@@ -201,7 +201,7 @@ open class PokemonEntity(
         get() = entityData.get(FRIENDSHIP)
 
     var drops: DropTable? = null
-
+    var lastTimeWhenHeadpatted: Long = 0L
     var tethering: PokemonPastureBlockEntity.Tethering? = null
 
     var queuedToDespawn = false
@@ -855,6 +855,8 @@ open class PokemonEntity(
             }
         }
 
+        onHeadpatCobblemon(hand, pokemon, player)
+
         return super.mobInteract(player, hand)
     }
 
@@ -1385,6 +1387,41 @@ open class PokemonEntity(
         super.setLeashedTo(entity, bl)
         if (this.ownerUUID != null && this.ownerUUID != entity.uuid ) {
             dropLeash(true, true)
+        }
+    }
+
+    fun onHeadpatCobblemon(hand: Hand, pokemon: Pokemon, player: PlayerEntity){
+        if (hand == Hand.MAIN_HAND && player is ServerPlayerEntity) {
+            var timeWhenHeadpatted = world.time
+            var eyePos = pokemon.entity?.eyePos
+            if(pokemon.getOwnerPlayer() == player){
+                if(timeWhenHeadpatted - 30 < lastTimeWhenHeadpatted){
+                    return
+                }
+                this.cry()
+                lastTimeWhenHeadpatted = timeWhenHeadpatted
+                var newX = (eyePos?.x ?: 0.0) + (Random.create().nextDouble() * 0.5)
+                var newY = (eyePos?.y ?: 0.0) + (Random.create().nextDouble() * 0.5)
+                var newZ = (eyePos?.z ?: 0.0) + (Random.create().nextDouble() * 0.5)
+                for (i in 0..2) {
+                    ParticleS2CPacket(
+                        ParticleTypes.HEART, true, newX, newY, newZ , .2f, .2f, .2f, .2f, 1
+                    ).also {
+                        (this.world as ServerWorld).server.playerManager.sendToAround(
+                            null,
+                            (eyePos?.x ?: 0.0),
+                            (eyePos?.y ?: 0.0),
+                            (eyePos?.z ?: 0.0),
+                            64.0,
+                            this.world.registryKey,
+                            it
+                        )
+                    }
+                }
+            }
+            else{
+                this.cry()
+            }
         }
     }
 
