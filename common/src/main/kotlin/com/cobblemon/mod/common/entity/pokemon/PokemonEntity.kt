@@ -202,9 +202,7 @@ open class PokemonEntity(
 
     var drops: DropTable? = null
     var lastHeadpat: Long = 0L
-    var lastFriendshipHeadpat: Long = 0L
-    var lastHeadpatTimestamp: Timestamp = Timestamp(System.currentTimeMillis())
-    var friendshipHeadpatTimestamp: Timestamp = Timestamp(System.currentTimeMillis())
+    var ticksInADay: Long = SharedConstants.TICKS_PER_IN_GAME_DAY.toLong()
     var tethering: PokemonPastureBlockEntity.Tethering? = null
 
     var queuedToDespawn = false
@@ -1395,19 +1393,18 @@ open class PokemonEntity(
 
     fun onHeadpat(hand: Hand, pokemon: Pokemon, player: PlayerEntity){
         if (hand == Hand.MAIN_HAND && player is ServerPlayerEntity) {
-            var timeWhenHeadpatted = world.time
-            lastHeadpatTimestamp = Timestamp(System.currentTimeMillis())
+            var timeWhenHeadpatted = world.timeOfDay
             val eyePos = pokemon.entity?.eyePos
+            world
             if(pokemon.getOwnerPlayer() == player){
                 if(timeWhenHeadpatted - 30 < lastHeadpat){
                     return
                 }
+                lastHeadpat = world.timeOfDay
                 this.cry()
                 player.swingHand(Hand.MAIN_HAND, true)
-                val friendshipHeadpat: Instant = friendshipHeadpatTimestamp.toInstant()
-                if(lastFriendshipHeadpat == 0L || lastHeadpatTimestamp.after(Timestamp.from(friendshipHeadpat.plus(20, ChronoUnit.MINUTES)))){
-                    friendshipHeadpatTimestamp = Timestamp(System.currentTimeMillis())
-                    lastFriendshipHeadpat = world.time
+                if(pokemon.headpatTime == 0L || world.timeOfDay > (pokemon.headpatTime + ticksInADay)){
+                    pokemon.headpatTime = world.timeOfDay
                     pokemon.incrementFriendship(2)
                     val newX = (eyePos?.x ?: 0.0) + (world.random.nextDouble() * 0.5)
                     val newY = (eyePos?.y ?: 0.0) + (world.random.nextDouble() * 0.5)
