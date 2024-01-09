@@ -202,7 +202,7 @@ open class PokemonEntity(
 
     var drops: DropTable? = null
     var lastHeadpat: Long = 0L
-    var ticksInADay: Long = SharedConstants.TICKS_PER_IN_GAME_DAY.toLong()
+    val ticksInADay: Long = SharedConstants.TICKS_PER_IN_GAME_DAY.toLong()
     var tethering: PokemonPastureBlockEntity.Tethering? = null
 
     var queuedToDespawn = false
