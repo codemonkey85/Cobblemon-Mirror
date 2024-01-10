@@ -202,7 +202,6 @@ open class PokemonEntity(
 
     var drops: DropTable? = null
     var lastHeadpat: Long = 0L
-    val ticksInADay: Long = SharedConstants.TICKS_PER_IN_GAME_DAY.toLong()
     var tethering: PokemonPastureBlockEntity.Tethering? = null
 
     var queuedToDespawn = false
@@ -1403,7 +1402,7 @@ open class PokemonEntity(
                 lastHeadpat = world.timeOfDay
                 this.cry()
                 player.swingHand(Hand.MAIN_HAND, true)
-                if(pokemon.headpatTime == 0L || world.timeOfDay > (pokemon.headpatTime + ticksInADay)){
+                if(pokemon.headpatTime == 0L || world.timeOfDay > (pokemon.headpatTime + TICKS_IN_A_DAY)){
                     pokemon.headpatTime = world.timeOfDay
                     pokemon.incrementFriendship(2)
                     val newX = (eyePos?.x ?: 0.0) + (world.random.nextDouble() * 0.5)
