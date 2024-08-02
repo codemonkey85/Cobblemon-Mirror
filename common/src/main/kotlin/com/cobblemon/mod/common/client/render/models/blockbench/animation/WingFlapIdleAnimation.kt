@@ -40,6 +40,6 @@ class WingFlapIdleAnimation(
         val time = timeVariable(state, limbSwing, ageInTicks) ?: 0F
         val angle = rotation(time)
         leftWing?.addRotation(axis, angle)
-        rightWing?.addRotation(axis, -angle)
+        rightWing?.addRotation(axis, angle)
     }
 }

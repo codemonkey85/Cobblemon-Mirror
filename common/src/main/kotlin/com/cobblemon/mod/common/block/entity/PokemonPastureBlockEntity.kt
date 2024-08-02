@@ -146,7 +146,7 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
 
         for (i in 0..5) {
             box = box.move(directionToBehind.normal.x.toDouble(), 0.0, directionToBehind.normal.z.toDouble())
-            val fixedPosition = makeSuitableY(world, idealPlace.offset(directionToBehind.normal), entity, box)
+            val fixedPosition = makeSuitableY(world, idealPlace.offset(directionToBehind.normal.multiply(i + 1)), entity, box)
             if (fixedPosition != null) {
                 entity.setPos(fixedPosition.center.subtract(0.0, 0.5, 0.0))
                 val pc = Cobblemon.storage.getPC(player.uuid)

@@ -28,6 +28,10 @@ class GlimmetModel (root: ModelPart) : PokemonPosableModel(root) {
     lateinit var standing: Pose
     lateinit var walk: Pose
     lateinit var sleep: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
+
+    val shoulderOffset = 8
 
     override val cryAnimation = CryProvider { bedrockStateful("glimmet", "cry") }
 
@@ -56,6 +60,28 @@ class GlimmetModel (root: ModelPart) : PokemonPosableModel(root) {
             animations = arrayOf(
                 bedrock("glimmet", "ground_walk")
             )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                quirks = arrayOf(blink),
+                idleAnimations = arrayOf(
+                        bedrock("glimmet", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                quirks = arrayOf(blink),
+                idleAnimations = arrayOf(
+                        bedrock("glimmet", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset)
+                )
         )
     }
     override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walk)) bedrockStateful("glimmet", "faint") else null

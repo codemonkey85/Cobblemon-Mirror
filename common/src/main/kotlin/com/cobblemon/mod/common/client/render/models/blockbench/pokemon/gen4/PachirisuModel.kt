@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen4
 
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
@@ -34,6 +35,11 @@ class PachirisuModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
 
     lateinit var standing: Pose
     lateinit var walk: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
+
+    val shoulderOffset = 5
+    val shoulderZOffset = 4.8
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("pachirisu", "blink") }
@@ -56,6 +62,32 @@ class PachirisuModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
                 BipedWalkAnimation(this, periodMultiplier = 0.8F, amplitudeMultiplier = 0.7F),
                 bedrock("pachirisu", "ground_idle")
             )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                quirks = arrayOf(blink),
+                idleAnimations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("pachirisu", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset),
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.Z_AXIS, shoulderZOffset)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                quirks = arrayOf(blink),
+                idleAnimations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("pachirisu", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset),
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.Z_AXIS, shoulderZOffset)
+                )
         )
     }
 

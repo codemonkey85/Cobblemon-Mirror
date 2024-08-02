@@ -27,6 +27,8 @@ class CombeeModel (root: ModelPart) : PokemonPosableModel(root) {
     lateinit var hover: Pose
     lateinit var fly: Pose
     lateinit var sleep: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
 
     override fun registerPoses() {
         val blink1 = quirk { bedrockStateful("combee", "blink_right") }
@@ -54,6 +56,30 @@ class CombeeModel (root: ModelPart) : PokemonPosableModel(root) {
             animations = arrayOf(
                 bedrock("combee", "air_fly")
             )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                quirks = arrayOf(blink1, blink2, blink3),
+                idleAnimations = arrayOf(
+                        bedrock("combee", "air_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset),
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.Z_AXIS, shoulderZOffset)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                quirks = arrayOf(blink1, blink2, blink3),
+                idleAnimations = arrayOf(
+                        bedrock("combee", "air_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset),
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.Z_AXIS, shoulderZOffset)
+                )
         )
     }
 

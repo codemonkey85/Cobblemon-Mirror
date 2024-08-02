@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFram
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
 import net.minecraft.client.model.geom.ModelPart
@@ -32,6 +33,11 @@ class GimmighoulRoamingModel (root: ModelPart) : PokemonPosableModel(root), Head
     lateinit var walk: CobblemonPose
     lateinit var battleIdle: CobblemonPose
     lateinit var sleep: CobblemonPose
+    lateinit var shoulderLeft: CobblemonPose
+    lateinit var shoulderRight: CobblemonPose
+
+    val shoulderOffset = 1
+
 
     override val cryAnimation = CryProvider { bedrockStateful("gimmighoul_roaming", "cry") }
 
@@ -77,6 +83,30 @@ class GimmighoulRoamingModel (root: ModelPart) : PokemonPosableModel(root), Head
                 singleBoneLook(),
                 bedrock("gimmighoul_roaming", "battle_idle")
             )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                quirks = arrayOf(blink),
+                idleAnimations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("gimmighoul_roaming", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                quirks = arrayOf(blink),
+                idleAnimations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("gimmighoul_roaming", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset)
+                )
         )
     }
 

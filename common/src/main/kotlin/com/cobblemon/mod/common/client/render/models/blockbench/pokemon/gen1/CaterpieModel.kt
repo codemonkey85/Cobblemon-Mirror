@@ -32,6 +32,9 @@ class CaterpieModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     lateinit var sleep: Pose
     lateinit var standing: Pose
     lateinit var walk: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
+
 
     override val cryAnimation = CryProvider { bedrockStateful("caterpie", "cry") }
 
@@ -61,6 +64,28 @@ class CaterpieModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
                 singleBoneLook(),
                 bedrock("caterpie", "ground_walk")
             )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                quirks = arrayOf(blink),
+                idleAnimations = arrayOf(
+                        bedrock("caterpie", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                quirks = arrayOf(blink),
+                idleAnimations = arrayOf(
+                        bedrock("caterpie", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset)
+                )
         )
     }
 

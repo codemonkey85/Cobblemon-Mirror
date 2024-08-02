@@ -9,7 +9,6 @@
 package com.cobblemon.mod.common.events
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.advancement.CobblemonCriteria
 import com.cobblemon.mod.common.advancement.criterion.*
 import com.cobblemon.mod.common.api.battles.model.actor.ActorType
@@ -152,7 +151,7 @@ object AdvancementHandler {
      * @param event the event to trigger the advancement from
      */
     fun onTumbleStonePlaced(event: ServerPlayerEvent.RightClickBlock) {
-        if (event.player.getItemInHand(event.hand).item == CobblemonItems.TUMBLESTONE.asItem()) {
+        if (event.player.getItemInHand(event.hand).item is TumblestoneItem) {
             val block = ((event.player.getItemInHand(event.hand).item as TumblestoneItem).block as TumblestoneBlock)
             CobblemonCriteria.PLANT_TUMBLESTONE.trigger(event.player, PlantTumblestoneContext(event.pos, block))
         }

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen9
 
+import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
@@ -29,6 +30,10 @@ class TatsugiriModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
     lateinit var swimming: Pose
     lateinit var standing: Pose
     lateinit var walk: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
+
+    val shoulderOffset = 2.5
 
     override val cryAnimation = CryProvider { bedrockStateful("tatsugiri", "cry") }
 
@@ -57,6 +62,28 @@ class TatsugiriModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
             animations = arrayOf(
                 bedrock("tatsugiri", "water_idle")
             )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                idleAnimations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("tatsugiri", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                idleAnimations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("tatsugiri", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset)
+                )
         )
     }
 }

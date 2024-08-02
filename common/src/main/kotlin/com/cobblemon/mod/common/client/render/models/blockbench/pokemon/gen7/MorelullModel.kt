@@ -24,6 +24,10 @@ class MorelullModel(root: ModelPart) : PokemonPosableModel(root) {
     override var profileTranslation = Vec3(0.0, 0.25, 0.0)
 
     lateinit var standing: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
+
+    val shoulderOffset = -0.35
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("morelull", "blink") }
@@ -34,6 +38,28 @@ class MorelullModel(root: ModelPart) : PokemonPosableModel(root) {
                 transformTicks = 10,
                 animations = arrayOf(
                         bedrock("morelull", "ground_idle")
+                )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                quirks = arrayOf(blink),
+                idleAnimations = arrayOf(
+                        bedrock("morelull", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.Y_AXIS, shoulderOffset)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                quirks = arrayOf(blink),
+                idleAnimations = arrayOf(
+                        bedrock("morelull", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.Y_AXIS, shoulderOffset)
                 )
         )
     }

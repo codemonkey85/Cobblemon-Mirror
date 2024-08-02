@@ -55,6 +55,7 @@ object HeldItemProvider {
      * @param manager The [HeldItemManager] being unregistered.
      * @param priority The [Priority] to specifically remove the instance from, if null it will remove from all.
      */
+    @Suppress("unused")
     fun unregister(manager: HeldItemManager, priority: Priority? = null) {
         if (priority != null) {
             this.managers.remove(priority, manager)

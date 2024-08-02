@@ -32,6 +32,11 @@ class WeedleModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     lateinit var sleep: Pose
     lateinit var standing: Pose
     lateinit var walk: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
+
+    val shoulderOffset = 3.8
+    val shoulderZOffset = -3
 
     override val cryAnimation = CryProvider { bedrockStateful("weedle", "cry") }
 
@@ -60,6 +65,30 @@ class WeedleModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
                 singleBoneLook(),
                 bedrock("weedle", "ground_walk")
             )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                quirks = arrayOf(blink),
+                idleAnimations = arrayOf(
+                        bedrock("weedle", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset),
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.Z_AXIS, shoulderZOffset)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                quirks = arrayOf(blink),
+                idleAnimations = arrayOf(
+                        bedrock("weedle", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset),
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.Z_AXIS, shoulderZOffset)
+                )
         )
     }
 
