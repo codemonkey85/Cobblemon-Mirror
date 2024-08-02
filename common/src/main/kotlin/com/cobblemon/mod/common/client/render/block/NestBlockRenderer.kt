@@ -16,27 +16,23 @@ import com.cobblemon.mod.common.client.render.layer.CobblemonRenderLayers
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.EggModelRepo
 import com.cobblemon.mod.common.client.render.models.blockbench.setRotation
 import com.cobblemon.mod.common.util.math.geometry.Axis
+import com.mojang.authlib.minecraft.client.MinecraftClient
 import com.mojang.blaze3d.systems.RenderSystem
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gl.VertexBuffer
-import net.minecraft.client.render.GameRenderer
-import net.minecraft.client.render.Tessellator
-import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.block.entity.BlockEntityRenderer
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.util.math.Vec3d
+import com.mojang.blaze3d.vertex.VertexBuffer
+import net.minecraft.client.renderer.GameRenderer
+import com.mojang.blaze3d.vertex.Tesselator
+import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
+import com.mojang.blaze3d.vertex.PoseStack
 import java.awt.Color
 
-class NestBlockRenderer(private val context: BlockEntityRendererFactory.Context) : BlockEntityRenderer<NestBlockEntity> {
-    override fun getRenderDistance(): Int {
-        return MinecraftClient.getInstance().options.viewDistance.value * 16
-    }
+class NestBlockRenderer(private val context: BlockEntityRendererProvider.Context) : BlockEntityRenderer<NestBlockEntity> {
     override fun render(
         entity: NestBlockEntity,
         tickDelta: Float,
-        matrices: MatrixStack,
-        vertexConsumers: VertexConsumerProvider,
+        matrices: PoseStack,
+        vertexConsumers: MultiBufferSource,
         light: Int,
         overlay: Int
     ) {
@@ -44,33 +40,32 @@ class NestBlockRenderer(private val context: BlockEntityRendererFactory.Context)
             entity.renderState = BasicBlockEntityRenderState()
         }
         val renderState = entity.renderState as BasicBlockEntityRenderState
-        if (renderState.needsRebuild || renderState.vboLightLevel != light || renderState.vbo.vertexFormat == null) {
+        if (renderState.needsRebuild || renderState.vboLightLevel != light || renderState.vbo.format == null) {
             renderToBuffer(entity, light, overlay, renderState.vbo, entity.egg)
             renderState.vboLightLevel = light
             renderState.needsRebuild = false
         }
         if (entity.egg != null) {
-            matrices.push()
-            CobblemonRenderLayers.EGG_LAYER.startDrawing()
+            matrices.pushPose()
+            CobblemonRenderLayers.EGG_LAYER.setupRenderState()
             renderState.vbo.bind()
-            renderState.vbo.draw(
-                matrices.peek().positionMatrix.mul(RenderSystem.getModelViewMatrix()),
+            renderState.vbo.drawWithShader(
+                matrices.last().pose().mul(RenderSystem.getModelViewMatrix()),
                 RenderSystem.getProjectionMatrix(),
-                GameRenderer.getRenderTypeCutoutProgram()
+                GameRenderer.getRendertypeCutoutShader()
             )
             VertexBuffer.unbind()
-            CobblemonRenderLayers.EGG_LAYER.endDrawing()
-            matrices.pop()
+            CobblemonRenderLayers.EGG_LAYER.clearRenderState()
+            matrices.popPose()
         }
 
     }
 
     fun renderToBuffer(entity: NestBlockEntity, light: Int, overlay: Int, buffer: VertexBuffer, egg: Egg?) {
         if (egg != null) {
-            val bufferBuilder = Tessellator.getInstance().buffer
-            bufferBuilder.begin(
-                CobblemonRenderLayers.EGG_LAYER.drawMode,
-                CobblemonRenderLayers.EGG_LAYER.vertexFormat
+            val bufferBuilder = Tesselator.getInstance().begin(
+                CobblemonRenderLayers.EGG_LAYER.mode(),
+                CobblemonRenderLayers.EGG_LAYER.format()
             )
             val pattern = EggPatterns.patternMap[egg.patternId]!!
             val model = EggModelRepo.eggModels[pattern.model]
@@ -84,20 +79,20 @@ class NestBlockRenderer(private val context: BlockEntityRendererFactory.Context)
                 false,
                 baseAtlasedTexture.x,
                 baseAtlasedTexture.y,
-                CobblemonAtlases.EGG_PATTERN_ATLAS.atlas.width,
-                CobblemonAtlases.EGG_PATTERN_ATLAS.atlas.height
-            )?.createModel()
+                CobblemonAtlases.EGG_PATTERN_ATLAS.textureAtlas.width,
+                CobblemonAtlases.EGG_PATTERN_ATLAS.textureAtlas.height
+            )?.bakeRoot()
             baseModel?.setRotation(Axis.Z_AXIS.ordinal, Math.toRadians(180.0).toFloat())
             val baseTextureModel = model?.createWithUvOverride(
                 false,
                 baseAtlasedTexture.x,
                 baseAtlasedTexture.y,
-                CobblemonAtlases.EGG_PATTERN_ATLAS.atlas.width,
-                CobblemonAtlases.EGG_PATTERN_ATLAS.atlas.height
-            )?.createModel()
+                CobblemonAtlases.EGG_PATTERN_ATLAS.textureAtlas.width,
+                CobblemonAtlases.EGG_PATTERN_ATLAS.textureAtlas.height
+            )?.bakeRoot()
             baseTextureModel?.setRotation(Axis.Z_AXIS.ordinal, Math.toRadians(180.0).toFloat())
-            val matrixStack = MatrixStack()
-            matrixStack.loadIdentity()
+            val matrixStack = PoseStack()
+            matrixStack.setIdentity()
             //matrixStack.translate(0F, 0.3F, 0F)
             baseModel?.render(matrixStack, bufferBuilder, light, overlay)
             baseTextureModel?.render(
@@ -105,10 +100,8 @@ class NestBlockRenderer(private val context: BlockEntityRendererFactory.Context)
                 bufferBuilder,
                 light,
                 overlay,
-                primaryColor.red.toFloat() / 255F,
-                primaryColor.green.toFloat() / 255F,
-                primaryColor.blue.toFloat() / 255F,
-                1.0F
+                //FIXME: ARGB or RGBA
+                primaryColor.rgb
             )
 
 
@@ -120,19 +113,17 @@ class NestBlockRenderer(private val context: BlockEntityRendererFactory.Context)
                         false,
                         overlayAtlasedTexture.x,
                         overlayAtlasedTexture.y,
-                        CobblemonAtlases.EGG_PATTERN_ATLAS.atlas.width,
-                        CobblemonAtlases.EGG_PATTERN_ATLAS.atlas.height
-                    )?.createModel()
+                        CobblemonAtlases.EGG_PATTERN_ATLAS.textureAtlas.width,
+                        CobblemonAtlases.EGG_PATTERN_ATLAS.textureAtlas.height
+                    )?.bakeRoot()
                     overlayTextureModel?.setRotation(Axis.Z_AXIS.ordinal, Math.toRadians(180.0).toFloat())
                     overlayTextureModel?.render(
                         matrixStack,
                         bufferBuilder,
                         light,
                         overlay,
-                        overlayColor.red.toFloat() / 255F,
-                        overlayColor.green.toFloat() / 255F,
-                        overlayColor.blue.toFloat() / 255F,
-                        1.0F
+                        //FIXME: ARGB or RGBA
+                        overlayColor.rgb
                     )
                 }
 
@@ -140,7 +131,7 @@ class NestBlockRenderer(private val context: BlockEntityRendererFactory.Context)
 
 
 
-            val bufferBuilderFinal = bufferBuilder.end()
+            val bufferBuilderFinal = bufferBuilder.build()
             buffer.bind()
             buffer.upload(bufferBuilderFinal)
             VertexBuffer.unbind()

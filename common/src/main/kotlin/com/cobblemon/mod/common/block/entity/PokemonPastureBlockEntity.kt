@@ -37,6 +37,8 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.Vec3i
+import net.minecraft.core.particles.ParticleOptions
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.NbtUtils
@@ -48,12 +50,14 @@ import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.shapes.Shapes
 import java.util.*
 import kotlin.math.ceil
 import kotlin.random.Random
@@ -290,6 +294,7 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
         setChanged()
     }
 
+    //Dear god this method needs to be cleaned up
     fun tryBreed() {
         val bredPokemon = mutableSetOf<Pokemon>()
         //We should probably find a way to minimize how often this gets called
@@ -309,6 +314,8 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
                                     // add cooldown to the parents
                                     motherPoke.breedingCooldown = 240
 
+                                    //FIXME: Reimplement or scrap
+                                    /*
                                     // add heart particles <3 <3 <3
                                     val fatherPokemon = father.getPokemon()?.entity
                                     val motherPokemon = mother.getPokemon()?.entity
@@ -330,8 +337,7 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
                                                 0.02 * motherPokemon.random.nextGaussian(), // X velocity (slight variance)
                                                 0.02 * motherPokemon.random.nextGaussian(), // Y velocity (upwards with variance)
                                                 0.02 * motherPokemon.random.nextGaussian()) // Z velocity (slight variance))*/
-
-                                        (world as ServerWorld).spawnParticles(
+                                        (level as ServerLevel).addParticle(
                                                 ParticleTypes.HEART,
                                                 fatherPokemon.getParticleX(1.0), fatherPokemon.getRandomBodyY() + 0.5, fatherPokemon.getParticleZ(1.0), // Slightly raise the Y position for upward effect
                                                 4 + kotlin.random.Random.nextInt(2),
@@ -353,11 +359,11 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
                                                 0.02 // Speed of particles
                                         )
                                     }
-
+                                    */
                                     println(breedResult.pokemon)
                                     val nestTaken = nests.random()
-                                    val nestState = world?.getBlockState(nestTaken)
-                                    val blockEntity = world?.getBlockEntity(nestTaken) as? NestBlockEntity
+                                    val nestStal = level?.getBlockState(nestTaken)
+                                    val blockEntity = level?.getBlockEntity(nestTaken) as? NestBlockEntity
                                     if (blockEntity != null && breedResult.pokemon != null) {
                                         //Most params here need to be gotten from the form when implemented properly
                                         blockEntity.egg = Egg(
@@ -367,8 +373,8 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
                                                 breedResult.pokemon.species.secondaryType?.let {Integer.toHexString(it.hue)} ?: "FFFFFF",
                                                 20*10
                                         )
-                                        blockEntity.markDirty()
-                                        world?.updateListeners(nestTaken, world?.getBlockState(nestTaken), world?.getBlockState(nestTaken), Block.NOTIFY_LISTENERS)
+                                        blockEntity.setChanged()
+                                        level?.sendBlockUpdated(nestTaken, level?.getBlockState(nestTaken), level?.getBlockState(nestTaken), Block.UPDATE_CLIENTS)
 
                                         // remove the nest used from the nest consideration pool
                                         nests.remove(nestTaken)
@@ -431,14 +437,14 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
 
     fun findUnusedNests(): MutableSet<BlockPos> {
         val res = mutableSetOf<BlockPos>()
-        val cube = VoxelShapes.cuboid(
-            (this.pos.x - 2).toDouble(), (this.pos.y - 1).toDouble(), (this.pos.z - 2).toDouble(),
-            (this.pos.x + 3).toDouble(), (this.pos.y + 3).toDouble(), (this.pos.z + 3).toDouble()
+        val cube = Shapes.box(
+            (this.blockPos.x - 2).toDouble(), (this.blockPos.y - 1).toDouble(), (this.blockPos.z - 2).toDouble(),
+            (this.blockPos.x + 3).toDouble(), (this.blockPos.y + 3).toDouble(), (this.blockPos.z + 3).toDouble()
         )
         cube.blockPositionsAsList().forEach {
-            val state = world?.getBlockState(it)
+            val state = level?.getBlockState(it)
             if (state?.block is NestBlock) {
-                val entity = world?.getBlockEntity(it) as NestBlockEntity
+                val entity = level?.getBlockEntity(it) as NestBlockEntity
                 //Cobblemon.LOGGER.warn("Nest at ${it.toString()}")
                 if (entity.egg == null) {
                     res.add(it)

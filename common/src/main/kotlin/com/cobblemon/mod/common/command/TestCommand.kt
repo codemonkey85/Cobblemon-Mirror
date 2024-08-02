@@ -157,9 +157,6 @@ object TestCommand {
             .build()
     }
 
-    private fun testBreeding(playerEntity: ServerPlayerEntity) {
-    }
-
     @Suppress("UNUSED_VARIABLE")
     private fun testUpdate() {
         val trade = this.trade ?: return

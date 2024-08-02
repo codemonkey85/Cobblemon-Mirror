@@ -785,7 +785,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     val NETHER_NEST = nestBlock(NestBlock.NestVariant.NETHER)
     val WATER_NEST = nestBlock(NestBlock.NestVariant.WATER)
 
-    val EGG = this.create("egg", EggBlock(AbstractBlock.Settings.copy(Blocks.DRAGON_EGG)))
+    val EGG = this.create("egg", EggBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DRAGON_EGG)))
 
     init {
         /**
@@ -816,8 +816,8 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     }
 
     private fun nestBlock(variant: NestBlock.NestVariant): NestBlock {
-        val identifier = cobblemonResource(variant.asString())
-        val block = NestBlock(variant, AbstractBlock.Settings.create().nonOpaque())
+        val identifier = cobblemonResource(variant.serializedName)
+        val block = NestBlock(variant, BlockBehaviour.Properties.of().noOcclusion())
         return this.create(identifier.path, block)
     }
 

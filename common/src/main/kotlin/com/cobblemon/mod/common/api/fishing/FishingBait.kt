@@ -60,7 +60,7 @@ data class FishingBait(
     companion object {
         fun fromNbt(nbt: CompoundTag): FishingBait {
             val item = ResourceLocation.parse(nbt.getString("Item"))
-            val effectsList = nbt.getList("Effects", 10) // 10 is the type for NbtCompound
+            val effectsList = nbt.getList("Effects", 10) // 10 is the type for CompoundTag
             val effects = mutableListOf<Effect>()
             for (i in 0 until effectsList.size) {
                 effects.add(Effect.fromNbt(effectsList.getCompound(i)))

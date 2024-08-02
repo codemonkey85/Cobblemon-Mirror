@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.client.render.block
 
 import com.cobblemon.mod.common.block.entity.BlockEntityRenderState
 import com.mojang.blaze3d.vertex.VertexBuffer
+import net.minecraft.client.renderer.GameRenderer
 
 class BasicBlockEntityRenderState : BlockEntityRenderState {
     val lastRenderFrame = -1

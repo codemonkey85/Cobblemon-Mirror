@@ -339,10 +339,10 @@ object CobblemonItemGroups {
         entries.accept(CobblemonItems.DEEPSLATE_THUNDER_STONE_ORE)
         entries.accept(CobblemonItems.WATER_STONE_ORE)
         entries.accept(CobblemonItems.DEEPSLATE_WATER_STONE_ORE)
-        entries.add(CobblemonItems.BASE_NEST)
-        entries.add(CobblemonItems.CAVE_NEST)
-        entries.add(CobblemonItems.NETHER_NEST)
-        entries.add(CobblemonItems.WATER_NEST)
+        entries.accept(CobblemonItems.BASE_NEST)
+        entries.accept(CobblemonItems.CAVE_NEST)
+        entries.accept(CobblemonItems.NETHER_NEST)
+        entries.accept(CobblemonItems.WATER_NEST)
     }
 
     private fun consumableEntries(displayContext: ItemDisplayParameters, entries: Output) {

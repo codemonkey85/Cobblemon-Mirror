@@ -13,31 +13,31 @@ import com.cobblemon.mod.common.api.pokemon.PokemonSpecies.species
 import com.cobblemon.mod.common.api.pokemon.breeding.Egg
 import com.cobblemon.mod.common.api.pokemon.breeding.EggPokemon
 import com.cobblemon.mod.common.util.DataKeys
-import net.minecraft.item.BlockItem
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.nbt.NbtList
-import net.minecraft.nbt.NbtString
-import net.minecraft.util.math.ColorHelper.Argb
+import net.minecraft.world.item.BlockItem
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.StringTag
+import net.minecraft.util.FastColor
 import java.awt.Color
 
-class PokemonEggItem() : Item(Settings().maxCount(1)) {
+class PokemonEggItem() : Item(Item.Properties().stacksTo(1)) {
 
     companion object {
         fun from(egg: EggPokemon): ItemStack {
+            //FIXME: Componentify
             val stack = ItemStack(CobblemonItems.POKEMON_EGG, 1)
-            stack.orCreateNbt.apply {
-                put(DataKeys.EGG, egg.toNbt())
-            }
             return stack
         }
 
         fun asEggPokemon(stack: ItemStack) : EggPokemon? {
-            return (stack.nbt?.get(DataKeys.EGG))?.let { EggPokemon.fromNBT(it as NbtCompound) }
+            //FIXME: Componentify
+            return null
         }
 
         fun getColor(stack: ItemStack, tintIndex: Int): Int {
+            /*
             val nbt = BlockItem.getBlockEntityNbt(stack)  ?: return Integer.valueOf("FFFFFFFF", 16)
             val eggNbt = nbt.getCompound(DataKeys.EGG) ?:  return Integer.valueOf("FFFFFFFF", 16)
             val colors = Egg.getColorsFromNbt(eggNbt)
@@ -49,6 +49,9 @@ class PokemonEggItem() : Item(Settings().maxCount(1)) {
                 val color = Color.decode("#${overlayColor}")
                 Argb.getArgb(255, color.red, color.green, color.blue)
             }
+
+             */
+            return FastColor.ARGB32.color(255, 255, 255)
         }
     }
 

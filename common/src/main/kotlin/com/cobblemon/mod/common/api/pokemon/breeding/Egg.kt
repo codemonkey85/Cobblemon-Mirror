@@ -12,33 +12,25 @@ import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.block.entity.NestBlockEntity
 import com.cobblemon.mod.common.util.DataKeys
-import net.minecraft.item.BlockItem
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.util.Identifier
+import net.minecraft.world.item.BlockItem
+import net.minecraft.world.item.ItemStack
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.resources.ResourceLocation
 
 data class Egg(
     val hatchedPokemon: EggPokemon,
-    val patternId: Identifier,
+    val patternId: ResourceLocation,
     val baseColor: String,
     val overlayColor: String?,
     //Time in ticks to hatch
     var timeToHatch: Int
 ) {
 
-    fun asItemStack(blockEntityNbt: NbtCompound): ItemStack {
-        val stack = CobblemonBlocks.EGG.asItem().defaultStack
-        BlockItem.setBlockEntityNbt(stack, CobblemonBlockEntities.EGG, blockEntityNbt)
+    fun asItemStack(blockEntityNbt: CompoundTag): ItemStack {
+        val stack = CobblemonBlocks.EGG.asItem().defaultInstance
+        //FIXME: Use properties
+        //BlockItem.setBlockEntityNbt(stack, CobblemonBlockEntities.EGG, blockEntityNbt)
         return stack
-    }
-    fun toNbt(): NbtCompound {
-        val result = NbtCompound()
-        result.put(DataKeys.HATCHED_POKEMON, hatchedPokemon.toNbt())
-        result.putString(DataKeys.EGG_PATTERN, patternId.toString())
-        result.putString(DataKeys.PRIMARY_COLOR, baseColor)
-        overlayColor?.let { result.putString(DataKeys.SECONDARY_COLOR, it) }
-        result.putInt(DataKeys.TIME_TO_HATCH, timeToHatch)
-        return result
     }
 
     fun getPattern(): EggPattern? {
@@ -46,14 +38,14 @@ data class Egg(
     }
 
     companion object {
-        fun fromBlockNbt(blockNbt: NbtCompound): Egg {
-            val eggNbt = blockNbt.get(DataKeys.EGG) as NbtCompound
+        fun fromBlockNbt(blockNbt: CompoundTag): Egg {
+            val eggNbt = blockNbt.get(DataKeys.EGG) as CompoundTag
             return fromNbt(eggNbt)
         }
-        fun fromNbt(nbt: NbtCompound): Egg {
+        fun fromNbt(nbt: CompoundTag): Egg {
             return Egg(
-                EggPokemon.fromNBT(nbt.get(DataKeys.HATCHED_POKEMON) as NbtCompound),
-                Identifier.tryParse(nbt.getString(DataKeys.EGG_PATTERN))!!,
+                EggPokemon.fromNBT(nbt.get(DataKeys.HATCHED_POKEMON) as CompoundTag),
+                ResourceLocation.tryParse(nbt.getString(DataKeys.EGG_PATTERN))!!,
                 nbt.getString(DataKeys.PRIMARY_COLOR),
                 if (nbt.contains(DataKeys.SECONDARY_COLOR)) nbt.getString(DataKeys.SECONDARY_COLOR) else null,
                 nbt.getInt(DataKeys.TIME_TO_HATCH)
@@ -62,7 +54,7 @@ data class Egg(
 
         //Less expensive than deserializing the whole thing, used for the color provider since it gets
         //called every frame
-        fun getColorsFromNbt(nbt: NbtCompound): Pair<String, String> {
+        fun getColorsFromNbt(nbt: CompoundTag): Pair<String, String> {
             return Pair(
                 nbt.getString(DataKeys.PRIMARY_COLOR),
                 nbt.getString(DataKeys.SECONDARY_COLOR)

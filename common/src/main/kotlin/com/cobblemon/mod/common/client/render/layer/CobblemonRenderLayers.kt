@@ -18,6 +18,7 @@ import java.util.function.Function
 import net.minecraft.Util
 import net.minecraft.client.renderer.RenderStateShard
 import net.minecraft.client.renderer.RenderStateShard.*
+import net.minecraft.client.renderer.entity.layers.RenderLayer
 
 object CobblemonRenderLayers {
     val BERRY_LAYER = run {
@@ -86,20 +87,21 @@ object CobblemonRenderLayers {
         )
     };
     val EGG_LAYER = run {
-        val multiPhaseParameters = RenderLayer.MultiPhaseParameters.builder()
-        .lightmap(ENABLE_LIGHTMAP)
-        .program(CUTOUT_PROGRAM)
-        .texture(Texture(
+        val multiPhaseParameters = RenderType.CompositeState.builder()
+        .setLightmapState(LIGHTMAP)
+        .setShaderState(RENDERTYPE_CUTOUT_SHADER)
+        .setTextureState(RenderStateShard.TextureStateShard(
             cobblemonResource("textures/atlas/egg_patterns.png"),
             false,
             true
         ))
-        .cull(DISABLE_CULLING)
-        .build(true)
-        RenderLayer.of(
+        .setCullState(RenderStateShard.NO_CULL)
+        .createCompositeState(true)
+
+        RenderType.create(
             "egg_patterns",
-            VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL,
-            VertexFormat.DrawMode.QUADS,
+            DefaultVertexFormat.BLOCK,
+            VertexFormat.Mode.QUADS,
             512,
             true,
             false,
@@ -109,19 +111,19 @@ object CobblemonRenderLayers {
 
     //For overlaying the 2D sprites for eggs in inventory
     val EGG_SPRITE_LAYER = run {
-        val multiPhaseParameters = RenderLayer.MultiPhaseParameters.builder()
-            .program(POSITION_COLOR_TEXTURE_PROGRAM)
-            .texture(Texture(
+        val multiPhaseParameters = RenderType.CompositeState.builder()
+            .setShaderState(POSITION_COLOR_TEX_LIGHTMAP_SHADER)
+            .setTextureState(RenderStateShard.TextureStateShard(
                 cobblemonResource("textures/atlas/egg_pattern_sprites.png"),
                 false,
                 false
             ))
-            .cull(DISABLE_CULLING)
-            .build(true)
-        RenderLayer.of(
+            .setCullState(RenderStateShard.NO_CULL)
+            .createCompositeState(true)
+        RenderType.create(
             "egg_patterns",
-            VertexFormats.POSITION_COLOR_TEXTURE,
-            VertexFormat.DrawMode.QUADS,
+            DefaultVertexFormat.POSITION_TEX_COLOR,
+            VertexFormat.Mode.QUADS,
             512,
             true,
             false,

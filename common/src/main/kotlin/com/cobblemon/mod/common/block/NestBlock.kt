@@ -9,103 +9,102 @@
 package com.cobblemon.mod.common.block
 
 import com.cobblemon.mod.common.CobblemonBlockEntities
-import com.cobblemon.mod.common.block.entity.HealingMachineBlockEntity
 import com.cobblemon.mod.common.block.entity.NestBlockEntity
-import com.cobblemon.mod.common.client.CobblemonClient
-import com.cobblemon.mod.common.util.DataKeys
-import net.minecraft.block.AbstractBlock
-import net.minecraft.block.Block
-import net.minecraft.block.BlockRenderType
-import net.minecraft.block.BlockState
-import net.minecraft.block.BlockWithEntity
-import net.minecraft.block.Waterloggable
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.block.entity.BlockEntityTicker
-import net.minecraft.block.entity.BlockEntityType
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.fluid.Fluid
-import net.minecraft.fluid.FluidState
-import net.minecraft.fluid.Fluids
-import net.minecraft.item.Item
-import net.minecraft.item.ItemPlacementContext
-import net.minecraft.state.StateManager
-import net.minecraft.state.property.BooleanProperty
-import net.minecraft.state.property.Properties
-import net.minecraft.util.ActionResult
-import net.minecraft.util.Hand
-import net.minecraft.util.StringIdentifiable
-import net.minecraft.util.hit.BlockHitResult
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.BlockView
-import net.minecraft.world.World
+import com.cobblemon.mod.common.client.gui.PartyOverlay.Companion.state
+import com.mojang.serialization.MapCodec
+import dev.lambdaurora.lambdynlights.util.SodiumDynamicLightHandler.pos
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.RenderShape
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.BaseEntityBlock
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityTicker
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.phys.BlockHitResult
+import net.minecraft.core.BlockPos
+import net.minecraft.util.StringRepresentable
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.item.context.BlockPlaceContext
+import net.minecraft.world.level.BlockGetter
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.SimpleWaterloggedBlock
+import net.minecraft.world.level.block.entity.BlockEntityType
+import net.minecraft.world.level.block.state.StateDefinition
+import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import net.minecraft.world.level.material.Fluid
+import net.minecraft.world.level.material.FluidState
+import net.minecraft.world.level.material.Fluids
 
-class NestBlock(val variant: NestVariant, settings: Settings) : BlockWithEntity(settings), Waterloggable {
+class NestBlock(val variant: NestVariant, properties: Properties) : BaseEntityBlock(properties), SimpleWaterloggedBlock {
 
     init {
-        defaultState = stateManager.defaultState
-            .with(Properties.WATERLOGGED, false)
+        registerDefaultState(
+            stateDefinition.any()
+                .setValue(BlockStateProperties.WATERLOGGED, false)
+        )
     }
 
-    enum class NestVariant(val id: String) : StringIdentifiable {
+    enum class NestVariant(val id: String) : StringRepresentable {
         CAVE("cave_nest"),
         NETHER("nether_nest"),
         WATER("water_nest"),
         BASIC("basic_nest");
 
-        override fun asString(): String {
-            return id
-        }
+        override fun getSerializedName() = id
     }
 
-    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
-        builder?.add(Properties.WATERLOGGED)
+    override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
+        builder.add(BlockStateProperties.WATERLOGGED)
     }
 
-    override fun onUse(
-        state: BlockState,
-        world: World,
+    override fun useWithoutItem(
+        blockState: BlockState,
+        level: Level,
+        blockPos: BlockPos,
+        player: Player,
+        blockHitResult: BlockHitResult
+    ): InteractionResult {
+        super.useWithoutItem(blockState, level, blockPos, player, blockHitResult)
+
+        val entity = level.getBlockEntity(blockPos) as? NestBlockEntity
+        return entity?.onUse(blockState, level, blockPos, player, InteractionHand.MAIN_HAND, blockHitResult) ?: InteractionResult.FAIL
+    }
+
+    override fun newBlockEntity(pos: BlockPos, state: BlockState) = NestBlockEntity(pos, state)
+
+    override fun getRenderShape(blockState: BlockState) = RenderShape.MODEL
+
+    override fun canPlaceLiquid(
+        player: Player?,
+        level: BlockGetter,
         pos: BlockPos,
-        player: PlayerEntity,
-        hand: Hand,
-        hit: BlockHitResult
-    ): ActionResult {
-        super.onUse(state, world, pos, player, hand, hit)
-
-        val entity = world.getBlockEntity(pos) as? NestBlockEntity
-        return entity?.onUse(state, world, pos, player, hand, hit) ?: ActionResult.FAIL
-    }
-
-    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
-        return NestBlockEntity(pos, state)
-    }
-
-    override fun getRenderType(state: BlockState?) = BlockRenderType.MODEL
-
-    override fun canFillWithFluid(
-        world: BlockView?,
-        pos: BlockPos?,
-        state: BlockState?,
-        fluid: Fluid?
+        state: BlockState,
+        fluid: Fluid
     ): Boolean {
-        return variant == NestVariant.WATER && super.canFillWithFluid(world, pos, state, fluid)
+        return variant == NestVariant.WATER && super.canPlaceLiquid(player, level, pos, state, fluid)
     }
 
-    override fun getFluidState(state: BlockState): FluidState? {
-        return if (state.get(PCBlock.WATERLOGGED)) {
-            Fluids.WATER.getStill(false)
+    override fun getFluidState(state: BlockState): FluidState {
+        return if (state.getValue(PCBlock.WATERLOGGED)) {
+            Fluids.WATER.getSource(false)
         } else super.getFluidState(state)
     }
 
-    override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
+    override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {
         if (variant == NestVariant.WATER) {
-            return defaultState.with(Properties.WATERLOGGED, ctx?.world?.getFluidState(ctx.blockPos)?.fluid == Fluids.WATER)
+            return defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, ctx.level.getFluidState(ctx.clickedPos).type == Fluids.WATER)
         }
-        return defaultState
+        return defaultBlockState()
     }
 
     override fun <T : BlockEntity?> getTicker(
-        world: World?,
-        state: BlockState?,
-        type: BlockEntityType<T>?
-    ): BlockEntityTicker<T>? = checkType(type, CobblemonBlockEntities.NEST, NestBlockEntity.TICKER::tick)
+        level: Level,
+        blockState: BlockState,
+        blockEntityType: BlockEntityType<T>
+    ): BlockEntityTicker<T>? = createTickerHelper(blockEntityType, CobblemonBlockEntities.NEST, NestBlockEntity.TICKER::tick)
+
+    override fun codec(): MapCodec<out BaseEntityBlock> {
+        TODO("Not yet implemented")
+    }
 }

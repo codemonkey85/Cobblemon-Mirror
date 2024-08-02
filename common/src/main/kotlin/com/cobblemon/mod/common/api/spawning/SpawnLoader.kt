@@ -65,7 +65,7 @@ object SpawnLoader {
         .registerTypeAdapter(ItemDropMethod::class.java, ItemDropMethod.adapter)
         .registerTypeAdapter(PokemonProperties::class.java, pokemonPropertiesShortAdapter)
         .registerTypeAdapter(SpawnBucket::class.java, SpawnBucketAdapter)
-        .registerTypeAdapter(CompoundTag::class.java, NbtCompoundAdapter)
+        .registerTypeAdapter(CompoundTag::class.java, CompoundTagAdapter)
         .registerTypeAdapter(IntRange::class.java, IntRangeAdapter)
         .registerTypeAdapter(PossibleHeldItem::class.java, PossibleHeldItemAdapter)
         .create()

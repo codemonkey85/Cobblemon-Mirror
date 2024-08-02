@@ -42,7 +42,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.effect.MobEffectInstance
-import net.minecraft.item.Item.Settings
+import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.food.FoodProperties
@@ -372,10 +372,10 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
 
     @JvmField val BERRY_JUICE = this.create("berry_juice", BerryJuiceItem())
 
-    val BASE_NEST = blockItem(NestBlock.NestVariant.BASIC.asString(), CobblemonBlocks.BASE_NEST)
-    val CAVE_NEST = blockItem(NestBlock.NestVariant.CAVE.asString(), CobblemonBlocks.CAVE_NEST)
-    val NETHER_NEST = blockItem(NestBlock.NestVariant.NETHER.asString(), CobblemonBlocks.NETHER_NEST)
-    val WATER_NEST = blockItem(NestBlock.NestVariant.WATER.asString(), CobblemonBlocks.WATER_NEST)
+    val BASE_NEST = blockItem(NestBlock.NestVariant.BASIC.serializedName, CobblemonBlocks.BASE_NEST)
+    val CAVE_NEST = blockItem(NestBlock.NestVariant.CAVE.serializedName, CobblemonBlocks.CAVE_NEST)
+    val NETHER_NEST = blockItem(NestBlock.NestVariant.NETHER.serializedName, CobblemonBlocks.NETHER_NEST)
+    val WATER_NEST = blockItem(NestBlock.NestVariant.WATER.serializedName, CobblemonBlocks.WATER_NEST)
 
     // Medicine
     @JvmField
@@ -1173,9 +1173,9 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     //@JvmField
     //val BINDING_SOIL = blockItem("binding_soil", CobblemonBlocks.BINDING_SOIL)
     @JvmField
-    val POKEMON_EGG = blockItem("egg", CobblemonBlocks.EGG, Item.Settings().maxCount(1))
+    val POKEMON_EGG = blockItem("egg", CobblemonBlocks.EGG, Item.Properties().stacksTo(1))
 
-    private fun blockItem(name: String, block: Block, settings: Item.Settings = Item.Settings()): BlockItem = this.create(name, BlockItem(block, settings))
+    private fun blockItem(name: String, block: Block, settings: Item.Properties = Item.Properties()): BlockItem = this.create(name, BlockItem(block, settings))
 
     private fun blockItem(name: String, block: Block): BlockItem = this.create(name, BlockItem(block, Item.Properties()))
 
@@ -1201,7 +1201,7 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
         return item
     }
 
-    private fun heldItem(name: String, remappedName: String? = null, settings: Settings = Item.Settings()): CobblemonItem = create(
+    private fun heldItem(name: String, remappedName: String? = null, settings:Item.Properties = Item.Properties()): CobblemonItem = create(
         name,
         CobblemonItem(Item.Properties()).also {
             if (remappedName != null) {

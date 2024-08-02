@@ -32,7 +32,8 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 
-class FossilAnalyzerBlock(settings: Properties) : MultiblockBlock(settings), WorldlyContainerHolder {
+class FossilAnalyzerBlock(settings: Properties) : MultiblockBlock(settings),
+    WorldlyContainerHolder {
     init {
         registerDefaultState(stateDefinition.any()
             .setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH)

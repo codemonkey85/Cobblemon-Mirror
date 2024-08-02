@@ -23,7 +23,7 @@ import net.minecraft.nbt.CompoundTag
  * reload.
  *
  * @property pokemonEntity The Pokémon entity being saved.
- * @property nbt The [NbtCompound] that the Pokémon is being saved to.
+ * @property nbt The [CompoundTag] that the Pokémon is being saved to.
  *      You should add or remove from this for whatever you
  *      want to accomplish. The existing contents will be all
  *      of what Cobblemon saves natively.

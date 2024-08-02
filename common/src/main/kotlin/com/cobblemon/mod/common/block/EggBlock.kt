@@ -10,30 +10,37 @@ package com.cobblemon.mod.common.block
 
 import com.cobblemon.mod.common.api.pokemon.breeding.Egg
 import com.cobblemon.mod.common.block.entity.EggBlockEntity
-import com.cobblemon.mod.common.util.DataKeys
-import net.minecraft.block.BlockRenderType
-import net.minecraft.block.BlockState
-import net.minecraft.block.BlockWithEntity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.item.BlockItem
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import com.cobblemon.mod.common.client.gui.PartyOverlay.Companion.state
+import com.mojang.serialization.MapCodec
+import dev.lambdaurora.lambdynlights.util.SodiumDynamicLightHandler.pos
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.BaseEntityBlock
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.item.BlockItem
+import net.minecraft.world.item.ItemStack
+import net.minecraft.core.BlockPos
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.RenderShape
 
-class EggBlock(settings: Settings?) : BlockWithEntity(settings) {
-    override fun onPlaced(
-        world: World?,
-        pos: BlockPos?,
-        state: BlockState?,
+class EggBlock(properties: Properties) : BaseEntityBlock(properties) {
+    override fun setPlacedBy(
+        level: Level,
+        blockPos: BlockPos,
+        blockState: BlockState,
         placer: LivingEntity?,
         itemStack: ItemStack
     ) {
-        val entity = world?.getBlockEntity(pos) as? EggBlockEntity
-        val itemBlockEntityNbt = BlockItem.getBlockEntityNbt(itemStack) ?: return
-        entity?.let { entity.readNbt(itemBlockEntityNbt) }
-        super.onPlaced(world, pos, state, placer, itemStack)
+        val entity = level.getBlockEntity(blockPos) as? EggBlockEntity
+        //FIXME: Component
+        val itemBlockEntityNbt = null /*BlockItem.getBlockEntityNbt(itemStack)*/ ?: return
+        //entity?.let { entity.readNbt(itemBlockEntityNbt) }
+        super.setPlacedBy(level, blockPos, blockState, placer, itemStack)
     }
-    override fun getRenderType(state: BlockState?) = BlockRenderType.ENTITYBLOCK_ANIMATED
-    override fun createBlockEntity(pos: BlockPos, state: BlockState) = EggBlockEntity(pos, state)
+
+    override fun codec(): MapCodec<out BaseEntityBlock> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getRenderShape(state: BlockState) = RenderShape.ENTITYBLOCK_ANIMATED
+    override fun newBlockEntity(pos: BlockPos, state: BlockState) = EggBlockEntity(pos, state)
 }

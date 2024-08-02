@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.client.render.block
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.block.entity.FossilAnalyzerBlockEntity
 import com.cobblemon.mod.common.block.multiblock.FossilMultiblockStructure
+import com.mojang.authlib.minecraft.client.MinecraftClient
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import net.minecraft.client.Minecraft
@@ -24,10 +25,6 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.Vec3
 
 class FossilAnalyzerRenderer(ctx: BlockEntityRendererProvider.Context) : BlockEntityRenderer<FossilAnalyzerBlockEntity> {
-    override fun getRenderDistance(): Int {
-        return MinecraftClient.getInstance().options.viewDistance.value * 16
-    }
-
     override fun render(
         entity: FossilAnalyzerBlockEntity,
         tickDelta: Float,

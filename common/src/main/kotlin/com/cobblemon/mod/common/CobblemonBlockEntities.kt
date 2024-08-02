@@ -80,7 +80,7 @@ object CobblemonBlockEntities : PlatformRegistry<Registry<BlockEntityType<*>>, R
     )
 
     val NEST: BlockEntityType<NestBlockEntity> = this.create("nest",
-        BlockEntityType.Builder.create(
+        BlockEntityType.Builder.of(
             ::NestBlockEntity,
             CobblemonBlocks.NETHER_NEST,
             CobblemonBlocks.WATER_NEST,
@@ -89,7 +89,7 @@ object CobblemonBlockEntities : PlatformRegistry<Registry<BlockEntityType<*>>, R
         ).build(null))
 
     val EGG: BlockEntityType<EggBlockEntity> = this.create("egg",
-            BlockEntityType.Builder.create(
+            BlockEntityType.Builder.of(
                 ::EggBlockEntity,
                 CobblemonBlocks.EGG
             ).build(null)

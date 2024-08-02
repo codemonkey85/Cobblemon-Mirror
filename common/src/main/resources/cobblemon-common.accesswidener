@@ -52,6 +52,7 @@ transitive-accessible class net/minecraft/client/renderer/RenderStateShard$Trans
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_ENTITY_TRANSLUCENT_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_ENTITY_CUTOUT_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
+transitive-accessible field net/minecraft/client/renderer/RenderStateShard POSITION_COLOR_TEX_LIGHTMAP_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard TRANSLUCENT_TRANSPARENCY Lnet/minecraft/client/renderer/RenderStateShard$TransparencyStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard NO_TRANSPARENCY Lnet/minecraft/client/renderer/RenderStateShard$TransparencyStateShard;
@@ -111,3 +112,5 @@ transitive-accessible method net/minecraft/world/entity/ai/sensing/SensorType <i
 transitive-accessible method net/minecraft/world/entity/Entity getDimensions (Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/entity/EntityDimensions;
 transitive-extendable method net/minecraft/world/entity/LivingEntity getDimensions (Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/entity/EntityDimensions;
 #String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, MultiPhaseParameters phases
+transitive-accessible method net/minecraft/client/renderer/block/model/ItemModelGenerator createSideElements (Lnet/minecraft/client/renderer/texture/SpriteContents;Ljava/lang/String;I)Ljava/util/List;
+transitive-accessible method net/minecraft/client/renderer/block/model/ItemOverrides <init> ()V

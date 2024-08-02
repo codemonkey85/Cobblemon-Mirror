@@ -12,28 +12,18 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.pokemon.breeding.Egg
-import com.cobblemon.mod.common.block.BerryBlock
-import com.cobblemon.mod.common.util.DataKeys
-import net.minecraft.block.Block
-import net.minecraft.block.BlockState
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.block.entity.BlockEntityTicker
-import net.minecraft.entity.ItemEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.BlockItem
-import net.minecraft.item.EggItem
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.listener.ClientPlayPacketListener
-import net.minecraft.network.packet.Packet
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.ActionResult
-import net.minecraft.util.Hand
-import net.minecraft.util.hit.BlockHitResult
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
-
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityTicker
+import net.minecraft.world.entity.player.Player
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.phys.BlockHitResult
+import net.minecraft.core.BlockPos
+import net.minecraft.world.level.Level
+import net.minecraft.world.entity.item.ItemEntity
 
 class NestBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(CobblemonBlockEntities.NEST, pos, state) {
     var egg: Egg? = null
@@ -41,11 +31,11 @@ class NestBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(CobblemonB
 
     fun dropEgg(
         state: BlockState,
-        world: World,
+        world: Level,
         pos: BlockPos,
     ) {
-        val blockNbt = NbtCompound()
-        writeNbt(blockNbt)
+        //FIXME: Use components
+        val blockNbt = CompoundTag()
         val itemEntity = ItemEntity(
             world,
             pos.x.toDouble(),
@@ -53,106 +43,79 @@ class NestBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(CobblemonB
             pos.z.toDouble(),
             egg!!.asItemStack(blockNbt)
         )
-        world.spawnEntity(itemEntity)
+        world.addFreshEntity(itemEntity)
         egg = null
-        this.markDirty()
-        world.setBlockState(pos, state, Block.NOTIFY_LISTENERS)
+        this.setChanged()
+        world.setBlock(pos, state, Block.UPDATE_CLIENTS)
 
     }
 
     fun onUse(
         state: BlockState,
-        world: World,
+        world: Level,
         pos: BlockPos,
-        player: PlayerEntity,
-        hand: Hand,
+        player: Player,
+        hand: InteractionHand,
         hit: BlockHitResult
-    ): ActionResult {
+    ): InteractionResult {
         if (egg != null) {
             return if (egg?.timeToHatch == 0) {
                 hatchPokemon(state, world, pos, player)
-                ActionResult.SUCCESS
+                InteractionResult.SUCCESS
             } else {
                 dropEgg(state, world, pos)
-                ActionResult.SUCCESS
+                InteractionResult.SUCCESS
             }
         }
-        val playerStack = player.getStackInHand(hand)
+        val playerStack = player.getItemInHand(hand)
         if (playerStack.item == CobblemonItems.POKEMON_EGG) {
-            val blockNbt = BlockItem.getBlockEntityNbt(playerStack) as NbtCompound
+            //FIXME: Update to use components
+            /*
+            val blockNbt = BlockItem.getBlockEntityNbt(playerStack) as CompoundTag
             this.egg = Egg.fromBlockNbt(blockNbt)
             if (!player.isCreative) {
                 playerStack.decrement(1)
             }
-            this.markDirty()
-            world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS)
-            return ActionResult.CONSUME
+            this.setChanged()
+            world.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS)
+
+             */
+            return InteractionResult.CONSUME
         }
-        return ActionResult.FAIL
+        return InteractionResult.FAIL
 
     }
 
     fun hatchPokemon(
         state: BlockState,
-        world: World,
+        world: Level,
         pos: BlockPos,
-        player: PlayerEntity
+        player: Player
     ) {
-        if (!world.isClient) {
+        if (!world.isClientSide) {
             val party = Cobblemon.storage.getParty(player.uuid)
             val newPoke = egg!!.hatchedPokemon.generatePokemon()
             party.add(newPoke)
             this.egg = null
-            this.markDirty()
-            world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS)
+            this.setChanged()
+            world.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS)
         }
 
 
-    }
-
-    override fun writeNbt(nbt: NbtCompound) {
-        super.writeNbt(nbt)
-        if (egg != null) {
-            nbt.put(DataKeys.EGG, egg?.toNbt())
-        }
-    }
-
-    override fun readNbt(nbt: NbtCompound) {
-        super.readNbt(nbt)
-        if (nbt.contains(DataKeys.EGG)) {
-            egg = Egg.fromNbt(nbt.getCompound(DataKeys.EGG))
-        }
-        else {
-            egg = null
-        }
-        renderState?.needsRebuild = true
-    }
-
-    override fun toUpdatePacket(): Packet<ClientPlayPacketListener> {
-        return BlockEntityUpdateS2CPacket.create(this)
-    }
-
-    override fun toInitialChunkDataNbt(): NbtCompound {
-        val nbt = createNbt()
-        //The block update packet sets nbt to null if the nbt is empty, and doesn't actually update the block
-        if (nbt.isEmpty){
-           nbt.putBoolean("placeholder", true)
-        }
-        return nbt
     }
 
     companion object {
         val TICKER = BlockEntityTicker<NestBlockEntity> { world, pos, state, blockEntity ->
             blockEntity.egg?.let {
                 if (it.timeToHatch == 0) {
-                    world.setBlockState(pos, state, Block.NOTIFY_LISTENERS)
-                    blockEntity.markDirty()
+                    world.setBlockAndUpdate(pos, state)
+                    blockEntity.setChanged()
                 }
                 if (it.timeToHatch > 0) {
                     it.timeToHatch--
                     //Dont write the block to the world every tick, do it every 10 seconds
                     if (it.timeToHatch % 200 == 0) {
-                        blockEntity.markDirty()
+                        blockEntity.setChanged()
                     }
                 }
             }

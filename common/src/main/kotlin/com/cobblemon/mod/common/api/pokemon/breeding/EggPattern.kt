@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.api.pokemon.breeding
 
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Represents a pattern on an egg
@@ -17,9 +17,9 @@ import net.minecraft.util.Identifier
  * @since January 2nd, 2024
  */
 data class EggPattern (
-    val model: Identifier,
-    val baseTexturePath: Identifier,
-    val overlayTexturePath: Identifier?,
-    val baseInvSpritePath: Identifier,
-    val overlayInvSpritePath: Identifier?,
+    val model: ResourceLocation,
+    val baseTexturePath: ResourceLocation,
+    val overlayTexturePath: ResourceLocation?,
+    val baseInvSpritePath: ResourceLocation,
+    val overlayInvSpritePath: ResourceLocation?,
 )

@@ -220,13 +220,13 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
         }
 
         val luckOfTheSeaEnchantment = pokerodEnchantments?.filter {
-            if (it is NbtCompound)
+            if (it is CompoundTag)
                 if (it.getString("id") == Registries.ENCHANTMENT.getEntry(enchantment).key.toString())
                     return@filter true
             return@filter false
         }?.first()
 
-        return (luckOfTheSeaEnchantment as? NbtCompound)?.getShort("lvl")?.toInt() ?: 0
+        return (luckOfTheSeaEnchantment as? CompoundTag)?.getShort("lvl")?.toInt() ?: 0
     }*/
 
     fun isOpenOrWaterAround(pos: BlockPos): Boolean {

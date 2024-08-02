@@ -20,7 +20,7 @@ import java.lang.reflect.Type
  * @author Hiroku
  * @since July 25th, 2022
  */
-object NbtCompoundAdapter : JsonDeserializer<CompoundTag>, JsonSerializer<CompoundTag> {
+object CompoundTagAdapter : JsonDeserializer<CompoundTag>, JsonSerializer<CompoundTag> {
     override fun deserialize(json: JsonElement, type: Type, ctx: JsonDeserializationContext) = NbtUtils.snbtToStructure(json.asString)
     override fun serialize(nbt: CompoundTag, type: Type, ctx: JsonSerializationContext): JsonElement {
         return JsonPrimitive(SnbtPrinterTagVisitor("", 0, mutableListOf()).visit(nbt))

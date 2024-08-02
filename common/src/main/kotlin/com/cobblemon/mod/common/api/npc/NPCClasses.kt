@@ -54,7 +54,7 @@ object NPCClasses : JsonDataRegistry<NPCClass> {
         .registerTypeAdapter(ItemDropMethod::class.java, ItemDropMethod.adapter)
         .registerTypeAdapter(SleepDepth::class.java, SleepDepth.adapter)
         .registerTypeAdapter(DropEntry::class.java, DropEntryAdapter)
-        .registerTypeAdapter(CompoundTag::class.java, NbtCompoundAdapter)
+        .registerTypeAdapter(CompoundTag::class.java, CompoundTagAdapter)
         .registerTypeAdapter(NPCPartyProvider::class.java, NPCPartyProviderAdapter)
         .registerTypeAdapter(NPCInteractConfiguration::class.java, NPCInteractConfigurationAdapter)
         .registerTypeAdapter(MoValue::class.java, MoValueAdapter)

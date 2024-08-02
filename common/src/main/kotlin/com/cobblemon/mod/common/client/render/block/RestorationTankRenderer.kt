@@ -21,7 +21,6 @@ import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.tim
 import com.cobblemon.mod.common.util.cobblemonResource
 import kotlin.math.pow
 import net.minecraft.world.level.block.HorizontalDirectionalBlock
-import net.minecraft.client.MinecraftClient
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.MultiBufferSource

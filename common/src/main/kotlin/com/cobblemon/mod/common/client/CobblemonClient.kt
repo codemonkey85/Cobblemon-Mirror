@@ -43,7 +43,7 @@ import com.cobblemon.mod.common.item.PokeBallItem
 import com.cobblemon.mod.common.item.PokemonEggItem
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import net.minecraft.client.Minecraft
-import net.minecraft.client.color.block.BlockColorProvider
+import net.minecraft.client.color.block.BlockColor
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.model.BoatModel
@@ -54,6 +54,7 @@ import net.minecraft.client.renderer.blockentity.HangingSignRenderer
 import net.minecraft.client.renderer.blockentity.SignRenderer
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.LivingEntityRenderer
+import net.minecraft.client.renderer.entity.layers.RenderLayer
 import net.minecraft.client.resources.PlayerSkin
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.world.entity.player.Player
@@ -209,7 +210,7 @@ object CobblemonClient {
         )
 
         this.implementation.registerBlockRenderType(
-            RenderLayer.getTranslucent(),
+            RenderType.translucent(),
             CobblemonBlocks.TUMBLESTONE_BLOCK
         )
 

@@ -23,9 +23,10 @@ import com.cobblemon.mod.common.pokemon.IVs
 import com.cobblemon.mod.common.pokemon.Nature
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.abilities.HiddenAbilityType
-import net.minecraft.item.Item
-import net.minecraft.registry.Registries
-import net.minecraft.registry.entry.RegistryEntry
+import net.minecraft.world.item.Item
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.Holder
+import net.minecraft.core.registries.Registries
 import kotlin.random.Random
 
 interface BreedingLogic {
@@ -149,8 +150,9 @@ interface BreedingLogic {
      * @author Nick, whatsy
      */
     fun calculateNature(mother: Pokemon, father: Pokemon): Nature {
-        val mom = mother.heldItemNoCopy().item?.let { Registries.ITEM.getEntry(it) }?.isIn(CobblemonItemTags.EVERSTONE) ?: false
-        val dad = father.heldItemNoCopy().item?.let { Registries.ITEM.getEntry(it) }?.isIn(CobblemonItemTags.EVERSTONE) ?: false
+        //FIXME: Use registry lookup
+        val dad = father.heldItemNoCopy().item.let { BuiltInRegistries.ITEM.wrapAsHolder(it) }.`is`(CobblemonItemTags.EVERSTONE) ?: false
+        val mom = mother.heldItemNoCopy().item.let { BuiltInRegistries.ITEM.wrapAsHolder(it) }.`is`(CobblemonItemTags.EVERSTONE) ?: false
 
         return if(mom && dad) {
             if(Random.nextInt(100) < 50) {
@@ -224,10 +226,11 @@ interface BreedingLogic {
      * @author Nick, whatsy, Apion
      */
     fun calculateIVs(mother: Pokemon, father: Pokemon): IVs {
-        val motherItem = mother.heldItemNoCopy().item?.let { Registries.ITEM.getEntry(it) }
-        val fatherItem = father.heldItemNoCopy().item?.let { Registries.ITEM.getEntry(it) }
-        val isMotherDestinyKnotted = motherItem?.isIn(CobblemonItemTags.DESTINY_KNOT) == true
-        val isFatherDestinyKnotted = fatherItem?.isIn(CobblemonItemTags.DESTINY_KNOT) == true
+        //FIXME: Use registry holder
+        val motherItem = mother.heldItemNoCopy().item.let { BuiltInRegistries.ITEM.wrapAsHolder(it) }
+        val fatherItem = father.heldItemNoCopy().item.let { BuiltInRegistries.ITEM.wrapAsHolder(it) }
+        val isMotherDestinyKnotted = motherItem.`is`(CobblemonItemTags.DESTINY_KNOT)
+        val isFatherDestinyKnotted = fatherItem.`is`(CobblemonItemTags.DESTINY_KNOT)
         val passedStats = mutableSetOf<Stat>()
         val childStats = IVs.createRandomIVs()
         var numPassed = if(isMotherDestinyKnotted || isFatherDestinyKnotted) {
@@ -236,7 +239,7 @@ interface BreedingLogic {
             3
         }
 
-        fun calcForcedStat(entry: RegistryEntry<Item>?, mon: Pokemon) {
+        fun calcForcedStat(holder: Holder<Item>?, mon: Pokemon) {
             fun passStat(stats: Stat) {
                 if (!passedStats.contains(stats)) {
                     childStats[stats] = mon.ivs[stats]!!
@@ -244,21 +247,21 @@ interface BreedingLogic {
                     numPassed--
                 }
             }
-            if(entry == null) {
+            if(holder == null) {
                 return
             }
 
-            if(entry.isIn(CobblemonItemTags.POWER_ANKLET)) {
+            if(holder.`is`(CobblemonItemTags.POWER_ANKLET)) {
                 passStat(Stats.SPEED)
-            } else if(entry.isIn(CobblemonItemTags.POWER_BAND)) {
+            } else if(holder.`is`(CobblemonItemTags.POWER_BAND)) {
                 passStat(Stats.SPECIAL_DEFENCE)
-            } else if(entry.isIn(CobblemonItemTags.POWER_BELT)) {
+            } else if(holder.`is`(CobblemonItemTags.POWER_BELT)) {
                 passStat(Stats.DEFENCE)
-            } else if(entry.isIn(CobblemonItemTags.POWER_BRACER)) {
+            } else if(holder.`is`(CobblemonItemTags.POWER_BRACER)) {
                 passStat(Stats.ATTACK)
-            } else if(entry.isIn(CobblemonItemTags.POWER_LENS)) {
+            } else if(holder.`is`(CobblemonItemTags.POWER_LENS)) {
                 passStat(Stats.SPECIAL_ATTACK)
-            } else if(entry.isIn(CobblemonItemTags.POWER_WEIGHT)) {
+            } else if(holder.`is`(CobblemonItemTags.POWER_WEIGHT)) {
                 passStat(Stats.HP)
             }
         }
@@ -296,11 +299,11 @@ interface BreedingLogic {
          */
         val anyDitto = listOf(mother, father).any { it.form.eggGroups.contains(EggGroup.DITTO) }
 
-        val motherBallItem = mother.caughtBall.item().let { Registries.ITEM.getEntry(it) }
-        val fatherBallItem = father.caughtBall.item().let { Registries.ITEM.getEntry(it) }
-        println(motherBallItem.isIn(CobblemonItemTags.DEFAULTING_POKE_BALLS))
-        val motherBall = if (motherBallItem.isIn(CobblemonItemTags.DEFAULTING_POKE_BALLS)) PokeBalls.POKE_BALL else mother.caughtBall
-        val fatherBall = if (fatherBallItem.isIn(CobblemonItemTags.DEFAULTING_POKE_BALLS)) PokeBalls.POKE_BALL else father.caughtBall
+        val motherBallItem = mother.caughtBall.item().let { BuiltInRegistries.ITEM.wrapAsHolder(it) }
+        val fatherBallItem = father.caughtBall.item().let { BuiltInRegistries.ITEM.wrapAsHolder(it) }
+        println(motherBallItem.`is`(CobblemonItemTags.DEFAULTING_POKE_BALLS))
+        val motherBall = if (motherBallItem.`is`(CobblemonItemTags.DEFAULTING_POKE_BALLS)) PokeBalls.POKE_BALL else mother.caughtBall
+        val fatherBall = if (fatherBallItem.`is`(CobblemonItemTags.DEFAULTING_POKE_BALLS)) PokeBalls.POKE_BALL else father.caughtBall
 
         val ball: PokeBall = if(anyDitto) {
             if (nonDittoPreferMother(mother, father) == mother) motherBall else fatherBall
