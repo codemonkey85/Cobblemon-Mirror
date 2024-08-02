@@ -45,6 +45,7 @@
 - Link Cable recipe has been redesigned
 - Updated potion sprites
 - Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs
+- Updated UI sounds for clicking and evolving Pokémon
 - Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users. 
 
 ### Pokémon Added
