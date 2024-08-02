@@ -50,7 +50,7 @@ open class PCBox(val pc: PCStore) : Iterable<Pokemon> {
                 val previousCoordinates = pokemon.storeCoordinates.get()
                 val position = previousCoordinates?.position
                 pokemon.storeCoordinates.set(StoreCoordinates(pc, PCPosition(boxNumber, index)))
-                if (previousCoordinates?.store != this || (position as PCPosition).box != boxNumber) {
+                if (previousCoordinates?.store !is PCStore || previousCoordinates.store.uuid != pc.uuid || (position as PCPosition).box != boxNumber) {
                     trackPokemon(pokemon)
                 }
             }
@@ -92,7 +92,7 @@ open class PCBox(val pc: PCStore) : Iterable<Pokemon> {
             .pipe(
                 stopAfter {
                     val coordinates = it.storeCoordinates.get() ?: return@stopAfter true
-                    return@stopAfter coordinates.store != this || (coordinates.position as PCPosition).box != boxNumber
+                    return@stopAfter coordinates.store !is PCStore || coordinates.store.uuid != pc.uuid || (coordinates.position as PCPosition).box != boxNumber
                 }
             )
             .subscribe { boxChangeEmitter.emit(Unit) }

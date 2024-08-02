@@ -12,11 +12,19 @@
 - Fixed Chimchar and Monferno T posing whenever they sleep.
 - Fixed the Magby line not having any placeholder walk animations.
 - Fixed Duskull and Dusclops using skylight levels for their nether spawn data. There is no sun in the Nether!
+- Fixed Hisuian Zoroark using base Zoroark stats. 
+- Fixed Bellossom clipping into the player head when shoulder mounted.
+- Fixed Shroomish's look range to prevent it from looking higher than it should. 
 - Fixed Crumbling Arch not blending in with the world.
 - Fixed Energy Root applying being usable on a fainted Pokemon.
 - Fixed Pokémon entity not spawning when starting a battle while recalling said Pokémon
 - Fixed species comparison not using namespace for both sides in PokemonProperties.isSubsetOf.
 - Fixed PokemonProperties#asString prefixing nicknames with a '$'
+- Fixed PC not saving when Pokemon was changed outside.
+- Fixed shearble Pokemon not dropping correct wool colors.
+- Fixed pasture spawning Pokemon inside solid blocks when closest spawning position is blocked off.
+- Fixed Tumbling Down advancement not being granted by tumblestone variants.
+- Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server
 
 ### Additions
 - Added extra visuals to early berry growth stages
@@ -32,15 +40,36 @@
 - Adjusted some berry balance values like yield and growth times
 - Adjusted volumes of most block sounds
 - Changes to mulch buffs/durations
-- Dreepy is now shoulder mountable
+- Weedle, Caterpie, Spearow, Smoochum, Mew, Murkrow, Larvitar, Taillow, Plusle, Minun, Beldum, Starly, Buneary, Combee, Pachirisu, Pidove, Petilil, Hisui Bias Petilil, Zorua, Hisuian Zorua, Elgyem, Fletchling, Skrelp, Klefki, Fomantis, Morelull, Dreepy, Shroodle, Tatsugiri, Glimmet, and Roaming Gimmighoul are now shoulder mountable
+- Chikorita's ability to look around removed due to the awkwardness of it.
 - Link Cable recipe has been redesigned
 - Updated potion sprites
 - Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs
+- Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users. 
+
+### Pokémon Added
+#### Gen 2
+- Ledyba
+- Ledian
+- Sunkern
+- Sunflora
+- Wobbuffet
+- Girafarig
+
+#### Gen 3
+- Wynaut
+
+#### Gen 9
+- Farigiraf
+
+### Changes
+- Kakuna, Beedrill, Snorlax, Munchlax, and Lurantis received model updates
 
 ### Developer
 
 ### Data Pack & Resource Pack Creators
 - Added support for "shedders" similar to Shedinja's evolution logic.
+- Fixed the placeholder WingFlapIdle animation so the wings are not rotating opposite to each other.
 
 ## [1.5.2 (May 27th, 2024)](#1-5-2)
 ### Fixes
