@@ -86,7 +86,7 @@ class NestBlock(val variant: NestVariant, properties: Properties) : BaseEntityBl
     }
 
     override fun getFluidState(state: BlockState): FluidState {
-        return if (state.getValue(PCBlock.WATERLOGGED)) {
+        return if (state.getValue(BlockStateProperties.WATERLOGGED)) {
             Fluids.WATER.getSource(false)
         } else super.getFluidState(state)
     }
