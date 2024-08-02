@@ -24,6 +24,7 @@
 - Fixed pasture spawning Pokemon inside solid blocks when closest spawning position is blocked off.
 - Fixed Tumbling Down advancement not being granted by tumblestone variants.
 - Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server
+- Fixed empty JsonPlayerData files resulting in players being unable to join server/world
 
 ### Additions
 - Added extra visuals to early berry growth stages
