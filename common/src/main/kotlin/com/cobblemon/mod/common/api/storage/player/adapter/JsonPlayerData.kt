@@ -19,8 +19,8 @@ import java.io.PrintWriter
 import java.nio.file.Path
 import java.util.UUID
 import net.minecraft.server.MinecraftServer
-import net.minecraft.util.Identifier
-import net.minecraft.util.WorldSavePath
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.level.storage.LevelResource
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.memberProperties
 
@@ -31,7 +31,7 @@ class JsonPlayerData: PlayerDataStoreAdapter {
             .setPrettyPrinting()
             .disableHtmlEscaping()
             .registerTypeAdapter(PlayerDataExtension::class.java, PlayerDataExtensionAdapter)
-            .registerTypeAdapter(Identifier::class.java, IdentifierAdapter)
+            .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
             .create()
     }
 
@@ -39,7 +39,7 @@ class JsonPlayerData: PlayerDataStoreAdapter {
     var useNestedStructure = true
 
     fun setup(server: MinecraftServer) {
-        savePath = server.getSavePath(WorldSavePath.PLAYERDATA).parent
+        savePath = server.getWorldPath(LevelResource.PLAYER_DATA_DIR).parent
     }
 
     fun getSubFile(uuid: UUID): String {

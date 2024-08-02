@@ -10,9 +10,8 @@ package com.cobblemon.mod.common.api.tags
 
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.registry.Registries
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.registry.tag.TagKey
+import net.minecraft.core.registries.Registries
+import net.minecraft.tags.TagKey
 
 /**
  * A collection of the Cobblemon [TagKey]s related to the [Registries.ITEM].
@@ -136,6 +135,8 @@ object CobblemonItemTags {
     val CONSUMED_IN_WILD_BATTLE = create("held/consumed_in_wild_battle")
     @JvmField
     val DEFAULTING_POKE_BALLS = create("defaulting_poke_balls")
+    @JvmField
+    val TERRAIN_SEEDS = create("held/terrain_seeds")
 
     /**
      * Tag that flags items as being able to "create" [CobblemonItems.LEFTOVERS].
@@ -146,6 +147,12 @@ object CobblemonItemTags {
     @JvmField
     val POTTERY_SHERDS = create("decorated_pot_sherds")
 
-    private fun create(path: String) = TagKey.of(RegistryKeys.ITEM, cobblemonResource(path))
+    @JvmField
+    val ABILITY_CHANGERS = create("ability_changers")
+
+    @JvmField
+    val IS_FRIENDSHIP_BOOSTER = create("is_friendship_booster")
+
+    private fun create(path: String) = TagKey.create(Registries.ITEM, cobblemonResource(path))
 
 }

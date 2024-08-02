@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:helix_fossil"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.obtain_fossil"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.obtain_fossil.description"
+    }
+  },
+  "parent": "cobblemon:craft_poke_ball",
+  "criteria": {
+    "check_inv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#cobblemon:fossils"
+          }
+        ]
+      }
+    }
+  }
+}

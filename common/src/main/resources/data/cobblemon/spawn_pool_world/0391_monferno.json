@@ -16,7 +16,8 @@
             "level": "14-41",
             "weight": 0.9,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_mountain"
                 ],
@@ -37,7 +38,7 @@
             "weight": 0.9,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_forest"
+                    "#cobblemon:nether/is_forest"
                 ]
             }
         }

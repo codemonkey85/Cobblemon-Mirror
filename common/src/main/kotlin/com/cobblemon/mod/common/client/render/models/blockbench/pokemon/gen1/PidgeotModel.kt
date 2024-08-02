@@ -9,76 +9,102 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.WingFlapIdleAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
-import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
-import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class PidgeotModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BiWingedFrame {
+class PidgeotModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("pidgeot")
-    override val leftWing = getPart("wing_open_left")
-    override val rightWing = getPart("wing_open_right")
     override val leftLeg = getPart("leg_left")
     override val rightLeg = getPart("leg_right")
     override val head = getPart("neck")
-    private val tail = getPart("tail")
 
-    override val portraitScale = 2.2F
-    override val portraitTranslation = Vec3d(-0.6, 0.15, 0.0)
-    override val profileScale = 0.9F
-    override val profileTranslation = Vec3d(0.0, 0.4, 0.0)
+    private val wingOpenRight = getPart("wing_open_right")
+    private val wingOpenLeft = getPart("wing_open_left")
+    private val wingClosedRight = getPart("wing_closed_right")
+    private val wingClosedLeft = getPart("wing_closed_left")
 
-    lateinit var sleep: PokemonPose
-    lateinit var stand: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var hover: PokemonPose
-    lateinit var fly: PokemonPose
+    override var portraitScale = 2.2F
+    override var portraitTranslation = Vec3(-0.6, 0.15, 0.0)
+    override var profileScale = 0.9F
+    override var profileTranslation = Vec3(0.0, 0.4, 0.0)
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("pidgeot", "cry") }
+//    lateinit var sleep: CobblemonPose
+    lateinit var stand: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var hover: CobblemonPose
+    lateinit var fly: CobblemonPose
+
+    override val cryAnimation = CryProvider { bedrockStateful("pidgeot", "cry") }
 
     override fun registerPoses() {
-        sleep = registerPose(
-            poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("pidgeot", "sleep"))
-        )
-
         val blink = quirk { bedrockStateful("pidgeot", "blink")}
+        val flyQuirk1 = quirk { bedrockStateful("pidgeot", "air_fly_quirk") }
+        val flyQuirk2 = quirk { bedrockStateful("pidgeot", "air_fly_quirk2") }
+
+//        sleep = registerPose(
+//            poseName = "sleeping",
+//            transformedParts = arrayOf(
+//                wingClosedLeft.createTransformation().withVisibility(visibility = true),
+//                wingClosedRight.createTransformation().withVisibility(visibility = true),
+//                wingOpenLeft.createTransformation().withVisibility(visibility = false),
+//                wingOpenRight.createTransformation().withVisibility(visibility = false)
+//            ),
+//            poseType = PoseType.SLEEP,
+//            idleAnimations = arrayOf(bedrock("pidgeot", "sleep"))
+//        )
+
         stand = registerPose(
             poseName = "stand",
+            transformedParts = arrayOf(
+                wingClosedLeft.createTransformation().withVisibility(visibility = true),
+                wingClosedRight.createTransformation().withVisibility(visibility = true),
+                wingOpenLeft.createTransformation().withVisibility(visibility = false),
+                wingOpenRight.createTransformation().withVisibility(visibility = false)
+            ),
             poseTypes = PoseType.STATIONARY_POSES - PoseType.HOVER - PoseType.FLOAT + UI_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
-                bedrock("pidgeot", "ground_idle")
+                bedrock("pidgeot", "ground_idle_PLACEHOLDER"),
             )
         )
 
         walk = registerPose(
             poseName = "walk",
+            transformedParts = arrayOf(
+                wingClosedLeft.createTransformation().withVisibility(visibility = true),
+                wingClosedRight.createTransformation().withVisibility(visibility = true),
+                wingOpenLeft.createTransformation().withVisibility(visibility = false),
+                wingOpenRight.createTransformation().withVisibility(visibility = false)
+            ),
             poseTypes = PoseType.MOVING_POSES - PoseType.FLY - PoseType.SWIM,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
-                bedrock("pidgeot", "ground_idle"),
+                bedrock("pidgeot", "ground_idle_PLACEHOLDER"),
                 BipedWalkAnimation(this)
             )
         )
 
         hover = registerPose(
             poseName = "floating",
+            transformedParts = arrayOf(
+                wingClosedLeft.createTransformation().withVisibility(visibility = false),
+                wingClosedRight.createTransformation().withVisibility(visibility = false),
+                wingOpenLeft.createTransformation().withVisibility(visibility = true),
+                wingOpenRight.createTransformation().withVisibility(visibility = true)
+            ),
             poseTypes = setOf(PoseType.FLOAT, PoseType.HOVER),
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("pidgeot", "air_idle")
             )
@@ -86,16 +112,17 @@ class PidgeotModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
 
         fly = registerPose(
             poseName = "flying",
+            transformedParts = arrayOf(
+                wingClosedLeft.createTransformation().withVisibility(visibility = false),
+                wingClosedRight.createTransformation().withVisibility(visibility = false),
+                wingOpenLeft.createTransformation().withVisibility(visibility = true),
+                wingOpenRight.createTransformation().withVisibility(visibility = true)
+            ),
             poseTypes = setOf(PoseType.FLY, PoseType.SWIM),
-            quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            quirks = arrayOf(blink, flyQuirk1, flyQuirk2),
+            animations = arrayOf(
                 singleBoneLook(),
-                bedrock("pidgeot", "air_fly"),
-                WingFlapIdleAnimation(this,
-                    flapFunction = sineFunction(verticalShift = -14F.toRadians(), period = 0.9F, amplitude = 0.9F),
-                    timeVariable = { state, _, _ -> state?.animationSeconds ?: 0F },
-                    axis = ModelPartTransformation.Z_AXIS
-                )
+                bedrock("pidgeot", "air_fly")
             )
         )
     }

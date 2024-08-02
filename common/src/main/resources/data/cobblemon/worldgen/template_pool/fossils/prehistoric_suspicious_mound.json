@@ -1,0 +1,33 @@
+{
+    "name": "cobblemon:prehistoric_suspicious_mound",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/suspicious_mound1",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_suspicious_mound",
+                "projection": "terrain_matching"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/suspicious_mound2",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_suspicious_mound",
+                "projection": "terrain_matching"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/suspicious_mound3",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_suspicious_mound",
+                "projection": "terrain_matching"
+            }
+        }
+    ]
+}

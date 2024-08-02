@@ -29,18 +29,31 @@
     "amount": 1,
     "entries": [
       {
-        "item": "minecraft:egg",
-        "percentage": 33.0
+        "item": "cobblemon:lucky_egg",
+        "percentage": 10.0
       },
       {
         "item": "cobblemon:oval_stone",
         "percentage": 10.0
       },
       {
-        "item": "cobblemon:lucky_egg",
-        "percentage": 10.0
+        "item": "minecraft:egg",
+        "percentage": 50.0
       }
     ]
+  },
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.25
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
   },
   "moves": [
     "1:charm",

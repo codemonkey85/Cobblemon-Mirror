@@ -11,14 +11,14 @@ package com.cobblemon.mod.common.api.pokemon.stats
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import java.util.EnumSet
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 
 /**
  * An enumeration of the default implemented [Stat]s.
  * Contains all the traditional stats in official Pokémon games.
  */
-enum class Stats(override val identifier: Identifier, override val displayName: Text, override val type: Stat.Type, override val showdownId: String) : Stat {
+enum class Stats(override val identifier: ResourceLocation, override val displayName: Component, override val type: Stat.Type, override val showdownId: String) : Stat {
 
     HP(cobblemonResource("hp"), lang("stat.hp.name"), Stat.Type.PERMANENT, "hp"),
     ATTACK(cobblemonResource("attack"), lang("stat.attack.name"), Stat.Type.PERMANENT, "atk"),
@@ -48,6 +48,26 @@ enum class Stats(override val identifier: Identifier, override val displayName: 
          * Using [StatProvider.ofType] with type [Stat.Type.BATTLE_ONLY] is recommended instead for maximum addon compatibility.
          */
         val BATTLE_ONLY: Set<Stat> = EnumSet.of(EVASION, ACCURACY)
+
+        /** Gets the [Stat] from the respective Showdown id. */
+        fun getStat(statKey: String) = when(statKey) {
+            "hp" -> HP
+            "atk", "Attack" -> ATTACK // Hyper Cutter states the full stat name "Attack"
+            "def", "Defense" -> DEFENCE // Big Pecks states the full stat name "Defense"
+            "spa" -> SPECIAL_ATTACK
+            "spd" -> SPECIAL_DEFENCE
+            "spe" -> SPEED
+            "evasion" -> EVASION
+            else -> ACCURACY
+        }
+
+        /** Gets the severity lang key from the respective boost/unboost stage. */
+        fun getSeverity(stages: Int) = when(stages) {
+            0 -> "cap.single"
+            1 -> "slight"
+            2 -> "sharp"
+            else -> "severe"
+        }
 
     }
 

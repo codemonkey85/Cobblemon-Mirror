@@ -8,8 +8,10 @@
 
 package com.cobblemon.mod.common.api.abilities
 
+import com.cobblemon.mod.common.util.codec.CodecUtils
 import com.google.gson.JsonObject
-import net.minecraft.nbt.NbtCompound
+import com.mojang.serialization.Codec
+import net.minecraft.nbt.CompoundTag
 
 /**
  * This represents the base of an Ability.
@@ -28,13 +30,12 @@ class AbilityTemplate(
      */
     fun create(forced: Boolean = false) = builder(this, forced)
 
-
     /**
      * Returns the Ability and loads the given NBT Tag into it.
      *
      * Ability extensions need to write and read their needed data from here.
      */
-    fun create(nbt: NbtCompound) = create().loadFromNBT(nbt)
+    fun create(nbt: CompoundTag) = create().loadFromNBT(nbt)
 
     /**
      * Returns the Ability and loads the given JSON object into it.
@@ -42,4 +43,15 @@ class AbilityTemplate(
      * Ability extensions need to write and read their needed data from here.
      */
     fun create(json: JsonObject) = create().loadFromJSON(json)
+
+    companion object {
+
+        @JvmStatic
+        val CODEC: Codec<AbilityTemplate> = CodecUtils.createByStringCodec(
+            Abilities::get,
+            AbilityTemplate::name
+        ) { id -> "No ability for ID $id" }
+
+    }
+
 }

@@ -16,7 +16,8 @@
             "level": "35-53",
             "weight": 1.0,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ]
@@ -25,9 +26,6 @@
         {
             "id": "glimmora-2",
             "pokemon": "glimmora",
-            "presets": [
-                "natural"
-            ],
             "type": "pokemon",
             "context": "grounded",
             "bucket": "common",
@@ -35,10 +33,22 @@
             "weight": 0.2,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_quartz"
-                ],
-                "neededBaseBlocks": [
-                    "minecraft:quartz_block"
+                    "#cobblemon:nether/is_quartz"
+                ]
+            }
+        },
+        {
+            "id": "glimmora-3",
+            "pokemon": "glimmora",
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "35-53",
+            "weight": 1.0,
+            "condition": {
+                "biomes": [
+                    "the_bumblezone:crystal_canyon",
+                    "biomesoplenty:crystalline_chasm"
                 ]
             }
         }

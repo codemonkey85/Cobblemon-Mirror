@@ -33,10 +33,14 @@
     }
   },
   "drops": {
-    "amount": 1,
+    "amount": 2,
     "entries": [
       {
         "item": "cobblemon:black_sludge",
+        "percentage": 2.5
+      },
+      {
+        "item": "cobblemon:smoke_ball",
         "percentage": 2.5
       }
     ]
@@ -207,7 +211,7 @@
     {
       "id": "koffing_weezing",
       "variant": "level_up",
-      "result": "weezing form=galar",
+      "result": "weezing galarian",
       "consumeHeldItem": false,
       "learnableMoves": [
         "doublehit"

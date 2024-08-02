@@ -8,12 +8,22 @@
 				"texture": "textures/particles/hit"
 			}
 		},
+		"events": {
+			"flamethrower_impact": {
+				"sound_effect": {
+					"event_name": "flamethrower.impact"
+				}
+			}
+		},
 		"components": {
 			"minecraft:emitter_rate_instant": {
 				"num_particles": 1
 			},
 			"minecraft:emitter_lifetime_once": {
 				"active_time": 1
+			},
+			"minecraft:emitter_lifetime_events": {
+				"creation_event": "flamethrower_impact"
 			},
 			"minecraft:emitter_shape_point": {},
 			"minecraft:particle_lifetime_expression": {

@@ -1,29 +1,32 @@
 {
   "required": true,
   "package": "com.cobblemon.mod.common.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
     "BuiltinModelItemRendererMixin",
     "EntityRenderDispatcherMixin",
     "GameRendererMixin",
+    "ModelLoaderMixin",
     "ModelPartMixin",
-    "ParticleManagerMixin",
     "MusicTrackerMixin",
+    "ParticleManagerMixin",
     "PartyScrollMixin",
     "SoundManagerMixin",
     "SoundSystemMixin",
     "accessor.KeyBindingAccessor",
     "invoker.ClientPlayNetworkHandlerInvoker",
-    "pokeball.ItemRendererMixin",
-    "ModelLoaderMixin"
+    "pokeball.ItemRendererMixin"
   ],
   "mixins": [
+    "CrashReportMixin",
     "DecoratedPotPatternsMixin",
     "EntityVillagerMixin",
     "ExplosionMixin",
     "LivingEntityMixin",
     "MinecraftDedicatedServerMixin",
+    "PiglinBarterMixin",
+    "PiglinEntityMixin",
     "PlayerMixin",
     "PointedDripstoneBlockMixin",
     "ShearsDispenserBehaviorMixin",
@@ -34,6 +37,7 @@
     "accessor.BoatEntityAccessor",
     "accessor.StatusEffectInstanceAccessor",
     "entity.TameableEntityMixin",
+    "invoker.AdornRegisterInvoker",
     "invoker.BlocksInvoker",
     "invoker.BooleanRuleInvoker",
     "invoker.DoorBlockInvoker",
@@ -41,12 +45,6 @@
     "invoker.PressurePlateBlockInvoker",
     "invoker.StairsBlockInvoker",
     "invoker.TrapdoorBlockInvoker",
-    "pokeball.ThrownEntityMixin",
-    "StructurePoolGeneratorMixin",
-    "StructurePoolAccessor",
-    "StructureProcessorListMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+    "pokeball.ThrownEntityMixin"
+  ]
 }

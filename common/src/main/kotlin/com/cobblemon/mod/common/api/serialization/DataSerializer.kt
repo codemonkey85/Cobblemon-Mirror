@@ -9,7 +9,7 @@
 package com.cobblemon.mod.common.api.serialization
 
 import com.google.gson.JsonElement
-import net.minecraft.nbt.NbtElement
+import net.minecraft.nbt.Tag
 
 /**
  * A serializer for the NBT and Json format.
@@ -17,7 +17,7 @@ import net.minecraft.nbt.NbtElement
  * @author Licious
  * @since June 27th, 2022
  */
-interface DataSerializer<N : NbtElement, J : JsonElement> {
+interface DataSerializer<N : Tag, J : JsonElement> {
 
     /**
      * Loads the given [N] into the object representation.

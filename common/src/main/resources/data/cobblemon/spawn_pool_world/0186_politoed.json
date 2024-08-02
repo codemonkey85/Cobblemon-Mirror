@@ -16,7 +16,8 @@
             "level": "34-50",
             "weight": 0.05,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "isRaining": true
             }
         },
@@ -51,7 +52,8 @@
             "level": "34-50",
             "weight": 0.01,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_lush"
                 ]
@@ -69,7 +71,8 @@
             "level": "34-50",
             "weight": 0.03,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_lush"
                 ]

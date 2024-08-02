@@ -2,8 +2,10 @@
   "maxScale": 1.0,
   "yTranslation": 0.2,
   "yGrowthPoint": 0.09375,
-
-  "animations": [
-    "bedrock(embryo_stage2, gooping)"
-  ]
+  "poses": {
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('embryo_stage2', 'gooping')"]
+    }
+  }
 }

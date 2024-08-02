@@ -16,7 +16,11 @@
             "level": "15-41",
             "weight": 1.0,
             "condition": {
-                "canSeeSky": true
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_freshwater"
+                ]
             }
         },
         {
@@ -24,15 +28,19 @@
             "pokemon": "bibarel",
             "presets": [
                 "freshwater",
-                "underwater"
+                "water_surface"
             ],
             "type": "pokemon",
-            "context": "submerged",
-            "bucket": "common",
+            "context": "surface",
+            "bucket": "uncommon",
             "level": "15-41",
             "weight": 1.0,
             "condition": {
-                "canSeeSky": true
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_freshwater"
+                ]
             }
         }
     ]

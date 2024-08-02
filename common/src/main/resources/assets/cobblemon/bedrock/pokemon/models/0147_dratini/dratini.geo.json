@@ -6,7 +6,7 @@
 				"identifier": "geometry.dratini",
 				"texture_width": 64,
 				"texture_height": 64,
-				"visible_bounds_width": 2,
+				"visible_bounds_width": 4,
 				"visible_bounds_height": 6,
 				"visible_bounds_offset": [0, 0, 0]
 			},
@@ -31,7 +31,12 @@
 				{
 					"name": "head",
 					"parent": "neck",
-					"pivot": [0, 17.5, 0],
+					"pivot": [0, 15.5, 0]
+				},
+				{
+					"name": "head2",
+					"parent": "head",
+					"pivot": [0, 18, 2.5],
 					"cubes": [
 						{"origin": [-4, 14, -4.5], "size": [8, 8, 8], "uv": [0, 0]},
 						{"origin": [-0.5, 20.25, -4.75], "size": [1, 1, 1], "pivot": [0, 20.75, -4.25], "rotation": [-5, 0, 0], "uv": [24, 0]}
@@ -39,7 +44,7 @@
 				},
 				{
 					"name": "eyes",
-					"parent": "head",
+					"parent": "head2",
 					"pivot": [0, 30.5, -4]
 				},
 				{
@@ -92,7 +97,7 @@
 				},
 				{
 					"name": "muzzle",
-					"parent": "head",
+					"parent": "head2",
 					"pivot": [0, 17, -4.5],
 					"cubes": [
 						{"origin": [-3, 14, -6.5], "size": [6, 3, 2], "uv": [24, 2]}
@@ -100,14 +105,13 @@
 				},
 				{
 					"name": "wings",
-					"parent": "head",
+					"parent": "head2",
 					"pivot": [4, 18.25, -1]
 				},
 				{
 					"name": "wing_left",
 					"parent": "wings",
 					"pivot": [4, 18.25, -1],
-					"rotation": [0, -65, 0],
 					"cubes": [
 						{"origin": [4, 14.25, -1], "size": [5, 10, 0], "uv": [40, 0]}
 					]
@@ -116,7 +120,6 @@
 					"name": "wing_right",
 					"parent": "wings",
 					"pivot": [-4, 18.25, -1],
-					"rotation": [0, 65, 0],
 					"cubes": [
 						{"origin": [-9, 14.25, -1], "size": [5, 10, 0], "uv": [50, 0], "mirror": true}
 					]

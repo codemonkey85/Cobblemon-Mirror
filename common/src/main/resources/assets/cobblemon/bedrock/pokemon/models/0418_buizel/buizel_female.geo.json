@@ -6,7 +6,7 @@
 				"identifier": "geometry.buizel_female",
 				"texture_width": 64,
 				"texture_height": 64,
-				"visible_bounds_width": 5,
+				"visible_bounds_width": 3,
 				"visible_bounds_height": 3.5,
 				"visible_bounds_offset": [0, 1.25, 0]
 			},
@@ -233,8 +233,13 @@
 					]
 				},
 				{
-					"name": "tail",
+					"name": "tail_rotation",
 					"parent": "torso",
+					"pivot": [0, 3.5, 0]
+				},
+				{
+					"name": "tail",
+					"parent": "tail_rotation",
 					"pivot": [0, 3.5, 3.5],
 					"cubes": [
 						{"origin": [-1, 2.5, 2.5], "size": [2, 2, 4], "inflate": 0.03, "uv": [22, 32]}

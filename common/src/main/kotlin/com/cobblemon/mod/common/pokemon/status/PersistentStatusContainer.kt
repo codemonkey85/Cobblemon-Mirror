@@ -11,8 +11,10 @@ package com.cobblemon.mod.common.pokemon.status
 import com.cobblemon.mod.common.api.pokemon.status.Statuses
 import com.cobblemon.mod.common.util.DataKeys
 import com.google.gson.JsonObject
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.util.Identifier
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Container that stores all status details
@@ -31,12 +33,14 @@ class PersistentStatusContainer(
         this.secondsLeft--
     }
 
-    fun saveToNBT(nbt: NbtCompound): NbtCompound {
+    @Deprecated("Use the Codec instead", ReplaceWith("PersistentStatusContainer.CODEC"))
+    fun saveToNBT(nbt: CompoundTag): CompoundTag {
         nbt.putString(DataKeys.POKEMON_STATUS_NAME, status.name.toString())
         nbt.putInt(DataKeys.POKEMON_STATUS_TIMER, secondsLeft)
         return nbt
     }
 
+    @Deprecated("Use the Codec instead", ReplaceWith("PersistentStatusContainer.CODEC"))
     fun saveToJSON(json: JsonObject): JsonObject {
         json.addProperty(DataKeys.POKEMON_STATUS_NAME, status.name.toString())
         json.addProperty(DataKeys.POKEMON_STATUS_TIMER, secondsLeft)
@@ -44,7 +48,20 @@ class PersistentStatusContainer(
     }
 
     companion object {
-        fun loadFromNBT(nbt: NbtCompound): PersistentStatusContainer? {
+
+        /**
+         * A [Codec] for [PersistentStatusContainer].
+         */
+        @JvmStatic
+        val CODEC: Codec<PersistentStatusContainer> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                PersistentStatus.CODEC.fieldOf(DataKeys.POKEMON_STATUS_NAME).forGetter(PersistentStatusContainer::status),
+                Codec.INT.fieldOf(DataKeys.POKEMON_STATUS_TIMER).forGetter(PersistentStatusContainer::secondsLeft)
+            ).apply(instance, ::PersistentStatusContainer)
+        }
+
+        @Deprecated("Use the Codec instead", ReplaceWith("PersistentStatusContainer.CODEC"))
+        fun loadFromNBT(nbt: CompoundTag): PersistentStatusContainer? {
             val statusId = nbt.getString(DataKeys.POKEMON_STATUS_NAME)
             val activeSeconds = nbt.getInt(DataKeys.POKEMON_STATUS_TIMER)
 
@@ -54,12 +71,13 @@ class PersistentStatusContainer(
             }
 
             // Return null if status doesn't exist
-            val status = Statuses.getStatus(Identifier(statusId)) ?: return null
+            val status = Statuses.getStatus(ResourceLocation.parse(statusId)) ?: return null
             // Return null if not a persistent status
             if (status !is PersistentStatus) return null
             return PersistentStatusContainer(status, activeSeconds)
         }
 
+        @Deprecated("Use the Codec instead", ReplaceWith("PersistentStatusContainer.CODEC"))
         fun loadFromJSON(json: JsonObject): PersistentStatusContainer? {
             val statusId = json.get(DataKeys.POKEMON_STATUS_NAME).asString
             val activeSeconds = json.get(DataKeys.POKEMON_STATUS_TIMER).asInt
@@ -70,7 +88,7 @@ class PersistentStatusContainer(
             }
 
             // Return null if status doesn't exist
-            val status = Statuses.getStatus(Identifier(statusId)) ?: return null
+            val status = Statuses.getStatus(ResourceLocation.parse(statusId)) ?: return null
             // Return null if not a persistent status
             if (status !is PersistentStatus) return null
             return PersistentStatusContainer(status, activeSeconds)

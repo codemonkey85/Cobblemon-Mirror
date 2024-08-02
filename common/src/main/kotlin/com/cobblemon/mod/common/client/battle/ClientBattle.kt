@@ -33,7 +33,7 @@ class ClientBattle(
     fun getFirstUnansweredRequest() = pendingActionRequests.firstOrNull { it.response == null }
     fun checkForFinishedChoosing() {
         if (getFirstUnansweredRequest() == null) {
-            CobblemonNetwork.sendPacketToServer(
+            CobblemonNetwork.sendToServer(
                 BattleSelectActionsPacket(
                     battleId = battleId,
                     pendingActionRequests.map { it.response!! }

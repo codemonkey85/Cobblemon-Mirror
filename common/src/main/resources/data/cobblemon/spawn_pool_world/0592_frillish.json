@@ -1,0 +1,96 @@
+{
+    "enabled": true,
+    "neededInstalledMods": [],
+    "neededUninstalledMods": [],
+    "spawns": [
+        {
+            "id": "frillish-1",
+            "pokemon": "frillish",
+            "presets": [
+                "underwater"
+            ],
+            "type": "pokemon",
+            "context": "submerged",
+            "bucket": "common",
+            "level": "9-34",
+            "weight": 5.4,
+            "weightMultiplier": {
+                "multiplier": 5.0,
+                "condition": {
+                    "structures": [
+                        "#minecraft:shipwreck"
+                    ]
+                }
+            },
+            "condition": {
+                "biomes": [
+                    "#cobblemon:is_ocean"
+                ]
+            }
+        },
+        {
+            "id": "frillish-2",
+            "pokemon": "frillish",
+            "presets": [
+                "water_surface"
+            ],
+            "type": "pokemon",
+            "context": "surface",
+            "bucket": "uncommon",
+            "level": "9-34",
+            "weight": 5.4,
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_ocean"
+                ],
+                "timeRange": "day"
+            }
+        },
+        {
+            "id": "frillish-3",
+            "pokemon": "frillish",
+            "presets": [
+                "water_surface"
+            ],
+            "type": "pokemon",
+            "context": "surface",
+            "bucket": "uncommon",
+            "level": "9-34",
+            "weight": 5.4,
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_ocean"
+                ],
+                "timeRange": "night"
+            },
+            "anticondition": {
+                "moonPhase": "1"
+            }
+        },
+        {
+            "id": "frillish-4",
+            "pokemon": "frillish",
+            "presets": [
+                "water_surface"
+            ],
+            "type": "pokemon",
+            "context": "surface",
+            "bucket": "common",
+            "level": "9-34",
+            "weight": 5.4,
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_ocean"
+                ],
+                "timeRange": "night",
+                "moonPhase": "1"
+            }
+        }
+    ]
+}

@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readSizedInt
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Updates the current health of the Pokémon
@@ -28,6 +28,6 @@ class HealthUpdatePacket(pokemon: () -> Pokemon, value: Int) : IntUpdatePacket<H
     }
     companion object {
         val ID = cobblemonResource("health_update")
-        fun decode(buffer: PacketByteBuf) = HealthUpdatePacket(decodePokemon(buffer), buffer.readSizedInt(IntSize.U_SHORT))
+        fun decode(buffer: RegistryFriendlyByteBuf) = HealthUpdatePacket(decodePokemon(buffer), buffer.readSizedInt(IntSize.U_SHORT))
     }
 }

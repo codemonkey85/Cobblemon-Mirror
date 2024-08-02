@@ -1,0 +1,33 @@
+{
+    "name": "cobblemon:prehistoric_submerged_impact",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/submerged_impact1",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_submerged_impact",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/submerged_impact2",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_submerged_impact",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/submerged_impact3",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_submerged_impact",
+                "projection": "rigid"
+            }
+        }
+    ]
+}

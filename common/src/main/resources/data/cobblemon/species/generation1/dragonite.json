@@ -29,11 +29,15 @@
   "behaviour": {
     "moving": {
       "swim": {
+        "canWalkOnWater": true,
         "canSwimInWater": true,
         "canBreatheUnderwater": true
       },
       "fly": {
         "canFly": true
+      },
+      "walk": {
+        "walkSpeed": 0.2
       }
     }
   },

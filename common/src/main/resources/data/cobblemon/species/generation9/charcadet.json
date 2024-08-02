@@ -8,11 +8,11 @@
     "h:flamebody"
   ],
   "drops": {
-    "amount": 3,
+    "amount": 4,
     "entries": [
       {
         "item": "minecraft:charcoal",
-        "quantityRange": "0-1"
+        "quantityRange": "0-2"
       },
       {
         "item": "cobblemon:charcoal_stick",
@@ -45,8 +45,10 @@
       }
     }
   },
+  "shoulderMountable": true,
   "catchRate": 90,
   "maleRatio": 0.5,
+  "shoulderMountable": true,
   "baseExperienceYield": 51,
   "baseFriendship": 50,
   "evYield": {
@@ -89,7 +91,9 @@
     "tm:nightshade",
     "tm:overheat",
     "tm:protect",
+    "tm:rest",
     "tm:sleeptalk",
+    "tm:spite",
     "tm:substitute",
     "tm:sunnyday",
     "tm:takedown",

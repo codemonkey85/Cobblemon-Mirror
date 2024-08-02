@@ -17,8 +17,8 @@ import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import kotlin.random.Random
-import net.minecraft.block.BlockState
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 enum class BlockStateTransformerType {
     NONE,
@@ -54,8 +54,8 @@ class NoneBlockStateTransformer : BlockStateTransformer {
     override fun transform(blockState: BlockState) = blockState
 
     override fun <T> encode(ops: DynamicOps<T>): DataResult<T> = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) = throw NotImplementedError("Not supposed to use this for block state transformers")
-    override fun writeToBuffer(buffer: PacketByteBuf) = throw NotImplementedError("Not supposed to use this for block state transformers")
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) = throw NotImplementedError("Not supposed to use this for block state transformers")
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) = throw NotImplementedError("Not supposed to use this for block state transformers")
 }
 
 // We could totally add mulch to this
@@ -73,10 +73,10 @@ class BerryTransformBlockStateTransformer(val minAge: Int, val maxAge: Int, val 
 
     override val type = BlockStateTransformerType.NONE
     override fun transform(blockState: BlockState) = blockState
-        .with(BerryBlock.AGE, Random.Default.nextInt(minAge, maxAge + 1))
-        .with(BerryBlock.WAS_GENERATED, wild)
+        .setValue(BerryBlock.AGE, Random.Default.nextInt(minAge, maxAge + 1))
+        .setValue(BerryBlock.WAS_GENERATED, wild)
 
     override fun <T> encode(ops: DynamicOps<T>): DataResult<T> = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) = throw NotImplementedError("Not supposed to use this for block state transformers")
-    override fun writeToBuffer(buffer: PacketByteBuf) = throw NotImplementedError("Not supposed to use this for block state transformers")
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) = throw NotImplementedError("Not supposed to use this for block state transformers")
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) = throw NotImplementedError("Not supposed to use this for block state transformers")
 }

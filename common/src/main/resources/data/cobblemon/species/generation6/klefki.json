@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Klefki",
   "nationalPokedexNumber": 707,
   "primaryType": "steel",
@@ -14,6 +15,13 @@
     "special_attack": 80,
     "special_defence": 87,
     "speed": 75
+  },
+  "behaviour": {
+    "resting": {
+      "canSleep": true,
+      "depth": "normal",
+      "light": "0-4"
+    }
   },
   "catchRate": 75,
   "maleRatio": 0.5,
@@ -117,10 +125,10 @@
     "cobblemon.species.klefki.desc"
   ],
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.35,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 1.3,
+    "height": 1.9,
     "fixed": false
   },
   "baseFriendship": 50,

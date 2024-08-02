@@ -87,9 +87,6 @@ class CobblemonConfig {
     var maxNearbyBlocksVerticalRange = 2
 
     @NodeCategory(Category.Spawning)
-    var maxHorizontalSpace = 6
-
-    @NodeCategory(Category.Spawning)
     var maxVerticalSpace = 8
 
     @NodeCategory(Category.Spawning)
@@ -175,9 +172,6 @@ class CobblemonConfig {
     var baseApricornTreeGenerationChance = 0.1F
 
     @NodeCategory(Category.Pokemon)
-    var ninjaskCreatesShedinja = true
-
-    @NodeCategory(Category.Pokemon)
     var displayEntityLevelLabel = true
 
     @NodeCategory(Category.Spawning)
@@ -225,4 +219,7 @@ class CobblemonConfig {
 
     @NodeCategory(Category.Battles)
     var walkingInBattleAnimations = false
+
+    @NodeCategory(Category.Debug)
+    var enableDebugKeys = false
 }

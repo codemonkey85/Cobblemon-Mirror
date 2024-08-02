@@ -1,4 +1,4 @@
-﻿{
+{
   "implemented": true,
   "name": "Gardevoir",
   "nationalPokedexNumber": 282,
@@ -87,6 +87,19 @@
       "battleOnly": true
     }
   ],
+  "behaviour": {
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": true,
+      "depth": "normal",
+      "light": "0-4"
+    },
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.15
+      }
+    }
+  },
   "baseExperienceYield": 259,
   "experienceGroup": "slow",
   "eggCycles": 20,

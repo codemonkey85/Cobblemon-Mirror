@@ -35,6 +35,7 @@ import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEv
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionDisplayEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionTestedEvent
 import com.cobblemon.mod.common.api.events.pokemon.interaction.ExperienceCandyUseEvent
+import com.cobblemon.mod.common.api.events.pokemon.interaction.HeldItemUpdatedEvent
 import com.cobblemon.mod.common.api.events.pokemon.interaction.PokemonInteractionGUICreationEvent
 import com.cobblemon.mod.common.api.events.starter.StarterChosenEvent
 import com.cobblemon.mod.common.api.events.storage.ReleasePokemonEvent
@@ -45,13 +46,13 @@ import com.cobblemon.mod.common.api.reactive.Observable.Companion.filter
 import com.cobblemon.mod.common.api.reactive.Observable.Companion.map
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 @Suppress("unused")
 object CobblemonEvents {
 
     @JvmField
-    val DATA_SYNCHRONIZED = SimpleObservable<ServerPlayerEntity>()
+    val DATA_SYNCHRONIZED = SimpleObservable<ServerPlayer>()
     @JvmField
     val SHOULDER_MOUNT = CancelableObservable<ShoulderMountEvent>()
     @JvmField
@@ -68,6 +69,8 @@ object CobblemonEvents {
     val EVOLUTION_COMPLETE = EventObservable<EvolutionCompleteEvent>()
     @JvmField
     val POKEMON_NICKNAMED = CancelableObservable<PokemonNicknamedEvent>()
+    @JvmField
+    val HELD_ITEM_UPDATED = CancelableObservable<HeldItemUpdatedEvent>()
 
     @JvmField
     val THROWN_POKEBALL_HIT = CancelableObservable<ThrownPokeballHitEvent>()
@@ -77,6 +80,8 @@ object CobblemonEvents {
     val POKE_BALL_CAPTURE_CALCULATED = EventObservable<PokeBallCaptureCalculatedEvent>()
     @JvmField
     val POKEMON_CAPTURED = EventObservable<PokemonCapturedEvent>()
+    @JvmField
+    val FOSSIL_REVIVED = EventObservable<FossilRevivedEvent>()
 //    @JvmField
 //    val EGG_HATCH = EventObservable<HatchEggEvent>()
     @JvmField

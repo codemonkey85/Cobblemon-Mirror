@@ -17,7 +17,11 @@
             "level": "18-43",
             "weight": 5.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_freshwater"
+                ],
                 "timeRange": "night",
                 "isRaining": false
             }
@@ -31,11 +35,15 @@
             ],
             "type": "pokemon",
             "context": "surface",
-            "bucket": "common",
+            "bucket": "uncommon",
             "level": "18-43",
             "weight": 5.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_freshwater"
+                ],
                 "timeRange": "night",
                 "isRaining": false
             }
@@ -67,7 +75,7 @@
             ],
             "type": "pokemon",
             "context": "surface",
-            "bucket": "common",
+            "bucket": "uncommon",
             "level": "18-43",
             "weight": 3.0,
             "condition": {

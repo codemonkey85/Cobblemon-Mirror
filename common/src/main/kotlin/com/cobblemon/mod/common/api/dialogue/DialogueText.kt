@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.resolveString
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
 
 /**
  * Some kind of text-resolving property. This is to hide where sometimes we want literals,
@@ -29,19 +29,19 @@ interface DialogueText {
         )
     }
 
-    operator fun invoke(activeDialogue: ActiveDialogue): MutableText
+    operator fun invoke(activeDialogue: ActiveDialogue): MutableComponent
 }
 
-class FunctionDialogueText(val function: (ActiveDialogue) -> MutableText = { "".text() }) : DialogueText {
+class FunctionDialogueText(val function: (ActiveDialogue) -> MutableComponent = { "".text() }) : DialogueText {
     override fun invoke(activeDialogue: ActiveDialogue) = function(activeDialogue)
 }
 
-class WrappedDialogueText(val text: MutableText = "".text()) : DialogueText {
+class WrappedDialogueText(val text: MutableComponent = "".text()) : DialogueText {
     override fun invoke(activeDialogue: ActiveDialogue) = text.copy()
 }
 
 class ExpressionLikeDialogueText(val expression: ExpressionLike = "''".asExpressionLike()) : DialogueText {
-    override fun invoke(activeDialogue: ActiveDialogue): MutableText {
+    override fun invoke(activeDialogue: ActiveDialogue): MutableComponent {
         return activeDialogue.runtime.resolveString(expression).text()
     }
 }

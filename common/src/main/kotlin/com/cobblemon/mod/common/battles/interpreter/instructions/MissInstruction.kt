@@ -11,22 +11,22 @@ package com.cobblemon.mod.common.battles.interpreter.instructions
 import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.text.red
-import com.cobblemon.mod.common.battles.dispatch.InstructionSet
 import com.cobblemon.mod.common.battles.dispatch.InterpreterInstruction
 import com.cobblemon.mod.common.util.battleLang
 
 /**
- * Format:
- * |-miss|SOURCE|TARGET
+ * Format: |-miss|SOURCE|TARGET
  *
  * The move used by the SOURCE Pokémon missed (maybe absent) the TARGET Pokémon.
+ * @author Hiroku
+ * @since October 3rd, 2022
  */
-class MissInstruction(val battle: PokemonBattle, val instructionSet: InstructionSet, val message: BattleMessage): InterpreterInstruction {
-    val target = message.getBattlePokemon(1, battle)
+class MissInstruction(val battle: PokemonBattle, val message: BattleMessage): InterpreterInstruction {
+    val target = message.battlePokemon(1, battle)
 
     override fun invoke(battle: PokemonBattle) {
         battle.dispatchGo {
-            val pokemon = message.getBattlePokemon(0, battle) ?: return@dispatchGo
+            val pokemon = message.battlePokemon(0, battle) ?: return@dispatchGo
             battle.broadcastChatMessage(battleLang("missed").red())
             battle.minorBattleActions[pokemon.uuid] = message
         }

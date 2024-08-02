@@ -8,13 +8,12 @@
 
 package com.cobblemon.mod.common.api.battles.model
 
-import com.bedrockk.molang.runtime.MoLangEnvironment
+import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.Cobblemon.LOGGER
 import com.cobblemon.mod.common.CobblemonNetwork
-import com.cobblemon.mod.common.Environment
 import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.model.actor.ActorType
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
@@ -22,8 +21,7 @@ import com.cobblemon.mod.common.api.battles.model.actor.EntityBackedBattleActor
 import com.cobblemon.mod.common.api.battles.model.actor.FleeableBattleActor
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.battles.BattleFledEvent
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunction
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.getQueryStruct
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.asMoLangValue
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
 import com.cobblemon.mod.common.api.text.red
@@ -33,6 +31,7 @@ import com.cobblemon.mod.common.battles.BattleCaptureAction
 import com.cobblemon.mod.common.battles.BattleFormat
 import com.cobblemon.mod.common.battles.BattleRegistry
 import com.cobblemon.mod.common.battles.BattleSide
+import com.cobblemon.mod.common.battles.ForfeitActionResponse
 import com.cobblemon.mod.common.battles.actor.PlayerBattleActor
 import com.cobblemon.mod.common.battles.dispatch.BattleDispatch
 import com.cobblemon.mod.common.battles.dispatch.DispatchResult
@@ -44,17 +43,17 @@ import com.cobblemon.mod.common.battles.runner.ShowdownService
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.net.messages.client.battle.BattleEndPacket
 import com.cobblemon.mod.common.net.messages.client.battle.BattleMessagePacket
-import com.cobblemon.mod.common.net.messages.client.battle.BattleMusicPacket
 import com.cobblemon.mod.common.pokemon.evolution.progress.DefeatEvolutionProgress
 import com.cobblemon.mod.common.pokemon.evolution.progress.LastBattleCriticalHitsEvolutionProgress
 import com.cobblemon.mod.common.pokemon.evolution.requirements.DefeatRequirement
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.getPlayer
+import net.minecraft.network.chat.Component
 import java.io.File
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentLinkedDeque
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Individual battle instance
@@ -70,6 +69,10 @@ open class PokemonBattle(
 ) {
     /** Whether logging will be silenced for this battle. */
     var mute = true
+    val struct = this.asMoLangValue()
+    val runtime = MoLangRuntime().also { it.environment.query = struct }
+
+    val onEndHandlers: MutableList<(PokemonBattle) -> Unit> = mutableListOf()
 
     init {
         side1.battle = this
@@ -99,14 +102,21 @@ open class PokemonBattle(
 
     val showdownMessages = mutableListOf<String>()
     val battleLog = mutableListOf<String>()
-    val chatLog = mutableListOf<Text>()
+    val chatLog = mutableListOf<Component>()
     var started = false
+    var winners = listOf<BattleActor>()
+    var losers = listOf<BattleActor>()
     var ended = false
     // TEMP battle showcase stuff
     var announcingRules = false
     var turn: Int = 1
         private set
 
+    private var ticks: Int = 0
+        set(value) { field = value.coerceAtMost(Int.MAX_VALUE) } // go outside
+
+    /** The current duration of the battle in seconds. */
+    val time: Int get() = ticks % 20
 
     var dispatchResult = GO
     val dispatches = ConcurrentLinkedDeque<BattleDispatch>()
@@ -163,10 +173,10 @@ open class PokemonBattle(
     /**
      * Gets the first battle actor whom the given player controls, or null if there is no such actor.
      */
-    fun getActor(player: ServerPlayerEntity) = actors.firstOrNull { it.isForPlayer(player) }
+    fun getActor(player: ServerPlayer) = actors.firstOrNull { it.isForPlayer(player) }
 
     /**
-     * Gets a BattleActor and an [ActiveBattlePokemon] from a pnx key, e.g. p2a
+     * Gets a [BattleActor] and an [ActiveBattlePokemon] from a pnx key, e.g. p2a
      *
      * Returns null if either the pn or x is invalid.
      */
@@ -179,6 +189,11 @@ open class PokemonBattle(
         return actor to pokemon
     }
 
+    /**
+     * Gets a [BattlePokemon] from a pnx key and uuid.
+     *
+     * Returns null if the pnx key is invalid or the uuid does not exist.
+     */
     fun getBattlePokemon(pnx: String, pokemonID: String): BattlePokemon {
         val actor = actors.find { it.showdownId == pnx.substring(0, 2) }
             ?: throw IllegalStateException("Invalid pnx: $pnx - unknown actor")
@@ -186,7 +201,7 @@ open class PokemonBattle(
             ?: throw IllegalStateException("Invalid pnx: $pnx - unknown pokemon")
     }
 
-    fun broadcastChatMessage(component: Text) {
+    fun broadcastChatMessage(component: Component) {
         chatLog.add(component)
         sendSpectatorUpdate(BattleMessagePacket(component))
         return actors.forEach { it.sendMessage(component) }
@@ -220,7 +235,7 @@ open class PokemonBattle(
                         val facedFainted = opponentPokemon.facedOpponents.contains(faintedPokemon)
                         val pokemon = opponentPokemon.effectedPokemon
                         if (facedFainted) {
-                            pokemon.evolutions.forEach { evolution ->
+                            pokemon.lockedEvolutions.forEach { evolution ->
                                 evolution.requirements.filterIsInstance<DefeatRequirement>().forEach { defeatRequirement ->
                                     if (defeatRequirement.target.matches(faintedPokemon.effectedPokemon)) {
                                         val progress = pokemon.evolutionProxy.current().progressFirstOrCreate({ it is DefeatEvolutionProgress && it.currentProgress().target == defeatRequirement.target }) { DefeatEvolutionProgress() }
@@ -231,7 +246,7 @@ open class PokemonBattle(
                         }
                         val multiplier = when {
                             // ToDo when Exp. All is implement if enabled && !facedFainted return 2.0, probably should be a configurable value too, this will have priority over the Exp. Share
-                            !facedFainted && pokemon.heldItemNoCopy().isIn(CobblemonItemTags.EXPERIENCE_SHARE) -> Cobblemon.config.experienceShareMultiplier
+                            !facedFainted && pokemon.heldItemNoCopy().`is`(CobblemonItemTags.EXPERIENCE_SHARE) -> Cobblemon.config.experienceShareMultiplier
                             // ToDo when Exp. All is implemented the facedFainted and else can be collapsed into the 1.0 return value
                             facedFainted -> 1.0
                             else -> continue
@@ -347,6 +362,14 @@ open class PokemonBattle(
         }
     }
 
+    fun dispatchFuture(future: () -> CompletableFuture<*>) {
+        val dispatch = BattleDispatch {
+            val generatedFuture = future()
+            return@BattleDispatch DispatchResult { generatedFuture.isDone }
+        }
+        dispatches.add(dispatch)
+    }
+
     fun dispatchInsert(dispatcher: () -> Iterable<BattleDispatch>) {
         dispatch {
             val newDispatches = dispatcher()
@@ -384,14 +407,15 @@ open class PokemonBattle(
         } catch (e: Exception) {
             LOGGER.error("Exception while ticking a battle. Saving battle log.", e)
             val message = battleLang("crash").red()
-            this.actors.filterIsInstance<PlayerBattleActor>().forEach { it.entity?.sendMessage(message) }
+            this.actors.filterIsInstance<PlayerBattleActor>().forEach { it.entity?.sendSystemMessage(message) }
             this.saveBattleLog()
             this.stop()
             return
         }
 
-        if (started && isPvW && !ended && dispatches.isEmpty()) {
-            checkFlee()
+        if (started) {
+            ticks++
+            if (isPvW && !ended && dispatches.isEmpty()) checkFlee()
         }
     }
 
@@ -408,8 +432,8 @@ open class PokemonBattle(
                         .filter { it.type == ActorType.PLAYER }
                         .filterIsInstance<EntityBackedBattleActor<*>>()
                         .mapNotNull { it.entity }
-                        .filter { it.world == world }
-                        .minOfOrNull { pos.distanceTo(it.pos) }
+                        .filter { it.level() == world }
+                        .minOfOrNull { pos.distanceTo(it.position()) }
 
                     nearestPlayerActorDistance != null && nearestPlayerActorDistance < pokemonActor.fleeDistance
                 }
@@ -422,7 +446,7 @@ open class PokemonBattle(
                 .filterIsInstance<PokemonEntity>()
                 .forEach{it.pokemon.heal()}
             CobblemonEvents.BATTLE_FLED.post(BattleFledEvent(this, actors.asSequence().filterIsInstance<PlayerBattleActor>().iterator().next()))
-            actors.filterIsInstance<EntityBackedBattleActor<*>>().mapNotNull { it.entity }.forEach { it.sendMessage(battleLang("flee").yellow()) }
+            actors.filterIsInstance<EntityBackedBattleActor<*>>().mapNotNull { it.entity }.forEach { it.sendSystemMessage(battleLang("flee").yellow()) }
             stop()
         }
     }
@@ -433,11 +457,22 @@ open class PokemonBattle(
     }
 
     fun checkForInputDispatch() {
-        val readyToInput = actors.any { !it.mustChoose && it.responses.isNotEmpty() } && actors.none { it.mustChoose }
+        if (checkForfeit()) return  // ignore actors that are still choosing, their choices don't matter anymore
+        val readyToInput = (actors.any { !it.mustChoose && it.responses.isNotEmpty() } && actors.none { it.mustChoose })
         if (readyToInput && captureActions.isEmpty()) {
             actors.filter { it.responses.isNotEmpty() }.forEach { it.writeShowdownResponse() }
             actors.forEach { it.responses.clear() ; it.request = null }
         }
+    }
+
+    /** Forces Showdown to end the battle when a [BattleActor] chooses to forfeit. */
+    private fun checkForfeit(): Boolean {
+        val forfeit = actors.find { it.responses.any { it is ForfeitActionResponse } }
+        return forfeit?.let {
+            this.dispatchWaiting { this.broadcastChatMessage(battleLang("forfeit", it.getName()).red()) }
+            writeShowdownAction(">forcelose ${it.showdownId}")
+            true
+        } ?: false
     }
 
     /**
@@ -448,9 +483,9 @@ open class PokemonBattle(
      * @param message The [BattleMessage] that wasn't able to find a lang interpretation.
      * @return The generated [Text] meant to notify the client.
      */
-    internal fun createUnimplemented(message: BattleMessage): Text {
+    internal fun createUnimplemented(message: BattleMessage): Component {
         LOGGER.error("Missing interpretation on '{}' action {}", message.id, message.rawMessage)
-        return Text.literal("Missing interpretation on '${message.id}' action ${message.rawMessage}").red()
+        return Component.literal("Missing interpretation on '${message.id}' action ${message.rawMessage}").red()
     }
 
     /**
@@ -463,12 +498,12 @@ open class PokemonBattle(
      *
      * @throws IllegalArgumentException if the [publicMessage] and [privateMessage] don't have a matching [BattleMessage.id].
      */
-    internal fun createUnimplementedSplit(publicMessage: BattleMessage, privateMessage: BattleMessage): Text {
+    internal fun createUnimplementedSplit(publicMessage: BattleMessage, privateMessage: BattleMessage): Component {
         if (publicMessage.id != privateMessage.id) {
             throw IllegalArgumentException("Messages do not match")
         }
         LOGGER.error("Missing interpretation on '{}' action: \nPublic » {}\nPrivate » {}", publicMessage.id, publicMessage.rawMessage, privateMessage.rawMessage)
-        return Text.literal("Missing interpretation on '${publicMessage.id}' action please report to the developers").red()
+        return Component.literal("Missing interpretation on '${publicMessage.id}' action please report to the developers").red()
     }
 
     fun addQueryFunctions(queryStruct: QueryStruct): QueryStruct {
@@ -476,7 +511,6 @@ open class PokemonBattle(
         queryStruct.addFunction("pvn") { DoubleValue(isPvN) }
         queryStruct.addFunction("pvw") { DoubleValue(isPvW) }
         queryStruct.addFunction("has_rule") { params -> DoubleValue(params.getString(0) in format.ruleSet) }
-
         return queryStruct
     }
 }

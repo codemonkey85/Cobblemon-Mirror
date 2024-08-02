@@ -40,6 +40,16 @@
   "eggGroups": [
     "grass"
   ],
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.35
+      },
+      "fly": {
+        "canFly": true
+      }
+    }
+  },
   "moves": [
     "1:bind",
     "1:growth",

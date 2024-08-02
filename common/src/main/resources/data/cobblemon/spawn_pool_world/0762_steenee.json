@@ -15,7 +15,8 @@
             "level": "18-29",
             "weight": 0.18,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_jungle",
                     "#cobblemon:is_tropical_island"

@@ -10,12 +10,11 @@ package com.cobblemon.mod.common.battles.interpreter.instructions
 
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.value.DoubleValue
+import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.interpreter.Effect
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunction
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.getQueryStruct
 import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
 import com.cobblemon.mod.common.api.moves.animations.TargetsProvider
@@ -29,8 +28,16 @@ import com.cobblemon.mod.common.battles.dispatch.UntilDispatch
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.pokemon.evolution.progress.UseMoveEvolutionProgress
 import com.cobblemon.mod.common.util.battleLang
+import com.cobblemon.mod.common.util.cobblemonResource
 import java.util.concurrent.CompletableFuture
 
+/**
+ * Format: |move|POKEMON|MOVE|TARGET
+ *
+ * POKEMON has used MOVE at TARGET.
+ * @author Deltric
+ * @since January 22nd, 2022
+ */
 class MoveInstruction(
     val instructionSet: InstructionSet,
     val message: BattleMessage
@@ -46,17 +53,17 @@ class MoveInstruction(
     var targetPokemon: BattlePokemon? = null
 
     override fun invoke(battle: PokemonBattle) {
-        userPokemon = message.getBattlePokemon(0, battle)!!
-        targetPokemon = message.getBattlePokemon(2, battle)
+        userPokemon = message.battlePokemon(0, battle)!!
+        targetPokemon = message.battlePokemon(2, battle)
         val targetPokemon = targetPokemon // So smart non-null casts can happen
 
         val optionalEffect = message.effect()
-        val pokemonName = userPokemon.getName()
-        ShowdownInterpreter.broadcastOptionalAbility(battle, optionalEffect, pokemonName)
+        ShowdownInterpreter.broadcastOptionalAbility(battle, optionalEffect, userPokemon)
 
         battle.dispatch { UntilDispatch { instructionSet.getMostRecentInstruction<MoveInstruction>(this)?.future?.isDone != false } }
 
         battle.dispatch {
+            val pokemonName = userPokemon.getName()
             ShowdownInterpreter.lastCauser[battle.battleId] = message
 
             userPokemon.effectedPokemon.let { pokemon ->
@@ -81,7 +88,7 @@ class MoveInstruction(
             userPokemon.effectedPokemon.entity?.let { UsersProvider(it) }?.let(providers::add)
             targetPokemon?.effectedPokemon?.entity?.let { TargetsProvider(it) }?.let(providers::add)
             val runtime = MoLangRuntime().also {
-                battle.addQueryFunctions(it.environment.getQueryStruct()).addStandardFunctions()
+                battle.addQueryFunctions(it.environment.query).addStandardFunctions()
             }
 
             actionEffect ?: return@dispatch GO
@@ -94,26 +101,27 @@ class MoveInstruction(
             val subsequentInstructions = instructionSet.findInstructionsCausedBy(this)
             val missedTargets = subsequentInstructions.filterIsInstance<MissInstruction>().mapNotNull { it.target }
 
-            runtime.environment.getQueryStruct().addFunction("missed") { params ->
+            runtime.environment.query.addFunction("missed") { params ->
                 if (params.params.size == 0) {
                     return@addFunction DoubleValue(missedTargets.isNotEmpty())
                 } else {
                     val entityUUID = params.getString(0)
-                    return@addFunction DoubleValue(missedTargets.any { it.entity?.uuidAsString == entityUUID })
+                    return@addFunction DoubleValue(missedTargets.any { it.entity?.stringUUID == entityUUID })
                 }
             }
 
-            val hurtTargets = subsequentInstructions.filterIsInstance<DamageInstruction>().mapNotNull { it.battlePokemon }
-            runtime.environment.getQueryStruct().addFunction("hurt") { params ->
+            val hurtTargets = subsequentInstructions.filterIsInstance<DamageInstruction>().mapNotNull { it.expectedTarget }
+            runtime.environment.query.addFunction("hurt") { params ->
                 if (params.params.size == 0) {
                     return@addFunction DoubleValue(hurtTargets.isNotEmpty())
                 } else {
                     val entityUUID = params.getString(0)
-                    return@addFunction DoubleValue(hurtTargets.any { it.entity?.uuidAsString == entityUUID })
+                    return@addFunction DoubleValue(hurtTargets.any { it.entity?.stringUUID == entityUUID })
                 }
             }
 
-            runtime.environment.getQueryStruct().addFunction("move") { move.struct }
+            runtime.environment.query.addFunction("move") { move.struct }
+            runtime.environment.query.addFunction("instruction_id") { StringValue(cobblemonResource("move").toString()) }
 
             this.future = actionEffect.run(context)
             holds = context.holds // Reference so future things can check on this action effect's holds

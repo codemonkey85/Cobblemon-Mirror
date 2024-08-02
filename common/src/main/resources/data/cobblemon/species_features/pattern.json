@@ -1,0 +1,19 @@
+{
+  "type": "choice",
+  "keys": ["pattern"],
+  "default": "none",
+  "choices": [
+    "kanto",
+    "johto",
+    "hoenn",
+    "sinnoh",
+    "unova",
+    "kalos",
+    "alola",
+    "galar",
+    "hisui",
+    "paldea"
+  ],
+  "isAspect": true,
+  "aspectFormat": "pattern-{{choice}}"
+}

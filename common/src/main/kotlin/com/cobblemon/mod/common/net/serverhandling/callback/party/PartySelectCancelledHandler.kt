@@ -12,10 +12,10 @@ import com.cobblemon.mod.common.api.callback.PartySelectCallbacks
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.net.messages.server.callback.party.PartySelectCancelledPacket
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object PartySelectCancelledHandler : ServerNetworkPacketHandler<PartySelectCancelledPacket> {
-    override fun handle(packet: PartySelectCancelledPacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: PartySelectCancelledPacket, server: MinecraftServer, player: ServerPlayer) {
         PartySelectCallbacks.handleCancelled(player, packet.uuid)
     }
 }

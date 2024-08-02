@@ -34,4 +34,10 @@ interface PassiveEvolution : Evolution {
         return false
     }
 
+    /**
+     * If the evolution will disappear once the conditions are no longer met.
+     */
+    val permanent: Boolean
+
+
 }

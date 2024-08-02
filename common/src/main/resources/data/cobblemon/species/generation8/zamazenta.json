@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "Zamazenta",
   "nationalPokedexNumber": 889,
   "primaryType": "fighting",
@@ -62,7 +62,15 @@
       "height": 29,
       "weight": 7850,
       "cannotDynamax": true,
-      "battleOnly": true
+      "battleOnly": true,
+      "drops": {
+        "amount": 1,
+        "entries": [
+          {
+            "item": "cobblemon:ability_shield"
+          }
+        ]
+      }
     }
   ],
   "baseExperienceYield": 335,

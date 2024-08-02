@@ -11,7 +11,9 @@ package com.cobblemon.mod.common.net.messages.client.battle
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 
 /**
@@ -26,9 +28,10 @@ class BattleSwitchPokemonPacket(val pnx: String, val newPokemon: BattleInitializ
 
     override val id = ID
 
-    constructor(pnx: String, newPokemon: BattlePokemon, isAlly: Boolean) : this(pnx, BattleInitializePacket.ActiveBattlePokemonDTO.fromPokemon(newPokemon, isAlly), isAlly)
+    constructor(pnx: String, newPokemon: BattlePokemon, isAlly: Boolean, illusion: BattlePokemon?) :
+        this(pnx, BattleInitializePacket.ActiveBattlePokemonDTO.fromPokemon(newPokemon, isAlly, illusion), isAlly)
 
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(pnx)
         newPokemon.saveToBuffer(buffer)
         buffer.writeBoolean(isAlly)
@@ -36,6 +39,6 @@ class BattleSwitchPokemonPacket(val pnx: String, val newPokemon: BattleInitializ
 
     companion object {
         val ID = cobblemonResource("battle_switch_pokemon")
-        fun decode(buffer: PacketByteBuf) = BattleSwitchPokemonPacket(buffer.readString(), BattleInitializePacket.ActiveBattlePokemonDTO.loadFromBuffer(buffer), buffer.readBoolean())
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleSwitchPokemonPacket(buffer.readString(), BattleInitializePacket.ActiveBattlePokemonDTO.loadFromBuffer(buffer), buffer.readBoolean())
     }
 }

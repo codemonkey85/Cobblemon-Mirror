@@ -180,22 +180,6 @@
 					]
 				},
 				{
-					"name": "leg_front_right",
-					"parent": "torso",
-					"pivot": [-2.75, 2, -2.75],
-					"cubes": [
-						{"origin": [-3.75, 0, -3.75], "size": [2, 3, 2], "uv": [56, 9]}
-					]
-				},
-				{
-					"name": "leg_front_left",
-					"parent": "torso",
-					"pivot": [2.75, 2, -2.75],
-					"cubes": [
-						{"origin": [1.75, 0, -3.75], "size": [2, 3, 2], "uv": [36, 4]}
-					]
-				},
-				{
 					"name": "leg_back_right",
 					"parent": "body",
 					"pivot": [-2.75, 2, 2.5],
@@ -209,6 +193,22 @@
 					"pivot": [2.75, 2, 2.5],
 					"cubes": [
 						{"origin": [1.75, 0, 1.5], "size": [2, 3, 2], "uv": [48, 9]}
+					]
+				},
+				{
+					"name": "leg_front_left",
+					"parent": "body",
+					"pivot": [2.75, 2, -2.75],
+					"cubes": [
+						{"origin": [1.75, 0, -3.75], "size": [2, 3, 2], "uv": [36, 4]}
+					]
+				},
+				{
+					"name": "leg_front_right",
+					"parent": "body",
+					"pivot": [-2.75, 2, -2.75],
+					"cubes": [
+						{"origin": [-3.75, 0, -3.75], "size": [2, 3, 2], "uv": [56, 9]}
 					]
 				}
 			]

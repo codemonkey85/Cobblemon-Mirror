@@ -25,20 +25,24 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 open class LevelUpEvolution(
     override val id: String,
     override val result: PokemonProperties,
+    override val shedder: PokemonProperties?,
     override var optional: Boolean,
     override var consumeHeldItem: Boolean,
     override val requirements: MutableSet<EvolutionRequirement>,
-    override val learnableMoves: MutableSet<MoveTemplate>
+    override val learnableMoves: MutableSet<MoveTemplate>,
+    override val permanent: Boolean
 ) : PassiveEvolution {
 
     /* Needed for old Gson versions that MC ships with */
     constructor(): this(
         id = "id",
         result = PokemonProperties(),
+        shedder = null,
         optional = true,
         consumeHeldItem = true,
         requirements = mutableSetOf(),
-        learnableMoves = mutableSetOf()
+        learnableMoves = mutableSetOf(),
+        permanent = false
     )
 
     override fun equals(other: Any?) = other is LevelUpEvolution && other.id.equals(this.id, true)

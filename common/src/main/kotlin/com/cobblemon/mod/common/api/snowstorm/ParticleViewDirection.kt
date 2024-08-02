@@ -12,16 +12,14 @@ import com.bedrockk.molang.Expression
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.codec.CodecMapped
 import com.cobblemon.mod.common.api.data.ArbitrarilyMappedSerializableCompanion
-import com.cobblemon.mod.common.util.asExpression
+import com.cobblemon.mod.common.util.*
 import com.cobblemon.mod.common.util.codec.EXPRESSION_CODEC
-import com.cobblemon.mod.common.util.getString
-import com.cobblemon.mod.common.util.resolveVec3d
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.math.Vec3d
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.world.phys.Vec3
 
 /**
  * A type of view direction for rotating a particle's rendering.
@@ -42,7 +40,7 @@ interface ParticleViewDirection : CodecMapped {
     }
 
     val type: ParticleViewDirectionType
-    fun getDirection(runtime: MoLangRuntime, lastDirection: Vec3d, currentVelocity: Vec3d): Vec3d
+    fun getDirection(runtime: MoLangRuntime, lastDirection: Vec3, currentVelocity: Vec3): Vec3
 }
 
 class FromMotionViewDirection(var minSpeed: Double = 0.01) : ParticleViewDirection {
@@ -57,15 +55,15 @@ class FromMotionViewDirection(var minSpeed: Double = 0.01) : ParticleViewDirecti
 
     override val type: ParticleViewDirectionType = ParticleViewDirectionType.FROM_MOTION
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeDouble(minSpeed)
     }
 
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         minSpeed = buffer.readDouble()
     }
 
-    override fun getDirection(runtime: MoLangRuntime, lastDirection: Vec3d, currentVelocity: Vec3d): Vec3d {
+    override fun getDirection(runtime: MoLangRuntime, lastDirection: Vec3, currentVelocity: Vec3): Vec3 {
         return if (currentVelocity.length() * 20 >= minSpeed) {
             currentVelocity.normalize()
         } else {
@@ -89,13 +87,13 @@ class CustomViewDirection(var direction: Triple<Expression, Expression, Expressi
     override val type = ParticleViewDirectionType.CUSTOM
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(direction.first.getString())
         buffer.writeString(direction.second.getString())
         buffer.writeString(direction.third.getString())
     }
 
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         direction = Triple(
             buffer.readString().asExpression(),
             buffer.readString().asExpression(),
@@ -103,7 +101,7 @@ class CustomViewDirection(var direction: Triple<Expression, Expression, Expressi
         )
     }
 
-    override fun getDirection(runtime: MoLangRuntime, lastDirection: Vec3d, currentVelocity: Vec3d) = runtime.resolveVec3d(direction)
+    override fun getDirection(runtime: MoLangRuntime, lastDirection: Vec3, currentVelocity: Vec3) = runtime.resolveVec3d(direction)
 }
 
 enum class ParticleViewDirectionType {

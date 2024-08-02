@@ -1,4 +1,4 @@
-﻿{
+{
   "implemented": true,
   "name": "Raichu",
   "nationalPokedexNumber": 26,
@@ -8,8 +8,12 @@
     "h:lightningrod"
   ],
   "drops": {
-    "amount": 2,
+    "amount": 3,
     "entries": [
+      {
+        "item": "cobblemon:light_ball",
+        "percentage": 10.0
+      },
       {
         "item": "cobblemon:thunder_stone",
         "percentage": 10.0
@@ -232,7 +236,7 @@
       ],
       "height": 7,
       "weight": 210,
-      "preEvolution": "pikachu alolan",
+      "preEvolution": "pikachu region_bias=alola",
       "baseScale": 0.75,
       "hitbox": {
         "width": 0.8,
@@ -240,7 +244,24 @@
         "fixed": false
       },
       "cannotDynamax": false,
-      "battleOnly": false
+      "battleOnly": false,
+      "drops": {
+        "amount": 3,
+        "entries": [
+          {
+            "item": "cobblemon:light_ball",
+            "percentage": 10.0
+          },
+          {
+            "item": "cobblemon:thunder_stone",
+            "percentage": 10.0
+          },
+          {
+            "item": "cobblemon:oran_berry",
+            "percentage": 10.0
+          }
+        ]
+      }
     }
   ],
   "baseExperienceYield": 243,

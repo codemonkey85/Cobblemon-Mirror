@@ -8,40 +8,56 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen2
 
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.BimanualSwingAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
+import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class BlisseyModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame, BimanualFrame {
+class BlisseyModel(root: ModelPart) : PokemonPosableModel(root), BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("blissey")
-
-    override val portraitScale = 1.5F
-    override val portraitTranslation = Vec3d(-0.6, 0.9, 0.0)
 
     override val leftLeg = getPart("left_foot")
     override val rightLeg = getPart("right_foot")
     override val leftArm = getPart("left_arm")
     override val rightArm = getPart("right_arm")
 
-    override val profileScale = 0.7F
-    override val profileTranslation = Vec3d(0.0, 0.7, 0.0)
+    override var portraitScale = 1.5F
+    override var portraitTranslation = Vec3(-0.6, 0.9, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    override var profileScale = 0.7F
+    override var profileTranslation = Vec3(0.0, 0.7, 0.0)
+
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var battle_idle: CobblemonPose
 
     override fun registerPoses() {
+        val blink = quirk { bedrockStateful("blissey", "blink") }
+        val eggQuirk = quirk { bedrockStateful("blissey", "eggadjust_quirk") }
+
+        sleep = registerPose(
+            poseName = "sleep",
+            poseType = PoseType.SLEEP,
+            animations = arrayOf(
+                bedrock("blissey", "sleep")
+            )
+        )
+
         standing = registerPose(
             poseName = "standing",
             poseTypes = STATIONARY_POSES + UI_POSES,
-            idleAnimations = arrayOf(
+            condition = { !it.isBattling },
+            quirks = arrayOf(blink, eggQuirk),
+            animations = arrayOf(
                 bedrock("blissey", "ground_idle")
             )
         )
@@ -49,17 +65,22 @@ class BlisseyModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame, Bimanu
         walk = registerPose(
             poseName = "walk",
             poseTypes = MOVING_POSES,
-            idleAnimations = arrayOf(
-                bedrock("blissey", "ground_idle"),
-                BipedWalkAnimation(this),
-                BimanualSwingAnimation(this)
-                //bedrock("blissey", "ground_walk")
+            quirks = arrayOf(blink),
+            animations = arrayOf(
+                bedrock("blissey", "ground_walk")
+            )
+        )
+
+        battle_idle = registerPose(
+            poseName = "battle_idle",
+            poseTypes = STATIONARY_POSES,
+            condition = { it.isBattling },
+            quirks = arrayOf(blink, eggQuirk),
+            animations = arrayOf(
+                bedrock("blissey", "battle_idle")
             )
         )
     }
 
-//    override fun getFaintAnimation(
-//        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
-//    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("blissey", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = bedrockStateful("blissey", "faint")
 }

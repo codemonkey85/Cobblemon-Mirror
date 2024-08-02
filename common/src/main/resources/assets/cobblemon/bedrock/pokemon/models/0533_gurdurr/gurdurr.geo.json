@@ -250,7 +250,7 @@
 					]
 				},
 				{
-					"name": "construction_beam",
+					"name": "girder_connected",
 					"parent": "hand_right",
 					"pivot": [-27, 12.5, 0],
 					"cubes": [
@@ -368,6 +368,14 @@
 					]
 				},
 				{
+					"name": "mouth_grin",
+					"parent": "mouth",
+					"pivot": [0, 22.3, -4.25],
+					"cubes": [
+						{"origin": [-3.5, 21.9, -5.16], "size": [7, 2, 0], "uv": [37, 2]}
+					]
+				},
+				{
 					"name": "hair",
 					"parent": "head",
 					"pivot": [0, 28.25, -4.05],
@@ -458,6 +466,71 @@
 					"pivot": [-5.5, 1, 0.3],
 					"cubes": [
 						{"origin": [-7, 0, -3.7], "size": [3, 1, 5], "uv": [58, 53], "mirror": true}
+					]
+				},
+				{
+					"name": "fbody",
+					"parent": "gurdurr",
+					"pivot": [0, 15, 0]
+				},
+				{
+					"name": "ftorso",
+					"parent": "fbody",
+					"pivot": [0, 4.5, 0.2]
+				},
+				{
+					"name": "fwaist",
+					"parent": "ftorso",
+					"pivot": [0, 10, 0]
+				},
+				{
+					"name": "fchest",
+					"parent": "fwaist",
+					"pivot": [0, 12.5, 1.5]
+				},
+				{
+					"name": "farms",
+					"parent": "fchest",
+					"pivot": [0, 17, -3.5]
+				},
+				{
+					"name": "fshoulder_right",
+					"parent": "farms",
+					"pivot": [-5.5, 17, 0]
+				},
+				{
+					"name": "farm_right",
+					"parent": "fshoulder_right",
+					"pivot": [-10.5, 17, 0]
+				},
+				{
+					"name": "farm_right_rotation",
+					"parent": "farm_right",
+					"pivot": [-10.5, 16.5, 0]
+				},
+				{
+					"name": "farm_right2",
+					"parent": "farm_right_rotation",
+					"pivot": [-15.5, 16.5, 2]
+				},
+				{
+					"name": "fwrist_right",
+					"parent": "farm_right2",
+					"pivot": [-20.5, 17, 0]
+				},
+				{
+					"name": "fhand_right",
+					"parent": "fwrist_right",
+					"pivot": [-22.5, 18.5, 0]
+				},
+				{
+					"name": "girder_disconnected",
+					"parent": "fhand_right",
+					"pivot": [-27, 12.5, 0],
+					"cubes": [
+						{"origin": [-30.5, 14, -27.5], "size": [7, 1, 55], "inflate": 0.02, "uv": [63, 72], "mirror": true},
+						{"origin": [-28.5, 11, -27.5], "size": [3, 3, 55], "inflate": 0.02, "uv": [140, 13], "mirror": true},
+						{"origin": [-30.5, 10, -27.5], "size": [7, 1, 55], "inflate": 0.02, "uv": [132, 71], "mirror": true}
 					]
 				}
 			]

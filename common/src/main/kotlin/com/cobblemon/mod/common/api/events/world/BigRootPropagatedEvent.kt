@@ -11,9 +11,9 @@ package com.cobblemon.mod.common.api.events.world
 import com.cobblemon.mod.common.api.events.Cancelable
 import com.cobblemon.mod.common.block.BigRootBlock
 import com.cobblemon.mod.common.block.EnergyRootBlock
-import net.minecraft.block.BlockState
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.BlockPos
+import net.minecraft.core.BlockPos
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.level.block.state.BlockState
 
 /**
  * Event fired when a [BigRootBlock] attempts to spread. The event includes the original root position
@@ -26,7 +26,7 @@ import net.minecraft.util.math.BlockPos
  * @author Hiroku
  */
 class BigRootPropagatedEvent(
-    val world: ServerWorld,
+    val world: ServerLevel,
     val pos: BlockPos,
     var newRootPosition: BlockPos,
     var resultingSpread: BlockState

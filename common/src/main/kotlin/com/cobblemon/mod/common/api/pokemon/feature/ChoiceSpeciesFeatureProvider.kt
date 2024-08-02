@@ -11,10 +11,14 @@ package com.cobblemon.mod.common.api.pokemon.feature
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
+import com.cobblemon.mod.common.client.gui.summary.featurerenderers.SummarySpeciesFeatureRenderer
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.substitute
+import com.cobblemon.mod.common.util.writeString
 import com.google.gson.JsonObject
-import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * A [SpeciesFeatureProvider] which is a string value selected from a fixed list of choices. Parameters exist
@@ -24,14 +28,45 @@ import net.minecraft.nbt.NbtCompound
  * @since November 30th, 2022
  */
 open class ChoiceSpeciesFeatureProvider(
-    override val keys: List<String>,
+    override var keys: List<String>,
     var default: String? = null,
     var choices: List<String> = listOf(),
     var isAspect: Boolean = true,
     var aspectFormat: String = "{{choice}}"
-) : SpeciesFeatureProvider<StringSpeciesFeature>, CustomPokemonPropertyType<StringSpeciesFeature>, AspectProvider {
-    override val needsKey = true
+) : SynchronizedSpeciesFeatureProvider<StringSpeciesFeature>, CustomPokemonPropertyType<StringSpeciesFeature>, AspectProvider {
+    override var needsKey = true
+    override var visible = false
     fun getAspect(feature: StringSpeciesFeature) = aspectFormat.substitute("choice", feature.value)
+
+    override fun saveToBuffer(buffer: RegistryFriendlyByteBuf, toClient: Boolean) {
+        buffer.writeCollection(keys) { _, value -> buffer.writeString(value) }
+        buffer.writeNullable(default) { _, value -> buffer.writeString(value) }
+        buffer.writeCollection(choices) { _, value -> buffer.writeString(value) }
+        buffer.writeBoolean(isAspect)
+        buffer.writeString(aspectFormat)
+        buffer.writeBoolean(needsKey)
+    }
+
+    override fun loadFromBuffer(buffer: RegistryFriendlyByteBuf) {
+        keys = buffer.readList { buffer.readString() }
+        default = buffer.readNullable { buffer.readString() }
+        choices = buffer.readList { buffer.readString() }
+        isAspect = buffer.readBoolean()
+        aspectFormat = buffer.readString()
+        needsKey = buffer.readBoolean()
+    }
+
+    override fun getRenderer(pokemon: Pokemon): SummarySpeciesFeatureRenderer<StringSpeciesFeature>? {
+        return null
+    }
+
+    override fun invoke(buffer: RegistryFriendlyByteBuf, name: String): StringSpeciesFeature? {
+        return if (name in keys) {
+            StringSpeciesFeature(name, "").also { it.loadFromBuffer(buffer) }
+        } else {
+            null
+        }
+    }
 
     fun getAllAspects(): MutableList<String> {
         val aspects = choices.toMutableList()
@@ -45,10 +80,10 @@ open class ChoiceSpeciesFeatureProvider(
 
     internal constructor(): this(emptyList())
 
-    fun get(pokemon: Pokemon) = pokemon.getFeature<StringSpeciesFeature>(keys.first())
+    override fun get(pokemon: Pokemon) = pokemon.getFeature<StringSpeciesFeature>(keys.first())
 
     override fun invoke(pokemon: Pokemon): StringSpeciesFeature? {
-        val existing = pokemon.getFeature<StringSpeciesFeature>(keys.first())
+        val existing = get(pokemon)
         return if (existing != null && existing.value in choices) {
             existing
         } else {
@@ -65,7 +100,7 @@ open class ChoiceSpeciesFeatureProvider(
         }
     }
 
-    override fun invoke(nbt: NbtCompound): StringSpeciesFeature? {
+    override fun invoke(nbt: CompoundTag): StringSpeciesFeature? {
         return if (nbt.contains(keys.first())) {
             StringSpeciesFeature(keys.first(), "").also { it.loadFromNBT(nbt) }
         } else null
@@ -88,7 +123,7 @@ open class ChoiceSpeciesFeatureProvider(
 
     override fun provide(pokemon: Pokemon): Set<String> {
         return if (isAspect) {
-            pokemon.getFeature<StringSpeciesFeature>(keys.first())?.let { setOf(getAspect(it)) } ?: emptySet()
+            get(pokemon)?.let { setOf(getAspect(it)) } ?: emptySet()
         } else {
             emptySet()
         }

@@ -53,6 +53,7 @@
     "tm:agility",
     "tm:aircutter",
     "tm:airslash",
+    "tm:alluringvoice",
     "tm:bravebird",
     "tm:calmmind",
     "tm:charm",
@@ -77,6 +78,7 @@
     "tm:poisonjab",
     "tm:poisontail",
     "tm:protect",
+    "tm:psychup",
     "tm:rest",
     "tm:shadowball",
     "tm:shadowclaw",
@@ -94,18 +96,23 @@
     "tm:toxic",
     "tm:uproar",
     "tm:uturn",
-    "tm:venoshock",
-    "tutor:beatup",
-    "tutor:flatter",
-    "tutor:roost",
-    "tutor:swagger"
+    "tm:venoshock"
   ],
   "labels": [
-    "gen9"
+    "gen9",
+    "legendary"
   ],
   "aspects": [],
   "height": 14,
   "weight": 301,
   "evolutions": [],
-  "cannotDynamax": false
+  "cannotDynamax": false,
+  "drops": {
+    "amount": 1,
+    "entries": [
+      {
+        "item": "cobblemon:fairy_feather"
+      }
+    ]
+  }
 }

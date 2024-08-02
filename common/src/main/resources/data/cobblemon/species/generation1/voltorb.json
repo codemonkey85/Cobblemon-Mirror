@@ -128,7 +128,7 @@
         {
           "id": "voltorb_electrode",
           "variant": "item_interact",
-          "result": "electrode form=hisui",
+          "result": "electrode hisuian",
           "consumeHeldItem": false,
           "learnableMoves": [
             "chloroblast"
@@ -138,7 +138,24 @@
         }
       ],
       "cannotDynamax": false,
-      "battleOnly": false
+      "battleOnly": false,
+      "drops": {
+        "amount": 3,
+        "entries": [
+          {
+            "item": "minecraft:gunpowder",
+            "quantityRange": "0-1"
+          },
+          {
+            "item": "cobblemon:red_apricorn",
+            "quantityRange": "0-1"
+          },
+          {
+            "item": "cobblemon:cheri_berry",
+            "percentage": 2.5
+          }
+        ]
+      }
     }
   ],
   "baseExperienceYield": 66,

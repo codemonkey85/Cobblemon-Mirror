@@ -22,10 +22,9 @@ import com.cobblemon.mod.common.net.messages.client.battle.BattleChallengeExpire
 import com.cobblemon.mod.common.util.getPlayer
 import com.google.gson.GsonBuilder
 import java.time.Instant
-import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object BattleRegistry {
 
@@ -139,7 +138,7 @@ object BattleRegistry {
             // 0 - 9, empty == 10
             packedTeamBuilder.append("${if (pk.dmaxLevel < 10) pk.dmaxLevel else ""},")
             // Teratype
-            packedTeamBuilder.append("${pokemon.effectedPokemon.teraType.name},")
+            packedTeamBuilder.append("${pokemon.effectedPokemon.teraType.showdownId()},")
 
             team.add(packedTeamBuilder.toString())
         }
@@ -220,6 +219,7 @@ object BattleRegistry {
     }
 
     fun closeBattle(battle: PokemonBattle) {
+        battle.onEndHandlers.forEach { it(battle) }
         battleMap.remove(battle.battleId)
     }
 
@@ -227,7 +227,7 @@ object BattleRegistry {
         return battleMap[id]
     }
 
-    fun getBattleByParticipatingPlayer(serverPlayerEntity: ServerPlayerEntity) : PokemonBattle? {
+    fun getBattleByParticipatingPlayer(serverPlayerEntity: ServerPlayer) : PokemonBattle? {
         return battleMap.values.find { it.getActor(serverPlayerEntity) != null }
     }
 

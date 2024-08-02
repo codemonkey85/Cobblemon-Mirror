@@ -1,4 +1,4 @@
-﻿{
+{
   "implemented": true,
   "name": "Meowth",
   "nationalPokedexNumber": 52,
@@ -293,6 +293,12 @@
           "walk": {
             "walkSpeed": 0.2
           }
+        },
+        "resting": {
+          "canSleep": true,
+          "willSleepOnBed": true,
+          "depth": "normal",
+          "light": "0-4"
         }
       },
       "moves": [

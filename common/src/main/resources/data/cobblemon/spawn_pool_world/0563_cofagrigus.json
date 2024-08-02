@@ -15,7 +15,8 @@
             "level": "34-48",
             "weight": 0.2,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_desert"
                 ],
@@ -43,7 +44,8 @@
                 "canSeeSky": false,
                 "biomes": [
                     "#cobblemon:is_overworld"
-                ]
+                ],
+                "minY": 48
             }
         }
     ]

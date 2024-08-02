@@ -1,0 +1,15 @@
+{
+    "name": "cobblemon:deserted_tower_ruins",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/deserted_tower",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/deserted_tower_ruins",
+                "projection": "rigid"
+            }
+        }
+    ]
+}

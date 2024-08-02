@@ -1,0 +1,33 @@
+{
+    "name": "cobblemon:prehistoric_rooted_pit",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/rooted_pit1",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_rooted_pit",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/rooted_pit2",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_rooted_pit",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/rooted_pit3",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_rooted_pit",
+                "projection": "rigid"
+            }
+        }
+    ]
+}

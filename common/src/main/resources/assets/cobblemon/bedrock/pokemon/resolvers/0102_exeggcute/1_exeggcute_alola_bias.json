@@ -1,0 +1,32 @@
+{
+  "species": "cobblemon:exeggcute",
+  "order": 1,
+  "variations": [
+    {
+      "aspects": ["region-bias-alola"],
+      "model": "cobblemon:exeggcute_alola_bias.geo",
+      "texture": "cobblemon:textures/pokemon/0102_exeggcute/exeggcute_alola_bias.png",
+      "layers": []
+    },
+    {
+      "aspects": ["alolan"],
+      "model": "cobblemon:exeggcute_alola_bias.geo",
+      "texture": "cobblemon:textures/pokemon/0102_exeggcute/exeggcute_alola_bias.png",
+      "layers": []
+    },
+    {
+      "aspects": [
+        "shiny",
+        "region-bias-alola"
+      ],
+      "texture": "cobblemon:textures/pokemon/0102_exeggcute/exeggcute_alola_bias_shiny.png"
+    },
+    {
+      "aspects": [
+        "shiny",
+        "alolan"
+      ],
+      "texture": "cobblemon:textures/pokemon/0102_exeggcute/exeggcute_alola_bias_shiny.png"
+    }
+  ]
+}

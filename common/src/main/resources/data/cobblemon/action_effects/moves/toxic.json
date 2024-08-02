@@ -1,0 +1,28 @@
+{
+  "timeline": [
+    {
+      "type": "add_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "animation",
+      "animation": ["toxic", "status"],
+      "delay": 1.15
+    },
+    {
+      "type": "pause",
+      "pause": 1.0
+    },
+    {
+      "type": "entity_particles",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "effect": "cobblemon:toxpoison_actor",
+      "locator": "target",
+      "delay": 1.5
+    },
+    {
+      "type": "remove_holds",
+      "holds": ["effects"]
+    }
+  ]
+}

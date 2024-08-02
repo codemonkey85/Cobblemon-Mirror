@@ -10,26 +10,28 @@ package com.cobblemon.mod.common.client.sound.battle
 
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.util.resumeSounds
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.sound.*
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvent
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.MathHelper
+import net.minecraft.client.Minecraft
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.client.resources.sounds.SoundInstance
+import net.minecraft.client.resources.sounds.TickableSoundInstance
+import net.minecraft.sounds.SoundSource
+import net.minecraft.core.BlockPos
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.util.Mth
 
 /**
  * A [SoundInstance] for [PokemonBattle] music.
  *
  * While an instance is being played, the [MusicTracker] will be frozen and the [SoundManager] will not play
- * [SoundCategory]s belonging to [BattleMusicController.filteredCategories].
+ * [SoundSource]s belonging to [BattleMusicController.filteredCategories].
  *
  * @author Segfault Guy
  * @since April 22nd, 2023
  */
 class BattleMusicInstance(sound: SoundEvent, volume: Float = 1.0F, pitch: Float = 1.0F) :
-        PositionedSoundInstance(sound, SoundCategory.MUSIC, volume, pitch, SoundInstance.createRandom(), BlockPos.ORIGIN), TickableSoundInstance {
+    SimpleSoundInstance(sound, SoundSource.MUSIC, volume, pitch, SoundInstance.createUnseededRandom(), BlockPos.ZERO), TickableSoundInstance {
 
-    private val soundManager = MinecraftClient.getInstance().soundManager;
+    private val soundManager = Minecraft.getInstance().soundManager;
     private var fade: Boolean = false
     private var done: Boolean = false
     private var tickCount = 0
@@ -39,12 +41,12 @@ class BattleMusicInstance(sound: SoundEvent, volume: Float = 1.0F, pitch: Float 
 
     init {
         this.relative = true
-        this.repeat = true
-        this.attenuationType = SoundInstance.AttenuationType.NONE
+        this.looping = true
+        this.attenuation = SoundInstance.Attenuation.NONE
         this.initVolume = volume.toDouble()
     }
 
-    override fun isDone(): Boolean {
+    override fun isStopped(): Boolean {
         if (this.done) BattleMusicController.filteredCategories.forEach { soundManager.resumeSounds(null, it) }
         return this.done
     }
@@ -52,14 +54,14 @@ class BattleMusicInstance(sound: SoundEvent, volume: Float = 1.0F, pitch: Float 
     /** Flags to fade and end this instance. */
     fun setFade() {
         this.fade = true
-        this.repeat = false
+        this.looping = false
     }
 
     override fun tick() {
         ++tickCount
         if (fade) {
             ++fadeCount
-            this.volume = MathHelper.lerp(fadeCount/fadeTime, initVolume, 0.0).toFloat()
+            this.volume = Mth.lerp(fadeCount/fadeTime, initVolume, 0.0).toFloat()
             if (volume <= 0) this.done = true
         }
     }

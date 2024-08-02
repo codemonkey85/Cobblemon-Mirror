@@ -1,0 +1,27 @@
+{
+  "species": "cobblemon:quilava",
+  "order": 1,
+  "variations": [
+    {
+      "aspects": ["region-bias-hisui"],
+      "poser": "cobblemon:quilava_hisui_bias",
+      "model": "cobblemon:quilava_hisui_bias.geo",
+      "texture": "cobblemon:textures/pokemon/0156_quilava/quilava_hisui_bias.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "texture": "cobblemon:textures/pokemon/0156_quilava/quilava_hisui_bias_emissives.png",
+          "emissive": true,
+          "translucent": true
+        }
+      ]
+    },
+    {
+      "aspects": [
+        "region-bias-hisui",
+        "shiny"
+      ],
+      "texture": "cobblemon:textures/pokemon/0156_quilava/quilava_hisui_bias_shiny.png"
+    }
+  ]
+}

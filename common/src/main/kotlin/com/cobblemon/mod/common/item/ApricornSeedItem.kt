@@ -10,17 +10,18 @@ package com.cobblemon.mod.common.item
 
 import com.cobblemon.mod.common.block.ApricornBlock
 import com.cobblemon.mod.common.block.ApricornSaplingBlock
-import net.minecraft.block.BlockState
-import net.minecraft.item.AliasedBlockItem
-import net.minecraft.item.ItemPlacementContext
+import net.minecraft.world.item.ItemNameBlockItem
+import net.minecraft.world.item.context.BlockPlaceContext
+import net.minecraft.world.level.block.state.BlockState
 
-class ApricornSeedItem(block: ApricornSaplingBlock, val apricornBlock: ApricornBlock) : AliasedBlockItem(block, Settings()) {
+class ApricornSeedItem(block: ApricornSaplingBlock, val apricornBlock: ApricornBlock) : ItemNameBlockItem(block, Properties()) {
 
-    override fun getPlacementState(context: ItemPlacementContext): BlockState? {
+    // TODO (techdaan): ensure this is ported properly
+    override fun getPlacementState(context: BlockPlaceContext): BlockState? {
         // Verify the feature is enabled similar to what's done at the top of place
-        if (this.apricornBlock.isEnabled(context.world.enabledFeatures)) {
+        if (this.apricornBlock.isEnabled(context.level.enabledFeatures())) {
             // Get a contextualized apricorn block state
-            val apricornState = this.apricornBlock.getPlacementState(context)
+            val apricornState = this.apricornBlock.getStateForPlacement(context)
             // If placeable return otherwise let default impl run, DO NOT return a null
             if (apricornState != null && this.canPlace(context, apricornState)) {
                 return apricornState

@@ -1,0 +1,61 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.larvesta.ground_idle": {
+			"loop": true,
+			"bones": {
+				"neck": {
+					"rotation": [-2.5, 0, 0]
+				},
+				"head": {
+					"rotation": [0, 0, 0]
+				},
+				"arm_left": {
+					"rotation": [5.07673, -9.96156, -0.88045]
+				},
+				"arm_right": {
+					"rotation": [7.61435, 9.91358, 1.31845]
+				},
+				"tail": {
+					"rotation": [-5, 0, 0]
+				},
+				"tail2": {
+					"rotation": [-2.5, 0, 0]
+				},
+				"leg_front_left": {
+					"rotation": [0, 0, -5]
+				},
+				"leg_front_right": {
+					"rotation": [0, 0, 5]
+				}
+			}
+		},
+		"animation.larvesta.blink": {
+			"animation_length": 0.16667,
+			"bones": {
+				"eyelid_left": {
+					"position": {
+						"0.0": [0.1, 0, 0],
+						"0.125": [0.1, 0, 0],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"eyelid_right": {
+					"position": {
+						"0.0": [-0.1, 0, 0],
+						"0.125": [-0.1, 0, 0],
+						"0.1667": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.larvesta.cry": {
+			"animation_length": 1.2,
+			"sound_effects": {
+				"0.04": {
+					"effect": "pokemon.larvesta.cry"
+				}
+			}
+		}
+	}
+}

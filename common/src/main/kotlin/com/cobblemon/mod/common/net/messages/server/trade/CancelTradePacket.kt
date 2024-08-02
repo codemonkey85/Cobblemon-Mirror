@@ -10,14 +10,14 @@ package com.cobblemon.mod.common.net.messages.server.trade
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class CancelTradePacket : NetworkPacket<CancelTradePacket> {
     companion object {
         val ID = cobblemonResource("cancel_trade")
-        fun decode(buffer: PacketByteBuf) = CancelTradePacket()
+        fun decode(buffer: RegistryFriendlyByteBuf) = CancelTradePacket()
     }
 
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {}
+    override fun encode(buffer: RegistryFriendlyByteBuf) {}
 }

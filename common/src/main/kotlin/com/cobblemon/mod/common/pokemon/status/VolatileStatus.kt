@@ -9,11 +9,16 @@
 package com.cobblemon.mod.common.pokemon.status
 
 import com.cobblemon.mod.common.api.pokemon.status.Status
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Represents a status that only remains during a battle.
  *
  * @author Deltric
  */
-class VolatileStatus(name: Identifier) : Status(name, "", "", "")
+open class VolatileStatus(
+    name: ResourceLocation,
+    showdownName: String,
+    applyMessage: String,
+    removeMessage: String,
+) : Status(name, showdownName, applyMessage, removeMessage)

@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.events
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.advancement.CobblemonCriteria
 import com.cobblemon.mod.common.advancement.criterion.*
 import com.cobblemon.mod.common.api.battles.model.actor.ActorType
@@ -17,6 +18,10 @@ import com.cobblemon.mod.common.api.events.pokemon.LevelUpEvent
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent
 import com.cobblemon.mod.common.api.events.pokemon.TradeCompletedEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEvent
+import com.cobblemon.mod.common.block.TumblestoneBlock
+import com.cobblemon.mod.common.item.TumblestoneItem
+import com.cobblemon.mod.common.platform.events.ServerPlayerEvent
+import com.cobblemon.mod.common.util.effectiveName
 import com.cobblemon.mod.common.util.getPlayer
 import java.util.*
 
@@ -34,7 +39,7 @@ object AdvancementHandler {
         }
         if (event.pokemon.shiny) {
             advancementData.updateTotalShinyCaptureCount()
-            CobblemonCriteria.CATCH_SHINY_POKEMON.trigger(event.player, advancementData.totalShinyCaptureCount)
+            CobblemonCriteria.CATCH_SHINY_POKEMON.trigger(event.player, CountableContext(advancementData.totalShinyCaptureCount))
         }
         CobblemonCriteria.COLLECT_ASPECT.trigger(event.player, advancementData.aspectsCollected)
         Cobblemon.playerData.saveSingle(playerData)
@@ -67,7 +72,7 @@ object AdvancementHandler {
                 CobblemonCriteria.COLLECT_ASPECT.trigger(player, advancementData.aspectsCollected)
             }
             else {
-                Cobblemon.LOGGER.warn("Evolution triggered by ${player.displayName} has missing evolution data for ${event.pokemon.species.resourceIdentifier}. Incomplete evolution data: ${event.evolution.id}, please report to the datapack creator!")
+                Cobblemon.LOGGER.warn("Evolution triggered by ${player.effectiveName().string} has missing evolution data for ${event.pokemon.species.resourceIdentifier}. Incomplete evolution data: ${event.evolution.id}, please report to the datapack creator!")
             }
         }
     }
@@ -83,14 +88,12 @@ object AdvancementHandler {
                         event.battle.actors.forEach { battleActor ->
                             if (!event.winners.contains(battleActor) && battleActor.type == ActorType.WILD) {
                                 battleActor.pokemonList.forEach { battlePokemon ->
-                                    battlePokemon.entity?.pokemon?.let {
-                                        advancementData.updateTotalDefeatedCount(it)
-                                    }
+                                    advancementData.updateTotalDefeatedCount(battlePokemon.originalPokemon)
                                 }
                             }
                         }
                         Cobblemon.playerData.saveSingle(playerData)
-                        CobblemonCriteria.DEFEAT_POKEMON.trigger(player, advancementData.totalBattleVictoryCount)
+                        CobblemonCriteria.DEFEAT_POKEMON.trigger(player, CountableContext(advancementData.totalBattleVictoryCount))
                     }
             }
         }
@@ -107,7 +110,7 @@ object AdvancementHandler {
                 if (event.battle.isPvN)
                     advancementData.updateTotalPvNBattleVictoryCount()
                 Cobblemon.playerData.saveSingle(playerData)
-                CobblemonCriteria.WIN_BATTLE.trigger(player, BattleCountableContext(advancementData.totalBattleVictoryCount, event.battle))
+                CobblemonCriteria.WIN_BATTLE.trigger(player, BattleCountableContext(event.battle, advancementData.totalBattleVictoryCount))
             }
 
     }
@@ -136,6 +139,22 @@ object AdvancementHandler {
             advancementData.updateAspectsCollected(player2, event.tradeParticipant1Pokemon)
             CobblemonCriteria.COLLECT_ASPECT.trigger(player2, advancementData.aspectsCollected)
             Cobblemon.playerData.saveSingle(playerData)
+        }
+    }
+
+    /**
+     * Triggers the advancement for placing a tumblestone
+     *
+     * Checks if the item in the player's hand is a tumblestone.
+     * Then gets the block as a [TumblestoneBlock] so we can call the canGrow method.
+     * Finally, triggers the advancement.
+     *
+     * @param event the event to trigger the advancement from
+     */
+    fun onTumbleStonePlaced(event: ServerPlayerEvent.RightClickBlock) {
+        if (event.player.getItemInHand(event.hand).item == CobblemonItems.TUMBLESTONE.asItem()) {
+            val block = ((event.player.getItemInHand(event.hand).item as TumblestoneItem).block as TumblestoneBlock)
+            CobblemonCriteria.PLANT_TUMBLESTONE.trigger(event.player, PlantTumblestoneContext(event.pos, block))
         }
     }
 }

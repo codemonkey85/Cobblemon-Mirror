@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "Minior",
   "nationalPokedexNumber": 774,
   "primaryType": "rock",
@@ -168,7 +168,16 @@
       "height": 3,
       "weight": 400,
       "cannotDynamax": false,
-      "battleOnly": true
+      "battleOnly": true,
+      "drops": {
+        "amount": 1,
+        "entries": [
+          {
+            "item": "cobblemon:float_stone",
+            "percentage": 5.0
+          }
+        ]
+      }
     }
   ],
   "aspects": [],

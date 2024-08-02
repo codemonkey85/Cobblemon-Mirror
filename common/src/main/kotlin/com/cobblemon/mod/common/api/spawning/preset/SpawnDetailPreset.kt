@@ -48,7 +48,7 @@ abstract class SpawnDetailPreset {
     var weightMultipliers: MutableList<WeightMultiplier>? = null
     var weight: Float? = null
     var percentage: Float? = null
-    var mergeMode = MergeMode.KEEP
+    var mergeMode = MergeMode.INSERT
 
     open fun apply(spawnDetail: SpawnDetail) {
         bucket?.let { spawnDetail.bucket = it }

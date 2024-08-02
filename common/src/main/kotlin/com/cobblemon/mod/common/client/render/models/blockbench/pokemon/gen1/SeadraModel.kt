@@ -9,27 +9,27 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class SeadraModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class SeadraModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("seadra")
     override val head = getPart("head")
 
-    override val portraitScale = 1.9F
-    override val portraitTranslation = Vec3d(-0.25, 0.62, 0.0)
+    override var portraitScale = 1.9F
+    override var portraitTranslation = Vec3(-0.25, 0.62, 0.0)
 
-    override val profileScale = 0.69F
-    override val profileTranslation = Vec3d(-0.06, 0.7, 0.0)
+    override var profileScale = 0.69F
+    override var profileTranslation = Vec3(-0.06, 0.7, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var float: PokemonPose
-    lateinit var swim: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var float: Pose
+    lateinit var swim: Pose
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("seadra", "blink")}
@@ -37,7 +37,7 @@ class SeadraModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "standing",
             poseType = PoseType.STAND,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("seadra", "ground_idle")
             )
@@ -47,7 +47,7 @@ class SeadraModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "walk",
             poseType = PoseType.WALK,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("seadra", "ground_walk")
             )
@@ -57,7 +57,7 @@ class SeadraModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "float",
             poseTypes = UI_POSES + PoseType.FLOAT,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("seadra", "water_idle")
             )
@@ -67,7 +67,7 @@ class SeadraModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "swim",
             poseType = PoseType.SWIM,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("seadra", "water_swim")
             )
@@ -76,6 +76,6 @@ class SeadraModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("seadra", "faint") else null
 }

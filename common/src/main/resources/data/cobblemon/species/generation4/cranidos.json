@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Cranidos",
   "nationalPokedexNumber": 408,
   "primaryType": "rock",
@@ -32,6 +33,19 @@
   "eggGroups": [
     "monster"
   ],
+  "behaviour": {
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    },
+    "moving" : {
+      "walk": {
+        "walkSpeed": 0.18
+      }
+    }
+  },
   "moves": [
     "1:headbutt",
     "1:leer",
@@ -175,10 +189,10 @@
       ]
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.8,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.7,
+    "height": 1.15,
     "fixed": false
   },
   "baseFriendship": 70,

@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "Castform",
   "nationalPokedexNumber": 351,
   "primaryType": "normal",
@@ -58,7 +58,16 @@
       "height": 3,
       "weight": 8,
       "cannotDynamax": false,
-      "battleOnly": true
+      "battleOnly": true,
+      "drops": {
+        "amount": 1,
+        "entries": [
+          {
+            "item": "cobblemon:heat_rock",
+            "percentage": 5.0
+          }
+        ]
+      }
     },
     {
       "name": "Rainy",
@@ -101,7 +110,16 @@
       "height": 3,
       "weight": 8,
       "cannotDynamax": false,
-      "battleOnly": true
+      "battleOnly": true,
+      "drops": {
+        "amount": 1,
+        "entries": [
+          {
+            "item": "cobblemon:damp_rock",
+            "percentage": 5.0
+          }
+        ]
+      }
     },
     {
       "name": "Snowy",
@@ -144,7 +162,16 @@
       "height": 3,
       "weight": 8,
       "cannotDynamax": false,
-      "battleOnly": true
+      "battleOnly": true,
+      "drops": {
+        "amount": 1,
+        "entries": [
+          {
+            "item": "cobblemon:icy_rock",
+            "percentage": 5.0
+          }
+        ]
+      }
     }
   ],
   "baseExperienceYield": 147,

@@ -9,15 +9,19 @@
 			}
 		},
 		"components": {
+			"minecraft:emitter_local_space": {
+				"position": true,
+				"rotation": false
+			},
 			"minecraft:emitter_rate_steady": {
-				"spawn_rate": "math.clamp(10 * v.entity_radius, 10, 100)",
+				"spawn_rate": "math.clamp(10 * math.clamp(q.entity_size,1,2), 10, 100)",
 				"max_particles": 100
 			},
-			"minecraft:emitter_lifetime_once": {
+			"minecraft:emitter_lifetime_looping": {
 				"active_time": 5
 			},
 			"minecraft:emitter_shape_point": {
-				"offset": ["math.sin(v.emitter_age*360*3+v.emitter_random_1*360)*(v.entity_radius+0.2)", 0, "math.cos(v.emitter_age*360*3+v.emitter_random_1*360)*(v.entity_radius+0.2)"]
+				"offset": ["math.sin(v.emitter_age*360*3+v.emitter_random_1*360)*(math.clamp(q.entity_size,1,2)+0.1)", -0.5, "math.cos(v.emitter_age*360*3+v.emitter_random_1*360)*(math.clamp(q.entity_size,1,2)+0.1)"]
 			},
 			"minecraft:particle_lifetime_expression": {
 				"max_lifetime": 1

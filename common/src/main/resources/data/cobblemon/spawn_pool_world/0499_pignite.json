@@ -15,7 +15,8 @@
             "level": "17-42",
             "weight": 0.9,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_plains"
                 ]
@@ -34,8 +35,8 @@
             "weight": 0.9,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_crimson",
-                    "#cobblemon:is_nether_overgrowth"
+                    "#cobblemon:nether/is_crimson",
+                    "#cobblemon:nether/is_overgrowth"
                 ]
             }
         }

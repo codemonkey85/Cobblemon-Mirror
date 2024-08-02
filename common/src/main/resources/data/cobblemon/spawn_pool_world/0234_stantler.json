@@ -22,9 +22,11 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_snowy_forest",
+                    "#cobblemon:is_snowy_taiga",
                     "#cobblemon:is_tundra"
                 ]
             }

@@ -1,0 +1,60 @@
+{
+    "name": "cobblemon:ruins/gimmi_stage2_sunscorched",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_sunscorched_stage2_long",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/sunscorched_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_sunscorched_stage2_short",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/sunscorched_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_sunscorched_stage2_platform",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/sunscorched_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_sunscorched_stage2_long_scaff",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/sunscorched_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_sunscorched_stage2_short_scaff",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/sunscorched_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_sunscorched_stage2_platform_scaff",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/sunscorched_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        }
+    ]
+}

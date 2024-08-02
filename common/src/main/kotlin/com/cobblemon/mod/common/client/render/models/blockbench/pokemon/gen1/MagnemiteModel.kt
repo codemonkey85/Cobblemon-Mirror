@@ -8,33 +8,32 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class MagnemiteModel(root: ModelPart) : PokemonPoseableModel() {
+class MagnemiteModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("magnemite")
 
-    override val portraitScale = 2.2F
-    override val portraitTranslation = Vec3d(-0.1, -1.5, 0.0)
+    override var portraitScale = 2.2F
+    override var portraitTranslation = Vec3(-0.1, -1.5, 0.0)
 
-    override val profileScale = 1.0F
-    override val profileTranslation = Vec3d(0.0, 0.18, 0.0)
+    override var profileScale = 1.0F
+    override var profileTranslation = Vec3(0.0, 0.18, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var sleep: Pose
 
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("magnemite", "blink") }
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("magnemite", "sleep"))
+            animations = arrayOf(bedrock("magnemite", "sleep"))
         )
 
         registerPose(
@@ -42,7 +41,7 @@ class MagnemiteModel(root: ModelPart) : PokemonPoseableModel() {
             poseTypes = PoseType.ALL_POSES - PoseType.FLY - PoseType.SLEEP - PoseType.SWIM,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("magnemite", "air_idle")
             )
         )
@@ -52,15 +51,12 @@ class MagnemiteModel(root: ModelPart) : PokemonPoseableModel() {
             poseTypes = setOf(PoseType.FLY, PoseType.SWIM),
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("magnemite", "air_fly")
             )
         )
 
     }
 
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = bedrockStateful("magnemite", "faint")
+    override fun getFaintAnimation(state: PosableState) = bedrockStateful("magnemite", "faint")
 }

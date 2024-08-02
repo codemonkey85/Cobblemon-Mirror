@@ -22,20 +22,21 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ],
                 "isRaining": false
             },
             "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
                 "biomes": [
                     "#cobblemon:is_arid",
                     "#cobblemon:is_freezing",
                     "#cobblemon:is_taiga"
-                ],
-                "structures": [
-                    "#minecraft:village"
                 ]
             }
         },
@@ -58,7 +59,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ],
@@ -91,7 +93,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_arid"
                 ]
@@ -121,7 +124,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_arid"
                 ]
@@ -146,7 +150,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ],
@@ -178,7 +183,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_arid",
                     "#cobblemon:is_freezing"
@@ -223,7 +229,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_freezing",
                     "#cobblemon:is_taiga"
@@ -254,7 +261,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_freezing",
                     "#cobblemon:is_taiga"

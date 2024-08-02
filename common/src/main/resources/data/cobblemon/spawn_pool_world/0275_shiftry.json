@@ -16,7 +16,8 @@
             "level": "29-48",
             "weight": 0.06,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_forest"
                 ]

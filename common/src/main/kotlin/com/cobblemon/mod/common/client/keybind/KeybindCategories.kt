@@ -10,4 +10,5 @@ package com.cobblemon.mod.common.client.keybind
 
 object KeybindCategories {
     const val COBBLEMON_CATEGORY = "key.cobblemon.categories.cobblemon"
+    const val COBBLEMON_DEBUG_CATEGORY = "key.cobblemon.categories.cobblemon.debug"
 }

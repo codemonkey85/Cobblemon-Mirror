@@ -21,7 +21,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_badlands",
                     "#cobblemon:is_jungle",
@@ -42,7 +43,8 @@
             "level": "7-32",
             "weight": 5.4,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ]
@@ -57,6 +59,7 @@
             "id": "joltik-3",
             "pokemon": "joltik",
             "presets": [
+                "webs",
                 "natural"
             ],
             "type": "pokemon",
@@ -65,10 +68,8 @@
             "level": "7-32",
             "weight": 9.0,
             "condition": {
-                "canSeeSky": false,
-                "biomes": [
-                    "terralith:cave/infested_caves"
-                ]
+                "minSkyLight": 0,
+                "maxSkyLight": 7
             }
         }
     ]

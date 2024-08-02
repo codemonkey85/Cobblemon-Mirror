@@ -47,13 +47,19 @@
     "moving": {
       "canLook": false,
       "walk": {
-        "avoidsLand": true
+        "walkSpeed": 0.3
       },
       "swim": {
-        "swimSpeed": 0.1,
+        "swimSpeed": 0.15,
         "canSwimInWater": true,
         "canBreatheUnderwater": true
       }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
     }
   },
   "moves": [

@@ -11,29 +11,12 @@
             ],
             "type": "pokemon",
             "context": "grounded",
-            "bucket": "uncommon",
-            "level": "6-31",
-            "weight": 5.4,
-            "condition": {
-                "canSeeSky": false,
-                "biomes": [
-                    "#cobblemon:is_deep_dark"
-                ]
-            }
-        },
-        {
-            "id": "gastly-2",
-            "pokemon": "gastly",
-            "presets": [
-                "natural"
-            ],
-            "type": "pokemon",
-            "context": "grounded",
             "bucket": "common",
             "level": "6-31",
             "weight": 9.0,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 0,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ],
@@ -46,7 +29,7 @@
             }
         },
         {
-            "id": "gastly-3",
+            "id": "gastly-2",
             "pokemon": "gastly",
             "presets": [
                 "derelict"
@@ -69,7 +52,7 @@
             }
         },
         {
-            "id": "gastly-4",
+            "id": "gastly-3",
             "pokemon": "gastly",
             "presets": [
                 "natural"
@@ -80,7 +63,8 @@
             "level": "6-31",
             "weight": 9.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_spooky"
                 ],
@@ -88,7 +72,7 @@
             }
         },
         {
-            "id": "gastly-5",
+            "id": "gastly-4",
             "pokemon": "gastly",
             "presets": [
                 "natural"
@@ -116,7 +100,7 @@
                     },
                     {
                         "item": "minecraft:ghast_tear",
-                        "percentage": 2.5
+                        "percentage": 5.0
                     }
                 ]
             }

@@ -13,18 +13,18 @@ import com.cobblemon.mod.common.api.pokeball.catching.calculators.CaptureCalcula
 import com.cobblemon.mod.common.api.pokeball.catching.calculators.CriticalCaptureProvider
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.pokemon.status.statuses.BurnStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.FrozenStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.ParalysisStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.PoisonBadlyStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.PoisonStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.SleepStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.BurnStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.FrozenStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.ParalysisStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.PoisonBadlyStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.PoisonStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.SleepStatus
 import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.random.Random
-import net.minecraft.entity.LivingEntity
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * An implementation of the capture calculator used in the generation 8 games.
@@ -54,7 +54,7 @@ object Gen8CaptureCalculator : CaptureCalculator, CriticalCaptureProvider {
         // ToDo implement difficulty when we have dynamax raids
         val ballBonus = if (validModifier) pokeBall.catchRateModifier.value(thrower, pokemon) else 1F
         val modifiedCatchRate = (pokeBall.catchRateModifier.behavior(thrower, pokemon).mutator((3F * pokemon.hp - 2F * pokemon.currentHealth) * catchRate, ballBonus) / (3F * pokemon.hp)) * bonusStatus * bonusLevel
-        val critical = if (thrower is ServerPlayerEntity) this.shouldHaveCriticalCapture(thrower, modifiedCatchRate) else false
+        val critical = if (thrower is ServerPlayer) this.shouldHaveCriticalCapture(thrower, modifiedCatchRate) else false
         val shakeProbability = (65536F / (255F / modifiedCatchRate).pow(0.1875F)).roundToInt()
         var shakes = 0
         repeat(4) {

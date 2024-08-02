@@ -11,8 +11,8 @@ package com.cobblemon.mod.common.client
 import com.cobblemon.mod.common.BakingOverride
 import com.cobblemon.mod.common.util.cobblemonModel
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.util.ModelIdentifier
-import net.minecraft.util.Identifier
+import net.minecraft.client.resources.model.ModelResourceLocation
+import net.minecraft.resources.ResourceLocation
 
 /**
  * The purpose of this class is to hold models that we want baked, but aren't associated with
@@ -62,7 +62,47 @@ object CobblemonBakingOverrides {
         cobblemonModel("restoration_tank_connector", "none")
     )
 
-    fun registerOverride(modelLocation: Identifier, modelIdentifier: ModelIdentifier): BakingOverride {
+    val COARSE_MULCH = registerOverride(
+        cobblemonResource("block/coarse_mulch"),
+        cobblemonModel("coarse_mulch", "none")
+    )
+
+    val GROWTH_MULCH = registerOverride(
+        cobblemonResource("block/growth_mulch"),
+        cobblemonModel("growth_mulch", "none")
+    )
+
+    val HUMID_MULCH = registerOverride(
+        cobblemonResource("block/humid_mulch"),
+        cobblemonModel("humid_mulch", "none")
+    )
+
+    val LOAMY_MULCH = registerOverride(
+        cobblemonResource("block/loamy_mulch"),
+        cobblemonModel("loamy_mulch", "none")
+    )
+
+    val PEAT_MULCH = registerOverride(
+        cobblemonResource("block/peat_mulch"),
+        cobblemonModel("peat_mulch", "none")
+    )
+
+    val RICH_MULCH = registerOverride(
+        cobblemonResource("block/rich_mulch"),
+        cobblemonModel("rich_mulch", "none")
+    )
+
+    val SANDY_MULCH = registerOverride(
+        cobblemonResource("block/sandy_mulch"),
+        cobblemonModel("sandy_mulch", "none")
+    )
+
+    val SURPRISE_MULCH = registerOverride(
+        cobblemonResource("block/surprise_mulch"),
+        cobblemonModel("surprise_mulch", "none")
+    )
+
+    fun registerOverride(modelLocation: ResourceLocation, modelIdentifier: ModelResourceLocation): BakingOverride {
         val result = BakingOverride(modelLocation, modelIdentifier)
         models.add(result)
         return result

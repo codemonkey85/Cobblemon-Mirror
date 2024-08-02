@@ -23,14 +23,14 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import java.math.RoundingMode
 import java.text.DecimalFormat
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
 
 class MovesWidget(
     pX: Int, pY: Int,
     val summary: Summary
-): SoundlessWidget(pX, pY, WIDTH, HEIGHT, Text.literal("MovesWidget")) {
+): SoundlessWidget(pX, pY, WIDTH, HEIGHT, Component.literal("MovesWidget")) {
     companion object {
         private const val WIDTH = 134
         private const val HEIGHT = 148
@@ -62,8 +62,8 @@ class MovesWidget(
         addWidget(it)
     }
 
-    override fun renderButton(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
-        val matrices = context.matrices
+    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+        val matrices = context.pose()
         blitk(
             matrixStack = matrices,
             texture = movesBaseResource,
@@ -135,12 +135,12 @@ class MovesWidget(
             shadow = true
         )
 
-        val mcFont = MinecraftClient.getInstance().textRenderer
+        val mcFont = Minecraft.getInstance().font
         val movePower = if (selectedMove != null && selectedMove!!.power.toInt() > 0) selectedMove!!.power.toInt().toString().text() else "—".text()
         drawScaledText(
             context = context,
             text = movePower,
-            x = (x + 62.5) - (mcFont.getWidth(movePower) * SCALE),
+            x = (x + 62.5) - (mcFont.width(movePower) * SCALE),
             y = y + 115,
             scale = SCALE,
             shadow = true
@@ -150,7 +150,7 @@ class MovesWidget(
         drawScaledText(
             context = context,
             text = moveAccuracy,
-            x = (x + 62.5) - (mcFont.getWidth(moveAccuracy) * SCALE),
+            x = (x + 62.5) - (mcFont.width(moveAccuracy) * SCALE),
             y = y + 126,
             scale = SCALE,
             shadow = true
@@ -160,14 +160,14 @@ class MovesWidget(
         drawScaledText(
             context = context,
             text = moveEffect,
-            x = (x + 62.5) - (mcFont.getWidth(moveEffect) * SCALE),
+            x = (x + 62.5) - (mcFont.width(moveEffect) * SCALE),
             y = y + 137,
             scale = SCALE,
             shadow = true
         )
 
         if (selectedMove != null) {
-            matrices.push()
+            matrices.pushPose()
             matrices.scale(SCALE, SCALE, 1F)
             MultiLineLabelK.create(
                 component = selectedMove!!.description,
@@ -181,7 +181,7 @@ class MovesWidget(
                 colour = ColourLibrary.WHITE,
                 shadow = true
             )
-            matrices.pop()
+            matrices.popPose()
         }
     }
 
@@ -201,7 +201,7 @@ class MovesWidget(
                 targetSlot = 0
         }
 
-        CobblemonNetwork.sendPacketToServer(
+        CobblemonNetwork.sendToServer(
             RequestMoveSwapPacket(
                 move1 = movePos,
                 move2 = targetSlot,

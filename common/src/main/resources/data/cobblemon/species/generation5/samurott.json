@@ -1,4 +1,4 @@
-﻿{
+{
   "implemented": true,
   "name": "Samurott",
   "nationalPokedexNumber": 503,
@@ -51,6 +51,20 @@
         "special_defence": 65,
         "speed": 85
       },
+      "behaviour": {
+        "resting": {
+          "canSleep": true,
+          "willSleepOnBed": false,
+          "depth": "normal",
+          "light": "0-4"
+        },
+        "moving": {
+          "swim": {
+            "canSwimInWater": true,
+            "canBreatheUnderwater": true
+          }
+        }
+      },
       "catchRate": 45,
       "maleRatio": 0.875,
       "baseExperienceYield": 238,
@@ -102,6 +116,7 @@
         "tm:facade",
         "tm:falseswipe",
         "tm:fling",
+        "tm:flipturn",
         "tm:gigaimpact",
         "tm:grassknot",
         "tm:helpinghand",
@@ -110,6 +125,8 @@
         "tm:hyperbeam",
         "tm:icebeam",
         "tm:icywind",
+        "tm:knockoff",
+        "tm:lashout",
         "tm:liquidation",
         "tm:protect",
         "tm:raindance",
@@ -127,9 +144,13 @@
         "tm:taunt",
         "tm:terablast",
         "tm:thief",
+        "tm:throatchop",
+        "tm:upperhand",
+        "tm:vacuumwave",
         "tm:waterfall",
         "tm:waterpledge",
         "tm:waterpulse",
+        "tm:whirlpool",
         "tm:xscissor"
       ],
       "labels": [
@@ -141,9 +162,28 @@
       ],
       "height": 15,
       "weight": 582,
-      "preEvolution": "dewott",
+      "preEvolution": "dewott region_bias=hisui",
+      "baseScale": 0.75,
+      "hitbox": {
+        "width": 1.6,
+        "height": 2.2,
+        "fixed": false
+      },
       "cannotDynamax": false,
-      "battleOnly": false
+      "battleOnly": false,
+      "drops": {
+        "amount": 2,
+        "entries": [
+          {
+            "item": "cobblemon:mystic_water",
+            "percentage": 25.0
+          },
+          {
+            "item": "cobblemon:shell_bell",
+            "percentage": 25.0
+          }
+        ]
+      }
     }
   ],
   "baseExperienceYield": 238,
@@ -207,6 +247,7 @@
     "tm:facade",
     "tm:falseswipe",
     "tm:fling",
+    "tm:flipturn",
     "tm:frustration",
     "tm:gigaimpact",
     "tm:grassknot",
@@ -218,6 +259,7 @@
     "tm:hyperbeam",
     "tm:icebeam",
     "tm:icywind",
+    "tm:knockoff",
     "tm:liquidation",
     "tm:protect",
     "tm:raindance",
@@ -243,9 +285,12 @@
     "tm:terablast",
     "tm:thief",
     "tm:toxic",
+    "tm:upperhand",
+    "tm:vacuumwave",
     "tm:waterfall",
     "tm:waterpledge",
     "tm:waterpulse",
+    "tm:whirlpool",
     "tm:workup",
     "tm:xscissor",
     "tutor:aquatail",
@@ -278,7 +323,7 @@
   ],
   "preEvolution": "dewott",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.8,
   "hitbox": {
     "width": 1.6,
     "height": 2.2,

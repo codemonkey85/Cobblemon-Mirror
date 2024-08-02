@@ -120,6 +120,7 @@
         "tm:temperflare",
         "tm:terablast",
         "tm:thunderfang",
+        "tm:wildcharge",
         "tm:willowisp"
       ],
       "labels": [
@@ -135,7 +136,7 @@
         {
           "id": "growlithe_arcanine",
           "variant": "item_interact",
-          "result": "arcanine form=hisui",
+          "result": "arcanine hisuian",
           "consumeHeldItem": false,
           "learnableMoves": [
             "extremespeed"
@@ -345,10 +346,10 @@
       "requiredContext": "cobblemon:fire_stone"
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.75,
   "hitbox": {
-    "width": 0.7,
-    "height": 0.9,
+    "width": 1.1,
+    "height": 1.15,
     "fixed": false
   },
   "baseFriendship": 50,

@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Morgrem",
   "nationalPokedexNumber": 860,
   "primaryType": "dark",
@@ -15,6 +16,13 @@
     "special_attack": 75,
     "special_defence": 55,
     "speed": 70
+  },
+  "behaviour": {
+    "resting": {
+      "canSleep": true,
+      "depth": "normal",
+      "light": "0-4"
+    }
   },
   "catchRate": 120,
   "maleRatio": 1,
@@ -111,10 +119,10 @@
       ]
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.6,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.85,
+    "height": 1.8,
     "fixed": false
   },
   "baseFriendship": 50,

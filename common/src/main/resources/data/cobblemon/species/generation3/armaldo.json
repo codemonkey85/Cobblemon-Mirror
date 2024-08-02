@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Armaldo",
   "nationalPokedexNumber": 348,
   "primaryType": "rock",
@@ -14,6 +15,26 @@
     "special_attack": 70,
     "special_defence": 80,
     "speed": 45
+  },
+  "behaviour": {
+    "moving": {
+      "swim": {
+        "swimSpeed": 0.3,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true,
+        "canWalkOnWater": true
+      },
+      "walk": {
+        "avoidsLand": false,
+        "walkSpeed": 0.16
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
   },
   "catchRate": 45,
   "maleRatio": 0.875,
@@ -141,7 +162,7 @@
   "baseScale": 1,
   "hitbox": {
     "width": 1,
-    "height": 1,
+    "height": 2.2,
     "fixed": false
   },
   "baseFriendship": 50,

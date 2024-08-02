@@ -8,25 +8,23 @@
 
 package com.cobblemon.mod.common.mixin;
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityModel;
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Bone;
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Map;
+import net.minecraft.client.model.geom.ModelPart;
 
 @Mixin(ModelPart.class)
 public abstract class ModelPartMixin implements Bone {
-    @Shadow public abstract void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha);
+    @Shadow public abstract void render(PoseStack matrices, VertexConsumer vertices, int light, int overlay, int color);
 
-    @Shadow public abstract void rotate(MatrixStack matrixStack);
+    @Shadow public abstract void translateAndRotate(PoseStack matrixStack);
 
     @Shadow @Final
     public Map<String, ModelPart> children;
@@ -38,12 +36,12 @@ public abstract class ModelPartMixin implements Bone {
     }
 
     @Override
-    public void render(RenderContext context, MatrixStack stack, VertexConsumer buffer, int packedLight, int packedOverlay, float r, float g, float b, float a) {
-        this.render(stack, buffer, packedLight, packedOverlay, r, g, b, a);
+    public void render(RenderContext context, PoseStack stack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
+        this.render(stack, buffer, packedLight, packedOverlay, color);
     }
 
     @Override
-    public void transform(MatrixStack matrixStack) {
-        this.rotate(matrixStack);
+    public void transform(PoseStack matrixStack) {
+        this.translateAndRotate(matrixStack);
     }
 }

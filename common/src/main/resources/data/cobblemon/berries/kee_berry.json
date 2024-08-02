@@ -1,31 +1,23 @@
 {
   "baseYield": {
     "min": 1,
-    "max": 3
+    "max": 2
   },
   "preferredBiomeTags": [
     "cobblemon:is_forest"
   ],
   "growthTime": {
-    "min": 75,
-    "max": 85
+    "min": 50,
+    "max": 60
   },
   "refreshRate": {
-    "min": 15,
-    "max": 25
+    "min": 25,
+    "max": 29
   },
   "favoriteMulches": [
     "peat"
   ],
-  "growthFactors": [
-    {
-      "variant": "cobblemon:preferred_biome",
-      "bonusYield": {
-        "min": 1,
-        "max": 1
-      }
-    }
-  ],
+  "growthFactors": [],
   "randomizedGrowthPoints": true,
   "spawnConditions": [],
   "growthPoints": [
@@ -126,14 +118,26 @@
       }
     }
   ],
+  "stageOnePositioning": {
+    "position": {
+      "x": 8.15,
+      "y": 3.25,
+      "z": 8.1
+    },
+    "rotation": {
+      "x": 5.0,
+      "y": -10.0,
+      "z": -7.5
+    }
+  },
   "mutations": {},
   "sproutShape": "tall-sprout",
   "matureShape": "tall-mature",
   "flavors": {
     "SPICY": 30,
-    "DRY": 30,
+    "DRY": 10,
     "SWEET": 10,
-    "BITTER": 10,
+    "BITTER": 30,
     "SOUR": 10
   },
   "weight": 1.0,
@@ -141,5 +145,6 @@
   "flowerModel": "cobblemon:flower.geo",
   "flowerTexture": "cobblemon:flower",
   "fruitModel": "cobblemon:kee_berry.geo",
-  "fruitTexture": "cobblemon:kee"
+  "fruitTexture": "cobblemon:kee",
+  "boneMealChance": 0.32
 }

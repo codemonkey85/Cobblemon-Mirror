@@ -7,13 +7,26 @@
       "poser": "cobblemon:venonat",
       "model": "cobblemon:venonat.geo",
       "texture": "cobblemon:textures/pokemon/0048_venonat/venonat.png",
-      "layers": []
+      "layers": [
+        {
+          "name": "emissive",
+          "texture": "cobblemon:textures/pokemon/0048_venonat/venonat_emissive.png",
+          "emissive": true
+        }
+      ]
     },
     {
       "aspects": [
         "shiny"
       ],
-      "texture": "cobblemon:textures/pokemon/0048_venonat/venonat_shiny.png"
+      "texture": "cobblemon:textures/pokemon/0048_venonat/venonat_shiny.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "texture": "cobblemon:textures/pokemon/0048_venonat/venonat_shiny_emissive.png",
+          "emissive": true
+        }
+      ]
     }
   ]
 }

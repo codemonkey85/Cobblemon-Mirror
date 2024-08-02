@@ -19,13 +19,13 @@ import com.cobblemon.mod.common.util.adapters.*
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import net.minecraft.advancements.critereon.MinMaxBounds
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 import java.awt.Color
-import net.minecraft.predicate.NumberRange
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.Vec3d
 
 /**
  * Data registry containing all of the [ActionEffectTimeline]s that can be triggered from various actions.
@@ -34,8 +34,8 @@ import net.minecraft.util.math.Vec3d
  * @since October 21st, 2023
  */
 object ActionEffects : JsonDataRegistry<ActionEffectTimeline> {
-    override val id: Identifier = cobblemonResource("action_effects")
-    override val type: ResourceType = ResourceType.SERVER_DATA
+    override val id: ResourceLocation = cobblemonResource("action_effects")
+    override val type: PackType = PackType.SERVER_DATA
     override val observable = SimpleObservable<ActionEffects>()
 
     init {
@@ -62,11 +62,11 @@ object ActionEffects : JsonDataRegistry<ActionEffectTimeline> {
         .disableHtmlEscaping()
         .setPrettyPrinting()
         .registerTypeAdapter(ActionEffectKeyframe::class.java, ActionEffectKeyframeAdapter)
-        .registerTypeAdapter(NumberRange.FloatRange::class.java, FloatNumberRangeAdapter)
-        .registerTypeAdapter(TypeToken.getParameterized(Collection::class.java, Box::class.java).type, BoxCollectionAdapter)
-        .registerTypeAdapter(Box::class.java, BoxAdapter)
-        .registerTypeAdapter(Vec3d::class.java, VerboseVec3dAdapter)
-        .registerTypeAdapter(Identifier::class.java, IdentifierAdapter)
+        .registerTypeAdapter(MinMaxBounds.Doubles::class.java, FloatNumberRangeAdapter)
+        .registerTypeAdapter(TypeToken.getParameterized(Collection::class.java, AABB::class.java).type, BoxCollectionAdapter)
+        .registerTypeAdapter(AABB::class.java, BoxAdapter)
+        .registerTypeAdapter(Vec3::class.java, VerboseVec3dAdapter)
+        .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .registerTypeAdapter(IntRange::class.java, VerboseIntRangeAdapter)
         .registerTypeAdapter(Color::class.java, LiteralHexColorAdapter)
         .registerTypeAdapter(Stat::class.java, CobblemonStatTypeAdapter)
@@ -84,12 +84,12 @@ object ActionEffects : JsonDataRegistry<ActionEffectTimeline> {
     override val typeToken: TypeToken<ActionEffectTimeline> = TypeToken.get(ActionEffectTimeline::class.java)
     override val resourcePath = "action_effects"
 
-    val actionEffects = mutableMapOf<Identifier, ActionEffectTimeline>()
-    override fun reload(data: Map<Identifier, ActionEffectTimeline>) {
+    val actionEffects = mutableMapOf<ResourceLocation, ActionEffectTimeline>()
+    override fun reload(data: Map<ResourceLocation, ActionEffectTimeline>) {
         actionEffects.clear()
         actionEffects.putAll(data)
         observable.emit(this)
     }
 
-    override fun sync(player: ServerPlayerEntity) {}
+    override fun sync(player: ServerPlayer) {}
 }

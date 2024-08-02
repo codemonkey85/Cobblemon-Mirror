@@ -46,6 +46,19 @@
   "eggGroups": [
     "field"
   ],
+  "behaviour": {
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": true,
+      "depth": "normal",
+      "light": "0-4"
+    },
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.12
+      }
+    }
+  },
   "moves": [
     "1:tackle",
     "1:tailwhip",
@@ -69,8 +82,11 @@
     "tm:bulldoze",
     "tm:bulletseed",
     "tm:chillingwater",
+    "tm:curse",
     "tm:dig",
     "tm:disarmingvoice",
+    "tm:doubleedge",
+    "tm:endeavor",
     "tm:endure",
     "tm:facade",
     "tm:helpinghand",
@@ -86,10 +102,12 @@
     "tm:sleeptalk",
     "tm:substitute",
     "tm:sunnyday",
+    "tm:superfang",
     "tm:takedown",
     "tm:terablast",
     "tm:thief",
     "tm:trailblaze",
+    "tm:uproar",
     "tm:zenheadbutt"
   ],
   "labels": [
@@ -121,7 +139,7 @@
     {
       "id": "lechonk_oinkologne",
       "variant": "level_up",
-      "result": "oinkologne form=f",
+      "result": "oinkologne f",
       "consumeHeldItem": false,
       "learnableMoves": [],
       "requirements": [

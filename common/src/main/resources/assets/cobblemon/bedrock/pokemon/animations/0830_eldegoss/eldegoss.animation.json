@@ -1,0 +1,58 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.eldegoss.ground_idle": {
+			"loop": true,
+			"bones": {
+				"head": {
+					"rotation": [5, 0, 0]
+				}
+			}
+		},
+		"animation.eldegoss.blink": {
+			"animation_length": 0.16667,
+			"bones": {
+				"eyelid_right": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"eyelid_left": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.eldegoss.cry": {
+			"animation_length": 1.5,
+			"sound_effects": {
+				"0.04": {
+					"effect": "pokemon.eldegoss.cry"
+				}
+			},
+			"bones": {
+				"mouth_closed": {
+					"position": {
+						"0.25": [0, 0, 0],
+						"0.3333": [0, 0, 0.1],
+						"1.1667": [0, 0, 0.1],
+						"1.25": [0, 0, 0]
+					}
+				},
+				"mouth_open": {
+					"position": {
+						"0.0": [0, 0, 0],
+						"0.25": [0, 0, -0.1],
+						"1.25": [0, 0, -0.1],
+						"1.5": [0, 0, 0]
+					}
+				}
+			}
+		}
+	}
+}

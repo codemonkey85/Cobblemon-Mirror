@@ -8,7 +8,7 @@
     "h:waterabsorb"
   ],
   "drops": {
-    "amount": 3,
+    "amount": 4,
     "entries": [
       {
         "item": "minecraft:cactus",
@@ -20,6 +20,10 @@
       },
       {
         "item": "cobblemon:tanga_berry",
+        "percentage": 2.5
+      },
+      {
+        "item": "cobblemon:sticky_barb",
         "percentage": 2.5
       }
     ]
@@ -219,8 +223,8 @@
   ],
   "baseScale": 0.7,
   "hitbox": {
-    "width": 0.9,
-    "height": 0.9,
+    "width": 0.65,
+    "height": 0.75,
     "fixed": false
   },
   "baseFriendship": 35,

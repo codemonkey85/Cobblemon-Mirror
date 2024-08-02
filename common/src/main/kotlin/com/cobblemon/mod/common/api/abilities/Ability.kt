@@ -9,9 +9,14 @@
 package com.cobblemon.mod.common.api.abilities
 
 import com.cobblemon.mod.common.api.Priority
+import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.DataKeys
 import com.google.gson.JsonObject
-import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.CompoundTag
+import com.mojang.serialization.Codec
+import com.mojang.serialization.JsonOps
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.nbt.NbtOps
 
 /**
  * Representing an Ability with all its attributes
@@ -21,7 +26,7 @@ import net.minecraft.nbt.NbtCompound
  * @author Qu
  * @since January 9th, 2022
  */
-open class Ability internal constructor(var template: AbilityTemplate, var forced: Boolean) {
+open class Ability internal constructor(var template: AbilityTemplate, forced: Boolean) {
 
     val name: String
         get() = template.name
@@ -34,47 +39,84 @@ open class Ability internal constructor(var template: AbilityTemplate, var force
 
     /**
      * This represents the last known index of this backing ability in the species data.
-     * If -1 the ability will attempt to find the correct index or reroll itself, this is done in order to be compatible with existing data
-     * The value can be mutated however this is not recommended by API users.
+     * @see [Pokemon.updateAbility].
+     */
+    var forced: Boolean = forced
+        internal set
+
+    /**
+     * This represents the last known index of this backing ability in the species data.
+     *
+     * @see [Pokemon.updateAbility].
      */
     var index: Int = -1
+        internal set
 
     /**
      * The last known priority of this ability in the species data.
-     * The value can be mutated however this is not recommended by API users.
+     *
+     * @see [Pokemon.updateAbility].
      */
     var priority = Priority.LOWEST
+        internal set
 
-    open fun saveToNBT(nbt: NbtCompound): NbtCompound {
-        nbt.putString(DataKeys.POKEMON_ABILITY_NAME, name)
-        nbt.putBoolean(DataKeys.POKEMON_ABILITY_FORCED, forced)
-        nbt.putInt(DataKeys.POKEMON_ABILITY_INDEX, index)
-        nbt.putString(DataKeys.POKEMON_ABILITY_PRIORITY, priority.name)
+    @Deprecated("Please use the Codec instead", ReplaceWith("Ability.CODEC"))
+    open fun saveToNBT(nbt: CompoundTag): CompoundTag {
+        CODEC.encodeStart(NbtOps.INSTANCE, this).ifSuccess { nElement ->
+            if (nElement is CompoundTag) {
+                nbt.merge(nElement)
+            }
+        }
         return nbt
     }
 
+    @Deprecated("Please use the Codec instead", ReplaceWith("Ability.CODEC"))
     open fun saveToJSON(json: JsonObject): JsonObject {
-        json.addProperty(DataKeys.POKEMON_ABILITY_NAME, name)
-        json.addProperty(DataKeys.POKEMON_ABILITY_FORCED, forced)
-        json.addProperty(DataKeys.POKEMON_ABILITY_INDEX, index)
-        json.addProperty(DataKeys.POKEMON_ABILITY_PRIORITY, priority.name)
+        CODEC.encodeStart(JsonOps.INSTANCE, this).ifSuccess { jElement ->
+            if (jElement is JsonObject) {
+                jElement.asMap().forEach(json::add)
+            }
+        }
         return json
     }
 
-    open fun loadFromNBT(nbt: NbtCompound): Ability {
-        forced = nbt.getBoolean(DataKeys.POKEMON_ABILITY_FORCED)
-        if (nbt.contains(DataKeys.POKEMON_ABILITY_INDEX) && nbt.contains(DataKeys.POKEMON_ABILITY_PRIORITY)) {
-            this.index = nbt.getInt(DataKeys.POKEMON_ABILITY_INDEX)
-            this.priority = Priority.valueOf(nbt.getString(DataKeys.POKEMON_ABILITY_PRIORITY))
+    @Deprecated("Please use the Codec instead", ReplaceWith("Ability.CODEC"))
+    open fun loadFromNBT(nbt: CompoundTag): Ability {
+        CODEC.parse(NbtOps.INSTANCE, nbt).ifSuccess { ability ->
+            this.template = ability.template
+            this.forced = ability.forced
+            this.index = ability.index
+            this.priority = ability.priority
         }
         return this
     }
+
+    @Deprecated("Please use the Codec instead", ReplaceWith("Ability.CODEC"))
     open fun loadFromJSON(json: JsonObject): Ability {
-        forced = json.get(DataKeys.POKEMON_ABILITY_FORCED)?.asBoolean ?: false
-        if (json.has(DataKeys.POKEMON_ABILITY_INDEX) && json.has(DataKeys.POKEMON_ABILITY_PRIORITY)) {
-            this.index = json.get(DataKeys.POKEMON_ABILITY_INDEX).asInt
-            this.priority = Priority.valueOf(json.get(DataKeys.POKEMON_ABILITY_PRIORITY).asString)
+        CODEC.parse(JsonOps.INSTANCE, json).ifSuccess { ability ->
+            this.template = ability.template
+            this.forced = ability.forced
+            this.index = ability.index
+            this.priority = ability.priority
         }
         return this
     }
+
+    companion object {
+
+        @JvmStatic
+        val CODEC: Codec<Ability> = RecordCodecBuilder.create {
+            it.group(
+                AbilityTemplate.CODEC.fieldOf(DataKeys.POKEMON_ABILITY_NAME).forGetter(Ability::template),
+                Codec.BOOL.optionalFieldOf(DataKeys.POKEMON_ABILITY_FORCED, false).forGetter(Ability::forced),
+                Codec.INT.optionalFieldOf(DataKeys.POKEMON_ABILITY_INDEX, -1).forGetter(Ability::index),
+                Priority.CODEC.optionalFieldOf(DataKeys.POKEMON_ABILITY_PRIORITY, Priority.LOWEST).forGetter(Ability::priority)
+            ).apply(it) { template, forced, index, priority -> Ability(template, forced).apply {
+                this.index = index
+                this.priority = priority
+            } }
+        }
+
+    }
+
 }

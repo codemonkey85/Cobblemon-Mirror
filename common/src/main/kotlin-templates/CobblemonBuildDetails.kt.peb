@@ -1,0 +1,17 @@
+{{ license }}
+
+package com.cobblemon.mod.common
+
+object CobblemonBuildDetails {
+
+    const val MOD_ID = "{{ modid }}"
+    const val VERSION = "{{ version }}"
+    const val SNAPSHOT = {{ isSnapshot }}
+
+    const val GIT_COMMIT = "{{ gitCommit | default("Not Specified") }}"
+    const val BRANCH = "{{ branch | default("Not Specified") }}"
+
+    fun smallCommitHash(): String {
+        return this.GIT_COMMIT.substring(0, 7)
+    }
+}

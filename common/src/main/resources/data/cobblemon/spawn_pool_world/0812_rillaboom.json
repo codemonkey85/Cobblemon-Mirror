@@ -7,7 +7,8 @@
             "id": "rillaboom-1",
             "pokemon": "rillaboom",
             "presets": [
-                "natural"
+                "natural",
+                "treetop"
             ],
             "type": "pokemon",
             "context": "grounded",
@@ -15,7 +16,8 @@
             "level": "35-53",
             "weight": 0.1,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_jungle",
                     "#cobblemon:is_tropical_island"

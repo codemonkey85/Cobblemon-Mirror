@@ -1,0 +1,15 @@
+{
+    "name": "cobblemon:fallen_statue_ruins",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/fallen_statue",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/fallen_statue_ruins",
+                "projection": "rigid"
+            }
+        }
+    ]
+}

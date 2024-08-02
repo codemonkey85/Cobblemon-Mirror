@@ -10,49 +10,53 @@ package com.cobblemon.mod.common.net.messages.client.spawn
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.mixin.invoker.ClientPlayNetworkHandlerInvoker
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.world.ClientWorld
-import net.minecraft.entity.Entity
-import net.minecraft.network.NetworkThreadUtils
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.Minecraft
+import net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.world.entity.Entity
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.protocol.PacketUtils
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
+import net.minecraft.world.phys.Vec3
 
-abstract class SpawnExtraDataEntityPacket<T: NetworkPacket<T>, E : Entity>(private val vanillaSpawnPacket: EntitySpawnS2CPacket) : NetworkPacket<T> {
-    override fun encode(buffer: PacketByteBuf) {
+abstract class SpawnExtraDataEntityPacket<T: NetworkPacket<T>, E : Entity>(private val vanillaSpawnPacket: ClientboundAddEntityPacket) : NetworkPacket<T> {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         this.encodeEntityData(buffer)
         this.vanillaSpawnPacket.write(buffer)
     }
 
-    abstract fun encodeEntityData(buffer: PacketByteBuf)
+    abstract fun encodeEntityData(buffer: RegistryFriendlyByteBuf)
 
     abstract fun applyData(entity: E)
 
     abstract fun checkType(entity: Entity): Boolean
 
-    fun spawnAndApply(client: MinecraftClient) {
+    fun spawnAndApply(client: Minecraft) {
         client.execute {
             val player = client.player ?: return@execute
-            val world = player.world as? ClientWorld ?: return@execute
+            val world = player.level() as? ClientLevel ?: return@execute
             // This is a copy pasta of ClientPlayNetworkHandler#onEntitySpawn
             // This exists due to us needing to do everything it does except spawn the entity in the world.
             // We invoke applyData then we add the entity to the world.
-            NetworkThreadUtils.forceMainThread(this.vanillaSpawnPacket, player.networkHandler, client)
-            val entityType = this.vanillaSpawnPacket.entityType
+            PacketUtils.ensureRunningOnSameThread(this.vanillaSpawnPacket, player.connection, client)
+            val entityType = this.vanillaSpawnPacket.type
             val entity = entityType.create(world) ?: return@execute
-            entity.onSpawnPacket(this.vanillaSpawnPacket)
-            entity.velocity = Vec3d(this.vanillaSpawnPacket.velocityX, this.vanillaSpawnPacket.velocityY, this.vanillaSpawnPacket.velocityZ)
+            entity.recreateFromPacket(this.vanillaSpawnPacket)
+            entity.deltaMovement = Vec3(
+                this.vanillaSpawnPacket.xa,
+                this.vanillaSpawnPacket.ya,
+                this.vanillaSpawnPacket.za
+            )
             // Cobblemon start
             if (this.checkType(entity)) {
                 this.applyData(entity as E)
             }
             // Cobblemon end
-            world.addEntity(this.vanillaSpawnPacket.id, entity)
-            (player.networkHandler as ClientPlayNetworkHandlerInvoker).callPlaySpawnSound(entity)
+            world.addEntity(entity)
+            (player.connection as ClientPlayNetworkHandlerInvoker).callPlaySpawnSound(entity)
         }
     }
 
     companion object {
-        fun decodeVanillaPacket(buffer: PacketByteBuf) = EntitySpawnS2CPacket(buffer)
+        fun decodeVanillaPacket(buffer: RegistryFriendlyByteBuf) = ClientboundAddEntityPacket(buffer)
     }
 }

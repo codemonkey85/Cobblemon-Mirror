@@ -8,14 +8,9 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench
 
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.StatefulAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.StatelessAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.animation.ActiveAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.animation.PoseAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.bedrock.animation.BedrockAnimationRepository
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.ModelFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.AnimationReferenceFactory
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.JsonPokemonPoseableModel
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.entity.Entity
 
 /**
  * An [AnimationReferenceFactory] that loads Bedrock-format animations from [BedrockAnimationRepository].
@@ -26,12 +21,12 @@ import net.minecraft.entity.Entity
  * @since June 28th, 2023
  */
 object BedrockAnimationReferenceFactory : AnimationReferenceFactory {
-    override fun <T : Entity> stateless(model: PoseableEntityModel<T>, animString: String): StatelessAnimation<T, ModelFrame> {
+    override fun pose(model: PosableModel, animString: String): PoseAnimation {
         val split = animString.replace("bedrock(", "").replace(")", "").split(",").map(String::trim)
         return model.bedrock(animationGroup = split[0], animation = split[1])
     }
 
-    override fun <T : Entity> stateful(model: PoseableEntityModel<T>, animString: String, ): StatefulAnimation<T, ModelFrame> {
+    override fun active(model: PosableModel, animString: String, ): ActiveAnimation {
         val split = animString.replace("bedrock(", "").replace(")", "").split(",").map(String::trim)
         return model.bedrockStateful(
             animationGroup = split[0],

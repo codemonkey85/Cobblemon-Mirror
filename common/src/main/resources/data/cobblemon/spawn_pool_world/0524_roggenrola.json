@@ -15,7 +15,8 @@
             "level": "3-28",
             "weight": 9.0,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ],
@@ -37,9 +38,10 @@
             "context": "grounded",
             "bucket": "uncommon",
             "level": "3-28",
-            "weight": 5.4,
+            "weight": 9.0,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_deep_dark"
                 ]

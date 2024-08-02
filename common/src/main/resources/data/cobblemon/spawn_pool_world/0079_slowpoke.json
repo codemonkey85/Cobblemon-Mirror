@@ -15,10 +15,28 @@
             "level": "7-32",
             "weight": 5.4,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_beach"
                 ]
+            }
+        },
+        {
+            "id": "slowpoke-2",
+            "pokemon": "slowpoke",
+            "presets": [
+                "natural",
+                "river"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "7-32",
+            "weight": 6.0,
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15
             }
         }
     ]

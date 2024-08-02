@@ -1,0 +1,35 @@
+{
+  "parent": "cobblemon:recipes/root",
+  "rewards": {
+    "recipes": [
+      "cobblemon:relic_pouch_from_coin",
+      "cobblemon:relic_pouch_from_relic_sack"
+    ]
+  },
+  "criteria": {
+    "has_coin": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:relic_coin"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "cobblemon:relic_coin"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_coin",
+      "has_the_recipe"
+    ]
+  ]
+}

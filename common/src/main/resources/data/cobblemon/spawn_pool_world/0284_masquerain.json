@@ -12,12 +12,15 @@
             ],
             "type": "pokemon",
             "context": "surface",
-            "bucket": "common",
+            "bucket": "uncommon",
             "level": "22-45",
-            "weight": 0.2,
+            "weight": 0.6,
             "condition": {
-                "canSeeSky": true,
-                "timeRange": "night",
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_freshwater"
+                ],
                 "isRaining": false
             }
         },
@@ -29,7 +32,7 @@
             ],
             "type": "pokemon",
             "context": "surface",
-            "bucket": "common",
+            "bucket": "uncommon",
             "level": "22-45",
             "weight": 1.0,
             "condition": {

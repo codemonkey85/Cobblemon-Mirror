@@ -10,14 +10,14 @@
 		},
 		"components": {
 			"minecraft:emitter_rate_steady": {
-				"spawn_rate": "10 * (v.entity_radius/2) + 5",
+				"spawn_rate": "10 * (math.clamp(q.entity_size,1,2)/2) + 5",
 				"max_particles": 100
 			},
 			"minecraft:emitter_lifetime_once": {
 				"active_time": 4
 			},
 			"minecraft:emitter_shape_sphere": {
-				"radius": "v.entity_radius",
+				"radius": "math.clamp(q.entity_size,1,2)",
 				"surface_only": true,
 				"direction": "outwards"
 			},
@@ -27,25 +27,29 @@
 			"minecraft:particle_initial_spin": {
 				"rotation": "math.random_integer(1,4)*90"
 			},
-			"minecraft:particle_initial_speed": "math.random(4,6) * v.entity_radius",
+			"minecraft:particle_initial_speed": "math.random(4,6) * math.clamp(q.entity_size,1,2)",
 			"minecraft:particle_motion_dynamic": {
 				"linear_drag_coefficient": 2
 			},
 			"minecraft:particle_appearance_billboard": {
-				"size": ["0.2 * v.entity_radius", "0.2 * v.entity_radius"],
+				"size": ["0.2 * math.clamp(q.entity_size,1,2)", "0.2 * math.clamp(q.entity_size,1,2)"],
 				"facing_camera_mode": "rotate_xyz",
 				"uv": {
 					"texture_width": 8,
 					"texture_height": 32,
 					"flipbook": {
 						"base_UV": [0, 0],
-						"size_UV": [0, 8],
+						"size_UV": [8, 8],
 						"step_UV": [0, 8],
 						"frames_per_second": 24,
 						"max_frame": 4,
 						"loop": true
 					}
 				}
+			},
+			"minecraft:particle_motion_collision": {
+				"collision_drag": 1,
+				"coefficient_of_restitution": 1
 			},
 			"minecraft:particle_appearance_tinting": {
 				"color": {

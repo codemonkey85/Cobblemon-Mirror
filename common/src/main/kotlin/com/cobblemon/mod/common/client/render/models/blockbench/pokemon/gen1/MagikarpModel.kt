@@ -8,71 +8,141 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.StatelessAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.ModelFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
-import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation.Companion.Y_AXIS
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.PoseType.Companion.FLYING_POSES
-import com.cobblemon.mod.common.entity.PoseType.Companion.STANDING_POSES
-import com.cobblemon.mod.common.entity.PoseType.Companion.SWIMMING_POSES
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isUnderWater
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class MagikarpModel(root: ModelPart) : PokemonPoseableModel() {
+class MagikarpModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("magikarp")
-    val leftMustache = getPart("whisker_left")
-    val rightMustache = getPart("whisker_right")
 
-    override val portraitScale = 2.0F
-    override val portraitTranslation = Vec3d(-0.1, -0.75, 0.0)
-    override val profileScale = 0.95F
-    override val profileTranslation = Vec3d(0.0, 0.40, 0.0)
+    override var portraitScale = 2.0F
+    override var portraitTranslation = Vec3(-0.1, -0.75, 0.0)
+    override var profileScale = 0.95F
+    override var profileTranslation = Vec3(0.0, 0.40, 0.0)
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var floating: CobblemonPose
+    lateinit var swimming: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var watersleep: CobblemonPose
+    lateinit var water_surface_idle: CobblemonPose
+    lateinit var water_surface_swim: CobblemonPose
+    lateinit var shoulderLeft: CobblemonPose
+    lateinit var shoulderRight: CobblemonPose
+
+    val wateroffset = -10
+
+    override val cryAnimation = CryProvider { bedrockStateful("magikarp", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("magikarp", "blink")}
-        registerPose(
-            poseName = "land",
-            poseTypes = STANDING_POSES + PoseType.PROFILE,
+        val sleepQuirk = quirk(secondsBetweenOccurrences = 60F to 120F) { bedrockStateful("magikarp", "sleep_quirk")}
+        val waterSurfaceQuirk = quirk(secondsBetweenOccurrences = 60F to 120F) { bedrockStateful("magikarp", "surfacewater_quirk")}
+
+        sleep = registerPose(
+            poseName = "sleeping",
+            poseType = PoseType.SLEEP,
+            quirks = arrayOf(sleepQuirk),
+            condition = { !it.isInWater },
+            animations = arrayOf(bedrock("magikarp", "sleep"))
+        )
+
+        watersleep = registerPose(
+            poseName = "water_sleeping",
+            poseType = PoseType.SLEEP,
+            quirks = arrayOf(sleepQuirk),
+            condition = { it.isInWater },
+            animations = arrayOf(bedrock("magikarp", "water_sleep"))
+        )
+
+        standing = registerPose(
+            poseName = "standing",
+            poseTypes = PoseType.UI_POSES + PoseType.STAND,
+            transformTicks = 10,
+            condition = {!it.isInWater && !it.isUnderWater},
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(bedrock("magikarp","flop")),
-            transformedParts = arrayOf(
-                rootPart.createTransformation().addPosition(Y_AXIS, 6),
-                leftMustache.createTransformation().withRotation(Y_AXIS, (-75F).toRadians()),
-                rightMustache.createTransformation().withRotation(Y_AXIS, 75F.toRadians())
+            animations = arrayOf(
+                bedrock("magikarp", "ground_idle")
             )
         )
 
-        registerPose(
+        walk = registerPose(
+            poseName = "walk",
+            transformTicks = 10,
+            poseType = PoseType.WALK,
+            condition = { !it.isInWater && !it.isUnderWater},
+            quirks = arrayOf(blink),
+            animations = arrayOf(
+                bedrock("magikarp", "ground_walk")
+            )
+        )
+
+        floating = registerPose(
+            poseName = "floating",
+            transformTicks = 10,
+            poseType = PoseType.FLOAT,
+            condition = { it.isUnderWater },
+            quirks = arrayOf(blink),
+            animations = arrayOf(
+                bedrock("magikarp", "water_idle")
+            )
+        )
+
+        swimming = registerPose(
             poseName = "swimming",
-            poseTypes = SWIMMING_POSES,
+            transformTicks = 10,
+            condition = { it.isUnderWater },
+            poseType = PoseType.SWIM,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
-                bedrock("magikarp", "water_swim")
+            animations = arrayOf(
+                bedrock("magikarp", "water_swim"),
             )
         )
 
-        registerPose(
-            poseName = "fly",
-            poseTypes = FLYING_POSES,
-            quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
-                bedrock("magikarp", "air_idle")
-            )
-        )
+//        battleidle = registerPose(
+//            poseName = "battle_idle",
+//            poseTypes = PoseType.STATIONARY_POSES,
+//            transformTicks = 10,
+//            quirks = arrayOf(blink),
+//            condition = { it.isBattling && !it.isInWater },
+//            idleAnimations = arrayOf(
+//                bedrock("magikarp", "battle_idle")
+//            )
+//        )
 
-        registerPose(
-            poseName = "portrait",
-            poseTypes = setOf(PoseType.PORTRAIT),
-            quirks = arrayOf(blink),
-            idleAnimations = emptyArray<StatelessAnimation<PokemonEntity, out ModelFrame>>(),
+        water_surface_idle = registerPose(
+            poseName = "surface_idle",
+            poseTypes = PoseType.STATIONARY_POSES,
+            quirks = arrayOf(blink, waterSurfaceQuirk),
+            condition = { !it.isUnderWater && it.isInWater },
+            animations = arrayOf(
+                bedrock("magikarp", "surfacewater_idle"),
+            ),
             transformedParts = arrayOf(
-                leftMustache.createTransformation().withRotation(Y_AXIS, (-75F).toRadians()),
-                rightMustache.createTransformation().withRotation(Y_AXIS, 75F.toRadians())
+                rootPart.createTransformation().addPosition(ModelPartTransformation.Y_AXIS, wateroffset)
+            )
+        )
+
+        water_surface_swim = registerPose(
+            poseName = "surface_swim",
+            poseTypes = PoseType.MOVING_POSES,
+            quirks = arrayOf(blink),
+            condition = { !it.isUnderWater && it.isInWater },
+            animations = arrayOf(
+                bedrock("magikarp", "surfacewater_swim"),
+            ),
+            transformedParts = arrayOf(
+                rootPart.createTransformation().addPosition(ModelPartTransformation.Y_AXIS, wateroffset)
             )
         )
     }
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walk, sleep)) bedrockStateful("magikarp", "ground_faint") else if (state.isPosedIn(floating, swimming, water_surface_idle, water_surface_swim, watersleep )) bedrockStateful("magikarp", "water_faint") else null
 }

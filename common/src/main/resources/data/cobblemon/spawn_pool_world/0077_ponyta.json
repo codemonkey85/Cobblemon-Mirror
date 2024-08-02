@@ -21,7 +21,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_grassland"
                 ],
@@ -41,8 +42,25 @@
             "weight": 5.4,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_overgrowth",
-                    "#cobblemon:is_nether_wasteland"
+                    "#cobblemon:nether/is_overgrowth",
+                    "#cobblemon:nether/is_wasteland"
+                ]
+            },
+            "drops": {
+                "amount": 3,
+                "entries": [
+                    {
+                        "item": "minecraft:leather",
+                        "quantityRange": "0-1"
+                    },
+                    {
+                        "item": "minecraft:blaze_powder",
+                        "percentage": 5.0
+                    },
+                    {
+                        "item": "cobblemon:shuca_berry",
+                        "percentage": 2.5
+                    }
                 ]
             }
         },
@@ -65,7 +83,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_floral",
                     "#cobblemon:is_magical"

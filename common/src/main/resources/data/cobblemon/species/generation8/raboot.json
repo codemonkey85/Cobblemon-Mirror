@@ -45,6 +45,13 @@
       }
     ]
   },
+  "behaviour": {
+    "moving" : {
+      "walk": {
+        "walkSpeed": 0.21
+      }
+    }
+  },
   "moves": [
     "1:ember",
     "1:growl",
@@ -132,10 +139,10 @@
       ]
     }
   ],
-  "baseScale": 0.7,
+  "baseScale": 0.65,
   "hitbox": {
-    "width": 0.75,
-    "height": 1.4,
+    "width": 0.5,
+    "height": 1.6,
     "fixed": false
   },
   "baseFriendship": 50,

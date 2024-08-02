@@ -1,0 +1,56 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"3": "cobblemon:block/relic_coin_pouch",
+		"particle": "cobblemon:block/relic_coin_pouch"
+	},
+	"elements": [
+		{
+			"name": "pouch",
+			"from": [5, 0, 5],
+			"to": [11, 5, 11],
+			"faces": {
+				"north": {"uv": [0, 6, 6, 11], "texture": "#3"},
+				"east": {"uv": [6, 6, 12, 11], "texture": "#3"},
+				"south": {"uv": [6, 6, 12, 11], "texture": "#3"},
+				"west": {"uv": [6, 6, 12, 11], "texture": "#3"},
+				"up": {"uv": [6, 6, 0, 0], "texture": "#3"},
+				"down": {"uv": [12, 0, 6, 6], "texture": "#3"}
+			}
+		},
+		{
+			"name": "tie",
+			"from": [6, 5, 6],
+			"to": [10, 6, 10],
+			"faces": {
+				"north": {"uv": [12, 10, 16, 11], "texture": "#3"},
+				"east": {"uv": [12, 10, 16, 11], "texture": "#3"},
+				"south": {"uv": [12, 10, 16, 11], "texture": "#3"},
+				"west": {"uv": [12, 10, 16, 11], "texture": "#3"},
+				"up": {"uv": [16, 6, 12, 2], "texture": "#3"},
+				"down": {"uv": [16, 6, 12, 10], "texture": "#3"}
+			}
+		},
+		{
+			"name": "opening",
+			"from": [5.5, 6, 5.5],
+			"to": [10.5, 7, 10.5],
+			"faces": {
+				"north": {"uv": [10, 11, 15, 12], "texture": "#3"},
+				"east": {"uv": [10, 11, 15, 12], "texture": "#3"},
+				"south": {"uv": [10, 11, 15, 12], "texture": "#3"},
+				"west": {"uv": [10, 11, 15, 12], "texture": "#3"},
+				"up": {"uv": [5, 16, 0, 11], "texture": "#3"},
+				"down": {"uv": [10, 11, 5, 16], "texture": "#3"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "relic_coin_pouch",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [0, 1, 2]
+		}
+	]
+}

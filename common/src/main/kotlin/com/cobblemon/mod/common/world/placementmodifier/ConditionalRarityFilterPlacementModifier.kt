@@ -8,14 +8,14 @@
 
 package com.cobblemon.mod.common.world.placementmodifier
 
-import com.mojang.serialization.Codec
+import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.random.Random
-import net.minecraft.world.gen.blockpredicate.BlockPredicate
-import net.minecraft.world.gen.feature.FeaturePlacementContext
-import net.minecraft.world.gen.placementmodifier.AbstractConditionalPlacementModifier
+import net.minecraft.core.BlockPos
+import net.minecraft.util.RandomSource
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate
+import net.minecraft.world.level.levelgen.placement.PlacementContext
+import net.minecraft.world.level.levelgen.placement.PlacementFilter
 
 /**
  * It's like the rarity filter placement modifier, but conditional. If condition fails, doesn't alter the stream.
@@ -26,21 +26,21 @@ import net.minecraft.world.gen.placementmodifier.AbstractConditionalPlacementMod
 class ConditionalRarityFilterPlacementModifier(
     val predicate: BlockPredicate,
     val chance: Int
-) : AbstractConditionalPlacementModifier() {
+) : PlacementFilter() {
     companion object {
-        val MODIFIER_CODEC: Codec<ConditionalRarityFilterPlacementModifier> = RecordCodecBuilder.create { instance ->
+        val MODIFIER_CODEC: MapCodec<ConditionalRarityFilterPlacementModifier> = RecordCodecBuilder.mapCodec { instance ->
             instance
                 .group(
-                    BlockPredicate.BASE_CODEC.fieldOf("predicate").forGetter { it.predicate },
+                    BlockPredicate.CODEC.fieldOf("predicate").forGetter { it.predicate },
                     PrimitiveCodec.INT.fieldOf("chance").forGetter { it.chance }
                 )
                 .apply(instance, ::ConditionalRarityFilterPlacementModifier)
         }
     }
 
-    override fun getType() = CobblemonPlacementModifierTypes.CONDITIONAL_RARITY_FILTER
+    override fun type() = CobblemonPlacementModifierTypes.CONDITIONAL_RARITY_FILTER
 
-    override fun shouldPlace(context: FeaturePlacementContext, random: Random, pos: BlockPos): Boolean {
-        return if (predicate.test(context.world, pos)) random.nextFloat() < 1.0f / this.chance.toFloat() else true
+    override fun shouldPlace(context: PlacementContext, random: RandomSource, pos: BlockPos): Boolean {
+        return if (predicate.test(context.level, pos)) random.nextFloat() < 1.0f / this.chance.toFloat() else true
     }
 }

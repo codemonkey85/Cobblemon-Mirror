@@ -9,9 +9,9 @@
 package com.cobblemon.mod.common.battles
 
 import com.cobblemon.mod.common.net.IntSize
-import com.cobblemon.mod.common.util.readSizedInt
-import com.cobblemon.mod.common.util.writeSizedInt
-import net.minecraft.network.PacketByteBuf
+import com.cobblemon.mod.common.util.*
+import net.minecraft.network.RegistryFriendlyByteBuf
+
 class InBattleMove {
     lateinit var id: String
     lateinit var move: String
@@ -22,7 +22,7 @@ class InBattleMove {
     var gimmickMove: InBattleGimmickMove? = null
 
     companion object {
-        fun loadFromBuffer(buffer: PacketByteBuf): InBattleMove {
+        fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): InBattleMove {
             return InBattleMove().apply {
                 id = buffer.readString()
                 move = buffer.readString()
@@ -37,7 +37,7 @@ class InBattleMove {
     fun getTargets(user: ActiveBattlePokemon) = target.targetList(user)
     fun canBeUsed() = (pp > 0 && !disabled) || mustBeUsed() // Second case is like Thrash, forced choice
     fun mustBeUsed() = maxpp == 100 && pp == 100 && target == MoveTarget.self
-    fun saveToBuffer(buffer: PacketByteBuf) {
+    fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(id)
         buffer.writeString(move)
         buffer.writeSizedInt(IntSize.U_BYTE, pp)
@@ -54,7 +54,7 @@ class InBattleGimmickMove {
     var disabled: Boolean = false
 
     companion object {
-        fun loadFromBuffer(buffer: PacketByteBuf): InBattleGimmickMove {
+        fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): InBattleGimmickMove {
             return InBattleGimmickMove().apply {
                 move = buffer.readString()
                 target = buffer.readEnumConstant(MoveTarget::class.java)
@@ -63,7 +63,7 @@ class InBattleGimmickMove {
         }
     }
 
-    fun saveToBuffer(buffer: PacketByteBuf) {
+    fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(move)
         buffer.writeEnumConstant(target)
         buffer.writeBoolean(disabled)

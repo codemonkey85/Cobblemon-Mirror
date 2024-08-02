@@ -10,7 +10,6 @@ package com.cobblemon.mod.common.api.moves
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.data.DataRegistry
-import com.cobblemon.mod.common.api.moves.animations.ActionEffectTimeline
 import com.cobblemon.mod.common.api.moves.animations.ActionEffects
 import com.cobblemon.mod.common.api.moves.categories.DamageCategories
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
@@ -22,9 +21,9 @@ import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import net.minecraft.resource.ResourceManager
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
+import net.minecraft.server.packs.resources.ResourceManager
 
 /**
  * Registry for all known Moves
@@ -32,7 +31,7 @@ import net.minecraft.server.network.ServerPlayerEntity
 object Moves : DataRegistry {
 
     override val id = cobblemonResource("moves")
-    override val type = ResourceType.SERVER_DATA
+    override val type = PackType.SERVER_DATA
     override val observable = SimpleObservable<Moves>()
 
     private val allMoves = mutableMapOf<String, MoveTemplate>()
@@ -96,7 +95,7 @@ object Moves : DataRegistry {
         this.observable.emit(this)
     }
 
-    override fun sync(player: ServerPlayerEntity) {
+    override fun sync(player: ServerPlayer) {
         MovesRegistrySyncPacket(all()).sendToPlayer(player)
     }
 

@@ -14,13 +14,13 @@ import com.cobblemon.mod.common.client.gui.trade.TradeGUI
 import com.cobblemon.mod.common.client.trade.ClientTrade
 import com.cobblemon.mod.common.net.messages.client.trade.TradeStartedPacket
 import com.cobblemon.mod.common.net.messages.client.trade.TradeStartedPacket.TradeablePokemon
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object TradeStartedHandler : ClientNetworkPacketHandler<TradeStartedPacket> {
-    override fun handle(packet: TradeStartedPacket, client: MinecraftClient) {
+    override fun handle(packet: TradeStartedPacket, client: Minecraft) {
         val trade = ClientTrade()
         CobblemonClient.trade = trade
-        MinecraftClient.getInstance().setScreen(
+        Minecraft.getInstance().setScreen(
             TradeGUI(
                 trade,
                 packet.traderId,

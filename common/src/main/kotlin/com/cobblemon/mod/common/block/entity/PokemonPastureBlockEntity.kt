@@ -33,33 +33,33 @@ import com.cobblemon.mod.common.util.DataKeys
 import com.cobblemon.mod.common.util.blockPositionsAsList
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.toVec3d
-import net.minecraft.block.Block
-import net.minecraft.block.BlockState
-import net.minecraft.block.Blocks
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.block.entity.BlockEntityTicker
-import net.minecraft.entity.EntityPose
-import net.minecraft.entity.ItemEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.nbt.NbtHelper
-import net.minecraft.nbt.NbtList
-import net.minecraft.particle.ParticleTypes
-import net.minecraft.registry.tag.FluidTags
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.TypeFilter
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.Direction
-import net.minecraft.util.math.Vec3i
-import net.minecraft.util.shape.VoxelShapes
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.core.HolderLookup
+import net.minecraft.core.Vec3i
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.NbtUtils
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.tags.FluidTags
+import net.minecraft.world.entity.Pose
+import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityTicker
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.entity.EntityTypeTest
+import net.minecraft.world.phys.AABB
 import java.util.*
 import kotlin.math.ceil
 import kotlin.random.Random
 
-class PokemonPastureBlockEntity(pos: BlockPos, val state: BlockState) : BlockEntity(CobblemonBlockEntities.PASTURE, pos, state) {
+class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
+    BlockEntity(CobblemonBlockEntities.PASTURE, pos, state) {
     open class Tethering(
         val minRoamPos: BlockPos,
         val maxRoamPos: BlockPos,
@@ -71,33 +71,38 @@ class PokemonPastureBlockEntity(pos: BlockPos, val state: BlockState) : BlockEnt
         val entityId: Int
     ) {
         fun getPokemon() = Cobblemon.storage.getPC(pcId)[pokemonId]
-        val box = Box(minRoamPos, maxRoamPos)
-        open fun canRoamTo(pos: BlockPos) = box.contains(pos.toCenterPos())
+        val box = AABB(minRoamPos.toVec3d(), maxRoamPos.toVec3d())
+        open fun canRoamTo(pos: BlockPos) = box.contains(pos.center)
 
-        fun toDTO(player: ServerPlayerEntity): OpenPasturePacket.PasturePokemonDataDTO? {
+        fun toDTO(player: ServerPlayer): OpenPasturePacket.PasturePokemonDataDTO? {
             val pokemon = getPokemon() ?: return null
             return OpenPasturePacket.PasturePokemonDataDTO(
                 pokemonId = pokemonId,
                 playerId = playerId,
-                displayName = if (playerId == player.uuid) pokemon.getDisplayName() else lang("ui.pasture.owned_name", pokemon.getDisplayName(), playerName),
+                displayName = if (playerId == player.uuid) pokemon.getDisplayName() else lang(
+                    "ui.pasture.owned_name",
+                    pokemon.getDisplayName(),
+                    playerName
+                ),
                 species = pokemon.species.resourceIdentifier,
                 aspects = pokemon.aspects,
                 heldItem = pokemon.heldItem(),
                 level = pokemon.level,
-                entityKnown = (player.getWorld().getEntityById(entityId) as? PokemonEntity)?.tethering?.tetheringId == tetheringId
+                entityKnown = (player.level()
+                    .getEntity(entityId) as? PokemonEntity)?.tethering?.tetheringId == tetheringId
             )
         }
     }
 
     companion object {
         internal val TICKER = BlockEntityTicker<PokemonPastureBlockEntity> { world, _, _, blockEntity ->
-            if (world.isClient) return@BlockEntityTicker
+            if (world.isClientSide) return@BlockEntityTicker
             blockEntity.ticksUntilCheck--
             if (blockEntity.ticksUntilCheck <= 0) {
                 blockEntity.checkPokemon()
                 blockEntity.tryBreed()
             }
-            blockEntity.togglePastureOn(blockEntity.getInRangeViewerCount(world, blockEntity.pos) > 0)
+            blockEntity.togglePastureOn(blockEntity.getInRangeViewerCount(world, blockEntity.blockPos) > 0)
         }
         val DITTO_DEX_NUM = 132
     }
@@ -117,25 +122,27 @@ class PokemonPastureBlockEntity(pos: BlockPos, val state: BlockState) : BlockEnt
     init {
         val radius = Cobblemon.config.pastureMaxWanderDistance
         minRoamPos = pos.subtract(Vec3i(radius, radius, radius))
-        maxRoamPos = pos.add(Vec3i(radius, radius, radius))
+        maxRoamPos = pos.offset(Vec3i(radius, radius, radius))
     }
 
     fun getMaxTethered() = Cobblemon.config.defaultPasturedPokemonLimit
 
-    fun canAddPokemon(player: ServerPlayerEntity, pokemon: Pokemon, maxPerPlayer: Int): Boolean {
+    fun canAddPokemon(player: ServerPlayer, pokemon: Pokemon, maxPerPlayer: Int): Boolean {
         val forThisPlayer = tetheredPokemon.count { it.playerId == player.uuid }
         // Shouldn't be possible, client should've prevented it
         if (forThisPlayer >= maxPerPlayer || tetheredPokemon.size >= getMaxTethered() || pokemon.isFainted()) {
             return false
         }
         val radius = Cobblemon.config.pastureMaxWanderDistance.toDouble()
-        val bottom = pos.toVec3d().multiply(1.0, 0.0, 1.0)
+        val bottom = blockPos.toVec3d().multiply(1.0, 0.0, 1.0)
 
-        val pokemonWithinPastureWander = player.world.getEntitiesByClass(PokemonEntity::class.java, Box.of(bottom, radius, 99999.0, radius)) { true }.count()
+        val pokemonWithinPastureWander = player.level()
+            .getEntitiesOfClass(PokemonEntity::class.java, AABB.ofSize(bottom, radius, 99999.0, radius)) { true }
+            .count()
         val chunkDiameter = (radius / 16) * 2 // Diameter
         if (pokemonWithinPastureWander >= Cobblemon.config.pastureMaxPerChunk * chunkDiameter * chunkDiameter) {
             player.sendPacket(ClosePasturePacket())
-            player.sendMessage(lang("pasture.too_many_nearby").red(), true)
+            player.sendSystemMessage(lang("pasture.too_many_nearby").red(), true)
             return false
         }
 
@@ -143,26 +150,26 @@ class PokemonPastureBlockEntity(pos: BlockPos, val state: BlockState) : BlockEnt
     }
 
 
-    fun tether(player: ServerPlayerEntity, pokemon: Pokemon, directionToBehind: Direction): Boolean {
-        val world = world ?: return false
+    fun tether(player: ServerPlayer, pokemon: Pokemon, directionToBehind: Direction): Boolean {
+        val world = level ?: return false
         val entity = PokemonEntity(world, pokemon = pokemon)
-        entity.calculateDimensions()
-        val width = entity.boundingBox.xLength
+        entity.refreshDimensions()
+        val width = entity.boundingBox.xsize
 
-        val idealPlace = pos.add(directionToBehind.vector.multiply(ceil(width).toInt() + 1))
-        var box = entity.getDimensions(EntityPose.STANDING).getBoxAt(idealPlace.toCenterPos().subtract(0.0, 0.5, 0.0))
+        val idealPlace = blockPos.offset(directionToBehind.normal.multiply(ceil(width).toInt() + 1))
+        var box = entity.getDimensions(Pose.STANDING).makeBoundingBox(idealPlace.center.subtract(0.0, 0.5, 0.0))
 
         for (i in 0..5) {
-            box = box.offset(directionToBehind.vector.x.toDouble(), 0.0, directionToBehind.vector.z.toDouble())
-            val fixedPosition = makeSuitableY(world, idealPlace.add(directionToBehind.vector), entity, box)
+            box = box.move(directionToBehind.normal.x.toDouble(), 0.0, directionToBehind.normal.z.toDouble())
+            val fixedPosition = makeSuitableY(world, idealPlace.offset(directionToBehind.normal), entity, box)
             if (fixedPosition != null) {
-                entity.setPosition(fixedPosition.toCenterPos().subtract(0.0, 0.5, 0.0))
+                entity.setPos(fixedPosition.center.subtract(0.0, 0.5, 0.0))
                 val pc = Cobblemon.storage.getPC(player.uuid)
-                entity.beamMode = 1
+                entity.beamMode = 2
                 afterOnServer(seconds = SendOutPokemonHandler.SEND_OUT_DURATION) {
                     entity.beamMode = 0
                 }
-                if (world.spawnEntity(entity)) {
+                if (world.addFreshEntity(entity)) {
                     val tethering = Tethering(
                         minRoamPos = minRoamPos,
                         maxRoamPos = maxRoamPos,
@@ -178,7 +185,7 @@ class PokemonPastureBlockEntity(pos: BlockPos, val state: BlockState) : BlockEnt
                     tetheredPokemon.add(tethering)
                     entity.tethering = tethering
                     tethering.toDTO(player)?.let { player.sendPacket(PokemonPasturedPacket(it)) }
-                    markDirty()
+                    setChanged()
                     CobblemonCriteria.PASTURE_USE.trigger(player, pokemon)
                     return true
                 } else {
@@ -192,63 +199,75 @@ class PokemonPastureBlockEntity(pos: BlockPos, val state: BlockState) : BlockEnt
     }
 
     private fun togglePastureOn(on: Boolean) {
-        val pastureBlock = state.block as PastureBlock
+        val pastureBlock = blockState.block as PastureBlock
 
-        if (world != null && !world!!.isClient) {
-            val world = world!!
-            val posBottom = pastureBlock.getBasePosition(state, pos)
+        val level = level
+        if (level != null && !level.isClientSide) {
+            val world = level
+            val posBottom = pastureBlock.getBasePosition(blockState, blockPos)
             val stateBottom = world.getBlockState(posBottom)
 
             val posTop = pastureBlock.getPositionOfOtherPart(stateBottom, posBottom)
             val stateTop = world.getBlockState(posTop)
 
             try {
-                if (stateBottom.get(PastureBlock.ON) != on) {
-                    world.setBlockState(posTop, stateTop.with(PastureBlock.ON, on))
-                    world.setBlockState(posBottom, stateBottom.with(PastureBlock.ON, on))
+                if (stateBottom.getValue(PastureBlock.ON) != on) {
+                    world.setBlockAndUpdate(posTop, stateTop.setValue(PastureBlock.ON, on))
+                    world.setBlockAndUpdate(posBottom, stateBottom.setValue(PastureBlock.ON, on))
                 }
             } catch (exception: IllegalArgumentException) {
-                if (world.getBlockState(pos.up()).block is PastureBlock) {
-                    world.setBlockState(pos.up(), Blocks.AIR.defaultState)
+                if (world.getBlockState(blockPos.above()).block is PastureBlock) {
+                    world.setBlockAndUpdate(blockPos.above(), Blocks.AIR.defaultBlockState())
                 } else {
-                    world.setBlockState(pos.down(), Blocks.AIR.defaultState)
+                    world.setBlockAndUpdate(blockPos.below(), Blocks.AIR.defaultBlockState())
                 }
-                world.setBlockState(pos, Blocks.AIR.defaultState)
-                world.spawnEntity(ItemEntity(world, pos.x + 0.5, pos.y + 1.0, pos.z + 0.5, ItemStack(CobblemonBlocks.PASTURE)))
+                world.setBlockAndUpdate(blockPos, Blocks.AIR.defaultBlockState())
+                world.addFreshEntity(
+                    ItemEntity(
+                        world, blockPos.x + 0.5, blockPos.y + 1.0, blockPos.z + 0.5,
+                        ItemStack(CobblemonBlocks.PASTURE)
+                    )
+                )
             }
         }
     }
 
-    fun isSafeFloor(world: World, pos: BlockPos, entity: PokemonEntity): Boolean {
+    fun isSafeFloor(world: Level, pos: BlockPos, entity: PokemonEntity): Boolean {
         val state = world.getBlockState(pos)
         return if (state.isAir) {
             false
-        } else if (state.hasSolidTopSurface(world, pos, entity) || state.isSolidSurface(world, pos, entity, Direction.DOWN)) {
+        } else if (state.entityCanStandOn(world, pos, entity) || state.entityCanStandOnFace(
+                world,
+                pos,
+                entity,
+                Direction.DOWN
+            )
+        ) {
             true
-        } else if ((entity.behaviour.moving.swim.canWalkOnWater || entity.behaviour.moving.swim.canSwimInWater) && state.fluidState.isIn(FluidTags.WATER)) {
+        } else if ((entity.behaviour.moving.swim.canWalkOnWater || entity.behaviour.moving.swim.canSwimInWater) && state.fluidState.`is`(FluidTags.WATER)) {
             true
         } else {
-            (entity.behaviour.moving.swim.canWalkOnLava || entity.behaviour.moving.swim.canSwimInLava) && state.fluidState.isIn(FluidTags.LAVA)
+            (entity.behaviour.moving.swim.canWalkOnLava || entity.behaviour.moving.swim.canSwimInLava) && state.fluidState.`is`(FluidTags.LAVA)
         }
     }
 
     // Place the tether block like this: https://gyazo.com/7c163bccfde238688e9a2c600c27aace
     // You'll find you can't place pokemon into the tether. It's because of this function somehow
-    fun makeSuitableY(world: World, pos: BlockPos, entity: PokemonEntity, box: Box): BlockPos? {
-        if (world.canCollide(entity, box)) {
+    fun makeSuitableY(world: Level, pos: BlockPos, entity: PokemonEntity, box: AABB): BlockPos? {
+        if (world.collidesWithSuffocatingBlock(entity, box)) {
             for (i in 1..15) {
-                val newBox = box.offset(0.5, i.toDouble(), 0.5)
+                val newBox = box.move(0.5, i.toDouble(), 0.5)
 
-                if (!world.canCollide(entity, newBox) && isSafeFloor(world, pos.add(0, i - 1, 0), entity)) {
-                    return pos.add(0, i, 0)
+                if (!world.collidesWithSuffocatingBlock(entity, newBox) && isSafeFloor(world, pos.offset(0, i - 1, 0), entity)) {
+                    return pos.offset(0, i, 0)
                 }
             }
         } else {
             for (i in 1..15) {
-                val newBox = box.offset(0.5, -i.toDouble(), 0.5)
+                val newBox = box.move(0.5, -i.toDouble(), 0.5)
 
-                if (world.canCollide(entity, newBox) && isSafeFloor(world, pos.add(0, -i, 0), entity)) {
-                    return pos.add(0, -i + 1, 0)
+                if (world.collidesWithSuffocatingBlock(entity, newBox) && isSafeFloor(world, pos.offset(0, -i, 0), entity)) {
+                    return pos.offset(0, -i + 1, 0)
                 }
             }
         }
@@ -268,7 +287,7 @@ class PokemonPastureBlockEntity(pos: BlockPos, val state: BlockState) : BlockEnt
         }
         deadLinks.forEach(::releasePokemon)
         ticksUntilCheck = Cobblemon.config.pastureBlockUpdateTicks
-        markDirty()
+        setChanged()
     }
 
     fun tryBreed() {
@@ -431,9 +450,9 @@ class PokemonPastureBlockEntity(pos: BlockPos, val state: BlockState) : BlockEnt
     }
 
     fun onBroken() {
-        if (world is ServerWorld) {
+        if (level is ServerLevel) {
             tetheredPokemon.toList().forEach { releasePokemon(it.pokemonId) }
-            PastureLinkManager.removeAt(world as ServerWorld, pos)
+            PastureLinkManager.removeAt(level as ServerLevel, blockPos)
         }
     }
 
@@ -441,7 +460,7 @@ class PokemonPastureBlockEntity(pos: BlockPos, val state: BlockState) : BlockEnt
         val tethering = tetheredPokemon.find { it.pokemonId == pokemonId } ?: return
         tethering.getPokemon()?.tetheringId = null
         tetheredPokemon.remove(tethering)
-        markDirty()
+        setChanged()
     }
 
     fun releaseAllPokemon(playerId: UUID): List<UUID> {
@@ -451,12 +470,12 @@ class PokemonPastureBlockEntity(pos: BlockPos, val state: BlockState) : BlockEnt
             tetheredPokemon.remove(it)
             unpastured.add(it.pokemonId)
         }
-        markDirty()
+        setChanged()
         return unpastured
     }
 
-    private fun getInRangeViewerCount(world: World, pos: BlockPos, range: Double = 5.0): Int {
-        val box = Box(
+    private fun getInRangeViewerCount(world: Level, pos: BlockPos, range: Double = 5.0): Int {
+        val box = AABB(
             pos.x.toDouble() - range,
             pos.y.toDouble() - range,
             pos.z.toDouble() - range,
@@ -465,51 +484,64 @@ class PokemonPastureBlockEntity(pos: BlockPos, val state: BlockState) : BlockEnt
             (pos.z + 1).toDouble() + range
         )
 
-        return world.getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity::class.java), box, this::isPlayerViewing).size
+        return world.getEntities(EntityTypeTest.forClass(ServerPlayer::class.java), box, this::isPlayerViewing).size
     }
 
-    private fun isPlayerViewing(player: ServerPlayerEntity): Boolean {
+    private fun isPlayerViewing(player: ServerPlayer): Boolean {
         val pastureLink = PastureLinkManager.getLinkByPlayer(player)
-        return pastureLink != null && pastureLink.pos == pos && pastureLink.dimension == player.world.dimensionKey.value
+        return pastureLink != null && pastureLink.pos == blockPos && pastureLink.dimension == ResourceLocation.tryParse(
+            player.level().dimensionTypeRegistration().registeredName // todo (techdaan): confirm this is good
+        )
     }
 
-    override fun readNbt(nbt: NbtCompound) {
-        super.readNbt(nbt)
-        val list = nbt.getList(DataKeys.TETHER_POKEMON, NbtCompound.COMPOUND_TYPE.toInt())
-        this.ownerId = if (nbt.containsUuid(DataKeys.TETHER_OWNER_ID)) nbt.getUuid(DataKeys.TETHER_OWNER_ID) else null
+    override fun loadAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
+        super.loadAdditional(nbt, registryLookup)
+        val list = nbt.getList(DataKeys.TETHER_POKEMON, CompoundTag.TAG_COMPOUND.toInt())
+        this.ownerId = if (nbt.hasUUID(DataKeys.TETHER_OWNER_ID)) nbt.getUUID(DataKeys.TETHER_OWNER_ID) else null
         this.ownerName = nbt.getString(DataKeys.TETHER_OWNER_NAME).takeIf { it.isNotEmpty() } ?: ""
         for (tetheringNBT in list) {
-            tetheringNBT as NbtCompound
-            val tetheringId = tetheringNBT.getUuid(DataKeys.TETHERING_ID)
-            val pokemonId = tetheringNBT.getUuid(DataKeys.POKEMON_UUID)
-            val pcId = tetheringNBT.getUuid(DataKeys.PC_ID)
-            val playerId = tetheringNBT.getUuid(DataKeys.TETHERING_PLAYER_ID)
+            tetheringNBT as CompoundTag
+            val tetheringId = tetheringNBT.getUUID(DataKeys.TETHERING_ID)
+            val pokemonId = tetheringNBT.getUUID(DataKeys.POKEMON_UUID)
+            val pcId = tetheringNBT.getUUID(DataKeys.PC_ID)
+            val playerId = tetheringNBT.getUUID(DataKeys.TETHERING_PLAYER_ID)
             val entityId = tetheringNBT.getInt(DataKeys.TETHERING_ENTITY_ID)
-            tetheredPokemon.add(Tethering(minRoamPos = minRoamPos, maxRoamPos = maxRoamPos, playerId = playerId, playerName = ownerName, tetheringId = tetheringId, pokemonId = pokemonId, pcId = pcId, entityId = entityId))
+            tetheredPokemon.add(
+                Tethering(
+                    minRoamPos = minRoamPos,
+                    maxRoamPos = maxRoamPos,
+                    playerId = playerId,
+                    playerName = ownerName,
+                    tetheringId = tetheringId,
+                    pokemonId = pokemonId,
+                    pcId = pcId,
+                    entityId = entityId
+                )
+            )
         }
-        this.minRoamPos = NbtHelper.toBlockPos(nbt.getCompound(DataKeys.TETHER_MIN_ROAM_POS))
-        this.maxRoamPos = NbtHelper.toBlockPos(nbt.getCompound(DataKeys.TETHER_MAX_ROAM_POS))
+        this.minRoamPos = NbtUtils.readBlockPos(nbt, DataKeys.TETHER_MIN_ROAM_POS).get()
+        this.maxRoamPos = NbtUtils.readBlockPos(nbt, DataKeys.TETHER_MAX_ROAM_POS).get()
         if (!initializedBreedingSets) {
             calcBreedingSets()
         }
     }
 
-    override fun writeNbt(nbt: NbtCompound) {
-        super.writeNbt(nbt)
-        val list = NbtList()
+    override fun saveAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
+        super.saveAdditional(nbt, registryLookup)
+        val list = ListTag()
         for (tethering in tetheredPokemon) {
-            val tetheringNBT = NbtCompound()
-            tetheringNBT.putUuid(DataKeys.TETHERING_ID, tethering.tetheringId)
-            tetheringNBT.putUuid(DataKeys.TETHERING_PLAYER_ID, tethering.playerId)
-            tetheringNBT.putUuid(DataKeys.POKEMON_UUID, tethering.pokemonId)
-            tetheringNBT.putUuid(DataKeys.PC_ID, tethering.pcId)
+            val tetheringNBT = CompoundTag()
+            tetheringNBT.putUUID(DataKeys.TETHERING_ID, tethering.tetheringId)
+            tetheringNBT.putUUID(DataKeys.TETHERING_PLAYER_ID, tethering.playerId)
+            tetheringNBT.putUUID(DataKeys.POKEMON_UUID, tethering.pokemonId)
+            tetheringNBT.putUUID(DataKeys.PC_ID, tethering.pcId)
             tetheringNBT.putInt(DataKeys.TETHERING_ENTITY_ID, tethering.entityId)
             list.add(tetheringNBT)
         }
         nbt.put(DataKeys.TETHER_POKEMON, list)
-        nbt.put(DataKeys.TETHER_MIN_ROAM_POS, NbtHelper.fromBlockPos(minRoamPos))
-        nbt.put(DataKeys.TETHER_MAX_ROAM_POS, NbtHelper.fromBlockPos(maxRoamPos))
-        ownerId?.let { nbt.putUuid(DataKeys.TETHER_OWNER_ID, it) }
+        nbt.put(DataKeys.TETHER_MIN_ROAM_POS, NbtUtils.writeBlockPos(minRoamPos))
+        nbt.put(DataKeys.TETHER_MAX_ROAM_POS, NbtUtils.writeBlockPos(maxRoamPos))
+        ownerId?.let { nbt.putUUID(DataKeys.TETHER_OWNER_ID, it) }
         nbt.putString(DataKeys.TETHER_OWNER_NAME, this.ownerName)
     }
 }

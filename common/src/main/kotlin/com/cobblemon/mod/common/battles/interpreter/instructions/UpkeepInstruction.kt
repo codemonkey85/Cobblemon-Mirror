@@ -13,10 +13,11 @@ import com.cobblemon.mod.common.battles.dispatch.GO
 import com.cobblemon.mod.common.battles.dispatch.InterpreterInstruction
 
 /**
- * Format:
- * |upkeep|
+ * Format: |upkeep|
  *
  * Signals the upkeep phase of the turn where the number of turns left for field conditions are updated.
+ * @author Hiroku
+ * @since March 12th, 2022
  */
 class UpkeepInstruction : InterpreterInstruction {
     override fun invoke(battle: PokemonBattle) {

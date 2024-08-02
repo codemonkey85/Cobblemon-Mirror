@@ -14,18 +14,18 @@ import com.cobblemon.mod.common.api.pokeball.catching.calculators.CriticalCaptur
 import com.cobblemon.mod.common.api.pokeball.catching.calculators.PokedexProgressCaptureMultiplierProvider
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.pokemon.status.statuses.BurnStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.FrozenStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.ParalysisStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.PoisonBadlyStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.PoisonStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.SleepStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.BurnStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.FrozenStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.ParalysisStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.PoisonBadlyStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.PoisonStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.SleepStatus
 import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.random.Random
-import net.minecraft.entity.LivingEntity
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * An implementation of the capture calculator used in the generation 9 games.
@@ -45,7 +45,7 @@ object Gen9CaptureCalculator : CaptureCalculator, CriticalCaptureProvider, Poked
             return CaptureContext.successful()
         }
         // We don't have dark grass so we're just gonna pretend everything is that.
-        val darkGrass = if (thrower is ServerPlayerEntity) this.caughtMultiplierFor(thrower).roundToInt() else 1
+        val darkGrass = if (thrower is ServerPlayer) this.caughtMultiplierFor(thrower).roundToInt() else 1
         val catchRate = getCatchRate(thrower, pokeBallEntity, target, pokemon.form.catchRate.toFloat())
         val validModifier = pokeBall.catchRateModifier.isValid(thrower, pokemon)
         val bonusStatus = when (pokemon.status?.status) {
@@ -58,7 +58,7 @@ object Gen9CaptureCalculator : CaptureCalculator, CriticalCaptureProvider, Poked
         // ToDo implement bonusMisc when we have sandwich powers
         val ballBonus = if (validModifier) pokeBall.catchRateModifier.value(thrower, pokemon) else 1F
         val modifiedCatchRate = (pokeBall.catchRateModifier.behavior(thrower, pokemon).mutator((3F * pokemon.hp - 2F * pokemon.currentHealth) * darkGrass * catchRate, ballBonus) / (3F * pokemon.hp)) * bonusStatus * bonusLevel
-        val critical = if (thrower is ServerPlayerEntity) this.shouldHaveCriticalCapture(thrower, modifiedCatchRate) else false
+        val critical = if (thrower is ServerPlayer) this.shouldHaveCriticalCapture(thrower, modifiedCatchRate) else false
         val shakeProbability = (65536F / (255F / modifiedCatchRate).pow(0.1875F)).roundToInt()
         var shakes = 0
         repeat(4) {

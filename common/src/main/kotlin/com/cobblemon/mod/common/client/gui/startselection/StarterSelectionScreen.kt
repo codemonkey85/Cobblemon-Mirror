@@ -15,6 +15,7 @@ import com.cobblemon.mod.common.api.gui.ColourLibrary
 import com.cobblemon.mod.common.api.gui.MultiLineLabelK
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.text.bold
+import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.gui.startselection.widgets.CategoryList
 import com.cobblemon.mod.common.client.gui.startselection.widgets.ExitButton
@@ -33,12 +34,12 @@ import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.toRGB
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.Text
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.toasts.Toast
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.network.chat.Component
 
 /**
  * Starterselection Screen Thingy
@@ -46,7 +47,7 @@ import net.minecraft.text.Text
  * @author Qu
  * @since 2022-06-18
  */
-class StarterSelectionScreen private constructor(): Screen("cobblemon.ui.starter.title".asTranslated()) {
+class StarterSelectionScreen(private val categories: List<RenderableStarterCategory>): Screen("cobblemon.ui.starter.title".asTranslated()) {
 
     companion object {
         // Size of UI at scale 1
@@ -63,25 +64,27 @@ class StarterSelectionScreen private constructor(): Screen("cobblemon.ui.starter
         private val doubleTypeBackground = cobblemonResource("textures/gui/starterselection/starterselection_type_slot2.png")
     }
 
-    lateinit var categories: List<RenderableStarterCategory>
-    lateinit var currentCategory: RenderableStarterCategory
-    lateinit var modelWidget: ModelWidget
-    lateinit var currentPokemon: RenderablePokemon
-    var currentSelection = 0
-    lateinit var rightButton: ArrowButton
-    lateinit var leftButton: ArrowButton
-    lateinit var typeWidget: TypeWidget
-    lateinit var selectionButton: SelectionButton
-    lateinit var starterRoundaboutCenter: StarterRoundabout
-    lateinit var starterRoundaboutLeft: StarterRoundabout
-    lateinit var starterRoundaboutRight: StarterRoundabout
+    private var currentSelection = 0
+    private lateinit var currentCategory: RenderableStarterCategory
+    private lateinit var modelWidget: ModelWidget
+    private lateinit var currentPokemon: RenderablePokemon
+    private lateinit var typeWidget: TypeWidget
+    private lateinit var starterRoundaboutCenter: StarterRoundabout
+    private lateinit var starterRoundaboutLeft: StarterRoundabout
+    private lateinit var starterRoundaboutRight: StarterRoundabout
 
-    constructor(categories: List<RenderableStarterCategory>) : this() {
-        this.categories = categories
-    }
+    override fun renderBlurredBackground(delta: Float) { }
+
+    override fun renderMenuBackground(context: GuiGraphics) {}
 
     override fun init() {
         super.init()
+        // Hide toast once checkedStarterScreen was set, which happens during the opening of the starter screen.
+        if (CobblemonClient.checkedStarterScreen) {
+            if (CobblemonClient.overlay.starterToast.nextVisibility != Toast.Visibility.HIDE) {
+                CobblemonClient.overlay.starterToast.nextVisibility = Toast.Visibility.HIDE
+            }
+        }
 
         val x = (width - BASE_WIDTH) / 2
         val y = (height - BASE_HEIGHT) / 2
@@ -91,18 +94,18 @@ class StarterSelectionScreen private constructor(): Screen("cobblemon.ui.starter
             return
         }
 
-        addDrawableChild(
+        addRenderableWidget(
             CategoryList(
                 paneWidth = 71, paneHeight = BASE_HEIGHT - 11,
-                topOffset = 6, bottomOffset = 5,
+                topOffset = 6,
                 entryHeight = 20, entryWidth = 57,
                 categories = categories,
-                x = x - 2, y = y + 8,
+                listX = x - 2, listY = y + 8,
                 starterSelectionScreen = this
             )
         )
 
-        rightButton = ArrowButton(
+        val rightButton = ArrowButton(
             pX = x + 183, pY = y + 151,
             pWidth = 9, pHeight = 14,
             right = true
@@ -110,7 +113,7 @@ class StarterSelectionScreen private constructor(): Screen("cobblemon.ui.starter
             right()
         }
 
-        leftButton = ArrowButton(
+        val leftButton = ArrowButton(
             pX = x + 72, pY = y + 151,
             pWidth = 9, pHeight = 14,
             right = false
@@ -118,8 +121,8 @@ class StarterSelectionScreen private constructor(): Screen("cobblemon.ui.starter
             left()
         }
 
-        addDrawableChild(rightButton)
-        addDrawableChild(leftButton)
+        addRenderableWidget(rightButton)
+        addRenderableWidget(leftButton)
 
         currentCategory = categories.first()
         currentPokemon = currentCategory.pokemon[currentSelection]
@@ -135,22 +138,22 @@ class StarterSelectionScreen private constructor(): Screen("cobblemon.ui.starter
             typeWidget = typeWidget(this, x, y)
         }
 
-        addDrawableChild(modelWidget)
+        addRenderableWidget(modelWidget)
 
-        selectionButton = SelectionButton(
+        val selectionButton = SelectionButton(
             pX = x + 106, pY = y + 124,
             pWidth = SelectionButton.BUTTON_WIDTH, pHeight = SelectionButton.BUTTON_HEIGHT
         ) {
-            CobblemonNetwork.sendPacketToServer(
+            CobblemonNetwork.sendToServer(
                 SelectStarterPacket(
                     categoryName = currentCategory.name,
                     selected = currentSelection
                 )
             )
-            MinecraftClient.getInstance().setScreen(null)
+            Minecraft.getInstance().setScreen(null)
         }
 
-        addDrawableChild(selectionButton)
+        addRenderableWidget(selectionButton)
 
         starterRoundaboutCenter = StarterRoundabout(
             pX = x + 119, pY = height / 2 + 84,
@@ -175,24 +178,24 @@ class StarterSelectionScreen private constructor(): Screen("cobblemon.ui.starter
             rotationVector = this.modelWidget.rotVec
         )
 
-        addDrawableChild(starterRoundaboutLeft)
-        addDrawableChild(starterRoundaboutCenter)
-        addDrawableChild(starterRoundaboutRight)
+        addRenderableWidget(starterRoundaboutLeft)
+        addRenderableWidget(starterRoundaboutCenter)
+        addRenderableWidget(starterRoundaboutRight)
 
-        addDrawableChild(
+        addRenderableWidget(
             ExitButton(
                 pX = x + 181, pY = y + 2,
                 pWidth = 16, pHeight = 12,
                 pXTexStart = 0, pYTexStart = 0, pYDiffText = 0
             ) {
-                MinecraftClient.getInstance().setScreen(null)
-                MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(CobblemonSounds.GUI_CLICK, 1.0F))
+                Minecraft.getInstance().setScreen(null)
+                Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.GUI_CLICK, 1.0F))
             }
         )
     }
 
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        val matrices = context.matrices
+    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        val matrices = context.pose()
         val x = (width - BASE_WIDTH) / 2
         val y = (height - BASE_HEIGHT) / 2
         // Render Underlay
@@ -248,7 +251,7 @@ class StarterSelectionScreen private constructor(): Screen("cobblemon.ui.starter
 
         // Render Description
         val scale2 = 0.60F
-        matrices.push()
+        matrices.pushPose()
         matrices.scale(scale2, scale2, 1F)
 
         // TODO use all pokedex lines across multiple clickable pages in this screen
@@ -262,7 +265,7 @@ class StarterSelectionScreen private constructor(): Screen("cobblemon.ui.starter
             ySpacing = (8.0 / scale2) - 1.25,
             colour = ColourLibrary.WHITE, shadow = false
         )
-        matrices.pop()
+        matrices.popPose()
 
         // Render the type background
         blitk(
@@ -284,7 +287,7 @@ class StarterSelectionScreen private constructor(): Screen("cobblemon.ui.starter
     }
 
     private fun right() {
-        MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(CobblemonSounds.GUI_CLICK, 1.0F))
+        Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.GUI_CLICK, 1.0F))
         currentSelection = rightOfCurrentSelection()
         updateSelection()
     }
@@ -292,7 +295,7 @@ class StarterSelectionScreen private constructor(): Screen("cobblemon.ui.starter
     private fun rightOfCurrentSelection() : Int = if (currentSelection + 1 <= currentCategory.pokemon.size - 1) currentSelection + 1 else 0
 
     private fun left() {
-        MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(CobblemonSounds.GUI_CLICK, 1.0F))
+        Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.GUI_CLICK, 1.0F))
         currentSelection = leftOfCurrentSelection()
         updateSelection()
     }
@@ -314,7 +317,7 @@ class StarterSelectionScreen private constructor(): Screen("cobblemon.ui.starter
             DualTypeWidget(
                 pX = x + 77, pY = y + 30,
                 pWidth = 18, pHeight = 18,
-                pMessage = Text.of("What?"),
+                pMessage = Component.literal("What?"),
                 mainType = pokemon.form.primaryType, secondaryType = it
             )
         } ?: SingleTypeWidget(
@@ -325,5 +328,5 @@ class StarterSelectionScreen private constructor(): Screen("cobblemon.ui.starter
         )
     }
 
-    override fun shouldPause() = true
+    override fun isPauseScreen() = true
 }

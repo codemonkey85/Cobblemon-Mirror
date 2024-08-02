@@ -12,8 +12,8 @@ import com.cobblemon.mod.common.Cobblemon.config
 import com.cobblemon.mod.common.api.spawning.context.SubmergedSpawningContext
 import com.cobblemon.mod.common.api.spawning.context.calculators.SpawningContextCalculator.Companion.isLavaCondition
 import com.cobblemon.mod.common.api.spawning.context.calculators.SpawningContextCalculator.Companion.isWaterCondition
-import net.minecraft.block.BlockState
-import net.minecraft.util.math.MathHelper.ceil
+import net.minecraft.util.Mth.ceil
+import net.minecraft.world.level.block.state.BlockState
 
 /**
  * The context calculator used for [SubmergedSpawningContext]s. Requires a fluid block as a base and the same fluid
@@ -32,7 +32,7 @@ object SubmergedSpawningContextCalculator : AreaSpawningContextCalculator<Submer
     override fun fits(input: AreaSpawningInput): Boolean {
         val condition = getFluidCondition(input)
         // For it to fit, there must be a known fluid above and below the base block. That's what defines submerged.
-        return condition != null && condition(input.slice.getBlockState(input.position.down())) && condition(input.slice.getBlockState(input.position.up()))
+        return condition != null && condition(input.slice.getBlockState(input.position.below())) && condition(input.slice.getBlockState(input.position.above()))
     }
 
     fun getFluidCondition(input: AreaSpawningInput): ((BlockState) -> Boolean)? {
@@ -44,7 +44,7 @@ object SubmergedSpawningContextCalculator : AreaSpawningContextCalculator<Submer
         return SubmergedSpawningContext(
             cause = input.cause,
             world = input.world,
-            position = input.position.toImmutable(),
+            position = input.position.immutable(),
             light = getLight(input),
             skyLight = getSkyLight(input),
             canSeeSky = getCanSeeSky(input),

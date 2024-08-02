@@ -24,6 +24,18 @@
   "eggGroups": [
     "human_like"
   ],
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.2
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "depth": "normal",
+      "light": "0-4"
+    }
+  },
   "drops": {
     "amount": 4,
     "entries": [
@@ -220,9 +232,9 @@
       ]
     }
   ],
-  "baseScale": 0.8,
+  "baseScale": 0.9,
   "hitbox": {
-    "width": 0.6,
+    "width": 0.7,
     "height": 1.5,
     "fixed": false
   },

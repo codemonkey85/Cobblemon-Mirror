@@ -48,6 +48,7 @@
     "54:memento",
     "60:leafstorm",
     "tm:calmmind",
+    "tm:curse",
     "tm:endure",
     "tm:energyball",
     "tm:foulplay",
@@ -60,9 +61,11 @@
     "tm:magicalleaf",
     "tm:nastyplot",
     "tm:nightshade",
+    "tm:painsplit",
     "tm:phantomforce",
     "tm:poltergeist",
     "tm:protect",
+    "tm:psychup",
     "tm:reflect",
     "tm:rest",
     "tm:scald",
@@ -144,6 +147,7 @@
         "54:memento",
         "60:leafstorm",
         "tm:calmmind",
+        "tm:curse",
         "tm:endure",
         "tm:energyball",
         "tm:foulplay",
@@ -156,9 +160,11 @@
         "tm:magicalleaf",
         "tm:nastyplot",
         "tm:nightshade",
+        "tm:painsplit",
         "tm:phantomforce",
         "tm:poltergeist",
         "tm:protect",
+        "tm:psychup",
         "tm:reflect",
         "tm:rest",
         "tm:scald",
@@ -183,7 +189,7 @@
         {
           "id": "poltchageist_sinistcha",
           "variant": "item_interact",
-          "result": "sinistcha form=masterpiece",
+          "result": "sinistcha masterpiece",
           "consumeHeldItem": false,
           "learnableMoves": [
             "matchagotcha"
@@ -195,5 +201,14 @@
       "cannotDynamax": false,
       "battleOnly": false
     }
-  ]
+  ],
+  "drops": {
+    "amount": 1,
+    "entries": [
+      {
+        "item": "cobblemon:rawst_berry",
+        "percentage": 2.5
+      }
+    ]
+  }
 }

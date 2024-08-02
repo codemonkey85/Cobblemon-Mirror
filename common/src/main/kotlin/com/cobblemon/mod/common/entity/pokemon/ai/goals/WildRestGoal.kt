@@ -11,9 +11,8 @@ package com.cobblemon.mod.common.entity.pokemon.ai.goals
 import com.cobblemon.mod.common.api.pokemon.status.Statuses
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.status.PersistentStatusContainer
-import java.util.EnumSet
-import net.minecraft.entity.ai.goal.Goal
-import net.minecraft.registry.RegistryKeys
+import net.minecraft.world.entity.ai.goal.Goal
+import java.util.*
 
 /**
  * AI goal for sleeping in the wild.
@@ -22,8 +21,9 @@ import net.minecraft.registry.RegistryKeys
  * @since July 18th, 2022
  */
 class WildRestGoal(private val pokemonEntity: PokemonEntity) : Goal() {
-    override fun getControls(): EnumSet<Control> = EnumSet.allOf(Control::class.java)
-    override fun canStart(): Boolean {
+    override fun getFlags(): EnumSet<Flag> = EnumSet.allOf(Flag::class.java)
+
+    override fun canUse(): Boolean {
         val rest = pokemonEntity.behaviour.resting
         if (!pokemonEntity.pokemon.isWild() || pokemonEntity.random.nextFloat() < 1 - rest.sleepChance || !pokemonEntity.canSleep() || pokemonEntity.isBusy || !rest.depth.canSleep(pokemonEntity)) {
             return false
@@ -31,11 +31,11 @@ class WildRestGoal(private val pokemonEntity: PokemonEntity) : Goal() {
         return true
     }
 
-    override fun canStop(): Boolean {
+    override fun isInterruptable(): Boolean {
         return false
     }
 
-    override fun shouldContinue(): Boolean {
+    override fun canContinueToUse(): Boolean {
         return if (pokemonEntity.canSleep() && !pokemonEntity.behaviour.resting.depth.shouldWake(pokemonEntity)) {
             true
         } else {

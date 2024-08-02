@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Alomomola",
   "nationalPokedexNumber": 594,
   "primaryType": "water",
@@ -30,6 +31,24 @@
     "special_attack": 40,
     "special_defence": 45,
     "speed": 65
+  },
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "avoidsLand": true
+      },
+      "swim": {
+        "swimSpeed": 0.3,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
   },
   "catchRate": 75,
   "maleRatio": 0.5,
@@ -140,11 +159,10 @@
   "pokedex": [
     "cobblemon.species.alomomola.desc"
   ],
-  "evolutions": [],
   "baseScale": 1,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.8,
+    "height": 1.1,
     "fixed": false
   },
   "baseFriendship": 70,
@@ -158,6 +176,5 @@
   },
   "height": 12,
   "weight": 316,
-  "evolutions": [],
   "cannotDynamax": false
 }

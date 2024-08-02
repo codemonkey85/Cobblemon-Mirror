@@ -15,8 +15,8 @@ import com.cobblemon.mod.common.pokemon.IVs
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.pokemon.stat.CobblemonStatProvider
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.Identifier
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.resources.ResourceLocation
 
 /**
  * A provider for various things stat related.
@@ -104,7 +104,7 @@ interface StatProvider {
      * @param identifier The identifier being queried.
      * @return The [Stat] if existing otherwise null.
      */
-    fun fromIdentifier(identifier: Identifier): Stat?
+    fun fromIdentifier(identifier: ResourceLocation): Stat?
 
     /**
      * Provides the [Stat] for the given identifier.
@@ -113,22 +113,22 @@ interface StatProvider {
      * @param identifier The identifier being queried.
      * @return The [Stat] if existing otherwise throws exception.
      */
-    fun fromIdentifierOrThrow(identifier: Identifier): Stat
+    fun fromIdentifierOrThrow(identifier: ResourceLocation): Stat
 
     /**
      * Decode a [Stat] from the given [buffer].
      *
-     * @param buffer The [PacketByteBuf].
+     * @param buffer The [ByteBuf].
      * @return The decoded [Stat].
      */
-    fun decode(buffer: PacketByteBuf): Stat
+    fun decode(buffer: RegistryFriendlyByteBuf): Stat
 
     /**
      * Encode the given [stat] to the [buffer].
      *
-     * @param buffer The [PacketByteBuf].
+     * @param buffer The [ByteBuf].
      * @param stat The [Stat] being encoded.
      */
-    fun encode(buffer: PacketByteBuf, stat: Stat)
+    fun encode(buffer: RegistryFriendlyByteBuf, stat: Stat)
 
 }

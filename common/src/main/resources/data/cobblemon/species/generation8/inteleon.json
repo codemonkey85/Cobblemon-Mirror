@@ -1,4 +1,4 @@
-﻿{
+{
   "implemented": true,
   "name": "Inteleon",
   "nationalPokedexNumber": 818,
@@ -72,6 +72,20 @@
     "water_1",
     "field"
   ],
+  "behaviour": {
+    "moving": {
+      "swim": {
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
+  },
   "drops": {
     "amount": 1,
     "entries": [

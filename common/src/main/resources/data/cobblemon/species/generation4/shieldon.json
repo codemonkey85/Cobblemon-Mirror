@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Shieldon",
   "nationalPokedexNumber": 410,
   "primaryType": "rock",
@@ -33,6 +34,13 @@
   "eggGroups": [
     "monster"
   ],
+  "behaviour": {
+    "moving" : {
+      "walk": {
+        "walkSpeed": 0.16
+      }
+    }
+  },
   "moves": [
     "1:protect",
     "1:tackle",
@@ -167,10 +175,10 @@
       ]
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.6,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.85,
+    "height": 1.22,
     "fixed": false
   },
   "baseFriendship": 70,

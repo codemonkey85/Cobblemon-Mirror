@@ -1,4 +1,4 @@
-﻿{
+{
   "implemented": true,
   "name": "Typhlosion",
   "nationalPokedexNumber": 157,
@@ -149,7 +149,13 @@
       ],
       "height": 16,
       "weight": 698,
-      "preEvolution": "quilava",
+      "preEvolution": "quilava region_bias=hisui",
+      "baseScale": 0.75,
+      "hitbox": {
+        "width": 1.35,
+        "height": 2.65,
+        "fixed": false
+      },
       "cannotDynamax": false,
       "battleOnly": false
     }

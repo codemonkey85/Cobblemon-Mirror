@@ -9,10 +9,14 @@
     "h:overcoat"
   ],
   "drops": {
-    "amount": 1,
+    "amount": 2,
     "entries": [
       {
         "item": "cobblemon:aspear_berry",
+        "percentage": 2.5
+      },
+      {
+        "item": "cobblemon:shell_bell",
         "percentage": 2.5
       }
     ]
@@ -38,7 +42,7 @@
     "moving": {
       "swim": {
         "swimSpeed": 0.1,
-        "canSwimInWater": false,
+        "canSwimInWater": true,
         "canBreatheUnderwater": true
       }
     }

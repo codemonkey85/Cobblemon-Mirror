@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.util
 
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.Drawable
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.components.Renderable
 
-fun Drawable.scaleIt(value: Number) = (MinecraftClient.getInstance().window.scaleFactor * value.toFloat()).toInt()
+fun Renderable.scaleIt(value: Number) = (Minecraft.getInstance().window.guiScale * value.toFloat()).toInt()

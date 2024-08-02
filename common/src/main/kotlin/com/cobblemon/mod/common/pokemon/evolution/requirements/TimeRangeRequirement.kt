@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequi
 import com.cobblemon.mod.common.api.spawning.TimeRange
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.requirements.template.EntityQueryRequirement
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
 
 /**
  * An [EvolutionRequirement] for when the current time must be in the provided [TimeRange].
@@ -23,7 +23,7 @@ import net.minecraft.entity.LivingEntity
  */
 class TimeRangeRequirement : EntityQueryRequirement {
     val range = TimeRange(0..23999)
-    override fun check(pokemon: Pokemon, queriedEntity: LivingEntity) = this.range.contains((queriedEntity.world.timeOfDay % DAY_DURATION).toInt())
+    override fun check(pokemon: Pokemon, queriedEntity: LivingEntity) = this.range.contains((queriedEntity.level().dayTime() % DAY_DURATION).toInt())
     companion object {
         const val ADAPTER_VARIANT = "time_range"
         private const val DAY_DURATION = 24000

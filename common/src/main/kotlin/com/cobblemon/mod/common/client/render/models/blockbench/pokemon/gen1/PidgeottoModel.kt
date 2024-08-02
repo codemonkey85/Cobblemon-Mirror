@@ -8,104 +8,102 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.WingFlapIdleAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.parabolaFunction
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class PidgeottoModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BiWingedFrame {
+class PidgeottoModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("pidgeotto")
-    override val leftWing = getPart("wing_open_left")
-    override val rightWing = getPart("wing_open_right")
+    override val head = getPart("neck")
+
+    override val leftWing = getPart("wing_closed_left")
+    override val rightWing = getPart("wing_closed_right")
     override val leftLeg = getPart("leg_left")
     override val rightLeg = getPart("leg_right")
-    override val head = getPart("neck")
     private val tail = getPart("tail")
 
-    override val portraitScale = 2.8F
-    override val portraitTranslation = Vec3d(-0.4, -0.9, 0.0)
-    override val profileScale = 1.1F
-    override val profileTranslation = Vec3d(0.0, 0.1, 0.0)
+    private val wingOpenRight = getPart("wing_open_right")
+    private val wingOpenLeft = getPart("wing_open_left")
+    private val wingClosedRight = getPart("wing_closed_right")
+    private val wingClosedLeft = getPart("wing_closed_left")
 
-    lateinit var sleep: PokemonPose
-    lateinit var stand: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var hover: PokemonPose
-    lateinit var fly: PokemonPose
+    override var portraitScale = 2.8F
+    override var portraitTranslation = Vec3(-0.4, -0.9, 0.0)
+    override var profileScale = 1.1F
+    override var profileTranslation = Vec3(0.0, 0.1, 0.0)
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("pidgeotto", "cry") }
+    lateinit var sleep: Pose
+    lateinit var stand: Pose
+    lateinit var walk: Pose
+    lateinit var hover: Pose
+    lateinit var fly: Pose
+
+    override val cryAnimation = CryProvider { bedrockStateful("pidgeotto", "cry") }
 
     override fun registerPoses() {
-        sleep = registerPose(
-                poseType = PoseType.SLEEP,
-                idleAnimations = arrayOf(bedrock("pidgeotto", "sleep"))
-        )
         val blink = quirk { bedrockStateful("pidgeotto", "blink")}
+        val flyQuirk1 = quirk { bedrockStateful("pidgeotto", "air_fly_quirk") }
+        val flyQuirk2 = quirk { bedrockStateful("pidgeotto", "air_fly_quirk2") }
+
+        sleep = registerPose(
+            poseName = "sleep",
+            poseType = PoseType.SLEEP,
+            transformedParts = arrayOf(
+                wingClosedLeft.createTransformation().withVisibility(visibility = true),
+                wingClosedRight.createTransformation().withVisibility(visibility = true),
+                wingOpenLeft.createTransformation().withVisibility(visibility = false),
+                wingOpenRight.createTransformation().withVisibility(visibility = false)
+            ),
+            animations = arrayOf(bedrock("pidgeotto", "sleep_PLACEHOLDER"))
+        )
+
         stand = registerPose(
             poseName = "stand",
-            poseTypes = STATIONARY_POSES - PoseType.HOVER - PoseType.FLOAT + UI_POSES,
-            transformTicks = 0,
+            poseTypes = STATIONARY_POSES - PoseType.HOVER + UI_POSES,
+            transformedParts = arrayOf(
+                wingClosedLeft.createTransformation().withVisibility(visibility = true),
+                wingClosedRight.createTransformation().withVisibility(visibility = true),
+                wingOpenLeft.createTransformation().withVisibility(visibility = false),
+                wingOpenRight.createTransformation().withVisibility(visibility = false)
+            ),
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
-                bedrock("pidgeotto", "ground_idle")
+                bedrock("pidgeotto", "ground_idle_PLACEHOLDER")
             )
         )
         walk = registerPose(
             poseName = "hover",
-            poseTypes = setOf(PoseType.HOVER, PoseType.FLOAT),
+            poseTypes = PoseType.MOVING_POSES - PoseType.FLY,
+            transformedParts = arrayOf(
+                wingClosedLeft.createTransformation().withVisibility(visibility = true),
+                wingClosedRight.createTransformation().withVisibility(visibility = true),
+                wingOpenLeft.createTransformation().withVisibility(visibility = false),
+                wingOpenRight.createTransformation().withVisibility(visibility = false)
+            ),
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
-                bedrock("pidgeotto", "air_idle"),
-                WingFlapIdleAnimation(this,
-                    flapFunction = sineFunction(verticalShift = -10F.toRadians(), period = 0.9F, amplitude = 0.6F),
-                    timeVariable = { state, _, _ -> state?.animationSeconds ?: 0F },
-                    axis = ModelPartTransformation.Z_AXIS
-                )
-            )
-        )
-        hover = registerPose(
-            poseName = "fly",
-            poseTypes = setOf(PoseType.FLY, PoseType.SWIM),
-            quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
-                singleBoneLook(),
-                bedrock("pidgeotto", "air_fly"),
-                WingFlapIdleAnimation(this,
-                    flapFunction = sineFunction(verticalShift = -14F.toRadians(), period = 0.9F, amplitude = 0.9F),
-                    timeVariable = { state, _, _ -> state?.animationSeconds ?: 0F },
-                    axis = ModelPartTransformation.Z_AXIS
-                )
-            )
-        )
-        fly = registerPose(
-            poseName = "walk",
-            poseTypes = MOVING_POSES - PoseType.FLY - PoseType.SWIM,
-            transformTicks = 5,
-            quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
-                singleBoneLook(),
-                bedrock("pidgeotto", "ground_idle"),
+                bedrock("pidgeotto", "ground_idle_PLACEHOLDER"),
                 rootPart.translation(
                     function = parabolaFunction(
                         peak = -4F,
                         period = 0.4F
                     ),
-                    timeVariable = { state, _, _ -> state?.animationSeconds },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = ModelPartTransformation.Y_AXIS
                 ),
                 head.translation(
@@ -115,7 +113,7 @@ class PidgeottoModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
                         verticalShift = (-10F).toRadians()
                     ),
                     axis = ModelPartTransformation.X_AXIS,
-                    timeVariable = { state, _, _ -> state?.animationSeconds }
+                    timeVariable = { state, _, _ -> state.animationSeconds }
                 ),
                 leftLeg.rotation(
                     function = parabolaFunction(
@@ -150,7 +148,7 @@ class PidgeottoModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
                         phaseShift = 0.00F,
                         verticalShift = (-20F).toRadians()
                     ),
-                    timeVariable = { state, _, _ -> state?.animationSeconds },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = ModelPartTransformation.Z_AXIS
                 ),
                 rightWing.translation(
@@ -171,6 +169,37 @@ class PidgeottoModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
                     axis = ModelPartTransformation.Y_AXIS,
                     timeVariable = { _, _, ageInTicks -> ageInTicks / 20 },
                 ),
+            )
+        )
+        hover = registerPose(
+            poseName = "fly",
+            poseType = PoseType.HOVER,
+            transformedParts = arrayOf(
+                wingClosedLeft.createTransformation().withVisibility(visibility = false),
+                wingClosedRight.createTransformation().withVisibility(visibility = false),
+                wingOpenLeft.createTransformation().withVisibility(visibility = true),
+                wingOpenRight.createTransformation().withVisibility(visibility = true)
+            ),
+            quirks = arrayOf(blink),
+            animations = arrayOf(
+                singleBoneLook(),
+                bedrock("pidgeotto", "air_idle")
+            )
+        )
+        fly = registerPose(
+            poseName = "walk",
+            poseType = PoseType.FLY,
+            transformedParts = arrayOf(
+                wingClosedLeft.createTransformation().withVisibility(visibility = false),
+                wingClosedRight.createTransformation().withVisibility(visibility = false),
+                wingOpenLeft.createTransformation().withVisibility(visibility = true),
+                wingOpenRight.createTransformation().withVisibility(visibility = true)
+            ),
+            transformTicks = 10,
+            quirks = arrayOf(blink, flyQuirk1, flyQuirk2),
+            animations = arrayOf(
+                singleBoneLook(),
+                bedrock("pidgeotto", "air_fly")
             )
         )
     }

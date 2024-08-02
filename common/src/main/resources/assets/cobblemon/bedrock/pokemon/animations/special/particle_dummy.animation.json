@@ -132,11 +132,6 @@
 		},
 		"animation.particle_dummy.flamethrower_target": {
 			"animation_length": 2,
-			"sound_effects": {
-				"0.0": {
-					"effect": "effective"
-				}
-			},
 			"particle_effects": {
 				"0.0833": [
 					{
@@ -370,36 +365,6 @@
 					},
 					{
 						"effect": "shiny_glimmer",
-						"locator": "center"
-					}
-				]
-			}
-		},
-		"animation.particle_dummy.stat_up": {
-			"animation_length": 2,
-			"particle_effects": {
-				"0.0": [
-					{
-						"effect": "stat_up_lines",
-						"locator": "center"
-					},
-					{
-						"effect": "stat_up_circles",
-						"locator": "center"
-					}
-				]
-			}
-		},
-		"animation.particle_dummy.stat_down": {
-			"animation_length": 2,
-			"particle_effects": {
-				"0.0": [
-					{
-						"effect": "stat_down_lines",
-						"locator": "center"
-					},
-					{
-						"effect": "stat_down_circles",
 						"locator": "center"
 					}
 				]

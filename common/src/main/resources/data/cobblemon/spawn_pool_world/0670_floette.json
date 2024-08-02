@@ -1,0 +1,385 @@
+{
+    "enabled": true,
+    "neededInstalledMods": [],
+    "neededUninstalledMods": [],
+    "spawns": [
+        {
+            "id": "floette-red-1",
+            "pokemon": "floette flower=red",
+            "presets": [
+                "natural",
+                "red_flowers"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "19-37",
+            "weight": 0.9,
+            "weightMultiplier": {
+                "multiplier": 0.25,
+                "condition": {
+                    "timeRange": "night"
+                }
+            },
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ]
+            },
+            "drops": {
+                "amount": 2,
+                "entries": [
+                    {
+                        "item": "minecraft:poppy"
+                    },
+                    {
+                        "item": "cobblemon:kebia_berry",
+                        "percentage": 5.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "floette-yellow-2",
+            "pokemon": "floette flower=yellow",
+            "presets": [
+                "natural",
+                "yellow_flowers"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "19-37",
+            "weight": 0.9,
+            "weightMultiplier": {
+                "multiplier": 0.25,
+                "condition": {
+                    "timeRange": "night"
+                }
+            },
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ]
+            },
+            "drops": {
+                "amount": 2,
+                "entries": [
+                    {
+                        "item": "minecraft:dandelion"
+                    },
+                    {
+                        "item": "cobblemon:kebia_berry",
+                        "percentage": 5.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "floette-orange-3",
+            "pokemon": "floette flower=orange",
+            "presets": [
+                "natural",
+                "orange_flowers"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "19-37",
+            "weight": 0.9,
+            "weightMultiplier": {
+                "multiplier": 0.25,
+                "condition": {
+                    "timeRange": "night"
+                }
+            },
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ]
+            },
+            "drops": {
+                "amount": 2,
+                "entries": [
+                    {
+                        "item": "minecraft:orange_tulip"
+                    },
+                    {
+                        "item": "cobblemon:kebia_berry",
+                        "percentage": 5.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "floette-blue-4",
+            "pokemon": "floette flower=blue",
+            "presets": [
+                "natural",
+                "blue_flowers"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "19-37",
+            "weight": 0.9,
+            "weightMultiplier": {
+                "multiplier": 0.25,
+                "condition": {
+                    "timeRange": "night"
+                }
+            },
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ]
+            },
+            "drops": {
+                "amount": 2,
+                "entries": [
+                    {
+                        "item": "minecraft:cornflower"
+                    },
+                    {
+                        "item": "cobblemon:kebia_berry",
+                        "percentage": 5.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "floette-white-5",
+            "pokemon": "floette flower=white",
+            "presets": [
+                "natural",
+                "white_flowers"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "19-37",
+            "weight": 0.9,
+            "weightMultiplier": {
+                "multiplier": 0.25,
+                "condition": {
+                    "timeRange": "night"
+                }
+            },
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ]
+            },
+            "drops": {
+                "amount": 2,
+                "entries": [
+                    {
+                        "item": "minecraft:oxeye_daisy"
+                    },
+                    {
+                        "item": "cobblemon:kebia_berry",
+                        "percentage": 5.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "floette-pink-6",
+            "pokemon": "floette flower=pink",
+            "presets": [
+                "natural",
+                "pink_flowers"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "19-37",
+            "weight": 0.9,
+            "weightMultiplier": {
+                "multiplier": 0.25,
+                "condition": {
+                    "timeRange": "night"
+                }
+            },
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ]
+            },
+            "drops": {
+                "amount": 2,
+                "entries": [
+                    {
+                        "item": "minecraft:allium"
+                    },
+                    {
+                        "item": "cobblemon:kebia_berry",
+                        "percentage": 5.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "floette-red-7",
+            "pokemon": "floette flower=red",
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "19-37",
+            "weight": 0.9,
+            "weightMultiplier": {
+                "multiplier": 0.25,
+                "condition": {
+                    "timeRange": "night"
+                }
+            },
+            "condition": {
+                "biomes": [
+                    "the_bumblezone:floral_meadow"
+                ]
+            },
+            "anticondition": {
+                "structures": [
+                    "#the_bumblezone:sempiternal_sanctums"
+                ]
+            }
+        },
+        {
+            "id": "floette-yellow-7",
+            "pokemon": "floette flower=yellow",
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "19-37",
+            "weight": 0.9,
+            "weightMultiplier": {
+                "multiplier": 0.25,
+                "condition": {
+                    "timeRange": "night"
+                }
+            },
+            "condition": {
+                "biomes": [
+                    "the_bumblezone:floral_meadow"
+                ]
+            },
+            "anticondition": {
+                "structures": [
+                    "#the_bumblezone:sempiternal_sanctums"
+                ]
+            }
+        },
+        {
+            "id": "floette-orange-7",
+            "pokemon": "floette flower=orange",
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "19-37",
+            "weight": 0.9,
+            "weightMultiplier": {
+                "multiplier": 0.25,
+                "condition": {
+                    "timeRange": "night"
+                }
+            },
+            "condition": {
+                "biomes": [
+                    "the_bumblezone:floral_meadow"
+                ]
+            },
+            "anticondition": {
+                "structures": [
+                    "#the_bumblezone:sempiternal_sanctums"
+                ]
+            }
+        },
+        {
+            "id": "floette-blue-7",
+            "pokemon": "floette flower=blue",
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "19-37",
+            "weight": 0.9,
+            "weightMultiplier": {
+                "multiplier": 0.25,
+                "condition": {
+                    "timeRange": "night"
+                }
+            },
+            "condition": {
+                "biomes": [
+                    "the_bumblezone:floral_meadow"
+                ]
+            },
+            "anticondition": {
+                "structures": [
+                    "#the_bumblezone:sempiternal_sanctums"
+                ]
+            }
+        },
+        {
+            "id": "floette-white-7",
+            "pokemon": "floette flower=white",
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "19-37",
+            "weight": 0.9,
+            "weightMultiplier": {
+                "multiplier": 0.25,
+                "condition": {
+                    "timeRange": "night"
+                }
+            },
+            "condition": {
+                "biomes": [
+                    "the_bumblezone:floral_meadow"
+                ]
+            },
+            "anticondition": {
+                "structures": [
+                    "#the_bumblezone:sempiternal_sanctums"
+                ]
+            }
+        },
+        {
+            "id": "floette-pink-7",
+            "pokemon": "floette flower=pink",
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "19-37",
+            "weight": 0.9,
+            "weightMultiplier": {
+                "multiplier": 0.25,
+                "condition": {
+                    "timeRange": "night"
+                }
+            },
+            "condition": {
+                "biomes": [
+                    "the_bumblezone:floral_meadow"
+                ]
+            },
+            "anticondition": {
+                "structures": [
+                    "#the_bumblezone:sempiternal_sanctums"
+                ]
+            }
+        }
+    ]
+}

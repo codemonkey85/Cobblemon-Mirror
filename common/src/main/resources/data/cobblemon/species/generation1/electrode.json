@@ -1,4 +1,4 @@
-﻿{
+{
   "implemented": true,
   "name": "Electrode",
   "nationalPokedexNumber": 101,
@@ -126,9 +126,26 @@
       ],
       "height": 12,
       "weight": 710,
-      "preEvolution": "voltorb form=hisui",
+      "preEvolution": "voltorb hisuian",
       "cannotDynamax": false,
-      "battleOnly": false
+      "battleOnly": false,
+      "drops": {
+        "amount": 5,
+        "entries": [
+          {
+            "item": "minecraft:gunpowder",
+            "quantityRange": "0-2"
+          },
+          {
+            "item": "cobblemon:red_apricorn",
+            "quantityRange": "0-2"
+          },
+          {
+            "item": "cobblemon:cheri_berry",
+            "percentage": 5.0
+          }
+        ]
+      }
     }
   ],
   "baseExperienceYield": 172,

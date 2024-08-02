@@ -10,8 +10,12 @@
     "h:immunity"
   ],
   "drops": {
-    "amount": 3,
+    "amount": 4,
     "entries": [
+      {
+        "item": "minecraft:phantom_membrane",
+        "percentage": 2.5
+      },
       {
         "item": "cobblemon:razor_fang",
         "percentage": 2.5
@@ -226,6 +230,7 @@
       "variant": "level_up",
       "result": "gliscor",
       "consumeHeldItem": true,
+      "permanent": true,
       "learnableMoves": [],
       "requirements": [
         {

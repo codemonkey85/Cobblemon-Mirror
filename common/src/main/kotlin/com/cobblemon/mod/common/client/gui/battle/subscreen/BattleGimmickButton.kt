@@ -13,12 +13,13 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.moves.MoveTemplate
 import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.battles.*
+import com.cobblemon.mod.common.client.gui.battle.subscreen.BattleGimmickButton.GimmickTile
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.math.toRGB
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.sound.SoundEvents
+import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.Minecraft
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.sounds.SoundEvents
 
 /**
  * Button for toggling gimmicks during a battle.
@@ -58,10 +59,10 @@ abstract class BattleGimmickButton(gimmick: ShowdownMoveset.Gimmick, val x: Floa
 
     abstract val tiles: List<BattleMoveSelection.MoveTile>
     var toggled = false
-    private val sfx = PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F)
+    private val sfx = SimpleSoundInstance.forUI(SoundEvents.ANVIL_LAND, 1.0F)
     private val texture = gimmick.id
 
-    fun render(matrices: MatrixStack, mouseX: Int, mouseY: Int, delta: Float) {
+    fun render(matrices: PoseStack, mouseX: Int, mouseY: Int, delta: Float) {
         blitk(
             matrixStack = matrices,
             texture = cobblemonResource("textures/gui/battle/battle_gimmick_${texture}.png"),
@@ -79,7 +80,7 @@ abstract class BattleGimmickButton(gimmick: ShowdownMoveset.Gimmick, val x: Floa
 
     fun toggle(): Boolean {
         toggled = !toggled
-        MinecraftClient.getInstance().soundManager.play(sfx)
+        Minecraft.getInstance().soundManager.play(sfx)
         return toggled
     }
 

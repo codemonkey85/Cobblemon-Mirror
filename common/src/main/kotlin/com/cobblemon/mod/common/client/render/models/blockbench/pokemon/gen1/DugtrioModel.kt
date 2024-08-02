@@ -8,54 +8,92 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.animation.SingleBoneLookAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class DugtrioModel(root: ModelPart) : PokemonPoseableModel() {
+class DugtrioModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("dugtrio")
+    override val head = getPart("body3")
 
-    override val portraitScale = 1.3F
-    override val portraitTranslation = Vec3d(0.0, -0.4, 0.0)
+    val lefthead = object : HeadedFrame {
+        override val rootPart = this@DugtrioModel.rootPart
+        override val head: ModelPart = getPart("body2")
+    }
+    val righthead = object : HeadedFrame {
+        override val rootPart = this@DugtrioModel.rootPart
+        override val head: ModelPart = getPart("body1")
+    }
 
-    override val profileScale = 0.9F
-    override val profileTranslation = Vec3d(0.0, 0.15, 0.0)
+    override var portraitScale = 1.3F
+    override var portraitTranslation = Vec3(-0.11, -0.1, 0.0)
 
-    lateinit var sleep: PokemonPose
+    override var profileScale = 0.9F
+    override var profileTranslation = Vec3(0.0, 0.29, 0.0)
+
+    lateinit var standing: CobblemonPose
+    lateinit var walking: CobblemonPose
+    lateinit var battleidle: CobblemonPose
+    lateinit var sleep: CobblemonPose
+
+    override val cryAnimation = CryProvider { bedrockStateful("dugtrio", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("dugtrio", "blink")}
         val blink2 = quirk { bedrockStateful("dugtrio", "blink2")}
         val blink3 = quirk { bedrockStateful("dugtrio", "blink3")}
-        registerPose(
-            poseName = "stand",
-            poseTypes = STATIONARY_POSES + UI_POSES,
-            quirks = arrayOf(blink, blink2, blink3),
-            idleAnimations = arrayOf(bedrock("dugtrio", "ground_idle"))
-        )
+
+        val quirk = quirk { bedrockStateful("dugtrio", "quirk_idle")}
+        val quirk2 = quirk { bedrockStateful("dugtrio", "quirk_idle2")}
+        val quirk3 = quirk { bedrockStateful("dugtrio", "quirk_idle3")}
 
         sleep = registerPose(
-                poseType = PoseType.SLEEP,
-                idleAnimations = arrayOf(bedrock("dugtrio", "sleep"))
+            poseName = "sleep",
+            poseType = PoseType.SLEEP,
+            animations = arrayOf(bedrock("dugtrio", "sleep"))
         )
 
-        registerPose(
+        standing = registerPose(
+            poseName = "stand",
+            poseTypes = STATIONARY_POSES + UI_POSES,
+            condition = { !it.isBattling },
+            quirks = arrayOf(blink, blink2, blink3, quirk, quirk2, quirk3),
+            animations = arrayOf(
+                    singleBoneLook(pitchMultiplier = 0.6F, yawMultiplier = 0.4F, maxPitch = 10F, minPitch = -30F),
+                    SingleBoneLookAnimation(lefthead, false, false, false, false, 1F, 1.4F, 0F, -30F, 20F, -45F),
+                    SingleBoneLookAnimation(righthead, false, false, false, false, 1F, 1.4F, 0F, -30F, 45F, -25F),
+                    bedrock("dugtrio", "ground_idle"))
+        )
+
+        walking = registerPose(
             poseName = "walk",
             poseTypes = MOVING_POSES,
             quirks = arrayOf(blink, blink2, blink3),
-            idleAnimations = arrayOf(bedrock("dugtrio", "ground_walk"))
+            animations = arrayOf(
+                    singleBoneLook(pitchMultiplier = 0.6F, yawMultiplier = 0.4F, maxPitch = 10F, minPitch = -30F),
+                    SingleBoneLookAnimation(lefthead, false, false, false, false, 1F, 1.4F, 0F, -30F, 20F, -45F),
+                    SingleBoneLookAnimation(righthead, false, false, false, false, 1F, 1.4F, 0F, -30F, 45F, -25F),
+                    bedrock("dugtrio", "ground_walk"))
+        )
+
+        battleidle = registerPose(
+            poseName = "battleidle",
+            poseTypes = STATIONARY_POSES,
+            condition = { it.isBattling },
+            quirks = arrayOf(blink, blink2, blink3, quirk, quirk2, quirk3),
+            animations = arrayOf(bedrock("dugtrio", "battle_idle"))
         )
     }
 
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = bedrockStateful("dugtrio", "faint")
+    override fun getFaintAnimation(state: PosableState) = bedrockStateful("dugtrio", "faint")
 }

@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Archen",
   "nationalPokedexNumber": 566,
   "primaryType": "rock",
@@ -25,7 +26,7 @@
   },
   "catchRate": 45,
   "maleRatio": 0.875,
-  "shoulderMountable": false,
+  "shoulderMountable": true,
   "baseExperienceYield": 71,
   "experienceGroup": "medium_fast",
   "eggCycles": 30,
@@ -33,6 +34,18 @@
     "flying",
     "water_3"
   ],
+  "behaviour": {
+    "resting": {
+      "canSleep": true,
+      "depth": "normal",
+      "light": "0-4"
+    },
+    "moving" : {
+      "walk": {
+        "walkSpeed": 0.15
+      }
+    }
+  },
   "moves": [
     "1:leer",
     "1:quickattack",
@@ -166,10 +179,10 @@
       ]
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.55,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.65,
+    "height": 1.2,
     "fixed": false
   },
   "baseFriendship": 50,

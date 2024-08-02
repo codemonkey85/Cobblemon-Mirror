@@ -1,0 +1,114 @@
+{
+    "name": "cobblemon:temperate_gimmi_tower",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 2,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_stone_stage1_long_entrance",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/temperate_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 2,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_stone_stage1_short_entrance",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/temperate_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 2,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_stone_stage1_platform_entrance",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/temperate_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 2,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_stone_stage1_long_entrance_shortcut",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/temperate_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 2,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_stone_stage1_short_entrance_shortcut",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/temperate_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 2,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_stone_stage1_platform_entrance_shortcut",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/temperate_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_silver_stage1_long_entrance",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/temperate_gimmi_tower_silver",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_silver_stage1_short_entrance",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/temperate_gimmi_tower_silver",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_silver_stage1_platform_entrance",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/temperate_gimmi_tower_stage2_silver",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_silver_stage1_long_entrance_shortcut",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/temperate_gimmi_tower_silver",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_silver_stage1_short_entrance_shortcut",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/temperate_gimmi_tower_silver",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_silver_stage1_platform_entrance_shortcut",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/temperate_gimmi_tower_stage2_silver",
+                "projection": "rigid"
+            }
+        }
+    ]
+}

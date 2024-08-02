@@ -8,71 +8,71 @@
 
 package com.cobblemon.mod.common.spawning
 
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
-import java.io.FileFilter
-import java.io.FileReader
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.isRegularFile
-import kotlin.io.path.name
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.io.FileNotFoundException
+import java.net.URI
+import kotlin.io.path.extension
 
 internal class SpawnValidator {
 
-    @Test
-    fun `Validate Spawn Files`() {
-        val root = Paths.get("src")
-            .resolve("main")
-            .resolve("resources")
-            .resolve("data")
-            .resolve("cobblemon")
-
-        val generations = root.resolve("species")
-            .toFile()
-            .listFiles(FileFilter {
-                it.isDirectory
-            })
-
-        val species = mutableListOf<String>()
-        for (generation in generations) {
-            Files.walk(generation.toPath()).filter { it.isRegularFile() }.use {
-                it.forEach { species.add(it.name.removeSuffix(".json")) }
-            }
-        }
-
-        val spawns = root.resolve("spawn_pool_world")
-            .toFile()
-            .listFiles(FileFilter { it.isFile })
-
-        val invalid = mutableListOf<Path>()
-        val gson = GsonBuilder().create()
-        for (spawner in spawns) {
-            val json = gson.fromJson(FileReader(spawner), JsonObject::class.java)
-            val options = json.getAsJsonArray("spawns")
-            for (option in options) {
-                val obj = option as JsonObject
-                var target = obj.get("pokemon").asString
-                if (target.contains(" ")) {
-                    target = target.substring(0, target.indexOf(' '))
-                }
-
-                if (!species.contains(target)) {
-                    invalid.add(spawner.toPath())
-                }
-            }
-        }
-
-        if (invalid.isNotEmpty()) {
-            println("Detected invalid spawn parameters (${invalid.size})")
-            for (marked in invalid) {
-                println("- $marked")
-            }
-        }
-
-        assertTrue(invalid.isEmpty())
+    companion object {
+        val GSON: Gson = GsonBuilder().create()
+        const val RESOURCE_PATH = "data/cobblemon/"
     }
 
+    @Test
+    fun `Validate Spawn Files`() {
+        val species = loadSpecies()
+        val invalidSpawns = findInvalidSpawns(species)
+
+        if (invalidSpawns.isNotEmpty()) {
+            println("Detected invalid spawn parameters (${invalidSpawns.size})")
+            invalidSpawns.forEach { println("- $it") }
+        }
+
+        assertTrue(invalidSpawns.isEmpty(), "There should be no invalid spawn parameters.")
+    }
+
+    private fun loadSpecies(): Collection<String> {
+        val speciesPath = Paths.get(cobblemonResource("species"))
+
+        return Files.walk(speciesPath)
+            .filter { path -> path.isRegularFile() && path.extension == "json"  }
+            .map { it.fileName.toString().removeSuffix(".json") }
+            .toList()
+    }
+
+    private fun findInvalidSpawns(species: Collection<String>): List<String> {
+        val spawnsPath = Paths.get(cobblemonResource("spawn_pool_world"))
+
+        return Files.list(spawnsPath)
+            .filter { path -> path.isRegularFile() && path.extension == "json"  }
+            .toList()
+            .flatMap { spawn ->
+                val json = GSON.fromJson(Files.newBufferedReader(spawn), JsonObject::class.java)
+
+                json.getAsJsonArray("spawns").mapNotNull { option ->
+                    val obj = option as JsonObject
+                    var target = obj.get("pokemon").asString
+                    if (target.contains(" ")) {
+                        target = target.substringBefore(' ')
+                    }
+                    if (!species.contains(target)) spawn.fileName.toString() else null
+                }
+            }
+    }
+
+    private fun cobblemonResource(path: String): URI {
+        val adjustedPath = RESOURCE_PATH + path
+
+        return javaClass.classLoader.getResource(adjustedPath)?.toURI()
+            ?: throw FileNotFoundException(adjustedPath)
+    }
 }

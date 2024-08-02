@@ -1,0 +1,158 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.dragapult.ground_idle": {
+			"loop": true,
+			"bones": {
+				"arm_left": {
+					"rotation": [35.00057, 41.99821, 46.3017]
+				},
+				"arm_left2": {
+					"rotation": [0, 0, -77.5]
+				},
+				"hand_left": {
+					"rotation": [0, 0, 110]
+				},
+				"arm_right": {
+					"rotation": [35.00057, -41.99821, -46.3017]
+				},
+				"arm_right2": {
+					"rotation": [0, 0, 77.5]
+				},
+				"hand_right": {
+					"rotation": [0, 0, -110]
+				},
+				"tail": {
+					"rotation": [-14.33501, 4.46375, 16.93839]
+				},
+				"tail2": {
+					"rotation": [-18.19144, 13.47157, 42.8335]
+				},
+				"tail3": {
+					"rotation": [-17.06488, 10.58927, 50.90686]
+				},
+				"tail4": {
+					"rotation": [-16.60179, 11.31335, 50.84411]
+				},
+				"tail5": {
+					"rotation": [-21.26765, 7.52076, 28.58597]
+				},
+				"leg_left": {
+					"rotation": [22.5, -12.5, 0]
+				},
+				"leg_left2": {
+					"rotation": [30, 0, 0]
+				},
+				"foot_left": {
+					"rotation": [-20, 0, 0]
+				},
+				"leg_right": {
+					"rotation": [22.5, 12.5, 0]
+				},
+				"leg_right2": {
+					"rotation": [30, 0, 0]
+				},
+				"foot_right": {
+					"rotation": [-20, 0, 0]
+				},
+				"jaw": {
+					"rotation": [0, 0, 0]
+				},
+				"tail6": {
+					"rotation": [25, 0, 0]
+				}
+			}
+		},
+		"animation.dragapult.blink2": {
+			"animation_length": 0.16667,
+			"bones": {
+				"eyelid_left3": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"eyelid_right3": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.dragapult.blink3": {
+			"animation_length": 0.16667,
+			"bones": {
+				"eyelid_left2": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"eyelid_right2": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.dragapult.cry": {
+			"animation_length": 1.5,
+			"sound_effects": {
+				"0.04": {
+					"effect": "pokemon.dragapult.cry"
+				}
+			},
+			"bones": {
+				"neck": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.25": [10, 0, 0],
+						"1.25": [10, 0, 0],
+						"1.5": [0, 0, 0]
+					}
+				},
+				"head": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.25": [-10, 0, 0],
+						"1.25": [-10, 0, 0],
+						"1.5": [0, 0, 0]
+					}
+				},
+				"jaw": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.25": [12.5, 0, 0],
+						"1.25": [12.5, 0, 0],
+						"1.5": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.dragapult.blink": {
+			"animation_length": 0.16667,
+			"bones": {
+				"eyelid_right": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"eyelid_left": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				}
+			}
+		}
+	}
+}

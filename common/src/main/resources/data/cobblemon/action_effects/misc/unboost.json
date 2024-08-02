@@ -1,0 +1,24 @@
+{
+  "timeline": [
+    {
+      "type": "add_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:stat_down_circles",
+      "delay": 0.05,
+      "locator": "middle"
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:stat_down_lines",
+      "delay": 0.05,
+      "locator": "middle"
+    },
+    {
+      "type": "remove_holds",
+      "holds": ["effects"]
+    }
+  ]
+}

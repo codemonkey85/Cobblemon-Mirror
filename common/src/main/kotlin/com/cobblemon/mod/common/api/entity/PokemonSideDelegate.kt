@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.api.entity
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.damage.DamageSource
+import net.minecraft.world.damagesource.DamageSource
 
 interface PokemonSideDelegate : EntitySideDelegate<PokemonEntity> {
     fun changePokemon(pokemon: Pokemon)

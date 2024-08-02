@@ -42,7 +42,7 @@ def process_pokemon_entry(entry, pokemon_data, base_pokemon_name, is_base_form=T
 
 def parse_pokemon_data(json_file):
     """Parse the JSON file and extract Pokémon data, including forms."""
-    with open(json_file, 'r', encoding='utf-8') as file:
+    with open(json_file, 'r', encoding='utf-8-sig') as file:
         data = json.load(file)
         pokemon_data = []
         pokemon_name = data.get('name', 'Unknown')  # Default to 'Unknown' if no name is present

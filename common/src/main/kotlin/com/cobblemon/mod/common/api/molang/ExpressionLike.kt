@@ -19,8 +19,10 @@ import com.bedrockk.molang.runtime.value.MoValue
  * @since October 22nd, 2023
  */
 interface ExpressionLike {
+    override fun toString(): String
     /** Produces a [MoValue] for a [MoLangRuntime] to supply an environment. */
-    fun resolve(runtime: MoLangRuntime): MoValue
+    fun resolve(runtime: MoLangRuntime, context: Map<String, MoValue> = emptyMap()): MoValue
+    fun getString(): String = toString()
 
     fun resolveDouble(runtime: MoLangRuntime) = resolve(runtime).asDouble()
     fun resolveFloat(runtime: MoLangRuntime) = resolveDouble(runtime).toFloat()
@@ -28,4 +30,5 @@ interface ExpressionLike {
     fun resolveInt(runtime: MoLangRuntime) = resolveDouble(runtime).toInt()
     fun resolveBoolean(runtime: MoLangRuntime) = resolveDouble(runtime) == 1.0
     fun resolveObject(runtime: MoLangRuntime) = resolve(runtime) as ObjectValue<*>
+
 }

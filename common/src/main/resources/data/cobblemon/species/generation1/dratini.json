@@ -29,8 +29,15 @@
     "moving": {
       "swim": {
         "canSwimInWater": true,
-        "canBreatheUnderwater": true
+        "canBreatheUnderwater": true,
+        "canWalkOnWater": true
       }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
     }
   },
   "drops": {

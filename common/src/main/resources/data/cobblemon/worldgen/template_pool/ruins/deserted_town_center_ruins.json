@@ -1,0 +1,15 @@
+{
+    "name": "cobblemon:deserted_town_center_ruins",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/deserted_town_center_layout1",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/deserted_town_center_ruins",
+                "projection": "terrain_matching"
+            }
+        }
+    ]
+}

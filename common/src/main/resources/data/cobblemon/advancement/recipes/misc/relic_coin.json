@@ -1,0 +1,36 @@
+{
+  "parent": "cobblemon:recipes/root",
+  "rewards": {
+    "recipes": [
+      "cobblemon:relic_coin_from_pouch",
+      "cobblemon:gold_nugget_from_blasting_coin",
+      "cobblemon:gold_nugget_from_smelting_coin"
+    ]
+  },
+  "criteria": {
+    "has_pouch": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:relic_coin_pouch"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "cobblemon:relic_coin_pouch"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_pouch",
+      "has_the_recipe"
+    ]
+  ]
+}

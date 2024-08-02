@@ -9,12 +9,12 @@
 package com.cobblemon.mod.fabric.mixin;
 
 import com.cobblemon.mod.common.client.CobblemonClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
@@ -23,19 +23,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * @author Qu
  * @since 2022-02-22
  */
-@Mixin(InGameHud.class)
+@Mixin(Gui.class)
 public class GuiMixin {
     private Long lastTimeMillis = null;
-    @Inject(
-            method = "render",
-            at = @At(
-                value = "INVOKE",
-                target = "Lnet/minecraft/client/gui/hud/ChatHud;render(Lnet/minecraft/client/gui/DrawContext;III)V",
-                shift = At.Shift.BEFORE,
-                ordinal = 0
-            )
-    )
-    private void beforeChatHook(DrawContext context, float f, CallbackInfo ci) {
+
+    @Inject(method = "renderCameraOverlays", at = @At("HEAD"))
+    private void beforeChatHook(GuiGraphics context, DeltaTracker tickCounter, CallbackInfo ci) {
         if (lastTimeMillis != null) {
             CobblemonClient.INSTANCE.beforeChatRender(context, (System.currentTimeMillis() - lastTimeMillis) / 1000F * 20);
         }

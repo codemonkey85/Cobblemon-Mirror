@@ -89,6 +89,22 @@
   "height": 4,
   "weight": 44,
   "preEvolution": "applin",
-  "evolutions": [],
+  "evolutions": [
+    {
+      "id": "dipplin_hydrapple",
+      "variant": "level_up",
+      "result": "hydrapple",
+      "consumeHeldItem": false,
+      "learnableMoves": [
+        "ficklebeam"
+      ],
+      "requirements": [
+        {
+          "variant": "has_move",
+          "type": "dragoncheer"
+        }
+      ]
+    }
+  ],
   "cannotDynamax": false
 }

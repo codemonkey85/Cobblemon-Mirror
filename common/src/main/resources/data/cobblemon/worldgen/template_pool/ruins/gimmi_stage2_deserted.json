@@ -1,0 +1,60 @@
+{
+    "name": "cobblemon:ruins/gimmi_stage2_deserted",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_deserted_stage2_long",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/deserted_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_deserted_stage2_short",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/deserted_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_deserted_stage2_platform",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/deserted_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_deserted_stage2_long_husk",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/deserted_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_deserted_stage2_short_husk",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/deserted_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_deserted_stage2_platform_husk",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/deserted_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        }
+    ]
+}

@@ -24,7 +24,7 @@ import com.cobblemon.mod.common.pokemon.Nature
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.battleLang
 import java.util.UUID
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
 
 open class BattlePokemon(
     val originalPokemon: Pokemon,
@@ -37,6 +37,14 @@ open class BattlePokemon(
             originalPokemon = pokemon,
             effectedPokemon = pokemon.clone(),
             postBattleEntityOperation = { entity -> entity.discard() }
+        )
+
+        fun playerOwned(pokemon: Pokemon): BattlePokemon = BattlePokemon(
+            originalPokemon = pokemon,
+            effectedPokemon = pokemon,
+            postBattleEntityOperation = { entity ->
+                entity.effects.wipe()
+            }
         )
     }
 
@@ -71,11 +79,12 @@ open class BattlePokemon(
 
     val contextManager = ContextManager()
 
-    open fun getName(): MutableText {
+    open fun getName(): MutableComponent {
+        val displayPokemon = getIllusion()?.effectedPokemon ?: effectedPokemon
         return if (actor is PokemonBattleActor || actor is MultiPokemonBattleActor) {
-            effectedPokemon.getDisplayName()
+            displayPokemon.getDisplayName()
         } else {
-            battleLang("owned_pokemon", actor.getName(), effectedPokemon.getDisplayName())
+            battleLang("owned_pokemon", actor.getName(), displayPokemon.getDisplayName())
         }
     }
 
@@ -94,4 +103,6 @@ open class BattlePokemon(
     fun writeVariables(struct: VariableStruct) {
         effectedPokemon.writeVariables(struct)
     }
+
+    fun getIllusion(): BattlePokemon? = this.actor.activePokemon.find { it.battlePokemon == this }?.illusion
 }

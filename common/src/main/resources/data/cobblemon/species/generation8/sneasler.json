@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Sneasler",
   "nationalPokedexNumber": 903,
   "primaryType": "fighting",
@@ -113,9 +114,15 @@
   "pokedex": [
     "cobblemon.species.sneasler.desc"
   ],
+  "baseScale": 0.7,
+  "hitbox": {
+    "width": 0.95,
+    "height": 2.5,
+    "fixed": false
+  },
   "height": 13,
   "weight": 430,
-  "preEvolution": "sneasel form=hisui",
+  "preEvolution": "sneasel hisuian",
   "evolutions": [],
   "aspects": [],
   "cannotDynamax": false,

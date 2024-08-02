@@ -22,7 +22,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_badlands",
                     "#cobblemon:is_hills"
@@ -43,7 +44,24 @@
             "weight": 2.0,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_mountain"
+                    "#cobblemon:nether/is_mountain"
+                ]
+            },
+            "drops": {
+                "amount": 3,
+                "entries": [
+                    {
+                        "item": "cobblemon:flame_orb",
+                        "percentage": 5.0
+                    },
+                    {
+                        "item": "minecraft:blaze_powder",
+                        "percentage": 10.0
+                    },
+                    {
+                        "item": "cobblemon:rawst_berry",
+                        "percentage": 5.0
+                    }
                 ]
             }
         }

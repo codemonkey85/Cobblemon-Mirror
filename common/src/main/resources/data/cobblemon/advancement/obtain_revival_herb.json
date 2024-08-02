@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:revival_herb"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.obtain_revival_herb"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.obtain_revival_herb.description"
+    }
+  },
+  "parent": "cobblemon:any_plant",
+  "criteria": {
+    "check_inv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:revival_herb"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

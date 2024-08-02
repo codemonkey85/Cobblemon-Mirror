@@ -16,7 +16,10 @@
             "level": "20-54",
             "weight": 0.1,
             "condition": {
-                "canSeeSky": true
+                "canSeeSky": true,
+                "biomes": [
+                    "#cobblemon:is_freshwater"
+                ]
             }
         },
         {
@@ -28,11 +31,15 @@
             ],
             "type": "pokemon",
             "context": "surface",
-            "bucket": "common",
+            "bucket": "uncommon",
             "level": "20-54",
-            "weight": 0.02,
+            "weight": 0.2,
             "condition": {
-                "canSeeSky": true
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_freshwater"
+                ]
             }
         },
         {
@@ -61,15 +68,25 @@
             ],
             "type": "pokemon",
             "context": "surface",
-            "bucket": "common",
+            "bucket": "uncommon",
             "level": "20-54",
-            "weight": 0.02,
+            "weight": 0.2,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_ocean"
                 ]
             }
+        },
+        {
+            "id": "gyarados-fishing-4",
+            "pokemon": "gyarados",
+            "type": "pokemon",
+            "context": "fishing",
+            "bucket": "common",
+            "level": "20-54",
+            "weight": 9.00
         }
     ]
 }

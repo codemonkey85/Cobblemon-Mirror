@@ -13,9 +13,11 @@ import com.cobblemon.mod.common.api.spawning.CobblemonSpawnRules
 import com.cobblemon.mod.common.api.spawning.SpawnerManager
 import com.cobblemon.mod.common.api.spawning.detail.SpawnPool
 import com.cobblemon.mod.common.api.spawning.influence.PlayerLevelRangeInfluence
+import com.cobblemon.mod.common.api.spawning.influence.RestrictedSpawnBlocksInfluence
 import com.cobblemon.mod.common.api.spawning.influence.SpawningInfluence
 import com.cobblemon.mod.common.api.spawning.rules.SpawnRule
-import net.minecraft.server.network.ServerPlayerEntity
+import com.cobblemon.mod.common.util.mutableLazy
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Responsible for creating [PlayerSpawner]s with whatever appropriate settings. You can
@@ -26,14 +28,31 @@ import net.minecraft.server.network.ServerPlayerEntity
  * @since February 14th, 2022
  */
 object PlayerSpawnerFactory {
-    var spawns: SpawnPool = CobblemonSpawnPools.WORLD_SPAWN_POOL
-    var influenceBuilders = mutableListOf<(player: ServerPlayerEntity) -> SpawningInfluence?>({ PlayerLevelRangeInfluence(it, variation = 5) })
+    var spawns: SpawnPool by mutableLazy {
+        CobblemonSpawnPools.WORLD_SPAWN_POOL
+    }
 
-    fun create(spawnerManager: SpawnerManager, player: ServerPlayerEntity): PlayerSpawner {
+    /**
+     * The list of influences for a new [PlayerSpawner].
+     * The influences will be added to the spawner in the order they are added to this list.
+     *
+     * [PlayerLevelRangeInfluence] adjusts the level range of Pokémon that can spawn based on the player's level.
+     * [RestrictedSpawnBlocksInfluence] prevents Pokémon from spawning on certain blocks.
+     */
+    var influenceBuilders = mutableListOf<(player: ServerPlayer) -> SpawningInfluence?>({
+        PlayerLevelRangeInfluence(
+            it,
+            variation = 5
+        )
+    }, { RestrictedSpawnBlocksInfluence() })
+
+    fun create(spawnerManager: SpawnerManager, player: ServerPlayer): PlayerSpawner {
         val influences = influenceBuilders.mapNotNull { it(player) }
         return PlayerSpawner(player, spawns, spawnerManager).also {
             it.influences.addAll(influences)
-            it.influences.addAll(CobblemonSpawnRules.rules.values.filter(SpawnRule::enabled).flatMap(SpawnRule::components))
+            it.influences.addAll(
+                CobblemonSpawnRules.rules.values.filter(SpawnRule::enabled).flatMap(SpawnRule::components)
+            )
         }
     }
 }

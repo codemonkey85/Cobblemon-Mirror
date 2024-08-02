@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Qwilfish",
   "nationalPokedexNumber": 211,
   "primaryType": "water",
@@ -15,6 +16,24 @@
     "special_attack": 55,
     "special_defence": 55,
     "speed": 85
+  },
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "avoidsLand": true
+      },
+      "swim": {
+        "swimSpeed": 0.3,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
   },
   "features": [
     "hisuian"
@@ -39,6 +58,24 @@
         "special_attack": 55,
         "special_defence": 55,
         "speed": 85
+      },
+      "behaviour": {
+        "moving": {
+          "walk": {
+            "avoidsLand": true
+          },
+          "swim": {
+            "swimSpeed": 0.3,
+            "canSwimInWater": true,
+            "canBreatheUnderwater": true
+          }
+        },
+        "resting": {
+          "canSleep": true,
+          "willSleepOnBed": false,
+          "depth": "normal",
+          "light": "0-4"
+        }
       },
       "catchRate": 45,
       "maleRatio": 0.5,
@@ -347,8 +384,8 @@
   "evolutions": [],
   "baseScale": 1,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.6,
+    "height": 0.8,
     "fixed": false
   },
   "baseFriendship": 50,

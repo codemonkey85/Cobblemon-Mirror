@@ -12,12 +12,12 @@
 			},
 			"bones": [
 				{
-					"name": "oinkologne",
+					"name": "oinkologne_male",
 					"pivot": [0, 0, 0]
 				},
 				{
 					"name": "body",
-					"parent": "oinkologne",
+					"parent": "oinkologne_male",
 					"pivot": [0, 9.5, 4.75],
 					"cubes": [
 						{"origin": [-4.5, 5, -7.25], "size": [9, 9, 13], "uv": [0, 0]}
@@ -266,7 +266,7 @@
 				},
 				{
 					"name": "leg_back_right",
-					"parent": "oinkologne",
+					"parent": "oinkologne_male",
 					"pivot": [-3.5, 9.5, 3.75],
 					"cubes": [
 						{"origin": [-5.5, 4, 1.25], "size": [4, 7, 5], "uv": [0, 38]}
@@ -290,7 +290,7 @@
 				},
 				{
 					"name": "leg_back_left",
-					"parent": "oinkologne",
+					"parent": "oinkologne_male",
 					"pivot": [3.5, 9.5, 3.75],
 					"cubes": [
 						{"origin": [1.5, 4, 1.25], "size": [4, 7, 5], "uv": [31, 0]}

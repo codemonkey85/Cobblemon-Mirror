@@ -15,7 +15,8 @@
             "level": "39-50",
             "weight": 0.6,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 1,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_spooky"
                 ],
@@ -34,7 +35,8 @@
             "level": "39-50",
             "weight": 0.2,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_spooky",
                     "#cobblemon:is_swamp"
@@ -72,7 +74,8 @@
             "level": "39-50",
             "weight": 0.6,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_swamp"
                 ],
@@ -92,7 +95,7 @@
             "weight": 0.6,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_warped"
+                    "#cobblemon:nether/is_warped"
                 ]
             }
         }

@@ -1,0 +1,32 @@
+{
+  "species": "cobblemon:zoroark",
+  "order": 1,
+  "variations": [
+    {
+      "aspects": ["hisuian"],
+      "poser": "cobblemon:zoroark_hisuian",
+      "model": "cobblemon:zoroark_hisuian.geo",
+      "texture": "cobblemon:textures/pokemon/0571_zoroark/zoroark_hisuian.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "texture": "cobblemon:textures/pokemon/0571_zoroark/zoroark_hisuian_emissive.png",
+          "emissive": true
+        }
+      ]
+    },
+    {
+      "aspects": [
+        "shiny", "hisuian"
+      ],
+      "texture": "cobblemon:textures/pokemon/0571_zoroark/zoroark_hisuian_shiny.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "texture": "cobblemon:textures/pokemon/0571_zoroark/zoroark_hisuian_shiny_emissive.png",
+          "emissive": true
+        }
+      ]
+    }
+  ]
+}

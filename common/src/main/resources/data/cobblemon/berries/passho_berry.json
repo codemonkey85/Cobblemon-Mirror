@@ -1,6 +1,6 @@
 {
   "baseYield": {
-    "min": 2,
+    "min": 1,
     "max": 3
   },
   "preferredBiomeTags": [
@@ -10,26 +10,18 @@
     "cobblemon:is_ocean"
   ],
   "growthTime": {
-    "min": 50,
-    "max": 60
+    "min": 45,
+    "max": 55
   },
   "refreshRate": {
-    "min": 16,
-    "max": 26
+    "min": 23,
+    "max": 27
   },
   "favoriteMulches": [
     "humid",
     "sandy"
   ],
-  "growthFactors": [
-    {
-      "variant": "cobblemon:preferred_biome",
-      "bonusYield": {
-        "min": 1,
-        "max": 2
-      }
-    }
-  ],
+  "growthFactors": [],
   "randomizedGrowthPoints": true,
   "spawnConditions": [
     {
@@ -100,6 +92,18 @@
       }
     }
   ],
+  "stageOnePositioning": {
+    "position": {
+      "x": 8.15,
+      "y": 3.0,
+      "z": 8.1
+    },
+    "rotation": {
+      "x": 5.0,
+      "y": -10.0,
+      "z": -7.5
+    }
+  },
   "mutations": {
     "cobblemon:hopo_berry": "cobblemon:enigma_berry",
     "cobblemon:cornn_berry": "cobblemon:pamtre_berry"
@@ -115,5 +119,6 @@
   "flowerModel": "cobblemon:flower.geo",
   "flowerTexture": "cobblemon:flower",
   "fruitModel": "cobblemon:passho_berry.geo",
-  "fruitTexture": "cobblemon:passho"
+  "fruitTexture": "cobblemon:passho",
+  "boneMealChance": 0.4
 }

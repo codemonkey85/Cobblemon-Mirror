@@ -1,20 +1,20 @@
 {
-  "maxScale": 1.0,
-  "yTranslation": 0,
+  "maxScale": 0.8,
+  "yTranslation": -0.0,
   "yGrowthPoint": 0.5625,
-
-  "animations": [
-    "bedrock(cranidos_fetus, sleep)"
-  ],
-  "quirks": [
-    {
-      "name": "quirk",
-      "animations": [
-        "bedrock(cranidos_fetus, quirk)"
-      ],
-      "loopTimes": 1,
-      "minSeconds": 12,
-      "maxSeconds": 20
+  "poses": {
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('cranidos_fetus', 'sleep')"],
+      "quirks": [
+        {
+          "name": "quirk",
+          "animations": ["q.bedrock_stateful('cranidos_fetus', 'quirk')"],
+          "loopTimes": 1,
+          "minSecondsBetweenOccurrences": 30,
+          "maxSecondsBetweenOccurrences": 60
+        }
+      ]
     }
-  ]
+  }
 }

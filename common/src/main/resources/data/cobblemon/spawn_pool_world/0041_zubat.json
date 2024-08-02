@@ -15,13 +15,10 @@
             "level": "1-25",
             "weight": 1.8,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_forest",
-                    "#cobblemon:is_grassland",
-                    "#cobblemon:is_hills",
-                    "#cobblemon:is_jungle",
-                    "#cobblemon:is_sky",
                     "#cobblemon:is_swamp"
                 ],
                 "timeRange": "night",
@@ -44,6 +41,38 @@
             "context": "grounded",
             "bucket": "common",
             "level": "1-25",
+            "weight": 1.8,
+            "weightMultiplier": {
+                "multiplier": 0.25,
+                "condition": {
+                    "timeRange": "night"
+                }
+            },
+            "condition": {
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
+                "biomes": [
+                    "#cobblemon:is_forest",
+                    "#cobblemon:is_swamp"
+                ]
+            },
+            "anticondition": {
+                "biomes": [
+                    "#cobblemon:is_spooky",
+                    "#cobblemon:is_freezing"
+                ]
+            }
+        },
+        {
+            "id": "zubat-4",
+            "pokemon": "zubat",
+            "presets": [
+                "natural"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "1-25",
             "weight": 9.0,
             "weightMultiplier": {
                 "multiplier": 1.5,
@@ -52,19 +81,22 @@
                 }
             },
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ]
             },
             "anticondition": {
                 "biomes": [
-                    "#cobblemon:is_deep_dark"
+                    "#cobblemon:is_deep_dark",
+                    "#cobblemon:is_forest",
+                    "#cobblemon:is_swamp"
                 ]
             }
         },
         {
-            "id": "zubat-4",
+            "id": "zubat-5",
             "pokemon": "zubat",
             "presets": [
                 "derelict"
@@ -88,12 +120,14 @@
             },
             "anticondition": {
                 "biomes": [
-                    "#cobblemon:is_deep_dark"
+                    "#cobblemon:is_deep_dark",
+                    "#cobblemon:is_forest",
+                    "#cobblemon:is_swamp"
                 ]
             }
         },
         {
-            "id": "zubat-5",
+            "id": "zubat-6",
             "pokemon": "zubat",
             "presets": [
                 "natural"
@@ -110,11 +144,31 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_spooky"
                 ],
                 "isRaining": false
+            }
+        },
+        {
+            "id": "zubat-8",
+            "pokemon": "zubat",
+            "presets": [
+                "natural"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "uncommon",
+            "level": "1-25",
+            "weight": 9.0,
+            "condition": {
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
+                "biomes": [
+                    "#cobblemon:is_deep_dark"
+                ]
             }
         }
     ]

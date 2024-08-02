@@ -12,10 +12,14 @@ import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
 import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
+import com.cobblemon.mod.common.client.gui.summary.featurerenderers.SummarySpeciesFeatureRenderer
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
 import com.google.gson.JsonObject
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.RegistryFriendlyByteBuf
 import kotlin.random.Random
-import net.minecraft.nbt.NbtCompound
 
 /**
  * A simple [SpeciesFeature] that is a true/false flag value. It implements [CustomPokemonProperty] for use in
@@ -26,18 +30,18 @@ import net.minecraft.nbt.NbtCompound
  * @author Hiroku
  * @since May 13th, 2022
  */
-open class FlagSpeciesFeature(override val name: String) : SpeciesFeature, CustomPokemonProperty {
+open class FlagSpeciesFeature(override val name: String) : SynchronizedSpeciesFeature, CustomPokemonProperty {
     constructor(name: String, enabled: Boolean): this(name) {
         this.enabled = enabled
     }
 
     var enabled = false
-    override fun saveToNBT(pokemonNBT: NbtCompound): NbtCompound {
+    override fun saveToNBT(pokemonNBT: CompoundTag): CompoundTag {
         pokemonNBT.putBoolean(name, enabled)
         return pokemonNBT
     }
 
-    override fun loadFromNBT(pokemonNBT: NbtCompound): SpeciesFeature {
+    override fun loadFromNBT(pokemonNBT: CompoundTag): SpeciesFeature {
         enabled = if (pokemonNBT.contains(name)) pokemonNBT.getBoolean(name) else enabled
         return this
     }
@@ -51,6 +55,14 @@ open class FlagSpeciesFeature(override val name: String) : SpeciesFeature, Custo
         val isEnabled = pokemonJSON.get(name)?.asBoolean
         enabled = isEnabled ?: this.enabled
         return this
+    }
+
+    override fun saveToBuffer(buffer: RegistryFriendlyByteBuf, toClient: Boolean) {
+        buffer.writeBoolean(enabled)
+    }
+
+    override fun loadFromBuffer(buffer: RegistryFriendlyByteBuf) {
+        enabled = buffer.readBoolean()
     }
 
     override fun asString() = "$name=$enabled"
@@ -71,11 +83,37 @@ open class FlagSpeciesFeature(override val name: String) : SpeciesFeature, Custo
     override fun matches(pokemon: Pokemon) = pokemon.getFeature<FlagSpeciesFeature>(name)?.enabled == enabled
 }
 
-class FlagSpeciesFeatureProvider : SpeciesFeatureProvider<FlagSpeciesFeature>, CustomPokemonPropertyType<FlagSpeciesFeature>, AspectProvider {
-    override val keys: List<String>
+class FlagSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<FlagSpeciesFeature>, CustomPokemonPropertyType<FlagSpeciesFeature>, AspectProvider {
+    override var keys: List<String> = emptyList()
+    // Uses get() = true because that way there's no backing field. It MUST be true, this way no JSON trickery will overwrite it
     override val needsKey get() = true
     var default: String? = null
-    val isAspect = true
+    var isAspect = true
+    override var visible: Boolean = false
+
+    override fun invoke(buffer: RegistryFriendlyByteBuf, name: String): FlagSpeciesFeature? {
+        return if (name in keys) {
+            FlagSpeciesFeature(name).also { it.loadFromBuffer(buffer) }
+        } else {
+            null
+        }
+    }
+
+    override fun saveToBuffer(buffer: RegistryFriendlyByteBuf, toClient: Boolean) {
+        buffer.writeCollection(keys) { _, value -> buffer.writeString(value) }
+        buffer.writeNullable(default) { _, value -> buffer.writeString(value) }
+        buffer.writeBoolean(isAspect)
+    }
+
+    override fun loadFromBuffer(buffer: RegistryFriendlyByteBuf) {
+        keys = buffer.readList { it.readString() }
+        default = buffer.readNullable { it.readString() }
+        isAspect = buffer.readBoolean()
+    }
+
+    override fun getRenderer(pokemon: Pokemon): SummarySpeciesFeatureRenderer<FlagSpeciesFeature>? {
+        return null
+    }
 
     override fun examples() = setOf("true", "false")
 
@@ -94,8 +132,10 @@ class FlagSpeciesFeatureProvider : SpeciesFeatureProvider<FlagSpeciesFeature>, C
 
     constructor(vararg keys: String) : this(keys.toList())
 
+    override fun get(pokemon: Pokemon) = pokemon.getFeature<FlagSpeciesFeature>(keys.first())
+
     override fun invoke(pokemon: Pokemon): FlagSpeciesFeature? {
-        return pokemon.getFeature(keys.first())
+        return get(pokemon)
             ?: when (default) {
                 "random" -> FlagSpeciesFeature(keys.first(), Random.Default.nextBoolean())
                 in setOf("true", "false") -> FlagSpeciesFeature(keys.first(), default.toBoolean())
@@ -103,7 +143,7 @@ class FlagSpeciesFeatureProvider : SpeciesFeatureProvider<FlagSpeciesFeature>, C
             }
     }
 
-    override fun invoke(nbt: NbtCompound): FlagSpeciesFeature? {
+    override fun invoke(nbt: CompoundTag): FlagSpeciesFeature? {
         return if (nbt.contains(keys.first())) {
             FlagSpeciesFeature(keys.first(), false).also { it.loadFromNBT(nbt) }
         } else null

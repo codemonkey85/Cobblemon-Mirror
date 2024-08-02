@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Dragapult",
   "nationalPokedexNumber": 887,
   "primaryType": "dragon",
@@ -16,6 +17,25 @@
     "special_defence": 75,
     "speed": 142
   },
+  "behaviour": {
+    "moving": {
+      "swim": {
+        "swimSpeed": 0.3,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true,
+        "canWalkOnWater": true
+      },
+      "fly": {
+        "canFly": true
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
+  },
   "catchRate": 45,
   "maleRatio": 0.5,
   "shoulderMountable": false,
@@ -27,6 +47,7 @@
     "dragon"
   ],
   "moves": [
+    "1:dragondarts",
     "1:astonish",
     "1:bite",
     "1:dragonbreath",
@@ -104,11 +125,7 @@
     "tm:triattack",
     "tm:uturn",
     "tm:willowisp",
-    "tutor:dracometeor",
-    "tutor:dragondarts",
-    "tutor:phantomforce",
-    "tutor:terablast",
-    "tutor:uturn"
+    "tutor:dracometeor"
   ],
   "labels": [
     "gen8",
@@ -121,8 +138,8 @@
   "evolutions": [],
   "baseScale": 1,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 1.2,
+    "height": 3,
     "fixed": false
   },
   "baseFriendship": 50,
@@ -139,8 +156,12 @@
   "aspects": [],
   "cannotDynamax": false,
   "drops": {
-    "amount": 1,
+    "amount": 2,
     "entries": [
+      {
+        "item": "minecraft:phantom_membrane",
+        "percentage": 10.0
+      },
       {
         "item": "cobblemon:haban_berry",
         "percentage": 10.0

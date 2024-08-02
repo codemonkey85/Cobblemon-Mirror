@@ -14,19 +14,17 @@ import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.item.PokemonSelectingItem
 import com.cobblemon.mod.common.api.pokemon.stats.Stat
 import com.cobblemon.mod.common.block.BerryBlock
-import com.cobblemon.mod.common.item.BerryItem
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.genericRuntime
 import com.cobblemon.mod.common.util.resolveInt
 import kotlin.math.max
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.util.Hand
-import net.minecraft.util.TypedActionResult
-import net.minecraft.world.World
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.level.Level
 
 /**
  * A berry that raises friendship but lowers EVs in a particular stat.
@@ -38,10 +36,10 @@ class FriendshipRaisingBerryItem(block: BerryBlock, val stat: Stat) : BerryItem(
     override val bagItem = null
     override fun canUseOnPokemon(pokemon: Pokemon) = pokemon.evs.getOrDefault(stat) > 0 || pokemon.friendship < Cobblemon.config.maxPokemonFriendship
     override fun applyToPokemon(
-        player: ServerPlayerEntity,
+        player: ServerPlayer,
         stack: ItemStack,
         pokemon: Pokemon
-    ): TypedActionResult<ItemStack> {
+    ): InteractionResultHolder<ItemStack> {
         val friendshipRaiseAmount = genericRuntime.resolveInt(CobblemonMechanics.berries.friendshipRaiseAmount, pokemon)
 
         val increasedFriendship = pokemon.incrementFriendship(friendshipRaiseAmount)
@@ -52,19 +50,19 @@ class FriendshipRaisingBerryItem(block: BerryBlock, val stat: Stat) : BerryItem(
         val decreasedEVs = currentStat != pokemon.evs.getOrDefault(stat)
 
         return if (increasedFriendship || decreasedEVs) {
-            player.playSound(CobblemonSounds.BERRY_EAT, SoundCategory.PLAYERS, 1F, 1F)
+            player.playSound(CobblemonSounds.BERRY_EAT, 1F, 1F)
             if (!player.isCreative) {
-                stack.decrement(1)
+                stack.shrink(1)
             }
-            TypedActionResult.success(stack)
+            InteractionResultHolder.success(stack)
         } else {
-            TypedActionResult.pass(stack)
+            InteractionResultHolder.pass(stack)
         }
     }
 
-    override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
-        if (world is ServerWorld && user is ServerPlayerEntity) {
-            return use(user, user.getStackInHand(hand))
+    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
+        if (world is ServerLevel && user is ServerPlayer) {
+            return use(user, user.getItemInHand(hand))
         }
         return super<BerryItem>.use(world, user, hand)
     }

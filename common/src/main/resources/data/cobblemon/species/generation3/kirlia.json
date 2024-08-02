@@ -48,6 +48,19 @@
     "human_like",
     "amorphous"
   ],
+  "behaviour": {
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    },
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.2
+      }
+    }
+  },
   "moves": [
     "1:confusion",
     "1:disarmingvoice",

@@ -8,21 +8,12 @@
 
 package com.cobblemon.mod.common.pokemon
 
-import net.minecraft.Bootstrap
+import com.cobblemon.mod.common.junit.BootstrapMinecraft
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
+@BootstrapMinecraft
 internal class IVsKtTest {
-
-    init {
-        // Mystery hack that somehow makes the tests work.
-        // Initialize throws an exception but catching it seems to make it still work.
-        try {
-            Bootstrap.initialize()
-        } catch (_: Throwable) {
-
-        }
-    }
 
     @Test
     fun `should create a randomized set of IVs with 3 perfect values`() {

@@ -8,18 +8,18 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.QuadrupedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class MudkipModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class MudkipModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("mudkip")
     override val head = getPart("head")
 
@@ -28,18 +28,18 @@ class MudkipModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadru
     override val foreLeftLeg= getPart("leg_front_left")
     override val foreRightLeg = getPart("leg_front_right")
 
-    override val portraitScale = 2.3F
-    override val portraitTranslation = Vec3d(-0.25, -1.2, 0.0)
+    override var portraitScale = 2.3F
+    override var portraitTranslation = Vec3(-0.25, -1.2, 0.0)
 
-    override val profileScale = 0.9F
-    override val profileTranslation = Vec3d(0.0, 0.4, 0.0)
+    override var profileScale = 0.9F
+    override var profileTranslation = Vec3(0.0, 0.4, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var float: PokemonPose
-    lateinit var swim: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var float: Pose
+    lateinit var swim: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("mudkip", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("mudkip", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("mudkip", "blink") }
@@ -47,7 +47,7 @@ class MudkipModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadru
             poseName = "standing",
             poseTypes = UI_POSES + PoseType.STAND,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook()
             )
         )
@@ -56,7 +56,7 @@ class MudkipModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadru
             poseName = "walk",
             poseType = PoseType.WALK,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 QuadrupedWalkAnimation(this, periodMultiplier = 0.8F, amplitudeMultiplier = 0.8F)
             )
@@ -66,7 +66,7 @@ class MudkipModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadru
             poseName = "float",
             poseTypes = setOf(PoseType.FLOAT, PoseType.HOVER),
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("mudkip", "water_swim")
             )
@@ -76,7 +76,7 @@ class MudkipModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadru
             poseName = "swim",
             poseTypes = setOf(PoseType.SWIM, PoseType.FLY),
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("mudkip", "water_swim")
             )
@@ -85,6 +85,6 @@ class MudkipModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadru
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("mudkip", "faint") else null
 }

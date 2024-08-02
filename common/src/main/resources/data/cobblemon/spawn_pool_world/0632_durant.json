@@ -15,7 +15,8 @@
             "level": "23-48",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_badlands",
                     "#cobblemon:is_hills"
@@ -34,7 +35,8 @@
             "level": "23-48",
             "weight": 10.0,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_badlands",
                     "#cobblemon:is_hills"
@@ -54,7 +56,7 @@
             "weight": 10.0,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_mountain"
+                    "#cobblemon:nether/is_mountain"
                 ]
             }
         }

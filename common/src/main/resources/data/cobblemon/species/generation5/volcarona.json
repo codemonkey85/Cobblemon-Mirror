@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Volcarona",
   "nationalPokedexNumber": 637,
   "primaryType": "bug",
@@ -41,6 +42,13 @@
   "eggGroups": [
     "bug"
   ],
+  "behaviour": {
+    "moving": {
+      "fly": {
+        "canFly": true
+      }
+    }
+  },
   "moves": [
     "1:absorb",
     "1:doubleedge",
@@ -161,10 +169,10 @@
   ],
   "preEvolution": "larvesta",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.9,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 1.3,
+    "height": 2.4,
     "fixed": false
   },
   "baseFriendship": 50,

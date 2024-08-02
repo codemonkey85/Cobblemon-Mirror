@@ -1,3 +1,9 @@
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import utilities.isSnapshot
+import utilities.version
+
 /*
  *
  *  * Copyright (C) 2023 Cobblemon Contributors
@@ -11,45 +17,44 @@
 plugins {
     id("cobblemon.base-conventions")
     id("cobblemon.publish-conventions")
+
+    id("net.kyori.blossom")
+    id("org.jetbrains.gradle.plugin.idea-ext")
+    id("net.nemerosa.versioning")
 }
 
 architectury {
-    common("forge", "fabric")
+    common("neoforge", "fabric")
 }
 
 repositories {
     maven(url = "${rootProject.projectDir}/deps")
     maven(url = "https://api.modrinth.com/maven")
+    maven(url = "https://maven.neoforged.net/releases")
     mavenLocal()
 }
 
 dependencies {
-    implementation(libs.stdlib)
-    implementation(libs.reflect)
-
-    modImplementation(libs.fabricLoader)
-    //Flywheel has no common dep so just pick one and don't use any platform specific code in common
-//    modCompileOnly(libs.flywheelFabric)
+    implementation(libs.bundles.kotlin)
+    modImplementation(libs.fabric.loader)
     modApi(libs.molang)
-    compileOnlyApi(libs.jeiApi)
-    modCompileOnly(libs.adornFabric)
-    modCompileOnly(libs.lambDynamicLights) { isTransitive = false }
 
-    // For Showdown
+    // Integrations
+//    compileOnlyApi(libs.jei.api)
+    modCompileOnly(libs.bundles.fabric.integrations.compileOnly) {
+        isTransitive = false
+    }
+    // Flywheel has no common dep so just pick one and don't use any platform specific code in common
+    // modCompileOnly(libs.flywheelFabric)
+
+    // Showdown
     modCompileOnly(libs.graal)
 
-    //shadowCommon group: 'commons-io', name: 'commons-io', version: '2.6'
+    // Data Storage
+    modCompileOnly(libs.bundles.mongo)
 
-    // For datastore
-    modCompileOnly(libs.mongoDriverCore)
-    modCompileOnly(libs.mongoDriverSync)
-
-    testRuntimeOnly(libs.junitEngine)
-    testImplementation(libs.junitApi)
-    testImplementation(libs.junitParams)
-    testImplementation(libs.mockito)
-    testImplementation(libs.mockk)
-    testImplementation(libs.classgraph)
+    // Unit Testing
+    testImplementation(libs.bundles.unitTesting)
 }
 
 tasks.withType<Test> {
@@ -57,5 +62,36 @@ tasks.withType<Test> {
     testLogging {
         setEvents(listOf("failed"))
         setExceptionFormat("full")
+    }
+}
+
+sourceSets {
+    main {
+        blossom {
+            kotlinSources {
+                fun generateLicenseHeader() : String {
+                    val builder = StringBuilder()
+                    builder.append("/*\n")
+                    rootProject.file("HEADER").forEachLine {
+                        if(it.isEmpty()) {
+                            builder.append(" *").append("\n")
+                        } else {
+                            builder.append(" * ").append(it).append("\n")
+                        }
+                    }
+
+                    return builder.append(" */").append("\n").toString()
+                }
+
+                property("license", generateLicenseHeader())
+                property("modid", "cobblemon")
+                property("version", project.version())
+                property("isSnapshot", if(rootProject.isSnapshot()) "true" else "false")
+                property("gitCommit", versioning.info.commit)
+                property("branch", versioning.info.branch)
+                System.getProperty("buildNumber")?.let { property("buildNumber", it) }
+                property("timestamp", OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss")) + " UTC")
+            }
+        }
     }
 }

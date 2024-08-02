@@ -16,7 +16,8 @@
             "level": "3-28",
             "weight": 5.4,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_forest",
                     "#cobblemon:is_sky",
@@ -39,13 +40,13 @@
             "weight": 5.4,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_forest",
-                    "#cobblemon:is_nether_fungus"
+                    "#cobblemon:nether/is_forest",
+                    "#cobblemon:nether/is_fungus"
                 ]
             },
             "anticondition": {
                 "biomes": [
-                    "#cobblemon:is_nether_warped"
+                    "#cobblemon:nether/is_warped"
                 ]
             }
         }

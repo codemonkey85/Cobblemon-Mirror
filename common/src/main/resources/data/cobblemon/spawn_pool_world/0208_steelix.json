@@ -15,7 +15,8 @@
             "level": "34-51",
             "weight": 0.6,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ]
@@ -39,7 +40,7 @@
             "weight": 0.2,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_basalt"
+                    "#cobblemon:nether/is_basalt"
                 ]
             }
         }

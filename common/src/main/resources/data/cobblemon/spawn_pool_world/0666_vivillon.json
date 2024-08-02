@@ -16,11 +16,17 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_badlands"
                 ],
                 "timeRange": "day"
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ]
             }
         },
         {
@@ -36,12 +42,18 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
-                    "minecraft:cherry_grove"
+                    "#cobblemon:is_cherry_blossom"
                 ],
                 "timeRange": "day",
                 "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ]
             }
         },
         {
@@ -57,13 +69,25 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_coast",
                     "#cobblemon:is_warm_ocean"
                 ],
                 "timeRange": "day",
                 "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
+                "biomes": [
+                    "#cobblemon:is_cold_ocean",
+                    "#cobblemon:is_frozen_ocean",
+                    "#cobblemon:is_lukewarm_ocean",
+                    "#cobblemon:is_temperate_ocean"
+                ]
             }
         },
         {
@@ -79,11 +103,20 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_desert"
                 ],
                 "timeRange": "day"
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
+                "biomes": [
+                    "#cobblemon:is_badlands"
+                ]
             }
         },
         {
@@ -99,12 +132,23 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_floral"
                 ],
                 "timeRange": "day",
                 "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
+                "biomes": [
+                    "#cobblemon:is_cherry_blossom",
+                    "#cobblemon:is_magical",
+                    "minecraft:sunflower_plains"
+                ]
             }
         },
         {
@@ -139,12 +183,29 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_forest"
                 ],
                 "timeRange": "day",
                 "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
+                "biomes": [
+                    "#cobblemon:is_cherry_blossom",
+                    "#cobblemon:is_floral",
+                    "#cobblemon:is_jungle",
+                    "#cobblemon:is_magical",
+                    "#cobblemon:is_mountain",
+                    "#cobblemon:is_mushroom",
+                    "#cobblemon:is_plains",
+                    "#cobblemon:is_spooky",
+                    "#cobblemon:is_swamp"
+                ]
             }
         },
         {
@@ -161,9 +222,21 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "timeRange": "day",
                 "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
+                "biomes": [
+                    "#cobblemon:is_forest",
+                    "#cobblemon:is_jungle",
+                    "#cobblemon:is_magical",
+                    "#cobblemon:is_spooky"
+                ]
             }
         },
         {
@@ -179,12 +252,18 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_frozen_ocean"
                 ],
                 "timeRange": "day",
                 "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ]
             }
         },
         {
@@ -200,7 +279,8 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_glacial",
                     "#cobblemon:is_snowy_forest",
@@ -208,6 +288,14 @@
                 ],
                 "timeRange": "day",
                 "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
+                "biomes": [
+                    "#cobblemon:is_mountain"
+                ]
             }
         },
         {
@@ -223,12 +311,21 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_jungle"
                 ],
                 "timeRange": "day",
                 "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
+                "biomes": [
+                    "#cobblemon:is_mountain"
+                ]
             }
         },
         {
@@ -244,12 +341,25 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_mountain"
                 ],
                 "timeRange": "day",
                 "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
+                "biomes": [
+                    "#cobblemon:is_badlands",
+                    "#cobblemon:is_floral",
+                    "#cobblemon:is_desert",
+                    "#cobblemon:is_mushroom",
+                    "#cobblemon:is_tropical_island"
+                ]
             }
         },
         {
@@ -265,12 +375,23 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_mushroom"
                 ],
                 "timeRange": "day",
                 "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
+                "biomes": [
+                    "#cobblemon:is_magical",
+                    "#cobblemon:is_spooky",
+                    "#cobblemon:is_swamp"
+                ]
             }
         },
         {
@@ -286,9 +407,42 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_ocean"
+                ],
+                "timeRange": "day",
+                "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
+                "biomes": [
+                    "#cobblemon:is_frozen_ocean",
+                    "#cobblemon:is_warm_ocean"
+                ]
+            }
+        },
+        {
+            "id": "vivillon-modern-15",
+            "pokemon": "vivillon vivillon_wings=modern",
+            "presets": [
+                "natural",
+                "flowers",
+                "village"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "12-41",
+            "weight": 2.0,
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_overworld"
                 ],
                 "timeRange": "day",
                 "isRaining": false
@@ -299,7 +453,8 @@
             "pokemon": "vivillon vivillon_wings=modern",
             "presets": [
                 "natural",
-                "flowers"
+                "flowers",
+                "urban"
             ],
             "type": "pokemon",
             "context": "grounded",
@@ -307,7 +462,8 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ],
@@ -328,12 +484,24 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_plains"
                 ],
                 "timeRange": "day",
                 "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
+                "biomes": [
+                    "#cobblemon:is_floral",
+                    "#cobblemon:is_mushroom",
+                    "#cobblemon:is_savanna",
+                    "minecraft:sunflower_plains"
+                ]
             }
         },
         {
@@ -349,11 +517,23 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_savanna"
                 ],
                 "timeRange": "day"
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
+                "biomes": [
+                    "#cobblemon:is_badlands",
+                    "#cobblemon:is_desert",
+                    "#cobblemon:is_floral",
+                    "#cobblemon:is_mountain"
+                ]
             }
         },
         {
@@ -369,7 +549,8 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "minecraft:sunflower_plains",
                     "#cobblemon:is_sky",
@@ -377,6 +558,11 @@
                 ],
                 "timeRange": "day",
                 "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ]
             }
         },
         {
@@ -392,13 +578,22 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_magical",
                     "#cobblemon:is_spooky"
                 ],
                 "timeRange": "day",
                 "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
+                "biomes": [
+                    "#cobblemon:is_mountain"
+                ]
             }
         },
         {
@@ -414,12 +609,21 @@
             "level": "12-41",
             "weight": 2.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_taiga"
                 ],
                 "timeRange": "day",
                 "isRaining": false
+            },
+            "anticondition": {
+                "structures": [
+                    "#minecraft:village"
+                ],
+                "biomes": [
+                    "#cobblemon:is_mountain"
+                ]
             }
         }
     ]

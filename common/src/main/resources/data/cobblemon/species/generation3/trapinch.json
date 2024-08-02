@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Trapinch",
   "nationalPokedexNumber": 328,
   "primaryType": "ground",
@@ -25,6 +26,13 @@
     "bug",
     "dragon"
   ],
+  "behaviour": {
+    "moving" : {
+      "walk": {
+        "walkSpeed": 0.3
+      }
+    }
+  },
   "moves": [
     "1:astonish",
     "1:bide",
@@ -146,10 +154,10 @@
       ]
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.75,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.8,
+    "height": 0.9,
     "fixed": false
   },
   "baseFriendship": 50,

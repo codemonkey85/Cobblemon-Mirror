@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Anorith",
   "nationalPokedexNumber": 347,
   "primaryType": "rock",
@@ -15,9 +16,29 @@
     "special_defence": 50,
     "speed": 75
   },
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "avoidsLand": false,
+        "walkSpeed": 0.17
+      },
+      "swim": {
+        "swimSpeed": 0.1,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true,
+        "canWalkOnWater": true
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
+  },
   "catchRate": 45,
   "maleRatio": 0.875,
-  "shoulderMountable": false,
+  "shoulderMountable": true,
   "baseExperienceYield": 71,
   "experienceGroup": "erratic",
   "eggCycles": 30,
@@ -147,8 +168,8 @@
   ],
   "baseScale": 1,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.9,
+    "height": 0.2,
     "fixed": false
   },
   "baseFriendship": 50,

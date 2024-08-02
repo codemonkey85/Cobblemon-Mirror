@@ -18,45 +18,45 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
+import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.server.level.ServerPlayer
 
 object LevelUp {
 
-    fun register(dispatcher : CommandDispatcher<ServerCommandSource>) {
-        val command = CommandManager.literal("levelup")
+    fun register(dispatcher : CommandDispatcher<CommandSourceStack>) {
+        val command = Commands.literal("levelup")
             .permission(CobblemonPermissions.LEVEL_UP_SELF)
             .then(
-                CommandManager.argument("player", EntityArgumentType.player())
+                Commands.argument("player", EntityArgument.player())
                     .permission(CobblemonPermissions.LEVEL_UP_OTHER)
                     .then(
-                        CommandManager.argument("slot", IntegerArgumentType.integer(1, 99))
+                        Commands.argument("slot", IntegerArgumentType.integer(1, 99))
                             .executes { execute(it, it.player()) }
                     )
             )
             .then(
-                CommandManager.argument("slot", IntegerArgumentType.integer(1, 99))
-                    .requires { it.entity is ServerPlayerEntity && it.player != null }
-                    .executes { execute(it, it.source.playerOrThrow) }
+                Commands.argument("slot", IntegerArgumentType.integer(1, 99))
+                    .requires { it.entity is ServerPlayer && it.player != null }
+                    .executes { execute(it, it.source.playerOrException) }
             )
 
         dispatcher.register(command)
     }
 
-    private fun execute(context: CommandContext<ServerCommandSource>, player: ServerPlayerEntity) : Int {
+    private fun execute(context: CommandContext<CommandSourceStack>, player: ServerPlayer) : Int {
         val slot = IntegerArgumentType.getInteger(context, "slot")
         val party = player.party()
         if (slot > party.size()) {
             // todo translate
-            context.source.sendError("Your party only has ${party.size()} slots.".text())
+            context.source.sendFailure("Your party only has ${party.size()} slots.".text())
             return 0
         }
 
         val pokemon = party.get(slot - 1)
         if (pokemon == null) {
-            context.source.sendError("There is no Pokémon in slot $slot".text())
+            context.source.sendFailure("There is no Pokémon in slot $slot".text())
             return 0
         }
 

@@ -13,13 +13,13 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFr
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class DrizzileModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class DrizzileModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("drizzile")
     override val head = getPart("head")
 
@@ -30,16 +30,16 @@ class DrizzileModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
     val tongue = getPart("tongue")
     val bomb = getPart("bomb")
 
-    override val portraitScale = 2.3F
-    override val portraitTranslation = Vec3d(-0.5, -0.2, 0.0)
+    override var portraitScale = 2.3F
+    override var portraitTranslation = Vec3(-0.5, -0.2, 0.0)
 
-    override val profileScale = 0.8F
-    override val profileTranslation = Vec3d(0.0, 0.56, 0.0)
+    override var profileScale = 0.8F
+    override var profileTranslation = Vec3(0.0, 0.56, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("drizzile", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("drizzile", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("drizzile", "blink") }
@@ -51,7 +51,7 @@ class DrizzileModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
                 tongue.createTransformation().withVisibility(visibility = false),
                 bomb.createTransformation().withVisibility(visibility = false),
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("drizzile", "ground_idle")
             )
@@ -65,7 +65,7 @@ class DrizzileModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
                 tongue.createTransformation().withVisibility(visibility = false),
                 bomb.createTransformation().withVisibility(visibility = false),
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("drizzile", "ground_walk")
             )

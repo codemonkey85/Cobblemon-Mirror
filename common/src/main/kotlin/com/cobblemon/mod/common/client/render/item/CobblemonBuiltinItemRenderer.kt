@@ -8,11 +8,10 @@
 
 package com.cobblemon.mod.common.client.render.item
 
-import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.model.json.ModelTransformation
-import net.minecraft.client.render.model.json.ModelTransformationMode
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.item.ItemStack
+import net.minecraft.client.renderer.MultiBufferSource
+import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.world.item.ItemDisplayContext
+import net.minecraft.world.item.ItemStack
 
 /**
  * A custom renderer for an item.
@@ -23,6 +22,6 @@ import net.minecraft.item.ItemStack
  */
 interface CobblemonBuiltinItemRenderer {
 
-    fun render(stack: ItemStack, mode: ModelTransformationMode, matrices: MatrixStack, vertexConsumers: VertexConsumerProvider, light: Int, overlay: Int)
+    fun render(stack: ItemStack, mode: ItemDisplayContext, matrices: PoseStack, vertexConsumers: MultiBufferSource, light: Int, overlay: Int)
 
 }

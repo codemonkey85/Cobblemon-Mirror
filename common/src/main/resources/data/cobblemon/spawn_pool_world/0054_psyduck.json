@@ -16,7 +16,8 @@
             "level": "7-32",
             "weight": 5.4,
             "condition": {
-                "canSeeSky": true
+                "minSkyLight": 8,
+                "maxSkyLight": 15
             }
         },
         {
@@ -34,6 +35,15 @@
             "condition": {
                 "canSeeSky": true
             }
+        },
+        {
+            "id": "psyduck-fishing-2",
+            "pokemon": "psyduck",
+            "type": "pokemon",
+            "context": "fishing",
+            "bucket": "common",
+            "level": "7-32",
+            "weight": 5.4
         }
     ]
 }

@@ -1,0 +1,646 @@
+{
+    "processors": [
+        {
+            "processor_type": "minecraft:rule",
+            "rules": [
+                {
+                    "input_predicate": {
+                        "block": "minecraft:polished_granite",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.1
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "cobblemon:relic_coin_pouch",
+                        "Properties": {
+                            "facing": "west",
+                            "natural": "true"
+                        }
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:polished_granite",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 1.0
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:air"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:mossy_stone_bricks",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.4
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:moss_block"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:ladder",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.2
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:air"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:polished_diorite",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.5
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:jungle_leaves",
+                        "Properties": {
+                            "distance": "7",
+                            "persistent": "true",
+                            "waterlogged": "false"
+                        }
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:polished_diorite",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.4
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:honey_block"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:polished_diorite",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 1.0
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:air"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:mossy_stone_bricks",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:honeycomb_block"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:jungle_leaves",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:flowering_azalea_leaves",
+                        "Properties": {
+                            "distance": "7",
+                            "persistent": "true",
+                            "waterlogged": "false"
+                        }
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:mossy_stone_bricks",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:tuff"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:mossy_stone_bricks",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:mossy_cobblestone"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:stone",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.5
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:gravel"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block_state": {
+                            "Name": "minecraft:mossy_stone_brick_wall",
+                            "Properties": {
+                                "east": "tall",
+                                "north": "tall",
+                                "south": "none",
+                                "west": "none",
+                                "up": "true",
+                                "waterlogged": "false"
+                            }
+                        },
+                        "predicate_type": "minecraft:random_blockstate_match",
+                        "probability": 0.2
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:jungle_fence",
+                        "Properties": {
+                            "east": "true",
+                            "north": "true",
+                            "south": "false",
+                            "west": "false",
+                            "waterlogged": "false"
+                        }
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block_state": {
+                            "Name": "minecraft:mossy_stone_brick_wall",
+                            "Properties": {
+                                "east": "tall",
+                                "north": "false",
+                                "south": "tall",
+                                "west": "none",
+                                "up": "true",
+                                "waterlogged": "false"
+                            }
+                        },
+                        "predicate_type": "minecraft:random_blockstate_match",
+                        "probability": 0.2
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:jungle_fence",
+                        "Properties": {
+                            "east": "true",
+                            "north": "false",
+                            "south": "true",
+                            "west": "false",
+                            "waterlogged": "false"
+                        }
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block_state": {
+                            "Name": "minecraft:mossy_stone_brick_wall",
+                            "Properties": {
+                                "east": "none",
+                                "north": "tall",
+                                "south": "none",
+                                "west": "tall",
+                                "up": "true",
+                                "waterlogged": "false"
+                            }
+                        },
+                        "predicate_type": "minecraft:random_blockstate_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:jungle_fence",
+                        "Properties": {
+                            "east": "false",
+                            "north": "true",
+                            "south": "false",
+                            "west": "true",
+                            "waterlogged": "false"
+                        }
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block_state": {
+                            "Name": "minecraft:mossy_stone_brick_wall",
+                            "Properties": {
+                                "east": "none",
+                                "north": "none",
+                                "south": "tall",
+                                "west": "tall",
+                                "up": "true",
+                                "waterlogged": "false"
+                            }
+                        },
+                        "predicate_type": "minecraft:random_blockstate_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:jungle_fence",
+                        "Properties": {
+                            "east": "false",
+                            "north": "false",
+                            "south": "true",
+                            "west": "true",
+                            "waterlogged": "false"
+                        }
+                    }
+                },
+                {
+                    "block_entity_modifier": {
+                        "type": "minecraft:append_loot",
+                        "loot_table": "cobblemon:ruins/gilded_chests/ruins"
+                    },
+                    "input_predicate": {
+                        "block_state": {
+                            "Name": "minecraft:chest",
+                            "Properties": {
+                                "facing": "north",
+                                "type": "single",
+                                "waterlogged": "false"
+                            }
+                        },
+                        "predicate_type": "minecraft:random_blockstate_match",
+                        "probability": 1.0
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "cobblemon:gilded_chest",
+                        "Properties": {
+                            "facing": "north"
+                        }
+                    }
+                },
+                {
+                    "block_entity_modifier": {
+                        "type": "minecraft:append_loot",
+                        "loot_table": "cobblemon:ruins/gilded_chests/ruins"
+                    },
+                    "input_predicate": {
+                        "block_state": {
+                            "Name": "minecraft:chest",
+                            "Properties": {
+                                "facing": "south",
+                                "type": "single",
+                                "waterlogged": "false"
+                            }
+                        },
+                        "predicate_type": "minecraft:random_blockstate_match",
+                        "probability": 1.0
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "cobblemon:gilded_chest",
+                        "Properties": {
+                            "facing": "south"
+                        }
+                    }
+                },
+                {
+                    "block_entity_modifier": {
+                        "type": "minecraft:append_loot",
+                        "loot_table": "cobblemon:ruins/gilded_chests/ruins"
+                    },
+                    "input_predicate": {
+                        "block_state": {
+                            "Name": "minecraft:chest",
+                            "Properties": {
+                                "facing": "east",
+                                "type": "single",
+                                "waterlogged": "false"
+                            }
+                        },
+                        "predicate_type": "minecraft:random_blockstate_match",
+                        "probability": 1.0
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "cobblemon:gilded_chest",
+                        "Properties": {
+                            "facing": "east"
+                        }
+                    }
+                },
+                {
+                    "block_entity_modifier": {
+                        "type": "minecraft:append_loot",
+                        "loot_table": "cobblemon:ruins/gilded_chests/ruins"
+                    },
+                    "input_predicate": {
+                        "block_state": {
+                            "Name": "minecraft:chest",
+                            "Properties": {
+                                "facing": "west",
+                                "type": "single",
+                                "waterlogged": "false"
+                            }
+                        },
+                        "predicate_type": "minecraft:random_blockstate_match",
+                        "probability": 1.0
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "cobblemon:gilded_chest",
+                        "Properties": {
+                            "facing": "west"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "processor_type": "minecraft:rule",
+            "rules": [
+                {
+                    "input_predicate": {
+                        "block": "cobblemon:relic_coin_pouch",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.4
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "cobblemon:relic_coin_pouch",
+                        "Properties": {
+                            "facing": "north",
+                            "natural": "true"
+                        }
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "cobblemon:relic_coin_pouch",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "cobblemon:relic_coin_pouch",
+                        "Properties": {
+                            "facing": "south",
+                            "natural": "true"
+                        }
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "cobblemon:relic_coin_pouch",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "cobblemon:relic_coin_pouch",
+                        "Properties": {
+                            "facing": "east",
+                            "natural": "true"
+                        }
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "cobblemon:relic_coin_pouch",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.1
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "cobblemon:relic_coin_pouch",
+                        "Properties": {
+                            "facing": "west",
+                            "natural": "true"
+                        }
+                    }
+                },
+                {
+                    "block_entity_modifier": {
+                        "type": "minecraft:append_loot",
+                        "loot_table": "cobblemon:ruins/common/gimmi_tower_lush"
+                    },
+                    "input_predicate": {
+                        "block": "minecraft:gravel",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.5
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:suspicious_gravel"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:polished_andesite",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.4
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:moss_block"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:polished_andesite",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 1.0
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:mossy_stone_bricks"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block_state": {
+                            "Name": "cobblemon:gilded_chest",
+                            "Properties": {
+                                "facing": "north"
+                            }
+                        },
+                        "predicate_type": "minecraft:random_blockstate_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "cobblemon:gimmighoul_chest",
+                        "Properties": {
+                            "facing": "north"
+                        }
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block_state": {
+                            "Name": "cobblemon:gilded_chest",
+                            "Properties": {
+                                "facing": "south"
+                            }
+                        },
+                        "predicate_type": "minecraft:random_blockstate_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "cobblemon:gimmighoul_chest",
+                        "Properties": {
+                            "facing": "south"
+                        }
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block_state": {
+                            "Name": "cobblemon:gilded_chest",
+                            "Properties": {
+                                "facing": "east"
+                            }
+                        },
+                        "predicate_type": "minecraft:random_blockstate_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "cobblemon:gimmighoul_chest",
+                        "Properties": {
+                            "facing": "east"
+                        }
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block_state": {
+                            "Name": "cobblemon:gilded_chest",
+                            "Properties": {
+                                "facing": "west"
+                            }
+                        },
+                        "predicate_type": "minecraft:random_blockstate_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "cobblemon:gimmighoul_chest",
+                        "Properties": {
+                            "facing": "west"
+                        }
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "cobblemon:gilded_chest",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.5
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:air"
+                    }
+                }
+            ]
+        },
+        {
+            "delegate": {
+                "processor_type": "minecraft:rule",
+                "rules": [
+                    {
+                        "block_entity_modifier": {
+                            "type": "minecraft:append_loot",
+                            "loot_table": "cobblemon:ruins/uncommon/gimmi_tower_lush"
+                        },
+                        "input_predicate": {
+                            "block": "minecraft:suspicious_gravel",
+                            "predicate_type": "minecraft:random_block_match",
+                            "probability": 0.5
+                        },
+                        "location_predicate": {
+                            "predicate_type": "minecraft:always_true"
+                        },
+                        "output_state": {
+                            "Name": "minecraft:suspicious_gravel"
+                        }
+                    }
+                ]
+            },
+            "limit": 2,
+            "processor_type": "minecraft:capped"
+        }
+    ]
+}

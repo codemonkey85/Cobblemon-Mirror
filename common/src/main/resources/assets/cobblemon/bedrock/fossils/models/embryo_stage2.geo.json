@@ -16,8 +16,13 @@
 					"pivot": [0, 0, 0]
 				},
 				{
-					"name": "cell",
+					"name": "embryo",
 					"parent": "embryo_stage2",
+					"pivot": [-0.5, 1, 0.5]
+				},
+				{
+					"name": "cell",
+					"parent": "embryo",
 					"pivot": [-0.5, 1, 0.5],
 					"cubes": [
 						{"origin": [-1.5, 0, -0.5], "size": [2, 2, 2], "uv": [24, 4]}
@@ -25,7 +30,7 @@
 				},
 				{
 					"name": "cell2",
-					"parent": "embryo_stage2",
+					"parent": "embryo",
 					"pivot": [0.5, 2, -0.5],
 					"cubes": [
 						{"origin": [-0.5, 1, -1.5], "size": [2, 2, 2], "uv": [24, 0]}

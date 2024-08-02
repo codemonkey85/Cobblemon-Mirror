@@ -140,6 +140,7 @@
     "tm:torment",
     "tm:toxic",
     "tm:trailblaze",
+    "tm:uproar",
     "tm:workup",
     "tutor:attract",
     "tutor:bodyslam",
@@ -218,7 +219,9 @@
       "variant": "item_interact",
       "result": "ursaluna",
       "consumeHeldItem": false,
-      "learnableMoves": [],
+      "learnableMoves": [
+        "headlongrush"
+      ],
       "requirements": [
         {
           "variant": "moon_phase",

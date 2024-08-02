@@ -470,6 +470,31 @@
 					"rotation": ["-math.sin(q.anim_time*90*4*2-33*7+45)*14", "math.sin(q.anim_time*90*2-33*7+180)*10", 0]
 				}
 			}
+		},
+		"animation.bouffalant.cry": {
+			"animation_length": 1.2,
+			"sound_effects": {
+				"0.04": {
+					"effect": "pokemon.bouffalant.cry"
+				}
+			}
+		},
+		"animation.bouffalant.blink": {
+			"animation_length": 0.375,
+			"bones": {
+				"eyelid_left": {
+					"position": {
+						"0.0": [0.1, -0.1, -0.1],
+						"0.375": [0, 0, 0]
+					}
+				},
+				"eyelid_right": {
+					"position": {
+						"0.0": [-0.1, -0.1, -0.1],
+						"0.375": [0, 0, 0]
+					}
+				}
+			}
 		}
 	}
 }

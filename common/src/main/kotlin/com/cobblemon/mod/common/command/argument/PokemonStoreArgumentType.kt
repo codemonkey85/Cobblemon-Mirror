@@ -12,28 +12,28 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.party
 import com.cobblemon.mod.common.util.pc
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.command.argument.EnumArgumentType
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.StringIdentifiable
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.arguments.StringRepresentableArgument
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.util.StringRepresentable
 
-class PokemonStoreArgumentType : EnumArgumentType<StoreType>(StoreType.CODEC, StoreType::values) {
+class PokemonStoreArgumentType : StringRepresentableArgument<StoreType>(StoreType.CODEC, StoreType::values) {
     companion object {
         fun pokemonStore() = PokemonStoreArgumentType()
-        fun pokemonStoreFrom(context: CommandContext<ServerCommandSource>, id: String): StoreType = context.getArgument(id, StoreType::class.java)
+        fun pokemonStoreFrom(context: CommandContext<CommandSourceStack>, id: String): StoreType = context.getArgument(id, StoreType::class.java)
     }
 }
 
-enum class StoreType(val storeFetcher: (ServerPlayerEntity) -> Collection<Pokemon>) : StringIdentifiable {
+enum class StoreType(val storeFetcher: (ServerPlayer) -> Collection<Pokemon>) : StringRepresentable {
 
     PARTY({ player -> player.party().filterNotNull() }),
     PC({ player -> player.pc().filterNotNull() }),
     ALL({ player -> PARTY.storeFetcher(player) + PC.storeFetcher(player) });
 
-    override fun asString(): String = this.name.lowercase()
+    override fun getSerializedName(): String = name.lowercase()
 
     companion object {
-        val CODEC: StringIdentifiable.Codec<StoreType> = StringIdentifiable.createCodec(::values)
+        val CODEC = StringRepresentable.fromEnum(::values)
     }
 
 }

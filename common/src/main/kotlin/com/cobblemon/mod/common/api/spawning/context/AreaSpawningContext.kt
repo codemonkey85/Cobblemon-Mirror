@@ -14,10 +14,10 @@ import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.api.spawning.influence.SpawningInfluence
 import kotlin.math.ceil
 import kotlin.math.floor
-import net.minecraft.block.Block
-import net.minecraft.block.BlockState
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.BlockPos
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.core.BlockPos
 
 /**
  * A [SpawningContext] that is for a particular area, and therefore has spatial properties.
@@ -27,7 +27,7 @@ import net.minecraft.util.math.BlockPos
  */
 open class AreaSpawningContext(
     override val cause: SpawnCause,
-    override val world: ServerWorld,
+    override val world: ServerLevel,
     override val position: BlockPos,
     override val light: Int,
     override val skyLight: Int,
@@ -49,7 +49,7 @@ open class AreaSpawningContext(
      * This is not considering the provided state as what the entity would be on top of,
      * but rather the space its hitbox would fill.
      */
-    open fun isSafeSpace(world: ServerWorld, pos: BlockPos, state: BlockState): Boolean = !state.isFullCube(world, pos)
+    open fun isSafeSpace(world: ServerLevel, pos: BlockPos, state: BlockState): Boolean = !state.isSolid
 
     override fun postFilter(detail: SpawnDetail): Boolean {
         if (!super.postFilter(detail)) {
@@ -68,7 +68,7 @@ open class AreaSpawningContext(
             val minZ = floor(position.z + 0.5 - (sizeX - 1) / 2F).toInt() - 1
             val maxZ = ceil(position.z + 0.5 + (sizeX + 1) / 2F).toInt() + 1
 
-            val mutable = BlockPos.Mutable()
+            val mutable = BlockPos.MutableBlockPos()
             for (x in minX until maxX) {
                 for (y in (position.y + 1)..maxY) {
                     for (z in minZ until maxZ) {

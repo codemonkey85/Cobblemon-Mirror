@@ -1,0 +1,119 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.fomantis.ground_idle": {
+			"loop": true,
+			"bones": {
+				"left_back_arm_flowering": {
+					"scale": 0
+				},
+				"right_back_arm_flowering": {
+					"scale": 0
+				}
+			}
+		},
+		"animation.fomantis.cry": {
+			"animation_length": 1,
+			"sound_effects": {
+				"0.04": {
+					"effect": "pokemon.fomantis.cry"
+				}
+			},
+			"bones": {
+				"head": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.2083": [-15, 0, "-2*Math.cos((query.anim_time-0) * 90 * 12) * 0.5"],
+						"0.75": [-15, 0, "-2*Math.cos((query.anim_time-0) * 90 * 12) * 0.5"],
+						"1.0": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.fomantis.blink": {
+			"animation_length": 0.20833,
+			"bones": {
+				"left_eye_closed": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.2083": [0, 0, 0]
+					}
+				},
+				"right_eye_closed": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.2083": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.fomantis.flowering": {
+			"loop": true,
+			"bones": {
+				"body": {
+					"scale": 1
+				},
+				"scarf": {
+					"position": [0, -5, 0]
+				},
+				"left_front_arm": {
+					"rotation": [22.5, 0, 0],
+					"position": [0, -5, 0]
+				},
+				"left_front_arm_bend": {
+					"rotation": [0, 0, -67.5]
+				},
+				"left_front_arm_end": {
+					"rotation": [0, 0, -15]
+				},
+				"right_front_arm": {
+					"rotation": [22.5, 0, 0],
+					"position": [0, -5, 0]
+				},
+				"right_front_arm_bend": {
+					"rotation": [0, 0, 67.5]
+				},
+				"right_front_arm_end": {
+					"rotation": [0, 0, 15]
+				},
+				"right_back_arm": {
+					"scale": 0
+				},
+				"tail": {
+					"scale": 0
+				},
+				"left_back_arm": {
+					"scale": 0
+				},
+				"left_back_arm_flowering": {
+					"rotation": [-22.5, 0, 0],
+					"position": [0, -5, 0]
+				},
+				"left_back_arm_bend": {
+					"rotation": [0, 0, -67.5]
+				},
+				"left_back_arm_end": {
+					"rotation": [0, 0, -15]
+				},
+				"right_back_arm_flowering": {
+					"rotation": [-22.5, 0, 0],
+					"position": [0, -5, 0]
+				},
+				"right_back_arm_bend": {
+					"rotation": [0, 0, 67.5]
+				},
+				"right_back_arm_end": {
+					"rotation": [0, 0, 15]
+				},
+				"right_eye_closed": {
+					"position": [0, 0, -0.1]
+				},
+				"left_eye_closed": {
+					"position": [0, 0, -0.1]
+				}
+			}
+		}
+	}
+}

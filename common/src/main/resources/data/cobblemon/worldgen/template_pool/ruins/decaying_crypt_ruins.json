@@ -1,0 +1,24 @@
+{
+    "name": "cobblemon:decaying_crypt_ruins",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/decaying_crypt",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/decaying_crypt_ruins",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/decaying_spider_crypt",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/decaying_crypt_ruins",
+                "projection": "rigid"
+            }
+        }
+    ]
+}

@@ -15,7 +15,8 @@
             "level": "17-41",
             "weight": 0.9,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_temperate"
                 ]
@@ -23,6 +24,45 @@
             "anticondition": {
                 "biomes": [
                     "#cobblemon:is_spooky"
+                ]
+            }
+        },
+        {
+            "id": "quilava-hisui-2",
+            "pokemon": "quilava region_bias=hisui",
+            "presets": [
+                "natural"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "ultra-rare",
+            "level": "17-41",
+            "weight": 0.9,
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_taiga"
+                ],
+                "isRaining": false
+            }
+        },
+        {
+            "id": "quilava-hisui-3",
+            "pokemon": "quilava region_bias=hisui",
+            "presets": [
+                "natural"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "ultra-rare",
+            "level": "17-41",
+            "weight": 0.9,
+            "condition": {
+                "biomes": [
+                    "#cobblemon:nether/is_crimson",
+                    "#cobblemon:nether/is_forest",
+                    "#cobblemon:nether/is_overgrowth"
                 ]
             }
         }

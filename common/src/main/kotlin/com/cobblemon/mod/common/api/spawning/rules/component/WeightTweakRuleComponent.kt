@@ -19,6 +19,7 @@ import com.cobblemon.mod.common.api.spawning.rules.selector.AllSpawningContextSe
 import com.cobblemon.mod.common.api.spawning.rules.selector.SpawnDetailSelector
 import com.cobblemon.mod.common.api.spawning.rules.selector.SpawningContextSelector
 import com.cobblemon.mod.common.util.asExpression
+import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.resolveFloat
 
 /**
@@ -30,7 +31,7 @@ import com.cobblemon.mod.common.util.resolveFloat
 class WeightTweakRuleComponent : SpawnRuleComponent {
     val spawnSelector: SpawnDetailSelector = AllSpawnDetailSelector
     val contextSelector: SpawningContextSelector = AllSpawningContextSelector
-    val weight: Expression = "v.weight".asExpression()
+    val weight = "v.weight".asExpressionLike()
 
     @Transient
     val runtime = MoLangRuntime().setup()

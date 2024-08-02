@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Archeops",
   "nationalPokedexNumber": 567,
   "primaryType": "rock",
@@ -33,6 +34,16 @@
     "flying",
     "water_3"
   ],
+  "behaviour": {
+    "moving": {
+      "fly": {
+        "canFly": true
+      }
+    },
+    "walk": {
+      "walkSpeed": 0.27
+    }
+  },
   "moves": [
     "1:leer",
     "1:quickattack",
@@ -148,10 +159,10 @@
   ],
   "preEvolution": "archen",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.7,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 1.2,
+    "height": 2,
     "fixed": false
   },
   "baseFriendship": 50,

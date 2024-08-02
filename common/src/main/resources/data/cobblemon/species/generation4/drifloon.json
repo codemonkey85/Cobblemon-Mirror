@@ -10,10 +10,18 @@
     "h:flareboost"
   ],
   "drops": {
-    "amount": 1,
+    "amount": 3,
     "entries": [
       {
+        "item": "minecraft:phantom_membrane",
+        "percentage": 2.5
+      },
+      {
         "item": "cobblemon:kasib_berry",
+        "percentage": 2.5
+      },
+      {
+        "item": "cobblemon:air_balloon",
         "percentage": 2.5
       }
     ]
@@ -40,6 +48,12 @@
       "fly": {
         "canFly": true
       }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
     }
   },
   "moves": [
@@ -224,7 +238,7 @@
       ]
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.75,
   "hitbox": {
     "width": 0.7,
     "height": 2,

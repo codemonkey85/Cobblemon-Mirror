@@ -22,15 +22,15 @@ import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.math.toRGB
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
-import net.minecraft.util.math.MathHelper
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
+import net.minecraft.util.Mth
 
 class MoveSlotWidget(
     pX: Int, pY: Int,
     val move: Move,
     private val movesWidget: MovesWidget
-): SoundlessWidget(pX, pY, MOVE_WIDTH, MOVE_HEIGHT, Text.literal(move.name)) {
+): SoundlessWidget(pX, pY, MOVE_WIDTH, MOVE_HEIGHT, Component.literal(move.name)) {
 
     companion object {
         private val moveResource = cobblemonResource("textures/gui/summary/summary_move.png")
@@ -65,9 +65,9 @@ class MoveSlotWidget(
         addWidget(this)
     }
 
-    override fun renderButton(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
-        val matrices = context.matrices
-        hovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height
+    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+        val matrices = context.pose()
+        isHovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height
 
         val moveTemplate = Moves.getByNameOrDummy(move.name)
         val rgb = moveTemplate.elementalType.hue.toRGB()
@@ -106,9 +106,9 @@ class MoveSlotWidget(
             height = MOVE_HEIGHT
         )
 
-        var movePPText = Text.literal("${move.currentPp}/${move.maxPp}").bold()
+        var movePPText = Component.literal("${move.currentPp}/${move.maxPp}").bold()
 
-        if (move.currentPp <= MathHelper.floor(move.maxPp / 2F)) {
+        if (move.currentPp <= Mth.floor(move.maxPp / 2F)) {
             movePPText = if (move.currentPp == 0) movePPText.red() else movePPText.gold()
         }
 

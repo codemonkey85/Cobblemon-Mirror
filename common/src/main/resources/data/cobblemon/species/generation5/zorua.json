@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Zorua",
   "nationalPokedexNumber": 570,
   "primaryType": "dark",
@@ -85,32 +86,42 @@
         "egg:extrasensory",
         "egg:memento",
         "tm:agility",
+        "tm:burningjealousy",
         "tm:calmmind",
         "tm:confuseray",
+        "tm:curse",
         "tm:darkpulse",
         "tm:dig",
         "tm:endure",
         "tm:facade",
         "tm:faketears",
         "tm:fling",
+        "tm:focuspunch",
         "tm:foulplay",
         "tm:gigaimpact",
         "tm:hex",
         "tm:hyperbeam",
         "tm:icywind",
         "tm:imprison",
+        "tm:knockoff",
+        "tm:lashout",
         "tm:nastyplot",
         "tm:nightshade",
+        "tm:painsplit",
         "tm:phantomforce",
         "tm:protect",
+        "tm:psychup",
         "tm:raindance",
         "tm:rest",
+        "tm:roar",
         "tm:shadowball",
         "tm:shadowclaw",
+        "tm:skittersmack",
         "tm:sleeptalk",
         "tm:sludgebomb",
         "tm:snarl",
         "tm:snowscape",
+        "tm:spite",
         "tm:substitute",
         "tm:swift",
         "tm:takedown",
@@ -134,7 +145,7 @@
         {
           "id": "zorua_zoroark",
           "variant": "level_up",
-          "result": "zoroark form=hisui",
+          "result": "zoroark hisuian",
           "consumeHeldItem": false,
           "learnableMoves": [
             "shadowclaw"
@@ -148,7 +159,20 @@
         }
       ],
       "cannotDynamax": false,
-      "battleOnly": false
+      "battleOnly": false,
+      "drops": {
+        "amount": 4,
+        "entries": [
+          {
+            "item": "minecraft:sweet_berries",
+            "quantityRange": "1-3"
+          },
+          {
+            "item": "cobblemon:colbur_berry",
+            "percentage": 2.5
+          }
+        ]
+      }
     }
   ],
   "baseExperienceYield": 66,
@@ -190,6 +214,7 @@
     "tm:assurance",
     "tm:attract",
     "tm:bounce",
+    "tm:burningjealousy",
     "tm:calmmind",
     "tm:confide",
     "tm:confuseray",
@@ -213,8 +238,11 @@
     "tm:hypervoice",
     "tm:imprison",
     "tm:incinerate",
+    "tm:knockoff",
+    "tm:lashout",
     "tm:nastyplot",
     "tm:nightshade",
+    "tm:painsplit",
     "tm:payback",
     "tm:protect",
     "tm:psychup",
@@ -229,10 +257,12 @@
     "tm:secretpower",
     "tm:shadowball",
     "tm:shadowclaw",
+    "tm:skittersmack",
     "tm:sleeptalk",
     "tm:sludgebomb",
     "tm:snarl",
     "tm:snore",
+    "tm:spite",
     "tm:substitute",
     "tm:sunnyday",
     "tm:swagger",
@@ -287,9 +317,9 @@
       ]
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.75,
   "hitbox": {
-    "width": 1,
+    "width": 0.6,
     "height": 1,
     "fixed": false
   },

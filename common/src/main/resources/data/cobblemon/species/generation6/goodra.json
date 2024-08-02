@@ -1,4 +1,5 @@
-﻿{
+{
+  "implemented": true,
   "name": "Goodra",
   "nationalPokedexNumber": 706,
   "primaryType": "dragon",
@@ -79,10 +80,13 @@
         "tm:blizzard",
         "tm:bodypress",
         "tm:bodyslam",
+        "tm:breakingswipe",
         "tm:bulldoze",
         "tm:charm",
         "tm:chillingwater",
+        "tm:curse",
         "tm:dracometeor",
+        "tm:dragoncheer",
         "tm:dragonclaw",
         "tm:dragonpulse",
         "tm:dragontail",
@@ -94,12 +98,16 @@
         "tm:flamethrower",
         "tm:flashcannon",
         "tm:gigaimpact",
+        "tm:gyroball",
         "tm:heavyslam",
         "tm:hydropump",
         "tm:hyperbeam",
         "tm:icebeam",
         "tm:icespinner",
         "tm:ironhead",
+        "tm:knockoff",
+        "tm:lashout",
+        "tm:muddywater",
         "tm:mudshot",
         "tm:outrage",
         "tm:protect",
@@ -109,8 +117,10 @@
         "tm:rocktomb",
         "tm:sandstorm",
         "tm:scaryface",
+        "tm:skittersmack",
         "tm:sleeptalk",
         "tm:sludgebomb",
+        "tm:sludgewave",
         "tm:steelbeam",
         "tm:stompingtantrum",
         "tm:substitute",
@@ -121,7 +131,8 @@
         "tm:thunder",
         "tm:thunderbolt",
         "tm:thunderpunch",
-        "tm:waterpulse"
+        "tm:waterpulse",
+        "tm:weatherball"
       ],
       "labels": [
         "gen8",
@@ -133,9 +144,32 @@
       ],
       "height": 17,
       "weight": 3341,
-      "preEvolution": "sliggoo form=hisui",
+      "preEvolution": "sliggoo hisuian",
+      "baseScale": 1,
+      "hitbox": {
+        "width": 2.5,
+        "height": 3.6,
+        "fixed": false
+      },
       "cannotDynamax": false,
-      "battleOnly": false
+      "battleOnly": false,
+      "drops": {
+        "amount": 7,
+        "entries": [
+          {
+            "item": "minecraft:slime_ball",
+            "quantityRange": "0-3"
+          },
+          {
+            "item": "minecraft:iron_ingot",
+            "quantityRange": "0-3"
+          },
+          {
+            "item": "cobblemon:bluk_berry",
+            "percentage": 10.0
+          }
+        ]
+      }
     }
   ],
   "baseExperienceYield": 300,
@@ -178,8 +212,10 @@
     "tm:charm",
     "tm:chillingwater",
     "tm:confide",
+    "tm:curse",
     "tm:doubleteam",
     "tm:dracometeor",
+    "tm:dragoncheer",
     "tm:dragonclaw",
     "tm:dragonpulse",
     "tm:dragontail",
@@ -190,6 +226,7 @@
     "tm:firepunch",
     "tm:flamethrower",
     "tm:focusblast",
+    "tm:focuspunch",
     "tm:frustration",
     "tm:gigaimpact",
     "tm:hail",
@@ -200,6 +237,7 @@
     "tm:incinerate",
     "tm:infestation",
     "tm:irontail",
+    "tm:knockoff",
     "tm:megakick",
     "tm:megapunch",
     "tm:muddywater",
@@ -214,7 +252,9 @@
     "tm:rockslide",
     "tm:rocksmash",
     "tm:round",
+    "tm:scald",
     "tm:secretpower",
+    "tm:skittersmack",
     "tm:sleeptalk",
     "tm:sludgebomb",
     "tm:sludgewave",
@@ -260,10 +300,10 @@
   ],
   "preEvolution": "sliggoo",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.9,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 1.8,
+    "height": 3.3,
     "fixed": false
   },
   "baseFriendship": 35,

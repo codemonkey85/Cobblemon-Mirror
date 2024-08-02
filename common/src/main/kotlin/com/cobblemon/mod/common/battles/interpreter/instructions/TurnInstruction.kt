@@ -24,13 +24,17 @@ import com.cobblemon.mod.common.net.messages.client.battle.BattleSetTeamPokemonP
 import com.cobblemon.mod.common.util.battleLang
 
 /**
- * Format:
- * |turn|NUMBER
+ * Format: |turn|NUMBER
  *
  * It is now turn NUMBER.
+ * @author Deltric
+ * @since January 22nd, 2022
  */
 class TurnInstruction(val message: BattleMessage) : InterpreterInstruction {
     override fun invoke(battle: PokemonBattle) {
+        // TODO maybe tell the client that the turn number has changed
+        val turnNumber = message.argumentAt(0)?.toInt() ?: return
+
         if (!battle.started) {
             battle.started = true
             battle.actors.filterIsInstance<PlayerBattleActor>().forEach { actor ->
@@ -53,9 +57,6 @@ class TurnInstruction(val message: BattleMessage) : InterpreterInstruction {
                 afterOnServer(seconds = 1.0F) { battle.side2.playCries() }
             }
         }
-
-        // TODO maybe tell the client that the turn number has changed
-        val turnNumber = message.argumentAt(0)?.toInt() ?: return
 
         battle.dispatch {
             battle.sendToActors(BattleMakeChoicePacket())

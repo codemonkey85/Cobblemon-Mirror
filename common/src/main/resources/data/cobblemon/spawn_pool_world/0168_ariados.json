@@ -16,7 +16,8 @@
             "level": "22-40",
             "weight": 0.6,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_forest",
                     "#cobblemon:is_jungle",
@@ -43,7 +44,8 @@
             "level": "22-40",
             "weight": 0.2,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ]
@@ -82,6 +84,7 @@
             "id": "ariados-4",
             "pokemon": "ariados",
             "presets": [
+                "webs",
                 "natural"
             ],
             "type": "pokemon",
@@ -90,10 +93,8 @@
             "level": "22-40",
             "weight": 1.0,
             "condition": {
-                "canSeeSky": false,
-                "biomes": [
-                    "terralith:cave/infested_caves"
-                ]
+                "minSkyLight": 0,
+                "maxSkyLight": 7
             }
         },
         {

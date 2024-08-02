@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Dracovish",
   "nationalPokedexNumber": 882,
   "primaryType": "water",
@@ -15,6 +16,24 @@
     "special_attack": 70,
     "special_defence": 80,
     "speed": 75
+  },
+  "behaviour": {
+    "moving": {
+      "swim": {
+        "swimSpeed": 0.3,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true
+      },
+      "walk": {
+        "walkSpeed": 0.2
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
   },
   "catchRate": 45,
   "maleRatio": -1,
@@ -94,10 +113,10 @@
     "cobblemon.species.dracovish.desc"
   ],
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.75,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 1.7,
+    "height": 4.2,
     "fixed": false
   },
   "baseFriendship": 50,

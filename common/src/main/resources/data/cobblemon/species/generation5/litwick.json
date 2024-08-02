@@ -35,13 +35,21 @@
   },
   "catchRate": 190,
   "maleRatio": 0.5,
-  "shoulderMountable": false,
+  "shoulderMountable": true,
   "baseExperienceYield": 55,
   "experienceGroup": "medium_slow",
   "eggCycles": 20,
   "eggGroups": [
     "amorphous"
   ],
+  "behaviour": {
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": true,
+      "depth": "normal",
+      "light": "12-15"
+    }
+  },
   "moves": [
     "1:astonish",
     "1:smog",
@@ -164,8 +172,8 @@
   ],
   "baseScale": 1,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.5,
+    "height": 0.5,
     "fixed": false
   },
   "baseFriendship": 50,

@@ -1,0 +1,42 @@
+{
+    "name": "cobblemon:prehistoric_frozen_spike",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/frozen_spike",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_frozen_spike",
+                "projection": "terrain_matching"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/frozen_spike_tiny",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_frozen_spike",
+                "projection": "terrain_matching"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/frozen_spike_large",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_frozen_spike",
+                "projection": "terrain_matching"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/frozen_spike_medium",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_frozen_spike",
+                "projection": "terrain_matching"
+            }
+        }
+    ]
+}

@@ -8,25 +8,17 @@
     "cobblemon:is_taiga"
   ],
   "growthTime": {
-    "min": 115,
-    "max": 125
+    "min": 50,
+    "max": 60
   },
   "refreshRate": {
-    "min": 20,
-    "max": 30
+    "min": 25,
+    "max": 29
   },
   "favoriteMulches": [
     "coarse"
   ],
-  "growthFactors": [
-    {
-      "variant": "cobblemon:preferred_biome",
-      "bonusYield": {
-        "min": 1,
-        "max": 1
-      }
-    }
-  ],
+  "growthFactors": [],
   "randomizedGrowthPoints": true,
   "spawnConditions": [],
   "growthPoints": [
@@ -127,6 +119,18 @@
       }
     }
   ],
+  "stageOnePositioning": {
+    "position": {
+      "x": 8.15,
+      "y": 3.0,
+      "z": 8.1
+    },
+    "rotation": {
+      "x": 5.0,
+      "y": -10.0,
+      "z": -7.5
+    }
+  },
   "mutations": {
     "cobblemon:occa_berry": "cobblemon:enigma_berry",
     "cobblemon:passho_berry": "cobblemon:enigma_berry",
@@ -149,11 +153,18 @@
   },
   "sproutShape": "tall-sprout",
   "matureShape": "tall-mature",
-  "flavors": {},
+  "flavors": {
+    "SPICY": 20,
+    "DRY": 20,
+    "SWEET": 20,
+    "BITTER": 20,
+    "SOUR": 20
+  },
   "weight": 1.0,
   "tintIndexes": [],
   "flowerModel": "cobblemon:flower.geo",
   "flowerTexture": "cobblemon:flower",
   "fruitModel": "cobblemon:hopo_berry.geo",
-  "fruitTexture": "cobblemon:hopo"
+  "fruitTexture": "cobblemon:hopo",
+  "boneMealChance": 0.32
 }

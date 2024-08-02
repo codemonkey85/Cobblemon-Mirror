@@ -14,8 +14,8 @@ import com.cobblemon.mod.common.api.spawning.context.AreaContextResolver
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.cobblemon.mod.common.api.spawning.spawner.Spawner
-import net.minecraft.block.BlockState
-import net.minecraft.util.math.BlockPos
+import net.minecraft.core.BlockPos
+import net.minecraft.world.level.block.state.BlockState
 
 /**
  * A spawning context calculator that deals with [AreaSpawningContext]s. These work off

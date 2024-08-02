@@ -15,7 +15,8 @@
             "level": "16-41",
             "weight": 0.9,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_floral",
                     "#cobblemon:is_magical"
@@ -35,12 +36,12 @@
             "weight": 0.9,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_warped"
+                    "#cobblemon:nether/is_warped"
                 ]
             },
             "anticondition": {
                 "biomes": [
-                    "#cobblemon:is_nether_desert"
+                    "#cobblemon:nether/is_desert"
                 ]
             }
         }

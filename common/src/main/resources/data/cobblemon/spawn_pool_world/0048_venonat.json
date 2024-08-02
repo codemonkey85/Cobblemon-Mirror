@@ -15,7 +15,8 @@
             "level": "6-31",
             "weight": 5.4,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_spooky",
                     "#cobblemon:is_swamp"

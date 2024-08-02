@@ -1,0 +1,34 @@
+{
+  "parent": "cobblemon:recipes/root",
+  "criteria": {
+    "has_everstone": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:everstone"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "cobblemon:eviolite"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_everstone",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "cobblemon:eviolite"
+    ]
+  }
+}

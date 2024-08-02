@@ -1,0 +1,43 @@
+{
+    "enabled": true,
+    "neededInstalledMods": [],
+    "neededUninstalledMods": [],
+    "spawns": [
+        {
+            "id": "lampent-1",
+            "pokemon": "lampent",
+            "presets": [
+                "natural"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "41-46",
+            "weight": 0.18,
+            "condition": {
+                "biomes": [
+                    "#cobblemon:nether/is_soul_fire"
+                ]
+            }
+        },
+        {
+            "id": "lampent-2",
+            "pokemon": "lampent",
+            "presets": [
+                "mansion"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "41-46",
+            "weight": 0.9,
+            "condition": {
+                "canSeeSky": false,
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ],
+                "timeRange": "night"
+            }
+        }
+    ]
+}

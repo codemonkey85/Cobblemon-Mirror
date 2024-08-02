@@ -33,7 +33,7 @@
     "bug"
   ],
   "drops": {
-    "amount": 2,
+    "amount": 3,
     "entries": [
       {
         "item": "minecraft:string",
@@ -41,6 +41,10 @@
       },
       {
         "item": "cobblemon:occa_berry",
+        "percentage": 2.5
+      },
+      {
+        "item": "cobblemon:iron_ball",
         "percentage": 2.5
       }
     ]
@@ -211,6 +215,7 @@
       "variant": "level_up",
       "result": "forretress shulker",
       "consumeHeldItem": true,
+      "permanent": true,
       "learnableMoves": [
         "heavyslam"
       ],

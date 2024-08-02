@@ -47,6 +47,15 @@ fun interface PokemonPropertyExtractor {
         val NICKNAME = add { pokemon, properties -> properties.nickname = pokemon.nickname }
         @JvmField
         val STATUS = add { pokemon, properties -> properties.status = pokemon.status?.status?.showdownName }
+        @JvmField
+        val IVS = add { pokemon, properties -> properties.ivs = pokemon.ivs }
+        @JvmField
+        val EVS = add { pokemon, properties -> properties.evs = pokemon.evs }
+
+        @JvmField
+        val ILLUSION = mutableListOf(SPECIES, FORM, ASPECTS, GENDER, NICKNAME, SHINY)
+        @JvmField
+        val TRANSFORM = mutableListOf(SPECIES, FORM, ASPECTS, GENDER)
 
         fun add(extractor: PokemonPropertyExtractor): PokemonPropertyExtractor {
             ALL.add(extractor)

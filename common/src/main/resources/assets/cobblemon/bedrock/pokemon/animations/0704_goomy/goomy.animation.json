@@ -1,0 +1,49 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.goomy.ground_idle": {
+			"loop": true,
+			"bones": {
+				"antenna_front_left_rotation": {
+					"rotation": [0, 0, 5]
+				},
+				"antenna_back_left2": {
+					"rotation": [-10, 0, 0]
+				},
+				"antenna_front_right_rotation": {
+					"rotation": [0, 0, -5]
+				},
+				"antenna_back_right2": {
+					"rotation": [-10, 0, 0]
+				}
+			}
+		},
+		"animation.goomy.blink": {
+			"animation_length": 0.16667,
+			"bones": {
+				"eyelid_left": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"eyelid_right": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.goomy.cry": {
+			"animation_length": 1.2,
+			"sound_effects": {
+				"0.04": {
+					"effect": "pokemon.goomy.cry"
+				}
+			}
+		}
+	}
+}

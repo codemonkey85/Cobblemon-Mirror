@@ -1,0 +1,33 @@
+{
+    "name": "cobblemon:prehistoric_lush_den",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/eroded_pillar1",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_eroded_pillar",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/eroded_pillar2",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_eroded_pillar",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/eroded_pillar3",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_eroded_pillar",
+                "projection": "rigid"
+            }
+        }
+    ]
+}

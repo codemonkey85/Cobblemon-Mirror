@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Bastiodon",
   "nationalPokedexNumber": 411,
   "primaryType": "rock",
@@ -33,6 +34,13 @@
   "eggGroups": [
     "monster"
   ],
+  "behaviour": {
+    "moving" : {
+      "walk": {
+        "walkSpeed": 0.12
+      }
+    }
+  },
   "moves": [
     "1:block",
     "1:metalsound",
@@ -151,8 +159,8 @@
   "evolutions": [],
   "baseScale": 1,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 1.75,
+    "height": 1.95,
     "fixed": false
   },
   "baseFriendship": 70,

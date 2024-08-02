@@ -1,0 +1,96 @@
+{
+    "name": "cobblemon:frozen_gimmi_tower",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 3,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_frozen_stage1_long_entrance",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/frozen_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 3,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_frozen_stage1_short_entrance",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/frozen_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 3,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_frozen_stage1_platform_entrance",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/frozen_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 3,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_frozen_stage1_platform2_entrance",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/frozen_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 3,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_frozen_stage1_platform3_entrance",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/frozen_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 3,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_frozen_stage1_long_entrance_shortcut",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/frozen_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 3,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_frozen_stage1_short_entrance_shortcut",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/frozen_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 3,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_frozen_stage1_platform_entrance_shortcut",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/frozen_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 3,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_frozen_stage1_platform2_entrance_shortcut",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/frozen_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 3,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_frozen_stage1_platform3_entrance_shortcut",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/frozen_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        }
+    ]
+}

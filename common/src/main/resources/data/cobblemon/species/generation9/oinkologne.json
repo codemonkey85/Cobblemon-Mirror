@@ -1,4 +1,4 @@
-﻿{
+{
   "implemented": true,
   "name": "Oinkologne",
   "nationalPokedexNumber": 916,
@@ -30,7 +30,7 @@
     "speed": 65
   },
   "catchRate": 100,
-  "maleRatio": 0.5,
+  "maleRatio": 1,
   "baseExperienceYield": 171,
   "baseFriendship": 50,
   "evYield": {
@@ -67,17 +67,22 @@
     "tm:bulldoze",
     "tm:bulletseed",
     "tm:chillingwater",
+    "tm:curse",
     "tm:dig",
     "tm:disarmingvoice",
+    "tm:doubleedge",
     "tm:earthpower",
+    "tm:endeavor",
     "tm:endure",
     "tm:energyball",
     "tm:facade",
     "tm:gigaimpact",
     "tm:helpinghand",
+    "tm:highhorsepower",
     "tm:hyperbeam",
     "tm:hypervoice",
     "tm:ironhead",
+    "tm:lashout",
     "tm:mudshot",
     "tm:mudslap",
     "tm:playrough",
@@ -89,10 +94,12 @@
     "tm:stompingtantrum",
     "tm:substitute",
     "tm:sunnyday",
+    "tm:superfang",
     "tm:takedown",
     "tm:terablast",
     "tm:thief",
     "tm:trailblaze",
+    "tm:uproar",
     "tm:zenheadbutt"
   ],
   "labels": [
@@ -122,6 +129,8 @@
         "speed": 65
       },
       "catchRate": 100,
+      "maleRatio": 0,
+      "baseExperienceYield": 171,
       "baseFriendship": 50,
       "evYield": {
         "hp": 2,
@@ -157,17 +166,22 @@
         "tm:bulldoze",
         "tm:bulletseed",
         "tm:chillingwater",
+        "tm:curse",
         "tm:dig",
         "tm:disarmingvoice",
+        "tm:doubleedge",
         "tm:earthpower",
+        "tm:endeavor",
         "tm:endure",
         "tm:energyball",
         "tm:facade",
         "tm:gigaimpact",
         "tm:helpinghand",
+        "tm:highhorsepower",
         "tm:hyperbeam",
         "tm:hypervoice",
         "tm:ironhead",
+        "tm:lashout",
         "tm:mudshot",
         "tm:mudslap",
         "tm:playrough",
@@ -179,10 +193,12 @@
         "tm:stompingtantrum",
         "tm:substitute",
         "tm:sunnyday",
+        "tm:superfang",
         "tm:takedown",
         "tm:terablast",
         "tm:thief",
         "tm:trailblaze",
+        "tm:uproar",
         "tm:zenheadbutt"
       ],
       "labels": [
@@ -194,11 +210,9 @@
       "height": 10,
       "weight": 1200,
       "preEvolution": "lechonk",
+      "evolutions": [],
       "cannotDynamax": false,
       "battleOnly": false
-    },
-    {
-      "name": "base"
     }
   ],
   "baseScale": 1.0,

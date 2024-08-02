@@ -13,7 +13,7 @@
             "context": "grounded",
             "bucket": "uncommon",
             "level": "16-32",
-            "weight": 0.18,
+            "weight": 0.54,
             "weightMultiplier": {
                 "multiplier": 5.0,
                 "condition": {
@@ -21,7 +21,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_forest"
                 ]
@@ -33,8 +34,8 @@
             }
         },
         {
-            "id": "pikachu-alolan-2",
-            "pokemon": "pikachu alolan",
+            "id": "pikachu-alola-2",
+            "pokemon": "pikachu region_bias=alola",
             "presets": [
                 "natural"
             ],
@@ -50,10 +51,16 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_beach",
                     "#cobblemon:is_tropical_island"
+                ]
+            },
+            "anticondition": {
+                "biomes": [
+                    "#cobblemon:is_freezing"
                 ]
             }
         }

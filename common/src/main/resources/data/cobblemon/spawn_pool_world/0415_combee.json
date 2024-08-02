@@ -13,9 +13,9 @@
             "context": "grounded",
             "bucket": "common",
             "level": "1-24",
-            "weight": 1.98,
+            "weight": 9.9,
             "weightMultiplier": {
-                "multiplier": 25.0,
+                "multiplier": 5.0,
                 "condition": {
                     "neededNearbyBlocks": [
                         "#minecraft:beehives"
@@ -23,7 +23,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_temperate"
                 ],

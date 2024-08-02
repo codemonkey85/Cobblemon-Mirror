@@ -18,15 +18,7 @@
 				{
 					"name": "body",
 					"parent": "blastoise",
-					"pivot": [0, 24, 2],
-					"locators": {
-						"target": [0, 25, -19],
-						"center": {
-							"offset": [0, 14, -1],
-							"rotation": [0, 0, -180]
-						},
-						"ground_center": [0, 0, 0]
-					}
+					"pivot": [0, 24, 2]
 				},
 				{
 					"name": "body2",
@@ -242,10 +234,7 @@
 				{
 					"name": "head",
 					"parent": "torso",
-					"pivot": [0, 38, -6.25],
-					"locators": {
-						"head_top": [0, 51, -7]
-					}
+					"pivot": [0, 38, -6.25]
 				},
 				{
 					"name": "head_correction",
@@ -263,10 +252,7 @@
 					"pivot": [0, 38, -6.25],
 					"cubes": [
 						{"origin": [-6.5, 38, -12.75], "size": [13, 12, 13], "uv": [0, 99]}
-					],
-					"locators": {
-						"special_attack": [0, 48, -25]
-					}
+					]
 				},
 				{
 					"name": "muzzle",

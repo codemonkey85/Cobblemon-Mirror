@@ -21,7 +21,7 @@ import com.cobblemon.mod.common.pokemon.evolution.variants.TradeEvolution
 import com.cobblemon.mod.common.util.getPlayer
 import com.cobblemon.mod.common.util.lang
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object TradeManager {
     class TradeRequest(val tradeOfferId: UUID, val senderId: UUID, val receiverId: UUID)
@@ -33,31 +33,31 @@ object TradeManager {
     fun getActiveTrade(playerId: UUID) =
         activeTrades.find { it.player1.uuid == playerId || it.player2.uuid == playerId }
 
-    fun offerTrade(player: ServerPlayerEntity, otherPlayerEntity: ServerPlayerEntity) {
+    fun offerTrade(player: ServerPlayer, otherPlayerEntity: ServerPlayer) {
         val existingFromPlayer = requests.find { it.senderId == player.uuid }
         if (existingFromPlayer != null) {
             existingFromPlayer.receiverId.getPlayer()?.sendPacket(TradeOfferExpiredPacket(existingFromPlayer.tradeOfferId))
         }
         if (getActiveTrade(otherPlayerEntity.uuid) != null) {
-            player.sendMessage(lang("trade.occupied", otherPlayerEntity.name), true)
+            player.sendSystemMessage(lang("trade.occupied", otherPlayerEntity.name), true)
         } else {
             val request = TradeRequest(UUID.randomUUID(), player.uuid, otherPlayerEntity.uuid)
             requests.add(request)
             afterOnServer(seconds = 60F) {
                 if (requests.remove(request)) {
-                    player.sendMessage(lang("trade.request_expired", otherPlayerEntity.name), true)
+                    player.sendSystemMessage(lang("trade.request_expired", otherPlayerEntity.name), true)
                 }
             }
 
             otherPlayerEntity.sendPacket(TradeOfferNotificationPacket(request.tradeOfferId, player.uuid, player.name.copy()))
-            player.sendMessage(lang("trade.request_sent", otherPlayerEntity.name), true)
+            player.sendSystemMessage(lang("trade.request_sent", otherPlayerEntity.name), true)
         }
     }
 
-    fun acceptTradeRequest(player: ServerPlayerEntity, tradeOfferId: UUID) {
+    fun acceptTradeRequest(player: ServerPlayer, tradeOfferId: UUID) {
         val request = requests.find { it.tradeOfferId == tradeOfferId }
         if (request == null) {
-            player.sendMessage(lang("trade.request_already_expired"), true)
+            player.sendSystemMessage(lang("trade.request_already_expired"), true)
         } else {
             requests.remove(request)
             val otherPlayer = request.senderId.getPlayer() ?: return
@@ -68,7 +68,7 @@ object TradeManager {
         }
     }
 
-    fun onLogoff(player: ServerPlayerEntity) {
+    fun onLogoff(player: ServerPlayer) {
         val request = requests.find { it.senderId == player.uuid || it.receiverId == player.uuid }
         if (request != null) {
             val otherPlayer = if (request.receiverId == player.uuid) request.senderId.getPlayer() else request.receiverId.getPlayer()
@@ -92,17 +92,17 @@ object TradeManager {
         party1.remove(pokemon1)
         party2.remove(pokemon2)
 
-        pokemon1.setFriendship(0)
-        pokemon2.setFriendship(0)
+        pokemon1.setFriendship(pokemon1.form.baseFriendship)
+        pokemon2.setFriendship(pokemon2.form.baseFriendship)
 
         party2.add(pokemon1)
         party1.add(pokemon2)
 
-        pokemon1.evolutions.filterIsInstance<TradeEvolution>().firstOrNull {
+        pokemon1.lockedEvolutions.filterIsInstance<TradeEvolution>().firstOrNull {
             it.attemptEvolution(pokemon1, pokemon2)
         }
 
-        pokemon2.evolutions.filterIsInstance<TradeEvolution>().firstOrNull {
+        pokemon2.lockedEvolutions.filterIsInstance<TradeEvolution>().firstOrNull {
             it.attemptEvolution(pokemon2, pokemon1)
         }
         CobblemonEvents.TRADE_COMPLETED.post(TradeCompletedEvent(player1, pokemon2, player2, pokemon1))

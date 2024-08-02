@@ -15,7 +15,8 @@
             "level": "20-43",
             "weight": 1.0,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_lush"
                 ]
@@ -33,7 +34,8 @@
             "level": "20-43",
             "weight": 1.0,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_lush"
                 ]
@@ -51,7 +53,8 @@
             "level": "20-43",
             "weight": 1.0,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ],
@@ -78,7 +81,8 @@
             "level": "20-43",
             "weight": 1.0,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ],
@@ -102,7 +106,8 @@
             "level": "20-43",
             "weight": 0.2,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_swamp"
                 ],
@@ -110,7 +115,7 @@
             },
             "anticondition": {
                 "biomes": [
-                    "minecraft:mangrove_swamp"
+                    "#cobblemon:has_block/mud"
                 ]
             }
         },
@@ -133,7 +138,7 @@
             },
             "anticondition": {
                 "biomes": [
-                    "minecraft:mangrove_swamp"
+                    "#cobblemon:has_block/mud"
                 ]
             }
         }

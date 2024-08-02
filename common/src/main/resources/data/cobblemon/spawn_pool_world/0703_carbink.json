@@ -1,0 +1,73 @@
+{
+    "enabled": true,
+    "neededInstalledMods": [],
+    "neededUninstalledMods": [],
+    "spawns": [
+        {
+            "id": "carbink-1",
+            "pokemon": "carbink",
+            "presets": [
+                "natural"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "25-50",
+            "weight": 100.0,
+            "condition": {
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ],
+                "neededNearbyBlocks": [
+                    "minecraft:diamond_ore"
+                ]
+            },
+            "anticondition": {
+                "biomes": [
+                    "#cobblemon:is_deep_dark"
+                ]
+            }
+        },
+        {
+            "id": "carbink-2",
+            "pokemon": "carbink",
+            "presets": [
+                "natural"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "uncommon",
+            "level": "25-50",
+            "weight": 10.0,
+            "condition": {
+                "biomes": [
+                    "#cobblemon:nether/is_quartz"
+                ],
+                "neededBaseBlocks": [
+                    "minecraft:quartz_block"
+                ]
+            }
+        },
+        {
+            "id": "carbink-3",
+            "pokemon": "carbink",
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "25-50",
+            "weight": 10.0,
+            "condition": {
+                "biomes": [
+                    "the_bumblezone:crystal_canyon"
+                ]
+            },
+            "anticondition": {
+                "structures": [
+                    "#the_bumblezone:sempiternal_sanctums"
+                ]
+            }
+        }
+    ]
+}

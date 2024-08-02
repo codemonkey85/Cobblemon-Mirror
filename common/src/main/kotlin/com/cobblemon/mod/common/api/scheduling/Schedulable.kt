@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.api.scheduling
 
+import java.util.concurrent.CompletableFuture
+
 /**
  * An interface for which an implementation must provide a [SchedulingTracker] so that the standard scheduling
  * functions can be executed.
@@ -50,6 +52,14 @@ interface Schedulable {
         } else {
             ScheduledTask.BLANK
         }
+    }
+
+    fun delayedFuture(seconds: Float): CompletableFuture<Unit> {
+        val future = CompletableFuture<Unit>()
+        after(seconds = seconds) {
+            future.complete(Unit)
+        }
+        return future
     }
 
     fun taskBuilder(): ScheduledTask.Builder = ScheduledTask.Builder().tracker(schedulingTracker)

@@ -16,7 +16,8 @@
             "level": "5-30",
             "weight": 9.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "isRaining": true,
                 "neededNearbyBlocks": [
                     "minecraft:lily_pad"
@@ -54,7 +55,8 @@
             "level": "5-30",
             "weight": 1.8,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_lush"
                 ]
@@ -72,7 +74,8 @@
             "level": "5-30",
             "weight": 5.4,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_lush"
                 ]

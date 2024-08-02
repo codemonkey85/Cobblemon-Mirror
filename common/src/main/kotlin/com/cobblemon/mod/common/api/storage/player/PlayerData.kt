@@ -13,8 +13,8 @@ import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.net.messages.client.starter.SetClientPlayerDataPacket
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.resources.ResourceLocation
 
 data class PlayerData(
     val uuid: UUID,
@@ -22,13 +22,13 @@ data class PlayerData(
     var starterLocked: Boolean,
     var starterSelected: Boolean,
     var starterUUID: UUID?,
-    var keyItems: MutableSet<Identifier>,
-    var battleTheme: Identifier?,
+    var keyItems: MutableSet<ResourceLocation>,
+    var battleTheme: ResourceLocation?,
     val extraData: MutableMap<String, PlayerDataExtension>,
 ) {
     var advancementData: PlayerAdvancementData = PlayerAdvancementData()
 
-    fun sendToPlayer(player: ServerPlayerEntity) {
+    fun sendToPlayer(player: ServerPlayer) {
         player.sendPacket(SetClientPlayerDataPacket(this))
     }
 
@@ -41,7 +41,7 @@ data class PlayerData(
             starterSelected =  false,
             starterUUID =  null,
             keyItems = mutableSetOf(),
-            battleTheme = CobblemonSounds.PVP_BATTLE.id,
+            battleTheme = CobblemonSounds.PVP_BATTLE.location,
             extraData = mutableMapOf()
         )
     }

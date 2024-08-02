@@ -8,8 +8,12 @@
     "h:lightningrod"
   ],
   "drops": {
-    "amount": 2,
+    "amount": 3,
     "entries": [
+      {
+        "item": "cobblemon:light_ball",
+        "percentage": 5.0
+      },
       {
         "item": "cobblemon:thunder_stone",
         "percentage": 5.0
@@ -29,7 +33,8 @@
     "speed": 90
   },
   "features": [
-    "alolan"
+    "alolan",
+    "region_bias"
   ],
   "behaviour": {
     "moving": {
@@ -1756,17 +1761,17 @@
       "battleOnly": false
     },
     {
-      "name": "Alolan",
+      "name": "Alola Bias",
       "maleRatio": 0.5,
       "labels": [
         "alola_regional"
       ],
       "aspects": [
-        "alolan"
+        "region-bias-alola"
       ],
       "evolutions": [
         {
-          "id": "pikachu_raichu_alolan_kantonian",
+          "id": "alola_pikachu_raichu",
           "variant": "item_interact",
           "result": "raichu alolan=false",
           "consumeHeldItem": false,
@@ -1776,25 +1781,24 @@
           "requirements": [
             {
               "variant": "biome",
-              "biomeCondition": "#cobblemon:is_temperate"
+              "biomeCondition": "#cobblemon:is_forest"
+            },
+            {
+              "variant": "biome",
+              "biomeAnticondition": "#cobblemon:is_spooky"
             }
           ],
           "requiredContext": "cobblemon:thunder_stone"
         },
         {
-          "id": "pikachu_raichu_alolan",
+          "id": "alola_pikachu_alola_raichu",
           "variant": "item_interact",
           "result": "raichu alolan",
           "consumeHeldItem": false,
           "learnableMoves": [
             "psychic"
           ],
-          "requirements": [
-            {
-              "variant": "biome",
-              "biomeAnticondition": "#cobblemon:is_temperate"
-            }
-          ],
+          "requirements": [],
           "requiredContext": "cobblemon:thunder_stone"
         }
       ]
@@ -1907,7 +1911,6 @@
     "tutor:bodyslam",
     "tutor:brickbreak",
     "tutor:calmmind",
-    "tutor:celebrate",
     "tutor:charm",
     "tutor:counter",
     "tutor:covet",
@@ -1930,7 +1933,6 @@
     "tutor:fakeout",
     "tutor:feint",
     "tutor:flash",
-    "tutor:fly",
     "tutor:focuspunch",
     "tutor:frustration",
     "tutor:grassknot",
@@ -1941,7 +1943,6 @@
     "tutor:helpinghand",
     "tutor:hiddenpower",
     "tutor:holdhands",
-    "tutor:irontail",
     "tutor:knockoff",
     "tutor:laserfocus",
     "tutor:lastresort",
@@ -1953,11 +1954,7 @@
     "tutor:mudslap",
     "tutor:nuzzle",
     "tutor:payday",
-    "tutor:playnice",
-    "tutor:playrough",
-    "tutor:present",
     "tutor:protect",
-    "tutor:quickattack",
     "tutor:rage",
     "tutor:raindance",
     "tutor:reflect",
@@ -1977,7 +1974,6 @@
     "tutor:strength",
     "tutor:submission",
     "tutor:substitute",
-    "tutor:surf",
     "tutor:swagger",
     "tutor:sweetkiss",
     "tutor:sweetscent",
@@ -1985,10 +1981,7 @@
     "tutor:tailwhip",
     "tutor:takedown",
     "tutor:teeterdance",
-    "tutor:thunder",
-    "tutor:thunderbolt",
     "tutor:thunderpunch",
-    "tutor:thundershock",
     "tutor:thunderwave",
     "tutor:toxic",
     "tutor:voltswitch",
@@ -2007,7 +2000,7 @@
   "preEvolution": "pichu",
   "evolutions": [
     {
-      "id": "pikachu_raichu_kantonian_alolan",
+      "id": "pikachu_alola_raichu",
       "variant": "item_interact",
       "result": "raichu alolan",
       "consumeHeldItem": false,
@@ -2017,25 +2010,24 @@
       "requirements": [
         {
           "variant": "biome",
-          "biomeCondition": "#minecraft:is_beach"
+          "biomeCondition": "#cobblemon:evolution/alolan"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#minecraft:is_freezing"
         }
       ],
       "requiredContext": "cobblemon:thunder_stone"
     },
     {
-      "id": "pikachu_raichu_kantonian",
+      "id": "pikachu_raichu",
       "variant": "item_interact",
       "result": "raichu alolan=false",
       "consumeHeldItem": false,
       "learnableMoves": [
         "thunderpunch"
       ],
-      "requirements": [
-        {
-          "variant": "biome",
-          "biomeAnticondition": "#minecraft:is_beach"
-        }
-      ],
+      "requirements": [],
       "requiredContext": "cobblemon:thunder_stone"
     }
   ],

@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Swoobat",
   "nationalPokedexNumber": 528,
   "primaryType": "psychic",
@@ -39,6 +40,13 @@
     "flying",
     "field"
   ],
+  "behaviour": {
+    "moving": {
+      "fly": {
+        "canFly": true
+      }
+    }
+  },
   "moves": [
     "1:attract",
     "1:confusion",
@@ -159,10 +167,10 @@
   ],
   "preEvolution": "woobat",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.65,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 1.1,
+    "height": 1.8,
     "fixed": false
   },
   "baseFriendship": 50,

@@ -21,7 +21,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_mushroom",
                     "#cobblemon:is_temperate"
@@ -51,7 +52,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_swamp"
                 ]
@@ -70,14 +72,14 @@
             "weight": 1.0,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_crimson",
-                    "#cobblemon:is_nether_fungus",
-                    "#cobblemon:is_nether_overgrowth"
+                    "#cobblemon:nether/is_crimson",
+                    "#cobblemon:nether/is_fungus",
+                    "#cobblemon:nether/is_overgrowth"
                 ]
             },
             "anticondition": {
                 "biomes": [
-                    "#cobblemon:is_nether_warped"
+                    "#cobblemon:nether/is_warped"
                 ]
             }
         }

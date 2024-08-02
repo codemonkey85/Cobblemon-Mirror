@@ -8,18 +8,22 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen5
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.animation.BimanualSwingAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class OshawottModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class OshawottModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("oshawott")
     override val head = getPart("head")
     override val rightArm = getPart("arm_right")
@@ -29,29 +33,30 @@ class OshawottModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
     val scalchop = getPart("scalchop_hand")
     val scalchopbody = getPart("scalchop_torso")
 
-    override val portraitScale = 2.0F
-    override val portraitTranslation = Vec3d(-0.2, -0.15, 0.0)
-    override val profileScale = 0.7F
-    override val profileTranslation = Vec3d(0.0, 0.69, 0.0)
+    override var portraitScale = 2.0F
+    override var portraitTranslation = Vec3(-0.2, -0.15, 0.0)
+    override var profileScale = 0.7F
+    override var profileTranslation = Vec3(0.0, 0.69, 0.0)
 
-    lateinit var battleidle: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var battleidle: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("oshawott", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("oshawott", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("oshawott", "blink") }
+
         sleep = registerPose(
-            poseType = PoseType.SLEEP,
-            transformTicks = 10,
-            condition = { !it.isBattling },
-            transformedParts = arrayOf(
-                scalchop.createTransformation().withVisibility(visibility = false),
-                scalchopbody.createTransformation().withVisibility(visibility = true)
-            ),
-            idleAnimations = arrayOf(bedrock("oshawott", "sleep"))
+                poseType = PoseType.SLEEP,
+                transformTicks = 10,
+                transformedParts = arrayOf(
+                        scalchop.createTransformation().withVisibility(visibility = false),
+                        scalchopbody.createTransformation().withVisibility(visibility = true),
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.Y_AXIS, -7)
+                ),
+                animations = arrayOf(bedrock("oshawott", "sleep"))
         )
 
         standing = registerPose(
@@ -64,7 +69,7 @@ class OshawottModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
                 scalchop.createTransformation().withVisibility(visibility = false),
                 scalchopbody.createTransformation().withVisibility(visibility = true)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("oshawott", "ground_idle")
             )
@@ -80,15 +85,17 @@ class OshawottModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
                 scalchop.createTransformation().withVisibility(visibility = false),
                 scalchopbody.createTransformation().withVisibility(visibility = true)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
-                bedrock("oshawott", "ground_walk")
+                bedrock("oshawott", "ground_idle"),
+                BipedWalkAnimation(this, periodMultiplier = 0.6F, amplitudeMultiplier = 0.9F),
+                BimanualSwingAnimation(this, swingPeriodMultiplier = 0.6F, amplitudeMultiplier = 0.9F)
             )
         )
 
         battleidle = registerPose(
             poseName = "battle_idle",
-            poseTypes = PoseType.STATIONARY_POSES,
+            poseTypes = PoseType.STATIONARY_POSES + PoseType.FLOAT,
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
@@ -96,11 +103,10 @@ class OshawottModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
                 scalchop.createTransformation().withVisibility(visibility = true),
                 scalchopbody.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("oshawott", "ground_idle")
             )
-
         )
     }
 }

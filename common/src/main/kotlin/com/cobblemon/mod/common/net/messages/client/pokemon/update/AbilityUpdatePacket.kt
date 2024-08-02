@@ -12,7 +12,9 @@ import com.cobblemon.mod.common.api.abilities.Abilities
 import com.cobblemon.mod.common.api.abilities.AbilityTemplate
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Packet sent when the ability of a Pokémon has changed. Only sends the template.
@@ -24,7 +26,7 @@ class AbilityUpdatePacket(pokemon: () -> Pokemon, ability: AbilityTemplate) : Si
 
     override val id = ID
 
-    override fun encodeValue(buffer: PacketByteBuf) {
+    override fun encodeValue(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(this.value.name)
     }
 
@@ -34,7 +36,7 @@ class AbilityUpdatePacket(pokemon: () -> Pokemon, ability: AbilityTemplate) : Si
 
     companion object {
         val ID = cobblemonResource("ability_update")
-        fun decode(buffer: PacketByteBuf): AbilityUpdatePacket {
+        fun decode(buffer: RegistryFriendlyByteBuf): AbilityUpdatePacket {
             val pokemon = decodePokemon(buffer)
             val ability = Abilities.get(buffer.readString())!!
             return AbilityUpdatePacket(pokemon, ability)

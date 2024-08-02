@@ -13,9 +13,10 @@
             "context": "grounded",
             "bucket": "uncommon",
             "level": "43-48",
-            "weight": 1.0,
+            "weight": 10.0,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_deep_dark"
                 ]
@@ -23,6 +24,26 @@
         },
         {
             "id": "golurk-2",
+            "pokemon": "golurk",
+            "presets": [
+                "natural",
+                "ruins"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "rare",
+            "level": "43-48",
+            "weight": 2.0,
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ]
+            }
+        },
+        {
+            "id": "golurk-3",
             "pokemon": "golurk",
             "presets": [
                 "trail_ruins"
@@ -33,17 +54,36 @@
             "level": "43-48",
             "weight": 2.0,
             "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ]
             }
         },
         {
-            "id": "golurk-3",
+            "id": "golurk-4",
             "pokemon": "golurk",
             "presets": [
                 "natural",
-                "desert_pyramid",
+                "desert_pyramid"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "43-48",
+            "weight": 2.0,
+            "condition": {
+                "biomes": [
+                    "#cobblemon:is_desert"
+                ]
+            }
+        },
+        {
+            "id": "golurk-5",
+            "pokemon": "golurk",
+            "presets": [
+                "natural",
                 "jungle_pyramid"
             ],
             "type": "pokemon",
@@ -53,12 +93,12 @@
             "weight": 2.0,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_overworld"
+                    "#cobblemon:is_jungle"
                 ]
             }
         },
         {
-            "id": "golurk-4",
+            "id": "golurk-6",
             "pokemon": "golurk",
             "type": "pokemon",
             "context": "grounded",

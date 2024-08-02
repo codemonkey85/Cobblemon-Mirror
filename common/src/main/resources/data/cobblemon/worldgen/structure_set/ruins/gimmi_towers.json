@@ -1,0 +1,39 @@
+{
+    "placement": {
+        "type": "minecraft:random_spread",
+        "exclusion_zone": {
+            "chunk_count": 10,
+            "other_set": "minecraft:villages"
+        },
+        "spacing": 40,
+        "separation": 25,
+        "salt": 1192837015,
+        "spread_type": "triangular"
+    },
+    "structures": [
+        {
+            "structure": "cobblemon:ruins/temperate_gimmi_tower",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:ruins/frozen_gimmi_tower",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:ruins/lush_gimmi_tower",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:ruins/rooted_gimmi_tower",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:ruins/deserted_gimmi_tower",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:ruins/sunscorched_gimmi_tower",
+            "weight": 1
+        }
+    ]
+}

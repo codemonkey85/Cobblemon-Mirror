@@ -15,13 +15,10 @@
             "level": "41-54",
             "weight": 0.02,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_forest",
-                    "#cobblemon:is_grassland",
-                    "#cobblemon:is_hills",
-                    "#cobblemon:is_jungle",
-                    "#cobblemon:is_sky",
                     "#cobblemon:is_swamp"
                 ],
                 "timeRange": "night",
@@ -44,6 +41,38 @@
             "context": "grounded",
             "bucket": "common",
             "level": "41-54",
+            "weight": 0.02,
+            "weightMultiplier": {
+                "multiplier": 0.25,
+                "condition": {
+                    "timeRange": "night"
+                }
+            },
+            "condition": {
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
+                "biomes": [
+                    "#cobblemon:is_forest",
+                    "#cobblemon:is_swamp"
+                ]
+            },
+            "anticondition": {
+                "biomes": [
+                    "#cobblemon:is_spooky",
+                    "#cobblemon:is_freezing"
+                ]
+            }
+        },
+        {
+            "id": "crobat-4",
+            "pokemon": "crobat",
+            "presets": [
+                "natural"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "41-54",
             "weight": 0.1,
             "weightMultiplier": {
                 "multiplier": 1.5,
@@ -52,19 +81,22 @@
                 }
             },
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ]
             },
             "anticondition": {
                 "biomes": [
-                    "#cobblemon:is_deep_dark"
+                    "#cobblemon:is_deep_dark",
+                    "#cobblemon:is_forest",
+                    "#cobblemon:is_swamp"
                 ]
             }
         },
         {
-            "id": "crobat-4",
+            "id": "crobat-5",
             "pokemon": "crobat",
             "presets": [
                 "derelict"
@@ -88,12 +120,14 @@
             },
             "anticondition": {
                 "biomes": [
-                    "#cobblemon:is_deep_dark"
+                    "#cobblemon:is_deep_dark",
+                    "#cobblemon:is_forest",
+                    "#cobblemon:is_swamp"
                 ]
             }
         },
         {
-            "id": "crobat-5",
+            "id": "crobat-6",
             "pokemon": "crobat",
             "presets": [
                 "natural"
@@ -110,11 +144,31 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_spooky"
                 ],
                 "isRaining": false
+            }
+        },
+        {
+            "id": "crobat-8",
+            "pokemon": "crobat",
+            "presets": [
+                "natural"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "uncommon",
+            "level": "41-54",
+            "weight": 0.1,
+            "condition": {
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
+                "biomes": [
+                    "#cobblemon:is_deep_dark"
+                ]
             }
         }
     ]

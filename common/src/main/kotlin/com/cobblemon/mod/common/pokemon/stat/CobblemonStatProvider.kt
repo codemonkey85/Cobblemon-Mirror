@@ -21,10 +21,10 @@ import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.pokemon.adapters.CobblemonStatTypeAdapter
 import com.cobblemon.mod.common.util.readSizedInt
 import com.cobblemon.mod.common.util.writeSizedInt
+import net.minecraft.network.RegistryFriendlyByteBuf
 import kotlin.math.truncate
 import kotlin.random.Random
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 /**
  * The default implementation of a [StatProvider].
@@ -35,9 +35,9 @@ import net.minecraft.util.Identifier
 object CobblemonStatProvider : StatProvider {
 
     override val typeAdapter: StatTypeAdapter = CobblemonStatTypeAdapter
-    private val stats = Stats.values().associateBy { it.identifier }
-    private val ordinalToStat = Stats.values().associateBy { it.ordinal }
-    private val identifierToOrdinal = Stats.values().associate { it.identifier to it.ordinal }
+    private val stats = Stats.entries.associateBy { it.identifier }
+    private val ordinalToStat = Stats.entries.associateBy { it.ordinal }
+    private val identifierToOrdinal = Stats.entries.associate { it.identifier to it.ordinal }
 
     override fun all(): Collection<Stat> = Stats.ALL
 
@@ -86,7 +86,6 @@ object CobblemonStatProvider : StatProvider {
     }
 
     override fun getStatForPokemon(pokemon: Pokemon, stat: Stat): Int {
-        val stats = pokemon.form.baseStats
         val iv = pokemon.ivs.getOrDefault(stat)
         val base = pokemon.form.baseStats[stat]!!
         val ev = pokemon.evs.getOrDefault(stat)
@@ -104,16 +103,16 @@ object CobblemonStatProvider : StatProvider {
         }
     }
 
-    override fun fromIdentifier(identifier: Identifier): Stat? = this.stats[identifier]
+    override fun fromIdentifier(identifier: ResourceLocation): Stat? = this.stats[identifier]
 
-    override fun fromIdentifierOrThrow(identifier: Identifier): Stat = this.fromIdentifier(identifier) ?: throw IllegalArgumentException("No stat was found with the identifier $identifier")
+    override fun fromIdentifierOrThrow(identifier: ResourceLocation): Stat = this.fromIdentifier(identifier) ?: throw IllegalArgumentException("No stat was found with the identifier $identifier")
 
-    override fun decode(buffer: PacketByteBuf): Stat {
+    override fun decode(buffer: RegistryFriendlyByteBuf): Stat {
         val ordinal = buffer.readSizedInt(IntSize.U_BYTE)
         return this.ordinalLookup(ordinal)
     }
 
-    override fun encode(buffer: PacketByteBuf, stat: Stat) {
+    override fun encode(buffer: RegistryFriendlyByteBuf, stat: Stat) {
         val ordinal = this.identifierLookup(stat.identifier)
         buffer.writeSizedInt(IntSize.U_BYTE, ordinal)
     }
@@ -129,7 +128,7 @@ object CobblemonStatProvider : StatProvider {
             ?: throw IllegalArgumentException("Cannot find the stat with the ordinal $ordinal, this should only happen if there is a custom Stat implementation but no StatProvider to go alongside it")
     }
 
-    private fun identifierLookup(identifier: Identifier): Int {
+    private fun identifierLookup(identifier: ResourceLocation): Int {
         return this.identifierToOrdinal[identifier]
             ?: throw IllegalArgumentException("Cannot find the stat to encode, this should only happen if there is a custom Stat implementation but no StatProvider to go alongside it on the server side")
     }

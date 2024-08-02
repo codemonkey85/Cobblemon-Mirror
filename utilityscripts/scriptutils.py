@@ -1,3 +1,4 @@
+import shutil
 import textwrap
 
 cobblemonheader = """
@@ -67,5 +68,21 @@ def print_problems_and_paths(problem_path_tuples, filter_words=None):
     max_width = max(len(problem) for problem, _ in problem_path_tuples)
     for problem, path in problem_path_tuples:
         # Only print the tuple if the problem description does not contain the filter_words
-        if filter_words not in problem:
+        if filter_words is None or filter_words not in problem:
             print("  {:<{}} {}".format(problem, max_width, path))
+
+# Print a separator line as wide as the width of the box
+def print_separator():
+    # get the width of the terminal
+    width = shutil.get_terminal_size()
+    print("\n")
+    print("─" * width.columns)
+    print("\n")
+
+
+
+
+def sanitize_pokemon(pokemon):
+    return (pokemon.replace("-", "").replace("♂", "m").replace("♀", "f")
+            .replace(".", "").replace("'", "").replace(' ', '')
+            .replace('é', 'e').replace(':', '').replace('’', '').replace('é', 'e').lower())

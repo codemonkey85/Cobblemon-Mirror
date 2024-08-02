@@ -95,6 +95,22 @@
         {
           "variant": "biome",
           "biomeCondition": "#cobblemon:is_mushroom"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_magical"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_spooky"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_swamp"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -114,6 +130,26 @@
         {
           "variant": "biome",
           "biomeCondition": "#cobblemon:is_plains"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_floral"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_mushroom"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_savanna"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "minecraft:sunflower_plains"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -132,11 +168,15 @@
         },
         {
           "variant": "biome",
-          "biomeCondition": "#cobblemon:is_spooky"
+          "biomeCondition": "#cobblemon:evolution/vivillon_elegant"
         },
         {
           "variant": "biome",
-          "biomeCondition": "#cobblemon:is_magical"
+          "biomeAnticondition": "#cobblemon:is_mountain"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -155,7 +195,11 @@
         },
         {
           "variant": "biome",
-          "biomeCondition": "minecraft:cherry_grove"
+          "biomeCondition": "#cobblemon:is_cherry_blossom"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -175,6 +219,46 @@
         {
           "variant": "biome",
           "biomeCondition": "#cobblemon:is_forest"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_cherry_blossom"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_floral"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_jungle"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_magical"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_mountain"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_mushroom"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_plains"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_spooky"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_swamp"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -194,6 +278,10 @@
         {
           "variant": "biome",
           "biomeCondition": "#cobblemon:is_badlands"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -213,6 +301,14 @@
         {
           "variant": "biome",
           "biomeCondition": "#cobblemon:is_taiga"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_mountain"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -232,6 +328,14 @@
         {
           "variant": "biome",
           "biomeCondition": "#cobblemon:is_jungle"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_mountain"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -255,6 +359,14 @@
         {
           "variant": "biome",
           "biomeAnticondition": "#cobblemon:is_warm_ocean"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_frozen_ocean"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -274,6 +386,22 @@
         {
           "variant": "biome",
           "biomeCondition": "#cobblemon:is_floral"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_cherry_blossom"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_magical"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "minecraft:sunflower_plains"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -311,11 +439,31 @@
         },
         {
           "variant": "biome",
-          "biomeCondition": "#cobblemon:is_mountain"
+          "biomeCondition": "#cobblemon:evolution/vivillon_monsoon"
         },
         {
           "variant": "biome",
-          "biomeCondition": "#cobblemon:is_peak"
+          "biomeAnticondition": "#cobblemon:is_badlands"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_floral"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_desert"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_mushroom"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_tropical_island"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -334,7 +482,27 @@
         },
         {
           "variant": "biome",
-          "biomeCondition": "#cobblemon:vivillon_evolutions/ocean"
+          "biomeCondition": "#cobblemon:evolution/vivillon_ocean"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_cold_ocean"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_frozen_ocean"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_lukewarm_ocean"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_temperate_ocean"
         }
       ]
     },
@@ -354,6 +522,10 @@
         {
           "variant": "biome",
           "biomeCondition": "#cobblemon:is_frozen_ocean"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -372,7 +544,27 @@
         },
         {
           "variant": "biome",
-          "biomeCondition": "#cobblemon:vivillon_evolutions/river"
+          "biomeCondition": "#cobblemon:evolution/vivillon_river"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_forest"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_jungle"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_magical"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_spooky"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -392,6 +584,14 @@
         {
           "variant": "biome",
           "biomeCondition": "#cobblemon:is_desert"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_badlands"
         }
       ]
     },
@@ -411,6 +611,26 @@
         {
           "variant": "biome",
           "biomeCondition": "#cobblemon:is_savanna"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_badlands"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_desert"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_floral"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_mountain"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -429,7 +649,11 @@
         },
         {
           "variant": "biome",
-          "biomeCondition": "#cobblemon:vivillon_evolutions/sun"
+          "biomeCondition": "#cobblemon:evolution/vivillon_sun"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
         }
       ]
     },
@@ -448,7 +672,15 @@
         },
         {
           "variant": "biome",
-          "biomeCondition": "#cobblemon:vivillon_evolutions/tundra"
+          "biomeCondition": "#cobblemon:evolution/vivillon_tundra"
+        },
+        {
+          "variant": "structure",
+          "structureAnticondition": "#minecraft:village"
+        },
+        {
+          "variant": "biome",
+          "biomeAnticondition": "#cobblemon:is_mountain"
         }
       ]
     },

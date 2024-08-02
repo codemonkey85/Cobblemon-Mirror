@@ -11,24 +11,25 @@ package com.cobblemon.mod.common.pokemon.effects
 import com.cobblemon.mod.common.api.pokemon.effect.ShoulderEffect
 import com.cobblemon.mod.common.mixin.accessor.StatusEffectInstanceAccessor
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.effect.StatusEffect
-import net.minecraft.entity.effect.StatusEffectInstance
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.effect.MobEffect
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.entity.LivingEntity
 import java.util.*
 
 @Suppress("MemberVisibilityCanBePrivate")
 class PotionBaseEffect(
-    val effect: StatusEffect,
+    val effect: MobEffect,
     val amplifier: Int,
     val ambient: Boolean,
     val showParticles: Boolean,
     val showIcon: Boolean
 ) : ShoulderEffect {
 
-    override fun applyEffect(pokemon: Pokemon, player: ServerPlayerEntity, isLeft: Boolean) {
-        val effect = player.getStatusEffect(this.effect)
+    override fun applyEffect(pokemon: Pokemon, player: ServerPlayer, isLeft: Boolean) {
+        val effect = player.getEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect))
         // We handle part of our own type.
         if (effect is ShoulderStatusEffectInstance && effect.amplifier >= this.amplifier) {
             // If the effect is the same strength simply add another source for it.
@@ -40,12 +41,12 @@ class PotionBaseEffect(
             return
         }
         // Let vanilla handle it, it will attempt to upgrade our custom impl which handles both upgrades from vanilla or our own.
-        player.addStatusEffect(this.createStatus(pokemon))
+        player.addEffect(this.createStatus(pokemon))
     }
 
-    override fun removeEffect(pokemon: Pokemon, player: ServerPlayerEntity, isLeft: Boolean) {
-        val effect = player.getStatusEffect(this.effect) as? ShoulderStatusEffectInstance ?: return
-        if (effect.amplifier == this.amplifier && effect.ambient == this.ambient && effect.shouldShowParticles() == this.showParticles && effect.shouldShowIcon() == this.showIcon) {
+    override fun removeEffect(pokemon: Pokemon, player: ServerPlayer, isLeft: Boolean) {
+        val effect = player.getEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect)) as? ShoulderStatusEffectInstance ?: return
+        if (effect.amplifier == this.amplifier && effect.ambient == this.ambient && effect.isVisible() == this.showParticles && effect.showIcon() == this.showIcon) {
             effect.shoulderSources.remove(pokemon.uuid)
         }
     }
@@ -60,18 +61,18 @@ class PotionBaseEffect(
      but it won't have even been added because of the uniqueness constraint. Unclear how best to solve this.
      */
     class ShoulderStatusEffectInstance(
-        effect: StatusEffect,
+        effect: MobEffect,
         amplifier: Int,
         ambient: Boolean,
         showParticles: Boolean,
         showIcon: Boolean,
         startingPokemon: Pokemon
-    ) : StatusEffectInstance(effect, -1, amplifier, ambient, showParticles, showIcon) {
+    ) : MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), -1, amplifier, ambient, showParticles, showIcon) {
 
         internal val shoulderSources: MutableSet<UUID> = hashSetOf(startingPokemon.uuid)
-        private var upgrade: StatusEffectInstance? = null
+        private var upgrade: MobEffectInstance? = null
 
-        override fun writeNbt(nbt: NbtCompound): NbtCompound {
+        fun save(nbt: CompoundTag): CompoundTag {
             /**
              * No need for this operation.
              * [StatusEffectInstance.fromNbt] tosses it out immediately if the ID is invalid.
@@ -97,9 +98,9 @@ class PotionBaseEffect(
             return nbt
         }
 
-        override fun isInfinite(): Boolean = this.shoulderSources.isNotEmpty()
+        override fun isInfiniteDuration(): Boolean = this.shoulderSources.isNotEmpty()
 
-        override fun upgrade(that: StatusEffectInstance): Boolean {
+        override fun update(that: MobEffectInstance): Boolean {
             if (that.amplifier > this.amplifier) {
                 // We handle our own upgrading, don't use the vanilla system.
                 if (that is ShoulderStatusEffectInstance) {
@@ -112,9 +113,9 @@ class PotionBaseEffect(
             return false
         }
 
-        override fun update(entity: LivingEntity, overwriteCallback: Runnable): Boolean {
-            if (this.effectType.canApplyUpdateEffect(entity.age, this.amplifier)) {
-                this.applyUpdateEffect(entity)
+        override fun tick(entity: LivingEntity, overwriteCallback: Runnable): Boolean {
+            if (this.effect.value().shouldApplyEffectTickThisTick(entity.tickCount, this.amplifier)) {
+                this.onEffectStarted(entity)
             }
             this.upgrade?.let {
                 if (--it.duration == 0) {
@@ -125,8 +126,8 @@ class PotionBaseEffect(
             return this.shoulderSources.isNotEmpty()
         }
 
-        override fun applyUpdateEffect(entity: LivingEntity) {
-            this.effectType.applyUpdateEffect(entity, this.upgrade?.amplifier ?: this.amplifier)
+        override fun onEffectStarted(entity: LivingEntity) {
+            this.effect.value().applyEffectTick(entity, this.upgrade?.amplifier ?: this.amplifier)
         }
 
         @Suppress("CAST_NEVER_SUCCEEDS")
@@ -136,8 +137,8 @@ class PotionBaseEffect(
             this.ambient = other.ambient
             val accessor = this as StatusEffectInstanceAccessor
             accessor.setAmplifier(other.amplifier)
-            accessor.setShowIcon(other.shouldShowIcon())
-            accessor.setShowParticles(other.shouldShowParticles())
+            accessor.setShowIcon(other.showIcon())
+            accessor.setShowParticles(other.isVisible)
         }
 
     }

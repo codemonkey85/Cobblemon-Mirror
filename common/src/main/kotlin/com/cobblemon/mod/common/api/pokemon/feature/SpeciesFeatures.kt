@@ -8,20 +8,25 @@
 
 package com.cobblemon.mod.common.api.pokemon.feature
 
+import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
 import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
+import com.cobblemon.mod.common.net.messages.client.data.StandardSpeciesFeatureSyncPacket
 import com.cobblemon.mod.common.pokemon.Species
+import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.cobblemon.mod.common.util.adapters.SpeciesFeatureProviderAdapter
+import com.cobblemon.mod.common.util.adapters.Vec3dAdapter
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
+import net.minecraft.world.phys.Vec3
 
 /**
  * A registry for [SpeciesFeatureProvider]s. This is the backbone of species-specific data such as
@@ -38,7 +43,7 @@ import net.minecraft.util.Identifier
  */
 object SpeciesFeatures : JsonDataRegistry<SpeciesFeatureProvider<*>> {
     override val id = cobblemonResource("species_features")
-    override val type = ResourceType.SERVER_DATA
+    override val type = PackType.SERVER_DATA
     override val observable = SimpleObservable<SpeciesFeatures>()
 
     val types = mutableMapOf<String, Class<out SpeciesFeatureProvider<*>>>()
@@ -48,13 +53,17 @@ object SpeciesFeatures : JsonDataRegistry<SpeciesFeatureProvider<*>> {
     override val gson: Gson = GsonBuilder()
         .setPrettyPrinting()
         .registerTypeAdapter(SpeciesFeatureProvider::class.java, SpeciesFeatureProviderAdapter)
+        .registerTypeAdapter(Vec3::class.java, Vec3dAdapter)
+        .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .create()
     override val typeToken: TypeToken<SpeciesFeatureProvider<*>> = TypeToken.get(SpeciesFeatureProvider::class.java)
     override val resourcePath: String = "species_features"
 
-    override fun sync(player: ServerPlayerEntity) {}
+    override fun sync(player: ServerPlayer) {
+        player.sendPacket(StandardSpeciesFeatureSyncPacket(codeFeatures + resourceFeatures))
+    }
 
-    override fun reload(data: Map<Identifier, SpeciesFeatureProvider<*>>) {
+    override fun reload(data: Map<ResourceLocation, SpeciesFeatureProvider<*>>) {
         resourceFeatures.keys.toList().forEach(this::unregister)
         data.forEach(this::registerFromAssets)
     }
@@ -62,6 +71,9 @@ object SpeciesFeatures : JsonDataRegistry<SpeciesFeatureProvider<*>> {
     fun getCodeFeature(name: String) = resourceFeatures[name]
     fun getResourceFeature(name: String) = codeFeatures[name]
     fun getFeature(name: String) = getCodeFeature(name) ?: getResourceFeature(name)
+    fun loadOnClient(entries: Collection<Map.Entry<String, SpeciesFeatureProvider<*>>>) {
+        codeFeatures.putAll(entries.map { it.toPair() })
+    }
 
     fun getFeatures() = (resourceFeatures.keys + codeFeatures.keys).mapNotNull(this::getFeature)
     fun getFeaturesFor(species: Species): List<SpeciesFeatureProvider<*>> {
@@ -84,7 +96,7 @@ object SpeciesFeatures : JsonDataRegistry<SpeciesFeatureProvider<*>> {
     }
 
     fun register(name: String, provider: SpeciesFeatureProvider<*>) = register(name, provider, isCoded = true)
-    private fun registerFromAssets(identifier: Identifier, provider: SpeciesFeatureProvider<*>) = register(identifier.path, provider, isCoded = false)
+    private fun registerFromAssets(identifier: ResourceLocation, provider: SpeciesFeatureProvider<*>) = register(identifier.path, provider, isCoded = false)
 
     fun unregister(name: String) {
         var coded = true

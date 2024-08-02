@@ -70,7 +70,9 @@
     "tm:magicalleaf",
     "tm:mistyterrain",
     "tm:nightshade",
+    "tm:painsplit",
     "tm:phantomforce",
+    "tm:poltergeist",
     "tm:powergem",
     "tm:protect",
     "tm:psybeam",
@@ -78,6 +80,7 @@
     "tm:rest",
     "tm:shadowball",
     "tm:sleeptalk",
+    "tm:spite",
     "tm:storedpower",
     "tm:substitute",
     "tm:sunnyday",
@@ -87,11 +90,7 @@
     "tm:thunder",
     "tm:thunderbolt",
     "tm:thunderwave",
-    "tm:trickroom",
-    "tutor:dazzlinggleam",
-    "tutor:mysticalfire",
-    "tutor:shadowball",
-    "tutor:wish"
+    "tm:trickroom"
   ],
   "labels": [
     "gen9",
@@ -104,5 +103,17 @@
   "cannotDynamax": false,
   "pokedex": [
     "cobblemon.species.fluttermane.desc"
-  ]
+  ],
+  "drops": {
+    "amount": 4,
+    "entries": [
+      {
+        "item": "minecraft:phantom_membrane",
+        "quantityRange": "0-3"
+      },
+      {
+        "item": "cobblemon:fairy_feather"
+      }
+    ]
+  }
 }

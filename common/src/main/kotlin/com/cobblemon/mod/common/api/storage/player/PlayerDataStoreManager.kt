@@ -12,9 +12,9 @@ import com.cobblemon.mod.common.api.scheduling.ScheduledTask
 import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
 import com.cobblemon.mod.common.api.storage.player.factory.JsonPlayerDataStoreFactory
 import com.cobblemon.mod.common.api.storage.player.factory.PlayerDataStoreFactory
-import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.world.entity.player.Player
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 class PlayerDataStoreManager {
 
@@ -37,13 +37,13 @@ class PlayerDataStoreManager {
         (factory as? JsonPlayerDataStoreFactory)?.setup(server)
     }
 
-    fun get(player: PlayerEntity): PlayerData = factory.load(player.uuid);
+    fun get(player: Player): PlayerData = factory.load(player.uuid);
 
     fun saveAll() = factory.saveAll();
 
     fun saveSingle(playerData: PlayerData) = factory.save(playerData)
 
-    fun onPlayerDisconnect(player: ServerPlayerEntity) {
+    fun onPlayerDisconnect(player: ServerPlayer) {
         factory.onPlayerDisconnect(player.uuid);
     }
 }

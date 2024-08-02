@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Sandile",
   "nationalPokedexNumber": 551,
   "primaryType": "ground",
@@ -28,6 +29,18 @@
     "special_attack": 35,
     "special_defence": 35,
     "speed": 65
+  },
+  "behaviour": {
+    "resting": {
+      "canSleep": true,
+      "depth": "normal",
+      "light": "0-4"
+    },
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.15
+      }
+    }
   },
   "catchRate": 180,
   "maleRatio": 0.5,
@@ -175,10 +188,10 @@
       ]
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.8,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.9,
+    "height": 0.6,
     "fixed": false
   },
   "baseFriendship": 50,

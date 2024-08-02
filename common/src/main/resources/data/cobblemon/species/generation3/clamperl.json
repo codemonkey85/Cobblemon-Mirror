@@ -26,6 +26,12 @@
         "canSwimInWater": false,
         "canBreatheUnderwater": true
       }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
     }
   },
   "catchRate": 255,
@@ -100,11 +106,11 @@
     "tutor:whirlpool"
   ],
   "drops": {
-    "amount": 2,
+    "amount": 1,
     "entries": [
       {
-        "item": "minecraft:prismarine_shard",
-        "quantityRange": "0-2"
+        "item": "cobblemon:shell_bell",
+        "percentage": 2.5
       }
     ]
   },

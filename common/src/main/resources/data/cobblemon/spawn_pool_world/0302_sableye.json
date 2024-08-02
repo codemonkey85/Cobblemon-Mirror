@@ -14,9 +14,10 @@
             "context": "grounded",
             "bucket": "common",
             "level": "13-38",
-            "weight": 6.0,
+            "weight": 10.0,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ]
@@ -25,6 +26,25 @@
         {
             "id": "sableye-2",
             "pokemon": "sableye",
+            "presets": [
+                "natural"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "rare",
+            "level": "13-38",
+            "weight": 10.0,
+            "condition": {
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
+                "biomes": [
+                    "#cobblemon:is_deep_dark"
+                ]
+            }
+        },
+        {
+            "id": "sableye-3",
+            "pokemon": "sableye",
             "type": "pokemon",
             "context": "grounded",
             "bucket": "common",
@@ -32,7 +52,8 @@
             "weight": 2.0,
             "condition": {
                 "biomes": [
-                    "the_bumblezone:crystal_canyon"
+                    "the_bumblezone:crystal_canyon",
+                    "biomesoplenty:crystalline_chasm"
                 ]
             },
             "anticondition": {

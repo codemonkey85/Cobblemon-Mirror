@@ -1,0 +1,122 @@
+{
+    "processors": [
+        {
+            "processor_type": "minecraft:rule",
+            "rules": [
+                {
+                    "block_entity_modifier": {
+                        "type": "minecraft:append_loot",
+                        "loot_table": "cobblemon:fossils/common/prehistoric_mud_pit"
+                    },
+                    "input_predicate": {
+                        "block": "minecraft:gravel",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.25
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:suspicious_gravel"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:mud",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:muddy_mangrove_roots"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:packed_mud",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:mud"
+                    }
+                },
+                {
+                    "input_predicate": {
+                        "block": "minecraft:coarse_dirt",
+                        "predicate_type": "minecraft:random_block_match",
+                        "probability": 0.3
+                    },
+                    "location_predicate": {
+                        "predicate_type": "minecraft:always_true"
+                    },
+                    "output_state": {
+                        "Name": "minecraft:packed_mud"
+                    }
+                }
+            ]
+        },
+        {
+            "processor_type": "gravity",
+            "heightmap": "WORLD_SURFACE_WG",
+            "offset": -10
+        },
+        {
+            "delegate": {
+                "processor_type": "minecraft:rule",
+                "rules": [
+                    {
+                        "block_entity_modifier": {
+                            "type": "minecraft:append_loot",
+                            "loot_table": "cobblemon:fossils/uncommon/prehistoric_mud_pit"
+                        },
+                        "input_predicate": {
+                            "block": "minecraft:suspicious_gravel",
+                            "predicate_type": "minecraft:random_block_match",
+                            "probability": 0.2
+                        },
+                        "location_predicate": {
+                            "predicate_type": "minecraft:always_true"
+                        },
+                        "output_state": {
+                            "Name": "minecraft:suspicious_gravel"
+                        }
+                    }
+                ]
+            },
+            "limit": 5,
+            "processor_type": "minecraft:capped"
+        },
+        {
+            "delegate": {
+                "processor_type": "minecraft:rule",
+                "rules": [
+                    {
+                        "block_entity_modifier": {
+                            "type": "minecraft:append_loot",
+                            "loot_table": "cobblemon:fossils/rare/skull_fossil"
+                        },
+                        "input_predicate": {
+                            "block": "minecraft:suspicious_gravel",
+                            "predicate_type": "minecraft:random_block_match",
+                            "probability": 1.0
+                        },
+                        "location_predicate": {
+                            "predicate_type": "minecraft:always_true"
+                        },
+                        "output_state": {
+                            "Name": "minecraft:suspicious_gravel"
+                        }
+                    }
+                ]
+            },
+            "limit": 1,
+            "processor_type": "minecraft:capped"
+        }
+    ]
+}

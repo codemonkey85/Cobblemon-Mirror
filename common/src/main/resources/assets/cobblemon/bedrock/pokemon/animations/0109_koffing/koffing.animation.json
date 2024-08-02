@@ -54,6 +54,32 @@
 					}
 				}
 			}
+		},
+		"animation.koffing.cry": {
+			"animation_length": 1.125,
+			"bones": {
+				"mouth_open": {
+					"position": {
+						"0.0": [0, 0, 0],
+						"0.0417": [0, 0, 0.1],
+						"0.125": [0, 0, 0.1],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"mouth_closed": {
+					"position": {
+						"0.0": [0, 0, 0],
+						"0.0417": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				}
+			},
+			"sound_effects": {
+				"0.0833": {
+					"effect": "pokemon.koffing.cry"
+				}
+			}
 		}
 	}
 }

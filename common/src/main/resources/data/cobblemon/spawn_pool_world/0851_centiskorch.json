@@ -16,7 +16,8 @@
             "level": "28-53",
             "weight": 0.6,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_badlands",
                     "#cobblemon:is_volcanic"
@@ -37,7 +38,20 @@
             "weight": 0.6,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_basalt"
+                    "#cobblemon:nether/is_basalt"
+                ]
+            },
+            "drops": {
+                "amount": 2,
+                "entries": [
+                    {
+                        "item": "minecraft:blaze_powder",
+                        "percentage": 10.0
+                    },
+                    {
+                        "item": "cobblemon:charti_berry",
+                        "percentage": 5.0
+                    }
                 ]
             }
         },
@@ -55,7 +69,7 @@
             "weight": 1.0,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_wasteland"
+                    "#cobblemon:nether/is_wasteland"
                 ]
             }
         }

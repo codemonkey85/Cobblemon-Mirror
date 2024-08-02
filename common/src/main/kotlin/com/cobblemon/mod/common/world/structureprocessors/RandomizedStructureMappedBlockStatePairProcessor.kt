@@ -10,18 +10,18 @@ package com.cobblemon.mod.common.world.structureprocessors
 
 import com.cobblemon.mod.common.util.codec.pairCodec
 import com.cobblemon.mod.common.world.placementmodifier.BlockStateTransformer
-import com.mojang.serialization.Codec
+import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.block.Block
-import net.minecraft.registry.Registries
-import net.minecraft.structure.StructurePlacementData
-import net.minecraft.structure.StructureTemplate
-import net.minecraft.structure.processor.StructureProcessor
-import net.minecraft.structure.rule.RuleTest
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.random.Random
-import net.minecraft.world.WorldView
+import net.minecraft.core.BlockPos
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.util.RandomSource
+import net.minecraft.world.level.LevelReader
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate
 
 /**
  * A [StructureProcessor] that picks a [Block] pair per structure to replace other blocks with
@@ -41,15 +41,15 @@ class RandomizedStructureMappedBlockStatePairProcessor(
     val rules: List<RuleTest>,
     val probability: Float = 1.0f
 ) : StructureProcessor() {
-    override fun process(
-        world: WorldView,
+    override fun processBlock(
+        world: LevelReader,
         pos: BlockPos,
         pivot: BlockPos,
         originalBlockInfo: StructureTemplate.StructureBlockInfo,
         currentBlockInfo: StructureTemplate.StructureBlockInfo,
-        data: StructurePlacementData
+        data: StructurePlaceSettings
     ): StructureTemplate.StructureBlockInfo {
-        val random = Random.create(pivot.hashCode().toLong())
+        val random = RandomSource.create(pivot.hashCode().toLong())
         val active = random.nextFloat() < probability
         if (!active) {
             return currentBlockInfo
@@ -58,7 +58,7 @@ class RandomizedStructureMappedBlockStatePairProcessor(
         for (rule in rules) {
             if (rule.test(currentBlockInfo.state, data.getRandom(pos))) {
                 val (block1, block2) = targetBlockPairs[random.nextInt(targetBlockPairs.size)]
-                val targetState = setOf(block1, block2).random().defaultState.let(transformer::transform)
+                val targetState = setOf(block1, block2).random().defaultBlockState().let(transformer::transform)
                 return StructureTemplate.StructureBlockInfo(
                     currentBlockInfo.pos,
                     targetState,
@@ -72,12 +72,12 @@ class RandomizedStructureMappedBlockStatePairProcessor(
     override fun getType() = CobblemonProcessorTypes.RANDOM_POOLED_STATES
 
     companion object {
-        val CODEC: Codec<RandomizedStructureMappedBlockStatePairProcessor> = RecordCodecBuilder.create { instance ->
+        val CODEC: MapCodec<RandomizedStructureMappedBlockStatePairProcessor> = RecordCodecBuilder.mapCodec { instance ->
             instance
                 .group(
-                    pairCodec(Registries.BLOCK.codec, Registries.BLOCK.codec).listOf().fieldOf("targetBlockPairs").forGetter { it.targetBlockPairs },
+                    pairCodec(BuiltInRegistries.BLOCK.byNameCodec(), BuiltInRegistries.BLOCK.byNameCodec()).listOf().fieldOf("targetBlockPairs").forGetter { it.targetBlockPairs },
                     BlockStateTransformer.codec.fieldOf("transformer").forGetter { it.transformer },
-                    RuleTest.TYPE_CODEC.listOf().fieldOf("rules").forGetter { it.rules },
+                    RuleTest.CODEC.listOf().fieldOf("rules").forGetter { it.rules },
                     PrimitiveCodec.FLOAT.fieldOf("probability").forGetter { it.probability }
                 )
                 .apply(instance) { targetBlockPairs, transformer, rules, probability ->

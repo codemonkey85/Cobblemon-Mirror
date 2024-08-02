@@ -15,7 +15,8 @@
             "level": "2-27",
             "weight": 10.0,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_forest",
                     "#cobblemon:is_jungle"

@@ -8,12 +8,12 @@
 
 package com.cobblemon.mod.common.util
 
-import net.minecraft.util.math.Direction
-import net.minecraft.util.math.Direction.EAST
-import net.minecraft.util.math.Direction.NORTH
-import net.minecraft.util.math.Direction.SOUTH
-import net.minecraft.util.shape.VoxelShape
-import net.minecraft.util.shape.VoxelShapes
+import net.minecraft.core.Direction
+import net.minecraft.core.Direction.EAST
+import net.minecraft.core.Direction.NORTH
+import net.minecraft.core.Direction.SOUTH
+import net.minecraft.world.phys.shapes.Shapes
+import net.minecraft.world.phys.shapes.VoxelShape
 
 fun voxelShape(minX: Double, minY: Double, minZ: Double, maxX: Double, maxY: Double, maxZ: Double, direction: Direction): VoxelShape {
     val fMinX = when (direction) {
@@ -44,5 +44,5 @@ fun voxelShape(minX: Double, minY: Double, minZ: Double, maxX: Double, maxY: Dou
         else -> 1 - minX
     }
 
-    return VoxelShapes.cuboid(fMinX, minY, fMinZ, fMaxX, maxY, fMaxZ)
+    return Shapes.box(fMinX, minY, fMinZ, fMaxX, maxY, fMaxZ)
 }

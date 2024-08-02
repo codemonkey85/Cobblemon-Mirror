@@ -8,8 +8,8 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.repository
 
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.JsonPokemonPoseableModel
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1.*
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen2.*
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3.*
@@ -19,12 +19,12 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen6.*
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen7.*
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen8.*
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen9.*
-import com.cobblemon.mod.common.client.render.models.blockbench.pose.Bone
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.isBattling
 import com.google.gson.JsonObject
 
-object PokemonModelRepository : VaryingModelRepository<PokemonEntity, PokemonPoseableModel>() {
+object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
+    override val poserClass = PokemonPosableModel::class.java
     override val title = "Pokémon"
     override val type = "pokemon"
     override val variationDirectories = listOf("bedrock/$type/resolvers", "bedrock/species")
@@ -575,7 +575,8 @@ object PokemonModelRepository : VaryingModelRepository<PokemonEntity, PokemonPos
         inbuilt("metagross", ::MetagrossModel)
         inbuilt("ursaluna", ::UrsalunaModel)
         inbuilt("lechonk", ::LechonkModel)
-        inbuilt("oinkologne", ::OinkologneModel)
+        inbuilt("oinkologne_male", ::OinkologneMaleModel)
+        inbuilt("oinkologne_female", ::OinkologneFemaleModel)
         inbuilt("pidove", ::PidoveModel)
         inbuilt("tranquill", ::TranquillModel)
         inbuilt("unfezant", ::UnfezantModel)
@@ -588,19 +589,141 @@ object PokemonModelRepository : VaryingModelRepository<PokemonEntity, PokemonPos
         inbuilt("litwick", ::LitwickModel)
         inbuilt("lampent", ::LampentModel)
         inbuilt("chandelure", ::ChandelureModel)
+        inbuilt("gimmighoulroaming", ::GimmighoulRoamingModel)
+        inbuilt("gimmighoulchest", ::GimmighoulChestModel)
+        inbuilt("gholdengo", ::GholdengoModel)
         inbuilt("drifloon", ::DrifloonModel)
         inbuilt("drifblim", ::DrifblimModel)
+        inbuilt("lileep", ::LileepModel)
+        inbuilt("cradily", ::CradilyModel)
+        inbuilt("tirtouga", ::TirtougaModel)
+        inbuilt("carracosta", ::CarracostaModel)
+        inbuilt("arctovish", ::ArctovishModel)
+        inbuilt("dracovish", ::DracovishModel)
+        inbuilt("arctozolt", ::ArctozoltModel)
+        inbuilt("dracozolt", ::DracozoltModel)
+        inbuilt("shieldon", ::ShieldonModel)
+        inbuilt("bastiodon", ::BastiodonModel)
+        inbuilt("cranidos", ::CranidosModel)
+        inbuilt("rampardos", ::RampardosModel)
+        inbuilt("basculegion", ::BasculegionModel)
+        inbuilt("tyrunt", ::TyruntModel)
+        inbuilt("tyrantrum", ::TyrantrumModel)
+        inbuilt("anorith", ::AnorithModel)
+        inbuilt("armaldo", ::ArmaldoModel)
+        inbuilt("archen", ::ArchenModel)
+        inbuilt("archeops", ::ArcheopsModel)
+        inbuilt("aron", ::AronModel)
+        inbuilt("lairon", ::LaironModel)
+        inbuilt("aggron", ::AggronModel)
+        inbuilt("hippopotas", ::HippopotasModel)
+        inbuilt("hippowdon", ::HippowdonModel)
+        inbuilt("zorua", ::ZoruaModel)
+        inbuilt("zorua_hisuian", ::ZoruaHisuianModel)
+        inbuilt("zoroark", ::ZoroarkModel)
+        inbuilt("zoroark_hisuian", ::ZoroarkHisuianModel)
+        inbuilt("gossifleur", ::GossifleurModel)
+        inbuilt("eldegoss", ::EldegossModel)
+        inbuilt("amaura", ::AmauraModel)
+        inbuilt("aurorus", ::AurorusModel)
+        inbuilt("voltorb_hisuian", ::VoltorbHisuianModel)
+        inbuilt("electrode_hisuian", ::ElectrodeHisuianModel)
+        inbuilt("sentret", ::SentretModel)
+        inbuilt("furret", ::FurretModel)
+        inbuilt("qwilfish", ::QwilfishModel)
+        inbuilt("qwilfish_hisuian", ::QwilfishHisuianModel)
+        inbuilt("overqwil", ::OverqwilModel)
+        inbuilt("sneasel_hisuian", ::SneaselHisuianModel)
+        inbuilt("sneasler", ::SneaslerModel)
+        inbuilt("tropius", ::TropiusModel)
+        inbuilt("petilil", ::PetililModel)
+        inbuilt("lilligant", ::LilligantModel)
+        inbuilt("petilil_hisui_bias", ::PetililHisuiBiasModel)
+        inbuilt("lilligant_hisuian", ::LilligantHisuianModel)
+        inbuilt("darumaka", ::DarumakaModel)
+        inbuilt("darmanitan", ::DarmanitanModel)
+        inbuilt("darmanitan_zen", ::DarmanitanZenModel)
+        inbuilt("turtonator", ::TurtonatorModel)
+        inbuilt("stonjourner", ::StonjournerModel)
+        inbuilt("cufant", ::CufantModel)
+        inbuilt("copperajah", ::CopperajahModel)
+        inbuilt("budew", ::BudewModel)
+        inbuilt("roselia", ::RoseliaModel)
+        inbuilt("roserade", ::RoseradeModel)
+        inbuilt("solrock", ::SolrockModel)
+        inbuilt("lunatone", ::LunatoneModel)
+        inbuilt("woobat", ::WoobatModel)
+        inbuilt("swoobat", ::SwoobatModel)
+        inbuilt("sandile", ::SandileModel)
+        inbuilt("krokorok", ::KrokorokModel)
+        inbuilt("krookodile", ::KrookodileModel)
+        inbuilt("frillish", ::FrillishModel)
+        inbuilt("jellicent", ::JellicentModel)
+        inbuilt("cubchoo", ::CubchooModel)
+        inbuilt("beartic", ::BearticModel)
+        inbuilt("deino", ::DeinoModel)
+        inbuilt("zweilous", ::ZweilousModel)
+        inbuilt("hydreigon", ::HydreigonModel)
+        inbuilt("larvesta", ::LarvestaModel)
+        inbuilt("volcarona", ::VolcaronaModel)
+        inbuilt("fomantis", ::FomantisModel)
+        inbuilt("lurantis", ::LurantisModel)
+        inbuilt("dreepy", ::DreepyModel)
+        inbuilt("drakloak", ::DrakloakModel)
+        inbuilt("dragapult", ::DragapultModel)
+        inbuilt("diglett_alolan", ::DiglettAlolanModel)
+        inbuilt("dugtrio_alolan", ::DugtrioAlolanModel)
+        inbuilt("makuhita", ::MakuhitaModel)
+        inbuilt("hariyama", ::HariyamaModel)
+        inbuilt("alomomola", ::AlomomolaModel)
+        inbuilt("ferroseed", ::FerroseedModel)
+        inbuilt("ferrothorn", ::FerrothornModel)
+        inbuilt("flabebe", ::FlabebeModel)
+        inbuilt("floette", ::FloetteModel)
+        inbuilt("florges", ::FlorgesModel)
+        inbuilt("carbink", ::CarbinkModel)
+        inbuilt("goomy", ::GoomyModel)
+        inbuilt("goomy_hisui_bias", ::GoomyHisuiBiasModel)
+        inbuilt("sliggoo", ::SliggooModel)
+        inbuilt("sliggoo_hisuian", ::SliggooHisuianModel)
+        inbuilt("goodra", ::GoodraModel)
+        inbuilt("goodra_hisuian", ::GoodraHisuianModel)
+        inbuilt("heracross", ::HeracrossModel)
+        inbuilt("skarmory", ::SkarmoryModel)
+        inbuilt("salandit", ::SalanditModel)
+        inbuilt("salazzle", ::SalazzleModel)
+        inbuilt("jangmo-o", ::JangmoOModel)
+        inbuilt("hakamo-o", ::HakamoOModel)
+        inbuilt("kommo-o", ::KommoOModel)
+        inbuilt("trapinch", ::TrapinchModel)
+        inbuilt("vibrava", ::VibravaModel)
+        inbuilt("flygon", ::FlygonModel)
+        inbuilt("larvitar", ::LarvitarModel)
+        inbuilt("pupitar", ::PupitarModel)
+        inbuilt("tyranitar", ::TyranitarModel)
+        inbuilt("impidimp", ::ImpidimpModel)
+        inbuilt("morgrem", ::MorgremModel)
+        inbuilt("grimmsnarl", ::GrimmsnarlModel)
+        inbuilt("klefki", ::KlefkiModel)
+        inbuilt("oshawott_hisui_bias", ::OshawottHisuiBiasModel)
+        inbuilt("dewott_hisui_bias", ::DewottHisuiBiasModel)
+        inbuilt("samurott_hisuian", ::SamurottHisuianModel)
+        inbuilt("cyndaquil_hisui_bias", ::CyndaquilHisuiBiasModel)
+        inbuilt("quilava_hisui_bias", ::QuilavaHisuiBiasModel)
+        inbuilt("typhlosion_hisuian", ::TyphlosionHisuianModel)
+        inbuilt("rowlet_hisui_bias", ::RowletHisuiBiasModel)
+        inbuilt("dartrix_hisui_bias", ::DartrixHisuiBiasModel)
+        inbuilt("decidueye_hisuian", ::DecidueyeHisuianModel)
+        inbuilt("smeargle", ::SmeargleModel)
     }
 
-    override fun loadJsonPoser(json: String): (Bone) -> PokemonPoseableModel {
-        // Faster to deserialize during asset load rather than rerunning this every time a poser is constructed.
-        val jsonObject = JsonPokemonPoseableModel.gson.fromJson(json, JsonObject::class.java)
-        return {
-            JsonPokemonPoseableModel.JsonPokemonPoseableModelAdapter.modelPart = it
-            JsonPokemonPoseableModel.gson.fromJson(jsonObject, JsonPokemonPoseableModel::class.java).also {
-                it.poses.forEach { poseName, pose -> pose.poseName = poseName }
-            }
+    override fun conditionParser(json: JsonObject): List<(PosableState) -> Boolean> {
+        val conditions = mutableListOf<(PosableState) -> Boolean>()
+        val mustBeInBattle = json.get("isBattle")?.asBoolean
+        if (mustBeInBattle != null) {
+            conditions.add { mustBeInBattle == it.isBattling }
         }
+        return conditions
     }
 }
 

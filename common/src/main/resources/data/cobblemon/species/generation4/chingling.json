@@ -54,6 +54,7 @@
     "22:lastresort",
     "25:entrainment",
     "32:uproar",
+    "egg:allyswitch",
     "egg:cosmicpower",
     "egg:curse",
     "egg:disable",
@@ -194,10 +195,18 @@
   "aspects": [],
   "cannotDynamax": false,
   "drops": {
-    "amount": 1,
+    "amount": 3,
     "entries": [
       {
         "item": "cobblemon:colbur_berry",
+        "percentage": 2.5
+      },
+      {
+        "item": "cobblemon:soothe_bell",
+        "percentage": 2.5
+      },
+      {
+        "item": "cobblemon:cleanse_tag",
         "percentage": 2.5
       }
     ]

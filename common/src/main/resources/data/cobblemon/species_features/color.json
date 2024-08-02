@@ -1,7 +1,7 @@
 {
   "type": "choice",
-  "keys": ["color"],
-  "default": "false",
+  "keys": ["color", "colour"],
+  "default": "none",
   "choices": [
     "white",
     "orange",
@@ -21,5 +21,6 @@
     "black"
   ],
   "isAspect": true,
+  "visible": true,
   "aspectFormat": "color-{{choice}}"
 }

@@ -34,15 +34,19 @@ abstract class SpawnAction<R>(
     /**
      * Runs the spawn action and processes any non-null result.
      */
-    open fun complete(): Boolean {
-        ctx.influences.forEach { it.affectAction(this) }
+    open fun complete(): R? {
+        if (future.isDone) {
+            return null
+        }
+
+        ctx.applyInfluences { it.affectAction(this) }
         val result = run()
-        return if (result != null) {
+        if (result != null) {
             future.complete(result)
-            true
         } else {
             future.completeExceptionally(Exception("Nothing was spawned."))
-            false
         }
+
+        return result
     }
 }

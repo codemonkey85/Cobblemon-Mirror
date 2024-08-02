@@ -4,12 +4,11 @@
     "neededUninstalledMods": [],
     "spawns": [
         {
-            "id": "sigilyph-1",
+            "id": "sigilyph-2",
             "pokemon": "sigilyph",
             "presets": [
                 "natural",
-                "desert_pyramid",
-                "jungle_pyramid"
+                "desert_pyramid"
             ],
             "type": "pokemon",
             "context": "grounded",
@@ -17,7 +16,8 @@
             "level": "24-49",
             "weight": 60.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ],
@@ -27,7 +27,47 @@
             }
         },
         {
-            "id": "sigilyph-2",
+            "id": "sigilyph-3",
+            "pokemon": "sigilyph",
+            "presets": [
+                "natural",
+                "jungle_pyramid"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "common",
+            "level": "24-49",
+            "weight": 60.0,
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ]
+            }
+        },
+        {
+            "id": "sigilyph-1",
+            "pokemon": "sigilyph",
+            "presets": [
+                "natural",
+                "ruins"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "rare",
+            "level": "24-49",
+            "weight": 100.0,
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_sandy"
+                ]
+            }
+        },
+        {
+            "id": "sigilyph-4",
             "pokemon": "sigilyph",
             "presets": [
                 "trail_ruins"
@@ -38,14 +78,15 @@
             "level": "24-49",
             "weight": 60.0,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ]
             }
         },
         {
-            "id": "sigilyph-3",
+            "id": "sigilyph-5",
             "pokemon": "sigilyph",
             "presets": [
                 "natural",
@@ -63,7 +104,7 @@
             }
         },
         {
-            "id": "sigilyph-4",
+            "id": "sigilyph-6",
             "pokemon": "sigilyph",
             "type": "pokemon",
             "context": "grounded",

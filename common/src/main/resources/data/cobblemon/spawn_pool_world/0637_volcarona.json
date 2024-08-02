@@ -1,0 +1,83 @@
+{
+    "enabled": true,
+    "neededInstalledMods": [],
+    "neededUninstalledMods": [],
+    "spawns": [
+        {
+            "id": "volcarona-1",
+            "pokemon": "volcarona",
+            "presets": [
+                "natural",
+                "desert_pyramid"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "uncommon",
+            "level": "59-64",
+            "weight": 10.0,
+            "condition": {
+                "canSeeSky": false,
+                "biomes": [
+                    "#cobblemon:is_desert"
+                ],
+                "minY": 48
+            }
+        },
+        {
+            "id": "volcarona-2",
+            "pokemon": "volcarona",
+            "presets": [
+                "natural",
+                "jungle_pyramid"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "uncommon",
+            "level": "59-64",
+            "weight": 10.0,
+            "condition": {
+                "canSeeSky": false,
+                "biomes": [
+                    "#cobblemon:is_jungle"
+                ],
+                "minY": 48
+            }
+        },
+        {
+            "id": "volcarona-3",
+            "pokemon": "volcarona",
+            "presets": [
+                "natural",
+                "treetop"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "uncommon",
+            "level": "59-64",
+            "weight": 1.0,
+            "condition": {
+                "biomes": [
+                    "#cobblemon:nether/is_crimson",
+                    "#cobblemon:nether/is_forest"
+                ]
+            },
+            "drops": {
+                "amount": 3,
+                "entries": [
+                    {
+                        "item": "minecraft:blaze_powder",
+                        "percentage": 10.0
+                    },
+                    {
+                        "item": "cobblemon:silver_powder",
+                        "percentage": 5.0
+                    },
+                    {
+                        "item": "cobblemon:charti_berry",
+                        "percentage": 5.0
+                    }
+                ]
+            }
+        }
+    ]
+}

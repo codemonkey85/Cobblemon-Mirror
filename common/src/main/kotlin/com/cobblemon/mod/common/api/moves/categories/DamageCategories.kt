@@ -9,32 +9,32 @@
 package com.cobblemon.mod.common.api.moves.categories
 
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 
 object DamageCategories {
     private val allCategories = mutableListOf<DamageCategory>()
 
     val PHYSICAL = register(
         name = "physical",
-        displayName = Text.translatable("cobblemon.move.category.physical"),
+        displayName = Component.translatable("cobblemon.move.category.physical"),
         textureXMultiplier = 0
     )
     val SPECIAL = register(
         name = "special",
-        displayName = Text.translatable("cobblemon.move.category.special"),
+        displayName = Component.translatable("cobblemon.move.category.special"),
         textureXMultiplier = 1
     )
     val STATUS = register(
         name = "status",
-        displayName = Text.translatable("cobblemon.move.category.status"),
+        displayName = Component.translatable("cobblemon.move.category.status"),
         textureXMultiplier = 2
     )
 
     fun register(
         name: String,
-        displayName: Text,
-        resourceLocation: Identifier = cobblemonResource("textures/gui/categories.png"),
+        displayName: Component,
+        resourceLocation: ResourceLocation = cobblemonResource("textures/gui/categories.png"),
         textureXMultiplier: Int
     ): DamageCategory {
         return DamageCategory(

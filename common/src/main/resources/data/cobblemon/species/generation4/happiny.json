@@ -34,6 +34,19 @@
       }
     ]
   },
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.25
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": true,
+      "depth": "normal",
+      "light": "0-4"
+    }
+  },
   "moves": [
     "1:charm",
     "1:copycat",
@@ -148,6 +161,7 @@
       "variant": "level_up",
       "result": "chansey",
       "consumeHeldItem": true,
+      "permanent": true,
       "learnableMoves": [],
       "requirements": [
         {

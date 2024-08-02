@@ -16,15 +16,37 @@
             "level": "34-53",
             "weight": 0.1,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
+                    "#cobblemon:is_forest",
                     "#cobblemon:is_taiga"
-                ],
-                "isRaining": false
+                ]
             },
             "anticondition": {
                 "biomes": [
-                    "#cobblemon:is_snowy_forest"
+                    "#cobblemon:is_freezing"
+                ]
+            }
+        },
+        {
+            "id": "decidueye-hisuian-3",
+            "pokemon": "decidueye hisuian",
+            "presets": [
+                "natural",
+                "treetop"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "ultra-rare",
+            "level": "34-53",
+            "weight": 0.1,
+            "condition": {
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
+                "biomes": [
+                    "#cobblemon:is_snowy_forest",
+                    "#cobblemon:is_snowy_taiga"
                 ]
             }
         }

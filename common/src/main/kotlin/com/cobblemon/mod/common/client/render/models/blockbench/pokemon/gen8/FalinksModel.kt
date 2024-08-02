@@ -8,25 +8,29 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen8
 
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class FalinksModel (root: ModelPart) : PokemonPoseableModel(){
+
+class FalinksModel (root: ModelPart) : PokemonPosableModel(root){
     override val rootPart = root.registerChildWithAllChildren("falinks")
 
-    override val portraitScale = 1.9F
-    override val portraitTranslation = Vec3d(-1.2, -1.2, 0.0)
+    override var portraitScale = 1.9F
+    override var portraitTranslation = Vec3(-1.0, -1.2, 0.0)
 
-    override val profileScale = 0.5F
-    override val profileTranslation = Vec3d(0.1, 0.9, 0.0)
+    override var profileScale = 0.5F
+    override var profileTranslation = Vec3(0.1, 0.9, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var battlestanding: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var uipose: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var battlestanding: CobblemonPose
+    lateinit var battlestanding2: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var uipose: CobblemonPose
+    lateinit var sleep: CobblemonPose
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("falinks", "blink") }
@@ -36,13 +40,31 @@ class FalinksModel (root: ModelPart) : PokemonPoseableModel(){
         val blink5 = quirk { bedrockStateful("falinks", "blink5") }
         val blink6 = quirk { bedrockStateful("falinks", "blink6") }
 
+        sleep = registerPose(
+            poseName = "sleep",
+            poseType = PoseType.SLEEP,
+            animations = arrayOf(
+                bedrock("falinks", "sleep")
+            )
+        )
+
         standing = registerPose(
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink, blink2, blink3, blink4, blink5, blink6),
             condition = { !it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("falinks", "ground_idle")
+            )
+        )
+
+        battlestanding2 = registerPose(
+            poseName = "battlestanding2",
+            poseTypes = PoseType.STATIONARY_POSES,
+            quirks = arrayOf(blink, blink2, blink3, blink4, blink5, blink6),
+            condition = { it.isBattling && ((it.getEntity()?.uuid?.mostSignificantBits ?: 2) % 2).toInt() == 0 },
+            animations = arrayOf(
+                bedrock("falinks", "battle_idle2")
             )
         )
 
@@ -51,7 +73,7 @@ class FalinksModel (root: ModelPart) : PokemonPoseableModel(){
             poseTypes = PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink, blink2, blink3, blink4, blink5, blink6),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("falinks", "battle_idle")
             )
         )
@@ -61,7 +83,7 @@ class FalinksModel (root: ModelPart) : PokemonPoseableModel(){
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink, blink2, blink3, blink4, blink5, blink6),
             condition = { !it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("falinks", "ground_walk")
             )
         )
@@ -70,7 +92,7 @@ class FalinksModel (root: ModelPart) : PokemonPoseableModel(){
             poseName = "uipose",
             poseTypes = PoseType.UI_POSES,
             quirks = arrayOf(blink, blink2, blink3, blink4, blink5, blink6),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("falinks", "summary_idle")
             )
         )

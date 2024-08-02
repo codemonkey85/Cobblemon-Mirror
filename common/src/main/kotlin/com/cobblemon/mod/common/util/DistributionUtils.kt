@@ -14,7 +14,7 @@ import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.reactive.Observable
 import java.util.concurrent.CompletableFuture
 import net.minecraft.server.MinecraftServer
-import net.minecraft.world.World
+import net.minecraft.world.level.Level
 
 /** Runs the given [Runnable] if the caller is on the CLIENT side. */
 fun ifClient(runnable: Runnable) {
@@ -61,4 +61,4 @@ fun server(): MinecraftServer? = Cobblemon.implementation.server()
 //    return future
 //}
 
-fun World.isServerSide() = !isClient
+fun Level.isServerSide() = !isClientSide

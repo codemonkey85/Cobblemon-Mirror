@@ -1,0 +1,33 @@
+{
+    "name": "cobblemon:prehistoric_vibrant_hydrothermal_vents",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 10,
+            "element": {
+                "location": "cobblemon:fossils/vibrant_hydrothermal_vents_small",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/prehistoric_vibrant_hydrothermal_vents",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 10,
+            "element": {
+                "location": "cobblemon:fossils/vibrant_hydrothermal_vents_medium",
+                "element_type": "minecraft:single_pool_element",
+                "projection": "rigid",
+                "processors": "cobblemon:fossils/prehistoric_vibrant_hydrothermal_vents"
+            }
+        },
+        {
+            "weight": 8,
+            "element": {
+                "location": "cobblemon:fossils/vibrant_hydrothermal_vents_large",
+                "element_type": "minecraft:single_pool_element",
+                "projection": "rigid",
+                "processors": "cobblemon:fossils/prehistoric_vibrant_hydrothermal_vents"
+            }
+        }
+    ]
+}

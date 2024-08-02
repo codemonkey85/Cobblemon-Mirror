@@ -39,11 +39,21 @@
     "field"
   ],
   "behaviour": {
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": true,
+      "depth": "normal",
+      "light": "0-4"
+    },
     "moving": {
       "swim": {
-        "swimSpeed": 0.4,
+        "canWalkOnWater": true,
+        "swimSpeed": 0.35,
         "canSwimInWater": true,
         "canBreatheUnderwater": true
+      },
+      "walk": {
+        "walkSpeed": 0.18
       }
     }
   },

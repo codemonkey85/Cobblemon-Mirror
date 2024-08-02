@@ -16,7 +16,8 @@
             "level": "1-25",
             "weight": 5.4,
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_forest",
                     "#cobblemon:is_jungle",
@@ -43,7 +44,8 @@
             "level": "1-25",
             "weight": 1.8,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ]
@@ -82,6 +84,7 @@
             "id": "spinarak-4",
             "pokemon": "spinarak",
             "presets": [
+                "webs",
                 "natural"
             ],
             "type": "pokemon",
@@ -90,10 +93,8 @@
             "level": "1-25",
             "weight": 9.0,
             "condition": {
-                "canSeeSky": false,
-                "biomes": [
-                    "terralith:cave/infested_caves"
-                ]
+                "minSkyLight": 0,
+                "maxSkyLight": 7
             }
         },
         {

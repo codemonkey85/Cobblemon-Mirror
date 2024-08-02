@@ -24,13 +24,13 @@ import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.party
 import java.util.UUID
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object ChallengeHandler : ServerNetworkPacketHandler<BattleChallengePacket> {
-    override fun handle(packet: BattleChallengePacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: BattleChallengePacket, server: MinecraftServer, player: ServerPlayer) {
         if(player.isSpectator) return
 
-        val targetedEntity = player.world.getEntityById(packet.targetedEntityId)?.let {
+        val targetedEntity = player.level().getEntity(packet.targetedEntityId)?.let {
             if (it is PokemonEntity) {
                 val owner = it.owner
                 if (owner != null) {
@@ -52,7 +52,7 @@ object ChallengeHandler : ServerNetworkPacketHandler<BattleChallengePacket> {
                  */
                 BattleBuilder.pve(player, targetedEntity, leadingPokemon).ifErrored { it.sendTo(player) { it.red() } }
             }
-            is ServerPlayerEntity -> {
+            is ServerPlayer -> {
                 // Bandaid for odd desync thing with data tracker
                 if (player == targetedEntity) {
                     return
@@ -63,8 +63,8 @@ object ChallengeHandler : ServerNetworkPacketHandler<BattleChallengePacket> {
                 if (existingChallenge != null && !existingChallenge.isExpired() && existingChallenge.challengedPlayerUUID == player.uuid) {
                     if (targetedEntity.party()[existingChallengePokemon!!] == null) {
                         if (targetedEntity.party().none()) {
-                            player.sendMessage(battleLang("error.no_pokemon_opponent"))
-                            targetedEntity.sendMessage(battleLang("error.no_pokemon"))
+                            player.sendSystemMessage(battleLang("error.no_pokemon_opponent"))
+                            targetedEntity.sendSystemMessage(battleLang("error.no_pokemon"))
                             BattleRegistry.removeChallenge(targetedEntity.uuid)
                             return
                         }
@@ -79,7 +79,7 @@ object ChallengeHandler : ServerNetworkPacketHandler<BattleChallengePacket> {
                         BattleRegistry.removeChallenge(player.uuid, challengeId = challenge.challengeId)
                     }
                     targetedEntity.sendPacket(BattleChallengeNotificationPacket(challenge.challengeId, player.uuid, player.name.copy().aqua()))
-                    player.sendMessage(lang("challenge.sender", targetedEntity.name).yellow())
+                    player.sendSystemMessage(lang("challenge.sender", targetedEntity.name).yellow())
                 }
             }
             else -> {

@@ -1,0 +1,49 @@
+{
+    "timeline": [
+        {
+            "type": "add_holds",
+            "holds": ["effects"]
+        },
+        {
+            "type": "animation",
+            "animation": ["quickattack", "tackle", "physical"]
+        },
+        {
+            "type": "pause",
+            "pause": 0.1
+        },
+        {
+            "type": "entity_molang",
+            "expressions": ["q.play_animation(q.bedrock_stateful('quickattack', 'actor'))"],
+            "delay": 0.1
+        },
+        {
+            "type": "pause",
+            "pause": 1.14
+        },
+        {
+            "type": "sequence",
+            "keyframes": [
+                {
+                    "type": "entity_sound",
+                    "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+                    "sound": "cobblemon:impact.normal"
+                },
+                {
+                    "type": "entity_particles",
+                    "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+                    "effect": "cobblemon:impact_normal",
+                    "locator": "target"
+                }
+            ]
+        },
+        {
+            "type": "remove_holds",
+            "holds": ["effects"]
+        },
+        {
+            "type": "pause",
+            "pause": 2.25
+        }
+    ]
+  }

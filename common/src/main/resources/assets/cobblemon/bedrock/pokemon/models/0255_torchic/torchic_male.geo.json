@@ -18,15 +18,15 @@
 				{
 					"name": "body",
 					"parent": "torchic",
-					"pivot": [0, 6.5, 1],
-					"cubes": [
-						{"origin": [-3.5, 4, -3], "size": [7, 5, 8], "uv": [0, 17]}
-					]
+					"pivot": [0, 6.5, 1]
 				},
 				{
 					"name": "torso",
 					"parent": "body",
-					"pivot": [0.5, 5.5, 2]
+					"pivot": [0.5, 5.5, 2],
+					"cubes": [
+						{"origin": [-3.5, 4, -3], "size": [7, 5, 8], "uv": [0, 17]}
+					]
 				},
 				{
 					"name": "head",

@@ -211,7 +211,7 @@
         {
           "id": "grimer_muk",
           "variant": "level_up",
-          "result": "muk form=alola",
+          "result": "muk alolan",
           "consumeHeldItem": false,
           "learnableMoves": [],
           "requirements": [
@@ -223,7 +223,24 @@
         }
       ],
       "cannotDynamax": false,
-      "battleOnly": false
+      "battleOnly": false,
+      "drops": {
+        "amount": 3,
+        "entries": [
+          {
+            "item": "minecraft:slime_ball",
+            "quantityRange": "0-1"
+          },
+          {
+            "item": "cobblemon:black_sludge",
+            "percentage": 2.5
+          },
+          {
+            "item": "cobblemon:toxic_orb",
+            "percentage": 2.5
+          }
+        ]
+      }
     }
   ],
   "baseExperienceYield": 65,
@@ -240,7 +257,7 @@
     }
   },
   "drops": {
-    "amount": 2,
+    "amount": 3,
     "entries": [
       {
         "item": "minecraft:slime_ball",
@@ -248,6 +265,10 @@
       },
       {
         "item": "cobblemon:black_sludge",
+        "percentage": 2.5
+      },
+      {
+        "item": "cobblemon:toxic_orb",
         "percentage": 2.5
       }
     ]

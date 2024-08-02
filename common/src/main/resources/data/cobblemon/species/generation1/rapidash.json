@@ -1,4 +1,4 @@
-﻿{
+{
   "implemented": true,
   "name": "Rapidash",
   "nationalPokedexNumber": 78,
@@ -39,6 +39,19 @@
         "special_attack": 80,
         "special_defence": 80,
         "speed": 105
+      },
+      "behaviour": {
+        "resting": {
+          "canSleep": false,
+          "willSleepOnBed": false,
+          "depth": "normal",
+          "light": "0-4"
+        },
+        "moving": {
+          "walk": {
+            "walkSpeed": 0.35
+          }
+        }
       },
       "catchRate": 60,
       "maleRatio": 0.5,
@@ -127,7 +140,7 @@
       ],
       "height": 17,
       "weight": 800,
-      "preEvolution": "ponyta form=galar",
+      "preEvolution": "ponyta galarian",
       "cannotDynamax": false,
       "battleOnly": false,
       "drops": {

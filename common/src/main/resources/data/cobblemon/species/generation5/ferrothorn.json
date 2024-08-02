@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Ferrothorn",
   "nationalPokedexNumber": 598,
   "primaryType": "grass",
@@ -8,7 +9,7 @@
     "h:anticipation"
   ],
   "drops": {
-    "amount": 3,
+    "amount": 4,
     "entries": [
       {
         "item": "minecraft:raw_iron",
@@ -16,6 +17,10 @@
       },
       {
         "item": "cobblemon:occa_berry",
+        "percentage": 5.0
+      },
+      {
+        "item": "cobblemon:sticky_barb",
         "percentage": 5.0
       }
     ]
@@ -38,6 +43,18 @@
     "grass",
     "mineral"
   ],
+  "behaviour": {
+    "resting": {
+      "canSleep": true,
+      "depth": "normal",
+      "light": "0-4"
+    },
+    "moving" : {
+      "walk": {
+        "walkSpeed": 0.16
+      }
+    }
+  },
   "moves": [
     "1:harden",
     "1:metalclaw",
@@ -140,8 +157,8 @@
   "evolutions": [],
   "baseScale": 1,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 2,
+    "height": 1.7,
     "fixed": false
   },
   "baseFriendship": 50,

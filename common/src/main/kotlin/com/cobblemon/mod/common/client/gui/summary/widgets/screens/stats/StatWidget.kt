@@ -10,6 +10,8 @@ package com.cobblemon.mod.common.client.gui.summary.widgets.screens.stats
 
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatures
+import com.cobblemon.mod.common.api.pokemon.feature.SynchronizedSpeciesFeatureProvider
 import com.cobblemon.mod.common.api.pokemon.stats.Stat
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.api.text.bold
@@ -21,28 +23,28 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.mojang.blaze3d.systems.RenderSystem
+import com.mojang.blaze3d.vertex.BufferUploader
+import com.mojang.blaze3d.vertex.DefaultVertexFormat
+import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.blaze3d.vertex.Tesselator
+import com.mojang.blaze3d.vertex.VertexFormat
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.util.Mth.ceil
+import net.minecraft.util.Mth.floor
+import net.minecraft.world.phys.Vec2
+import org.joml.Vector3f
 import kotlin.math.cos
 import kotlin.math.sin
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.render.BufferRenderer
-import net.minecraft.client.render.Tessellator
-import net.minecraft.client.render.VertexFormat
-import net.minecraft.client.render.VertexFormats
-import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
-import net.minecraft.util.math.MathHelper.ceil
-import net.minecraft.util.math.MathHelper.floor
-import net.minecraft.util.math.Vec2f
-import org.joml.Vector3f
 
 class StatWidget(
     pX: Int, pY: Int,
     val pokemon: Pokemon,
     val tabIndex: Int = STATS
-): SoundlessWidget(pX, pY, WIDTH, HEIGHT, Text.literal("StatWidget")) {
+): SoundlessWidget(pX, pY, WIDTH, HEIGHT, Component.literal("StatWidget")) {
 
     companion object {
         // Stat Index
@@ -54,7 +56,7 @@ class StatWidget(
 
         private const val WIDTH = 134
         private const val HEIGHT = 148
-        private const val SCALE = 0.5F
+        const val SCALE = 0.5F
 
         private const val WHITE = 0x00FFFFFF
         private const val GREY = 0x00AAAAAA
@@ -64,6 +66,7 @@ class StatWidget(
         private val statsBaseResource = cobblemonResource("textures/gui/summary/summary_stats_chart_base.png")
         private val statsChartResource = cobblemonResource("textures/gui/summary/summary_stats_chart.png")
         private val statsOtherBaseResource = cobblemonResource("textures/gui/summary/summary_stats_other_base.png")
+        private val statsOtherBarTemplate = cobblemonResource("textures/gui/summary/summary_stats_other_bar.png")
         private val friendshipOverlayResource = cobblemonResource("textures/gui/summary/summary_stats_friendship_overlay.png")
         private val tabMarkerResource = cobblemonResource("textures/gui/summary/summary_stats_tab_marker.png")
         private val statIncreaseResource = cobblemonResource("textures/gui/summary/summary_stats_icon_increase.png")
@@ -84,21 +87,24 @@ class StatWidget(
     }
 
     var statTabIndex = tabIndex
+    val renderableFeatures = SpeciesFeatures
+        .getFeaturesFor(pokemon.species)
+        .filterIsInstance<SynchronizedSpeciesFeatureProvider<*>>()
+        .mapNotNull { it.getRenderer(pokemon) }
 
     private fun drawTriangle(
         colour: Vector3f,
-        v1: Vec2f,
-        v2: Vec2f,
-        v3: Vec2f
+        v1: Vec2,
+        v2: Vec2,
+        v3: Vec2
     ) {
         CobblemonResources.WHITE.let { RenderSystem.setShaderTexture(0, it) }
         RenderSystem.setShaderColor(colour.x, colour.y, colour.z, 0.6F)
-        val bufferBuilder = Tessellator.getInstance().buffer
-        bufferBuilder.begin(VertexFormat.DrawMode.TRIANGLES, VertexFormats.POSITION)
-        bufferBuilder.vertex(v1.x.toDouble(), v1.y.toDouble(), 10.0).next()
-        bufferBuilder.vertex(v2.x.toDouble(), v2.y.toDouble(), 10.0).next()
-        bufferBuilder.vertex(v3.x.toDouble(), v3.y.toDouble(), 10.0).next()
-        BufferRenderer.drawWithGlobalProgram(bufferBuilder.end())
+        val bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION)
+        bufferBuilder.addVertex(v1.x, v1.y, 10F)
+        bufferBuilder.addVertex(v2.x, v2.y, 10F)
+        bufferBuilder.addVertex(v3.x, v3.y, 10F)
+        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow())
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F)
     }
 
@@ -126,37 +132,37 @@ class StatWidget(
         val spDefRatio = (stats.getOrDefault(Stats.SPECIAL_DEFENCE, 0).toFloat() / maximum).coerceIn(0F, 1F)
         val spdRatio = (stats.getOrDefault(Stats.SPEED, 0).toFloat() / maximum).coerceIn(0F, 1F)
 
-        val hpPoint = Vec2f(
+        val hpPoint = Vec2(
             hexCenterX.toFloat(),
             hexCenterY.toFloat() - minTriangleSize - hpRatio * triangleLongEdge
         )
 
-        val attackPoint = Vec2f(
+        val attackPoint = Vec2(
             hexCenterX.toFloat() + minXTriangleLen + atkRatio * triangleMediumEdge,
             hexCenterY.toFloat() - minYTriangleLen - atkRatio * triangleShortEdge
         )
 
-        val defencePoint = Vec2f(
+        val defencePoint = Vec2(
             hexCenterX.toFloat() + minXTriangleLen + defRatio * triangleMediumEdge,
             hexCenterY.toFloat() + minYTriangleLen + defRatio * triangleShortEdge
         )
 
-        val specialAttackPoint = Vec2f(
+        val specialAttackPoint = Vec2(
             hexCenterX.toFloat() - minXTriangleLen - spAtkRatio * triangleMediumEdge,
             hexCenterY.toFloat() - minYTriangleLen - spAtkRatio * triangleShortEdge
         )
 
-        val specialDefencePoint = Vec2f(
+        val specialDefencePoint = Vec2(
             hexCenterX.toFloat() - minXTriangleLen - spDefRatio * triangleMediumEdge,
             hexCenterY.toFloat() + minYTriangleLen + spDefRatio * triangleShortEdge
         )
 
-        val speedPoint = Vec2f(
+        val speedPoint = Vec2(
             hexCenterX.toFloat(),
             hexCenterY.toFloat() + minTriangleSize + spdRatio * triangleLongEdge
         )
 
-        val centerPoint = Vec2f(
+        val centerPoint = Vec2(
             hexCenterX.toFloat(),
             hexCenterY.toFloat()
         )
@@ -178,10 +184,78 @@ class StatWidget(
 //        drawTriangle(colour, specialAttackPoint, centerPoint, hpPoint)
     }
 
+    private fun drawFriendship(moduleX: Int, moduleY: Int, matrices: PoseStack, context: GuiGraphics, friendship: Int) {
+        val barRatio = friendship / 255F
+        val barWidth = ceil(barRatio * 108)
 
-    override fun renderButton(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+        blitk(
+            matrixStack = matrices,
+            texture = statsOtherBarTemplate,
+            x = moduleX,
+            y = moduleY,
+            height = 28,
+            width = 124
+        )
+
+        val red = 1
+        val green: Number = if (pokemon.friendship >= 160) 0.28 else 0.56
+        val blue: Number = if (pokemon.friendship >= 160) 0.4 else 0.64
+
+        blitk(
+            matrixStack = matrices,
+            texture = CobblemonResources.WHITE,
+            x = moduleX + 8,
+            y = moduleY + 18,
+            height = 8,
+            width = barWidth,
+            red = red,
+            green = green,
+            blue = blue
+        )
+
+        blitk(
+            matrixStack = matrices,
+            texture = friendshipOverlayResource,
+            x = moduleX / SCALE,
+            y = (moduleY + 16) / SCALE,
+            height = 20,
+            width = 248,
+            scale = SCALE
+        )
+
+        // Label
+        drawScaledText(
+            context = context,
+            font = CobblemonResources.DEFAULT_LARGE,
+            text = lang("ui.stats.friendship").bold(),
+            x = moduleX + 62,
+            y = moduleY + 2.5,
+            centered = true,
+            shadow = true
+        )
+
+        drawScaledText(
+            context = context,
+            text = friendship.toString().text(),
+            x = moduleX + 11,
+            y = moduleY + 6,
+            scale = SCALE,
+            centered = true
+        )
+
+        drawScaledText(
+            context = context,
+            text = "${floor(barRatio * 100)}%".text(),
+            x = moduleX + 113,
+            y = moduleY + 6,
+            scale = SCALE,
+            centered = true
+        )
+    }
+
+    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         val renderChart = statTabIndex != OTHER
-        val matrices = context.matrices
+        val matrices = context.pose()
 
         // Background
         blitk(
@@ -287,7 +361,7 @@ class StatWidget(
         )
 
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = tabMarkerResource,
             x= (x + 27 + (statTabIndex * 19)) / SCALE,
             y = (y + 140) / SCALE,
@@ -328,60 +402,28 @@ class StatWidget(
                 renderModifiedStatIcon(matrices, nature.decreasedStat, false)
             }
         } else {
-            // Friendship
-            val friendshipBarWidthMax = 108
-            val friendshipRatio = pokemon.friendship / 255F
-            val friendshipBarWidth = ceil(friendshipRatio * friendshipBarWidthMax)
-            blitk(
-                matrixStack = matrices,
-                texture = CobblemonResources.WHITE,
-                x = x + 13,
-                y = y + 27,
-                height = 8,
-                width = friendshipBarWidth,
-                red = 0.92,
-                green = if (pokemon.friendship >= 160) 0.28 else 0.7,
-                blue = if (pokemon.friendship >= 160) 0.4 else 0.28
-            )
+            var drawY = y + 11
 
-            blitk(
-                matrixStack = matrices,
-                texture = friendshipOverlayResource,
-                x = (x + 5) / SCALE,
-                y = (y + 26) / SCALE,
-                height = 20,
-                width = 248,
-                scale = SCALE
-            )
+            drawFriendship(x + 5, drawY, matrices, context, pokemon.friendship)
+            drawY += 30
 
-            // Label
-            drawScaledText(
-                context = context,
-                font = CobblemonResources.DEFAULT_LARGE,
-                text = lang("ui.stats.friendship").bold(),
-                x = x + 67,
-                y = y + 12.5,
-                centered = true,
-                shadow = true
-            )
+            for (renderableFeature in renderableFeatures) {
+                val rendered = renderableFeature.render(
+                    drawContext = context,
+                    x = x + 5F,
+                    y = drawY.toFloat(),
+                    pokemon = pokemon
+                )
 
-            drawScaledText(
-                context = context,
-                text = pokemon.friendship.toString().text(),
-                x = x + 16,
-                y = y + 16,
-                scale = SCALE,
-                centered = true
-            )
+                if (rendered) {
+                    drawY += 30
+                }
+            }
 
-            drawScaledText(
-                context = context,
-                text = "${floor(friendshipRatio * 100)}%".text(),
-                x = x + 118,
-                y = y + 16,
-                scale = SCALE,
-                centered = true
-            )
+//            for (value in summaries) {
+//                drawBarModule(x + 5, drawY, matrices, context, value)
+//            }
+
         }
     }
 
@@ -390,12 +432,12 @@ class StatWidget(
         // Only play sound here as the rest of the widget is meant to be silent
         if (index in 0..4) {
             statTabIndex = index
-            MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(CobblemonSounds.GUI_CLICK, 1.0F))
+            Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.GUI_CLICK, 1.0F))
         }
         return super.mouseClicked(pMouseX, pMouseY, pButton)
     }
 
-    private fun getStatValueAsText(stat: Stat): MutableText {
+    private fun getStatValueAsText(stat: Stat): MutableComponent {
         val value = when(statTabIndex) {
             STATS -> if (stat == Stats.HP) "${pokemon.currentHealth} / ${pokemon.hp}" else pokemon.getStat(stat).toString()
             BASE -> pokemon.form.baseStats[stat].toString()
@@ -406,7 +448,7 @@ class StatWidget(
         return value.text()
     }
 
-    private fun renderModifiedStatIcon(pMatrixStack: MatrixStack, stat: Stat?, increasedStat: Boolean) {
+    private fun renderModifiedStatIcon(pPoseStack: PoseStack, stat: Stat?, increasedStat: Boolean) {
         if (stat != null) {
             var posX = x.toDouble()
             var posY = y.toDouble()
@@ -421,7 +463,7 @@ class StatWidget(
             }
 
             blitk(
-                matrixStack = pMatrixStack,
+                matrixStack = pPoseStack,
                 texture = if (increasedStat) statIncreaseResource else statDecreaseResource,
                 x= posX / SCALE,
                 y = posY / SCALE,
@@ -443,15 +485,15 @@ class StatWidget(
     }
 
     private fun renderTextAtVertices(
-        context: DrawContext,
+        context: GuiGraphics,
         offsetY: Double = 0.0,
         enableColour: Boolean = true,
-        hp: MutableText,
-        spAtk: MutableText,
-        atk: MutableText,
-        spDef: MutableText,
-        def: MutableText,
-        speed: MutableText
+        hp: MutableComponent,
+        spAtk: MutableComponent,
+        atk: MutableComponent,
+        spDef: MutableComponent,
+        def: MutableComponent,
+        speed: MutableComponent
     ) {
         drawScaledText(
             context = context,

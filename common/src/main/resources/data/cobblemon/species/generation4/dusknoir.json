@@ -206,8 +206,8 @@
   "evolutions": [],
   "baseScale": 1,
   "hitbox": {
-    "width": 2,
-    "height": 3,
+    "width": 1.8,
+    "height": 3.4,
     "fixed": false
   },
   "baseFriendship": 35,
@@ -224,8 +224,12 @@
   "aspects": [],
   "cannotDynamax": false,
   "drops": {
-    "amount": 2,
+    "amount": 3,
     "entries": [
+      {
+        "item": "minecraft:phantom_membrane",
+        "percentage": 10.0
+      },
       {
         "item": "cobblemon:reaper_cloth",
         "percentage": 10.0

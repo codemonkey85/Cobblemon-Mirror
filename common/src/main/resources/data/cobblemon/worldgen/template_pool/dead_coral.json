@@ -1,40 +1,40 @@
 {
-  "name": "cobblemon:dead_coral",
-  "fallback": "minecraft:empty",
-  "elements": [
-    {
-      "weight": 1,
-      "element": {
-        "location": "cobblemon:fossils/decorations/dead_coral/dead_coral_1",
-        "element_type": "minecraft:single_pool_element",
-        "processors": "cobblemon:dead_coral",
-        "projection": "rigid"
-      }
-    },
-    {
-      "weight": 1,
-      "element": {
-        "location": "cobblemon:fossils/decorations/dead_coral/dead_coral_2",
-        "element_type": "minecraft:single_pool_element",
-        "projection": "rigid",
-        "processors": "cobblemon:dead_coral"
-      }
-    },
-    {
-      "weight": 1,
-      "element": {
-        "location": "cobblemon:fossils/decorations/dead_coral/dead_coral_3",
-        "element_type": "minecraft:single_pool_element",
-        "projection": "rigid",
-        "processors": "cobblemon:dead_coral"
-      }
-    },
-    {
-      "weight": 1,
-      "element": {
-        "element_type": "minecraft:empty_pool_element",
-        "projection": "rigid"
-      }
-    }
-  ]
+    "name": "cobblemon:dead_coral",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/decorations/dead_coral/dead_coral_1",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:fossils/decorations/dead_coral",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/decorations/dead_coral/dead_coral_2",
+                "element_type": "minecraft:single_pool_element",
+                "projection": "rigid",
+                "processors": "cobblemon:fossils/decorations/dead_coral"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:fossils/decorations/dead_coral/dead_coral_3",
+                "element_type": "minecraft:single_pool_element",
+                "projection": "rigid",
+                "processors": "cobblemon:fossils/decorations/dead_coral"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "element_type": "minecraft:empty_pool_element",
+                "projection": "rigid"
+            }
+        }
+    ]
 }

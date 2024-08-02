@@ -1,0 +1,32 @@
+{
+  "species": "cobblemon:gimmighoul",
+  "order": 0,
+  "variations": [
+    {
+      "aspects": [],
+      "poser": "cobblemon:gimmighoulchest",
+      "model": "cobblemon:gimmighoul_chest.geo",
+      "texture": "cobblemon:textures/pokemon/0999_gimmighoul/gimmighoul_chest.png",
+      "layers": []
+    },
+    {
+      "aspects": ["minecraft"],
+      "poser": "cobblemon:gimmighoulchest",
+      "model": "cobblemon:gimmighoul_chest_minecraft.geo",
+      "texture": "cobblemon:textures/pokemon/0999_gimmighoul/gimmighoul_chest_minecraft.png",
+      "layers": []
+    },
+    {
+      "aspects": ["shiny"],
+      "poser": "cobblemon:gimmighoulchest",
+      "model": "cobblemon:gimmighoul_chest.geo",
+      "texture": "cobblemon:textures/pokemon/0999_gimmighoul/gimmighoul_chest_shiny.png"
+    },
+    {
+      "aspects": ["shiny", "minecraft"],
+      "poser": "cobblemon:gimmighoulchest",
+      "model": "cobblemon:gimmighoul_chest_minecraft.geo",
+      "texture": "cobblemon:textures/pokemon/0999_gimmighoul/gimmighoul_chest_minecraft_shiny.png"
+    }
+  ]
+}

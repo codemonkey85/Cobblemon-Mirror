@@ -13,9 +13,10 @@
             "context": "grounded",
             "bucket": "uncommon",
             "level": "24-49",
-            "weight": 6.0,
+            "weight": 60.0,
             "condition": {
-                "canSeeSky": false,
+                "minSkyLight": 0,
+                "maxSkyLight": 7,
                 "biomes": [
                     "#cobblemon:is_deep_dark"
                 ]
@@ -25,7 +26,25 @@
             "id": "spiritomb-2",
             "pokemon": "spiritomb",
             "presets": [
-                "trail_ruins"
+                "ruins"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "rare",
+            "level": "24-49",
+            "weight": 100.0,
+            "condition": {
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ],
+                "minY": 48
+            }
+        },
+        {
+            "id": "spiritomb-3",
+            "pokemon": "spiritomb",
+            "presets": [
+                "underground_ruins"
             ],
             "type": "pokemon",
             "context": "grounded",
@@ -35,15 +54,54 @@
             "condition": {
                 "biomes": [
                     "#cobblemon:is_overworld"
-                ]
+                ],
+                "minY": -37,
+                "maxY": 10
             }
         },
         {
-            "id": "spiritomb-3",
+            "id": "spiritomb-4",
+            "pokemon": "spiritomb",
+            "presets": [
+                "trail_ruins"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "rare",
+            "level": "24-49",
+            "weight": 100.0,
+            "condition": {
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ],
+                "minY": 48
+            }
+        },
+        {
+            "id": "spiritomb-5",
             "pokemon": "spiritomb",
             "presets": [
                 "natural",
-                "desert_pyramid",
+                "desert_pyramid"
+            ],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "rare",
+            "level": "24-49",
+            "weight": 100.0,
+            "condition": {
+                "canSeeSky": false,
+                "biomes": [
+                    "#cobblemon:is_desert"
+                ],
+                "minY": 48
+            }
+        },
+        {
+            "id": "spiritomb-6",
+            "pokemon": "spiritomb",
+            "presets": [
+                "natural",
                 "jungle_pyramid"
             ],
             "type": "pokemon",
@@ -54,12 +112,13 @@
             "condition": {
                 "canSeeSky": false,
                 "biomes": [
-                    "#cobblemon:is_overworld"
-                ]
+                    "#cobblemon:is_jungle"
+                ],
+                "minY": 48
             }
         },
         {
-            "id": "spiritomb-4",
+            "id": "spiritomb-7",
             "pokemon": "spiritomb",
             "type": "pokemon",
             "context": "grounded",

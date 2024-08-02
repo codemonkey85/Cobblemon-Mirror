@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Florges",
   "nationalPokedexNumber": 671,
   "primaryType": "fairy",
@@ -13,6 +14,19 @@
     "special_attack": 112,
     "special_defence": 154,
     "speed": 75
+  },
+  "behaviour": {
+    "moving": {
+      "fly": {
+        "canFly": true
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
   },
   "catchRate": 45,
   "maleRatio": 0,
@@ -116,10 +130,10 @@
   ],
   "preEvolution": "floette",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.7,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 1.3,
+    "height": 2.6,
     "fixed": false
   },
   "baseFriendship": 70,
@@ -136,8 +150,12 @@
   "aspects": [],
   "cannotDynamax": false,
   "drops": {
-    "amount": 1,
+    "amount": 4,
     "entries": [
+      {
+        "item": "minecraft:poppy",
+        "quantityRange": "0-3"
+      },
       {
         "item": "cobblemon:kebia_berry",
         "percentage": 10.0

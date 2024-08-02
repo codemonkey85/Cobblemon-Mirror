@@ -11,7 +11,7 @@
             ],
             "type": "pokemon",
             "context": "surface",
-            "bucket": "common",
+            "bucket": "uncommon",
             "level": "8-33",
             "weight": 1.8,
             "weightMultiplier": {
@@ -21,7 +21,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_swamp"
                 ]
@@ -36,7 +37,7 @@
             ],
             "type": "pokemon",
             "context": "surface",
-            "bucket": "common",
+            "bucket": "uncommon",
             "level": "8-33",
             "weight": 5.4,
             "weightMultiplier": {
@@ -46,7 +47,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ]
@@ -61,7 +63,7 @@
             ],
             "type": "pokemon",
             "context": "surface",
-            "bucket": "common",
+            "bucket": "uncommon",
             "level": "8-33",
             "weight": 5.4,
             "weightMultiplier": {
@@ -71,7 +73,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ]
@@ -90,7 +93,7 @@
             "weight": 9.0,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_toxic"
+                    "#cobblemon:nether/is_toxic"
                 ]
             }
         }

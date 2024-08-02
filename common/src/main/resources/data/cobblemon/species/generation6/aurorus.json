@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Aurorus",
   "nationalPokedexNumber": 699,
   "primaryType": "rock",
@@ -14,6 +15,18 @@
     "special_attack": 99,
     "special_defence": 92,
     "speed": 58
+  },
+  "behaviour": {
+    "resting": {
+      "canSleep": true,
+      "depth": "normal",
+      "light": "0-4"
+    },
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.2
+      }
+    }
   },
   "catchRate": 45,
   "maleRatio": 0.875,
@@ -133,10 +146,10 @@
   ],
   "preEvolution": "amaura",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 1.25,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 2.4,
+    "height": 5.1,
     "fixed": false
   },
   "baseFriendship": 50,

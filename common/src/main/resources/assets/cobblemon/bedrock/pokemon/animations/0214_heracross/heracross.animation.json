@@ -1,0 +1,211 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.heracross.ground_idle": {
+			"loop": true,
+			"bones": {
+				"body": {
+					"rotation": [0, 0, 0],
+					"position": [0, 0.1, 0]
+				},
+				"arm_left": {
+					"rotation": [-15, 12.5, 37.5]
+				},
+				"arm_left2": {
+					"rotation": [0, 5, 0]
+				},
+				"arm_left3": {
+					"rotation": [22.14838, 42.00089, 3.44402]
+				},
+				"hand_left": {
+					"rotation": [0, 0, 15]
+				},
+				"claw_left2": {
+					"rotation": [0, 0, 25]
+				},
+				"claw_left1": {
+					"rotation": [0, 5, 20]
+				},
+				"antenna_left": {
+					"rotation": [0, -20, 15]
+				},
+				"antenna_left2": {
+					"rotation": [0, 0, 0]
+				},
+				"leg_left": {
+					"rotation": [40.5, -20, -11.5]
+				},
+				"leg_left2": {
+					"rotation": [-17.5, 5, 7.5]
+				},
+				"foot_left": {
+					"rotation": [-18.5, 0, 2]
+				},
+				"antenna_right": {
+					"rotation": [0, 20, -15]
+				},
+				"shell_left": {
+					"rotation": [0, 0, 0]
+				},
+				"wing_left": {
+					"scale": 0
+				},
+				"torso": {
+					"rotation": [12.5, 0, 0]
+				},
+				"arm_right": {
+					"rotation": [-15, -12.5, -37.5]
+				},
+				"arm_right2": {
+					"rotation": [0, -5, 0]
+				},
+				"arm_right3": {
+					"rotation": [22.14838, -42.00089, -3.44402]
+				},
+				"hand_right": {
+					"rotation": [0, 0, -15]
+				},
+				"claw_right1": {
+					"rotation": [0, -5, -20]
+				},
+				"claw_right2": {
+					"rotation": [0, 0, -25]
+				},
+				"leg_right": {
+					"rotation": [40.5, 20, 11.5]
+				},
+				"leg_right2": {
+					"rotation": [-17.5, -5, -7.5]
+				},
+				"foot_right": {
+					"rotation": [-18.5, 0, -2]
+				},
+				"wing_right": {
+					"scale": 0
+				}
+			}
+		},
+		"animation.heracross.air_idle": {
+			"loop": true,
+			"bones": {
+				"body": {
+					"rotation": [-37.5, 0, 0],
+					"position": [0, 4, 0]
+				},
+				"arm_left": {
+					"rotation": [-15, -25, 45]
+				},
+				"arm_left2": {
+					"rotation": [0, 10, 0]
+				},
+				"arm_left3": {
+					"rotation": [21.9989, 27.02124, 2.69736]
+				},
+				"hand_left": {
+					"rotation": [0, 12.5, 15]
+				},
+				"claw_left2": {
+					"rotation": [0, 0, 30]
+				},
+				"claw_left1": {
+					"rotation": [0, 0, 30]
+				},
+				"antenna_left": {
+					"rotation": [0, -20, 15]
+				},
+				"antenna_left2": {
+					"rotation": [0, 0, 0]
+				},
+				"leg_left": {
+					"rotation": [80, 0, -30]
+				},
+				"leg_left2": {
+					"rotation": [-48.98734, 2.66902, 6.0322],
+					"position": [0, 0, -1]
+				},
+				"foot_left": {
+					"rotation": [25, 0, 0]
+				},
+				"antenna_right": {
+					"rotation": [0, 20, -15]
+				},
+				"shell_left": {
+					"rotation": [154.09167, 40.21191, 19.98492]
+				},
+				"wing_left": {
+					"rotation": [-3.14127, -24.93052, 8.85642],
+					"scale": 1
+				},
+				"torso": {
+					"rotation": [42.5, 0, 0]
+				},
+				"arm_right": {
+					"rotation": [-15, 25, -45]
+				},
+				"arm_right2": {
+					"rotation": [0, -10, 0]
+				},
+				"arm_right3": {
+					"rotation": [21.9989, -27.02124, -2.69736]
+				},
+				"hand_right": {
+					"rotation": [0, -12.5, -15]
+				},
+				"claw_right1": {
+					"rotation": [0, 0, -30]
+				},
+				"claw_right2": {
+					"rotation": [0, 0, -30]
+				},
+				"leg_right": {
+					"rotation": [80, 0, 30]
+				},
+				"leg_right2": {
+					"rotation": [-48.98734, -2.66902, -6.0322]
+				},
+				"foot_right": {
+					"rotation": [25, 0, 0]
+				},
+				"shell_right": {
+					"rotation": [154.09167, -40.21191, -19.98492]
+				},
+				"wing_right": {
+					"rotation": [-3.14127, 24.93052, -8.85642]
+				}
+			}
+		},
+		"animation.heracross.blink": {
+			"animation_length": 0.16667,
+			"bones": {
+				"pupil_left": {
+					"position": {
+						"0.0": [0, 0, 0.1],
+						"0.125": [0, 0, 0.1],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"eyelid_left": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"pupil_right": {
+					"position": {
+						"0.0": [0, 0, 0.1],
+						"0.125": [0, 0, 0.1],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"eyelid_right": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				}
+			}
+		}
+	}
+}

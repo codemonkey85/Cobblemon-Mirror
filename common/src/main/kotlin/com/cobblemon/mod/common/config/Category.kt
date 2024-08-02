@@ -16,5 +16,6 @@ enum class Category {
     PassiveStatus,
     Healing,
     Storage,
-    World
+    World,
+    Debug
 }

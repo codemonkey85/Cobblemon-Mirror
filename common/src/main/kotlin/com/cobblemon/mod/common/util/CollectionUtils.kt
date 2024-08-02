@@ -12,8 +12,8 @@ import com.cobblemon.mod.common.api.pokemon.stats.Stat
 import com.cobblemon.mod.common.pokemon.EVs
 import com.cobblemon.mod.common.pokemon.IVs
 import com.cobblemon.mod.common.pokemon.PokemonStats
-import net.minecraft.nbt.NbtElement
-import net.minecraft.nbt.NbtList
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.Tag
 import kotlin.math.max
 import kotlin.random.Random
 
@@ -54,8 +54,8 @@ fun <T> MutableList<T>.swap(index1: Int, index2: Int) {
     this[index2] = t1
 }
 
-fun Collection<NbtElement>.toNbtList(): NbtList {
-    val nbtList = NbtList()
+fun Collection<Tag>.toNbtList(): ListTag {
+    val nbtList = ListTag()
     this.forEach(nbtList::add)
     return nbtList
 }

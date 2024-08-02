@@ -10,8 +10,12 @@ package com.cobblemon.mod.common.net.messages.client.pokemon.update
 
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.readNullable
+import com.cobblemon.mod.common.util.readUUID
+import com.cobblemon.mod.common.util.writeNullable
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
-import net.minecraft.network.PacketByteBuf
 
 /**
  * Packet sent to update the client's tetheringId for a Pokémon. Really only used to show in the PC appropriately.
@@ -23,8 +27,8 @@ class TetheringUpdatePacket(pokemon: () -> Pokemon, tetheringId: UUID?) : Single
 
     override val id = ID
 
-    override fun encodeValue(buffer: PacketByteBuf) {
-        buffer.writeNullable(this.value) { _, v -> buffer.writeUuid(v) }
+    override fun encodeValue(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeNullable(this.value) { _, v -> buffer.writeUUID(v) }
     }
 
     override fun set(pokemon: Pokemon, value: UUID?) {
@@ -33,9 +37,9 @@ class TetheringUpdatePacket(pokemon: () -> Pokemon, tetheringId: UUID?) : Single
 
     companion object {
         val ID = cobblemonResource("tethering_update")
-        fun decode(buffer: PacketByteBuf): TetheringUpdatePacket {
+        fun decode(buffer: RegistryFriendlyByteBuf): TetheringUpdatePacket {
             val pokemon = decodePokemon(buffer)
-            val tetheringId = buffer.readNullable { buffer.readUuid() }
+            val tetheringId = buffer.readNullable { buffer.readUUID() }
             return TetheringUpdatePacket(pokemon, tetheringId)
         }
     }

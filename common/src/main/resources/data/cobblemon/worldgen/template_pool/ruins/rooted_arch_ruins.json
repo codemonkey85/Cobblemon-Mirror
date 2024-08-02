@@ -1,0 +1,15 @@
+{
+    "name": "cobblemon:rooted_arch_ruins",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/rooted_arch",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/rooted_arch_ruins",
+                "projection": "rigid"
+            }
+        }
+    ]
+}

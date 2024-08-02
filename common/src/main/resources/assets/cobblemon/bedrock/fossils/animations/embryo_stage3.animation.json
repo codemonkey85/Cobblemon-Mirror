@@ -4,26 +4,36 @@
 		"animation.embryo_stage3.gooping": {
 			"loop": true,
 			"bones": {
-				"cell1": {
-					"position": ["0.05*(math.sin(q.anim_time*90*1+180)*1+1)", 0, "-0.05*(math.sin(q.anim_time*90*1+270)*1+1)"]
+				"embryo": {
+					"position": ["math.sin(q.anim_time*90*0.25-90)*0.2", "math.sin(q.anim_time*90*0.5)*0.3", "math.sin(q.anim_time*90*0.25+30)*0.1"]
+				},
+				"core": {
+					"rotation": ["math.sin(q.anim_time*90*0.25+200)*4", 0, "math.sin(q.anim_time*90*0.1-90)*6"],
+					"position": [0, "math.sin(q.anim_time*90*0.5-30)*-0.1", 0],
+					"scale": "1+math.sin(q.anim_time*90*0.5)*0.02"
 				},
 				"cell2": {
-					"position": ["-0.05*(math.sin(q.anim_time*90*1+180)*1+1)", 0, "0.05*(math.sin(q.anim_time*90*1+270)*1+1)"]
-				},
-				"cell3": {
-					"position": ["-0.05*(math.sin(q.anim_time*90*1)*1+1)", "0.05*(math.sin(q.anim_time*90*1+90)*1+1)", 0]
-				},
-				"cell4": {
-					"position": ["-0.05*(math.sin(q.anim_time*90*1)*1+1)", "0.05*(math.sin(q.anim_time*90*1+90)*1+1)", 0]
+					"rotation": ["math.sin(q.anim_time*90*0.25-50)*12", "math.sin(q.anim_time*90*0.4-60)*9", "math.sin(q.anim_time*90*0.1)*-18"],
+					"position": [0, "math.sin(q.anim_time*90*0.5-60)*-0.1", 0]
 				},
 				"cell5": {
-					"position": [0, "-0.05*(math.sin(q.anim_time*90*1+130)*1+1)", "-0.05*(math.sin(q.anim_time*90*1+40)*1+1)"]
+					"rotation": ["math.sin(q.anim_time*90*0.5)*9", "math.sin(q.anim_time*90*0.2-60)*-16", "math.sin(q.anim_time*90*0.1+90)*-14"],
+					"position": [0, "math.sin(q.anim_time*90*0.5-60)*-0.6", 0]
+				},
+				"cell1": {
+					"rotation": ["math.cos(q.anim_time*90*0.25-50)*12", 0, "math.sin(q.anim_time*90*0.1-120)*-18"],
+					"position": [0, "math.sin(q.anim_time*90*0.5-60)*-0.1", 0]
+				},
+				"cell3": {
+					"rotation": ["math.sin(q.anim_time*90*0.5-90)*-12", "math.sin(q.anim_time*90*0.25-90)*-4", "math.sin(q.anim_time*90*0.2)*7"],
+					"position": [0, "math.sin(q.anim_time*90*0.5-60)*-0.3", 0]
+				},
+				"cell4": {
+					"rotation": ["math.sin(q.anim_time*90*0.1)*20", "math.sin(q.anim_time*90*0.5-60)*3", "math.cos(q.anim_time*90*0.25-50)*6"],
+					"position": [0, "math.sin(q.anim_time*90*0.5-60)*-0.4", 0]
 				},
 				"cell6": {
-					"position": [0, "0.05*(math.sin(q.anim_time*90*1+150)*1+1)", "0.05*(math.sin(q.anim_time*90*1+60)*1+1)"]
-				},
-				"embryo": {
-					"position": ["-0.1*(math.sin(q.anim_time*90*0.5)*1+1)", "-0.05*(math.sin(q.anim_time*90*1)*1+1)", "-0.1*(math.sin(q.anim_time*90*0.5+90)*1+1)"]
+					"rotation": ["math.sin(q.anim_time*90*0.7-90)*14", "math.sin(q.anim_time*90*0.1-90)*11", "math.sin(q.anim_time*90*0.3)*-9"]
 				}
 			}
 		},

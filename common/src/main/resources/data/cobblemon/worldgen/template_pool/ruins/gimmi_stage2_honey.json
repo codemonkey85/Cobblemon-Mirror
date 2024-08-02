@@ -1,0 +1,51 @@
+{
+    "name": "cobblemon:ruins/gimmi_stage2_lush",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_honey_stage2_long",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/honey_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_honey_stage2_short",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/honey_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_honey_stage2_platform1",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/honey_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_honey_stage2_platform2",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/honey_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_honey_stage2_platform3",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/honey_gimmi_tower_stage2",
+                "projection": "rigid"
+            }
+        }
+    ]
+}

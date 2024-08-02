@@ -10,9 +10,8 @@ package com.cobblemon.mod.common.api.spawning.condition
 
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.spawning.context.SurfaceSpawningContext
-import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.util.Merger
-import net.minecraft.fluid.Fluid
+import net.minecraft.world.level.material.Fluid
 
 /**
  * Base type for a spawning condition that applies to some kind of [SurfaceSpawningContext]. This
@@ -33,7 +32,7 @@ abstract class SurfaceTypeSpawningCondition<T : SurfaceSpawningContext> : AreaTy
             false
         } else if (maxDepth != null && ctx.depth > maxDepth!!) {
             false
-        } else !(ctx.baseBlock.fluidState.isEmpty || (fluid != null && !fluid!!.fits(ctx.baseBlock.fluidState.fluid, ctx.fluidRegistry)))
+        } else !(ctx.baseBlock.fluidState.isEmpty || (fluid != null && !fluid!!.fits(ctx.baseBlock.fluidState.type, ctx.fluidRegistry)))
     }
 
     override fun copyFrom(other: SpawningCondition<*>, merger: Merger) {

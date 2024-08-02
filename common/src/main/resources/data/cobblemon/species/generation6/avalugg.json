@@ -98,19 +98,26 @@
         "tm:bulldoze",
         "tm:chillingwater",
         "tm:crunch",
+        "tm:curse",
         "tm:dig",
+        "tm:doubleedge",
         "tm:earthquake",
         "tm:endure",
         "tm:facade",
         "tm:gigaimpact",
+        "tm:gyroball",
+        "tm:hardpress",
         "tm:heavyslam",
+        "tm:highhorsepower",
         "tm:hyperbeam",
         "tm:icebeam",
         "tm:icefang",
         "tm:icespinner",
+        "tm:iciclespear",
         "tm:icywind",
         "tm:irondefense",
         "tm:ironhead",
+        "tm:meteorbeam",
         "tm:protect",
         "tm:raindance",
         "tm:rest",
@@ -139,7 +146,20 @@
       "weight": 2624,
       "preEvolution": "bergmite",
       "cannotDynamax": false,
-      "battleOnly": false
+      "battleOnly": false,
+      "drops": {
+        "amount": 2,
+        "entries": [
+          {
+            "item": "cobblemon:never_melt_ice",
+            "percentage": 5.0
+          },
+          {
+            "item": "cobblemon:babiri_berry",
+            "percentage": 5.0
+          }
+        ]
+      }
     }
   ],
   "baseExperienceYield": 180,
@@ -200,6 +220,8 @@
     "tm:chillingwater",
     "tm:confide",
     "tm:crunch",
+    "tm:curse",
+    "tm:doubleedge",
     "tm:doubleteam",
     "tm:earthquake",
     "tm:endure",

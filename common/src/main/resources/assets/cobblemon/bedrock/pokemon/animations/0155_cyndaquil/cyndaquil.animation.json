@@ -28,7 +28,7 @@
 				"fire": {
 					"rotation": ["math.sin(q.anim_time*90*3*2-90)*1-1*6", 0, "math.sin(q.anim_time*90*3-150)*1-1)+6*(math.sin(q.anim_time*90*3/2-90)*10"],
 					"position": [0, -2.75, 0],
-					"scale": [0.3, 0.2, 0.6]
+					"scale": [0.3, 0, 0.6]
 				},
 				"torso2": {
 					"rotation": ["-7.5+math.cos(q.anim_time*90*3-60)*1", 0, 0]
@@ -112,7 +112,7 @@
 				"fire": {
 					"rotation": ["math.sin(q.anim_time*90*3*2-90)*1-1*6", 0, "math.sin(q.anim_time*90*3-150)*1-1)+6*(math.sin(q.anim_time*90*3/2-90)*10"],
 					"position": [0, -2.75, 0],
-					"scale": [0.3, 0.2, 0.6]
+					"scale": [0.3, 0, 0.6]
 				},
 				"torso2": {
 					"rotation": ["-7.5+math.cos(q.anim_time*90*4*2-60)*1", 0, "0+math.cos(q.anim_time*90*4-60)*3"]
@@ -561,6 +561,11 @@
 		},
 		"animation.cyndaquil.battle_cry": {
 			"animation_length": 2,
+			"sound_effects": {
+				"0.25": {
+					"effect": "pokemon.cyndaquil.cry"
+				}
+			},
 			"bones": {
 				"torso": {
 					"rotation": {

@@ -1,0 +1,33 @@
+{
+    "name": "cobblemon:ruins/gimmi_stage3_stone",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_deserted_stage3_platform",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/deserted_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_deserted_stage3_ruined",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/deserted_gimmi_tower",
+                "projection": "rigid"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "cobblemon:ruins/gimmi_tower_deserted_stage3_platform_husk",
+                "element_type": "minecraft:single_pool_element",
+                "processors": "cobblemon:ruins/deserted_gimmi_tower",
+                "projection": "rigid"
+            }
+        }
+    ]
+}

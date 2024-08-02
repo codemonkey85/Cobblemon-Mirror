@@ -1,0 +1,18 @@
+{
+  "type": "choice",
+  "keys": ["netherite_coating"],
+  "default": "none",
+  "choices": [
+    "none",
+    "stage1",
+    "stage2",
+    "stage3",
+    "stage4",
+    "stage5",
+    "stage6",
+    "stage7",
+    "full"
+  ],
+  "isAspect": true,
+  "aspectFormat": "netherite-coating-{{choice}}"
+}

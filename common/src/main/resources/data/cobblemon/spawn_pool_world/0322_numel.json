@@ -21,7 +21,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_badlands"
                 ]
@@ -45,7 +46,8 @@
                 }
             },
             "condition": {
-                "canSeeSky": true,
+                "minSkyLight": 8,
+                "maxSkyLight": 15,
                 "biomes": [
                     "#cobblemon:is_volcanic"
                 ]
@@ -64,8 +66,8 @@
             "weight": 5.4,
             "condition": {
                 "biomes": [
-                    "#cobblemon:is_nether_overgrowth",
-                    "#cobblemon:is_nether_wasteland"
+                    "#cobblemon:nether/is_overgrowth",
+                    "#cobblemon:nether/is_wasteland"
                 ]
             }
         }
