@@ -71,7 +71,7 @@ import com.cobblemon.mod.common.pokemon.evolution.controller.ServerEvolutionCont
 import com.cobblemon.mod.common.pokemon.evolution.progress.DamageTakenEvolutionProgress
 import com.cobblemon.mod.common.pokemon.evolution.progress.RecoilEvolutionProgress
 import com.cobblemon.mod.common.pokemon.feature.SeasonFeatureHandler
-import com.cobblemon.mod.common.pokemon.misc.GimmighoulStashHandler
+import com.cobblemon.mod.common.pokemon.feature.StashHandler
 import com.cobblemon.mod.common.pokemon.properties.UncatchableProperty
 import com.cobblemon.mod.common.pokemon.status.PersistentStatus
 import com.cobblemon.mod.common.pokemon.status.PersistentStatusContainer
@@ -853,7 +853,7 @@ open class Pokemon : ShowdownIdentifiable {
             this.heldItem = giving
             this._heldItem.emit(giving)
             CobblemonEvents.HELD_ITEM_POST.post(HeldItemEvent.Post(this, this.heldItem(), event.returning.copy(), event.decrement)) {
-                GimmighoulStashHandler.giveHeldItem(it)
+                StashHandler.giveHeldItem(it)
             }
             return event.returning
         })
