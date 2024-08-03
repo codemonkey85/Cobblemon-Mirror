@@ -34,14 +34,8 @@ class MoveSet : Iterable<Move> {
     /**
      * Gets all Moves from the Pokémon but skips null Moves
      */
-    fun getMoves(): List<Move> {
-        return moves.filterNotNull()
-    }
-
-    fun getMovesWithNulls(): List<Move?> {
-        return moves.toList()
-    }
-
+    fun getMoves() = moves.filterNotNull()
+    fun getMovesWithNulls() = moves.toList()
     fun hasSpace() = moves.any { it == null }
 
     /**
