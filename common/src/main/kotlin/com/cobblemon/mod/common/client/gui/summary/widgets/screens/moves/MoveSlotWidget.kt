@@ -14,12 +14,14 @@ import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.api.text.gold
 import com.cobblemon.mod.common.api.text.red
+import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.gui.MoveCategoryIcon
 import com.cobblemon.mod.common.client.gui.TypeIcon
 import com.cobblemon.mod.common.client.gui.summary.Summary
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.math.toRGB
 import net.minecraft.client.gui.DrawContext
@@ -29,7 +31,8 @@ import net.minecraft.util.math.MathHelper
 class MoveSlotWidget(
     pX: Int, pY: Int,
     val move: Move,
-    private val movesWidget: MovesWidget
+    private val movesWidget: MovesWidget,
+        private val pokemon: Pokemon,
 ): SoundlessWidget(pX, pY, MOVE_WIDTH, MOVE_HEIGHT, Text.literal(move.name)) {
 
     companion object {
@@ -64,13 +67,13 @@ class MoveSlotWidget(
     }.apply {
         addWidget(this)
     }
-
+    val elementalType:ElementalType = Moves.getByNameOrDummy(move.name).getEffectiveElementalType(pokemon)
     override fun renderButton(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         val matrices = context.matrices
         hovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height
 
         val moveTemplate = Moves.getByNameOrDummy(move.name)
-        val rgb = moveTemplate.elementalType.hue.toRGB()
+        val rgb = elementalType.hue.toRGB()
 
         if (movesWidget.selectedMove == move) {
             blitk(
@@ -125,7 +128,7 @@ class MoveSlotWidget(
         TypeIcon(
             x = x + 2,
             y = y + 2,
-            type = moveTemplate.elementalType
+            type = elementalType
         ).render(context)
 
         // Move Category

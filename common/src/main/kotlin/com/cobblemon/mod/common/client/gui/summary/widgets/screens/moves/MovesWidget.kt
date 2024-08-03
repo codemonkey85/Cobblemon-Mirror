@@ -56,7 +56,8 @@ class MovesWidget(
             x + 13,
             y + 6 + (MoveSlotWidget.MOVE_HEIGHT + 3) * index,
             move,
-            this
+            this,
+            summary.selectedPokemon
         )
     }.toMutableList().onEach {
         addWidget(it)

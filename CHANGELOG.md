@@ -8,6 +8,7 @@
 - Fixed Pokemon spawning in non-full blocks like slabs.
 - Fixed Gilded Chests not dropping the chest itself when broken, only the contents.
 - Fixed Pokémon losing their Hidden Ability through evolution if the middle stage did not have a Hidden Ability.
+- Hidden Power no longer plays the water type action effect. (It now plays the normal type action effect.)
 - Fixed Chimchar and Monferno T posing whenever they sleep.
 - Fixed the Magby line not having any placeholder walk animations.
 - Fixed Duskull and Dusclops using skylight levels for their nether spawn data. There is no sun in the Nether!
@@ -28,6 +29,8 @@
 
 ### Additions
 - Added extra visuals to early berry growth stages
+- Hidden Power now displays its effective typing.
+- Moves impacted by the abilities Pixelate, Refrigerate, Aerilate, Galvanize, and Normalize now display as their altered typing.
 - Added Polished Tumblestone and Tumblestone Brick block sets from Tumblestone, Black Tumblestone, and Sky Tumblestone.
 - Added Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
 
