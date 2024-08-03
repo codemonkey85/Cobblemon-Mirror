@@ -10,7 +10,6 @@ package com.cobblemon.mod.common.api.spawning.condition
 
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
-import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.util.Merger
 import net.minecraft.block.Block
 
@@ -47,6 +46,11 @@ abstract class AreaTypeSpawningCondition<T : AreaSpawningContext> : SpawningCond
             merger.mergeSingle(maxHeight, other.maxHeight)
             neededNearbyBlocks = merger.merge(neededNearbyBlocks, other.neededNearbyBlocks)?.toMutableList()
         }
+    }
+
+    override fun isValid(): Boolean {
+        val containsNullValues = neededNearbyBlocks != null && neededNearbyBlocks!!.any {it == null}
+        return super.isValid() && !containsNullValues
     }
 }
 
