@@ -14,7 +14,9 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
+import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
@@ -38,6 +40,8 @@ class BunearyModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
     lateinit var walk: Pose
     lateinit var shoulderLeft: Pose
     lateinit var shoulderRight: Pose
+
+    val shoulderOffset = 2.5
 
     override val cryAnimation = CryProvider { bedrockStateful("buneary", "cry") }
 
@@ -68,7 +72,7 @@ class BunearyModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
         shoulderLeft = registerPose(
                 poseType = PoseType.SHOULDER_LEFT,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("buneary", "ground_idle")
                 ),
@@ -80,7 +84,7 @@ class BunearyModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
         shoulderRight = registerPose(
                 poseType = PoseType.SHOULDER_RIGHT,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("buneary", "ground_idle")
                 ),

@@ -45,7 +45,7 @@ class ScorbunnyModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame,
         val blink = quirk { bedrockStateful("scorbunny", "blink") }
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("scorbunny", "sleep"))
+//            animations = arrayOf(bedrock("scorbunny", "sleep"))
 //        )
 
         standing = registerPose(

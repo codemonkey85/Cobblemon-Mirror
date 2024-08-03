@@ -54,7 +54,7 @@ class FletchlingModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("fletchling", "sleep"))
+//            animations = arrayOf(bedrock("fletchling", "sleep"))
 //        )
         val blink = quirk { bedrockStateful("fletchling", "blink") }
         stand = registerPose(
@@ -183,7 +183,7 @@ class FletchlingModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame
         shoulderLeft = registerPose(
                 poseType = PoseType.SHOULDER_LEFT,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("fletchling", "ground_idle")
                 ),
@@ -195,7 +195,7 @@ class FletchlingModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame
         shoulderRight = registerPose(
                 poseType = PoseType.SHOULDER_RIGHT,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("fletchling", "ground_idle")
                 ),

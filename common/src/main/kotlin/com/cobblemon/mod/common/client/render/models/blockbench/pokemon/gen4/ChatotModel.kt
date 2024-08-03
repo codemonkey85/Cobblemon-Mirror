@@ -53,7 +53,7 @@ class ChatotModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
 //        no sleep anim yet
 //        sleep = registerPose(
 //                poseType = PoseType.SLEEP,
-//                idleAnimations = arrayOf(bedrock("chatot", "sleep"))
+//                animations = arrayOf(bedrock("chatot", "sleep"))
 //        )
 
         val blink = quirk { bedrockStateful("chatot", "blink") }

@@ -54,7 +54,7 @@ class PerrserkerModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame,
 
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("perrserker", "sleep"))
+//            animations = arrayOf(bedrock("perrserker", "sleep"))
 //        )
 
         walk = registerPose(

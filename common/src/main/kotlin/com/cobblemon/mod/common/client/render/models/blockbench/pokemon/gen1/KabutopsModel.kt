@@ -91,7 +91,7 @@ class KabutopsModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, B
 //        float = registerPose(
 //            poseName = "float",
 //            poseTypes = setOf(PoseType.FLOAT, PoseType.HOVER),
-//            idleAnimations = arrayOf(
+//            animations = arrayOf(
 //                singleBoneLook(),
 //                bedrock("kabutops", "water_idle")
 //            )
@@ -100,7 +100,7 @@ class KabutopsModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, B
 //        swim = registerPose(
 //            poseName = "swim",
 //            poseTypes = setOf(PoseType.SWIM, PoseType.FLOAT),
-//            idleAnimations = arrayOf(
+//            animations = arrayOf(
 //                singleBoneLook(),
 //                bedrock("kabutops", "water_swim")
 //            )

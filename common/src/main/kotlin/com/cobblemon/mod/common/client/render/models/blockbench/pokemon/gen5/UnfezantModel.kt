@@ -53,7 +53,7 @@ class UnfezantModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("unfezant", "sleep"))
+//            animations = arrayOf(bedrock("unfezant", "sleep"))
 //        )
 
         val blink = quirk { bedrockStateful("unfezant", "blink")}

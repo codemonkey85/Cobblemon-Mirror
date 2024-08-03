@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.createTransforma
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import net.minecraft.client.model.geom.ModelPart
@@ -66,7 +67,7 @@ class TatsugiriModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
 
         shoulderLeft = registerPose(
                 poseType = PoseType.SHOULDER_LEFT,
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("tatsugiri", "ground_idle")
                 ),
@@ -77,7 +78,7 @@ class TatsugiriModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
 
         shoulderRight = registerPose(
                 poseType = PoseType.SHOULDER_RIGHT,
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("tatsugiri", "ground_idle")
                 ),

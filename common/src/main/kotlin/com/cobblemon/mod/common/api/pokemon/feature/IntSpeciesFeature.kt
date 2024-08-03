@@ -119,7 +119,7 @@ class IntSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<IntSpeciesF
     var min = 0
     var max = 100
     var display: DisplayData? = null
-    var itemPoints: Map<Identifier, Int> = emptyMap()
+    var itemPoints: Map<ResourceLocation, Int> = emptyMap()
 
     override fun fromString(value: String?) =
         value?.toIntOrNull()?.takeIf { it in min..max }?.let { IntSpeciesFeature(keys.first(), it) }
@@ -174,7 +174,7 @@ class IntSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<IntSpeciesF
         min = buffer.readInt()
         max = buffer.readInt()
         display = buffer.readNullable { DisplayData().also { it.loadFromBuffer(buffer) } }
-        itemPoints = buffer.readMap({ Identifier(buffer.readString()) }) { buffer.readInt() }
+        itemPoints = buffer.readMap({ ResourceLocation.parse(buffer.readString()) }) { buffer.readInt() }
     }
 
     override fun getRenderer(pokemon: Pokemon): SummarySpeciesFeatureRenderer<IntSpeciesFeature>? {

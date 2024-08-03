@@ -40,7 +40,7 @@ class GrovyleModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, B
     override fun registerPoses() {
         //sleep = registerPose(
         //    poseType = PoseType.SLEEP,
-        //    idleAnimations = arrayOf(bedrock("grovyle", "sleep"))
+        //    animations = arrayOf(bedrock("grovyle", "sleep"))
         //)
 
         val blink = quirk { bedrockStateful("grovyle", "blink") }

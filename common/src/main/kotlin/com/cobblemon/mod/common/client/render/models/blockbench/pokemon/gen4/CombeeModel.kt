@@ -9,7 +9,9 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen4
 
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import net.minecraft.client.model.geom.ModelPart
@@ -29,6 +31,9 @@ class CombeeModel (root: ModelPart) : PokemonPosableModel(root) {
     lateinit var sleep: Pose
     lateinit var shoulderLeft: Pose
     lateinit var shoulderRight: Pose
+
+    val shoulderOffset = 4
+    val shoulderZOffset = 8
 
     override fun registerPoses() {
         val blink1 = quirk { bedrockStateful("combee", "blink_right") }
@@ -61,7 +66,7 @@ class CombeeModel (root: ModelPart) : PokemonPosableModel(root) {
         shoulderLeft = registerPose(
                 poseType = PoseType.SHOULDER_LEFT,
                 quirks = arrayOf(blink1, blink2, blink3),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         bedrock("combee", "air_idle")
                 ),
                 transformedParts = arrayOf(
@@ -73,7 +78,7 @@ class CombeeModel (root: ModelPart) : PokemonPosableModel(root) {
         shoulderRight = registerPose(
                 poseType = PoseType.SHOULDER_RIGHT,
                 quirks = arrayOf(blink1, blink2, blink3),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         bedrock("combee", "air_idle")
                 ),
                 transformedParts = arrayOf(

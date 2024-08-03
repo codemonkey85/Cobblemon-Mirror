@@ -68,7 +68,7 @@ class CradilyModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
 //            poseName = "water_idle",
 //            poseType = PoseType.FLOAT,
 //            quirks = arrayOf(blink),
-//            idleAnimations = arrayOf(
+//            animations = arrayOf(
 //                singleBoneLook(),
 //                bedrock("cradily", "water_idle")
 //            )
@@ -78,7 +78,7 @@ class CradilyModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
 //            poseName = "water_swim",
 //            poseType = PoseType.SWIM,
 //            quirks = arrayOf(blink),
-//            idleAnimations = arrayOf(
+//            animations = arrayOf(
 //                singleBoneLook(),
 //                bedrock("cradily", "water_swim")
 //            )

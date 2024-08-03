@@ -113,7 +113,7 @@ class MagikarpModel(root: ModelPart) : PokemonPosableModel(root) {
 //            transformTicks = 10,
 //            quirks = arrayOf(blink),
 //            condition = { it.isBattling && !it.isInWater },
-//            idleAnimations = arrayOf(
+//            animations = arrayOf(
 //                bedrock("magikarp", "battle_idle")
 //            )
 //        )

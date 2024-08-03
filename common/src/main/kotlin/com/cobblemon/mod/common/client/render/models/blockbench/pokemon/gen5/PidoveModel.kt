@@ -49,7 +49,7 @@ class PidoveModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("pidove", "sleep"))
+//            animations = arrayOf(bedrock("pidove", "sleep"))
 //        )
         val blink = quirk { bedrockStateful("pidove", "blink") }
         stand = registerPose(

@@ -33,6 +33,10 @@ class BeldumModel (root: ModelPart) : PokemonPosableModel(root) {
     lateinit var fly: Pose
     lateinit var sleep: Pose
     lateinit var battleidle: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
+
+    val shoulderOffset = 0.5
 
     override val cryAnimation = CryProvider { bedrockStateful("beldum", "cry") }
 
@@ -93,7 +97,7 @@ class BeldumModel (root: ModelPart) : PokemonPosableModel(root) {
         shoulderLeft = registerPose(
                 poseType = PoseType.SHOULDER_LEFT,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         bedrock("beldum", "ground_idle")
                 ),
                 transformedParts = arrayOf(
@@ -104,7 +108,7 @@ class BeldumModel (root: ModelPart) : PokemonPosableModel(root) {
         shoulderRight = registerPose(
                 poseType = PoseType.SHOULDER_RIGHT,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         bedrock("beldum", "ground_idle")
                 ),
                 transformedParts = arrayOf(

@@ -88,7 +88,7 @@ class MurkrowModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
         shoulderLeft = registerPose(
                 poseType = PoseType.SHOULDER_LEFT,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("murkrow", "ground_idle")
                 )
@@ -97,7 +97,7 @@ class MurkrowModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
         shoulderRight = registerPose(
                 poseType = PoseType.SHOULDER_RIGHT,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("murkrow", "ground_idle")
                 )
