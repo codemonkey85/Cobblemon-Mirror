@@ -147,7 +147,7 @@ object ShowdownInterpreter {
         val entityPosList = battleActor.getSide().actors.mapNotNull { if (it is EntityBackedBattleActor<*>) it.initialPos else null }
         var entityPos = if (entityPosList.size == 1)
             entityPosList[0]
-        else if(entityPosList.size > 1)
+        else if (entityPosList.size > 1)
             entityPosList.fold(Vec3(0.0, 0.0, 0.0)) { acc, vec3 -> acc.add(vec3.scale(1.0 / entityPosList.size)) }
         else
             null
@@ -161,7 +161,7 @@ object ShowdownInterpreter {
         var baseOffset = entityPos?.let { opposingEntityPos?.subtract(it) }
 
         if (baseOffset != null) {
-            val minDistance = if(battle.isPvW) 8.0 else 5.0
+            val minDistance = if (battle.isPvW) 8.0 else 5.0
             val length = baseOffset.length()
             if (length < minDistance) {
                 val temp = baseOffset.scale(minDistance / length) ?: baseOffset

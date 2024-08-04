@@ -202,7 +202,8 @@ class BattleMoveSelection(
             if(this.request.activePokemon.getFormat().battleType.pokemonPerSide == 1) {
                 move.onClick()
             } else {
-                battleGUI.changeActionSelection(BattleTargetSelection(battleGUI, request, move.move))
+                battleGUI.changeActionSelection(BattleTargetSelectionOverlay(battleGUI, request, move.move))
+                playDownSound(Minecraft.getInstance().soundManager)
             }
             return true
         } else if (backButton.isHovered(mouseX, mouseY)) {

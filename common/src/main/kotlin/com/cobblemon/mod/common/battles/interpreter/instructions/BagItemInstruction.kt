@@ -33,7 +33,7 @@ class BagItemInstruction(val message: BattleMessage): InterpreterInstruction {
             val item = message.argumentAt(1)!!
 
             val index = pokemon.actor.itemsUsed.indexOfFirst { item == it.itemName }
-            if(index >= 0) {
+            if (index >= 0) {
                 val player = pokemon.actor.getPlayerUUIDs().first().getPlayer()
                 player?.giveOrDropItemStack(ItemStack(pokemon.actor.itemsUsed[index].returnItem))
                 pokemon.actor.itemsUsed.removeAt(index)

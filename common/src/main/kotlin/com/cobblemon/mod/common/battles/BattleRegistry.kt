@@ -132,7 +132,7 @@ object BattleRegistry {
                 // Remove any outstanding battle requests for the team
                 // TODO: Find a way to not do a reverse map look up
                 val battleChallengeEntry = pvpChallenges.entries.firstOrNull { it -> it.value.challengedPlayerUUID == teamEntry.teamID }
-                if(battleChallengeEntry != null) {
+                if (battleChallengeEntry != null) {
                     val battleChallenge = battleChallengeEntry.value
                     removeChallenge(battleChallengeEntry.key, battleChallenge.challengeId, true)
 

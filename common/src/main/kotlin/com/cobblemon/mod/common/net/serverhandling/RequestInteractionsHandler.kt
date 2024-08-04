@@ -40,7 +40,7 @@ object RequestInteractionsHandler : ServerNetworkPacketHandler<RequestPlayerInte
         ) == targetPlayerEntity) {
             //We could potentially check if the targeted player has pokemon here
             val squaredDistance = targetPlayerEntity.position().distanceToSqr(player.position())
-            if(squaredDistance <= Cobblemon.config.tradeMaxDistance.pow(2)) {
+            if (squaredDistance <= Cobblemon.config.tradeMaxDistance.pow(2)) {
                 options.add(PlayerInteractOptionsPacket.Options.TRADE)
             }
 
@@ -56,12 +56,12 @@ object RequestInteractionsHandler : ServerNetworkPacketHandler<RequestPlayerInte
                     options.add(PlayerInteractOptionsPacket.Options.SINGLE_BATTLE)
                     //options.add(PlayerInteractOptionsPacket.Options.ROYAL_BATTLE)
                     if (BattleRegistry.playerToTeam[player.uuid] != null && BattleRegistry.playerToTeam[packet.targetId] !== null) {
-                        if(BattleRegistry.playerToTeam[player.uuid]?.teamID != BattleRegistry.playerToTeam[packet.targetId]?.teamID) {
+                        if (BattleRegistry.playerToTeam[player.uuid]?.teamID != BattleRegistry.playerToTeam[packet.targetId]?.teamID) {
                             options.add(PlayerInteractOptionsPacket.Options.MULTI_BATTLE)
                         } else {
                             options.add(PlayerInteractOptionsPacket.Options.TEAM_LEAVE)
                         }
-                    } else if(BattleRegistry.playerToTeam[player.uuid] === null && BattleRegistry.playerToTeam[packet.targetId] === null) {
+                    } else if (BattleRegistry.playerToTeam[player.uuid] === null && BattleRegistry.playerToTeam[packet.targetId] === null) {
                         // TODO: Max team size checking, allow for team of size > 2
                         options.add(PlayerInteractOptionsPacket.Options.TEAM_REQUEST)
                     }

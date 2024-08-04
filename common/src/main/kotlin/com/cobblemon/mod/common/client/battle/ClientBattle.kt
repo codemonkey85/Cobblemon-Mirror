@@ -41,7 +41,7 @@ class ClientBattle(
         if (index != -1) {
            while(index < pendingActionRequests.size) {
                val request = pendingActionRequests[index]
-               if(request.response != PassActionResponse && request.response !is ForcePassActionResponse)
+               if (request.response != PassActionResponse && request.response !is ForcePassActionResponse)
                    request.response = null
                index++
            }
