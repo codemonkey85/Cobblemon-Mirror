@@ -6,47 +6,49 @@
     },
     {
       "type": "animation",
-      "animation": ["confusion", "psychic", "special"],
+      "animation": ["psychic", "special"],
       "delay": 1.2
     },
     {
       "type": "entity_particles",
-      "effect": "cobblemon:confusion_actorglint",
-      "locator": "special_attack",
-      "delay": 0.1
+      "effect": "cobblemon:psychic_actor",
+      "locator": "special_attack"
     },
     {
       "type": "entity_particles",
-      "effect": "cobblemon:confusion_actor",
-      "locator": "special_attack",
-      "delay": 0.85
-    },
-    {
-      "type": "entity_particles",
-      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
-      "effect": "cobblemon:confusion_target",
-      "locator": "special_attack",
-      "delay": 0.03
+      "effect": "cobblemon:psychic_actordots",
+      "locator": "special_attack"
     },
     {
       "type": "pause",
-      "pause": 0.9
+      "pause": 0.65
     },
     {
       "type": "entity_particles",
       "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
-      "effect": "cobblemon:confusion_impact",
+      "effect": "cobblemon:psychic_target",
+      "locator": "root"
+    },
+    {
+      "type": "entity_molang",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "expressions": ["q.play_animation(q.bedrock_stateful('psychic', 'target'))"]
+    },
+    {
+      "type": "pause",
+      "pause": 0.95
+    },
+    {
+      "type": "entity_particles",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "effect": "cobblemon:psychic_impact",
       "locator": "target"
     },
     {
       "type": "entity_particles",
       "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
-      "effect": "cobblemon:confusion_impactdots",
+      "effect": "cobblemon:psychic_impactdots",
       "locator": "target"
-    },
-    {
-      "type": "pause",
-      "pause": 0.01
     },
     {
       "type": "remove_holds",

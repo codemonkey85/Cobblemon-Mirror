@@ -1,0 +1,41 @@
+{
+  "timeline": [
+    {
+      "type": "add_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "animation",
+      "animation": ["mudsport", "ground", "status"],
+      "delay": 1.2
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:mudsport_actor",
+      "locator": "root"
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:mudsport_actorbubbles",
+      "locator": "root"
+    },
+    {
+      "type": "pause",
+      "pause": 0.45
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:mudsport_targetbubbles",
+      "locator": "root",
+      "delay": 1.75
+    },
+    {
+      "type": "remove_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "pause",
+      "pause": 1.95
+    }
+  ]
+}
