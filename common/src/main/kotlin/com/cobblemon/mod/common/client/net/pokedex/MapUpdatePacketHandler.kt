@@ -6,16 +6,19 @@ import io.netty.util.internal.PlatformDependent.putByte
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.NbtOps
 import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.dimension.DimensionType
 import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.saveddata.maps.MapId
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData
 import java.awt.Color
+import java.awt.Dimension
 import java.awt.Image
 import java.awt.image.BufferedImage
 import java.io.File
@@ -64,9 +67,11 @@ object MapUpdatePacketHandler : ServerNetworkPacketHandler<MapUpdatePacket> {
             if (stack.item == Items.MAP) {
                 val mapStack = ItemStack(Items.FILLED_MAP)
                 val mapId = world.freeMapId.id
+                val serializationContext = world.registryAccess().createSerializationContext(NbtOps.INSTANCE)
+                val dimensionNbt = serializationContext.withEncoder(DimensionType.CODEC).apply(world.dimensionTypeRegistration()).result().get()
 
                 val nbt = CompoundTag().apply {
-                    putString("dimension", world.dimensionTypeRegistration().value().toString())
+                    put("dimension", dimensionNbt)
                     putInt("xCenter", 0)
                     putInt("zCenter", 0)
                     putBoolean("locked", true)

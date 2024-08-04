@@ -64,7 +64,6 @@ transitive-accessible field net/minecraft/client/renderer/RenderStateShard OVERL
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_CUTOUT_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard LIGHTMAP Lnet/minecraft/client/renderer/RenderStateShard$LightmapStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard NO_CULL Lnet/minecraft/client/renderer/RenderStateShard$CullStateShard;
-transitive-accessible field net/minecraft/client/gui/widget/EntryListWidget hoveredEntry Lnet/minecraft/client/gui/widget/EntryListWidget$Entry;
 
 #transitive-accessible field  net/minecraft/recipe/BrewingRecipeRegistry ITEM_RECIPES Ljava/util/List;
 #transitive-accessible field  net/minecraft/recipe/BrewingRecipeRegistry POTION_RECIPES Ljava/util/List;
@@ -104,7 +103,6 @@ transitive-accessible method net/minecraft/world/entity/schedule/Activity <init>
 transitive-accessible method net/minecraft/network/protocol/game/ClientboundAddEntityPacket write (Lnet/minecraft/network/RegistryFriendlyByteBuf;)V
 transitive-accessible method net/minecraft/client/renderer/item/ItemProperties register (Lnet/minecraft/world/item/Item;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/item/ClampedItemPropertyFunction;)V
 
-transitive-accessible field net/minecraft/block/MapColor COLORS [Lnet/minecraft/block/MapColor;
 transitive-accessible method net/minecraft/world/entity/ai/sensing/SensorType <init> (Ljava/util/function/Supplier;)V
 #accessible method net/minecraft/client/render/RenderLayer$MultiPhase (Ljava/lang/String;Lnet/minecraft/client/render/VertexFormat;Lnet/minecraft/client/render/VertexFormat$DrawMode;IZZLnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
 transitive-accessible method net/minecraft/world/entity/Entity getDimensions (Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/entity/EntityDimensions;
