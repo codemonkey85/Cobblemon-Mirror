@@ -11,11 +11,9 @@ package com.cobblemon.mod.common.mixin;
 import com.cobblemon.mod.common.client.CobblemonClient;
 import com.cobblemon.mod.common.client.keybind.keybinds.PartySendBinding;
 import com.cobblemon.mod.common.item.PokedexItem;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
-import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,7 +27,7 @@ public class PartyScrollMixin {
     @Shadow
     private double accumulatedScrollY;
 
-    @Shadow @Final private MinecraftClient client;
+    @Shadow @Final private Minecraft minecraft;
 
     @Inject(
             method = "onScroll",
@@ -56,19 +54,19 @@ public class PartyScrollMixin {
                 accumulatedScrollY = 0;
                 PartySendBinding.INSTANCE.actioned();
             }
-        } else if (client.player != null && client.player.getMainHandStack().getItem() instanceof PokedexItem) {
-            PokedexItem pokedexItem = (PokedexItem) client.player.getMainHandStack().getItem();
+        } else if (minecraft.player != null && minecraft.player.getMainHandItem().getItem() instanceof PokedexItem) {
+            PokedexItem pokedexItem = (PokedexItem) minecraft.player.getMainHandItem().getItem();
 
             // Check if isScanning is true
             if (pokedexItem.isScanning()) {
                 // Adjust zoom level based on scroll direction
                 if (vertical != 0) {
                     pokedexItem.zoomLevel += vertical * 0.1;
-                    pokedexItem.zoomLevel = MathHelper.clamp(pokedexItem.zoomLevel, 1.0, 2.3);
+                    pokedexItem.zoomLevel = Mth.clamp(pokedexItem.zoomLevel, 1.0, 2.3);
                     pokedexItem.changeFOV(70.0); // Update the FOV
 
                     ci.cancel();
-                    eventDeltaVerticalWheel = 0;
+                    accumulatedScrollY = 0;
                 }
             }
         }

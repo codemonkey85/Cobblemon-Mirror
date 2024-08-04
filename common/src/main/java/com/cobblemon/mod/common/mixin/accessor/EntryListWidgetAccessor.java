@@ -8,12 +8,11 @@
 
 package com.cobblemon.mod.common.mixin.accessor;
 
-import net.minecraft.client.gui.widget.EntryListWidget;
-
+import net.minecraft.client.gui.components.AbstractSelectionList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(EntryListWidget.class)
+@Mixin(AbstractSelectionList.class)
 public interface EntryListWidgetAccessor {
     @Accessor("renderHeader")
     boolean getRenderHeader();

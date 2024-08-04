@@ -38,6 +38,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
+import net.minecraft.client.Minecraft
 import net.minecraft.client.color.block.BlockColor
 import net.minecraft.client.color.item.ItemColor
 import net.minecraft.client.model.geom.builders.LayerDefinition
@@ -106,7 +107,7 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
             val client = Minecraft.getInstance()
             val player = client.player
             if (player != null) {
-                val itemStack = player.mainHandStack
+                val itemStack = player.mainHandItem
                 if (itemStack.item is PokedexItem && (itemStack.item as PokedexItem).transitionTicks > 0) {
                     if (!(itemStack.item as PokedexItem).bufferImageSnap) {
                         (itemStack.item as PokedexItem).onRenderOverlay(GuiGraphics, tickCounter)
@@ -117,15 +118,15 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
 
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client ->
             // if player is holding pokedex item in their main hand look for other actions by them
-            if (client != null && client.currentScreen == null && client.player != null && client.player!!.mainHandStack.item is PokedexItem) {
-                val pokedexItem = client.player!!.mainHandStack.item as PokedexItem
+            if (client != null && client.screen == null && client.player != null && client.player!!.mainHandItem.item is PokedexItem) {
+                val pokedexItem = client.player!!.mainHandItem.item as PokedexItem
 
                 // if the player is currently scanning with the pokedex
                 if (pokedexItem.isScanning) {
-                    val attackKey = client.options.attackKey
+                    val attackKey = client.options.keyAttack
 
                     // If the attack key is currently pressed
-                    if (attackKey.isPressed) {
+                    if (attackKey.isDown) {
                         pokedexItem.attackKeyHeldTicks++
                         if (pokedexItem.attackKeyHeldTicks > 3) { // Adjust the threshold for considering it as a hold
                             pokedexItem.onMouseHeld()
