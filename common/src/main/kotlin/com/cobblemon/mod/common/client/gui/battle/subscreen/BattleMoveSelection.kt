@@ -67,7 +67,7 @@ class BattleMoveSelection(
     }
     var moveTiles = baseTiles
 
-    val backButton = BattleBackButton(x - 3F, Minecraft.getInstance().window.guiScaledHeight - 22F)
+    val backButton = BattleBackButton(x - 11F, Minecraft.getInstance().window.guiScaledHeight - 22F)
     val gimmickButtons = moveSet.getGimmicks().mapIndexed { index, gimmick ->
         val initOff = BattleBackButton.WIDTH * 0.65F
         val xOff = initOff + BattleGimmickButton.SPACING * index
@@ -202,7 +202,7 @@ class BattleMoveSelection(
             if(this.request.activePokemon.getFormat().battleType.pokemonPerSide == 1) {
                 move.onClick()
             } else {
-                battleGUI.changeActionSelection(BattleTargetSelectionOverlay(battleGUI, request, move.move))
+                battleGUI.changeActionSelection(BattleTargetSelectionPortrait(battleGUI, request, move.move))
                 playDownSound(Minecraft.getInstance().soundManager)
             }
             return true

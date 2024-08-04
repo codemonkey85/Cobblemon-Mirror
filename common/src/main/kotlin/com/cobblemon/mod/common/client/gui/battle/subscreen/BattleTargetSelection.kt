@@ -47,7 +47,6 @@ class BattleTargetSelection(
 
         val targetTexture = cobblemonResource("textures/gui/battle/battle_move.png")
         val moveOverlayTexture = cobblemonResource("textures/gui/battle/battle_move_overlay.png")
-//        val highlightTexture = cobblemonResource("textures/gui/battle/battle_menu_run.png")
     }
 
     val targets = request.activePokemon.getAllActivePokemon()

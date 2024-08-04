@@ -22,15 +22,15 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.sounds.SoundManager
 
-class BattleTargetSelectionOverlay(
+class BattleTargetSelectionPortrait(
         battleGUI: BattleGUI,
         request: SingleActionRequest,
         val move: InBattleMove
 ) : BattleActionSelection(
     battleGUI = battleGUI,
     request = request,
-    x = 20,
-    y = Minecraft.getInstance().window.guiScaledHeight - 84,
+    x = 0,
+    y = 0,
     width = 100,
     height = 100,
     battleLang("ui.select_move")
@@ -38,7 +38,7 @@ class BattleTargetSelectionOverlay(
 
     val targets = request.activePokemon.getAllActivePokemon()
 
-    val backButton = BattleBackButton(x - 3F, Minecraft.getInstance().window.guiScaledHeight - 22F)
+    val backButton = BattleBackButton(x + 9F, Minecraft.getInstance().window.guiScaledHeight - 22F)
     val selectableTargetList = move.target.targetList(request.activePokemon)
     val multiTargetList = if(selectableTargetList == null) request.activePokemon.getMultiTargetList(move.target) else null
     val mc = Minecraft.getInstance()
@@ -61,7 +61,7 @@ class BattleTargetSelectionOverlay(
 
 
     open inner class TargetTile(
-            val targetSelection: BattleTargetSelectionOverlay,
+            val targetSelection: BattleTargetSelectionPortrait,
             val target: ActiveClientBattlePokemon,
             val x: Float,
             val y: Float,
