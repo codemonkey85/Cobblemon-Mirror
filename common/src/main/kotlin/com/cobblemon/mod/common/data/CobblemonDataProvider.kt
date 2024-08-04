@@ -112,7 +112,9 @@ object CobblemonDataProvider : DataProvider {
 
     override fun sync(player: ServerPlayer) {
         if (!player.connection.connection.isMemoryConnection) {
-            this.registries.forEach { registry -> registry.sync(player) }
+            this.registries.forEach { registry ->
+                registry.sync(player)
+            }
         }
 
         CobblemonEvents.DATA_SYNCHRONIZED.emit(player)

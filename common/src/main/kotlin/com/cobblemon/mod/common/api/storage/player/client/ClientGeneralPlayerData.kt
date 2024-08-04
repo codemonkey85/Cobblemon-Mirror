@@ -14,6 +14,7 @@ import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.readIdentifier
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeIdentifier
+import com.cobblemon.mod.common.util.writeNullable
 import com.cobblemon.mod.common.util.writeString
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
@@ -42,7 +43,7 @@ data class ClientGeneralPlayerData(
         val starterUUID = starterUUID
         buf.writeNullable(starterUUID) { pb, value -> pb.writeString(value.toString()) }
         buf.writeNullable(resetStarters) { pb, value -> pb.writeBoolean(value) }
-        buf.writeIdentifier(battleTheme)
+        buf.writeNullable(battleTheme) {pb, value -> pb.writeIdentifier(value)}
     }
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf): SetClientPlayerDataPacket {
@@ -52,7 +53,7 @@ data class ClientGeneralPlayerData(
             val starterSelected = buffer.readBoolean()
             val starterUUID = buffer.readNullable { it.readString() }?.let { UUID.fromString(it) }
             val resetStarterPrompt = buffer.readNullable { it.readBoolean() }
-            val battleTheme = buffer.readIdentifier()
+            val battleTheme = buffer.readNullable { it.readIdentifier() }
             val data = ClientGeneralPlayerData(
                 resetStarterPrompt,
                 promptStarter,
