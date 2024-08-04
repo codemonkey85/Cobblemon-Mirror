@@ -30,7 +30,7 @@ import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.sound.PositionedSoundInstance
 import net.minecraft.text.Text
 import net.minecraft.util.math.ColorHelper
@@ -74,7 +74,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Dex
         return pX + width - 3// scrollBarWidth
     }
 
-    override fun renderScrollbar(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderScrollbar(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val xLeft = this.scrollbarX
         val xRight = xLeft + 3
 
@@ -96,7 +96,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Dex
     }
 
     override fun renderEntry(
-        context: DrawContext,
+        context: GuiGraphics,
         mouseX: Int,
         mouseY: Int,
         delta: Float,
@@ -137,7 +137,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Dex
         var y: Int = 0
 
         override fun render(
-            context: DrawContext,
+            context: GuiGraphics,
             index: Int,
             y: Int,
             x: Int,
@@ -162,7 +162,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Dex
 
                 if (species == null) return@forEachIndexed
 
-                val matrices = context.matrices
+                val matrices = context.pose()
 
                 val startPosX = x + ((SCROLL_SLOT_SPACING + SCROLL_SLOT_SIZE) * index)
                 val startPosY = y + if (isFirstRow) (SCROLL_SLOT_SPACING + 1) else SCROLL_SLOT_SPACING
@@ -265,7 +265,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Dex
             val hoverIndex = getHoveredSlotIndex(mouseX.toInt(), mouseY.toInt())
             if (hoverIndex > -1 && hoverIndex < dexDataList.size) {
                 setPokedexEntry.invoke(dexDataList[hoverIndex])
-                MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(CobblemonSounds.POKEDEX_CLICK, 1.0F))
+                Minecraft.getInstance().soundManager.play(PositionedSoundInstance.master(CobblemonSounds.POKEDEX_CLICK, 1.0F))
             }
 
             return true

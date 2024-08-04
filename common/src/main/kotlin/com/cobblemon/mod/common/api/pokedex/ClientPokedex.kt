@@ -14,8 +14,14 @@ import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerD
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.pokedex.DexPokemonData
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.Identifier
+import com.cobblemon.mod.common.util.readEnumConstant
+import com.cobblemon.mod.common.util.readIdentifier
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeEnumConstant
+import com.cobblemon.mod.common.util.writeIdentifier
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Clientside representation of the Pokedex
@@ -24,11 +30,11 @@ import net.minecraft.util.Identifier
  * @since February 24, 2024
  */
 class ClientPokedex(
-    val speciesEntries: MutableMap<Identifier, SpeciesPokedexEntry>,
+    val speciesEntries: MutableMap<ResourceLocation, SpeciesPokedexEntry>,
     val globalTrackedData: MutableSet<GlobalTrackedData>,
 ) : ClientInstancedPlayerData(false) {
 
-    override fun encode(buf: PacketByteBuf) {
+    override fun encode(buf: RegistryFriendlyByteBuf) {
         buf.writeInt(speciesEntries.size)
         speciesEntries.forEach {
             buf.writeIdentifier(it.key)
@@ -44,14 +50,14 @@ class ClientPokedex(
         return dexData.count{ discoveryLevel(it.identifier) == pokedexEntryProgress }
     }
 
-    fun discoveryLevel(species: Identifier): PokedexEntryProgress {
+    fun discoveryLevel(species: ResourceLocation): PokedexEntryProgress {
         val entry = speciesEntries[species] ?: return PokedexEntryProgress.NONE
 
         return entry.highestDiscoveryLevel()
     }
 
     companion object {
-        fun encodeSpeciesEntry(buf: PacketByteBuf, speciesEntry: SpeciesPokedexEntry) {
+        fun encodeSpeciesEntry(buf: RegistryFriendlyByteBuf, speciesEntry: SpeciesPokedexEntry) {
             buf.writeInt(speciesEntry.formEntries.size)
             speciesEntry.formEntries.forEach {
                 buf.writeString(it.key)
@@ -59,11 +65,11 @@ class ClientPokedex(
             }
         }
 
-        fun encodeFormEntry(buf: PacketByteBuf, formEntry: FormPokedexRecords) {
+        fun encodeFormEntry(buf: RegistryFriendlyByteBuf, formEntry: FormPokedexRecords) {
             buf.writeEnumConstant(formEntry.knowledge)
         }
 
-        fun decodeSpeciesEntry(buf: PacketByteBuf): SpeciesPokedexEntry {
+        fun decodeSpeciesEntry(buf: RegistryFriendlyByteBuf): SpeciesPokedexEntry {
             val formEntries = mutableMapOf<String, FormPokedexRecords>()
             val numForms = buf.readInt()
             for (i in 1..numForms) {
@@ -76,15 +82,15 @@ class ClientPokedex(
             return result
         }
 
-        fun decodeFormEntry(buf: PacketByteBuf): FormPokedexRecords {
+        fun decodeFormEntry(buf: RegistryFriendlyByteBuf): FormPokedexRecords {
             val knowledge = buf.readEnumConstant(PokedexEntryProgress::class.java)
             val result = FormPokedexRecords()
             result.knowledge = knowledge
             return FormPokedexRecords(knowledge)
         }
 
-        fun decode(buf: PacketByteBuf): SetClientPlayerDataPacket {
-            val speciesMap = mutableMapOf<Identifier, SpeciesPokedexEntry>()
+        fun decode(buf: RegistryFriendlyByteBuf): SetClientPlayerDataPacket {
+            val speciesMap = mutableMapOf<ResourceLocation, SpeciesPokedexEntry>()
             val statSet = mutableSetOf<GlobalTrackedData>()
             val numSpecies = buf.readInt()
             for (i in 1..numSpecies) {

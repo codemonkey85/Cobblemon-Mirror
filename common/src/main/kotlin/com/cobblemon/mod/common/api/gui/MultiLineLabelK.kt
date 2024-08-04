@@ -47,8 +47,8 @@ class MultiLineLabelK(
         scale: Float = 1F,
         shadow: Boolean = true
     ) {
-        context.matrices.push()
-        context.matrices.scale(scale, scale, 1F)
+        context.pose().pushPose()
+        context.pose().scale(scale, scale, 1F)
         comps.forEachIndexed { index, textWithWidth ->
             val yOffset = if (index == 0) YStartOffset else 0
             drawString(
@@ -61,7 +61,7 @@ class MultiLineLabelK(
                 font = font
             )
         }
-        context.matrices.pop()
+        context.pose().popPose()
     }
 
     class TextWithWidth internal constructor(val text: FormattedText, val width: Int)

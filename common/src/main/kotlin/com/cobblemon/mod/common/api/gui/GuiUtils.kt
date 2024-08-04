@@ -15,6 +15,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.repository.Rende
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.toHex
+import com.mojang.authlib.minecraft.client.MinecraftClient
 import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.platform.Lighting
 import com.mojang.blaze3d.systems.RenderSystem
@@ -149,17 +150,17 @@ fun drawText(
 
 @JvmOverloads
 fun drawTextJustifiedRight(
-    context: DrawContext,
-    font: Identifier? = null,
-    text: MutableText,
+    context: GuiGraphics,
+    font: ResourceLocation? = null,
+    text: MutableComponent,
     x: Number,
     y: Number,
     colour: Int,
     shadow: Boolean = true
 ) {
-    val comp = (text as MutableText).let { if (font != null) it.font(font) else it }
-    val textRenderer = MinecraftClient.getInstance().textRenderer
-    context.drawText(textRenderer, comp, x.toInt() - textRenderer.getWidth(comp), y.toInt(), colour, shadow)
+    val comp = text.let { if (font != null) it.font(font) else it }
+    val font = Minecraft.getInstance().font
+    context.drawString(font, comp, x.toInt() - font.width(comp), y.toInt(), colour, shadow)
 }
 
 @JvmOverloads

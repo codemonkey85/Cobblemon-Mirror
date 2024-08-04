@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.api.pokedex
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.util.StringIdentifiable
+import net.minecraft.util.StringRepresentable
 
 /**
  * Contains stats about a specific pokemon for putting in the pokedex
@@ -19,13 +19,12 @@ import net.minecraft.util.StringIdentifiable
  * @author JPAK, Apion
  * @since February 21, 2024
  */
-enum class PokedexEntryProgress : StringIdentifiable, Comparable<PokedexEntryProgress> {
+enum class PokedexEntryProgress : StringRepresentable, Comparable<PokedexEntryProgress> {
     NONE,
     ENCOUNTERED,
     CAUGHT;
-    override fun asString(): String {
-        return this.name
-    }
+
+    override fun getSerializedName() = this.name
     companion object {
         val CODEC: Codec<PokedexEntryProgress> = RecordCodecBuilder.create { instance ->
             instance.map ({

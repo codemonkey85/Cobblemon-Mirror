@@ -11,8 +11,12 @@ package com.cobblemon.mod.common.api.storage.player.client
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.Identifier
+import com.cobblemon.mod.common.util.readIdentifier
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeIdentifier
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.resources.ResourceLocation
 import java.util.UUID
 
 /**
@@ -28,25 +32,25 @@ data class ClientGeneralPlayerData(
     var starterLocked: Boolean = true,
     var starterSelected: Boolean = false,
     var starterUUID: UUID? = null,
-    val battleTheme: Identifier? = null
+    val battleTheme: ResourceLocation? = null
 ) : ClientInstancedPlayerData(false) {
 
-    override fun encode(buf: PacketByteBuf) {
+    override fun encode(buf: RegistryFriendlyByteBuf) {
         buf.writeBoolean(promptStarter)
         buf.writeBoolean(starterLocked)
         buf.writeBoolean(starterSelected)
         val starterUUID = starterUUID
-        buf.writeNullable(starterUUID) { pb, value -> pb.writeUuid(value) }
+        buf.writeNullable(starterUUID) { pb, value -> pb.writeString(value.toString()) }
         buf.writeNullable(resetStarters) { pb, value -> pb.writeBoolean(value) }
         buf.writeIdentifier(battleTheme)
     }
     companion object {
-        fun decode(buffer: PacketByteBuf): SetClientPlayerDataPacket {
+        fun decode(buffer: RegistryFriendlyByteBuf): SetClientPlayerDataPacket {
 
             val promptStarter = buffer.readBoolean()
             val starterLocked = buffer.readBoolean()
             val starterSelected = buffer.readBoolean()
-            val starterUUID = buffer.readNullable { it.readUuid() }
+            val starterUUID = buffer.readNullable { it.readString() }?.let { UUID.fromString(it) }
             val resetStarterPrompt = buffer.readNullable { it.readBoolean() }
             val battleTheme = buffer.readIdentifier()
             val data = ClientGeneralPlayerData(

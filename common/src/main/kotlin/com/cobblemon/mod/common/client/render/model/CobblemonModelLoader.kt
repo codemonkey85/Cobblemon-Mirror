@@ -12,11 +12,11 @@ package com.cobblemon.mod.common.client.render.model
 //    val bakedModelMap = mutableMapOf<Identifier, BakedModel>()
 //
 //    class CobblemonBaker : Baker{
-//        override fun getOrLoadModel(id: Identifier?): UnbakedModel {
+//        override fun getOrLoadModel(id: ResourceLocation?): UnbakedModel {
 //            TODO("Not yet implemented")
 //        }
 //
-//        override fun bake(id: Identifier?, settings: ModelBakeSettings?): BakedModel? {
+//        override fun bake(id: ResourceLocation?, settings: ModelBakeSettings?): BakedModel? {
 //            val unbakedModel = getOrLoadModel(id)
 //            val bakedModel = unbakedModel.bake(this, null, settings, id)
 //            TODO("Not yet implemented")

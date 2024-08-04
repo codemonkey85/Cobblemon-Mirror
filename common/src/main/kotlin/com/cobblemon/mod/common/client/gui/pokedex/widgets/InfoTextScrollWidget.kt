@@ -22,8 +22,8 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.SCROLL_BA
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.MutableText
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.text.MutableComponent
 import net.minecraft.text.Style
 import net.minecraft.text.Text
 import net.minecraft.util.math.ColorHelper
@@ -39,11 +39,11 @@ abstract class InfoTextScrollWidget(val pX: Int, val pY: Int): ScrollingWidget<I
         private val scrollBorder = cobblemonResource("textures/gui/pokedex/info_scroll_border.png")
     }
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         super.renderWidget(context, mouseX, mouseY, delta)
 
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = scrollBorder,
             x = (pX + 1) / SCALE,
             y = (pY + 40) / SCALE,
@@ -61,7 +61,7 @@ abstract class InfoTextScrollWidget(val pX: Int, val pY: Int): ScrollingWidget<I
     fun setText(text: Collection<String>) {
         clearEntries()
         text.forEach {
-            MinecraftClient.getInstance().textRenderer.textHandler.wrapLines(
+            Minecraft.getInstance().textRenderer.textHandler.wrapLines(
                 it.text(),
                 ((width - SCROLL_BAR_WIDTH  - (POKEMON_DESCRIPTION_PADDING * 2)) / SCALE).toInt(),
                 Style.EMPTY
@@ -71,7 +71,7 @@ abstract class InfoTextScrollWidget(val pX: Int, val pY: Int): ScrollingWidget<I
         }
     }
 
-    override fun renderScrollbar(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderScrollbar(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val xLeft = this.scrollbarX
         val xRight = xLeft + 3
 
@@ -93,7 +93,7 @@ abstract class InfoTextScrollWidget(val pX: Int, val pY: Int): ScrollingWidget<I
 
     class TextSlot(val text : String) : Slot<TextSlot>() {
         override fun render(
-            context: DrawContext,
+            context: GuiGraphics,
             index: Int,
             y: Int,
             x: Int,
@@ -104,7 +104,7 @@ abstract class InfoTextScrollWidget(val pX: Int, val pY: Int): ScrollingWidget<I
             hovered: Boolean,
             tickDelta: Float
         ) {
-            val matrices = context.matrices
+            val matrices = context.pose()
 
             matrices.push()
             MultiLineLabelK.create(

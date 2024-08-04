@@ -24,7 +24,7 @@ import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.text.Text
 import org.joml.Quaternionf
 import org.joml.Vector3f
@@ -47,8 +47,8 @@ class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
     var pokemonHeight: Float = 0F
     var weight: Float = 0F
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        val matrices = context.matrices
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        val matrices = context.pose()
 
 //        drawScaledText(
 //            context = context,
@@ -104,7 +104,7 @@ class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         matrices.translate(0.0, 0.0, 100.0)
 
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = gridPlayer,
             x = pX + 85,
             y = pY + 23.5,
@@ -122,7 +122,7 @@ class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         )
 
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = scrollBorder,
             x = (pX + 1) / SCALE,
             y = pY / SCALE,
@@ -134,7 +134,7 @@ class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         )
 
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = scrollBorder,
             x = (pX + 1) / SCALE,
             y = (pY + 40) / SCALE,

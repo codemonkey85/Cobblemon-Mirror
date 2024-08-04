@@ -35,7 +35,7 @@ import com.cobblemon.mod.common.pokedex.DexPokemonData
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.Drawable
 import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.Selectable
@@ -49,7 +49,7 @@ import net.minecraft.util.Identifier
  * @author JPAK
  * @since February 24, 2024
  */
-class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: String, val initSpecies: Identifier?): Screen(Text.translatable("cobblemon.ui.pokedex.title")) {
+class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: String, val initSpecies: ResourceLocation?): Screen(Text.translatable("cobblemon.ui.pokedex.title")) {
 
     companion object {
         private val screenBackground = cobblemonResource("textures/gui/pokedex/pokedex_screen.png")
@@ -68,8 +68,8 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Strin
         /**
          * Attempts to open this screen for a client.
          */
-        fun open(pokedex: ClientPokedex, type: String, species: Identifier? = null) {
-            val mc = MinecraftClient.getInstance()
+        fun open(pokedex: ClientPokedex, type: String, species: ResourceLocation? = null) {
+            val mc = Minecraft.getInstance()
             val screen = PokedexGUI(pokedex, type, species)
             mc.setScreen(screen)
         }
@@ -95,7 +95,7 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Strin
     var tabInfoIndex = TAB_DESCRIPTION
 
     override fun applyBlur(delta: Float) {}
-    override fun renderDarkening(context: DrawContext) {}
+    override fun renderDarkening(context: GuiGraphics) {}
 
     public override fun init() {
         super.init()
@@ -130,8 +130,8 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Strin
         updateFilters(true)
     }
 
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        val matrices = context.matrices
+    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        val matrices = context.pose()
         renderBackground(context, mouseX, mouseY, delta)
 
         val x = (width - BASE_WIDTH) / 2
@@ -449,6 +449,6 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Strin
     override fun shouldPause(): Boolean = false
 
     fun playSound(soundEvent: SoundEvent) {
-        MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(soundEvent, 1.0F))
+        Minecraft.getInstance().soundManager.play(PositionedSoundInstance.master(soundEvent, 1.0F))
     }
 }

@@ -86,7 +86,7 @@ class BattleCountableCriterion(
 //        json.add("battle_types", battleTypes.toJsonArray())
 //    }
 //
-//    override fun matches(player: ServerPlayerEntity, context: BattleCountableContext): Boolean {
+//    override fun matches(player: ServerPlayer, context: BattleCountableContext): Boolean {
 //        var typeCheck = false
 //        val advancementData = Cobblemon.playerData.get(player).advancementData
 //        if (battleTypes.isEmpty() || battleTypes.contains("any")) {

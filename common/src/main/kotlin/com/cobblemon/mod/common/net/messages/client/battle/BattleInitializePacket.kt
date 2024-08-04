@@ -28,7 +28,7 @@ import com.cobblemon.mod.common.util.writeMapK
 import com.cobblemon.mod.common.util.writeSizedInt
 import java.util.UUID
 import net.minecraft.network.RegistryByteBuf
-import net.minecraft.text.MutableText
+import net.minecraft.text.MutableComponent
 import kotlin.properties.Delegates
 import net.minecraft.text.TextCodecs
 

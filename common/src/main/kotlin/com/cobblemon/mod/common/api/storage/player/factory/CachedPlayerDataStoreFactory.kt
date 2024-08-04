@@ -16,7 +16,7 @@ import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
 import com.cobblemon.mod.common.util.removeIf
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 import java.util.UUID
 
 /**
@@ -51,12 +51,12 @@ class CachedPlayerDataStoreFactory<T : InstancedPlayerData>(val backend: PlayerD
         backend.save(getForPlayer(playerId))
     }
 
-    override fun onPlayerDisconnect(player: ServerPlayerEntity) {
+    override fun onPlayerDisconnect(player: ServerPlayer) {
         saveSingle(player.uuid)
         cache.remove(player.uuid)
     }
 
-    override fun sendToPlayer(player: ServerPlayerEntity) {
+    override fun sendToPlayer(player: ServerPlayer) {
         player.sendPacket(SetClientPlayerDataPacket(backend.dataType, getForPlayer(player).toClientData()))
     }
 

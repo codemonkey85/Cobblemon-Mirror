@@ -16,7 +16,7 @@ import com.cobblemon.mod.common.api.pokedex.trackeddata.SpeciesTrackedData
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import java.util.Optional
 import java.util.UUID
 import kotlin.jvm.optionals.getOrDefault
@@ -66,7 +66,7 @@ class SpeciesPokedexEntry(
         formEntries[formStr]?.knowledge = PokedexEntryProgress.CAUGHT
     }
 
-    fun pokemonSeen(speciesId: Identifier, formStr: String) {
+    fun pokemonSeen(speciesId: ResourceLocation, formStr: String) {
         if (!formEntries.containsKey(formStr)) {
             formEntries[formStr] = FormPokedexRecords()
         }

@@ -35,11 +35,11 @@ import org.joml.Vector3f
  * @since January 1st, 2024
  */
 sealed interface RenderableFace {
-    fun render(drawContext: GuiGraphics, partialTicks: Float)
+    fun render(GuiGraphics: GuiGraphics, partialTicks: Float)
 }
 
 class PlayerRenderableFace(val playerId: UUID) : RenderableFace {
-    override fun render(drawContext: GuiGraphics, partialTicks: Float) {
+    override fun render(GuiGraphics: GuiGraphics, partialTicks: Float) {
         val entity = Minecraft.getInstance().level?.getPlayerByUUID(playerId) ?: return
         // All of the maths below is shamelessly stolen from InventoryScreen.drawEntity.
         // the -20 and 5 divided by 40 are for configuring the yaw and pitch tilt of the body and head respectively.
@@ -63,7 +63,7 @@ class PlayerRenderableFace(val playerId: UUID) : RenderableFace {
         val size = 37F
         val xOffset = 0
         val yOffset = 72
-        InventoryScreen.renderEntityInInventory(drawContext, xOffset.toFloat(), yOffset.toFloat(), size, Vector3f(), quaternionf, quaternionf2, entity)
+        InventoryScreen.renderEntityInInventory(GuiGraphics, xOffset.toFloat(), yOffset.toFloat(), size, Vector3f(), quaternionf, quaternionf2, entity)
         // Resets the entity
         entity.yBodyRot = oldBodyYaw
         entity.yRot = oldEntityYaw
@@ -75,7 +75,7 @@ class PlayerRenderableFace(val playerId: UUID) : RenderableFace {
 
 class ReferenceRenderableFace(val entity: PosableEntity): RenderableFace {
     val state = entity.delegate as PosableState
-    override fun render(drawContext: GuiGraphics, partialTicks: Float) {
+    override fun render(GuiGraphics: GuiGraphics, partialTicks: Float) {
         val state = this.state
         if (state is PokemonClientDelegate) {
             state.currentAspects = state.currentEntity.pokemon.aspects
@@ -84,7 +84,7 @@ class ReferenceRenderableFace(val entity: PosableEntity): RenderableFace {
                 aspects = state.currentEntity.pokemon.aspects,
                 repository = PokemonModelRepository,
                 contextScale = state.currentEntity.pokemon.form.baseScale,
-                matrixStack = drawContext.pose(),
+                matrixStack = GuiGraphics.pose(),
                 state = state,
                 partialTicks = 0F // It's already being rendered potentially so we don't need to tick the state.
             )
@@ -97,7 +97,7 @@ class ReferenceRenderableFace(val entity: PosableEntity): RenderableFace {
                 identifier = state.npcEntity.npc.resourceIdentifier,
                 aspects = state.npcEntity.aspects,
                 repository = NPCModelRepository,
-                matrixStack = drawContext.pose(),
+                matrixStack = GuiGraphics.pose(),
                 state = state,
                 partialTicks = 0F, // It's already being rendered potentially so we don't need to tick the state.
                 limbSwing = limbSwing,
@@ -115,7 +115,7 @@ class ArtificialRenderableFace(
 ): RenderableFace {
     val state = FloatingState()
 
-    override fun render(drawContext: GuiGraphics, partialTicks: Float) {
+    override fun render(GuiGraphics: GuiGraphics, partialTicks: Float) {
         val state = this.state
         state.currentAspects = aspects
         if (modelType == "pokemon") {
@@ -126,7 +126,7 @@ class ArtificialRenderableFace(
             drawPosablePortrait(
                 identifier = species.resourceIdentifier,
                 aspects = aspects,
-                matrixStack = drawContext.pose(),
+                matrixStack = GuiGraphics.pose(),
                 contextScale = species.getForm(aspects).baseScale,
                 state = state,
                 repository = PokemonModelRepository,
@@ -136,7 +136,7 @@ class ArtificialRenderableFace(
             drawPosablePortrait(
                 identifier = identifier,
                 aspects = aspects,
-                matrixStack = drawContext.pose(),
+                matrixStack = GuiGraphics.pose(),
                 state = state,
                 repository = NPCModelRepository,
                 partialTicks = partialTicks

@@ -18,7 +18,7 @@ import com.cobblemon.mod.common.util.getPlayer
 import com.cobblemon.mod.common.util.removeIf
 import com.mongodb.client.MongoClient
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.network.ServerPlayer
 import java.util.UUID
 
 class MongoPlayerDataStoreFactory(mongoClient: MongoClient, databaseName: String) : PlayerInstancedDataFactory<GeneralPlayerData> {
@@ -43,11 +43,11 @@ class MongoPlayerDataStoreFactory(mongoClient: MongoClient, databaseName: String
         adapter.save(getForPlayer(playerId))
     }
 
-    override fun onPlayerDisconnect(player: ServerPlayerEntity) {
+    override fun onPlayerDisconnect(player: ServerPlayer) {
         cache.remove(player.uuid)
     }
 
-    override fun sendToPlayer(player: ServerPlayerEntity) {
+    override fun sendToPlayer(player: ServerPlayer) {
         player.sendPacket(SetClientPlayerDataPacket(getForPlayer(player)))
     }
 

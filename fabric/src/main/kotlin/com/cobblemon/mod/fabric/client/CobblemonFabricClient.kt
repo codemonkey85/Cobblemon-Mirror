@@ -102,14 +102,14 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
         })
 
         // Register the HUD render callback for pokedex
-        HudRenderCallback.EVENT.register { drawContext, tickCounter ->
-            val client = MinecraftClient.getInstance()
+        HudRenderCallback.EVENT.register { GuiGraphics, tickCounter ->
+            val client = Minecraft.getInstance()
             val player = client.player
             if (player != null) {
                 val itemStack = player.mainHandStack
                 if (itemStack.item is PokedexItem && (itemStack.item as PokedexItem).transitionTicks > 0) {
                     if (!(itemStack.item as PokedexItem).bufferImageSnap) {
-                        (itemStack.item as PokedexItem).onRenderOverlay(drawContext, tickCounter)
+                        (itemStack.item as PokedexItem).onRenderOverlay(GuiGraphics, tickCounter)
                     }
                 }
             }

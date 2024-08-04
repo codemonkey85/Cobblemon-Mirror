@@ -12,11 +12,12 @@ import com.cobblemon.mod.common.api.events.battles.BattleStartedPostEvent
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent
 import com.cobblemon.mod.common.api.events.pokemon.TradeCompletedEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEvent
+import com.cobblemon.mod.common.util.writeIdentifier
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.Identifier
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.resources.ResourceLocation
 
 /**
  * A type of tracked data specific to a species
@@ -45,8 +46,8 @@ abstract class SpeciesTrackedData(val speciesFilter: String) {
         return false
     }
 
-    fun encode(buf: PacketByteBuf) {
-        val variant = buf.writeIdentifier(TrackedDataTypes.classToVariant[this::class])
+    fun encode(buf: RegistryFriendlyByteBuf) {
+        val variant = buf.writeIdentifier(TrackedDataTypes.classToVariant[this::class]!!)
         internalEncode(buf)
     }
 
@@ -55,14 +56,14 @@ abstract class SpeciesTrackedData(val speciesFilter: String) {
     abstract override fun equals(other: Any?): Boolean
 
     //The type of GlobalTrackedData, used for serializing/deserializing
-    abstract fun getVariant(): Identifier
+    abstract fun getVariant(): ResourceLocation
 
     abstract fun clone(): GlobalTrackedData
 
-    abstract fun internalEncode(buf: PacketByteBuf)
+    abstract fun internalEncode(buf: RegistryFriendlyByteBuf)
 
     companion object {
-        val CODEC: Codec<SpeciesTrackedData> = Identifier.CODEC.dispatch("variant", {
+        val CODEC: Codec<SpeciesTrackedData> = ResourceLocation.CODEC.dispatch("variant", {
             TrackedDataTypes.classToVariant[it::class]
         }) {
             TrackedDataTypes.variantToCodec[it] as MapCodec<out SpeciesTrackedData>

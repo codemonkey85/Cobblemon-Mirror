@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.RegistryByteBuf
 
 /**

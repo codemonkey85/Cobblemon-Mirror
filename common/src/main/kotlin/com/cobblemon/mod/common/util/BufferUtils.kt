@@ -134,6 +134,12 @@ fun ByteBuf.readIdentifier(): ResourceLocation {
     return ResourceLocation.tryParse(str)!!
 }
 
+fun ByteBuf.writeIdentifier(id: ResourceLocation?) {
+    writeNullable(id.toString()) { buf, idStr ->
+        buf.writeString(idStr)
+    }
+}
+
 fun ByteBuf.writeIdentifier(id: ResourceLocation) {
     writeString(id.toString())
 }

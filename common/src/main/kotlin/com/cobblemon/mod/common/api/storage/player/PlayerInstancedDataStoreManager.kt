@@ -11,9 +11,9 @@ package com.cobblemon.mod.common.api.storage.player
 import com.cobblemon.mod.common.api.pokedex.PokedexRecord
 import com.cobblemon.mod.common.api.scheduling.ScheduledTask
 import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.player.Player
 
 /**
  * Manages all types of [InstancedPlayerData]
@@ -56,7 +56,7 @@ class PlayerInstancedDataStoreManager {
             .build()
     }
 
-    fun get(player: PlayerEntity, dataType: PlayerInstancedDataStoreType): InstancedPlayerData {
+    fun get(player: Player, dataType: PlayerInstancedDataStoreType): InstancedPlayerData {
         if (!factories.contains(dataType)) {
             throw UnsupportedOperationException("No factory registered for $dataType")
         }
@@ -76,13 +76,13 @@ class PlayerInstancedDataStoreManager {
         return factories[dataType]!!.saveSingle(playerData.uuid)
     }
 
-    fun onPlayerDisconnect(player: ServerPlayerEntity) {
+    fun onPlayerDisconnect(player: ServerPlayer) {
         factories.values.forEach {
             it.onPlayerDisconnect(player)
         }
     }
 
-    fun syncAllToPlayer(player: ServerPlayerEntity) {
+    fun syncAllToPlayer(player: ServerPlayer) {
         factories.values.forEach {
             it.sendToPlayer(player)
         }
@@ -94,11 +94,11 @@ class PlayerInstancedDataStoreManager {
         }
     }
 
-    fun getGenericData(player: ServerPlayerEntity): GeneralPlayerData {
+    fun getGenericData(player: ServerPlayer): GeneralPlayerData {
         return get(player, PlayerInstancedDataStoreType.GENERAL) as GeneralPlayerData
     }
 
-    fun getPokedexData(player: ServerPlayerEntity): PokedexRecord {
+    fun getPokedexData(player: ServerPlayer): PokedexRecord {
         return get(player, PlayerInstancedDataStoreType.POKEDEX) as PokedexRecord
     }
 }

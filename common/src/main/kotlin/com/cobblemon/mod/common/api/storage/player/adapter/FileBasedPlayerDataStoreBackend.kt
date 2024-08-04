@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.api.storage.player.adapter
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import net.minecraft.server.MinecraftServer
-import net.minecraft.util.WorldSavePath
+import net.minecraft.world.level.storage.LevelResource
 import java.nio.file.Path
 import java.util.UUID
 
@@ -32,7 +32,7 @@ abstract class FileBasedPlayerDataStoreBackend<T : InstancedPlayerData>(
     val useNestedStructure = true
 
     override fun setup(server: MinecraftServer) {
-        savePath = server.getSavePath(WorldSavePath.PLAYERDATA).parent
+        savePath = server.getWorldPath(LevelResource.PLAYER_DATA_DIR).parent
     }
 
     //TODO: Set file extension to be a field

@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.net.messages.client.ui
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.client.net.gui.PokedexUIPacketHandler
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.RegistryByteBuf
 import net.minecraft.util.Identifier
 
@@ -20,7 +20,7 @@ import net.minecraft.util.Identifier
  *
  * Handled by [PokedexUIPacketHandler].
  */
-class PokedexUIPacket(val type: String, val initSpecies: Identifier? = null): NetworkPacket<PokedexUIPacket> {
+class PokedexUIPacket(val type: String, val initSpecies: ResourceLocation? = null): NetworkPacket<PokedexUIPacket> {
 
     override val id = ID
 

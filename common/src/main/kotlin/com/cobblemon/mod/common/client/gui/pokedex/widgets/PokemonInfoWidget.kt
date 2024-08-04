@@ -40,10 +40,10 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.sound.PositionedSoundInstance
 import net.minecraft.sound.SoundEvent
-import net.minecraft.text.MutableText
+import net.minecraft.text.MutableComponent
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import org.joml.Quaternionf
@@ -88,8 +88,8 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
 
     var dexPokemonData : DexPokemonData? = null
     var speciesPokedexEntry : SpeciesPokedexEntry? = null
-    var speciesName: MutableText = Text.translatable("")
-    var speciesNumber: MutableText = "0000".text()
+    var speciesName: MutableComponent = Text.translatable("")
+    var speciesNumber: MutableComponent = "0000".text()
     var formsList: MutableList<String> = mutableListOf("normal")
     var selectedFormIndex: Int = 0
     var type: Array<ElementalType?> = arrayOf(null, null)
@@ -178,13 +178,13 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
         clickAction = { switchPose(true) }
     ).apply { addWidget(this) }
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (dexPokemonData == null || renderablePokemon == null) return
 
         val hasKnowledge = speciesPokedexEntry != null
         val species = dexPokemonData!!.species
 
-        val matrices = context.matrices
+        val matrices = context.pose()
 
         blitk(
             matrixStack = matrices,
@@ -505,7 +505,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
         }
     }
 
-    fun getPlatformResource(): Identifier? {
+    fun getPlatformResource(): ResourceLocation? {
         val primaryType = type[0]
         if (primaryType != null) {
             return try {
@@ -535,6 +535,6 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
     }
 
     fun playSound(soundEvent: SoundEvent) {
-        MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(soundEvent, 1.0F))
+        Minecraft.getInstance().soundManager.play(PositionedSoundInstance.master(soundEvent, 1.0F))
     }
 }

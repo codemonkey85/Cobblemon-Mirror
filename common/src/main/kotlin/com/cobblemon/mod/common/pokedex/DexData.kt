@@ -11,14 +11,12 @@ package com.cobblemon.mod.common.pokedex
 import com.cobblemon.mod.common.api.data.ClientDataSynchronizer
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryCategory
 import com.cobblemon.mod.common.api.pokedex.PokedexJSONRegistry
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 class DexData (
-    var identifier : Identifier,
+    var identifier : ResourceLocation,
     var enabled : Boolean = true,
-    var containedDexes : MutableList<Identifier> = mutableListOf(),
+    var containedDexes : MutableList<ResourceLocation> = mutableListOf(),
     var pokemonList : MutableList<DexPokemonData> = mutableListOf(),
     var overrideCategories : Boolean = false
 ): ClientDataSynchronizer<DexData> {

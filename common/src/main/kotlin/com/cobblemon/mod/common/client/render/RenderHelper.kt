@@ -136,7 +136,7 @@ fun drawScaledText(
         pMouseY = pMouseY?.toFloat()?.div(scale * extraScale)?.plus((1F - extraScale) * fontHeight * scale)
     )
     matrices.popPose()
-    // Draw tooltip that was created with onHover and is attached to the MutableText
+    // Draw tooltip that was created with onHover and is attached to the MutableComponent
     if (isHovered) {
         context.renderComponentHoverEffect(Minecraft.getInstance().font, text.style, pMouseX!!, pMouseY!!)
     }
@@ -173,9 +173,9 @@ fun drawScaledText(
 }
 
 fun drawScaledTextJustifiedRight(
-    context: DrawContext,
-    font: Identifier? = null,
-    text: MutableText,
+    context: GuiGraphics,
+    font: ResourceLocation? = null,
+    text: MutableComponent,
     x: Number,
     y: Number,
     scale: Float = 1F,
@@ -187,10 +187,10 @@ fun drawScaledTextJustifiedRight(
     if (opacity.toFloat() < 0.05F) {
         return
     }
-    val textWidth = MinecraftClient.getInstance().textRenderer.getWidth(if (font != null) text.font(font) else text)
+    val textWidth = Minecraft.getInstance().textRenderer.getWidth(if (font != null) text.font(font) else text)
     val extraScale = if (textWidth < maxCharacterWidth) 1F else (maxCharacterWidth / textWidth.toFloat())
     val fontHeight = if (font == null) 5F else 6F
-    val matrixStack = context.matrices
+    val matrixStack = context.pose()
     matrixStack.push()
     matrixStack.scale(scale * extraScale, scale * extraScale, 1F)
     drawTextJustifiedRight(
@@ -206,8 +206,8 @@ fun drawScaledTextJustifiedRight(
 }
 
 fun drawScaledTextJustifiedRight(
-    context: DrawContext,
-    text: MutableText,
+    context: GuiGraphics,
+    text: MutableComponent,
     x: Number,
     y: Number,
     scaleX: Float = 1F,
@@ -219,7 +219,7 @@ fun drawScaledTextJustifiedRight(
     if (opacity.toFloat() < 0.05F) {
         return
     }
-    val matrixStack = context.matrices
+    val matrixStack = context.pose()
     matrixStack.push()
     matrixStack.scale(scaleX, scaleY, 1F)
     drawTextJustifiedRight(

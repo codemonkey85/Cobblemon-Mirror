@@ -18,7 +18,7 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.SCALE
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.text.Text
 
@@ -28,7 +28,7 @@ class SearchWidget(
     width: Int,
     height: Int,
     text: Text = "Search".text(),
-    val update: () -> (Unit)): TextFieldWidget(MinecraftClient.getInstance().textRenderer,
+    val update: () -> (Unit)): TextFieldWidget(Minecraft.getInstance().textRenderer,
     posX.toInt(), posY.toInt(), width, height, text) {
 
     companion object {
@@ -52,8 +52,8 @@ class SearchWidget(
         }
     }
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        val matrices = context.matrices
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        val matrices = context.pose()
 
         blitk(
             matrixStack = matrices,

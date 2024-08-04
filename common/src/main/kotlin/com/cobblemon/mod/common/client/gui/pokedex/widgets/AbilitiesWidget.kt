@@ -15,7 +15,7 @@ import com.cobblemon.mod.common.client.gui.pokedex.ScaledButton
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.text.Text
 
 class AbilitiesWidget(x: Int, y: Int): InfoTextScrollWidget(pX = x, pY = y) {
@@ -58,7 +58,7 @@ class AbilitiesWidget(x: Int, y: Int): InfoTextScrollWidget(pX = x, pY = y) {
         setAbility()
     }
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (!abilitiesAvailable()) return
 
         drawScaledText(

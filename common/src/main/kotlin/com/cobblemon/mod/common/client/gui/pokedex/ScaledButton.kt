@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.client.gui.pokedex
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.text.text
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.sound.PositionedSoundInstance
@@ -23,7 +23,7 @@ class ScaledButton(
     var buttonY: Float,
     val buttonWidth: Number,
     val buttonHeight: Number,
-    var resource: Identifier? = null,
+    var resource: ResourceLocation? = null,
     val scale: Float = 0.5F,
     val silent: Boolean = false,
     val clickAction: PressAction
@@ -35,8 +35,8 @@ class ScaledButton(
     override fun appendDefaultNarrations(builder: NarrationMessageBuilder) {
     }
 
-    override fun renderWidget(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
-        val matrices = context.matrices
+    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+        val matrices = context.pose()
 
         if (resource != null) {
             blitk(
