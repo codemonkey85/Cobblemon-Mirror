@@ -16,7 +16,7 @@ import com.cobblemon.mod.common.net.messages.client.pokemon.update.evolution.Add
 import com.cobblemon.mod.common.net.messages.client.pokemon.update.evolution.AddEvolutionPacket.Companion.encode
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class RemoveEvolutionPacket(pokemon: () -> Pokemon, value: EvolutionDisplay) : SingleUpdatePacket<EvolutionDisplay, RemoveEvolutionPacket>(pokemon, value) {
 
@@ -24,7 +24,7 @@ class RemoveEvolutionPacket(pokemon: () -> Pokemon, value: EvolutionDisplay) : S
 
     constructor(pokemon: Pokemon, value: Evolution) : this({ pokemon }, value.convertToDisplay(pokemon))
 
-    override fun encodeValue(buffer: RegistryByteBuf) {
+    override fun encodeValue(buffer: RegistryFriendlyByteBuf) {
         this.value.encode(buffer)
     }
 
@@ -35,7 +35,7 @@ class RemoveEvolutionPacket(pokemon: () -> Pokemon, value: EvolutionDisplay) : S
     companion object {
         val ID = cobblemonResource("remove_evolution")
 
-        fun decode(buffer: RegistryByteBuf) = RemoveEvolutionPacket(decodePokemon(buffer), decodeDisplay(buffer))
+        fun decode(buffer: RegistryFriendlyByteBuf) = RemoveEvolutionPacket(decodePokemon(buffer), decodeDisplay(buffer))
 
     }
 

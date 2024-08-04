@@ -16,8 +16,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class KommoOModel (root: ModelPart) : PokemonPosableModel(root), BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("kommo_o")
@@ -28,10 +28,10 @@ class KommoOModel (root: ModelPart) : PokemonPosableModel(root), BipedFrame, Bim
     override val rightLeg = getPart("leg_left")
 
     override var portraitScale = 1.69F
-    override var portraitTranslation = Vec3d(-0.65, 3.56, 0.0)
+    override var portraitTranslation = Vec3(-0.65, 3.56, 0.0)
 
     override var profileScale = 0.39F
-    override var profileTranslation = Vec3d(0.0, 1.16, -6.0)
+    override var profileTranslation = Vec3(0.0, 1.16, -6.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

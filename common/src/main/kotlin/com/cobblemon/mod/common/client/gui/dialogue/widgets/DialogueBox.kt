@@ -15,12 +15,12 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.net.messages.client.dialogue.dto.DialogueInputDTO
 import com.cobblemon.mod.common.net.messages.server.dialogue.InputToDialoguePacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget
-import net.minecraft.text.MutableText
-import net.minecraft.text.OrderedText
-import net.minecraft.util.Language
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.ObjectSelectionList
+import net.minecraft.locale.Language
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.util.FormattedCharSequence
 
 /**
  * UI element for showing the lines of dialogue text.
@@ -34,9 +34,9 @@ class DialogueBox(
     val listY: Int = 0,
     val frameWidth: Int,
     height: Int,
-    messages: List<MutableText>
-): AlwaysSelectedEntryListWidget<DialogueBox.DialogueLine>(
-    MinecraftClient.getInstance(),
+    messages: List<MutableComponent>
+): ObjectSelectionList<DialogueBox.DialogueLine>(
+    Minecraft.getInstance(),
     frameWidth - 14,
     height, // height
     1, // top
@@ -54,28 +54,30 @@ class DialogueBox(
     init {
         correctSize()
 
-        val textRenderer = MinecraftClient.getInstance().textRenderer
+        val textRenderer = Minecraft.getInstance().font
 
         messages
-            .flatMap { Language.getInstance().reorder(textRenderer.textHandler.wrapLines(it, LINE_WIDTH, it.style)) }
+            .flatMap { Language.getInstance().getVisualOrder(textRenderer.splitter.splitLines(it, LINE_WIDTH, it.style)) }
             .forEach { addEntry(DialogueLine(it)) }
     }
 
-    override fun drawMenuListBackground(context: DrawContext) {}
-    override fun drawSelectionHighlight(context: DrawContext, y: Int, entryWidth: Int, entryHeight: Int, borderColor: Int, fillColor: Int) {}
-    override fun renderHeader(context: DrawContext?, x: Int, y: Int) {
+    override fun renderListBackground(context: GuiGraphics) {}
+
+    override fun renderSelection(context: GuiGraphics, y: Int, entryWidth: Int, entryHeight: Int, borderColor: Int, fillColor: Int) {}
+
+    override fun renderHeader(context: GuiGraphics, x: Int, y: Int) {
 //        super.renderHeader(context, x, y)
     }
 
-    override fun drawHeaderAndFooterSeparators(context: DrawContext?) {}
+    override fun renderListSeparators(context: GuiGraphics) {}
 
-    override fun renderDecorations(context: DrawContext?, mouseX: Int, mouseY: Int) {
+    override fun renderDecorations(context: GuiGraphics, mouseX: Int, mouseY: Int) {
 //        super.renderDecorations(context, mouseX, mouseY)
     }
 
     private fun correctSize() {
         val textBoxHeight = height
-        setDimensions(width, textBoxHeight)
+        setSize(width, textBoxHeight)
         x = listX + 8
         y = listY + 6
 //        setDimensionsAndPosition(width, textBoxHeight, appropriateY + 6, appropriateY + 6 + textBoxHeight)
@@ -96,18 +98,18 @@ class DialogueBox(
         return 80
     }
 
-    override fun getScrollbarX(): Int {
+    override fun getScrollbarPosition(): Int {
         return this.x + 144
     }
 
     private fun scaleIt(i: Number): Int {
-        return (client.window.scaleFactor * i.toFloat()).toInt()
+        return (minecraft.window.guiScale * i.toFloat()).toInt()
     }
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
         correctSize()
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = boxResource,
             x = x - 8,
             y = y - 7,
@@ -121,7 +123,7 @@ class DialogueBox(
 //        context.disableScissor()
     }
 
-    override fun enableScissor(context: DrawContext) {
+    override fun enableScissor(context: GuiGraphics) {
         val textBoxHeight = height
         context.enableScissor(
             this.x,
@@ -170,16 +172,17 @@ class DialogueBox(
     }
 
     private fun updateScrollingState(mouseX: Double, mouseY: Double) {
-        scrolling = mouseX >= this.scrollbarX.toDouble()
-                && mouseX < (this.scrollbarX + 3).toDouble()
+        scrolling = mouseX >= this.scrollbarPosition.toDouble()
+                && mouseX < (this.scrollbarPosition + 3).toDouble()
                 && mouseY >= this.y
                 && mouseY < bottom
     }
 
-    class DialogueLine(val line: OrderedText) : Entry<DialogueLine>() {
+    class DialogueLine(val line: FormattedCharSequence) : Entry<DialogueLine>() {
         override fun getNarration() = "".text()
-        override fun drawBorder(
-            context: DrawContext?,
+
+        override fun renderBack(
+            context: GuiGraphics,
             index: Int,
             y: Int,
             x: Int,
@@ -192,7 +195,7 @@ class DialogueBox(
         ) {}
 
         override fun render(
-            context: DrawContext,
+            context: GuiGraphics,
             index: Int,
             rowTop: Int,
             rowLeft: Int,

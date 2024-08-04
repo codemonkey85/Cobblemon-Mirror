@@ -10,17 +10,15 @@ package com.cobblemon.mod.common.client.gui.npc
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.text.text
-import com.cobblemon.mod.common.client.gui.dialogue.widgets.DialogueTextInputWidget
 import com.cobblemon.mod.common.client.gui.npc.widgets.NPCRenderWidget
 import com.cobblemon.mod.common.client.gui.npc.widgets.SimpleNPCTextInputWidget
 import com.cobblemon.mod.common.net.messages.client.npc.dto.NPCConfigurationDTO
 import com.cobblemon.mod.common.net.messages.server.npc.SaveNPCPacket
 import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.client.gui.screen.report.ChatSelectionScreen.SelectionListWidget
-import net.minecraft.client.gui.widget.ButtonWidget
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Button
+import net.minecraft.client.gui.screens.Screen
 
 class NPCEditorScreen(
     val npcId: Int,
@@ -34,9 +32,9 @@ class NPCEditorScreen(
     }
 
     val middleX: Int
-        get() = this.client!!.window.scaledWidth / 2
+        get() = this.minecraft!!.window.guiScaledWidth / 2
     val middleY: Int
-        get() = this.client!!.window.scaledHeight / 2
+        get() = this.minecraft!!.window.guiScaledHeight / 2
 
     val leftX: Int
         get() = middleX - BASE_WIDTH / 2
@@ -45,8 +43,8 @@ class NPCEditorScreen(
 
     override fun init() {
         super.init()
-        addDrawable(NPCRenderWidget(leftX + 6, topY + 32, dto.npcClass, dto.aspects))
-        addDrawableChild(SimpleNPCTextInputWidget(
+        addRenderableOnly(NPCRenderWidget(leftX + 6, topY + 32, dto.npcClass, dto.aspects))
+        addRenderableWidget(SimpleNPCTextInputWidget(
             texture = cobblemonResource("textures/gui/npc/basic_text_input.png"),
             getter = { dto.npcName.string },
             setter = { dto.npcName = it.text() },
@@ -55,7 +53,7 @@ class NPCEditorScreen(
             width = 130,
             height = 22
         ))
-        addDrawableChild(SimpleNPCTextInputWidget(
+        addRenderableWidget(SimpleNPCTextInputWidget(
             texture = cobblemonResource("textures/gui/npc/aspects_text_input.png"),
             getter = { dto.aspects.joinToString() },
             setter = {
@@ -69,21 +67,21 @@ class NPCEditorScreen(
             maxLength = 75,
             wrap = true
         ))
-        addDrawableChild(
-            ButtonWidget
+        addRenderableWidget(
+            Button
                 .builder("Save".text()) {
                     SaveNPCPacket(npcId, dto).sendToServer()
-                    this.client!!.setScreen(null)
+                    this.minecraft!!.setScreen(null)
                 }
-                .position(leftX + BASE_WIDTH - 42, topY + BASE_HEIGHT - 18)
+                .pos(leftX + BASE_WIDTH - 42, topY + BASE_HEIGHT - 18)
                 .size(40, 16)
                 .build()
         )
     }
 
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = baseResource,
             x = leftX,
             y = topY,

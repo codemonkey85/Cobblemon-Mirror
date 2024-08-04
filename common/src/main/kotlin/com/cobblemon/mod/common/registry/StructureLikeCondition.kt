@@ -11,9 +11,9 @@ package com.cobblemon.mod.common.registry
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.conditional.RegistryLikeIdentifierCondition
 import com.cobblemon.mod.common.api.conditional.RegistryLikeTagCondition
-import net.minecraft.registry.tag.TagKey
-import net.minecraft.util.Identifier
-import net.minecraft.world.gen.structure.Structure
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.TagKey
+import net.minecraft.world.level.levelgen.structure.Structure
 
 /**
  * A [RegistryLikeCondition] that expects a [TagKey] attached to the [Structure] registry.
@@ -23,8 +23,8 @@ import net.minecraft.world.gen.structure.Structure
 class StructureTagCondition(tag: TagKey<Structure>) : RegistryLikeTagCondition<Structure>(tag)
 
 /**
- * A [RegistryLikeCondition] that expects an [Identifier] to match.
+ * A [RegistryLikeCondition] that expects an [ResourceLocation] to match.
  *
  * @property identifier The identifier for the structure being referenced.
  */
-class StructureIdentifierCondition(identifier: Identifier) : RegistryLikeIdentifierCondition<Structure>(identifier)
+class StructureIdentifierCondition(identifier: ResourceLocation) : RegistryLikeIdentifierCondition<Structure>(identifier)

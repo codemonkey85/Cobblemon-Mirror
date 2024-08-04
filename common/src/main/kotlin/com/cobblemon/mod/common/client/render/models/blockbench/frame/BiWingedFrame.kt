@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.client.render.models.blockbench.frame
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.WingFlapIdleAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.WaveFunction
-import net.minecraft.client.model.ModelPart
+import net.minecraft.client.model.geom.ModelPart
 
 interface BiWingedFrame : ModelFrame {
     val leftWing: ModelPart

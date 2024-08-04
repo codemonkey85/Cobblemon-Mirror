@@ -17,7 +17,7 @@ import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.pokemon.status.PersistentStatus
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import java.util.UUID
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
 
 /**
  * The client side representation of a Pokémon in battle.
@@ -34,7 +34,7 @@ import net.minecraft.text.MutableText
  */
 class ClientBattlePokemon(
     val uuid: UUID,
-    var displayName: MutableText,
+    var displayName: MutableComponent,
     var properties: PokemonProperties,
     var aspects: Set<String>,
     var hpValue: Float,

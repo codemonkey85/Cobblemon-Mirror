@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokeball
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableEntityModel
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
-import net.minecraft.entity.Entity
+import net.minecraft.world.entity.Entity
 
 class PosablePokeBallModel : PosableEntityModel<EmptyPokeBallEntity>() {
     override fun setupEntityTypeContext(entity: Entity?) {

@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.net.messages.server.npc
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.net.messages.client.npc.dto.NPCConfigurationDTO
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Packet sent to the server to save an NPC's configuration. It will validate the
@@ -26,14 +26,14 @@ class SaveNPCPacket(
 ) : NetworkPacket<SaveNPCPacket> {
     companion object {
         val ID = cobblemonResource("save_npc")
-        fun decode(buffer: RegistryByteBuf) = SaveNPCPacket(
+        fun decode(buffer: RegistryFriendlyByteBuf) = SaveNPCPacket(
             npcId = buffer.readInt(),
             npcConfigurationDTO = NPCConfigurationDTO().also { it.decode(buffer) }
         )
     }
 
     override val id = ID
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeInt(npcId)
         npcConfigurationDTO.encode(buffer)
     }

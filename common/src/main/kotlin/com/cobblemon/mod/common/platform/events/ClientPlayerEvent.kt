@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.platform.events
 
-import net.minecraft.client.network.ClientPlayerEntity
+import net.minecraft.client.player.LocalPlayer
 
 /**
  * Events related to a [ClientPlayerEntity].
@@ -23,16 +23,16 @@ interface ClientPlayerEvent {
     /**
      * The [ClientPlayerEntity] triggering the events.
      */
-    val player: ClientPlayerEntity
+    val player: LocalPlayer
 
     /**
      * Fired when the [player] logs in.
      */
-    data class Login(override val player: ClientPlayerEntity) : ClientPlayerEvent
+    data class Login(override val player: LocalPlayer) : ClientPlayerEvent
 
     /**
      * Fired when the [player] logs out.
      */
-    data class Logout(override val player: ClientPlayerEntity) : ClientPlayerEvent
+    data class Logout(override val player: LocalPlayer) : ClientPlayerEvent
 
 }

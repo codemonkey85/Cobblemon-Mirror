@@ -27,11 +27,6 @@ import com.cobblemon.mod.common.api.events.CobblemonEvents.LEVEL_UP_EVENT
 import com.cobblemon.mod.common.api.events.CobblemonEvents.POKEMON_CAPTURED
 import com.cobblemon.mod.common.api.events.CobblemonEvents.STARTER_CHOSEN
 import com.cobblemon.mod.common.api.events.CobblemonEvents.TRADE_COMPLETED
-import com.cobblemon.mod.common.api.net.serializers.IdentifierDataSerializer
-import com.cobblemon.mod.common.api.net.serializers.PoseTypeDataSerializer
-import com.cobblemon.mod.common.api.net.serializers.StringSetDataSerializer
-import com.cobblemon.mod.common.api.net.serializers.UUIDSetDataSerializer
-import com.cobblemon.mod.common.api.net.serializers.Vec3DataSerializer
 import com.cobblemon.mod.common.api.permission.PermissionValidator
 import com.cobblemon.mod.common.api.pokeball.catching.calculators.CaptureCalculator
 import com.cobblemon.mod.common.api.pokeball.catching.calculators.CaptureCalculators
@@ -53,13 +48,8 @@ import com.cobblemon.mod.common.api.scheduling.ServerRealTimeTaskTracker
 import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
 import com.cobblemon.mod.common.api.spawning.BestSpawner
 import com.cobblemon.mod.common.api.spawning.CobblemonSpawningProspector
-import com.cobblemon.mod.common.api.spawning.WorldSlice
 import com.cobblemon.mod.common.api.spawning.context.AreaContextResolver
-import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
-import com.cobblemon.mod.common.api.spawning.context.calculators.AreaSpawningContextCalculator
-import com.cobblemon.mod.common.api.spawning.context.calculators.AreaSpawningInput
 import com.cobblemon.mod.common.api.spawning.prospecting.SpawningProspector
-import com.cobblemon.mod.common.api.spawning.spawner.Spawner
 import com.cobblemon.mod.common.api.starter.StarterHandler
 import com.cobblemon.mod.common.api.storage.PokemonStoreManager
 import com.cobblemon.mod.common.api.storage.adapter.conversions.ReforgedConversion
@@ -101,7 +91,6 @@ import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.events.AdvancementHandler
 import com.cobblemon.mod.common.events.PokedexHandler
 import com.cobblemon.mod.common.events.ServerTickHandler
-import com.cobblemon.mod.common.item.PokeBallItem
 import com.cobblemon.mod.common.net.messages.client.settings.ServerSettingsPacket
 import com.cobblemon.mod.common.permission.LaxPermissionValidator
 import com.cobblemon.mod.common.platform.events.PlatformEvents
@@ -125,27 +114,24 @@ import com.cobblemon.mod.common.world.feature.ore.CobblemonOrePlacedFeatures
 import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
-import net.minecraft.client.MinecraftClient
-import net.minecraft.command.argument.serialize.ConstantArgumentSerializer
-import net.minecraft.entity.data.TrackedDataHandlerRegistry
-import net.minecraft.item.Items
-import net.minecraft.item.NameTagItem
-import net.minecraft.registry.RegistryKey
-import net.minecraft.util.WorldSavePath
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import java.io.PrintWriter
 import java.util.*
+import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
-import kotlin.math.roundToInt
+import net.minecraft.client.Minecraft
+import net.minecraft.commands.synchronization.SingletonArgumentInfo
+import net.minecraft.resources.ResourceKey
+import net.minecraft.world.item.NameTagItem
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.storage.LevelResource
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 object Cobblemon {
     const val MODID = CobblemonBuildDetails.MOD_ID
@@ -200,6 +186,7 @@ object Cobblemon {
         implementation.registerParticles()
         implementation.registerEntityDataSerializers()
         implementation.registerCriteria()
+        implementation.registerEntitySubPredicates()
 
         DropEntry.register("command", CommandDropEntry::class.java)
         DropEntry.register("item", ItemDropEntry::class.java, isDefault = true)
@@ -236,18 +223,18 @@ object Cobblemon {
         }
 
         PlatformEvents.RIGHT_CLICK_ENTITY.subscribe { event ->
-            if (event.player.getStackInHand(event.hand).item is NameTagItem && event.entity.type.isIn(CobblemonEntityTypeTags.CANNOT_HAVE_NAME_TAG)) {
+            if (event.player.getItemInHand(event.hand).item is NameTagItem && event.entity.type.`is`(CobblemonEntityTypeTags.CANNOT_HAVE_NAME_TAG)) {
                 event.cancel()
             }
         }
         PlatformEvents.RIGHT_CLICK_BLOCK.subscribe { event ->
             val player = event.player
-            val block = player.world.getBlockState(event.pos).block
+            val block = player.level().getBlockState(event.pos).block
             player.party().forEach { pokemon ->
                 pokemon.lockedEvolutions
                     .filterIsInstance<BlockClickEvolution>()
                     .forEach { evolution ->
-                        evolution.attemptEvolution(pokemon, BlockClickEvolution.BlockInteractionContext(block, player.world))
+                        evolution.attemptEvolution(pokemon, BlockClickEvolution.BlockInteractionContext(block, player.level()))
                     }
             }
         }
@@ -263,7 +250,7 @@ object Cobblemon {
         CobblemonEvents.FRIENDSHIP_UPDATED.subscribe(Priority.LOWEST) { event ->
             var increment = (event.newFriendship - event.pokemon.friendship).toFloat()
             // Our Luxury ball spec is diff from official, but we will still assume these stack
-            if (event.pokemon.heldItemNoCopy().isIn(CobblemonItemTags.IS_FRIENDSHIP_BOOSTER)) {
+            if (event.pokemon.heldItemNoCopy().`is`(CobblemonItemTags.IS_FRIENDSHIP_BOOSTER)) {
                 increment += increment * 0.5F
             }
             event.newFriendship = event.pokemon.friendship + increment.roundToInt()
@@ -315,7 +302,7 @@ object Cobblemon {
 
             val mongoClient: MongoClient?
 
-            val pokemonStoreRoot = server.getSavePath(WorldSavePath.ROOT).resolve("pokemon").toFile()
+            val pokemonStoreRoot = server.getWorldPath(LevelResource.ROOT).resolve("pokemon").toFile()
             val storeAdapter = when (config.storageFormat) {
                 "nbt", "json" -> {
                     val generalJsonFactory = CachedPlayerDataStoreFactory(PlayerDataJsonBackend())
@@ -363,7 +350,7 @@ object Cobblemon {
 
                 else -> throw IllegalArgumentException("Unsupported storageFormat: ${config.storageFormat}")
             }
-                .with(ReforgedConversion(server.getSavePath(WorldSavePath.ROOT))) as FileStoreAdapter<*>
+                .with(ReforgedConversion(server.getWorldPath(LevelResource.ROOT))) as FileStoreAdapter<*>
 
             storage.registerFactory(
                 priority = Priority.LOWEST,
@@ -422,12 +409,12 @@ object Cobblemon {
         //CobblemonSherds.registerSherds()
     }
 
-    fun getLevel(dimension: RegistryKey<World>): World? {
+    fun getLevel(dimension: ResourceKey<Level>): Level? {
         return if (isDedicatedServer) {
-            server()?.getWorld(dimension)
+            server()?.getLevel(dimension)
         } else {
-            val mc = MinecraftClient.getInstance()
-            return mc.server?.getWorld(dimension) ?: mc.world
+            val mc = Minecraft.getInstance()
+            return mc.singleplayerServer?.getLevel(dimension) ?: mc.level
         }
     }
 
@@ -517,13 +504,13 @@ object Cobblemon {
     }
 
     private fun registerArgumentTypes() {
-        this.implementation.registerCommandArgument(cobblemonResource("pokemon"), SpeciesArgumentType::class, ConstantArgumentSerializer.of(SpeciesArgumentType::species))
-        this.implementation.registerCommandArgument(cobblemonResource("pokemon_properties"), PokemonPropertiesArgumentType::class, ConstantArgumentSerializer.of(PokemonPropertiesArgumentType::properties))
-        this.implementation.registerCommandArgument(cobblemonResource("spawn_bucket"), SpawnBucketArgumentType::class, ConstantArgumentSerializer.of(SpawnBucketArgumentType::spawnBucket))
-        this.implementation.registerCommandArgument(cobblemonResource("move"), MoveArgumentType::class, ConstantArgumentSerializer.of(MoveArgumentType::move))
-        this.implementation.registerCommandArgument(cobblemonResource("party_slot"), PartySlotArgumentType::class, ConstantArgumentSerializer.of(PartySlotArgumentType::partySlot))
-        this.implementation.registerCommandArgument(cobblemonResource("pokemon_store"), PokemonStoreArgumentType::class, ConstantArgumentSerializer.of(PokemonStoreArgumentType::pokemonStore))
-        this.implementation.registerCommandArgument(cobblemonResource("dialogue"), DialogueArgumentType::class, ConstantArgumentSerializer.of(DialogueArgumentType::dialogue))
+        this.implementation.registerCommandArgument(cobblemonResource("pokemon"), SpeciesArgumentType::class, SingletonArgumentInfo.contextFree(SpeciesArgumentType::species))
+        this.implementation.registerCommandArgument(cobblemonResource("pokemon_properties"), PokemonPropertiesArgumentType::class, SingletonArgumentInfo.contextFree(PokemonPropertiesArgumentType::properties))
+        this.implementation.registerCommandArgument(cobblemonResource("spawn_bucket"), SpawnBucketArgumentType::class, SingletonArgumentInfo.contextFree(SpawnBucketArgumentType::spawnBucket))
+        this.implementation.registerCommandArgument(cobblemonResource("move"), MoveArgumentType::class, SingletonArgumentInfo.contextFree(MoveArgumentType::move))
+        this.implementation.registerCommandArgument(cobblemonResource("party_slot"), PartySlotArgumentType::class, SingletonArgumentInfo.contextFree(PartySlotArgumentType::partySlot))
+        this.implementation.registerCommandArgument(cobblemonResource("pokemon_store"), PokemonStoreArgumentType::class, SingletonArgumentInfo.contextFree(PokemonStoreArgumentType::pokemonStore))
+        this.implementation.registerCommandArgument(cobblemonResource("dialogue"), DialogueArgumentType::class, SingletonArgumentInfo.contextFree(DialogueArgumentType::dialogue))
         this.implementation.registerCommandArgument(cobblemonResource("form"), FormArgumentType::class, ConstantArgumentSerializer.of(FormArgumentType::form))
     }
 

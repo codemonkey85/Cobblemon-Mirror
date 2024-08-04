@@ -10,24 +10,21 @@ package com.cobblemon.mod.common.net.messages.client.ui
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.api.net.UnsplittablePacket
-import com.cobblemon.mod.common.net.messages.PokemonDTO
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
-class SummaryUIPacket internal constructor(val pokemon: List<PokemonDTO>, val editable: Boolean): NetworkPacket<SummaryUIPacket>, UnsplittablePacket {
+class SummaryUIPacket internal constructor(val pokemon: List<Pokemon>, val editable: Boolean): NetworkPacket<SummaryUIPacket>, UnsplittablePacket {
 
     override val id = ID
 
-    constructor(vararg pokemon: Pokemon, editable: Boolean = true) : this(pokemon.map { PokemonDTO(it, true) }, editable)
-
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(editable)
-        buffer.writeCollection(this.pokemon) { _, value -> value.encode(buffer) }
+        buffer.writeCollection(this.pokemon, Pokemon.S2C_CODEC::encode)
     }
 
     companion object {
         val ID = cobblemonResource("summary_ui")
-        fun decode(buffer: RegistryByteBuf) = SummaryUIPacket(buffer.readList { PokemonDTO().apply { decode(buffer) } }, buffer.readBoolean())
+        fun decode(buffer: RegistryFriendlyByteBuf) = SummaryUIPacket(buffer.readList(Pokemon.S2C_CODEC::decode), buffer.readBoolean())
     }
 }

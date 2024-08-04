@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.brewing.ingredient
 
-import net.minecraft.item.ItemStack
+import net.minecraft.world.item.ItemStack
 import org.jetbrains.annotations.ApiStatus
 
 /**

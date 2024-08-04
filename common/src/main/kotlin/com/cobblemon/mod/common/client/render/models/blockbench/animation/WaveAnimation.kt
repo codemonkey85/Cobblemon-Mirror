@@ -14,8 +14,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.addPosition
 import com.cobblemon.mod.common.client.render.models.blockbench.addRotation
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.WaveFunction
+import net.minecraft.client.model.geom.ModelPart
 import kotlin.math.atan
-import net.minecraft.client.model.ModelPart
 
 /**
  * An animation that interpolates some segment of limbs onto a given wave function. This wave function
@@ -50,7 +50,7 @@ class WaveAnimation(
     val basedOnLimbSwing: Boolean = false,
     val segments: Array<WaveSegment>
 ): PoseAnimation() {
-    override fun setAngles(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
+    override fun setupAnim(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
         val t = if (basedOnLimbSwing) {
             limbSwing
         } else {

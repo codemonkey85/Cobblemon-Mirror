@@ -19,17 +19,17 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.net.messages.server.callback.party.PartyPokemonSelectedPacket
 import com.cobblemon.mod.common.net.messages.server.callback.party.PartySelectCancelledPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import java.util.UUID
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.sound.SoundEvent
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.sounds.SoundEvent
+import java.util.*
 
 class PartySelectConfiguration(
-    val title: MutableText,
+    val title: MutableComponent,
     val pokemon: List<PartySelectPokemonDTO>,
     val onCancel: (PartySelectGUI) -> Unit,
     val onBack: (PartySelectGUI) -> Unit,
@@ -37,7 +37,7 @@ class PartySelectConfiguration(
 )
 class PartySelectGUI(
     val config: PartySelectConfiguration
-) : Screen(Text.translatable("cobblemon.ui.interact.moveselect")) {
+) : Screen(Component.translatable("cobblemon.ui.interact.moveselect")) {
     companion object {
         const val WIDTH = 163
         const val HEIGHT = 132
@@ -50,7 +50,7 @@ class PartySelectGUI(
     var closed = false
 
     constructor(
-        title: MutableText,
+        title: MutableComponent,
         pokemon: List<PartySelectPokemonDTO>,
         uuid: UUID
     ): this(
@@ -62,13 +62,13 @@ class PartySelectGUI(
                 gui.closeProperly()
             },
             onCancel = { CobblemonNetwork.sendToServer(PartySelectCancelledPacket(uuid = uuid)) },
-            onBack = PartySelectGUI::close
+            onBack = PartySelectGUI::onClose // todo (techdaan): should this be closeProperly?
         )
     )
 
     fun closeProperly() {
         closed = true
-        close()
+        onClose()
     }
 
     override fun init() {
@@ -89,7 +89,7 @@ class PartySelectGUI(
                 slotY += (31 * offsetIndex) + offsetY
             }
 
-            addDrawableChild(
+            addRenderableWidget(
                 PartySlotButton(
                     parent = this,
                     x = slotX,
@@ -105,7 +105,7 @@ class PartySelectGUI(
         }
 
         // Add Exit Button
-        addDrawableChild(
+        addRenderableWidget(
             ExitButton(
                 pX = x + 134,
                 pY = y + 116
@@ -118,12 +118,12 @@ class PartySelectGUI(
         super.init()
     }
 
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
         val x = (width - WIDTH) / 2
         val y = (height - HEIGHT) / 2
 
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = baseBackgroundResource,
             x = x,
             y = y,
@@ -142,7 +142,7 @@ class PartySelectGUI(
         )
 
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = spacerResource,
             x = (x + 86.5) / SCALE,
             y = (y + 111) / SCALE,
@@ -163,17 +163,17 @@ class PartySelectGUI(
         config.onSelect(this, pokemon)
     }
 
-    override fun close() {
+    override fun onClose() {
         if (!closed) {
             config.onCancel(this)
         }
-        super.close()
+        super.onClose()
     }
 
     override fun shouldCloseOnEsc() = true
-    override fun shouldPause() = false
+    override fun isPauseScreen() = false
 
     fun playSound(soundEvent: SoundEvent) {
-        MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(soundEvent, 1.0F))
+        Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))
     }
 }

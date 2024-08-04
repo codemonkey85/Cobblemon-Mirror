@@ -11,21 +11,21 @@ package com.cobblemon.mod.common.net.messages.client.data
 import com.cobblemon.mod.common.api.fishing.PokeRod
 import com.cobblemon.mod.common.api.fishing.PokeRods
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class PokeRodRegistrySyncPacket(rods: Collection<PokeRod>) : DataRegistrySyncPacket<PokeRod, PokeRodRegistrySyncPacket>(rods) {
     companion object {
         val ID = cobblemonResource("pokerod_sync")
-        fun decode(buffer: RegistryByteBuf) = PokeRodRegistrySyncPacket(emptyList()).apply { decodeBuffer(buffer) }
+        fun decode(buffer: RegistryFriendlyByteBuf) = PokeRodRegistrySyncPacket(emptyList()).apply { decodeBuffer(buffer) }
     }
 
     override val id = ID
 
-    override fun encodeEntry(buffer: RegistryByteBuf, entry: PokeRod) {
+    override fun encodeEntry(buffer: RegistryFriendlyByteBuf, entry: PokeRod) {
         entry.encode(buffer)
     }
 
-    override fun decodeEntry(buffer: RegistryByteBuf) = PokeRod.decode(buffer)
+    override fun decodeEntry(buffer: RegistryFriendlyByteBuf) = PokeRod.decode(buffer)
 
     override fun synchronizeDecoded(entries: Collection<PokeRod>) {
         PokeRods.reload(entries.associateBy { it.name!! })

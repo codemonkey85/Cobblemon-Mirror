@@ -16,8 +16,8 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.aspects.SHINY_ASPECT
 import com.cobblemon.mod.common.util.DataKeys
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.registry.RegistryWrapper
+import net.minecraft.core.HolderLookup
+import net.minecraft.nbt.CompoundTag
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -56,15 +56,15 @@ class TransformEffect(
         }
     }
 
-    override fun saveToNbt(registryLookup: RegistryWrapper.WrapperLookup): NbtCompound {
-        val nbt = NbtCompound()
+    override fun saveToNbt(registryLookup: HolderLookup.Provider): CompoundTag {
+        val nbt = CompoundTag()
         nbt.putString(DataKeys.ENTITY_EFFECT_MOCK, ID)
         nbt.put(DataKeys.POKEMON_ENTITY_MOCK, mock.saveToNBT(registryLookup))
         nbt.putFloat(DataKeys.POKEMON_ENTITY_SCALE, scale)
         return nbt
     }
 
-    override fun loadFromNBT(nbt: NbtCompound, registryLookup: RegistryWrapper.WrapperLookup) {
+    override fun loadFromNBT(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
         if (nbt.contains(DataKeys.POKEMON_ENTITY_MOCK)) this.mock = PokemonProperties().loadFromNBT(nbt.getCompound(DataKeys.POKEMON_ENTITY_MOCK), registryLookup)
         if (nbt.contains(DataKeys.POKEMON_ENTITY_SCALE)) this.scale = nbt.getFloat(DataKeys.POKEMON_ENTITY_SCALE)
     }

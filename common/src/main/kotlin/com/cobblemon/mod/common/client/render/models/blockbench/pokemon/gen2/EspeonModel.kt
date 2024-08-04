@@ -15,18 +15,18 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class EspeonModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("espeon")
     override val head = getPart("head")
 
     override var portraitScale = 2.15F
-    override var portraitTranslation = Vec3d(-0.55, -0.43, 0.0)
+    override var portraitTranslation = Vec3(-0.55, -0.43, 0.0)
 
     override var profileScale = 0.81F
-    override var profileTranslation = Vec3d(0.07, 0.59, 0.0)
+    override var profileTranslation = Vec3(0.07, 0.59, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

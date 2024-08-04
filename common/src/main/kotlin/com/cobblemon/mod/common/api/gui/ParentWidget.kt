@@ -8,13 +8,11 @@
 
 package com.cobblemon.mod.common.api.gui
 
-import net.minecraft.client.gui.Drawable
-import net.minecraft.client.gui.Element
-import net.minecraft.client.gui.navigation.GuiNavigation
-import net.minecraft.client.gui.navigation.GuiNavigationPath
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder
-import net.minecraft.client.gui.widget.ClickableWidget
-import net.minecraft.text.Text
+import net.minecraft.client.gui.components.AbstractWidget
+import net.minecraft.client.gui.components.Renderable
+import net.minecraft.client.gui.components.events.GuiEventListener
+import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.network.chat.Component
 
 /**
  * This class adds children-awareness to a Widget similar like a Screen
@@ -23,22 +21,22 @@ import net.minecraft.text.Text
 abstract class ParentWidget(
     pX: Int, pY: Int,
     pWidth: Int, pHeight: Int,
-    component: Text
-): Drawable, ClickableWidget(pX, pY, pWidth, pHeight, component) {
+    component: Component
+): Renderable, AbstractWidget(pX, pY, pWidth, pHeight, component) {
 
-    private val children: MutableList<Element> = mutableListOf()
+    private val children: MutableList<GuiEventListener> = mutableListOf()
 
     /**
      * Adds Widget to the children list
      */
-    protected fun addWidget(widget: Element) {
+    protected fun addWidget(widget: GuiEventListener) {
         children.add(widget)
     }
 
     /**
      * Removes Widget from the children list
      */
-    protected fun removeWidget(widget: Element) {
+    protected fun removeWidget(widget: GuiEventListener) {
         children.remove(widget)
     }
 
@@ -93,7 +91,7 @@ abstract class ParentWidget(
         return super.charTyped(pCodePoint, pModifiers)
     }
 
-    override fun appendDefaultNarrations(pNarrationElementOutput: NarrationMessageBuilder) {
+    override fun defaultButtonNarrationText(pNarrationElementOutput: NarrationElementOutput) {
     }
 
     /**
@@ -108,6 +106,6 @@ abstract class ParentWidget(
      */
     fun ishHovered(mouseX: Number, mouseY: Number) = mouseX in this.x..(this.x + this.width) && mouseY in this.y..(this.y + this.height)
 
-    override fun appendClickableNarrations(builder: NarrationMessageBuilder) {}
+    override fun updateWidgetNarration(builder: NarrationElementOutput) {}
 
 }

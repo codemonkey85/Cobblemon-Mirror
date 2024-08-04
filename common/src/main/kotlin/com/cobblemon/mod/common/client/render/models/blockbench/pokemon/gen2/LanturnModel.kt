@@ -13,19 +13,19 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import com.cobblemon.mod.common.util.isSubmergedInWater
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isUnderWater
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class LanturnModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("lanturn")
 
     override var portraitScale = 1.7F
-    override var portraitTranslation = Vec3d(-0.65, -0.7, 0.0)
+    override var portraitTranslation = Vec3(-0.65, -0.7, 0.0)
 
     override var profileScale = 0.6F
-    override var profileTranslation = Vec3d(0.0, 0.7, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.7, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose
@@ -44,14 +44,14 @@ class LanturnModel (root: ModelPart) : PokemonPosableModel(root) {
         sleep = registerPose(
             poseName = "sleeping",
             poseType = PoseType.SLEEP,
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             animations = arrayOf(bedrock("lanturn", "sleep"))
         )
 
         watersleep = registerPose(
             poseName = "water_sleeping",
             poseType = PoseType.SLEEP,
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             animations = arrayOf(bedrock("lanturn", "water_sleep"))
         )
 
@@ -59,7 +59,7 @@ class LanturnModel (root: ModelPart) : PokemonPosableModel(root) {
             poseName = "standing",
             poseTypes = PoseType.UI_POSES + PoseType.STAND,
             transformTicks = 10,
-            condition = { !it.isBattling && !it.isTouchingWater && !it.isSubmergedInWater},
+            condition = { !it.isBattling && !it.isInWater && !it.isUnderWater},
             quirks = arrayOf(blink),
             animations = arrayOf(
                 bedrock("lanturn", "ground_idle")
@@ -70,7 +70,7 @@ class LanturnModel (root: ModelPart) : PokemonPosableModel(root) {
             poseName = "walk",
             transformTicks = 10,
             poseType = PoseType.WALK,
-            condition = { !it.isTouchingWater && !it.isSubmergedInWater},
+            condition = { !it.isInWater && !it.isUnderWater},
             quirks = arrayOf(blink),
             animations = arrayOf(
                 bedrock("lanturn", "ground_walk")
@@ -81,7 +81,7 @@ class LanturnModel (root: ModelPart) : PokemonPosableModel(root) {
             poseName = "floating",
             transformTicks = 10,
             poseType = PoseType.FLOAT,
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             quirks = arrayOf(blink),
             animations = arrayOf(
                 bedrock("lanturn", "water_idle")
@@ -91,7 +91,7 @@ class LanturnModel (root: ModelPart) : PokemonPosableModel(root) {
         swimming = registerPose(
             poseName = "swimming",
             transformTicks = 10,
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
             animations = arrayOf(
@@ -104,7 +104,7 @@ class LanturnModel (root: ModelPart) : PokemonPosableModel(root) {
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            condition = { it.isBattling && !it.isTouchingWater },
+            condition = { it.isBattling && !it.isInWater },
             animations = arrayOf(
                 bedrock("lanturn", "ground_battle_idle")
             )
@@ -115,7 +115,7 @@ class LanturnModel (root: ModelPart) : PokemonPosableModel(root) {
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            condition = { it.isBattling && it.isTouchingWater },
+            condition = { it.isBattling && it.isInWater },
             animations = arrayOf(
                 bedrock("lanturn", "water_battle_idle")
             )

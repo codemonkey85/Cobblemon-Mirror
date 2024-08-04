@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.api.pokeball.catching
 
 
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
 
 /**
  * Represents an effect triggered by a Pokeball after a successful capture.

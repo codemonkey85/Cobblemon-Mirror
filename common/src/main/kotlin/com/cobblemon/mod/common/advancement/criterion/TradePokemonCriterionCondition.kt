@@ -12,16 +12,15 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.predicate.entity.EntityPredicate
-import net.minecraft.predicate.entity.LootContextPredicate
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.dynamic.Codecs
+import net.minecraft.advancements.critereon.ContextAwarePredicate
+import net.minecraft.advancements.critereon.EntityPredicate
+import net.minecraft.server.level.ServerPlayer
 import java.util.Optional
 
 class TradePokemonContext(val traded: Pokemon, val received: Pokemon)
 
 class TradePokemonCriterion(
-    playerCtx: Optional<LootContextPredicate>,
+    playerCtx: Optional<ContextAwarePredicate>,
     val traded: String,
     val received: String,
     val tradedHeldItem: String,
@@ -30,7 +29,7 @@ class TradePokemonCriterion(
 
     companion object {
         val CODEC: Codec<TradePokemonCriterion> = RecordCodecBuilder.create { it.group(
-            EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(TradePokemonCriterion::playerCtx),
+            EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TradePokemonCriterion::playerCtx),
             Codec.STRING.optionalFieldOf("traded", "any").forGetter(TradePokemonCriterion::traded),
             Codec.STRING.optionalFieldOf("received", "any").forGetter(TradePokemonCriterion::received),
             Codec.STRING.optionalFieldOf("traded_held_item", "minecraft:air").forGetter(TradePokemonCriterion::tradedHeldItem),
@@ -38,9 +37,9 @@ class TradePokemonCriterion(
         ).apply(it, ::TradePokemonCriterion) }
     }
 
-    override fun matches(player: ServerPlayerEntity, context: TradePokemonContext): Boolean {
-        val heldItem1 = context.traded.heldItem().item.registryEntry.registryKey().value
-        val heldItem2 = context.received.heldItem().item.registryEntry.registryKey().value
+    override fun matches(player: ServerPlayer, context: TradePokemonContext): Boolean {
+        val heldItem1 = context.traded.heldItem().item.builtInRegistryHolder().key().location()
+        val heldItem2 = context.received.heldItem().item.builtInRegistryHolder().key().location()
 
         if (traded != "any" && context.traded.species.resourceIdentifier != traded.asIdentifierDefaultingNamespace()) {
             return false
@@ -82,8 +81,8 @@ class TradePokemonCriterion(
     }
 
     override fun matches(player: ServerPlayerEntity, context: TradePokemonContext): Boolean {
-        val heldItem1 = context.traded.heldItem().item.registryEntry.registryKey().value
-        val heldItem2 = context.received.heldItem().item.registryEntry.registryKey().value
+        val heldItem1 = context.traded.heldItem().item.registryEntry.ResourceKey().value
+        val heldItem2 = context.received.heldItem().item.registryEntry.ResourceKey().value
         return (context.traded.species.resourceIdentifier == traded.asIdentifierDefaultingNamespace() || traded == "any") &&
                 (context.received.species.resourceIdentifier == received.asIdentifierDefaultingNamespace() || received == "any") &&
                 (heldItem1 == tradedHeldItem.asIdentifierDefaultingNamespace() || heldItem1 == "minecraft:air".asIdentifierDefaultingNamespace()) &&

@@ -11,10 +11,10 @@ package com.cobblemon.mod.common.client.net.trade
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.net.messages.client.trade.TradeOfferExpiredPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object TradeOfferExpiredHandler : ClientNetworkPacketHandler<TradeOfferExpiredPacket> {
-    override fun handle(packet: TradeOfferExpiredPacket, client: MinecraftClient) {
+    override fun handle(packet: TradeOfferExpiredPacket, client: Minecraft) {
         CobblemonClient.requests.tradeOffers.removeIf { it.tradeOfferId == packet.tradeOfferId }
     }
 }

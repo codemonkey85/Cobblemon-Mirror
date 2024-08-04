@@ -10,16 +10,18 @@ package com.cobblemon.mod.common.pokemon.evolution.requirements
 
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.requirements.template.EntityQueryRequirement
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
+
 class WeatherRequirement : EntityQueryRequirement {
     companion object {
         const val ADAPTER_VARIANT = "weather"
     }
+
     val isRaining: Boolean? = null
     val isThundering: Boolean? = null
 
     override fun check(pokemon: Pokemon, queriedEntity: LivingEntity): Boolean {
-        val world = queriedEntity.world
+        val world = queriedEntity.level()
         return when {
             isRaining == true && !world.isRaining -> false
             isRaining == false && world.isRaining -> false

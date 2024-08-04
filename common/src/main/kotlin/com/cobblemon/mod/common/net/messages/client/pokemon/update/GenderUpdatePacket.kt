@@ -13,12 +13,11 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readEnumConstant
 import com.cobblemon.mod.common.util.writeEnumConstant
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class GenderUpdatePacket(pokemon: () -> Pokemon, value: Gender): SingleUpdatePacket<Gender, GenderUpdatePacket>(pokemon, value) {
     override val id = ID
-    override fun encodeValue(buffer: RegistryByteBuf) {
+    override fun encodeValue(buffer: RegistryFriendlyByteBuf) {
         buffer.writeEnumConstant(this.value)
     }
 
@@ -28,7 +27,7 @@ class GenderUpdatePacket(pokemon: () -> Pokemon, value: Gender): SingleUpdatePac
 
     companion object {
         val ID = cobblemonResource("gender_update")
-        fun decode(buffer: RegistryByteBuf): GenderUpdatePacket {
+        fun decode(buffer: RegistryFriendlyByteBuf): GenderUpdatePacket {
             val pokemon = decodePokemon(buffer)
             val gender = buffer.readEnumConstant(Gender::class.java)
             return GenderUpdatePacket(pokemon, gender)

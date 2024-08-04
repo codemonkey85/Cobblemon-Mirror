@@ -25,15 +25,14 @@ import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.isHeld
 import com.cobblemon.mod.common.util.isInBattle
 import com.cobblemon.mod.common.util.party
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.registry.Registries
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.util.Hand
-import net.minecraft.util.TypedActionResult
-import net.minecraft.world.World
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
 import kotlin.math.ceil
 
 /**
@@ -42,26 +41,26 @@ import kotlin.math.ceil
  * @author Hiroku
  * @since July 7th, 2023
  */
-class ReviveItem(val max: Boolean): CobblemonItem(Settings()) {
+class ReviveItem(val max: Boolean): CobblemonItem(Properties()) {
     val bagItem = object : BagItem {
         override val itemName = "item.cobblemon.${ if (max) "max_revive" else "revive" }"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) = target.health <= 0
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "revive ${ if (max) "1" else "0.5" }"
     }
 
-    override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
-        if (world !is ServerWorld) {
-            return TypedActionResult.success(user.getStackInHand(hand))
+    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
+        if (world !is ServerLevel) {
+            return InteractionResultHolder.success(user.getItemInHand(hand))
         } else {
-            val player = user as ServerPlayerEntity
-            val stack = user.getStackInHand(hand)
+            val player = user as ServerPlayer
+            val stack = user.getItemInHand(hand)
             val battle = BattleRegistry.getBattleByParticipatingPlayer(player)
             if (battle != null) {
                 val actor = battle.getActor(player)!!
                 val battlePokemon = actor.pokemonList
                 if (!actor.canFitForcedAction()) {
-                    player.sendMessage(battleLang("bagitem.cannot").red(), true)
-                    return TypedActionResult.consume(stack)
+                    player.sendSystemMessage(battleLang("bagitem.cannot").red(), true)
+                    return InteractionResultHolder.consume(stack)
                 } else {
                     val turn = battle.turn
                     PartySelectCallbacks.createBattleSelect(
@@ -73,9 +72,9 @@ class ReviveItem(val max: Boolean): CobblemonItem(Settings()) {
                             player.playSound(CobblemonSounds.ITEM_USE, 1F, 1F)
                             actor.forceChoose(BagItemActionResponse(bagItem = bagItem, target = bp, data = bp.uuid.toString()))
                             if (!player.isCreative) {
-                                stack.decrement(1)
+                                stack.shrink(1)
                             }
-                            CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(bp.entity?.pokemon?.species!!.resourceIdentifier, Registries.ITEM.getId(stack.item)))
+                            CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(bp.entity?.pokemon?.species!!.resourceIdentifier, BuiltInRegistries.ITEM.getKey(stack.item)))
                         }
                     }
                 }
@@ -89,13 +88,13 @@ class ReviveItem(val max: Boolean): CobblemonItem(Settings()) {
                     if (pk.isFainted() && !player.isInBattle() && stack.isHeld(player)) {
                         pk.currentHealth = if (max) pk.hp else ceil(pk.hp / 2F).toInt()
                         if (!player.isCreative) {
-                            stack.decrement(1)
+                            stack.shrink(1)
                         }
-                        CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(pk.species.resourceIdentifier, Registries.ITEM.getId(stack.item)))
+                        CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(pk.species.resourceIdentifier, BuiltInRegistries.ITEM.getKey(stack.item)))
                     }
                 }
             }
-            return TypedActionResult.success(stack)
+            return InteractionResultHolder.success(stack)
         }
     }
 }

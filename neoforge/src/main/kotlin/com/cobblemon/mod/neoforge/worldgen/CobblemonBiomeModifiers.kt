@@ -9,15 +9,14 @@
 package com.cobblemon.mod.neoforge.worldgen
 
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.registry.entry.RegistryEntry
-import net.minecraft.registry.tag.TagKey
-import net.minecraft.world.biome.Biome
-import net.minecraft.world.gen.GenerationStep
-import net.minecraft.world.gen.feature.PlacedFeature
+import net.minecraft.core.Holder
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
+import net.minecraft.tags.TagKey
+import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.levelgen.GenerationStep
+import net.minecraft.world.level.levelgen.placement.PlacedFeature
 import net.neoforged.neoforge.common.world.BiomeModifier
 import net.neoforged.neoforge.common.world.ModifiableBiomeInfo
 import net.neoforged.neoforge.registries.NeoForgeRegistries
@@ -44,25 +43,25 @@ internal object CobblemonBiomeModifiers : BiomeModifier {
         }
     }
 
-    fun add(feature: RegistryKey<PlacedFeature>, step: GenerationStep.Feature, validTag: TagKey<Biome>?) {
+    fun add(feature: ResourceKey<PlacedFeature>, step: GenerationStep.Decoration, validTag: TagKey<Biome>?) {
         this.entries += Entry(feature, step, validTag)
     }
 
-    override fun modify(arg: RegistryEntry<Biome>, phase: BiomeModifier.Phase, builder: ModifiableBiomeInfo.BiomeInfo.Builder) {
+    override fun modify(arg: Holder<Biome>, phase: BiomeModifier.Phase, builder: ModifiableBiomeInfo.BiomeInfo.Builder) {
         if (phase != BiomeModifier.Phase.ADD) {
             return
         }
         val server = ServerLifecycleHooks.getCurrentServer()!!
-        val registry = server.registryManager.get(RegistryKeys.PLACED_FEATURE)
+        val registry = server.registryAccess().registryOrThrow(Registries.PLACED_FEATURE)
         this.entries.forEach { entry ->
-            if (entry.validTag == null || arg.isIn(entry.validTag)) {
-                builder.generationSettings.feature(entry.step, RegistryEntry.of(registry.get(entry.feature)))
+            if (entry.validTag == null || arg.`is`(entry.validTag)) {
+                builder.generationSettings.addFeature(entry.step, Holder.direct(registry.getOrThrow(entry.feature)))
             }
         }
     }
 
     override fun codec(): MapCodec<out BiomeModifier> = this.codec ?: MapCodec.unit(CobblemonBiomeModifiers)
 
-    private data class Entry(val feature: RegistryKey<PlacedFeature>, val step: GenerationStep.Feature, val validTag: TagKey<Biome>?)
+    private data class Entry(val feature: ResourceKey<PlacedFeature>, val step: GenerationStep.Decoration, val validTag: TagKey<Biome>?)
 
 }

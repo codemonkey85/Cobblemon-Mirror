@@ -15,7 +15,7 @@ import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore
 import com.cobblemon.mod.common.api.storage.pc.PCStore
 import com.cobblemon.mod.common.block.entity.PCBlockEntity
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * A provider for [PokemonStore]'s when given a player UUID. An implementation of this interface
@@ -31,7 +31,7 @@ import net.minecraft.server.network.ServerPlayerEntity
 interface PokemonStoreFactory {
     fun getPlayerParty(playerID: UUID): PlayerPartyStore?
     fun getPC(playerID: UUID): PCStore?
-    fun getPCForPlayer(player: ServerPlayerEntity, pcBlockEntity: PCBlockEntity): PCStore? = getPC(player.uuid)
+    fun getPCForPlayer(player: ServerPlayer, pcBlockEntity: PCBlockEntity): PCStore? = getPC(player.uuid)
 
     fun <E : StorePosition, T : PokemonStore<E>> getCustomStore(storeClass: Class<T>, uuid: UUID): T?
     fun shutdown()

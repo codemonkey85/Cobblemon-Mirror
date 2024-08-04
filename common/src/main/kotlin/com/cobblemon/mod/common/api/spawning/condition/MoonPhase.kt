@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.api.spawning.condition
 
-import net.minecraft.world.World
+import net.minecraft.world.level.Level
 
 /**
  * Represents the literal name of a moon phase instead of a raw number.
@@ -34,12 +34,12 @@ enum class MoonPhase {
         /**
          * Finds the moon phase of the given [world].
          *
-         * @param world The [World] being queried.
+         * @param world The [Level] being queried.
          * @return The [MoonPhase] of the world.
          *
          * @throws IndexOutOfBoundsException if the moon phase cannot be resolved, this should never happen.
          */
-        fun ofWorld(world: World): MoonPhase = VALUES[world.moonPhase]
+        fun ofWorld(world: Level): MoonPhase = VALUES[world.moonPhase]
     }
 
 }

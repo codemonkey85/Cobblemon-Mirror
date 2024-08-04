@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.net.messages.client.battle
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Tells the client to terminate its battle reference
@@ -22,9 +22,9 @@ import net.minecraft.network.RegistryByteBuf
  */
 class BattleEndPacket : NetworkPacket<BattleEndPacket> {
     override val id = ID
-    override fun encode(buffer: RegistryByteBuf) {}
+    override fun encode(buffer: RegistryFriendlyByteBuf) {}
     companion object {
         val ID = cobblemonResource("battle_end")
-        fun decode(buffer: RegistryByteBuf) = BattleEndPacket()
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleEndPacket()
     }
 }

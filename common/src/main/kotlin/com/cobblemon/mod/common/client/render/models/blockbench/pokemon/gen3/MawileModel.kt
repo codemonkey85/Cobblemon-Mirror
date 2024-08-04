@@ -17,8 +17,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFram
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class MawileModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("mawile")
@@ -29,10 +29,10 @@ class MawileModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
     override val leftLeg = getPart("leg_left")
 
     override var portraitScale = 2.93F
-    override var portraitTranslation = Vec3d(0.2, -1.06, 0.0)
+    override var portraitTranslation = Vec3(0.2, -1.06, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.09, 0.6, 0.0)
+    override var profileTranslation = Vec3(0.09, 0.6, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

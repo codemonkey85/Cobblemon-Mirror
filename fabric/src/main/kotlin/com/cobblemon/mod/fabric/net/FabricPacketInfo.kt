@@ -15,8 +15,8 @@ import com.cobblemon.mod.common.net.PacketRegisterInfo
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
-import net.minecraft.client.MinecraftClient
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.client.Minecraft
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Good news, everyone! I've figured out how to remove a bunch of blank boilerplate from the network manager!
@@ -41,14 +41,14 @@ class FabricPacketInfo<T : NetworkPacket<T>>(val info: PacketRegisterInfo<T>) {
     fun registerClientHandler() {
         ClientPlayNetworking.registerGlobalReceiver(info.payloadId) { obj, _ ->
             val handler = info.handler as ClientNetworkPacketHandler<T>
-            handler.handle(obj, MinecraftClient.getInstance())
+            handler.handle(obj, Minecraft.getInstance())
         }
     }
 
     fun registerServerHandler() {
         ServerPlayNetworking.registerGlobalReceiver(info.payloadId) { obj, context ->
             val handler = info.handler as ServerNetworkPacketHandler<T>
-            handler.handle(obj, context.player().server!!, context.player() as ServerPlayerEntity)
+            handler.handle(obj, context.player().server!!, context.player() as ServerPlayer)
         }
     }
 }

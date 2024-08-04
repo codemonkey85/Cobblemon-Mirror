@@ -31,29 +31,26 @@ import com.cobblemon.mod.common.util.writeEnumSet
 import com.cobblemon.mod.common.util.writeIdentifier
 import com.cobblemon.mod.common.util.writeMap
 import com.google.gson.annotations.SerializedName
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.core.BlockPos
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.awt.Color
 import java.util.EnumSet
-import kotlin.math.min
-import net.minecraft.block.Block
-import net.minecraft.block.BlockState
-import net.minecraft.client.model.ModelPart
-import net.minecraft.entity.LivingEntity
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.registry.tag.TagKey
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.Vec3d
-import net.minecraft.util.shape.VoxelShape
-import net.minecraft.util.shape.VoxelShapes
-import net.minecraft.world.World
-import net.minecraft.world.biome.Biome
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.TagKey
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
+import net.minecraft.world.phys.shapes.Shapes
+import net.minecraft.world.phys.shapes.VoxelShape
 
 /**
  * Represents the data behind a berry.
  *
- * @property identifier The [Identifier] of this berry.
+ * @property identifier The [ResourceLocation] of this berry.
  * @property baseYield The [IntRange] possible for the berry tree before [bonusYield] is calculated.
  * @property preferredBiomeTags The [TagKey]s of the berries preffered biomes. Determines spawning and yield
  * @property growthTime The [IntRange] possible in minutes for how long the berry tree takes to grow frome age 0 to age 3
@@ -66,16 +63,16 @@ import net.minecraft.world.biome.Biome
  * @property matureShapeBoxes A collection of [Box]es that make up the tree [VoxelShape] during the mature stages.
  * @property flavors The [Flavor] values.
  * @property tintIndexes Determines tints at specific indexes if any.
- * @property flowerModelIdentifier The [Identifier] for the model of the berry in flower form.
- * @property flowerTexture The [Identifier] for the texture of the berry in flower form. This is resolved into a [ModelPart] on the client.
- * @property fruitModelIdentifier The [Identifier] for the model of the berry in flower form. This is resolved into a [ModelPart] on the client.
- * @property fruitTexture The [Identifier] for the texture of the berry in flower form.
+ * @property flowerModelIdentifier The [ResourceLocation] for the model of the berry in flower form.
+ * @property flowerTexture The [ResourceLocation] for the texture of the berry in flower form. This is resolved into a [ModelPart] on the client.
+ * @property fruitModelIdentifier The [ResourceLocation] for the model of the berry in flower form. This is resolved into a [ModelPart] on the client.
+ * @property fruitTexture The [ResourceLocation] for the texture of the berry in flower form.
  * @property stageOnePositioning Transformation of the berry model for age 0
  *
  * @throws IllegalArgumentException if the any yield range argument is not a positive range.
  */
 class Berry(
-    identifier: Identifier,
+    identifier: ResourceLocation,
     val baseYield: IntRange,
     val preferredBiomeTags: List<TagKey<Biome>>,
     val growthTime: IntRange,
@@ -85,26 +82,26 @@ class Berry(
     val spawnConditions: List<BerrySpawnCondition>,
     var growthPoints: Array<GrowthPoint>,
     val randomizedGrowthPoints: Boolean = true,
-    val mutations: Map<Identifier, Identifier>,
+    val mutations: Map<ResourceLocation, ResourceLocation>,
     @SerializedName("sproutShape")
-    private val sproutShapeBoxes: Collection<Box>,
+    private val sproutShapeBoxes: Collection<AABB>,
     @SerializedName("matureShape")
-    private val matureShapeBoxes: Collection<Box>,
+    private val matureShapeBoxes: Collection<AABB>,
     private val flavors: Map<Flavor, Int>,
     val tintIndexes: Map<Int, Color>,
     @SerializedName("flowerModel")
-    val flowerModelIdentifier: Identifier,
-    val flowerTexture: Identifier,
+    val flowerModelIdentifier: ResourceLocation,
+    val flowerTexture: ResourceLocation,
     @SerializedName("fruitModel")
-    val fruitModelIdentifier: Identifier,
-    val fruitTexture: Identifier,
+    val fruitModelIdentifier: ResourceLocation,
+    val fruitTexture: ResourceLocation,
     val stageOnePositioning: GrowthPoint,
     val weight: Float,
     val boneMealChance: Float
 ) {
 
     @Transient
-    var identifier: Identifier = identifier
+    var identifier: ResourceLocation = identifier
         internal set
 
     @Transient
@@ -168,14 +165,14 @@ class Berry(
      * @param placer The [LivingEntity] tending to the tree, if any.
      * @return The total berry stack count.
      */
-    fun calculateYield(world: World, state: BlockState, pos: BlockPos, placer: LivingEntity? = null): Int {
+    fun calculateYield(world: Level, state: BlockState, pos: BlockPos, placer: LivingEntity? = null): Int {
         val base = this.baseYield.random()
         val bonus = this.bonusYield(world, state, pos)
         var yield = base + bonus.first
         val treeEntity = world.getBlockEntity(pos) as BerryBlockEntity
         if (BerryBlock.getMulch(treeEntity) == MulchVariant.RICH) {
             //I hope the upper bound isnt exclusive, especially when there's a method called nextBetweenExclusive
-            yield += world.random.nextBetween(1, 3)
+            yield += world.random.nextIntBetweenInclusive(1, 3)
             treeEntity.decrementMulchDuration(world, pos, state)
         }
         val event = BerryYieldCalculationEvent(this, world, state, pos, placer, yield, bonus.second)
@@ -259,7 +256,7 @@ class Berry(
         this.matureShape = this.createAndUniteShapes(this.matureShapeBoxes)
     }
 
-    internal fun encode(buffer: RegistryByteBuf) {
+    internal fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeIdentifier(this.identifier)
         buffer.writeInt(this.baseYield.first)
         buffer.writeInt(this.baseYield.last)
@@ -309,7 +306,7 @@ class Berry(
      * @param pos The [BlockPos] of the tree.
      * @return The bonus yield, the growth factors that passed.
      */
-    private fun bonusYield(world: World, state: BlockState, pos: BlockPos): Pair<Int, Collection<GrowthFactor>> {
+    private fun bonusYield(world: Level, state: BlockState, pos: BlockPos): Pair<Int, Collection<GrowthFactor>> {
         var bonus = 0
         val passed = arrayListOf<GrowthFactor>()
         val treeEntity = world.getBlockEntity(pos) as? BerryBlockEntity ?: return 0 to passed
@@ -326,21 +323,23 @@ class Berry(
         return bonus to passed
     }
 
-    private fun createAndUniteShapes(boxes: Collection<Box>): VoxelShape {
+    private fun createAndUniteShapes(boxes: Collection<AABB>): VoxelShape {
         var shape: VoxelShape? = null
         boxes.forEach { box ->
-            shape = if (shape == null) {
-                Block.createCuboidShape(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ)
+            val outerShape = shape // Kotlin is complaining about nullability of `shape` in the Shapes.or call
+
+            shape = if (outerShape == null) {
+                Block.box(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ)
             } else {
-                VoxelShapes.union(shape, Block.createCuboidShape(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ))
+                Shapes.or(outerShape, Block.box(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ))
             }
         }
-        return shape ?: VoxelShapes.fullCube()
+        return shape ?: Shapes.block()
     }
 
     companion object {
 
-        internal fun decode(buffer: RegistryByteBuf): Berry {
+        internal fun decode(buffer: RegistryFriendlyByteBuf): Berry {
             val identifier = buffer.readIdentifier()
             val baseYield = IntRange(buffer.readInt(), buffer.readInt())
             val favMulchs = buffer.readEnumSet(MulchVariant::class.java)
@@ -348,7 +347,7 @@ class Berry(
             val growthTime = IntRange(buffer.readInt(), buffer.readInt())
             val refreshRate = IntRange(buffer.readInt(), buffer.readInt())
             val growthPoints = buffer.readList { reader ->
-                GrowthPoint(Vec3d(reader.readDouble(), reader.readDouble(), reader.readDouble()), Vec3d(reader.readDouble(), reader.readDouble(), reader.readDouble()))
+                GrowthPoint(Vec3(reader.readDouble(), reader.readDouble(), reader.readDouble()), Vec3(reader.readDouble(), reader.readDouble(), reader.readDouble()))
             }.toTypedArray()
             val randomizedGrowthPoints = buffer.readBoolean()
             val mutations = buffer.readMap({ reader -> reader.readIdentifier() }, { reader -> reader.readIdentifier() })
@@ -360,7 +359,7 @@ class Berry(
             val flowerTexture = buffer.readIdentifier()
             val fruitModelIdentifier = buffer.readIdentifier()
             val fruitTexture = buffer.readIdentifier()
-            val stageOneYPos = GrowthPoint(Vec3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()), Vec3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()))
+            val stageOneYPos = GrowthPoint(Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()), Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()))
             val boneMealChance = buffer.readFloat()
             return Berry(identifier, baseYield, emptyList(), growthTime, refreshRate, favMulchs, emptySet(), emptyList(), growthPoints, randomizedGrowthPoints, mutations, sproutShapeBoxes, matureShapeBoxes, flavors, tintIndexes, flowerModelIdentifier, flowerTexture, fruitModelIdentifier, fruitTexture, stageOneYPos, 0F, boneMealChance)
         }

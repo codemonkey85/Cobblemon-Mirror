@@ -10,9 +10,9 @@ package com.cobblemon.mod.common.net.messages.server.callback.move
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readUuid
-import com.cobblemon.mod.common.util.writeUuid
-import net.minecraft.network.RegistryByteBuf
+import com.cobblemon.mod.common.util.readUUID
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
 /**
@@ -24,11 +24,11 @@ import java.util.UUID
 class MoveSelectCancelledPacket(val uuid: UUID) : NetworkPacket<MoveSelectCancelledPacket> {
     companion object {
         val ID = cobblemonResource("move_select_cancelled")
-        fun decode(buffer: RegistryByteBuf) = MoveSelectCancelledPacket(buffer.readUuid())
+        fun decode(buffer: RegistryFriendlyByteBuf) = MoveSelectCancelledPacket(buffer.readUUID())
     }
 
     override val id = ID
-    override fun encode(buffer: RegistryByteBuf) {
-        buffer.writeUuid(uuid)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(uuid)
     }
 }

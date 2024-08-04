@@ -9,7 +9,6 @@
 package com.cobblemon.mod.common.util
 
 object DataKeys {
-    const val POKEMON_LAST_SAVED_VERSION = "CobblemonVersion"
     const val POKEMON = "Pokemon"
     const val POKEMON_UUID = "UUID"
     const val POKEMON_SPECIES_IDENTIFIER = "Species"
@@ -20,7 +19,6 @@ object DataKeys {
     const val POKEMON_EXPERIENCE = "Experience"
     const val POKEMON_FRIENDSHIP = "Friendship"
 
-    const val POKEMON_STATS = "Stats"
     const val POKEMON_IVS = "IVs"
     const val POKEMON_EVS = "EVs"
     const val POKEMON_HEALTH = "Health"
@@ -79,7 +77,6 @@ object DataKeys {
 
     // Evolution stuff
     const val POKEMON_EVOLUTIONS = "Evolutions"
-    const val POKEMON_PENDING_EVOLUTIONS = "Pending"
 
     const val BENCHED_MOVES = "BenchedMoves"
 
@@ -200,4 +197,11 @@ object DataKeys {
     const val NPC_ASPECTS = "AppliedAspects"
     const val NPC_DATA = "Data"
     const val NPC_INTERACTION = "Interaction"
+    const val NPC_INTERACT_TYPE = "Type"
+    const val NPC_INTERACT_SCRIPT = "Script"
+    const val NPC_INTERACT_CUSTOM_SCRIPT = "CustomScript"
+    const val NPC_INTERACT_DIALOGUE = "Dialogue"
+
+    // PokemonProperties
+    const val ELEMENTAL_TYPE = "ElementalType"
 }

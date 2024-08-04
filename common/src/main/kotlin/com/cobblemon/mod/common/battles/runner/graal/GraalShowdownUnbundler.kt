@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.util.FileUtils
 import com.cobblemon.mod.common.util.extractTo
 import com.cobblemon.mod.common.util.fromJson
 import com.google.gson.GsonBuilder
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStreamReader
@@ -62,8 +62,8 @@ class GraalShowdownUnbundler {
             }
 
             if (extract) {
-                Identifier.of(Cobblemon.MODID, "showdown.zip").extractTo(showdownZip)
-                Identifier.of(Cobblemon.MODID, "showdown.json").extractTo(showdownMetadataFile)
+                ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID, "showdown.zip").extractTo(showdownZip)
+                ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID, "showdown.json").extractTo(showdownMetadataFile)
                 FileUtils.unzipFile(showdownZip.toPath(), showdownDir.toPath())
                 showdownZip.delete()
             }

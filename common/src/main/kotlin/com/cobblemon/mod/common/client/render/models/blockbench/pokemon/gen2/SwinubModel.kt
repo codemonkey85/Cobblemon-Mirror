@@ -14,17 +14,17 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPo
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class SwinubModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("swinub")
 
     override var portraitScale = 2.6800003F
-    override var portraitTranslation = Vec3d(-0.2, -2.5200000000000102, 0.0)
+    override var portraitTranslation = Vec3(-0.2, -2.5200000000000102, 0.0)
 
     override var profileScale = 1.2300003F
-    override var profileTranslation = Vec3d(0.0, -0.13999999999999968, 0.0)
+    override var profileTranslation = Vec3(0.0, -0.13999999999999968, 0.0)
 
 //    lateinit var sleep: CobblemonPose
     lateinit var standing: CobblemonPose
@@ -35,7 +35,7 @@ class SwinubModel(root: ModelPart) : PokemonPosableModel(root) {
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("swinub", "sleep"))
+//            animations = arrayOf(bedrock("swinub", "sleep"))
 //        )
 
         standing = registerPose(

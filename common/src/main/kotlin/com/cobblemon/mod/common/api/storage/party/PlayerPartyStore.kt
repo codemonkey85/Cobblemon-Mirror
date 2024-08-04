@@ -19,9 +19,9 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.activestate.ShoulderedState
 import com.cobblemon.mod.common.pokemon.evolution.variants.LevelUpEvolution
 import com.cobblemon.mod.common.util.*
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.network.chat.Component
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.round
@@ -70,13 +70,13 @@ open class PlayerPartyStore(
 
             if (pc == null || !pc.add(pokemon)) {
                 if (pc == null) {
-                    player?.sendMessage(lang("overflow_no_pc"))
+                    player?.sendSystemMessage(lang("overflow_no_pc"))
                 } else {
-                    player?.sendMessage(lang("overflow_no_space", pc.name))
+                    player?.sendSystemMessage(lang("overflow_no_space", pc.name))
                 }
                 false
             } else {
-                player?.sendMessage(lang("overflow_to_pc", pokemon.species.translatedName, pc.name))
+                player?.sendSystemMessage(lang("overflow_to_pc", pokemon.species.translatedName, pc.name))
                 true
             }
         }
@@ -86,7 +86,7 @@ open class PlayerPartyStore(
      * Called on the party every second for routine party updates
      * ex: Passive healing, statuses, etc
      */
-    fun onSecondPassed(player: ServerPlayerEntity) {
+    fun onSecondPassed(player: ServerPlayer) {
         // Passive healing and passive statuses require the player be out of battle
         if (BattleRegistry.getBattleByParticipatingPlayer(player) == null) {
             val random = Random.Default
@@ -97,7 +97,7 @@ open class PlayerPartyStore(
                     if (pokemon.faintedTimer <= -1) {
                         val php = ceil(pokemon.hp * Cobblemon.config.faintAwakenHealthPercent)
                         pokemon.currentHealth = php.toInt()
-                        player.sendMessage(Text.translatable("cobblemon.party.faintRecover", pokemon.getDisplayName()))
+                        player.sendSystemMessage(Component.translatable("cobblemon.party.faintRecover", pokemon.getDisplayName()))
                     }
                 }
                 // Passive healing while less than full health
@@ -147,10 +147,10 @@ open class PlayerPartyStore(
 
         // Shoulder validation code
         if (player.shoulderEntityLeft.isPokemonEntity() && !validateShoulder(player.shoulderEntityLeft, true)) {
-            player.dropShoulderEntity(player.shoulderEntityLeft)
+            player.respawnEntityOnShoulder(player.shoulderEntityLeft)
         }
         if (player.shoulderEntityRight.isPokemonEntity() && !validateShoulder(player.shoulderEntityRight, false)) {
-            player.dropShoulderEntity(player.shoulderEntityRight)
+            player.respawnEntityOnShoulder(player.shoulderEntityRight)
         }
 
         forEach {
@@ -161,8 +161,8 @@ open class PlayerPartyStore(
         }
     }
 
-    fun validateShoulder(shoulderEntity: NbtCompound, isLeft: Boolean): Boolean {
-        val pokemon = find { it.uuid == shoulderEntity.getCompound("Pokemon").getUuid(DataKeys.POKEMON_UUID) }
+    fun validateShoulder(shoulderEntity: CompoundTag, isLeft: Boolean): Boolean {
+        val pokemon = find { it.uuid == shoulderEntity.getCompound("Pokemon").getUUID(DataKeys.POKEMON_UUID) }
         if (pokemon == null || (pokemon.state as? ShoulderedState)?.isLeftShoulder != isLeft) {
             return false
         }

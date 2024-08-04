@@ -9,13 +9,17 @@
 package com.cobblemon.mod.common.mixin;
 
 import com.cobblemon.mod.common.world.CobblemonStructureIDs;
-import net.minecraft.registry.Registry;
-import net.minecraft.structure.PoolStructurePiece;
-import net.minecraft.structure.StructureTemplateManager;
-import net.minecraft.structure.pool.*;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
+import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
+import net.minecraft.world.level.levelgen.structure.pools.LegacySinglePoolElement;
+import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
+import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,13 +28,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
-@Mixin(StructurePoolBasedGenerator.StructurePoolGenerator.class)
+@Mixin(JigsawPlacement.Placer.class)
 public abstract class StructurePoolGeneratorMixin {
 
     Map<String, Integer> generatedStructureGroupCounts;
 
     private static final Map<String, Integer> structureMaxes;
-    private static final Map<Identifier, Set<String>> structureGroups = new HashMap<>();
+    private static final Map<ResourceLocation, Set<String>> structureGroups = new HashMap<>();
     static {
         String pokecenter = "pokecenter";
         String berry = "berry_farm";
@@ -65,11 +69,11 @@ public abstract class StructurePoolGeneratorMixin {
         structureMaxes = Collections.unmodifiableMap(aMap);
     }
 
-    public Set<String> getGroups(Identifier structureIdentifier) {
+    public Set<String> getGroups(ResourceLocation structureIdentifier) {
         return structureGroups.getOrDefault(structureIdentifier, Set.of());
     }
 
-    public boolean hasReachedMaximum(Identifier structureIdentifier) {
+    public boolean hasReachedMaximum(ResourceLocation structureIdentifier) {
         Set<String> groups = getGroups(structureIdentifier);
         for (String group : groups) {
             int count = generatedStructureGroupCounts.getOrDefault(group, 0);
@@ -81,7 +85,7 @@ public abstract class StructurePoolGeneratorMixin {
         return false;
     }
 
-    public void incrementStructureCount(Identifier structureIdentifier) {
+    public void incrementStructureCount(ResourceLocation structureIdentifier) {
         Set<String> groups = getGroups(structureIdentifier);
         for (String group : groups) {
             generatedStructureGroupCounts.put(group, generatedStructureGroupCounts.getOrDefault(group, 0) + 1);
@@ -89,17 +93,17 @@ public abstract class StructurePoolGeneratorMixin {
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void onStructurePoolGeneratorCreation(Registry<StructurePool> registry, int maxSize, ChunkGenerator chunkGenerator, StructureTemplateManager structureTemplateManager, List<? super PoolStructurePiece> children, Random random, CallbackInfo ci) {
+    private void onStructurePoolGeneratorCreation(Registry<StructureTemplatePool> registry, int maxSize, ChunkGenerator chunkGenerator, StructureTemplateManager structureTemplateManager, List<? super PoolElementStructurePiece> children, RandomSource random, CallbackInfo ci) {
         generatedStructureGroupCounts = new HashMap<>();
     }
 
-    @ModifyVariable(method = "generatePiece", at = @At("STORE"), ordinal = 1)
+    @ModifyVariable(method = "tryPlacingChildren", at = @At("STORE"), ordinal = 1)
     private Iterator<StructurePoolElement> reduceStructurePoolElementIterator(Iterator<StructurePoolElement> iterator) {
         List<StructurePoolElement> reducedList = new ArrayList<>();
 
         while (iterator.hasNext()) {
             StructurePoolElement structure = iterator.next();
-            Identifier structurePieceLocationKey = getCobblemonOnlyLocation(structure);
+            ResourceLocation structurePieceLocationKey = getCobblemonOnlyLocation(structure);
             if (structurePieceLocationKey == null) {
                 reducedList.add(structure);
                 continue;
@@ -113,9 +117,9 @@ public abstract class StructurePoolGeneratorMixin {
         return reducedList.iterator();
     }
 
-    @ModifyVariable(method = "generatePiece", at = @At("HEAD"), ordinal = 0, argsOnly = true)
-    private PoolStructurePiece injected(PoolStructurePiece poolStructurePiece) {
-        Identifier structureLocationKey = getCobblemonOnlyLocation(poolStructurePiece.getPoolElement());
+    @ModifyVariable(method = "tryPlacingChildren", at = @At("HEAD"), ordinal = 0, argsOnly = true)
+    private PoolElementStructurePiece injected(PoolElementStructurePiece poolStructurePiece) {
+        ResourceLocation structureLocationKey = getCobblemonOnlyLocation(poolStructurePiece.getElement());
         if (structureLocationKey != null) {
             incrementStructureCount(structureLocationKey);
         }
@@ -160,8 +164,8 @@ public abstract class StructurePoolGeneratorMixin {
 ////        structurePieces = new ArrayDeque<>(reducedStructurePiecesList);
 //    }
 
-    private static Identifier getCobblemonOnlyLocation(StructurePoolElement structurePoolElement) {
-        Identifier location = getLocationIfAvailable(structurePoolElement);
+    private static ResourceLocation getCobblemonOnlyLocation(StructurePoolElement structurePoolElement) {
+        ResourceLocation location = getLocationIfAvailable(structurePoolElement);
         if (location == null) return null;
 
         if (!location.getNamespace().equals("cobblemon")) return null;
@@ -169,15 +173,15 @@ public abstract class StructurePoolGeneratorMixin {
         return location;
     }
 
-    private static Identifier getLocationIfAvailable(StructurePoolElement structurePoolElement) {
+    private static ResourceLocation getLocationIfAvailable(StructurePoolElement structurePoolElement) {
         if (structurePoolElement instanceof LegacySinglePoolElement legacySinglePoolElement) {
-            if (legacySinglePoolElement.location.left().isEmpty()) return null;
+            if (legacySinglePoolElement.template.left().isEmpty()) return null;
 
-            return legacySinglePoolElement.location.left().get();
+            return legacySinglePoolElement.template.left().get();
         } else if (structurePoolElement instanceof SinglePoolElement singlePoolElement) {
-            if (singlePoolElement.location.left().isEmpty()) return null;
+            if (singlePoolElement.template.left().isEmpty()) return null;
 
-            return singlePoolElement.location.left().get();
+            return singlePoolElement.template.left().get();
         } else {
             return null;
         }

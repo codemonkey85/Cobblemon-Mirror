@@ -18,8 +18,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.DataKeys
 import com.cobblemon.mod.common.util.asExpressionLike
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class DubwoolModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("dubwool")
@@ -32,9 +32,9 @@ class DubwoolModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Qu
     val neckWool = getPart("neck_wool_shearable")
 
     override var portraitScale = 3.1F
-    override var portraitTranslation = Vec3d(-1.2, -0.7, 0.0)
+    override var portraitTranslation = Vec3(-1.2, -0.7, 0.0)
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.4, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.4, 0.0)
 
     lateinit var sleep: Pose
     lateinit var standing: Pose

@@ -14,28 +14,28 @@ import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.asTranslated
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.sound.SoundManager
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.MutableText
-import net.minecraft.util.Identifier
+import net.minecraft.client.gui.GuiGraphics
+import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.gui.components.Button
+import net.minecraft.client.sounds.SoundManager
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
 
 open class PokeNavImageButton(
     val posX: Int, val posY: Int,
     pX: Int, pY: Int,
     pWidth: Int, pHeight: Int,
     pXTexStart: Int, pYTexStart: Int, pYDiffText: Int,
-    private val resourceLocation: Identifier, pTextureWidth: Int, pTextureHeight: Int,
-    onPress: PressAction,
-    private val text: MutableText,
+    private val resourceLocation: ResourceLocation, pTextureWidth: Int, pTextureHeight: Int,
+    onPress: OnPress,
+    private val text: MutableComponent,
     private val canClick: () -> Boolean = { true }
     // TODO: Make lang key per button
-): ButtonWidget(pX, pY, pWidth, pHeight, "cobblemon.ui.pokenav.narrator.backbutton".asTranslated(), onPress, DEFAULT_NARRATION_SUPPLIER) {
+): Button(pX, pY, pWidth, pHeight, "cobblemon.ui.pokenav.narrator.backbutton".asTranslated(), onPress, DEFAULT_NARRATION) {
 
-    override fun renderWidget(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         // Render Button Image
-        this.applyBlitk(context.matrices, pMouseX, pMouseY, pPartialTicks)
+        this.applyBlitk(context.pose(), pMouseX, pMouseY, pPartialTicks)
         // Draw Text
         drawScaledText(
             context = context,
@@ -62,9 +62,9 @@ open class PokeNavImageButton(
         }
     }
 
-    protected open fun applyBlitk(pMatrixStack: MatrixStack, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    protected open fun applyBlitk(pPoseStack: PoseStack, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         blitk(
-            matrixStack = pMatrixStack,
+            matrixStack = pPoseStack,
             texture = resourceLocation,
             x = x, y = y + 0.25,
             width = width, height = height

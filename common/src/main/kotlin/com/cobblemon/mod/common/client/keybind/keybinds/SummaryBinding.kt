@@ -13,13 +13,12 @@ import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.summary.Summary
 import com.cobblemon.mod.common.client.keybind.CobblemonPartyLockedKeyBinding
 import com.cobblemon.mod.common.client.keybind.KeybindCategories
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.util.InputUtil
+import com.mojang.blaze3d.platform.InputConstants
 
 object SummaryBinding : CobblemonPartyLockedKeyBinding(
     "key.cobblemon.summary",
-    InputUtil.Type.KEYSYM,
-    InputUtil.GLFW_KEY_M,
+    InputConstants.Type.KEYSYM,
+    InputConstants.KEY_M,
     KeybindCategories.COBBLEMON_CATEGORY
 ) {
     override fun onPress() {

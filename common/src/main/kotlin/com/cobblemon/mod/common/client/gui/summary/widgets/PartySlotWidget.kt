@@ -22,9 +22,9 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
@@ -36,7 +36,7 @@ class PartySlotWidget(
     private val pokemon: Pokemon?,
     private val index: Int,
     private val isClientPartyMember: Boolean,
-) : SoundlessWidget(pX.toInt(), pY.toInt(), WIDTH, HEIGHT, Text.literal("PartyMember")) {
+) : SoundlessWidget(pX.toInt(), pY.toInt(), WIDTH, HEIGHT, Component.literal("PartyMember")) {
     val state = FloatingState()
     companion object {
         const val WIDTH = 46
@@ -50,7 +50,7 @@ class PartySlotWidget(
         val genderIconFemale = cobblemonResource("textures/gui/party/party_gender_female.png")
     }
 
-    private fun getSlotTexture(pokemon: Pokemon?): Identifier {
+    private fun getSlotTexture(pokemon: Pokemon?): ResourceLocation {
         if (pokemon != null) {
             if (pokemon.isFainted()) return slotFaintedResource
             return slotResource
@@ -69,9 +69,9 @@ class PartySlotWidget(
         return 0
     }
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height
-        val matrices = context.matrices
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height
+        val matrices = context.pose()
         val isDraggedSlot = partyWidget.swapEnabled && partyWidget.swapSource == index
         val slotPokemon = if (isDraggedSlot) null else pokemon
         val isSelected = this.isClientPartyMember && this.summary.selectedPokemon.uuid == slotPokemon?.uuid
@@ -149,7 +149,7 @@ class PartySlotWidget(
             )
 
             // Render Pokémon
-            matrices.push()
+            matrices.pushPose()
             matrices.translate(x + (PORTRAIT_DIAMETER / 2.0), y - 3.0, 0.0)
             matrices.scale(2.5F, 2.5F, 1F)
             drawProfilePokemon(
@@ -161,7 +161,7 @@ class PartySlotWidget(
                 scale = 4.5F,
                 partialTicks = delta
             )
-            matrices.pop()
+            matrices.popPose()
 
             drawScaledText(
                 context = context,
@@ -224,7 +224,7 @@ class PartySlotWidget(
 
     override fun mouseReleased(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
         if (partyWidget.swapEnabled) toggleDrag(false)
-        return super.mouseReleased(pMouseX, pMouseY, pButton)
+        return partyWidget.mouseReleased(pMouseX, pMouseY, pButton)
     }
 
     override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, f: Double, g: Double): Boolean {

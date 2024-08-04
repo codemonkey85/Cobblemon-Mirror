@@ -48,12 +48,12 @@ import com.cobblemon.mod.common.pokemon.evolution.progress.LastBattleCriticalHit
 import com.cobblemon.mod.common.pokemon.evolution.requirements.DefeatRequirement
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.getPlayer
+import net.minecraft.network.chat.Component
 import java.io.File
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentLinkedDeque
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Individual battle instance
@@ -102,7 +102,7 @@ open class PokemonBattle(
 
     val showdownMessages = mutableListOf<String>()
     val battleLog = mutableListOf<String>()
-    val chatLog = mutableListOf<Text>()
+    val chatLog = mutableListOf<Component>()
     var started = false
     var winners = listOf<BattleActor>()
     var losers = listOf<BattleActor>()
@@ -173,7 +173,7 @@ open class PokemonBattle(
     /**
      * Gets the first battle actor whom the given player controls, or null if there is no such actor.
      */
-    fun getActor(player: ServerPlayerEntity) = actors.firstOrNull { it.isForPlayer(player) }
+    fun getActor(player: ServerPlayer) = actors.firstOrNull { it.isForPlayer(player) }
 
     /**
      * Gets a [BattleActor] and an [ActiveBattlePokemon] from a pnx key, e.g. p2a
@@ -201,7 +201,7 @@ open class PokemonBattle(
             ?: throw IllegalStateException("Invalid pnx: $pnx - unknown pokemon")
     }
 
-    fun broadcastChatMessage(component: Text) {
+    fun broadcastChatMessage(component: Component) {
         chatLog.add(component)
         sendSpectatorUpdate(BattleMessagePacket(component))
         return actors.forEach { it.sendMessage(component) }
@@ -246,7 +246,7 @@ open class PokemonBattle(
                         }
                         val multiplier = when {
                             // ToDo when Exp. All is implement if enabled && !facedFainted return 2.0, probably should be a configurable value too, this will have priority over the Exp. Share
-                            !facedFainted && pokemon.heldItemNoCopy().isIn(CobblemonItemTags.EXPERIENCE_SHARE) -> Cobblemon.config.experienceShareMultiplier
+                            !facedFainted && pokemon.heldItemNoCopy().`is`(CobblemonItemTags.EXPERIENCE_SHARE) -> Cobblemon.config.experienceShareMultiplier
                             // ToDo when Exp. All is implemented the facedFainted and else can be collapsed into the 1.0 return value
                             facedFainted -> 1.0
                             else -> continue
@@ -275,7 +275,6 @@ open class PokemonBattle(
         }
         sendUpdate(BattleEndPacket())
         BattleRegistry.closeBattle(this)
-        onEndHandlers.forEach { it(this) }
     }
 
     fun finishCaptureAction(captureAction: BattleCaptureAction) {
@@ -408,7 +407,7 @@ open class PokemonBattle(
         } catch (e: Exception) {
             LOGGER.error("Exception while ticking a battle. Saving battle log.", e)
             val message = battleLang("crash").red()
-            this.actors.filterIsInstance<PlayerBattleActor>().forEach { it.entity?.sendMessage(message) }
+            this.actors.filterIsInstance<PlayerBattleActor>().forEach { it.entity?.sendSystemMessage(message) }
             this.saveBattleLog()
             this.stop()
             return
@@ -433,8 +432,8 @@ open class PokemonBattle(
                         .filter { it.type == ActorType.PLAYER }
                         .filterIsInstance<EntityBackedBattleActor<*>>()
                         .mapNotNull { it.entity }
-                        .filter { it.world == world }
-                        .minOfOrNull { pos.distanceTo(it.pos) }
+                        .filter { it.level() == world }
+                        .minOfOrNull { pos.distanceTo(it.position()) }
 
                     nearestPlayerActorDistance != null && nearestPlayerActorDistance < pokemonActor.fleeDistance
                 }
@@ -447,7 +446,7 @@ open class PokemonBattle(
                 .filterIsInstance<PokemonEntity>()
                 .forEach{it.pokemon.heal()}
             CobblemonEvents.BATTLE_FLED.post(BattleFledEvent(this, actors.asSequence().filterIsInstance<PlayerBattleActor>().iterator().next()))
-            actors.filterIsInstance<EntityBackedBattleActor<*>>().mapNotNull { it.entity }.forEach { it.sendMessage(battleLang("flee").yellow()) }
+            actors.filterIsInstance<EntityBackedBattleActor<*>>().mapNotNull { it.entity }.forEach { it.sendSystemMessage(battleLang("flee").yellow()) }
             stop()
         }
     }
@@ -484,9 +483,9 @@ open class PokemonBattle(
      * @param message The [BattleMessage] that wasn't able to find a lang interpretation.
      * @return The generated [Text] meant to notify the client.
      */
-    internal fun createUnimplemented(message: BattleMessage): Text {
+    internal fun createUnimplemented(message: BattleMessage): Component {
         LOGGER.error("Missing interpretation on '{}' action {}", message.id, message.rawMessage)
-        return Text.literal("Missing interpretation on '${message.id}' action ${message.rawMessage}").red()
+        return Component.literal("Missing interpretation on '${message.id}' action ${message.rawMessage}").red()
     }
 
     /**
@@ -499,12 +498,12 @@ open class PokemonBattle(
      *
      * @throws IllegalArgumentException if the [publicMessage] and [privateMessage] don't have a matching [BattleMessage.id].
      */
-    internal fun createUnimplementedSplit(publicMessage: BattleMessage, privateMessage: BattleMessage): Text {
+    internal fun createUnimplementedSplit(publicMessage: BattleMessage, privateMessage: BattleMessage): Component {
         if (publicMessage.id != privateMessage.id) {
             throw IllegalArgumentException("Messages do not match")
         }
         LOGGER.error("Missing interpretation on '{}' action: \nPublic » {}\nPrivate » {}", publicMessage.id, publicMessage.rawMessage, privateMessage.rawMessage)
-        return Text.literal("Missing interpretation on '${publicMessage.id}' action please report to the developers").red()
+        return Component.literal("Missing interpretation on '${publicMessage.id}' action please report to the developers").red()
     }
 
     fun addQueryFunctions(queryStruct: QueryStruct): QueryStruct {

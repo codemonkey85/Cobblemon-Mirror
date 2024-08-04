@@ -17,8 +17,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvi
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class TyranitarModel(root: ModelPart) : PokemonPosableModel(root), BipedFrame, BimanualFrame, HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("tyranitar")
@@ -30,10 +30,10 @@ class TyranitarModel(root: ModelPart) : PokemonPosableModel(root), BipedFrame, B
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 1.21F
-    override var portraitTranslation = Vec3d(-0.43, 3.73, 0.0)
+    override var portraitTranslation = Vec3(-0.43, 3.73, 0.0)
 
     override var profileScale = 0.33F
-    override var profileTranslation = Vec3d(0.02, 1.31, 0.0)
+    override var profileTranslation = Vec3(0.02, 1.31, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

@@ -33,9 +33,9 @@ import com.cobblemon.mod.common.pokemon.ai.FormPokemonBehaviour
 import com.cobblemon.mod.common.pokemon.lighthing.LightingData
 import com.cobblemon.mod.common.util.*
 import com.google.gson.annotations.SerializedName
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.entity.EntityDimensions
-import net.minecraft.util.Identifier
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.world.entity.EntityDimensions
+import net.minecraft.resources.ResourceLocation
 
 class FormData(
     name: String = "Normal",
@@ -101,7 +101,7 @@ class FormData(
      */
     val gigantamaxMove: MoveTemplate? = null,
     @SerializedName("battleTheme")
-    private var _battleTheme: Identifier? = null,
+    private var _battleTheme: ResourceLocation? = null,
     @SerializedName("lightingData")
     private var _lightingData: LightingData? = null
 ) : Decodable, Encodable, ShowdownIdentifiable {
@@ -191,7 +191,7 @@ class FormData(
     val evolutions: MutableSet<Evolution>
         get() = _evolutions ?: mutableSetOf()
 
-    val battleTheme: Identifier
+    val battleTheme: ResourceLocation
         get() = _battleTheme ?: species.battleTheme
 
     val lightingData: LightingData?
@@ -205,7 +205,7 @@ class FormData(
 
     fun eyeHeight(entity: PokemonEntity): Float {
         val multiplier = this.resolveEyeHeight(entity) ?: return this.species.eyeHeight(entity)
-        return entity.height * multiplier
+        return entity.bbHeight * multiplier
     }
 
     private fun resolveEyeHeight(entity: PokemonEntity): Float? = when {
@@ -242,7 +242,7 @@ class FormData(
 
     override fun hashCode(): Int = this.showdownId().hashCode()
 
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(this.name)
         buffer.writeCollection(this.aspects) { pb, aspect -> pb.writeString(aspect) }
         buffer.writeNullable(this._baseStats) { statsBuffer, map ->
@@ -270,7 +270,7 @@ class FormData(
         }
     }
 
-    override fun decode(buffer: RegistryByteBuf) {
+    override fun decode(buffer: RegistryFriendlyByteBuf) {
         this.name = buffer.readString()
         this.aspects = buffer.readList { buffer.readString() }.toMutableList()
         buffer.readNullable { mapBuffer ->
@@ -285,15 +285,7 @@ class FormData(
         this._height = buffer.readNullable { pb -> pb.readFloat() }
         this._weight = buffer.readNullable { pb -> pb.readFloat() }
         this._baseScale = buffer.readNullable { pb -> pb.readFloat() }
-        this._hitbox = buffer.readNullable { pb ->
-            val isFixed = pb.readBoolean()
-            if (isFixed) {
-                EntityDimensions.fixed(pb.readFloat(), pb.readFloat())
-            }
-            else {
-                EntityDimensions.changing(pb.readFloat(), pb.readFloat())
-            }
-        }
+        this._hitbox = buffer.readNullable { pb -> pb.readEntityDimensions() }
         this._moves = buffer.readNullable { _ -> Learnset().apply { decode(buffer) }}
         this._pokedex = buffer.readNullable { pb -> pb.readList { it.readString() } }?.toMutableList()
         this._lightingData = buffer.readNullable { pb -> LightingData(pb.readInt(), pb.readEnumConstant(LightingData.LiquidGlowMode::class.java)) }

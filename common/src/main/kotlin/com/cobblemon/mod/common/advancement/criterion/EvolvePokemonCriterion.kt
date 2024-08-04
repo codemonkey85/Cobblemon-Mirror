@@ -11,16 +11,15 @@ package com.cobblemon.mod.common.advancement.criterion
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.predicate.entity.LootContextPredicate
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
-import net.minecraft.util.dynamic.Codecs
+import net.minecraft.advancements.critereon.ContextAwarePredicate
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.resources.ResourceLocation
 import java.util.Optional
 
-class EvolvePokemonContext(val species : Identifier, val evolution : Identifier, times: Int) : CountableContext(times)
+class EvolvePokemonContext(val species : ResourceLocation, val evolution : ResourceLocation, times: Int) : CountableContext(times)
 
 class EvolvePokemonCriterion(
-    playerCtx: Optional<LootContextPredicate>,
+    playerCtx: Optional<ContextAwarePredicate>,
     val species: String,
     val evolution: String,
     count: Int
@@ -28,14 +27,14 @@ class EvolvePokemonCriterion(
 
     companion object {
         val CODEC: Codec<EvolvePokemonCriterion> = RecordCodecBuilder.create { it.group(
-            LootContextPredicate.CODEC.optionalFieldOf("player").forGetter(EvolvePokemonCriterion::playerCtx),
+            ContextAwarePredicate.CODEC.optionalFieldOf("player").forGetter(EvolvePokemonCriterion::playerCtx),
             Codec.STRING.optionalFieldOf("species", "any").forGetter(EvolvePokemonCriterion::species),
             Codec.STRING.optionalFieldOf("evolution", "any").forGetter(EvolvePokemonCriterion::evolution),
             Codec.INT.optionalFieldOf("count", 0).forGetter(EvolvePokemonCriterion::count)
         ).apply(it, ::EvolvePokemonCriterion) }
     }
 
-    override fun matches(player: ServerPlayerEntity, context: EvolvePokemonContext): Boolean {
+    override fun matches(player: ServerPlayer, context: EvolvePokemonContext): Boolean {
         return context.times >= count && (context.species == species.asIdentifierDefaultingNamespace() || species == "any") &&
                 (context.evolution == evolution.asIdentifierDefaultingNamespace() || evolution == "any")
     }

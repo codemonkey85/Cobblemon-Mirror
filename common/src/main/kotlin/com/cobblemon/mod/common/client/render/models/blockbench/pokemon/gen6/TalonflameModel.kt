@@ -20,8 +20,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class TalonflameModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("talonflame")
@@ -32,9 +32,9 @@ class TalonflameModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame
     override val head = getPart("neck")
 
     override var portraitScale = 2.2F
-    override var portraitTranslation = Vec3d(-0.6, 0.6, 0.0)
+    override var portraitTranslation = Vec3(-0.6, 0.6, 0.0)
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.4, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.4, 0.0)
 
     //    lateinit var sleep: Pose
     lateinit var stand: Pose
@@ -47,7 +47,7 @@ class TalonflameModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("talonflame", "sleep"))
+//            animations = arrayOf(bedrock("talonflame", "sleep"))
 //        )
 
         val blink = quirk { bedrockStateful("talonflame", "blink")}

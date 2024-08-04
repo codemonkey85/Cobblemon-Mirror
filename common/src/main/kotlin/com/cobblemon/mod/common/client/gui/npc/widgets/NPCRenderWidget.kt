@@ -13,17 +13,17 @@ import com.cobblemon.mod.common.api.gui.drawProfile
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.NPCModelRepository
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.Drawable
-import net.minecraft.client.gui.Element
-import net.minecraft.util.Identifier
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Renderable
+import net.minecraft.client.gui.components.events.GuiEventListener
+import net.minecraft.resources.ResourceLocation
 
 class NPCRenderWidget(
     val x: Int,
     val y: Int,
-    var identifier: Identifier,
+    var identifier: ResourceLocation,
     val aspects: MutableSet<String>
-) : Drawable, Element {
+) : Renderable, GuiEventListener {
     val state = FloatingState()
     companion object {
         val profileBackgroundResource = cobblemonResource("textures/gui/npc/profile_background.png")
@@ -33,9 +33,9 @@ class NPCRenderWidget(
 
     override fun isFocused() = false
     override fun setFocused(focused: Boolean) {}
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = profileBackgroundResource,
             x = x,
             y = y,
@@ -43,19 +43,19 @@ class NPCRenderWidget(
             height = HEIGHT
         )
 
-        context.matrices.push()
-        context.matrices.translate(x + WIDTH / 2F, y + HEIGHT / 2F, 0F)
+        context.pose().pushPose()
+        context.pose().translate(x + WIDTH / 2F, y + HEIGHT / 2F, 0F)
 
         drawProfile(
             repository = NPCModelRepository,
             resourceIdentifier = identifier,
             aspects = aspects,
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             partialTicks = delta,
             scale = 30F,
             state = state
         )
 
-        context.matrices.pop()
+        context.pose().popPose()
     }
 }

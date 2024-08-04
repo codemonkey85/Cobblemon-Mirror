@@ -15,7 +15,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import java.nio.file.Path
 import java.util.UUID
 import kotlin.io.path.exists
-import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.CompoundTag
 
 interface CobblemonConverter<S> : CobblemonAdapter<S> {
 
@@ -25,10 +25,10 @@ interface CobblemonConverter<S> : CobblemonAdapter<S> {
         return target.exists()
     }
 
-    fun party(user: UUID, nbt: NbtCompound): PlayerPartyStore
+    fun party(user: UUID, nbt: CompoundTag): PlayerPartyStore
 
-    fun pc(user: UUID, nbt: NbtCompound): PCStore
+    fun pc(user: UUID, nbt: CompoundTag): PCStore
 
-    fun translate(nbt: NbtCompound): Pokemon
+    fun translate(nbt: CompoundTag): Pokemon
 
 }

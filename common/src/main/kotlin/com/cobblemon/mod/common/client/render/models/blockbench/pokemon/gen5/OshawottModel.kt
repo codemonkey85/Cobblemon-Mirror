@@ -20,8 +20,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPo
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class OshawottModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("oshawott")
@@ -34,9 +34,9 @@ class OshawottModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     val scalchopbody = getPart("scalchop_torso")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.2, -0.15, 0.0)
+    override var portraitTranslation = Vec3(-0.2, -0.15, 0.0)
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.0, 0.69, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.69, 0.0)
 
     lateinit var battleidle: CobblemonPose
     lateinit var sleep: CobblemonPose

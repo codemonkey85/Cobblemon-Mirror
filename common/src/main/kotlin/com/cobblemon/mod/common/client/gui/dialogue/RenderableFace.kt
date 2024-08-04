@@ -21,10 +21,10 @@ import com.cobblemon.mod.common.entity.PosableEntity
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import java.util.UUID
 import kotlin.math.atan
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.ingame.InventoryScreen
-import net.minecraft.util.Identifier
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.screens.inventory.InventoryScreen
+import net.minecraft.resources.ResourceLocation
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
@@ -35,12 +35,12 @@ import org.joml.Vector3f
  * @since January 1st, 2024
  */
 sealed interface RenderableFace {
-    fun render(drawContext: DrawContext, partialTicks: Float)
+    fun render(drawContext: GuiGraphics, partialTicks: Float)
 }
 
 class PlayerRenderableFace(val playerId: UUID) : RenderableFace {
-    override fun render(drawContext: DrawContext, partialTicks: Float) {
-        val entity = MinecraftClient.getInstance().world?.getPlayerByUuid(playerId) ?: return
+    override fun render(drawContext: GuiGraphics, partialTicks: Float) {
+        val entity = Minecraft.getInstance().level?.getPlayerByUUID(playerId) ?: return
         // All of the maths below is shamelessly stolen from InventoryScreen.drawEntity.
         // the -20 and 5 divided by 40 are for configuring the yaw and pitch tilt of the body and head respectively.
         // For more information, pray for divine inspiration or something idk.
@@ -49,33 +49,33 @@ class PlayerRenderableFace(val playerId: UUID) : RenderableFace {
         val quaternionf = Quaternionf().rotateZ(Math.PI.toFloat())
         val quaternionf2 = Quaternionf().rotateX(g * 20.0f * (Math.PI.toFloat() / 180))
         quaternionf.mul(quaternionf2)
-        val oldBodyYaw = entity.bodyYaw
-        val oldEntityYaw = entity.yaw
-        val oldPitch = entity.pitch
-        val oldPrevHeadYaw = entity.prevHeadYaw
-        val oldHeadYaw = entity.headYaw
+        val oldBodyYaw = entity.yBodyRot
+        val oldEntityYaw = entity.yRot
+        val oldPitch = entity.xRot
+        val oldPrevHeadYaw = entity.yHeadRotO
+        val oldHeadYaw = entity.yHeadRot
         // Modifies the entity for rendering based on our f and g values
-        entity.bodyYaw = 180.0F + f * 20.0F
-        entity.setYaw(180.0F + f * 40.0F)
-        entity.setPitch(0F)
-        entity.headYaw = entity.yaw
-        entity.prevHeadYaw = entity.yaw
+        entity.yBodyRot = 180.0F + f * 20.0F
+        entity.yRot = 180.0F + f * 40.0F
+        entity.xRot = 0F
+        entity.yHeadRot = entity.yRot // TODO (techdaan): is this correct, looks weird.
+        entity.yHeadRotO = entity.yRot
         val size = 37F
         val xOffset = 0
         val yOffset = 72
-        InventoryScreen.drawEntity(drawContext, xOffset.toFloat(), yOffset.toFloat(), size, Vector3f(), quaternionf, quaternionf2, entity)
+        InventoryScreen.renderEntityInInventory(drawContext, xOffset.toFloat(), yOffset.toFloat(), size, Vector3f(), quaternionf, quaternionf2, entity)
         // Resets the entity
-        entity.bodyYaw = oldBodyYaw
-        entity.setYaw(oldEntityYaw)
-        entity.setPitch(oldPitch)
-        entity.prevHeadYaw = oldPrevHeadYaw
-        entity.headYaw = oldHeadYaw
+        entity.yBodyRot = oldBodyYaw
+        entity.yRot = oldEntityYaw
+        entity.xRot = oldPitch
+        entity.yHeadRotO = oldPrevHeadYaw
+        entity.yHeadRot = oldHeadYaw
     }
 }
 
 class ReferenceRenderableFace(val entity: PosableEntity): RenderableFace {
     val state = entity.delegate as PosableState
-    override fun render(drawContext: DrawContext, partialTicks: Float) {
+    override fun render(drawContext: GuiGraphics, partialTicks: Float) {
         val state = this.state
         if (state is PokemonClientDelegate) {
             state.currentAspects = state.currentEntity.pokemon.aspects
@@ -84,20 +84,20 @@ class ReferenceRenderableFace(val entity: PosableEntity): RenderableFace {
                 aspects = state.currentEntity.pokemon.aspects,
                 repository = PokemonModelRepository,
                 contextScale = state.currentEntity.pokemon.form.baseScale,
-                matrixStack = drawContext.matrices,
+                matrixStack = drawContext.pose(),
                 state = state,
                 partialTicks = 0F // It's already being rendered potentially so we don't need to tick the state.
             )
         } else if (state is NPCClientDelegate) {
             entity as NPCEntity
             state.currentAspects = entity.aspects
-            val limbSwing = entity.limbAnimator.getPos(partialTicks)
-            val limbSwingAmount = entity.limbAnimator.getSpeed(partialTicks)
+            val limbSwing = entity.walkAnimation.position(partialTicks)
+            val limbSwingAmount = entity.walkAnimation.speed(partialTicks)
             drawPosablePortrait(
                 identifier = state.npcEntity.npc.resourceIdentifier,
                 aspects = state.npcEntity.aspects,
                 repository = NPCModelRepository,
-                matrixStack = drawContext.matrices,
+                matrixStack = drawContext.pose(),
                 state = state,
                 partialTicks = 0F, // It's already being rendered potentially so we don't need to tick the state.
                 limbSwing = limbSwing,
@@ -110,12 +110,12 @@ class ReferenceRenderableFace(val entity: PosableEntity): RenderableFace {
 
 class ArtificialRenderableFace(
     val modelType: String,
-    val identifier: Identifier,
+    val identifier: ResourceLocation,
     val aspects: Set<String>
 ): RenderableFace {
     val state = FloatingState()
 
-    override fun render(drawContext: DrawContext, partialTicks: Float) {
+    override fun render(drawContext: GuiGraphics, partialTicks: Float) {
         val state = this.state
         state.currentAspects = aspects
         if (modelType == "pokemon") {
@@ -126,7 +126,7 @@ class ArtificialRenderableFace(
             drawPosablePortrait(
                 identifier = species.resourceIdentifier,
                 aspects = aspects,
-                matrixStack = drawContext.matrices,
+                matrixStack = drawContext.pose(),
                 contextScale = species.getForm(aspects).baseScale,
                 state = state,
                 repository = PokemonModelRepository,
@@ -136,7 +136,7 @@ class ArtificialRenderableFace(
             drawPosablePortrait(
                 identifier = identifier,
                 aspects = aspects,
-                matrixStack = drawContext.matrices,
+                matrixStack = drawContext.pose(),
                 state = state,
                 repository = NPCModelRepository,
                 partialTicks = partialTicks

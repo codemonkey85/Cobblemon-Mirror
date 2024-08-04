@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.NetworkManager
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object CobblemonFabricNetworkManager : NetworkManager {
     fun registerMessages() {
@@ -29,7 +29,7 @@ object CobblemonFabricNetworkManager : NetworkManager {
         CobblemonNetwork.c2sPayloads.map { FabricPacketInfo(it) }.forEach { it.registerServerHandler() }
     }
 
-    override fun sendPacketToPlayer(player: ServerPlayerEntity, packet: NetworkPacket<*>) {
+    override fun sendPacketToPlayer(player: ServerPlayer, packet: NetworkPacket<*>) {
         ServerPlayNetworking.send(player, packet)
     }
 

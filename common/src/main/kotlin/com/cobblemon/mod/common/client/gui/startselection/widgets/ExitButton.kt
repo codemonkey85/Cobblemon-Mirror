@@ -11,16 +11,16 @@ package com.cobblemon.mod.common.client.gui.startselection.widgets
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.sound.SoundManager
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Button
+import net.minecraft.client.sounds.SoundManager
 
 class ExitButton(
     pX: Int, pY: Int,
     pWidth: Int, pHeight: Int,
     pXTexStart: Int, pYTexStart: Int, pYDiffText: Int,
-    onPress: PressAction
-): ButtonWidget(pX, pY, EXIT_BUTTON_WIDTH.toInt(), EXIT_BUTTON_HEIGHT.toInt(), "cobblemon.ui.starter.narrator.backbutton".asTranslated(), onPress, DEFAULT_NARRATION_SUPPLIER) {
+    onPress: OnPress
+): Button(pX, pY, EXIT_BUTTON_WIDTH.toInt(), EXIT_BUTTON_HEIGHT.toInt(), "cobblemon.ui.starter.narrator.backbutton".asTranslated(), onPress, DEFAULT_NARRATION) {
 
     companion object {
         private const val EXIT_BUTTON_WIDTH = 15.95F
@@ -28,11 +28,11 @@ class ExitButton(
         private val exitButtonResource = cobblemonResource("textures/gui/starterselection/starterselection_exit.png")
     }
 
-    override fun renderWidget(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
-        hovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height
+    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+        isHovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height
         if (isHovered) {
             blitk(
-                matrixStack = context.matrices,
+                matrixStack = context.pose(),
                 x = x + 0.075f, y = y + 1.05f,
                 texture = exitButtonResource,
                 width = EXIT_BUTTON_WIDTH, height = EXIT_BUTTON_HEIGHT

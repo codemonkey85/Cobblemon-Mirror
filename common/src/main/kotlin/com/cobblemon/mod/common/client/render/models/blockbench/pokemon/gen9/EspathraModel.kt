@@ -17,18 +17,18 @@ import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class EspathraModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("espathra")
     override val head = getPart("head_ai")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-1.1, 2.4, 0.0)
+    override var portraitTranslation = Vec3(-1.1, 2.4, 0.0)
 
     override var profileScale = 0.5F
-    override var profileTranslation = Vec3d(0.0, 1.0, 0.0)
+    override var profileTranslation = Vec3(0.0, 1.0, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

@@ -9,12 +9,10 @@
 package com.cobblemon.mod.common.battles
 
 import com.cobblemon.mod.common.net.IntSize
-import com.cobblemon.mod.common.util.lang
-import com.cobblemon.mod.common.util.readSizedInt
-import com.cobblemon.mod.common.util.writeSizedInt
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.text.MutableText
-import net.minecraft.text.TextCodecs
+import com.cobblemon.mod.common.util.*
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.ComponentSerialization
+import net.minecraft.network.chat.MutableComponent
 
 // note: showdown calls it gameType, but in MC GameType would collide with plugins and shit a lot.
 
@@ -27,7 +25,7 @@ object BattleTypes {
 
     fun makeBattleType(
         name: String,
-        displayName: MutableText = lang("battle.types.$name"),
+        displayName: MutableComponent = lang("battle.types.$name"),
         actorsPerSide: Int,
         slotsPerActor: Int
     ) = object : BattleType {
@@ -40,7 +38,7 @@ object BattleTypes {
 
 interface BattleType {
     val name: String
-    val displayName: MutableText
+    val displayName: MutableComponent
     val actorsPerSide: Int
     val slotsPerActor: Int
 
@@ -48,9 +46,9 @@ interface BattleType {
         get() = actorsPerSide * slotsPerActor
 
     companion object {
-        fun loadFromBuffer(buffer: RegistryByteBuf): BattleType {
+        fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): BattleType {
             val name = buffer.readString()
-            val displayName = TextCodecs.PACKET_CODEC.decode(buffer)
+            val displayName = ComponentSerialization.STREAM_CODEC.decode(buffer)
             val actorsPerSide = buffer.readSizedInt(IntSize.U_BYTE)
             val slotsPerActor = buffer.readSizedInt(IntSize.U_BYTE)
             return BattleTypes.makeBattleType(
@@ -61,9 +59,9 @@ interface BattleType {
             )
         }
     }
-    fun saveToBuffer(buffer: RegistryByteBuf): RegistryByteBuf {
+    fun saveToBuffer(buffer: RegistryFriendlyByteBuf): RegistryFriendlyByteBuf {
         buffer.writeString(name)
-        TextCodecs.PACKET_CODEC.encode(buffer, displayName)
+        ComponentSerialization.STREAM_CODEC.encode(buffer, displayName)
         buffer.writeSizedInt(IntSize.U_BYTE, actorsPerSide)
         buffer.writeSizedInt(IntSize.U_BYTE, slotsPerActor)
         return buffer

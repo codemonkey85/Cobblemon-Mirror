@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.pokemon.evolution.controller
 import com.cobblemon.mod.common.CobblemonNetwork
 import com.cobblemon.mod.common.api.pokemon.evolution.EvolutionController
 import com.cobblemon.mod.common.api.pokemon.evolution.EvolutionDisplay
+import com.cobblemon.mod.common.api.pokemon.evolution.PreProcessor
 import com.cobblemon.mod.common.api.pokemon.evolution.progress.EvolutionProgress
 import com.cobblemon.mod.common.net.messages.client.pokemon.update.evolution.AddEvolutionPacket
 import com.cobblemon.mod.common.net.messages.server.pokemon.update.evolution.AcceptEvolutionPacket
@@ -18,16 +19,22 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.readList
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.nbt.NbtElement
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.Tag
+import net.minecraft.network.RegistryFriendlyByteBuf
+import com.mojang.serialization.Codec
 
-class ClientEvolutionController(override val pokemon: Pokemon) : EvolutionController<EvolutionDisplay> {
+class ClientEvolutionController(
+    private val pokemon: Pokemon,
+    evolutions: Set<EvolutionDisplay>,
+) : EvolutionController<EvolutionDisplay, ClientEvolutionController.Intermediate> {
 
-    private val evolutions = hashSetOf<EvolutionDisplay>()
+    private val evolutions = evolutions.toMutableSet()
 
     override val size: Int
         get() = this.evolutions.size
+
+    override fun pokemon(): Pokemon = this.pokemon
 
     override fun start(evolution: EvolutionDisplay) {
         CobblemonNetwork.sendToServer(AcceptEvolutionPacket(this.pokemon, evolution))
@@ -46,30 +53,6 @@ class ClientEvolutionController(override val pokemon: Pokemon) : EvolutionContro
     override fun <P : EvolutionProgress<*>> progressFirstOrCreate(predicate: (progress: EvolutionProgress<*>) -> Boolean, progressFactory: () -> P): P {
         // Nothing is done on the client
         return progressFactory()
-    }
-
-    override fun saveToNBT(): NbtElement {
-        return NbtCompound()
-    }
-
-    override fun loadFromNBT(nbt: NbtElement) {
-        // Nothing is done on the client
-    }
-
-    override fun saveToJson(): JsonElement {
-        return JsonArray()
-    }
-
-    override fun loadFromJson(json: JsonElement) {
-        // Nothing is done on the client
-    }
-
-    override fun saveToBuffer(buffer: PacketByteBuf, toClient: Boolean) {
-        // Nothing is done on the client
-    }
-
-    override fun loadFromBuffer(buffer: PacketByteBuf) {
-        buffer.readList(AddEvolutionPacket::decodeDisplay).forEach { this.add(it) }
     }
 
     override fun add(element: EvolutionDisplay) = this.evolutions.add(element)
@@ -93,5 +76,22 @@ class ClientEvolutionController(override val pokemon: Pokemon) : EvolutionContro
     override fun containsAll(elements: Collection<EvolutionDisplay>) = this.evolutions.containsAll(elements)
 
     override fun isEmpty() = this.evolutions.isEmpty()
+
+    override fun asIntermediate(): Intermediate = Intermediate(this.evolutions)
+
+    data class Intermediate(val evolutions: Set<EvolutionDisplay>): PreProcessor {
+        override fun create(pokemon: Pokemon): ClientEvolutionController = ClientEvolutionController(pokemon, this.evolutions)
+    }
+
+    companion object {
+
+        @JvmStatic
+        val CODEC: Codec<Intermediate> = EvolutionDisplay.CODEC.listOf()
+            .xmap(
+                { displays -> Intermediate(displays.toSet()) },
+                { controller -> controller.evolutions.toMutableList() }
+            )
+
+    }
 
 }

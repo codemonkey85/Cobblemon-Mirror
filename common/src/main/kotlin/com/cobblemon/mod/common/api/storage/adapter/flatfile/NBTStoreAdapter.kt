@@ -10,14 +10,14 @@ package com.cobblemon.mod.common.api.storage.adapter.flatfile
 
 import com.cobblemon.mod.common.api.storage.PokemonStore
 import com.cobblemon.mod.common.api.storage.StorePosition
-import java.io.File
-import java.util.UUID
-import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtAccounter
 import net.minecraft.nbt.NbtIo
-import net.minecraft.nbt.NbtSizeTracker
+import java.io.File
+import java.util.*
 
 /**
- * A [OneToOneFileStoreAdapter] that can arbitrarily save a single [PokemonStore] into an [NbtCompound] with the
+ * A [OneToOneFileStoreAdapter] that can arbitrarily save a single [PokemonStore] into an [CompoundTag] with the
  * help of Minecraft's [NbtIo]. This is arguably the best persistence method for [PokemonStore]s and is absolutely
  * the most efficient [FileStoreAdapter].
  *
@@ -28,9 +28,9 @@ open class NBTStoreAdapter(
     rootFolder: String,
     useNestedFolders: Boolean,
     folderPerClass: Boolean,
-) : OneToOneFileStoreAdapter<NbtCompound>(rootFolder, useNestedFolders, folderPerClass, "dat") {
-    override fun <E : StorePosition, T : PokemonStore<E>> serialize(store: T) = store.saveToNBT(NbtCompound())
-    override fun save(file: File, serialized: NbtCompound) = NbtIo.writeCompressed(serialized, file.toPath())
+) : OneToOneFileStoreAdapter<CompoundTag>(rootFolder, useNestedFolders, folderPerClass, "dat") {
+    override fun <E : StorePosition, T : PokemonStore<E>> serialize(store: T) = store.saveToNBT(CompoundTag())
+    override fun save(file: File, serialized: CompoundTag) = NbtIo.writeCompressed(serialized, file.toPath())
     override fun <E, T : PokemonStore<E>> load(file: File, storeClass: Class<out T>, uuid: UUID): T? {
         val store = try {
             storeClass.getConstructor(UUID::class.java).newInstance(uuid)
@@ -38,7 +38,7 @@ open class NBTStoreAdapter(
             storeClass.getConstructor(UUID::class.java).newInstance(uuid)
         }
         return try {
-            val nbt = NbtIo.readCompressed(file.toPath(), NbtSizeTracker.ofUnlimitedBytes())
+            val nbt = NbtIo.readCompressed(file.toPath(), NbtAccounter.unlimitedHeap())
             store.loadFromNBT(nbt)
             store
         } catch (e: Exception) {

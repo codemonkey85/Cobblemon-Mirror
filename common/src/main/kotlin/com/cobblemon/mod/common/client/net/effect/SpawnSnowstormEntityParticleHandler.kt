@@ -12,19 +12,19 @@ import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.ClientMoLangFunctions.setupClient
-import com.cobblemon.mod.common.client.particle.BedrockParticleEffectRepository
+import com.cobblemon.mod.common.client.particle.BedrockParticleOptionsRepository
 import com.cobblemon.mod.common.client.particle.ParticleStorm
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.entity.PosableEntity
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket
-import net.minecraft.client.MinecraftClient
-import net.minecraft.entity.Entity
+import net.minecraft.client.Minecraft
+import net.minecraft.world.entity.Entity
 
 object SpawnSnowstormEntityParticleHandler : ClientNetworkPacketHandler<SpawnSnowstormEntityParticlePacket> {
-    override fun handle(packet: SpawnSnowstormEntityParticlePacket, client: MinecraftClient) {
-        val world = MinecraftClient.getInstance().world ?: return
-        val effect = BedrockParticleEffectRepository.getEffect(packet.effectId) ?: return
-        val entity = world.getEntityById(packet.entityId) as? PosableEntity ?: return
+    override fun handle(packet: SpawnSnowstormEntityParticlePacket, client: Minecraft) {
+        val world = Minecraft.getInstance().level ?: return
+        val effect = BedrockParticleOptionsRepository.getEffect(packet.effectId) ?: return
+        val entity = world.getEntity(packet.entityId) as? PosableEntity ?: return
         entity as Entity
         val state = entity.delegate as PosableState
         val matrixWrapper = state.locatorStates[packet.locator] ?: state.locatorStates["root"]!!
@@ -37,7 +37,7 @@ object SpawnSnowstormEntityParticleHandler : ClientNetworkPacketHandler<SpawnSno
             matrixWrapper = matrixWrapper,
             world = world,
             runtime = particleRuntime,
-            sourceVelocity = { entity.velocity },
+            sourceVelocity = { entity.deltaMovement },
             sourceAlive = { !entity.isRemoved },
             sourceVisible = { !entity.isInvisible },
             entity = entity

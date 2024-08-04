@@ -14,8 +14,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFram
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class WhismurModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("whismur")
@@ -25,10 +25,10 @@ class WhismurModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, B
     override val rightLeg = getPart("foot_right")
 
     override var portraitScale = 2.3F
-    override var portraitTranslation = Vec3d(-0.15, -1.2, 0.0)
+    override var portraitTranslation = Vec3(-0.15, -1.2, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.45, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.45, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

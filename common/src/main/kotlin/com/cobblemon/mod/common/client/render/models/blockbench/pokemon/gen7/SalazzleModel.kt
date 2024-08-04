@@ -14,8 +14,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class SalazzleModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("salazzle")
@@ -25,10 +25,10 @@ class SalazzleModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     override val rightLeg = getPart("leg_left")
 
     override var portraitScale = 1.99F
-    override var portraitTranslation = Vec3d(-0.15, 2.15, 0.0)
+    override var portraitTranslation = Vec3(-0.15, 2.15, 0.0)
 
     override var profileScale = 0.61F
-    override var profileTranslation = Vec3d(0.0, 0.89, -6.0)
+    override var profileTranslation = Vec3(0.0, 0.89, -6.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

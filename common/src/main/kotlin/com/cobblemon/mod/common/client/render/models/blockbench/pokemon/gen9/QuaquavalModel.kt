@@ -17,11 +17,11 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPo
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import com.cobblemon.mod.common.util.isSubmergedInWater
-import com.cobblemon.mod.common.util.isTouchingWater
-import com.cobblemon.mod.common.util.isTouchingWaterOrRain
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isUnderWater
+import com.cobblemon.mod.common.util.isInWater
+import com.cobblemon.mod.common.util.isInWaterOrRain
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class QuaquavalModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("quaquaval")
@@ -33,10 +33,10 @@ class QuaquavalModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame,
     val water_feathers = getPart("water_feathers")
 
     override var portraitScale = 2.3F
-    override var portraitTranslation = Vec3d(-0.42, 3.7, 0.0)
+    override var portraitTranslation = Vec3(-0.42, 3.7, 0.0)
 
     override var profileScale = 0.32F
-    override var profileTranslation = Vec3d(0.0, 1.24, 0.0)
+    override var profileTranslation = Vec3(0.0, 1.24, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var standing2: CobblemonPose
@@ -63,7 +63,7 @@ class QuaquavalModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame,
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             transformTicks = 10,
-            condition = { !it.isBattling && !it.isTouchingWaterOrRain},
+            condition = { !it.isBattling && !it.isInWaterOrRain},
             transformedParts = arrayOf(
                 water_feathers.createTransformation().withVisibility(visibility = false)
             ),
@@ -78,7 +78,7 @@ class QuaquavalModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame,
             poseName = "standing2",
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
-            condition = { !it.isBattling && it.isTouchingWaterOrRain && !it.isSubmergedInWater},
+            condition = { !it.isBattling && it.isInWaterOrRain && !it.isUnderWater},
             transformedParts = arrayOf(
                 water_feathers.createTransformation().withVisibility(visibility = false)
             ),
@@ -92,7 +92,7 @@ class QuaquavalModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame,
         walking = registerPose(
             poseName = "walking",
             poseTypes = PoseType.MOVING_POSES,
-                condition = { !it.isTouchingWater},
+                condition = { !it.isInWater},
             transformTicks = 10,
             transformedParts = arrayOf(
                 water_feathers.createTransformation().withVisibility(visibility = false)
@@ -121,7 +121,7 @@ class QuaquavalModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame,
 
         floating = registerPose(
                 transformTicks = 10,
-                condition = { it.isTouchingWater },
+                condition = { it.isInWater },
                 poseType = PoseType.FLOAT,
                 quirks = arrayOf(blink),
                 transformedParts = arrayOf(
@@ -135,7 +135,7 @@ class QuaquavalModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame,
 
         swimming = registerPose(
                 transformTicks = 10,
-                condition = { it.isTouchingWater },
+                condition = { it.isInWater },
                 poseType = PoseType.SWIM,
                 quirks = arrayOf(blink),
                 transformedParts = arrayOf(
@@ -149,7 +149,7 @@ class QuaquavalModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame,
 
         surface_floating = registerPose(
                 transformTicks = 10,
-                condition = { it.isTouchingWater && !it.isSubmergedInWater},
+                condition = { it.isInWater && !it.isUnderWater},
                 poseType = PoseType.STAND,
                 quirks = arrayOf(blink),
                 transformedParts = arrayOf(
@@ -164,7 +164,7 @@ class QuaquavalModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame,
 
         surface_swimming = registerPose(
                 transformTicks = 10,
-                condition = { it.isTouchingWater && !it.isSubmergedInWater},
+                condition = { it.isInWater && !it.isUnderWater},
                 poseType = PoseType.WALK,
                 quirks = arrayOf(blink),
                 transformedParts = arrayOf(

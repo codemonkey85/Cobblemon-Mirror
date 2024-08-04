@@ -17,8 +17,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class CombuskenModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("combusken")
@@ -28,10 +28,10 @@ class CombuskenModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 2.5F
-    override var portraitTranslation = Vec3d(0.0, 0.3, 0.0)
+    override var portraitTranslation = Vec3(0.0, 0.3, 0.0)
 
     override var profileScale = 0.76F
-    override var profileTranslation = Vec3d(0.0, 0.6, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.6, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

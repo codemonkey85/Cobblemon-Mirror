@@ -20,8 +20,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sin
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class ZapdosModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BiWingedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("zapdos")
@@ -32,10 +32,10 @@ class ZapdosModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BiW
     override val rightWing = getPart("right_wing")
 
     override var portraitScale = 2.7F
-    override var portraitTranslation = Vec3d(-0.9, -0.65, 0.0)
+    override var portraitTranslation = Vec3(-0.9, -0.65, 0.0)
 
     override var profileScale = 0.85F
-    override var profileTranslation = Vec3d(0.0, 0.5, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.5, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

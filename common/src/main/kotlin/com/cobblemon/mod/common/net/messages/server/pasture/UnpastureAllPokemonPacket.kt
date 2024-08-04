@@ -10,9 +10,9 @@ package com.cobblemon.mod.common.net.messages.server.pasture
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readUuid
-import com.cobblemon.mod.common.util.writeUuid
-import net.minecraft.network.RegistryByteBuf
+import com.cobblemon.mod.common.util.readUUID
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
 /**
@@ -24,11 +24,11 @@ import java.util.UUID
 class UnpastureAllPokemonPacket(val pastureId: UUID) : NetworkPacket<UnpastureAllPokemonPacket> {
     companion object {
         val ID = cobblemonResource("unpasture_all_pokemon")
-        fun decode(buffer: RegistryByteBuf) = UnpastureAllPokemonPacket(buffer.readUuid())
+        fun decode(buffer: RegistryFriendlyByteBuf) = UnpastureAllPokemonPacket(buffer.readUUID())
     }
 
     override val id = ID
-    override fun encode(buffer: RegistryByteBuf) {
-        buffer.writeUuid(pastureId)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(pastureId)
     }
 }

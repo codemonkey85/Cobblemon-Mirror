@@ -16,24 +16,33 @@ import com.cobblemon.mod.common.api.text.green
 import com.cobblemon.mod.common.block.HealingMachineBlock
 import com.cobblemon.mod.common.pokeball.PokeBall
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.util.DataKeys
-import com.cobblemon.mod.common.util.getPlayer
-import com.cobblemon.mod.common.util.lang
-import com.cobblemon.mod.common.util.party
-import com.cobblemon.mod.common.util.playSoundServer
-import com.cobblemon.mod.common.util.toVec3d
-import java.util.UUID
+import com.cobblemon.mod.common.util.*
+import net.minecraft.core.BlockPos
+import net.minecraft.core.HolderLookup
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.protocol.Packet
+import net.minecraft.network.protocol.game.ClientGamePacketListener
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityTicker
+import net.minecraft.world.level.block.state.BlockState
+import java.util.*
+import kotlin.collections.Map
+import kotlin.collections.MutableList
+import kotlin.collections.MutableMap
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.forEach
+import kotlin.collections.forEachIndexed
+import kotlin.collections.hashMapOf
+import kotlin.collections.hashSetOf
+import kotlin.collections.isNotEmpty
+import kotlin.collections.set
+import kotlin.collections.toMutableList
 import kotlin.math.floor
-import net.minecraft.block.BlockState
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.block.entity.BlockEntityTicker
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
-import net.minecraft.registry.RegistryWrapper
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.BlockPos
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 class HealingMachineBlockEntity(
@@ -98,7 +107,7 @@ class HealingMachineBlockEntity(
         markUpdated()
     }
 
-    fun canHeal(player: ServerPlayerEntity): Boolean {
+    fun canHeal(player: ServerPlayer): Boolean {
         if (Cobblemon.config.infiniteHealerCharge || this.infinite) {
             return true
         }
@@ -106,7 +115,7 @@ class HealingMachineBlockEntity(
         return this.healingCharge >= neededHealthPercent
     }
 
-    fun activate(player: ServerPlayerEntity) {
+    fun activate(player: ServerPlayer) {
         if (!Cobblemon.config.infiniteHealerCharge && this.healingCharge != maxCharge) {
             val neededHealthPercent = player.party().getHealingRemainderPercent()
             this.healingCharge = (healingCharge - neededHealthPercent).coerceIn(0F..maxCharge)
@@ -115,7 +124,13 @@ class HealingMachineBlockEntity(
         this.setUser(player.uuid)
         alreadyHealing.add(player.uuid)
         updateBlockChargeLevel(HealingMachineBlock.MAX_CHARGE_LEVEL + 1)
-        if (world != null && !world!!.isClient) world!!.playSoundServer(position = pos.toVec3d(), sound = CobblemonSounds.HEALING_MACHINE_ACTIVE, volume = 1F, pitch = 1F)
+        val world = level ?: return
+        if (!world.isClientSide) world.playSoundServer(
+            position = blockPos.toVec3d(),
+            sound = CobblemonSounds.HEALING_MACHINE_ACTIVE,
+            volume = 1F,
+            pitch = 1F
+        )
     }
 
     fun completeHealing() {
@@ -123,33 +138,33 @@ class HealingMachineBlockEntity(
         val party = player.party()
 
         party.heal()
-        player.sendMessage(lang("healingmachine.healed").green(), true)
+        player.sendSystemMessage(lang("healingmachine.healed").green(), true)
         updateBlockChargeLevel()
         clearData()
     }
 
-    override fun readNbt(
-        compoundTag: NbtCompound,
-        registryLookup: RegistryWrapper.WrapperLookup
+    override fun loadAdditional(
+        compoundTag: CompoundTag,
+        registryLookup: HolderLookup.Provider
     ) {
-        super.readNbt(compoundTag, registryLookup)
+        super.loadAdditional(compoundTag, registryLookup)
 
         this.pokeBallMap.clear()
 
-        if (compoundTag.containsUuid(DataKeys.HEALER_MACHINE_USER)) {
-            this.currentUser = compoundTag.getUuid(DataKeys.HEALER_MACHINE_USER)
+        if (compoundTag.hasUUID(DataKeys.HEALER_MACHINE_USER)) {
+            this.currentUser = compoundTag.getUUID(DataKeys.HEALER_MACHINE_USER)
         }
         if (compoundTag.contains(DataKeys.HEALER_MACHINE_POKEBALLS)) {
             val pokeBallsTag = compoundTag.getCompound(DataKeys.HEALER_MACHINE_POKEBALLS)
             // Keep around for compat with old format
             var index = 0
-            for (key in pokeBallsTag.keys) {
+            for (key in pokeBallsTag.allKeys) {
                 val pokeBallId = pokeBallsTag.getString(key)
                 if (pokeBallId.isEmpty()) {
                     continue
                 }
                 val actualIndex = key.toIntOrNull() ?: index
-                val pokeBall = PokeBalls.getPokeBall(Identifier.of(pokeBallId))
+                val pokeBall = PokeBalls.getPokeBall(ResourceLocation.parse(pokeBallId))
                 if (pokeBall != null) {
                     this.pokeBallMap[actualIndex] = pokeBall
                 }
@@ -167,20 +182,20 @@ class HealingMachineBlockEntity(
         }
     }
 
-    override fun writeNbt(
-        compoundTag: NbtCompound,
-        registryLookup: RegistryWrapper.WrapperLookup
+    override fun saveAdditional(
+        compoundTag: CompoundTag,
+        registryLookup: HolderLookup.Provider
     ) {
-        super.writeNbt(compoundTag, registryLookup)
+        super.saveAdditional(compoundTag, registryLookup)
 
         if (this.currentUser != null) {
-            compoundTag.putUuid(DataKeys.HEALER_MACHINE_USER, this.currentUser!!)
+            compoundTag.putUUID(DataKeys.HEALER_MACHINE_USER, this.currentUser!!)
         } else {
             compoundTag.remove(DataKeys.HEALER_MACHINE_USER)
         }
 
         if (this.pokeBalls().isNotEmpty()) {
-            val pokeBallsTag = NbtCompound()
+            val pokeBallsTag = CompoundTag()
             this.pokeBalls().forEach { (index, pokeBall) ->
                 pokeBallsTag.putString(index.toString(), pokeBall.name.toString())
             }
@@ -194,19 +209,20 @@ class HealingMachineBlockEntity(
         compoundTag.putBoolean(DataKeys.HEALER_MACHINE_INFINITE, this.infinite)
     }
 
-    override fun toUpdatePacket(): BlockEntityUpdateS2CPacket =  BlockEntityUpdateS2CPacket.create(this)
-    override fun toInitialChunkDataNbt(registryLookup: RegistryWrapper.WrapperLookup?): NbtCompound? {
-        return super.createNbtWithIdentifyingData(registryLookup)
+    override fun getUpdatePacket(): Packet<ClientGamePacketListener>? = ClientboundBlockEntityDataPacket.create(this)
+
+    override fun getUpdateTag(provider: HolderLookup.Provider): CompoundTag {
+        return super.saveWithFullMetadata(provider)
     }
 
-    override fun markRemoved() {
+    override fun setRemoved() {
         this.snapshotAndClearData()
-        super.markRemoved()
+        super.setRemoved()
     }
 
-    override fun cancelRemoval() {
+    override fun clearRemoved() {
         this.restoreSnapshot()
-        super.cancelRemoval()
+        super.clearRemoved()
     }
 
     private fun updateRedstoneSignal() {
@@ -218,23 +234,25 @@ class HealingMachineBlockEntity(
     }
 
     private fun updateBlockChargeLevel(level: Int? = null) {
-        if (world != null && !world!!.isClient) {
-            val chargeLevel = (level ?:
-                if (Cobblemon.config.infiniteHealerCharge || this.infinite) HealingMachineBlock.MAX_CHARGE_LEVEL
+        val world = this.level ?: return
+        if (true && !world.isClientSide) {
+            val chargeLevel = (level
+                ?: if (Cobblemon.config.infiniteHealerCharge || this.infinite) HealingMachineBlock.MAX_CHARGE_LEVEL
                 else floor((healingCharge / maxCharge) * HealingMachineBlock.MAX_CHARGE_LEVEL).toInt()
-            ).coerceIn(0..HealingMachineBlock.MAX_CHARGE_LEVEL + 1)
+                    ).coerceIn(0..HealingMachineBlock.MAX_CHARGE_LEVEL + 1)
 
-            val state = world!!.getBlockState(pos)
-            if (state != null && state.block is HealingMachineBlock) {
-                val currentCharge = state.get(HealingMachineBlock.CHARGE_LEVEL).toInt()
-                if (chargeLevel != currentCharge) world!!.setBlockState(pos, state.with(HealingMachineBlock.CHARGE_LEVEL, chargeLevel))
+            val state = world.getBlockState(blockPos)
+            if (state.block is HealingMachineBlock) {
+                val currentCharge = state.getValue(HealingMachineBlock.CHARGE_LEVEL).toInt()
+                if (chargeLevel != currentCharge)
+                    world.setBlockAndUpdate(blockPos, state.setValue(HealingMachineBlock.CHARGE_LEVEL, chargeLevel))
             }
         }
     }
 
     private fun markUpdated() {
-        this.markDirty()
-        world!!.updateListeners(pos, this.cachedState, this.cachedState, 3)
+        this.setChanged()
+        level!!.sendBlockUpdated(blockPos, blockState, blockState, 3)
     }
 
     private fun snapshotAndClearData() {
@@ -274,7 +292,7 @@ class HealingMachineBlockEntity(
         const val MAX_REDSTONE_SIGNAL = 10
 
         internal val TICKER = BlockEntityTicker<HealingMachineBlockEntity> { world, _, _, blockEntity ->
-            if (world.isClient) return@BlockEntityTicker
+            if (world.isClientSide) return@BlockEntityTicker
 
             // Healing progression
             if (blockEntity.isInUse) {
@@ -287,7 +305,8 @@ class HealingMachineBlockEntity(
                 // Recharging
                 if (blockEntity.healingCharge < blockEntity.maxCharge) {
                     val chargePerTick = (Cobblemon.config.chargeGainedPerTick).coerceAtLeast(0F)
-                    blockEntity.healingCharge = (blockEntity.healingCharge + chargePerTick).coerceIn(0F..blockEntity.maxCharge)
+                    blockEntity.healingCharge =
+                        (blockEntity.healingCharge + chargePerTick).coerceIn(0F..blockEntity.maxCharge)
                     blockEntity.updateBlockChargeLevel()
                     blockEntity.updateRedstoneSignal()
                     blockEntity.markUpdated()
@@ -295,7 +314,7 @@ class HealingMachineBlockEntity(
             }
         }
 
-        fun isUsingHealer(player: PlayerEntity) = this.alreadyHealing.contains(player.uuid)
+        fun isUsingHealer(player: Player) = this.alreadyHealing.contains(player.uuid)
 
     }
 }

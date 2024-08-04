@@ -9,27 +9,27 @@
 package com.cobblemon.mod.common.api.fishing
 
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.nbt.NbtList
-import net.minecraft.registry.Registry
-import net.minecraft.util.Identifier
+import net.minecraft.core.Registry
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 
 data class FishingBait(
-    val item: Identifier,
+    val item: ResourceLocation,
     val effects: List<Effect>,
 ) {
     fun toItemStack(itemRegistry: Registry<Item>) = item.let(itemRegistry::get)?.let { ItemStack(it) } ?: ItemStack.EMPTY
 
     data class Effect(
-        val type: Identifier,
-        val subcategory: Identifier?,
+        val type: ResourceLocation,
+        val subcategory: ResourceLocation?,
         val chance: Double = 0.0,
         val value: Double = 0.0
     ) {
-        fun toNbt(): NbtCompound {
-            val nbt = NbtCompound()
+        fun toNbt(): CompoundTag {
+            val nbt = CompoundTag()
             nbt.putString("Type", type.toString())
             subcategory?.let { nbt.putString("Subcategory", it.toString()) }
             nbt.putDouble("Chance", chance)
@@ -38,9 +38,9 @@ data class FishingBait(
         }
 
         companion object {
-            fun fromNbt(nbt: NbtCompound): Effect {
-                val type = Identifier.of(nbt.getString("Type"))
-                val subcategory = if (nbt.contains("Subcategory")) Identifier.of(nbt.getString("Subcategory")) else null
+            fun fromNbt(nbt: CompoundTag): Effect {
+                val type = ResourceLocation.parse(nbt.getString("Type"))
+                val subcategory = if (nbt.contains("Subcategory")) ResourceLocation.parse(nbt.getString("Subcategory")) else null
                 val chance = nbt.getDouble("Chance")
                 val value = nbt.getDouble("Value")
                 return Effect(type, subcategory, chance, value)
@@ -48,18 +48,18 @@ data class FishingBait(
         }
     }
 
-    fun toNbt(): NbtCompound {
-        val nbt = NbtCompound()
+    fun toNbt(): CompoundTag {
+        val nbt = CompoundTag()
         nbt.putString("Item", item.toString())
-        val effectsList = NbtList()
+        val effectsList = ListTag()
         effects.forEach { effectsList.add(it.toNbt()) }
         nbt.put("Effects", effectsList)
         return nbt
     }
 
     companion object {
-        fun fromNbt(nbt: NbtCompound): FishingBait {
-            val item = Identifier.of(nbt.getString("Item"))
+        fun fromNbt(nbt: CompoundTag): FishingBait {
+            val item = ResourceLocation.parse(nbt.getString("Item"))
             val effectsList = nbt.getList("Effects", 10) // 10 is the type for NbtCompound
             val effects = mutableListOf<Effect>()
             for (i in 0 until effectsList.size) {

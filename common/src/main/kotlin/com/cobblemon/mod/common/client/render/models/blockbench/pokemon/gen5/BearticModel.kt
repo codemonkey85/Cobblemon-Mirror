@@ -16,8 +16,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFram
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class BearticModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("beartic")
@@ -29,10 +29,10 @@ class BearticModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, B
     override val rightLeg = getPart("right_leg")
 
     override var portraitScale = 2.85F
-    override var portraitTranslation = Vec3d(-0.21, 2.40, 0.0)
+    override var portraitTranslation = Vec3(-0.21, 2.40, 0.0)
 
     override var profileScale = 0.6F
-    override var profileTranslation = Vec3d(0.0, 0.79, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.79, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

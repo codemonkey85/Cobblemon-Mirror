@@ -9,13 +9,13 @@
 package com.cobblemon.mod.common.client.gui.summary.widgets
 
 import com.cobblemon.mod.common.api.gui.ParentWidget
-import net.minecraft.client.sound.SoundManager
-import net.minecraft.text.Text
+import net.minecraft.client.sounds.SoundManager
+import net.minecraft.network.chat.Component
 
 abstract class SoundlessWidget(
     pX: Int, pY: Int,
     pWidth: Int, pHeight: Int,
-    component: Text
+    component: Component
 ): ParentWidget(pX, pY, pWidth, pHeight, component) {
     /**
      * Do not play sounds when clicking, because clicking a Widget anywhere produces a sound... :(

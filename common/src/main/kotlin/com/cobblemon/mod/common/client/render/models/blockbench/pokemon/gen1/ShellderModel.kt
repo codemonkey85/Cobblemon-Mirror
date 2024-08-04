@@ -13,17 +13,17 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class ShellderModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("shellder")
 
     override var portraitScale = 2.2F
-    override var portraitTranslation = Vec3d(0.0, -1.7, 0.0)
+    override var portraitTranslation = Vec3(0.0, -1.7, 0.0)
 
     override var profileScale = 1.4F
-    override var profileTranslation = Vec3d(0.0, -0.35, 0.0)
+    override var profileTranslation = Vec3(0.0, -0.35, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

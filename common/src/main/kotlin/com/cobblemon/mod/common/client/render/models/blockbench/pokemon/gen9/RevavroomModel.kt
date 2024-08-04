@@ -12,17 +12,17 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvi
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class RevavroomModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("revavroom")
 
     override var portraitScale = 3.1F
-    override var portraitTranslation = Vec3d(-1.4, -1.7, 1.1)
+    override var portraitTranslation = Vec3(-1.4, -1.7, 1.1)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(-0.2, 0.3, 1.1)
+    override var profileTranslation = Vec3(-0.2, 0.3, 1.1)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

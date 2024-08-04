@@ -8,10 +8,10 @@
 
 package com.cobblemon.mod.common
 
-import net.minecraft.registry.Registries
-import net.minecraft.village.TradeOffers
-import net.minecraft.village.VillagerData
-import net.minecraft.village.VillagerProfession
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.world.entity.npc.VillagerData
+import net.minecraft.world.entity.npc.VillagerProfession
+import net.minecraft.world.entity.npc.VillagerTrades
 
 /**
  * A generator for various trade offers in the mod.
@@ -23,7 +23,7 @@ object CobblemonTradeOffers {
      *
      * @return The resulting list.
      */
-    fun tradeOffersForAll(): List<VillagerTradeOffer> = Registries.VILLAGER_PROFESSION.map(this::tradeOffersFor).flatten()
+    fun tradeOffersForAll(): List<VillagerTradeOffer> = BuiltInRegistries.VILLAGER_PROFESSION.map(this::tradeOffersFor).flatten()
 
     /**
      * Creates a list of all Cobblemon trade offers for the given [VillagerProfession].
@@ -33,11 +33,11 @@ object CobblemonTradeOffers {
      */
     fun tradeOffersFor(profession: VillagerProfession): List<VillagerTradeOffer> = when (profession) {
         VillagerProfession.FARMER -> listOf(
-            VillagerTradeOffer(VillagerProfession.FARMER, 3, listOf(TradeOffers.SellItemFactory(CobblemonItems.VIVICHOKE_SEEDS, 24, 1, 1, 6)))
+            VillagerTradeOffer(VillagerProfession.FARMER, 3, listOf(VillagerTrades.ItemsForEmeralds(CobblemonItems.VIVICHOKE_SEEDS, 24, 1, 1, 6)))
         )
         VillagerProfession.FISHERMAN -> listOf(
             VillagerTradeOffer(VillagerProfession.FISHERMAN, 5, listOf(
-                TradeOffers.SellItemFactory(CobblemonItems.POKEROD_SMITHING_TEMPLATE, 12, 3, 30)
+                VillagerTrades.ItemsForEmeralds(CobblemonItems.POKEROD_SMITHING_TEMPLATE, 12, 3, 30)
             ))
         )
         else -> emptyList()
@@ -49,7 +49,7 @@ object CobblemonTradeOffers {
      * @return The resulting list.
      */
     fun resolveWanderingTradeOffers(): List<WandererTradeOffer> = listOf(
-        WandererTradeOffer(false, listOf(TradeOffers.SellItemFactory(CobblemonItems.VIVICHOKE_SEEDS, 24, 1, 1, 6)))
+        WandererTradeOffer(false, listOf(VillagerTrades.ItemsForEmeralds(CobblemonItems.VIVICHOKE_SEEDS, 24, 1, 1, 6)))
     )
 
     /**
@@ -59,7 +59,7 @@ object CobblemonTradeOffers {
         /**
          * The list of the possible [TradeOffers.Factory].
          */
-        val tradeOffers: List<TradeOffers.Factory>
+        val tradeOffers: List<VillagerTrades.ItemListing>
     }
 
     /**
@@ -74,12 +74,12 @@ object CobblemonTradeOffers {
     data class VillagerTradeOffer(
         val profession: VillagerProfession,
         val requiredLevel: Int,
-        override val tradeOffers: List<TradeOffers.Factory>
+        override val tradeOffers: List<VillagerTrades.ItemListing>
     ) : TradeOfferHolder {
 
         init {
-            if (this.requiredLevel < VillagerData.MIN_LEVEL || this.requiredLevel > VillagerData.MAX_LEVEL) {
-                throw IllegalArgumentException("${this.requiredLevel} is not a valid level for a villager trade accepted range is ${VillagerData.MIN_LEVEL}-${VillagerData.MAX_LEVEL}")
+            if (this.requiredLevel < VillagerData.MIN_VILLAGER_LEVEL || this.requiredLevel > VillagerData.MAX_VILLAGER_LEVEL) {
+                throw IllegalArgumentException("${this.requiredLevel} is not a valid level for a villager trade accepted range is ${VillagerData.MIN_VILLAGER_LEVEL}-${VillagerData.MAX_VILLAGER_LEVEL}")
             }
         }
 
@@ -93,7 +93,7 @@ object CobblemonTradeOffers {
      */
     data class WandererTradeOffer(
         val isRareTrade: Boolean,
-        override val tradeOffers: List<TradeOffers.Factory>
+        override val tradeOffers: List<VillagerTrades.ItemListing>
     ) : TradeOfferHolder
     
 }

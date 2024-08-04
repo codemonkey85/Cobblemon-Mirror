@@ -14,11 +14,11 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readIdentifier
 import com.cobblemon.mod.common.util.writeIdentifier
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class CaughtBallUpdatePacket(pokemon: () -> Pokemon, value: PokeBall): SingleUpdatePacket<PokeBall, CaughtBallUpdatePacket>(pokemon, value) {
     override val id = ID
-    override fun encodeValue(buffer: RegistryByteBuf) {
+    override fun encodeValue(buffer: RegistryFriendlyByteBuf) {
         buffer.writeIdentifier(this.value.name)
     }
 
@@ -28,7 +28,7 @@ class CaughtBallUpdatePacket(pokemon: () -> Pokemon, value: PokeBall): SingleUpd
 
     companion object {
         val ID = cobblemonResource("caught_ball_update")
-        fun decode(buffer: RegistryByteBuf): CaughtBallUpdatePacket {
+        fun decode(buffer: RegistryFriendlyByteBuf): CaughtBallUpdatePacket {
             val pokemon = decodePokemon(buffer)
             val pokeBall = PokeBalls.getPokeBall(buffer.readIdentifier()) ?: PokeBalls.POKE_BALL
             return CaughtBallUpdatePacket(pokemon, pokeBall)

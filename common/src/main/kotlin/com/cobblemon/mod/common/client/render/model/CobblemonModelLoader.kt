@@ -8,12 +8,6 @@
 
 package com.cobblemon.mod.common.client.render.model
 
-import net.minecraft.client.render.model.BakedModel
-import net.minecraft.client.render.model.Baker
-import net.minecraft.client.render.model.ModelBakeSettings
-import net.minecraft.client.render.model.UnbakedModel
-import net.minecraft.util.Identifier
-
 //class CobblemonModelLoader {
 //    val bakedModelMap = mutableMapOf<Identifier, BakedModel>()
 //

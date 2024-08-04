@@ -21,7 +21,7 @@ build:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
     paths:
-      - forge/build/libs
+      - neoforge/build/libs
       - fabric/build/libs
 
 publish:
@@ -32,10 +32,10 @@ publish:
     key: "CI_COMMIT_REF_NAME"
     policy: pull
     paths:
-      - forge/build/libs/*.jar
+      - neoforge/build/libs/*.jar
       - fabric/build/libs/*.jar
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "sega_bass_pro_fishing_2"'
   script:
     - export GRADLE_OPTS="-Xmx4G -Xms4G"
     - chmod +x ./gradlew
@@ -51,16 +51,16 @@ deploy:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
     paths:
-      - forge/build/libs/*.jar
+      - neoforge/build/libs/*.jar
       - fabric/build/libs/*.jar
   script: 
     - echo "Collecting artifacts..."
-    - mv forge/build/libs/*+*.jar ./
+    - mv neoforge/build/libs/*+*.jar ./
     - mv fabric/build/libs/*+*.jar ./
     - for f in *.jar; do mv "$f" "$(echo "$f" | sed s/+/b$CI_PIPELINE_IID+/)"; done
   artifacts:
     expire_in: 28 days
     paths:
       - ./*.jar
-#      - forge/build/libs/*+*.jar
+#      - neoforge/build/libs/*+*.jar
 #      - fabric/build/libs/*+*.jar

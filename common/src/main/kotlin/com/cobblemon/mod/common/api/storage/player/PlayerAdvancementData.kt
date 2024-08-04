@@ -11,8 +11,8 @@ package com.cobblemon.mod.common.api.storage.player
 import com.cobblemon.mod.common.advancement.criterion.AspectCriterion
 import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.resources.ResourceLocation
 
 class PlayerAdvancementData {
 
@@ -36,8 +36,8 @@ class PlayerAdvancementData {
         private set
 
     private var totalTypeCaptureCounts = mutableMapOf<String, Int>()
-    private var totalDefeatedCounts = mutableMapOf<Identifier, Int>()
-    var aspectsCollected = mutableMapOf<Identifier, MutableSet<String>>()
+    private var totalDefeatedCounts = mutableMapOf<ResourceLocation, Int>()
+    var aspectsCollected = mutableMapOf<ResourceLocation, MutableSet<String>>()
         private set
 
     fun updateTotalCaptureCount() {
@@ -101,10 +101,10 @@ class PlayerAdvancementData {
         }
     }
 
-    fun updateAspectsCollected(player: ServerPlayerEntity, pokemon: Pokemon) {
-        val aspectConditions = player.advancementTracker.progress.keys
+    fun updateAspectsCollected(player: ServerPlayer, pokemon: Pokemon) {
+        val aspectConditions = player.advancements.progress.keys
             .flatMap { it.value.criteria.values }
-            .mapNotNull { it.conditions }
+            .mapNotNull { it.trigger }
             .filterIsInstance<AspectCriterion>()
 
         val trackedAspects = aspectConditions

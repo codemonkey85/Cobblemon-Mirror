@@ -8,18 +8,13 @@
 
 package com.cobblemon.mod.common.api.moves.animations
 
-import com.bedrockk.molang.Expression
 import com.bedrockk.molang.runtime.MoLangRuntime
-import com.bedrockk.molang.runtime.struct.VariableStruct
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.moves.animations.keyframes.ActionEffectKeyframe
-import com.cobblemon.mod.common.api.scheduling.ScheduledTask
 import com.cobblemon.mod.common.util.asExpressionLike
-import com.cobblemon.mod.common.util.asExpressions
-import com.cobblemon.mod.common.util.asExpression
 import com.cobblemon.mod.common.util.resolveBoolean
+import net.minecraft.world.entity.Entity
 import java.util.concurrent.CompletableFuture
-import net.minecraft.entity.Entity
 
 /**
  * An action effect will run and execute a series of 'keyframes', with each running once

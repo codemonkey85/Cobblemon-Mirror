@@ -15,7 +15,7 @@ import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.battleLang
 import java.util.UUID
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
 
 class TrainerBattleActor(
     val trainerName: String,
@@ -24,6 +24,6 @@ class TrainerBattleActor(
     artificialDecider: BattleAI
 ) : AIBattleActor(uuid, pokemonList, artificialDecider) {
     override fun getName() = trainerName.asTranslated()
-    override fun nameOwned(name: String): MutableText = battleLang("owned_pokemon", this.getName(), name)
+    override fun nameOwned(name: String): MutableComponent = battleLang("owned_pokemon", this.getName(), name)
     override val type = ActorType.NPC
 }

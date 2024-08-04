@@ -10,31 +10,35 @@ package com.cobblemon.mod.common.api.fishing
 
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.pokeball.PokeBall
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.Identifier
+import com.cobblemon.mod.common.util.readIdentifier
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeIdentifier
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Base poke rod object
  * It is intended that there is one poke rod object initialized for a given poke rod type.
  *
  * @property name the poke rod registry name
- * @property pokeBallId The [Identifier] of the pokeball that is used as the bobber for this rod
+ * @property pokeBallId The [ResourceLocation] of the pokeball that is used as the bobber for this rod
  * @property lineColor list of [RGB] values that apply to the fishing line of the Pokérod
  */
 data class PokeRod(
-    val pokeBallId: Identifier,
+    val pokeBallId: ResourceLocation,
     //Hex string of color
     val lineColor: String,
-    var name: Identifier?
+    var name: ResourceLocation// ?// TODO (techdaan) Why was this nullable?
 ) {
-    internal fun encode(buffer: PacketByteBuf) {
+    internal fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeIdentifier(name)
         buffer.writeIdentifier(pokeBallId)
         buffer.writeString(lineColor)
     }
 
     companion object {
-        internal fun decode(buffer: PacketByteBuf): PokeRod {
+        internal fun decode(buffer: RegistryFriendlyByteBuf): PokeRod {
             val name = buffer.readIdentifier()
             val pokeBallId = buffer.readIdentifier()
             val lineColor = buffer.readString()

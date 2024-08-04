@@ -13,8 +13,8 @@ import com.cobblemon.mod.common.pokemon.evolution.predicate.NbtItemPredicate
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import com.mojang.serialization.JsonOps
-import net.minecraft.item.Item
-import net.minecraft.predicate.NbtPredicate
+import net.minecraft.advancements.critereon.NbtPredicate
+import net.minecraft.world.item.Item
 import java.lang.reflect.Type
 
 object NbtItemPredicateAdapter : JsonDeserializer<NbtItemPredicate>, JsonSerializer<NbtItemPredicate> {

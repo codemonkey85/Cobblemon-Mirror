@@ -16,11 +16,11 @@ import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.gui.summary.widgets.screens.stats.StatWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.MutableText
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.MathHelper
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.Mth
+import net.minecraft.world.phys.Vec3
 
 /**
  * Renders an [IntSpeciesFeature] as a bar in the summary screen.
@@ -30,21 +30,21 @@ import net.minecraft.util.math.Vec3d
  */
 class BarSummarySpeciesFeatureRenderer(
     override val name: String,
-    val displayName: MutableText,
+    val displayName: MutableComponent,
     val min: Int,
     val max: Int,
-    val colour: Vec3d,
-    val underlay: Identifier,
-    val overlay: Identifier,
+    val colour: Vec3,
+    val underlay: ResourceLocation,
+    val overlay: ResourceLocation,
     val pokemon: Pokemon
 ) : SummarySpeciesFeatureRenderer<IntSpeciesFeature> {
-    override fun render(drawContext: DrawContext, x: Float, y: Float, pokemon: Pokemon, feature: IntSpeciesFeature) {
+    override fun render(drawContext: GuiGraphics, x: Float, y: Float, pokemon: Pokemon, feature: IntSpeciesFeature) {
         val value = feature.value
         val barRatio = (value - min) / (max - min).toFloat()
-        val barWidth = MathHelper.ceil(barRatio * 108)
+        val barWidth = Mth.ceil(barRatio * 108)
 
         blitk(
-            matrixStack = drawContext.matrices,
+            matrixStack = drawContext.pose(),
             texture = underlay,
             x = x,
             y = y,
@@ -57,7 +57,7 @@ class BarSummarySpeciesFeatureRenderer(
         val blue = colour.z / 255F
 
         blitk(
-            matrixStack = drawContext.matrices,
+            matrixStack = drawContext.pose(),
             texture = CobblemonResources.WHITE,
             x = x + 8,
             y = y + 16,
@@ -69,7 +69,7 @@ class BarSummarySpeciesFeatureRenderer(
         )
 
         blitk(
-            matrixStack = drawContext.matrices,
+            matrixStack = drawContext.pose(),
             texture = overlay,
             x = x / StatWidget.SCALE,
             y = (y + 16) / StatWidget.SCALE,
@@ -100,7 +100,7 @@ class BarSummarySpeciesFeatureRenderer(
 
         drawScaledText(
             context = drawContext,
-            text = "${MathHelper.floor(barRatio * 100)}%".text(),
+            text = "${Mth.floor(barRatio * 100)}%".text(),
             x = x + 113,
             y = y + 6,
             scale = StatWidget.SCALE,

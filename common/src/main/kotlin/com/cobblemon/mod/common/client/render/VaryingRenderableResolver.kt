@@ -19,7 +19,7 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
 import kotlin.math.floor
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import org.joml.Vector3f
 import org.joml.Vector4f
 
@@ -30,24 +30,24 @@ import org.joml.Vector4f
  * @since May 14th, 2022
  */
 class VaryingRenderableResolver<T : PosableModel>(
-    val name: Identifier,
+    val name: ResourceLocation,
     val variations: MutableList<ModelAssetVariation>
 ) {
     lateinit var repository: VaryingModelRepository<T>
-    val posers = mutableMapOf<Pair<Identifier, Identifier>, T>()
-    val models = mutableMapOf<Identifier, Bone>()
+    val posers = mutableMapOf<Pair<ResourceLocation, ResourceLocation>, T>()
+    val models = mutableMapOf<ResourceLocation, Bone>()
 
-    fun getResolvedPoser(aspects: Set<String>): Identifier {
+    fun getResolvedPoser(aspects: Set<String>): ResourceLocation {
         return getVariationValue(aspects) { poser }
             ?: throw IllegalStateException("Unable to find a poser for $name with aspects ${aspects.joinToString()}. This shouldn't be possible if you've defined the fallback variation.")
     }
 
-    fun getResolvedModel(aspects: Set<String>): Identifier {
+    fun getResolvedModel(aspects: Set<String>): ResourceLocation {
         return getVariationValue(aspects) { model }
             ?: throw IllegalStateException("Unable to find a model for $name with aspects ${aspects.joinToString()}. This shouldn't be possible if you've defined the fallback variation.")
     }
 
-    fun getResolvedTexture(aspects: Set<String>, animationSeconds: Float): Identifier {
+    fun getResolvedTexture(aspects: Set<String>, animationSeconds: Float): ResourceLocation {
         return getVariationValue(aspects) { texture }?.invoke(animationSeconds)
             ?: throw IllegalStateException("Unable to find a texture for $name with aspects ${aspects.joinToString()}. This shouldn't be possible if you've defined the fallback variation.")
     }
@@ -69,8 +69,8 @@ class VaryingRenderableResolver<T : PosableModel>(
         return layerMaps.values.filter(ModelLayer::enabled)
     }
 
-    fun getAllModels(): Set<Identifier> {
-        val models = mutableSetOf<Identifier>()
+    fun getAllModels(): Set<ResourceLocation> {
+        val models = mutableSetOf<ResourceLocation>()
         for (variation in variations) {
             if (variation.model != null) {
                 models.add(variation.model)
@@ -82,7 +82,7 @@ class VaryingRenderableResolver<T : PosableModel>(
     companion object {
         val GSON = GsonBuilder()
             .setPrettyPrinting()
-            .registerTypeAdapter(Identifier::class.java, IdentifierAdapter)
+            .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
             .registerTypeAdapter(Vector3f::class.java, Vector3fAdapter)
             .registerTypeAdapter(Vector4f::class.java, Vector4fAdapter)
             .registerTypeAdapter(ModelTextureSupplier::class.java, ModelTextureSupplierAdapter)
@@ -120,7 +120,7 @@ class VaryingRenderableResolver<T : PosableModel>(
         }
     }
 
-    fun getTexture(aspects: Set<String>, animationSeconds: Float): Identifier {
+    fun getTexture(aspects: Set<String>, animationSeconds: Float): ResourceLocation {
         repository.posers[getResolvedPoser(aspects)] ?: throw IllegalStateException("No poser for $name")
         return getResolvedTexture(aspects, animationSeconds)
     }
@@ -140,7 +140,7 @@ class VaryingRenderableResolver<T : PosableModel>(
  */
 class ModelVariationSet(
     @SerializedName("name", alternate = ["species", "pokeball"])
-    val name: Identifier = cobblemonResource("thing"),
+    val name: ResourceLocation = cobblemonResource("thing"),
     val order: Int = 0,
     val variations: MutableList<ModelAssetVariation> = mutableListOf()
 )
@@ -157,8 +157,8 @@ class ModelVariationSet(
  */
 class ModelAssetVariation(
     val aspects: MutableSet<String> = mutableSetOf(),
-    val poser: Identifier? = null,
-    val model: Identifier? = null,
+    val poser: ResourceLocation? = null,
+    val model: ResourceLocation? = null,
     val texture: ModelTextureSupplier? = null,
     val layers: List<ModelLayer>? = null
 )
@@ -171,11 +171,11 @@ class ModelAssetVariation(
  * @since February 6th, 2023
  */
 fun interface ModelTextureSupplier {
-    operator fun invoke(animationSeconds: Float): Identifier
+    operator fun invoke(animationSeconds: Float): ResourceLocation
 }
 
-class StaticModelTextureSupplier(val texture: Identifier): ModelTextureSupplier {
-    override fun invoke(animationSeconds: Float): Identifier {
+class StaticModelTextureSupplier(val texture: ResourceLocation): ModelTextureSupplier {
+    override fun invoke(animationSeconds: Float): ResourceLocation {
         return texture
     }
 }
@@ -183,9 +183,9 @@ class StaticModelTextureSupplier(val texture: Identifier): ModelTextureSupplier 
 class AnimatedModelTextureSupplier(
     val loop: Boolean,
     val fps: Float,
-    val frames: List<Identifier>
+    val frames: List<ResourceLocation>
 ): ModelTextureSupplier {
-    override fun invoke(animationSeconds: Float): Identifier {
+    override fun invoke(animationSeconds: Float): ResourceLocation {
         val frameIndex = floor(animationSeconds * fps).toInt()
         if (frameIndex >= frames.size && !loop) {
             return frames.last()

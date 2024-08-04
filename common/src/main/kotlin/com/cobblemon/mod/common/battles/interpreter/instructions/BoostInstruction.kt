@@ -16,16 +16,13 @@ import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
 import com.cobblemon.mod.common.api.moves.animations.ActionEffects
 import com.cobblemon.mod.common.api.moves.animations.UsersProvider
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
-import com.cobblemon.mod.common.api.pokemon.status.Statuses
 import com.cobblemon.mod.common.battles.ShowdownInterpreter
 import com.cobblemon.mod.common.battles.dispatch.ActionEffectInstruction
 import com.cobblemon.mod.common.battles.dispatch.GO
 import com.cobblemon.mod.common.battles.dispatch.InstructionSet
-import com.cobblemon.mod.common.battles.dispatch.InterpreterInstruction
 import com.cobblemon.mod.common.battles.dispatch.UntilDispatch
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.util.Identifier
 import java.util.concurrent.CompletableFuture
 
 /**

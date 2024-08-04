@@ -17,20 +17,20 @@ import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.isBattling
-import com.cobblemon.mod.common.util.isSubmergedInWater
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isUnderWater
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class WartortleModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("wartortle")
     override val head = getPart("head_ai")
 
     override var portraitScale = 1.57F
-    override var portraitTranslation = Vec3d(-0.05, 0.54, 0.0)
+    override var portraitTranslation = Vec3(-0.05, 0.54, 0.0)
 
     override var profileScale = 0.69F
-    override var profileTranslation = Vec3d(-0.04, 0.69, 0.0)
+    override var profileTranslation = Vec3(-0.04, 0.69, 0.0)
 
     lateinit var sleep: CobblemonPose
     lateinit var standing: CobblemonPose
@@ -69,7 +69,7 @@ class WartortleModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES - PoseType.HOVER + UI_POSES,
             quirks = arrayOf(blink, quirkidle),
-            condition = { !it.isBattling && !it.isTouchingWater && !it.isSubmergedInWater},
+            condition = { !it.isBattling && !it.isInWater && !it.isUnderWater},
             namedAnimations = mutableMapOf("faint" to faint),
             animations = arrayOf(
                 singleBoneLook(),
@@ -93,7 +93,7 @@ class WartortleModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES - PoseType.FLY,
             quirks = arrayOf(blink),
-            condition = { !it.isTouchingWater && !it.isSubmergedInWater},
+            condition = { !it.isInWater && !it.isUnderWater},
             namedAnimations = mutableMapOf("faint" to faint),
             animations = arrayOf(
                 singleBoneLook(),
@@ -105,7 +105,7 @@ class WartortleModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             poseName = "floating",
             transformTicks = 10,
             poseType = PoseType.FLOAT,
-            condition = { it.isSubmergedInWater },
+            condition = { it.isUnderWater },
             namedAnimations = mutableMapOf("faint" to faint),
             quirks = arrayOf(blink),
             animations = arrayOf(
@@ -117,7 +117,7 @@ class WartortleModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         swimming = registerPose(
             poseName = "swimming",
             transformTicks = 10,
-            condition = { it.isSubmergedInWater },
+            condition = { it.isUnderWater },
             namedAnimations = mutableMapOf("faint" to faint),
             poseType = PoseType.SWIM,
             quirks = arrayOf(blink),
@@ -132,7 +132,7 @@ class WartortleModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             poseTypes = PoseType.STATIONARY_POSES,
             namedAnimations = mutableMapOf("faint" to faint),
             quirks = arrayOf(blink),
-            condition = { !it.isSubmergedInWater && it.isTouchingWater },
+            condition = { !it.isUnderWater && it.isInWater },
             animations = arrayOf(
                 singleBoneLook(),
                 bedrock("wartortle", "surfacewater_idle"),
@@ -146,7 +146,7 @@ class WartortleModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             poseName = "surface_swim",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            condition = { !it.isSubmergedInWater && it.isTouchingWater },
+            condition = { !it.isUnderWater && it.isInWater },
             namedAnimations = mutableMapOf("faint" to faint),
             animations = arrayOf(
                 singleBoneLook(),

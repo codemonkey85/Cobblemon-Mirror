@@ -8,8 +8,8 @@
 
 package com.cobblemon.mod.common.api.net
 
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 interface ClientNetworkPacketHandler<T: NetworkPacket<T>> : PacketHandler<T>{
-    fun handle(packet: T, client: MinecraftClient)
+    fun handle(packet: T, client: Minecraft)
 }

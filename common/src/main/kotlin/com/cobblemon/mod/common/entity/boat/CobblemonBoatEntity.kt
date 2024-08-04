@@ -10,50 +10,48 @@ package com.cobblemon.mod.common.entity.boat
 
 import com.cobblemon.mod.common.CobblemonEntities
 import com.cobblemon.mod.common.mixin.accessor.BoatEntityAccessor
-import net.minecraft.block.Block
-import net.minecraft.block.BlockState
-import net.minecraft.block.WoodType
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.data.DataTracker
-import net.minecraft.entity.data.TrackedDataHandlerRegistry
-import net.minecraft.entity.vehicle.BoatEntity
-import net.minecraft.item.Item
-import net.minecraft.item.Items
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.nbt.NbtElement
-import net.minecraft.nbt.NbtString
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.listener.ClientPlayPacketListener
-import net.minecraft.network.packet.Packet
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket
-import net.minecraft.registry.tag.FluidTags
-import net.minecraft.registry.tag.TagGroupLoader.TrackedEntry
-import net.minecraft.server.network.EntityTrackerEntry
-import net.minecraft.text.Text
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.GameRules
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.StringTag
+import net.minecraft.nbt.Tag
+import net.minecraft.network.chat.Component
+import net.minecraft.network.protocol.Packet
+import net.minecraft.network.protocol.game.ClientGamePacketListener
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.server.level.ServerEntity
+import net.minecraft.tags.FluidTags
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.vehicle.Boat
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.Items
+import net.minecraft.world.level.GameRules
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.properties.WoodType
 
 @Suppress("unused")
-open class CobblemonBoatEntity(entityType: EntityType<out BoatEntity>, world: World) : BoatEntity(entityType, world) {
+open class CobblemonBoatEntity(entityType: EntityType<out Boat>, world: Level) : Boat(entityType, world) {
 
-    constructor(world: World) : this(CobblemonEntities.BOAT, world)
+    constructor(world: Level) : this(CobblemonEntities.BOAT, world)
 
     // This exists cause super passes in vanilla boat entity type
-    constructor(world: World, x: Double, y: Double, z: Double) : this(CobblemonEntities.BOAT, world) {
-        this.setPosition(x, y, z)
-        this.prevX = x
-        this.prevY = y
-        this.prevZ = z
+    constructor(world: Level, x: Double, y: Double, z: Double) : this(CobblemonEntities.BOAT, world) {
+        this.setPos(x, y, z)
+        this.xo = x
+        this.yo = y
+        this.zo = z
     }
 
     /**
      * The [CobblemonBoatType] of this boat.
      */
     var boatType: CobblemonBoatType
-        get() = CobblemonBoatType.ofOrdinal(this.dataTracker.get(TYPE_TRACKED_DATA))
+        get() = CobblemonBoatType.ofOrdinal(this.entityData.get(TYPE_TRACKED_DATA))
         set(value) {
-            this.dataTracker.set(TYPE_TRACKED_DATA, value.ordinal)
+            this.entityData.set(TYPE_TRACKED_DATA, value.ordinal)
         }
 
     /**
@@ -66,25 +64,25 @@ open class CobblemonBoatEntity(entityType: EntityType<out BoatEntity>, world: Wo
      */
     val baseBlock: Block get() = this.boatType.baseBlock
 
-    override fun asItem(): Item = this.boatType.boatItem
+    override fun getDropItem(): Item = this.boatType.boatItem
 
-    override fun createSpawnPacket(entityTrackerEntry: EntityTrackerEntry): Packet<ClientPlayPacketListener> = EntitySpawnS2CPacket(this, entityTrackerEntry)
+    override fun getAddEntityPacket(entityTrackerEntry: ServerEntity): Packet<ClientGamePacketListener> = ClientboundAddEntityPacket(this, entityTrackerEntry)
 
-    override fun initDataTracker(builder: DataTracker.Builder) {
-        super.initDataTracker(builder)
-        builder.add(TYPE_TRACKED_DATA, CobblemonBoatType.APRICORN.ordinal)
+    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        super.defineSynchedData(builder)
+        builder.define(TYPE_TRACKED_DATA, CobblemonBoatType.APRICORN.ordinal)
     }
 
-    override fun getDefaultName(): Text = EntityType.BOAT.name
+    override fun getTypeName(): Component = EntityType.BOAT.description
 
-    override fun readCustomDataFromNbt(nbt: NbtCompound) {
-        if (nbt.contains(TYPE_KEY, NbtElement.STRING_TYPE.toInt())) {
+    override fun readAdditionalSaveData(nbt: CompoundTag) {
+        if (nbt.contains(TYPE_KEY, Tag.TAG_STRING.toInt())) {
             this.boatType = CobblemonBoatType.valueOf(nbt.getString(TYPE_KEY))
         }
     }
 
-    override fun writeCustomDataToNbt(nbt: NbtCompound) {
-        nbt.put(TYPE_KEY, NbtString.of(this.boatType.name))
+    override fun addAdditionalSaveData(nbt: CompoundTag) {
+        nbt.put(TYPE_KEY, StringTag.valueOf(this.boatType.name))
     }
 
     override fun setVariant(type: Type) {
@@ -95,35 +93,35 @@ open class CobblemonBoatEntity(entityType: EntityType<out BoatEntity>, world: Wo
         throw UnsupportedOperationException("The vanilla boat type is not present in the Cobblemon implementation use the type property")
     }
 
-    override fun getPassengerHorizontalOffset(): Float = this.boatType.mountedOffset
+    override fun getSinglePassengerXOffset(): Float = this.boatType.mountedOffset
 
-    override fun fall(heightDifference: Double, onGround: Boolean, state: BlockState, landedPosition: BlockPos) {
+    override fun checkFallDamage(heightDifference: Double, onGround: Boolean, state: BlockState, landedPosition: BlockPos) {
         val accessor = this.accessor()
-        accessor.setFallVelocity(this.velocity.y)
-        if (!this.hasVehicle()) {
+        accessor.setFallVelocity(this.deltaMovement.y)
+        if (!this.isPassenger()) {
             return
         }
-        if (!this.world.getFluidState(this.blockPos.down()).isIn(FluidTags.WATER) && heightDifference < 0.0) {
+        if (!this.level().getFluidState(this.blockPosition().below()).`is`(FluidTags.WATER) && heightDifference < 0.0) {
             this.fallDistance -= heightDifference.toFloat()
         }
         if (!onGround) {
             return
         }
-        if (this.fallDistance < 3F || accessor.location != Location.ON_LAND) {
-            this.onLanding()
+        if (this.fallDistance < 3F || accessor.location != Status.ON_LAND) {
+            this.resetFallDistance()
             return
         }
-        this.handleFallDamage(this.fallDistance, 1F, this.damageSources.fall())
-        if (this.world.isClient || this.isRemoved) {
+        this.causeFallDamage(this.fallDistance, 1F, this.damageSources().fall())
+        if (this.level().isClientSide || this.isRemoved) {
             return
         }
         this.kill()
-        if (this.world.gameRules.getBoolean(GameRules.DO_ENTITY_DROPS)) {
+        if (this.level().gameRules.getBoolean(GameRules.RULE_DOENTITYDROPS)) {
             repeat(3) {
-                this.dropItem(this.boatType.baseBlock)
+                this.spawnAtLocation(this.boatType.baseBlock)
             }
             repeat(2) {
-                this.dropItem(Items.STICK)
+                this.spawnAtLocation(Items.STICK)
             }
         }
     }
@@ -133,7 +131,7 @@ open class CobblemonBoatEntity(entityType: EntityType<out BoatEntity>, world: Wo
     companion object {
 
         private const val TYPE_KEY = "type"
-        private val TYPE_TRACKED_DATA = DataTracker.registerData(CobblemonBoatEntity::class.java, TrackedDataHandlerRegistry.INTEGER)
+        private val TYPE_TRACKED_DATA = SynchedEntityData.defineId(CobblemonBoatEntity::class.java, EntityDataSerializers.INT)
 
     }
 

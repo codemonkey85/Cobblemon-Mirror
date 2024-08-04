@@ -24,7 +24,7 @@ import com.google.gson.GsonBuilder
 import java.time.Instant
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object BattleRegistry {
 
@@ -219,6 +219,7 @@ object BattleRegistry {
     }
 
     fun closeBattle(battle: PokemonBattle) {
+        battle.onEndHandlers.forEach { it(battle) }
         battleMap.remove(battle.battleId)
     }
 
@@ -226,7 +227,7 @@ object BattleRegistry {
         return battleMap[id]
     }
 
-    fun getBattleByParticipatingPlayer(serverPlayerEntity: ServerPlayerEntity) : PokemonBattle? {
+    fun getBattleByParticipatingPlayer(serverPlayerEntity: ServerPlayer) : PokemonBattle? {
         return battleMap.values.find { it.getActor(serverPlayerEntity) != null }
     }
 

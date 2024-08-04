@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequi
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.predicate.NbtItemPredicate
 import com.cobblemon.mod.common.registry.ItemIdentifierCondition
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 /**
  * An [EvolutionRequirement] for a [Pokemon.heldItem].
@@ -23,7 +23,7 @@ import net.minecraft.util.Identifier
  */
 class HeldItemRequirement(val itemCondition: NbtItemPredicate) : EvolutionRequirement {
 
-    constructor() : this(NbtItemPredicate(ItemIdentifierCondition(Identifier.of("air"))))
+    constructor() : this(NbtItemPredicate(ItemIdentifierCondition(ResourceLocation.parse("air"))))
 
     override fun check(pokemon: Pokemon): Boolean = this.itemCondition.test(pokemon.heldItemNoCopy())
 

@@ -1,0 +1,54 @@
+{
+  "type": "minecraft:fishing",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": "minecraft:gameplay/fishing/junk",
+          "weight": 66,
+          "quality": -2
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "cobblemon:fishing/pokerod_treasure",
+          "weight": 17,
+          "quality": 2,
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "type_specific": {
+                  "type": "cobblemon:poke_bobber",
+                  "in_open_water": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "minecraft:gameplay/fishing/treasure",
+          "weight": 17,
+          "quality": 2,
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "type_specific": {
+                  "type": "cobblemon:poke_bobber",
+                  "in_open_water": true
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "minecraft:gameplay/fishing"
+}

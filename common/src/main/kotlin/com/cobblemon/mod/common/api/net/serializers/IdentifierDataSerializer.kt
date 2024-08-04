@@ -9,26 +9,27 @@
 package com.cobblemon.mod.common.api.net.serializers
 
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.entity.data.TrackedDataHandler
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.codec.PacketCodec
-import net.minecraft.util.Identifier
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.codec.StreamCodec
+import net.minecraft.network.syncher.EntityDataSerializer
+import net.minecraft.resources.ResourceLocation
 
 /**
- * Data serializer of [Identifier] for DataTracker things.
+ * Data serializer of [ResourceLocation] for DataTracker things.
  *
  * @author Hiroku
  * @since May 22nd, 2023
  */
-object IdentifierDataSerializer : TrackedDataHandler<Identifier> {
+object IdentifierDataSerializer : EntityDataSerializer<ResourceLocation> {
     val ID = cobblemonResource("identifier")
-    override fun copy(value: Identifier) = Identifier.of(value.namespace, value.path)
-    fun read(buf: PacketByteBuf) = Identifier.of(buf.readString(), buf.readString())
-    fun write(buf: PacketByteBuf, value: Identifier) {
+    override fun copy(value: ResourceLocation) = ResourceLocation.fromNamespaceAndPath(value.namespace, value.path)
+    fun read(buf: RegistryFriendlyByteBuf) = ResourceLocation.fromNamespaceAndPath(buf.readString(), buf.readString())
+    fun write(buf: RegistryFriendlyByteBuf, value: ResourceLocation) {
         buf.writeString(value.namespace)
         buf.writeString(value.path)
     }
 
-    override fun codec() = PacketCodec.ofStatic(::write, ::read)
+    override fun codec() = StreamCodec.of(::write, ::read)
 }

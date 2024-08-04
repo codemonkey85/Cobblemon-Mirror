@@ -24,7 +24,7 @@ import com.cobblemon.mod.common.pokemon.Nature
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.battleLang
 import java.util.UUID
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
 
 open class BattlePokemon(
     val originalPokemon: Pokemon,
@@ -79,7 +79,7 @@ open class BattlePokemon(
 
     val contextManager = ContextManager()
 
-    open fun getName(): MutableText {
+    open fun getName(): MutableComponent {
         val displayPokemon = getIllusion()?.effectedPokemon ?: effectedPokemon
         return if (actor is PokemonBattleActor || actor is MultiPokemonBattleActor) {
             displayPokemon.getDisplayName()

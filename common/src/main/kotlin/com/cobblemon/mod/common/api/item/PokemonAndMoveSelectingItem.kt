@@ -23,10 +23,10 @@ import com.cobblemon.mod.common.util.getBattleState
 import com.cobblemon.mod.common.util.isHeld
 import com.cobblemon.mod.common.util.isLookingAt
 import com.cobblemon.mod.common.util.party
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.TypedActionResult
-import net.minecraft.util.math.Box
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.phys.AABB
 
 /**
  * Interface to make it easier to define items that will, upon use, prompt you to
@@ -38,19 +38,19 @@ import net.minecraft.util.math.Box
  * @since July 29th, 2023
  */
 interface PokemonAndMoveSelectingItem {
-    fun use(player: ServerPlayerEntity, stack: ItemStack): TypedActionResult<ItemStack>? {
-        val entity = player.world
-            .getOtherEntities(player, Box.of(player.pos, 16.0, 16.0, 16.0))
+    fun use(player: ServerPlayer, stack: ItemStack): InteractionResultHolder<ItemStack>? {
+        val entity = player.level()
+            .getEntities(player, AABB.ofSize(player.position(), 16.0, 16.0, 16.0))
             .filter { player.isLookingAt(it, stepDistance = 0.1F) }
             .minByOrNull { it.distanceTo(player) } as? PokemonEntity?
 
         player.getBattleState()?.let { (_, actor) ->
             if (bagItem == null) {
-                return TypedActionResult.fail(stack)
+                return InteractionResultHolder.fail(stack)
             }
             if (!actor.canFitForcedAction()) {
-                player.sendMessage(battleLang("bagitem.cannot").red())
-                return TypedActionResult.fail(stack)
+                player.sendSystemMessage(battleLang("bagitem.cannot").red())
+                return InteractionResultHolder.fail(stack)
             }
             val battlePokemon = actor.pokemonList.find { it.effectedPokemon == entity?.pokemon }
             if (entity == null) {
@@ -61,10 +61,10 @@ interface PokemonAndMoveSelectingItem {
         } ?: run {
             if (entity != null) {
                 val pokemon = entity.pokemon
-                if (entity.ownerUuid == player.uuid) {
+                if (entity.ownerUUID == player.uuid) {
                     return interactWithSpecific(player, stack, pokemon)
                 } else {
-                    return TypedActionResult.fail(stack)
+                    return InteractionResultHolder.fail(stack)
                 }
             } else {
                 return interactGeneral(player, stack)
@@ -75,19 +75,19 @@ interface PokemonAndMoveSelectingItem {
     }
 
     val bagItem: BagItem?
-    fun applyToPokemon(player: ServerPlayerEntity, stack: ItemStack, pokemon: Pokemon, move: Move)
+    fun applyToPokemon(player: ServerPlayer, stack: ItemStack, pokemon: Pokemon, move: Move)
 
-    fun applyToBattlePokemon(player: ServerPlayerEntity, stack: ItemStack, battlePokemon: BattlePokemon, move: Move) {
+    fun applyToBattlePokemon(player: ServerPlayer, stack: ItemStack, battlePokemon: BattlePokemon, move: Move) {
         val battle = battlePokemon.actor.battle
         val bagItem = bagItem
         if (!battlePokemon.actor.canFitForcedAction()) {
-            player.sendMessage(battleLang("bagitem.cannot").red())
+            player.sendSystemMessage(battleLang("bagitem.cannot").red())
         } else if (!bagItem!!.canUse(battle, battlePokemon)) {
-            player.sendMessage(battleLang("bagitem.invalid").red())
+            player.sendSystemMessage(battleLang("bagitem.invalid").red())
         } else {
             battlePokemon.actor.forceChoose(BagItemActionResponse(bagItem, battlePokemon, move.template.name))
             if (!player.isCreative) {
-                stack.decrement(1)
+                stack.shrink(1)
             }
         }
     }
@@ -97,10 +97,10 @@ interface PokemonAndMoveSelectingItem {
     fun canUseOnMove(pokemon: Pokemon, move: Move): Boolean = canUseOnMove(move)
     fun canUseOnMove(move: Move): Boolean
 
-    fun interactWithSpecific(player: ServerPlayerEntity, stack: ItemStack, pokemon: Pokemon): TypedActionResult<ItemStack>? {
+    fun interactWithSpecific(player: ServerPlayer, stack: ItemStack, pokemon: Pokemon): InteractionResultHolder<ItemStack>? {
 
-        if (player.isSneaking) {
-            return TypedActionResult.pass(stack)
+        if (player.isShiftKeyDown) {
+            return InteractionResultHolder.pass(stack)
         }
 
         MoveSelectCallbacks.create(
@@ -109,10 +109,10 @@ interface PokemonAndMoveSelectingItem {
             canSelect = ::canUseOnMove,
             handler = { move -> if (stack.isHeld(player)) applyToPokemon(player, stack, pokemon, move) }
         )
-        return TypedActionResult.success(stack)
+        return InteractionResultHolder.success(stack)
     }
 
-    fun interactWithSpecificBattle(player: ServerPlayerEntity, stack: ItemStack, battlePokemon: BattlePokemon): TypedActionResult<ItemStack>? {
+    fun interactWithSpecificBattle(player: ServerPlayer, stack: ItemStack, battlePokemon: BattlePokemon): InteractionResultHolder<ItemStack>? {
         return if (canUseOnBattlePokemon(battlePokemon)) {
             MoveSelectCallbacks.create(
                 player = player,
@@ -120,14 +120,14 @@ interface PokemonAndMoveSelectingItem {
                 canSelect = ::canUseOnMove,
                 handler = { applyToBattlePokemon(player, stack, battlePokemon, it) }
             )
-            TypedActionResult.success(stack)
+            InteractionResultHolder.success(stack)
         } else {
-            player.sendMessage(battleLang("bagitem.invalid").red())
-            TypedActionResult.fail(stack)
+            player.sendSystemMessage(battleLang("bagitem.invalid").red())
+            InteractionResultHolder.fail(stack)
         }
     }
 
-    fun interactGeneral(player: ServerPlayerEntity, stack: ItemStack): TypedActionResult<ItemStack>? {
+    fun interactGeneral(player: ServerPlayer, stack: ItemStack): InteractionResultHolder<ItemStack>? {
         PartyMoveSelectCallbacks.createFromPokemon(
             player = player,
             pokemon = player.party().toList(),
@@ -136,10 +136,10 @@ interface PokemonAndMoveSelectingItem {
             handler = { pk, mv -> if (stack.isHeld(player)) applyToPokemon(player, stack, pk, mv) }
         )
 
-        return TypedActionResult.success(stack)
+        return InteractionResultHolder.success(stack)
     }
 
-    fun interactGeneralBattle(player: ServerPlayerEntity, stack: ItemStack, actor: BattleActor): TypedActionResult<ItemStack>? {
+    fun interactGeneralBattle(player: ServerPlayer, stack: ItemStack, actor: BattleActor): InteractionResultHolder<ItemStack>? {
         PartyMoveSelectCallbacks.createFromPokemon(
             player = player,
             pokemon = actor.pokemonList.map { it.effectedPokemon },
@@ -149,6 +149,6 @@ interface PokemonAndMoveSelectingItem {
             handler = { pk, mv -> applyToBattlePokemon(player, stack, actor.pokemonList.find { it.effectedPokemon == pk }!!, mv) }
         )
 
-        return TypedActionResult.success(stack)
+        return InteractionResultHolder.success(stack)
     }
 }

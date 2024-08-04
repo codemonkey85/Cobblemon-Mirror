@@ -19,8 +19,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.par
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class NoctowlModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("noctowl")
@@ -32,9 +32,9 @@ class NoctowlModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, B
     private val tail = getPart("tail")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.35, 1.0, 0.0)
+    override var portraitTranslation = Vec3(-0.35, 1.0, 0.0)
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.0, 0.68, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.68, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

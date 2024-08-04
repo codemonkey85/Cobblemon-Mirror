@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "com.cobblemon.mod.common.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
     "BuiltinModelItemRendererMixin",
@@ -50,8 +50,5 @@
     "invoker.StairsBlockInvoker",
     "invoker.TrapdoorBlockInvoker",
     "pokeball.ThrownEntityMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+  ]
 }

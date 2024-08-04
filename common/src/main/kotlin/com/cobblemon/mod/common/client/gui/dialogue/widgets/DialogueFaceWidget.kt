@@ -9,12 +9,11 @@
 package com.cobblemon.mod.common.client.gui.dialogue.widgets
 
 import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.client.gui.PartyOverlay
 import com.cobblemon.mod.common.client.gui.dialogue.DialogueScreen
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.Drawable
-import net.minecraft.client.gui.Element
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Renderable
+import net.minecraft.client.gui.components.events.GuiEventListener
 
 class DialogueFaceWidget(
     val dialogueScreen: DialogueScreen,
@@ -22,19 +21,19 @@ class DialogueFaceWidget(
     val y: Int,
     val width: Int,
     val height: Int
-) : Drawable, Element {
+) : Renderable, GuiEventListener {
     companion object {
         val frameResource = cobblemonResource("textures/gui/dialogue/dialogue_face.png")
         val frameBackground = cobblemonResource("textures/gui/dialogue/dialogue_face_background.png")
     }
     override fun setFocused(focused: Boolean) {}
     override fun isFocused() = false
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val face = dialogueScreen.dialogueDTO.currentPageDTO.speaker?.let { dialogueScreen.speakers[it] }?.face ?: return
 
         blitk(
             texture = frameBackground,
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             x = x,
             y = y,
             width = width,
@@ -47,21 +46,22 @@ class DialogueFaceWidget(
             x + 1 + width - 4,
             y + 2 + height - 4
         )
-        context.matrices.push()
-        context.matrices.translate(x.toDouble() + width / 2, y.toDouble(), 0.0)
+        context.pose().pushPose()
+        context.pose().translate(x.toDouble() + width / 2, y.toDouble(), 0.0)
         face.render(context, delta)
         context.disableScissor()
-        context.matrices.pop()
-        context.matrices.push()
-        context.matrices.translate(0F, 0F, 100F)
+        context.pose().popPose()
+
+        context.pose().pushPose()
+        context.pose().translate(0F, 0F, 100F)
         blitk(
             texture = frameResource,
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             x = x,
             y = y,
             width = width,
             height = height
         )
-        context.matrices.pop()
+        context.pose().popPose()
     }
 }

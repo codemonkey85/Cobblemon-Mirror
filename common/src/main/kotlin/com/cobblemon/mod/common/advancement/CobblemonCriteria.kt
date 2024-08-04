@@ -10,11 +10,11 @@ package com.cobblemon.mod.common.advancement
 
 import com.cobblemon.mod.common.advancement.criterion.*
 import com.cobblemon.mod.common.platform.PlatformRegistry
-import net.minecraft.advancement.criterion.Criterion
-import net.minecraft.registry.Registries
-import net.minecraft.registry.Registry
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.RegistryKeys
+import net.minecraft.advancements.CriterionTrigger
+import net.minecraft.core.Registry
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
 
 /**
  * Contains all the advancement criteria in Cobblemon.
@@ -22,7 +22,7 @@ import net.minecraft.registry.RegistryKeys
  * @author Licious
  * @since October 26th, 2022
  */
-object CobblemonCriteria : PlatformRegistry<Registry<Criterion<*>>, RegistryKey<Registry<Criterion<*>>>, Criterion<*>>(){
+object CobblemonCriteria : PlatformRegistry<Registry<CriterionTrigger<*>>, ResourceKey<Registry<CriterionTrigger<*>>>, CriterionTrigger<*>>(){
     val PICK_STARTER = this.create("pick_starter", SimpleCriterionTrigger(PokemonCriterion.CODEC))
 
     val CATCH_POKEMON = this.create("catch_pokemon", SimpleCriterionTrigger(CaughtPokemonCriterion.CODEC))
@@ -56,6 +56,6 @@ object CobblemonCriteria : PlatformRegistry<Registry<Criterion<*>>, RegistryKey<
     // Advancement criteria for [grow_tumblestone.json]
     val PLANT_TUMBLESTONE = this.create("plant_tumblestone", SimpleCriterionTrigger(PlantTumblestoneCriterion.CODEC))
 
-    override val registry = Registries.CRITERION
-    override val registryKey = RegistryKeys.CRITERION
+    override val registry = BuiltInRegistries.TRIGGER_TYPES
+    override val resourceKey = Registries.TRIGGER_TYPE
 }

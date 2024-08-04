@@ -8,10 +8,10 @@
 
 package com.cobblemon.mod.common.block
 
-import net.minecraft.block.BlockState
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.core.BlockPos
+import net.minecraft.world.level.Level
 
 interface PreEmptsExplosion {
-    fun whenExploded(world: World, state: BlockState, pos: BlockPos)
+    fun whenExploded(world: Level, state: BlockState, pos: BlockPos)
 }

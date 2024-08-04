@@ -8,27 +8,27 @@
 
 package com.cobblemon.mod.common.entity.ai
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
 
 object GetAngryAtAttackerTask {
-    fun create(): SingleTickTask<LivingEntity> {
-        return TaskTriggerer.task {
+    fun create(): OneShot<LivingEntity> {
+        return BehaviorBuilder.create {
             it.group(
-                it.queryMemoryValue(MemoryModuleType.HURT_BY_ENTITY),
-                it.queryMemoryOptional(MemoryModuleType.ANGRY_AT)
+                it.present(MemoryModuleType.HURT_BY_ENTITY),
+                it.registered(MemoryModuleType.ANGRY_AT)
             ).apply(it) { hurtByEntity, angryAt ->
-                TaskRunnable { _, entity, _ ->
-                    val hurtByEntity = it.getValue(hurtByEntity)
-                    val angryAt = it.getOptionalValue(angryAt).orElse(null)
+                Trigger { _, entity, _ ->
+                    val hurtByEntity = it.get(hurtByEntity)
+                    val angryAt = it.tryGet(angryAt).orElse(null)
                     if (angryAt != null && angryAt == hurtByEntity.uuid) {
-                        return@TaskRunnable false
+                        return@Trigger false
                     }
-                    entity.brain.remember(MemoryModuleType.ANGRY_AT, hurtByEntity.uuid)
-                    return@TaskRunnable true
+                    entity.brain.setMemory(MemoryModuleType.ANGRY_AT, hurtByEntity.uuid)
+                    return@Trigger true
                 }
             }
         }

@@ -1,6 +1,9 @@
 {
   "hitbox": "player",
-  "interaction": "cobblemon:basic-npc-interaction",
+  "interaction": {
+    "type": "dialogue",
+    "dialogue": "cobblemon:npc-example"
+  },
   "battleConfiguration": {
     "canChallenge": true,
     "party": {

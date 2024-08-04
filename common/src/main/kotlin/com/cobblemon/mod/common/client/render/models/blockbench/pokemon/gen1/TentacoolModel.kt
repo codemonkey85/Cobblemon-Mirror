@@ -12,18 +12,18 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class TentacoolModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("tentacool")
 
     override var portraitScale = 1.2F
-    override var portraitTranslation = Vec3d(0.1, 1.1, 0.0)
+    override var portraitTranslation = Vec3(0.1, 1.1, 0.0)
 
     override var profileScale = 0.6F
-    override var profileTranslation = Vec3d(0.0, 0.8, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.8, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose
@@ -74,14 +74,14 @@ class TentacoolModel(root: ModelPart) : PokemonPosableModel(root) {
         sleep = registerPose(
                 poseName = "sleep",
                 poseType = PoseType.SLEEP,
-                condition = { !it.isTouchingWater },
+                condition = { !it.isInWater },
                 animations = arrayOf(bedrock("tentacool", "sleep"))
         )
 
         watersleep = registerPose(
                 poseName = "watersleep",
                 poseType = PoseType.SLEEP,
-                condition = { it.isTouchingWater },
+                condition = { it.isInWater },
                 animations = arrayOf(bedrock("tentacool", "water_sleep"))
         )
     }

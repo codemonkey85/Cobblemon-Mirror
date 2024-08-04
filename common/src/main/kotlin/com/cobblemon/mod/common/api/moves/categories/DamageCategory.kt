@@ -9,8 +9,8 @@
 package com.cobblemon.mod.common.api.moves.categories
 
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Representing a DamageCategory from the Pokemon Game
@@ -21,8 +21,8 @@ import net.minecraft.util.Identifier
  */
 class DamageCategory(
     val name: String,
-    val displayName: Text,
+    val displayName: Component,
     val textureXMultiplier: Int,
-    val resourceLocation: Identifier = cobblemonResource("textures/gui/categories.png")
+    val resourceLocation: ResourceLocation = cobblemonResource("textures/gui/categories.png")
 ) {
 }

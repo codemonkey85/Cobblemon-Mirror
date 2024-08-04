@@ -18,7 +18,7 @@ import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityP
 import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import java.util.concurrent.CompletableFuture
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
 
 /**
  * Spawns particles on the entity based on the given particle effect and locator.
@@ -46,7 +46,7 @@ class EntityParticlesActionEffectKeyframe : ConditionalActionEffectKeyframe(), E
 
         entities.filter { it is PosableEntity }.forEach { entity ->
             val packet = SpawnSnowstormEntityParticlePacket(effectIdentifier, entity.id, locator)
-            val players = (entity.world as ServerWorld).getPlayers { it.distanceTo(entity) <= visibilityRange }
+            val players = (entity.level() as ServerLevel).getPlayers { it.distanceTo(entity) <= visibilityRange }
             packet.sendToPlayers(players)
         }
 

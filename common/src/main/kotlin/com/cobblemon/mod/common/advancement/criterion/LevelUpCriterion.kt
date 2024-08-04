@@ -11,29 +11,28 @@ package com.cobblemon.mod.common.advancement.criterion
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.predicate.entity.EntityPredicate
-import net.minecraft.predicate.entity.LootContextPredicate
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.dynamic.Codecs
+import net.minecraft.advancements.critereon.ContextAwarePredicate
+import net.minecraft.advancements.critereon.EntityPredicate
+import net.minecraft.server.level.ServerPlayer
 import java.util.Optional
 
 class LevelUpContext(val level: Int, val pokemon: Pokemon)
 
 class LevelUpCriterion(
-    playerCtx: Optional<LootContextPredicate>,
+    playerCtx: Optional<ContextAwarePredicate>,
     val level: Int,
     val evolved: Boolean
 ): SimpleCriterionCondition<LevelUpContext>(playerCtx) {
 
     companion object {
         val CODEC: Codec<LevelUpCriterion> = RecordCodecBuilder.create { it.group(
-            EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(LevelUpCriterion::playerCtx),
+            EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(LevelUpCriterion::playerCtx),
             Codec.INT.optionalFieldOf("level", 0).forGetter(LevelUpCriterion::level),
             Codec.BOOL.optionalFieldOf("evolved", true).forGetter(LevelUpCriterion::evolved)
         ).apply(it, ::LevelUpCriterion) }
     }
 
-    override fun matches(player: ServerPlayerEntity, context: LevelUpContext): Boolean {
+    override fun matches(player: ServerPlayer, context: LevelUpContext): Boolean {
         val preEvo = context.pokemon.preEvolution == null
         val hasEvolution = !context.pokemon.evolutions.none()
         var evolutionCheck = true

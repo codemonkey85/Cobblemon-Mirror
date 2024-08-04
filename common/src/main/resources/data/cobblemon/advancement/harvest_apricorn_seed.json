@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:green_apricorn_seed"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.harvest_apricorn_seed"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.harvest_apricorn_seed.description"
+    }
+  },
+  "parent": "cobblemon:any_plant",
+  "criteria": {
+    "check_inv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#cobblemon:apricorn_sprouts"
+          }
+        ]
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

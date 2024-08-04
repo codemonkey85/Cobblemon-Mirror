@@ -8,10 +8,13 @@
 
 package com.cobblemon.mod.common.client.entity
 
+import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.cobblemon.mod.common.api.entity.NPCSideDelegate
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunctions
+import com.cobblemon.mod.common.client.ClientMoLangFunctions
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.entity.npc.NPCEntity
-import net.minecraft.entity.data.TrackedData
+import net.minecraft.network.syncher.EntityDataAccessor
 
 class NPCClientDelegate : PosableState(), NPCSideDelegate {
     lateinit var npcEntity: NPCEntity
@@ -19,7 +22,7 @@ class NPCClientDelegate : PosableState(), NPCSideDelegate {
         get() = npcEntity.schedulingTracker
     override fun initialize(entity: NPCEntity) {
         this.npcEntity = entity
-        this.age = entity.age
+        this.age = entity.tickCount
     }
 
     override fun tick(entity: NPCEntity) {
@@ -27,10 +30,10 @@ class NPCClientDelegate : PosableState(), NPCSideDelegate {
         incrementAge(entity)
     }
 
-    override fun onTrackedDataSet(data: TrackedData<*>) {
-        super.onTrackedDataSet(data)
+    override fun onSyncedDataUpdated(data: EntityDataAccessor<*>) {
+        super.onSyncedDataUpdated(data)
         if (data == NPCEntity.ASPECTS) {
-            currentAspects = getEntity().dataTracker.get(NPCEntity.ASPECTS)
+            currentAspects = getEntity().entityData.get(NPCEntity.ASPECTS)
         }
     }
 
@@ -38,5 +41,12 @@ class NPCClientDelegate : PosableState(), NPCSideDelegate {
 
     override fun updatePartialTicks(partialTicks: Float) {
         this.currentPartialTicks = partialTicks
+    }
+
+    override fun addToStruct(struct: QueryStruct) {
+        super.addToStruct(struct)
+        struct.addFunctions(functions.functions)
+        struct.addFunctions(ClientMoLangFunctions.clientFunctions)
+        runtime.environment.query.addFunctions(struct.functions)
     }
 }

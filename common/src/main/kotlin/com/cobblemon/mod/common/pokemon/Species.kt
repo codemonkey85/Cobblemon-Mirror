@@ -31,20 +31,19 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.pokemon.ai.PokemonBehaviour
 import com.cobblemon.mod.common.pokemon.lighthing.LightingData
-import com.cobblemon.mod.common.util.readEntityDimensions
-import com.cobblemon.mod.common.util.readSizedInt
-import com.cobblemon.mod.common.util.writeSizedInt
+import com.cobblemon.mod.common.util.codec.CodecUtils
+import com.cobblemon.mod.common.util.*
 import com.mojang.serialization.Codec
-import net.minecraft.entity.EntityDimensions
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.world.entity.EntityDimensions
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 
 class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
     var name: String = "Bulbasaur"
-    val translatedName: MutableText
-        get() = Text.translatable("${this.resourceIdentifier.namespace}.species.${this.unformattedShowdownId()}.name")
+    val translatedName: MutableComponent
+        get() = Component.translatable("${this.resourceIdentifier.namespace}.species.${this.unformattedShowdownId()}.name")
     var nationalPokedexNumber = 1
 
     var baseStats = hashMapOf<Stat, Int>()
@@ -126,12 +125,12 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
         private set
 
     @Transient
-    lateinit var resourceIdentifier: Identifier
+    lateinit var resourceIdentifier: ResourceLocation
 
     val types: Iterable<ElementalType>
         get() = secondaryType?.let { listOf(primaryType, it) } ?: listOf(primaryType)
 
-    var battleTheme: Identifier = CobblemonSounds.PVW_BATTLE.id
+    var battleTheme: ResourceLocation = CobblemonSounds.PVW_BATTLE.location
 
     var lightingData: LightingData? = null
         private set
@@ -166,7 +165,7 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
 
     fun eyeHeight(entity: PokemonEntity): Float {
         val multiplier = this.resolveEyeHeight(entity) ?: VANILLA_DEFAULT_EYE_HEIGHT
-        return entity.height * multiplier
+        return entity.bbHeight * multiplier
     }
 
     private fun resolveEyeHeight(entity: PokemonEntity): Float? = when {
@@ -177,7 +176,7 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
 
     fun canGmax() = this.forms.find { it.formOnlyShowdownId() == "gmax" } != null
 
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(this.implemented)
         buffer.writeString(this.name)
         buffer.writeInt(this.nationalPokedexNumber)
@@ -208,7 +207,7 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
         }
     }
 
-    override fun decode(buffer: RegistryByteBuf) {
+    override fun decode(buffer: RegistryFriendlyByteBuf) {
         this.implemented = buffer.readBoolean()
         this.name = buffer.readString()
         this.nationalPokedexNumber = buffer.readInt()
@@ -286,11 +285,15 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
     companion object {
         private const val VANILLA_DEFAULT_EYE_HEIGHT = .85F
 
-        val CODEC: Codec<Species> = Codec.STRING.xmap(
-            // TODO: 1.21 uses the one below
-            //{ speciesId -> PokemonSpecies.getByIdentifier(Identifier.of(speciesId)) },
-            { speciesId -> PokemonSpecies.getByIdentifier(Identifier.of(speciesId)) },
-            { it.resourceIdentifier.toString() }
-        )
+        // TODO: Registries have dedicated Codecs, migrate to that once this is a proper registry impl
+        /**
+         * A [Codec] that maps to/from an [Identifier] associated as [Species.resourceIdentifier].
+         * Uses [PokemonSpecies.getByIdentifier] to query.
+         */
+        @JvmStatic
+        val BY_IDENTIFIER_CODEC: Codec<Species> = CodecUtils.createByIdentifierCodec(
+            PokemonSpecies::getByIdentifier,
+            Species::resourceIdentifier
+        ) { identifier -> "No species for ID $identifier" }
     }
 }

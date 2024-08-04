@@ -10,9 +10,9 @@ package com.cobblemon.mod.common.registry
 
 import com.cobblemon.mod.common.api.conditional.RegistryLikeIdentifierCondition
 import com.cobblemon.mod.common.api.conditional.RegistryLikeTagCondition
-import net.minecraft.block.Block
-import net.minecraft.registry.tag.TagKey
-import net.minecraft.util.Identifier
+import net.minecraft.world.level.block.Block
+import net.minecraft.tags.TagKey
+import net.minecraft.resources.ResourceLocation
 
 /**
  * A tag condition for blocks. Built off of [RegistryLikeTagCondition].
@@ -27,4 +27,4 @@ class BlockTagCondition(tag: TagKey<Block>) : RegistryLikeTagCondition<Block>(ta
  * @author Hiroku
  * @since July 15th, 2022
  */
-class BlockIdentifierCondition(identifier: Identifier) : RegistryLikeIdentifierCondition<Block>(identifier)
+class BlockIdentifierCondition(identifier: ResourceLocation) : RegistryLikeIdentifierCondition<Block>(identifier)

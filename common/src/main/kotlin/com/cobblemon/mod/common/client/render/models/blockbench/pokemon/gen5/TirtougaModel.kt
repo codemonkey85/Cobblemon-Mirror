@@ -13,19 +13,19 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvi
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class TirtougaModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("tirtouga")
     override val head = getPart("head")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.9, -1.65, 0.0)
+    override var portraitTranslation = Vec3(-0.9, -1.65, 0.0)
 
     override var profileScale = 0.6F
-    override var profileTranslation = Vec3d(0.0, 0.65, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.65, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose
@@ -43,7 +43,7 @@ class TirtougaModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             animations = arrayOf(
                 bedrock("tirtouga", "sleep")
             )
@@ -52,7 +52,7 @@ class TirtougaModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         waterSleep = registerPose(
             poseName = "water_sleep",
             poseType = PoseType.SLEEP,
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             animations = arrayOf(
                 bedrock("tirtouga", "water_sleep")
             )

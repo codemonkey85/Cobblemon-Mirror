@@ -13,9 +13,11 @@ import com.bedrockk.molang.MoLang
 import com.bedrockk.molang.ast.NumberExpression
 import com.cobblemon.mod.common.util.codec.EXPRESSION_CODEC
 import com.cobblemon.mod.common.util.getString
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Configuration of the emitter component for a particle effect.
@@ -65,7 +67,7 @@ class BedrockParticleEmitter(
         }
     }
 
-    fun writeToBuffer(buffer: RegistryByteBuf) {
+    fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeCollection(startExpressions) { pb, expression -> pb.writeString(expression.getString()) }
         buffer.writeCollection(updateExpressions) { pb, expression -> pb.writeString(expression.getString()) }
         ParticleEmitterRate.writeToBuffer(buffer, rate)
@@ -78,7 +80,7 @@ class BedrockParticleEmitter(
         buffer.writeCollection(loopingTravelDistanceEvents) { _, event -> event.encode(buffer) }
     }
 
-    fun readFromBuffer(buffer: RegistryByteBuf) {
+    fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         startExpressions = buffer.readList { MoLang.createParser(buffer.readString()).parseExpression() }
         updateExpressions = buffer.readList { MoLang.createParser(buffer.readString()).parseExpression() }
         rate = ParticleEmitterRate.readFromBuffer(buffer)

@@ -11,26 +11,25 @@ package com.cobblemon.mod.common.advancement.criterion
 import com.cobblemon.mod.common.block.TumblestoneBlock
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.predicate.entity.LootContextPredicate
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.dynamic.Codecs
-import net.minecraft.util.math.BlockPos
+import net.minecraft.advancements.critereon.ContextAwarePredicate
+import net.minecraft.core.BlockPos
+import net.minecraft.server.level.ServerPlayer
 import java.util.Optional
 
 class PlantTumblestoneContext(val pos: BlockPos, val block: TumblestoneBlock)
 
 class PlantTumblestoneCriterion(
-    playerCtx: Optional<LootContextPredicate>
+    playerCtx: Optional<ContextAwarePredicate>
 ): SimpleCriterionCondition<PlantTumblestoneContext>(playerCtx) {
 
     companion object {
         val CODEC: Codec<PlantTumblestoneCriterion> = RecordCodecBuilder.create { it.group(
-            LootContextPredicate.CODEC.optionalFieldOf("player").forGetter(PlantTumblestoneCriterion::playerCtx)
+            ContextAwarePredicate.CODEC.optionalFieldOf("player").forGetter(PlantTumblestoneCriterion::playerCtx)
         ).apply(it, ::PlantTumblestoneCriterion) }
     }
 
-    override fun matches(player: ServerPlayerEntity, context: PlantTumblestoneContext): Boolean {
-        return context.block.canGrow(context.pos, player.world)
+    override fun matches(player: ServerPlayer, context: PlantTumblestoneContext): Boolean {
+        return context.block.canGrow(context.pos, player.level())
     }
 }
 
@@ -59,7 +58,7 @@ class PlantTumblestoneCriterion(
 //     * @return True if the tumblestone block can grow at the given position, false otherwise
 //     */
 //    override fun matches(player: ServerPlayerEntity, context: PlantTumblestoneContext): Boolean {
-//        return context.tumbleStoneBlock.canGrow(context.pos, player.world)
+//        return context.tumbleStoneBlock.canGrow(context.pos, player.level())
 //    }
 //}
 //

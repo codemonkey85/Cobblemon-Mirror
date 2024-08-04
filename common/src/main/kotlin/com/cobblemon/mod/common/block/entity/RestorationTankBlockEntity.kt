@@ -12,48 +12,46 @@ import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.api.fossil.NaturalMaterials
 import com.cobblemon.mod.common.api.multiblock.builder.MultiblockStructureBuilder
 import com.cobblemon.mod.common.block.multiblock.FossilMultiblockStructure
-import net.minecraft.block.BlockState
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.inventory.Inventories
-import net.minecraft.inventory.SidedInventory
-import net.minecraft.inventory.SimpleInventory
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.nbt.NbtList
-import net.minecraft.registry.Registries
-import net.minecraft.registry.RegistryWrapper
-import net.minecraft.util.collection.DefaultedList
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.core.HolderLookup
+import net.minecraft.core.NonNullList
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.ContainerHelper
+import net.minecraft.world.WorldlyContainer
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.block.state.BlockState
 
 class RestorationTankBlockEntity(
     pos: BlockPos, state: BlockState,
     multiblockBuilder: MultiblockStructureBuilder
-) : FossilMultiblockEntity(pos, state, multiblockBuilder, CobblemonBlockEntities.RESTORATION_TANK)  {
+) : FossilMultiblockEntity(pos, state, multiblockBuilder, CobblemonBlockEntities.RESTORATION_TANK) {
     val inv = RestorationTankInventory(this)
 
-    override fun writeNbt(nbt: NbtCompound, registryLookup: RegistryWrapper.WrapperLookup) {
-        super.writeNbt(nbt, registryLookup)
-        Inventories.writeNbt(nbt, inv.items, registryLookup)
+    override fun saveAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
+        super.saveAdditional(nbt, registryLookup)
+        ContainerHelper.saveAllItems(nbt, inv.items, registryLookup)
     }
 
-    override fun readNbt(nbt: NbtCompound, registryLookup: RegistryWrapper.WrapperLookup) {
-        super.readNbt(nbt, registryLookup)
-        Inventories.readNbt(nbt, inv.items, registryLookup)
+    override fun loadAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
+        super.loadAdditional(nbt, registryLookup)
+        ContainerHelper.loadAllItems(nbt, inv.items, registryLookup)
     }
 
-    class RestorationTankInventory(val tankEntity: RestorationTankBlockEntity) : SidedInventory {
+    class RestorationTankInventory(val tankEntity: RestorationTankBlockEntity) : WorldlyContainer {
 
-        val items: DefaultedList<ItemStack> =  DefaultedList.ofSize(8, ItemStack.EMPTY)
+        val items: NonNullList<ItemStack> = NonNullList.withSize(8, ItemStack.EMPTY)
 
-        override fun clear() {
+        override fun clearContent() {
             for (i in items.indices) {
                 items[i] = ItemStack.EMPTY
             }
         }
 
-        override fun size(): Int {
+        override fun getContainerSize(): Int {
             return 8
         }
 
@@ -61,36 +59,36 @@ class RestorationTankBlockEntity(
             return items.all { it == ItemStack.EMPTY }
         }
 
-        override fun getStack(slot: Int): ItemStack {
-            if(slot == -1 || slot >= size()) {
+        override fun getItem(slot: Int): ItemStack {
+            if (slot == -1 || slot >= containerSize) {
                 return ItemStack.EMPTY
             }
             return items[slot]
         }
 
-        override fun removeStack(slot: Int, amount: Int): ItemStack {
-            if(slot < 0 || slot >= size()) {
+        override fun removeItem(slot: Int, amount: Int): ItemStack {
+            if (slot < 0 || slot >= containerSize) {
                 return ItemStack.EMPTY
             }
             val result = items[slot].split(amount)
-            if(items[slot].count == 0) {
+            if (items[slot].count == 0) {
                 items[slot] = ItemStack.EMPTY
             }
             return result
         }
 
-        override fun removeStack(slot: Int): ItemStack {
-            return removeStack(slot, 1)
+        override fun removeItemNoUpdate(slot: Int): ItemStack {
+            return removeItem(slot, 1)
         }
 
-        override fun setStack(slot: Int, stack: ItemStack) {
+        override fun setItem(slot: Int, stack: ItemStack) {
             val struct = tankEntity.multiblockStructure as? FossilMultiblockStructure
-            tankEntity.world?.let {
+            tankEntity.level?.let {
                 struct?.insertOrganicMaterial(stack, it)
                 val returnIdentifier = NaturalMaterials.getReturnItem((stack))
-                if(returnIdentifier != null ) {
+                if (returnIdentifier != null) {
                     // Store the return item
-                    val returnItem = Registries.ITEM.get(returnIdentifier)
+                    val returnItem = BuiltInRegistries.ITEM.get(returnIdentifier)
                     storeReturnItem(returnItem, stack.count)
                 }
             }
@@ -98,44 +96,45 @@ class RestorationTankBlockEntity(
 
         private fun storeReturnItem(returnItem: Item, count: Int) {
             val destStack = items.withIndex().firstOrNull {
-                it.value == ItemStack.EMPTY || (it.value.count < it.value.maxCount && it.value.item == returnItem)
+                it.value == ItemStack.EMPTY || (it.value.count < it.value.maxStackSize && it.value.item == returnItem)
             }
             if (destStack != null) {
-                if(destStack.value == ItemStack.EMPTY) {
+                if (destStack.value == ItemStack.EMPTY) {
                     items[destStack.index] = ItemStack(returnItem, 1)
                 } else {
-                    destStack.value.increment(count)
+                    destStack.value.grow(count)
                 }
             }
         }
 
-        override fun markDirty() {
-            tankEntity.world?.let {
+        override fun setChanged() {
+            tankEntity.level?.let {
                 tankEntity.multiblockStructure?.markDirty(it)
             }
         }
 
-        override fun canPlayerUse(player: PlayerEntity?): Boolean {
+        override fun stillValid(player: Player): Boolean {
             return false
         }
 
-        override fun getAvailableSlots(side: Direction?): IntArray {
-            return if(side == Direction.DOWN)  intArrayOf(0,1,2,3,4,5,6,7) else intArrayOf(-1)
+        override fun getSlotsForFace(side: Direction): IntArray {
+            return if (side == Direction.DOWN) intArrayOf(0, 1, 2, 3, 4, 5, 6, 7) else intArrayOf(-1)
         }
 
-        override fun canInsert(slot: Int, stack: ItemStack?, dir: Direction?): Boolean {
+        override fun canPlaceItemThroughFace(slot: Int, stack: ItemStack, direction: Direction?): Boolean {
             if (tankEntity.multiblockStructure is FossilMultiblockStructure) {
-                if(dir != Direction.DOWN) {
+                if (direction != Direction.DOWN) {
                     val structure = tankEntity.multiblockStructure as FossilMultiblockStructure
                     val canUtilize = stack?.let { NaturalMaterials.isNaturalMaterial(it) } == true
                             && structure.organicMaterialInside < FossilMultiblockStructure.MATERIAL_TO_START
                             && structure.hasCreatedPokemon
                     val returnItem = NaturalMaterials.getReturnItem(stack!!) ?: return canUtilize
-                    if(canUtilize) {
+                    if (canUtilize) {
                         // See if there's room
-                        for (i in items.indices ) {
-                            if(items[i] == ItemStack.EMPTY || (items[i].count < items[i].maxCount
-                                        && items[i].item == Registries.ITEM.get(returnItem))) {
+                        for (i in items.indices) {
+                            if (items[i] == ItemStack.EMPTY || (items[i].count < items[i].maxStackSize
+                                        && items[i].item == BuiltInRegistries.ITEM.get(returnItem))
+                            ) {
                                 return true
                             }
                         }
@@ -146,8 +145,8 @@ class RestorationTankBlockEntity(
             return false
         }
 
-        override fun canExtract(slot: Int, stack: ItemStack?, dir: Direction?): Boolean {
-            return dir == Direction.DOWN && slot >= 0 && slot < size()
+        override fun canTakeItemThroughFace(slot: Int, stack: ItemStack, dir: Direction): Boolean {
+            return dir == Direction.DOWN && slot >= 0 && slot < containerSize
         }
 
     }

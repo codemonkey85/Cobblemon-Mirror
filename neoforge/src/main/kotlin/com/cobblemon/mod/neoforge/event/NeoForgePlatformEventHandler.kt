@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.cobblemon.mod.common.platform.events.ServerEvent
 import com.cobblemon.mod.common.platform.events.ServerPlayerEvent
 import com.cobblemon.mod.common.platform.events.ServerTickEvent
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent
@@ -23,7 +23,6 @@ import net.neoforged.neoforge.event.server.ServerAboutToStartEvent
 import net.neoforged.neoforge.event.server.ServerStartedEvent
 import net.neoforged.neoforge.event.server.ServerStoppedEvent
 import net.neoforged.neoforge.event.server.ServerStoppingEvent
-import net.neoforged.neoforge.server.ServerLifecycleHooks
 
 object NeoForgePlatformEventHandler {
 
@@ -64,19 +63,19 @@ object NeoForgePlatformEventHandler {
 
     @SubscribeEvent
     fun onLogin(e: PlayerEvent.PlayerLoggedInEvent) {
-        val player = e.entity as? ServerPlayerEntity ?: return
+        val player = e.entity as? ServerPlayer ?: return
         PlatformEvents.SERVER_PLAYER_LOGIN.post(ServerPlayerEvent.Login(player))
     }
 
     @SubscribeEvent
     fun onLogout(e: PlayerEvent.PlayerLoggedOutEvent) {
-        val player = e.entity as? ServerPlayerEntity ?: return
+        val player = e.entity as? ServerPlayer ?: return
         PlatformEvents.SERVER_PLAYER_LOGOUT.post(ServerPlayerEvent.Logout(player))
     }
 
     @SubscribeEvent
     fun onDeath(e: LivingDeathEvent) {
-        val player = e.entity as? ServerPlayerEntity ?: return
+        val player = e.entity as? ServerPlayer ?: return
         PlatformEvents.PLAYER_DEATH.postThen(
             event = ServerPlayerEvent.Death(player),
             ifSucceeded = {},
@@ -86,7 +85,7 @@ object NeoForgePlatformEventHandler {
 
     @SubscribeEvent
     fun onRightClickBlock(e: PlayerInteractEvent.RightClickBlock) {
-        val player = e.entity as? ServerPlayerEntity ?: return
+        val player = e.entity as? ServerPlayer ?: return
         val hand = e.hand
         val pos = e.pos
         val face = e.face
@@ -99,9 +98,9 @@ object NeoForgePlatformEventHandler {
 
     @SubscribeEvent
     fun onRightClickEntity(e: PlayerInteractEvent.EntityInteract) {
-        val player = e.entity as? ServerPlayerEntity ?: return
+        val player = e.entity as? ServerPlayer ?: return
         val hand = e.hand
-        val item = player.getStackInHand(hand)
+        val item = player.getItemInHand(hand)
         val entity = e.target
         PlatformEvents.RIGHT_CLICK_ENTITY.postThen(
             event = ServerPlayerEvent.RightClickEntity(player, item, hand, entity),
@@ -113,7 +112,7 @@ object NeoForgePlatformEventHandler {
     @SubscribeEvent
     fun onChangeDimension(e: PlayerEvent.PlayerChangedDimensionEvent) {
         val player = e.entity
-        if (player is ServerPlayerEntity) {
+        if (player is ServerPlayer) {
             PlatformEvents.CHANGE_DIMENSION.post(ChangeDimensionEvent(player))
         }
     }

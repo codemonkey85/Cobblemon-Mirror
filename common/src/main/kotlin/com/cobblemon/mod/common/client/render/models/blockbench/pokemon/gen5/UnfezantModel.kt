@@ -21,8 +21,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class UnfezantModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("unfezant")
@@ -38,9 +38,9 @@ class UnfezantModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     val closedWingRight = getPart("closed_right")
 
     override var portraitScale = 2.1F
-    override var portraitTranslation = Vec3d(-0.5, 1.5, 0.0)
+    override var portraitTranslation = Vec3(-0.5, 1.5, 0.0)
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.0, 0.7, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.7, 0.0)
 
     //    lateinit var sleep: Pose
     lateinit var stand: Pose
@@ -53,7 +53,7 @@ class UnfezantModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("unfezant", "sleep"))
+//            animations = arrayOf(bedrock("unfezant", "sleep"))
 //        )
 
         val blink = quirk { bedrockStateful("unfezant", "blink")}

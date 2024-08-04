@@ -16,8 +16,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class GarchompModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("garchomp")
@@ -28,10 +28,10 @@ class GarchompModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, B
     override val leftLeg = getPart("leg_left1")
 
     override var portraitScale = 2.4F
-    override var portraitTranslation = Vec3d(-1.1, 1.9, 0.0)
+    override var portraitTranslation = Vec3(-1.1, 1.9, 0.0)
 
     override var profileScale = 0.55F
-    override var profileTranslation = Vec3d(0.0, 0.9, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.9, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

@@ -15,8 +15,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedF
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class LaironModel  (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("lairon")
@@ -28,10 +28,10 @@ class LaironModel  (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Q
     override val hindRightLeg = getPart("leg_back_right3")
 
     override var portraitScale = 1.76F
-    override var portraitTranslation = Vec3d(-0.68, -1.01, 0.0)
+    override var portraitTranslation = Vec3(-0.68, -1.01, 0.0)
 
     override var profileScale = 0.72F
-    override var profileTranslation = Vec3d(0.0, 0.59, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.59, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

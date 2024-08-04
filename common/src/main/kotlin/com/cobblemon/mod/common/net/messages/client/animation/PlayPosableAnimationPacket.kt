@@ -10,8 +10,10 @@ package com.cobblemon.mod.common.net.messages.client.animation
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.util.Identifier
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Packet sent to arbitrarily play the first animation of the given set that exists on the given entity. MoLang
@@ -25,18 +27,18 @@ class PlayPosableAnimationPacket(
     val animation: Set<String>,
     val expressions: Set<String>
 ) : NetworkPacket<PlayPosableAnimationPacket> {
-    override val id: Identifier = ID
+    override val id: ResourceLocation = ID
 
     companion object {
         val ID = cobblemonResource("play_posable_animation")
-        fun decode(buffer: RegistryByteBuf) = PlayPosableAnimationPacket(
+        fun decode(buffer: RegistryFriendlyByteBuf) = PlayPosableAnimationPacket(
             buffer.readInt(),
             buffer.readList { buffer.readString() }.toSet(),
             buffer.readList { buffer.readString() }.toSet()
         )
     }
 
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeInt(entityId)
         buffer.writeCollection(animation) { pb, value -> pb.writeString(value) }
         buffer.writeCollection(expressions) { pb, value -> pb.writeString(value) }

@@ -45,16 +45,16 @@ class PoseAdapter(
         val conditionsList = mutableListOf<(PosableState) -> Boolean>()
         val mustBeTouchingWater = json.get("isTouchingWater")?.asBoolean
         if (mustBeTouchingWater != null) {
-            conditionsList.add { mustBeTouchingWater == it.getEntity()?.isTouchingWater }
+            conditionsList.add { mustBeTouchingWater == it.getEntity()?.isInWater }
         }
 
-        val mustBeTouchingWaterOrRain = json.get("isTouchingWaterOrRain")?.asBoolean
+        val mustBeTouchingWaterOrRain = json.get("isInWaterOrRain")?.asBoolean
         if (mustBeTouchingWaterOrRain != null) {
-            conditionsList.add { mustBeTouchingWaterOrRain == it.getEntity()?.isTouchingWaterOrRain }
+            conditionsList.add { mustBeTouchingWaterOrRain == it.getEntity()?.isInWaterOrRain }
         }
-        val mustBeSubmergedInWater = json.get("isSubmergedInWater")?.asBoolean
+        val mustBeSubmergedInWater = json.get("isUnderWater")?.asBoolean
         if (mustBeSubmergedInWater != null) {
-            conditionsList.add { mustBeSubmergedInWater == it.getEntity()?.isSubmergedInWater }
+            conditionsList.add { mustBeSubmergedInWater == it.getEntity()?.isUnderWater }
         }
         val mustBeStandingOnRedSand = json.get("isStandingOnRedSand")?.asBoolean
         if (mustBeStandingOnRedSand != null) {
@@ -75,13 +75,12 @@ class PoseAdapter(
 
         conditionsList.addAll(poseConditionReader(json))
 
-        if (json.has("condition")) {
-            val condition = json.get("condition").asString
-            conditionsList.add {
-                val entity = it.getEntity()
+        if (json.has("conditions")) {
+            val conditionSet = json.get("conditions").asJsonArray.map { it.asString.asExpressionLike() }
+            conditionsList.add { state ->
+                val entity = state.getEntity()
                 if (entity is PosableEntity) {
-                    runtime.environment.query = entity.struct
-                    condition.asExpressionLike().resolveBoolean(runtime)
+                    conditionSet.any { it.resolveBoolean(state.runtime) }
                 } else {
                     false
                 }

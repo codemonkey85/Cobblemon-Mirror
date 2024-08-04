@@ -18,8 +18,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPo
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.triangleFunction
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class VibravaModel  (root: ModelPart) : PokemonPosableModel(root), QuadrupedFrame, HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("vibrava")
@@ -31,10 +31,10 @@ class VibravaModel  (root: ModelPart) : PokemonPosableModel(root), QuadrupedFram
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 1.36F
-    override var portraitTranslation = Vec3d(-0.37, -0.55, 0.0)
+    override var portraitTranslation = Vec3(-0.37, -0.55, 0.0)
 
     override var profileScale = 0.54F
-    override var profileTranslation = Vec3d(-0.01, 0.71, 0.0)
+    override var profileTranslation = Vec3(-0.01, 0.71, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

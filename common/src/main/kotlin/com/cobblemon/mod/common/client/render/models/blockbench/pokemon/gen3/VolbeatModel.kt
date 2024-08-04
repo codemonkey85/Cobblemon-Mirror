@@ -17,10 +17,10 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPo
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import com.cobblemon.mod.common.util.isSubmergedInWater
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isUnderWater
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class VolbeatModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("volbeat")
@@ -31,10 +31,10 @@ class VolbeatModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, B
     override val head = getPart("head")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.2, -0.3, 0.0)
+    override var portraitTranslation = Vec3(-0.2, -0.3, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.3, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.3, 0.0)
 
     lateinit var sleep: CobblemonPose
     lateinit var stand: CobblemonPose
@@ -62,7 +62,7 @@ class VolbeatModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, B
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink, flicker),
-            condition = { it.isTouchingWater && !it.isSubmergedInWater },
+            condition = { it.isInWater && !it.isUnderWater },
             transformedParts = arrayOf(
                 rootPart.createTransformation().addPosition(ModelPartTransformation.Y_AXIS, wateroffset)
             ),
@@ -77,7 +77,7 @@ class VolbeatModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, B
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink, flicker),
-            condition = { it.isTouchingWater && !it.isSubmergedInWater },
+            condition = { it.isInWater && !it.isUnderWater },
             transformedParts = arrayOf(
                 rootPart.createTransformation().addPosition(ModelPartTransformation.Y_AXIS, wateroffset)
             ),

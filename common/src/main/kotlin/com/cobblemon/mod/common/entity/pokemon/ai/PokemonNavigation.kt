@@ -15,31 +15,30 @@ import com.cobblemon.mod.common.pokemon.ai.OmniPathNodeMaker
 import com.cobblemon.mod.common.util.getWaterAndLavaIn
 import com.cobblemon.mod.common.util.toVec3d
 import com.google.common.collect.ImmutableSet
+import net.minecraft.core.BlockPos
+import net.minecraft.tags.FluidTags
+import net.minecraft.util.Mth
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.pathfinder.Node
+import net.minecraft.world.level.pathfinder.Path
+import net.minecraft.world.level.pathfinder.PathComputationType
+import net.minecraft.world.level.pathfinder.PathFinder
+import net.minecraft.world.level.pathfinder.PathType
+import net.minecraft.world.phys.Vec3
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.acos
-import kotlin.math.ceil
-import net.minecraft.entity.Entity
-import net.minecraft.entity.ai.pathing.MobNavigation
-import net.minecraft.entity.ai.pathing.NavigationType
-import net.minecraft.entity.ai.pathing.Path
-import net.minecraft.entity.ai.pathing.PathNode
-import net.minecraft.entity.ai.pathing.PathNodeNavigator
-import net.minecraft.entity.ai.pathing.PathNodeType
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.registry.tag.FluidTags
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.MathHelper
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
 
-class PokemonNavigation(val world: World, val pokemonEntity: PokemonEntity) : MobNavigation(pokemonEntity, world) {
+class PokemonNavigation(val world: Level, val pokemonEntity: PokemonEntity) : GroundPathNavigation(pokemonEntity, world) {
     // Lazy init because navigation is instantiated during entity construction and pokemonEntity.form isn't set yet.
     // (pokemonEntity.behaviour is a shortcut to pokemonEntity.form.behaviour)
     // It's JVM field instantiation order stuff, too niche to explain further.
     val moving: MoveBehaviour by lazy { pokemonEntity.behaviour.moving }
 
-    var cachedCurrentNode: PathNode? = null
+    var cachedCurrentNode: Node? = null
     var currentNodeDistance = 0F
 
     data class NavigationContext(
@@ -53,55 +52,57 @@ class PokemonNavigation(val world: World, val pokemonEntity: PokemonEntity) : Mo
 
     var navigationContext = NavigationContext()
 
-    override fun createPathNodeNavigator(range: Int): PathNodeNavigator {
-        this.nodeMaker = OmniPathNodeMaker()
-        nodeMaker.setCanEnterOpenDoors(true)
-        return PathNodeNavigator(nodeMaker, range)
+    override fun createPathFinder(range: Int): PathFinder {
+        this.nodeEvaluator = OmniPathNodeMaker()
+        nodeEvaluator.setCanOpenDoors(true)
+        return PathFinder(nodeEvaluator, range)
     }
 
-    override fun isAtValidPosition(): Boolean {
-        val (_, isTouchingLava) = entity.world.getWaterAndLavaIn(entity.boundingBox)
-        val isAtValidPosition = (!entity.isInLava && !entity.isSubmergedIn(FluidTags.LAVA)) ||
+    override fun canUpdatePath(): Boolean {
+        val (_, isTouchingLava) = mob.level().getWaterAndLavaIn(mob.boundingBox)
+        val isAtValidPosition = (!mob.isInLava && !mob.isEyeInFluid(FluidTags.LAVA)) ||
                 (isTouchingLava && moving.swim.canSwimInLava) ||
-                this.entity.hasVehicle()
+                this.mob.isPassenger
         return isAtValidPosition
     }
 
-    override fun canSwim(): Boolean {
+    override fun canFloat(): Boolean {
         return moving.swim.canSwimInWater
     }
 
     fun setCanPathThroughFire(canPathThroughFire: Boolean) {
-        val omniPathNodeMaker = this.nodeMaker as OmniPathNodeMaker
+        val omniPathNodeMaker = this.nodeEvaluator as OmniPathNodeMaker
         omniPathNodeMaker.canPathThroughFire = canPathThroughFire
     }
 
-    override fun getPos() = Vec3d(entity.x, getPathfindingY().toDouble(), entity.z)
+    // todo (techdaan): validate this is the right name
+    override fun getTempMobPos() =
+        Vec3(mob.x, getPathfindingY().toDouble(), mob.z)
 
-    override fun continueFollowingPath() {
-        val vec3d = this.pos
+    override fun followThePath() {
+        val vec3d = this.tempMobPos
 
         val targetVec = targetPos?.toVec3d()?.add(0.5, 0.0, 0.5)
-        if (targetVec != null && targetVec.distanceTo(vec3d) <= navigationContext.destinationProximity && currentPath != null) {
-            currentPath = null
+        if (targetVec != null && targetVec.distanceTo(vec3d) <= navigationContext.destinationProximity && path != null) {
+            path = null
             cachedCurrentNode = null
             navigationContext.onArrival()
             // If we arrived at a not-flying destination
-            val node = currentPath?.currentNode?.type
-            if (node != null && node != PathNodeType.OPEN && pokemonEntity.couldStopFlying()) {
+            val node = path?.nextNode?.type
+            if (node != null && node != PathType.OPEN && pokemonEntity.couldStopFlying()) {
                 pokemonEntity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, false)
             }
             return
         }
 
-        nodeReachProximity = if (entity.width > 0.75f) entity.width / 2.0f else 0.75f - entity.width / 2.0f
+        maxDistanceToWaypoint = if (mob.bbWidth > 0.75f) mob.bbWidth / 2.0f else 0.75f - mob.bbWidth / 2.0f
 
-        val currentNode = currentPath!!.currentNode
+        val currentNode = path!!.nextNode
         if (currentNode != cachedCurrentNode) {
             cachedCurrentNode = currentNode
-            currentNodeDistance = currentNode.pos.distanceTo(pokemonEntity.pos).toFloat()
-        } else if (cachedCurrentNode != null && cachedCurrentNode!!.pos.distanceTo(pokemonEntity.pos) > currentNodeDistance + 1) {
-            recalculatePath()
+            currentNodeDistance = currentNode.asVec3().distanceTo(pokemonEntity.position()).toFloat()
+        } else if (cachedCurrentNode != null && cachedCurrentNode!!.asVec3().distanceTo(pokemonEntity.position()) > currentNodeDistance + 1) {
+            recomputePath()
             navigationContext.onRecalculate(true)
             return
         }
@@ -110,40 +111,40 @@ class PokemonNavigation(val world: World, val pokemonEntity: PokemonEntity) : Mo
          * The difference between this and the overrided function is that we use the vector
          * position for the d,e,f which improves behaviour of larger pokemon
          */
-        val targetVec3d = currentPath!!.getNodePosition(entity)
-        val d = abs(entity.x - targetVec3d.x)
-        val e = abs(entity.y - targetVec3d.y)
-        val f = abs(entity.z - targetVec3d.z)
-        val closeEnough = d < nodeReachProximity.toDouble() && f < this.nodeReachProximity.toDouble() && e < 1.0
+        val targetVec3d = path!!.getNextEntityPos(mob)
+        val d = abs(mob.x - targetVec3d.x)
+        val e = abs(mob.y - targetVec3d.y)
+        val f = abs(mob.z - targetVec3d.z)
+        val closeEnough = d < maxDistanceToWaypoint.toDouble() && f < this.maxDistanceToWaypoint.toDouble() && e < 1.0
 
-        if (closeEnough || entity.navigation.canJumpToNext(currentPath!!.currentNode.type) && shouldJumpToNextNode(vec3d)) {
-            currentPath!!.next()
-            if (currentPath!!.isFinished) {
-                currentPath = null
+        if (closeEnough || mob.navigation.canCutCorner(path!!.nextNode.type) && shouldTargetNextNodeInDirection(vec3d)) {
+            path!!.advance()
+            if (path!!.isDone) {
+                path = null
                 navigationContext.onArrival()
                 // If we arrived at a not-flying destination
-                if (currentNode.type != PathNodeType.OPEN && pokemonEntity.couldStopFlying()) {
+                if (currentNode.type != PathType.OPEN && pokemonEntity.couldStopFlying()) {
                     pokemonEntity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, false)
                 }
             } else {
-                val newNode = currentPath!!.currentNode
+                val newNode = path!!.nextNode
                 if (currentNode.type != newNode.type) {
-                    if (newNode.type == PathNodeType.OPEN) {
+                    if (newNode.type == PathType.OPEN) {
                         pokemonEntity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, true)
-                    } else if (currentNode.type != PathNodeType.OPEN && pokemonEntity.couldStopFlying()) { // if we just reached a non-flying node and the next node isn't a flying node, stop flying
+                    } else if (currentNode.type != PathType.OPEN && pokemonEntity.couldStopFlying()) { // if we just reached a non-flying node and the next node isn't a flying node, stop flying
                         pokemonEntity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, false)
                     }
                 }
             }
         }
 
-        checkTimeouts(vec3d)
+        doStuckDetection(vec3d)
     }
 
-    fun isAirborne(world: World, pos: BlockPos) =
-        world.getBlockState(pos).canPathfindThrough(NavigationType.AIR)
-                && world.getBlockState(pos.down(1)).canPathfindThrough(NavigationType.AIR)
-                && world.getBlockState(pos.down(2)).canPathfindThrough(NavigationType.AIR)
+    fun isAirborne(world: Level, pos: BlockPos) =
+        world.getBlockState(pos).isPathfindable(PathComputationType.AIR)
+                && world.getBlockState(pos.below(1)).isPathfindable(PathComputationType.AIR)
+                && world.getBlockState(pos.below(2)).isPathfindable(PathComputationType.AIR)
 
     override fun tick() {
         super.tick()
@@ -169,19 +170,19 @@ class PokemonNavigation(val world: World, val pokemonEntity: PokemonEntity) : Mo
 //        }
     }
 
-    fun findPath(target: BlockPos, distance: Int): Path? = findPathTo(ImmutableSet.of(target), 8, false, distance)
+    fun findPath(target: BlockPos, distance: Int): Path? = createPath(ImmutableSet.of(target), 8, false, distance)
 
-    override fun findPathTo(target: BlockPos, distance: Int): Path? {
+    override fun createPath(target: BlockPos, distance: Int): Path? {
         var target = target
 
         var blockPos: BlockPos
         if (this.world.getBlockState(target).isAir && !pokemonEntity.behaviour.moving.fly.canFly) {
-            blockPos = target.down()
-            while (blockPos.y > this.world.bottomY && this.world.getBlockState(blockPos).isAir) {
-                blockPos = blockPos.down()
+            blockPos = target.below()
+            while (blockPos.y > this.world.minBuildHeight && this.world.getBlockState(blockPos).isAir) {
+                blockPos = blockPos.below()
             }
-            while (blockPos.y < this.world.topY && this.world.getBlockState(blockPos).isAir) {
-                blockPos = blockPos.up()
+            while (blockPos.y < this.world.maxBuildHeight && this.world.getBlockState(blockPos).isAir) {
+                blockPos = blockPos.above()
             }
             target = blockPos
         }
@@ -189,9 +190,9 @@ class PokemonNavigation(val world: World, val pokemonEntity: PokemonEntity) : Mo
         val path = if (!this.world.getBlockState(target).isSolid) {
             findPath(target, distance)
         } else {
-            blockPos = target.up()
-            while (blockPos.y < this.world.topY && this.world.getBlockState(blockPos).isSolid) {
-                blockPos = blockPos.up()
+            blockPos = target.above()
+            while (blockPos.y < this.world.maxBuildHeight && this.world.getBlockState(blockPos).isSolid) {
+                blockPos = blockPos.above()
             }
             findPath(blockPos, distance)
         }
@@ -221,57 +222,57 @@ class PokemonNavigation(val world: World, val pokemonEntity: PokemonEntity) : Mo
         return path
     }
 
-    fun startMovingTo(x: Double, y: Double, z: Double, speed: Double = 1.0, navigationContext: NavigationContext) {
+    fun moveTo(x: Double, y: Double, z: Double, speed: Double = 1.0, navigationContext: NavigationContext) {
         this.navigationContext = navigationContext
-        this.startMovingTo(x, y, z, speed)
+        this.moveTo(x, y, z, speed)
     }
 
-    override fun findPathTo(entity: Entity, distance: Int): Path? {
-        return this.findPathTo(entity.blockPos, distance)
+    override fun createPath(entity: Entity, distance: Int): Path? {
+        return this.createPath(entity.blockPosition(), distance)
     }
 
-    override fun startMovingAlong(path: Path?, speed: Double): Boolean {
-        if (path != null && path.length > 0) {
+    override fun moveTo(path: Path?, speed: Double): Boolean {
+        if (path != null && path.nodeCount > 0) {
             val node = path.getNode(0)!!
 //            pokemonEntity.discard()
 //            return false
             // If we just started moving and it's to an open node, fly
-            if (node.type == PathNodeType.OPEN && pokemonEntity.form.behaviour.moving.fly.canFly && !pokemonEntity.isFlying()) {
+            if (node.type == PathType.OPEN && pokemonEntity.form.behaviour.moving.fly.canFly && !pokemonEntity.isFlying()) {
                 pokemonEntity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, true)
             }
         }
 
-        return super.startMovingAlong(path, speed)
+        return super.moveTo(path, speed)
     }
 
-    override fun adjustPath() {
-        super.adjustPath()
-        val path = getCurrentPath() ?: return
+    override fun trimPath() {
+        super.trimPath()
+        val path = getPath() ?: return
         var i = 2
 
         // Tries to skip some nodes that are all lined up
         skipLoop@
-        while (i < path.length) {
+        while (i < path.nodeCount) {
             val firstNode = path.getNode(i - 2)
             val middleNode = path.getNode(i - 1)
             val nextNode = path.getNode(i)
 
-            val directionToMiddle = middleNode.blockPos.subtract(firstNode.blockPos).toVec3d().normalize()
+            val directionToMiddle = middleNode.asBlockPos().subtract(firstNode.asBlockPos()).toVec3d().normalize()
             val nodeType = firstNode.type
-            if (nodeType != middleNode.type || nodeType != nextNode.type || nodeType == PathNodeType.WALKABLE) {
+            if (nodeType != middleNode.type || nodeType != nextNode.type || nodeType == PathType.WALKABLE) {
                 i++
                 continue
             }
 
-            val directionToEnd = nextNode.blockPos.subtract(middleNode.blockPos).toVec3d().normalize()
+            val directionToEnd = nextNode.asBlockPos().subtract(middleNode.asBlockPos()).toVec3d().normalize()
 
             // If we'd be making a big (greater than 45 degrees) turn by removing the middle node, that's a bit much, leave it alone.
-            if (acos(directionToMiddle.dotProduct(directionToEnd)) > PI / 3) {
+            if (acos(directionToMiddle.dot(directionToEnd)) > PI / 3) {
                 i++
                 continue
             }
 
-            var directionFromFirstToEnd = nextNode.blockPos.subtract(firstNode.blockPos).toVec3d()
+            var directionFromFirstToEnd = nextNode.asBlockPos().subtract(firstNode.asBlockPos()).toVec3d()
             val length = directionFromFirstToEnd.length()
             directionFromFirstToEnd = directionFromFirstToEnd.normalize()
 
@@ -289,16 +290,16 @@ class PokemonNavigation(val world: World, val pokemonEntity: PokemonEntity) : Mo
              */
 
             // Construct a new node list that cuts out unnecessary in-between bits
-            val remainingNodes = mutableListOf<PathNode>()
+            val remainingNodes = mutableListOf<Node>()
             var j = i
-            while (j < path.length) {
+            while (j < path.nodeCount) {
                 remainingNodes.add(path.getNode(j))
                 j++
             }
 
-            path.length = i + remainingNodes.size - 1
+            path.truncateNodes(i + remainingNodes.size - 1)
             for (k in remainingNodes.indices) {
-                path.setNode(i - 1 + k, remainingNodes[k])
+                path.replaceNode(i - 1 + k, remainingNodes[k])
             }
         }
 
@@ -317,23 +318,23 @@ class PokemonNavigation(val world: World, val pokemonEntity: PokemonEntity) : Mo
     }
 
     fun getPathfindingY(): Int {
-        val inSwimmableFluid = (entity.isSubmergedIn(FluidTags.WATER) && moving.swim.canSwimInWater) ||
-                (entity.isSubmergedIn(FluidTags.LAVA) && moving.swim.canSwimInLava)
+        val inSwimmableFluid = (mob.isEyeInFluid(FluidTags.WATER) && moving.swim.canSwimInWater) ||
+                (mob.isEyeInFluid(FluidTags.LAVA) && moving.swim.canSwimInLava)
         if (!inSwimmableFluid) {
-            return MathHelper.floor(entity.y + 0.5)
+            return Mth.floor(mob.y + 0.5)
         }
 
-        return entity.blockY
+        return mob.blockY
     }
 
     override fun stop() {
         super.stop()
         this.currentNodeDistance = -1F
         this.cachedCurrentNode = null
-        currentPath = null
-        nodeMaker.clear()
+        path = null
+        nodeEvaluator.done()
         // In case a path is cancelled instead of completed, check if we should stop flying
-        if (pokemonEntity.couldStopFlying() && !isAirborne(pokemonEntity.world, pokemonEntity.blockPos)) {
+        if (pokemonEntity.couldStopFlying() && !isAirborne(pokemonEntity.level(), pokemonEntity.blockPosition())) {
             pokemonEntity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, false)
         }
     }

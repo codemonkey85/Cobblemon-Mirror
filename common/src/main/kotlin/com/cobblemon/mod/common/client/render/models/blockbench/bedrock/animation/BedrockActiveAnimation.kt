@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.ActiveAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
-import net.minecraft.entity.Entity
+import net.minecraft.world.entity.Entity
 
 /**
  * An active animation that runs a [BedrockAnimation]. It is completed when the underlying

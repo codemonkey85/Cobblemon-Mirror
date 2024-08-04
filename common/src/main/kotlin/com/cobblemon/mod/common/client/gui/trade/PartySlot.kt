@@ -18,10 +18,10 @@ import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.sound.SoundManager
-import net.minecraft.text.Text
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Button
+import net.minecraft.client.sounds.SoundManager
+import net.minecraft.network.chat.Component
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
@@ -30,8 +30,8 @@ open class PartySlot(
     private val pokemon: TradeStartedPacket.TradeablePokemon?,
     private val parent: TradeGUI,
     private val isOpposing: Boolean = false,
-    onPress: PressAction
-) : ButtonWidget(x, y, SIZE, SIZE, Text.literal("PartySlot"), onPress, DEFAULT_NARRATION_SUPPLIER) {
+    onPress: OnPress
+) : Button(x, y, SIZE, SIZE, Component.literal("PartySlot"), onPress, DEFAULT_NARRATION) {
     val state = FloatingState()
     companion object {
         const val SIZE = 25
@@ -46,8 +46,8 @@ open class PartySlot(
     override fun playDownSound(soundManager: SoundManager) {
     }
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        val matrices = context.matrices
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        val matrices = context.pose()
         if (!isOpposing && isHovered(mouseX, mouseY)) {
             blitk(
                 matrixStack = matrices,
@@ -68,7 +68,7 @@ open class PartySlot(
             )
 
             // Render Pokémon
-            matrices.push()
+            matrices.pushPose()
             matrices.translate(x + (SIZE / 2.0), y + 1.0, 0.0)
             matrices.scale(2.5F, 2.5F, 1F)
             drawProfilePokemon(
@@ -79,12 +79,12 @@ open class PartySlot(
                 scale = 4.5F,
                 partialTicks = delta
             )
-            matrices.pop()
+            matrices.popPose()
 
             context.disableScissor()
 
             // Ensure elements are not hidden behind Pokémon render
-            matrices.push()
+            matrices.pushPose()
             matrices.translate(0.0, 0.0, 100.0)
             // Level
             drawScaledText(
@@ -108,7 +108,7 @@ open class PartySlot(
                 )
             }
             if (!pokemon.tradeable) {
-                matrices.push()
+                matrices.pushPose()
                 matrices.translate(0F, 0F, 10F)
                 blitk(
                     matrixStack = matrices,
@@ -119,10 +119,10 @@ open class PartySlot(
                     height = 20,
                     scale = TradeGUI.SCALE
                 )
-                matrices.pop()
+                matrices.popPose()
             }
 
-            matrices.pop()
+            matrices.popPose()
             if (hasSelected()) {
                 blitk(
                     matrixStack = matrices,

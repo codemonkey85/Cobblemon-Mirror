@@ -14,19 +14,19 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.isBattling
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class SlowkingModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("slowking")
     override val head = getPart("head")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.1, 0.1, 0.0)
+    override var portraitTranslation = Vec3(-0.1, 0.1, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.55, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.55, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose
@@ -84,7 +84,7 @@ class SlowkingModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink, blink2),
-            condition = { it.isBattling && it.isTouchingWater },
+            condition = { it.isBattling && it.isInWater },
             animations = arrayOf(
                 singleBoneLook(),
                 bedrock("slowking", "battle_idle")

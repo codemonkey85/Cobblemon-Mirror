@@ -17,8 +17,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTr
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class AlcremieModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("alcremie")
@@ -27,10 +27,10 @@ class AlcremieModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     override val leftArm = getPart("arm_left")
 
     override var portraitScale = 2.14F
-    override var portraitTranslation = Vec3d(-0.25, -0.31, 0.0)
+    override var portraitTranslation = Vec3(-0.25, -0.31, 0.0)
 
     override var profileScale = 0.54F
-    override var profileTranslation = Vec3d(0.0, 0.88, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.88, 0.0)
 
     lateinit var sleep: Pose
     lateinit var standing: Pose

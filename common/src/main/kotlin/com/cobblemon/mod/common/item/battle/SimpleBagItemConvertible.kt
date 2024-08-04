@@ -8,17 +8,17 @@
 
 package com.cobblemon.mod.common.item.battle
 
-import net.minecraft.item.ItemStack
+import net.minecraft.world.item.ItemStack
 
 /**
- * A type of [BagItemConvertible] that just checks the item type of the stack.
+ * A type of [BagItemLike] that just checks the item type of the stack.
  *
  * Used for internal Item subclasses.
  *
  * @author Hiroku
  * @since July 1st, 2023
  */
-interface SimpleBagItemConvertible : BagItemConvertible {
+interface SimpleBagItemLike : BagItemLike {
     val bagItem: BagItem
     override fun getBagItem(stack: ItemStack) = stack.item.takeIf { it == this }?.let { bagItem }
 }

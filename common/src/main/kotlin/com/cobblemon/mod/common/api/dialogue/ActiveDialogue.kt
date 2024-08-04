@@ -24,7 +24,7 @@ import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.scheduling.ServerRealTimeTaskTracker
 import com.cobblemon.mod.common.net.messages.client.dialogue.DialogueOpenedPacket
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * An active instance of [Dialogue]. Bound to a player. These all need to be created through DialogueManager
@@ -33,7 +33,7 @@ import net.minecraft.server.network.ServerPlayerEntity
  * @author Hiroku
  * @since December 27th, 2023
  */
-class ActiveDialogue(var playerEntity: ServerPlayerEntity, var dialogueReference: Dialogue) {
+class ActiveDialogue(var playerEntity: ServerPlayer, var dialogueReference: Dialogue) {
     val dialogueId = UUID.randomUUID()
     val runtime = MoLangRuntime().setup()
     var currentPage = dialogueReference.pages[0]

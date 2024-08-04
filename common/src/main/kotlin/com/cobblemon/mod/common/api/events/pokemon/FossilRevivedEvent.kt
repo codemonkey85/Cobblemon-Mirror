@@ -9,9 +9,9 @@
 package com.cobblemon.mod.common.api.events.pokemon
 
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 data class FossilRevivedEvent (
     val pokemon: Pokemon,
-    val player: ServerPlayerEntity?
+    val player: ServerPlayer?
 )

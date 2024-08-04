@@ -10,11 +10,9 @@ package com.cobblemon.mod.common.client.sound.battle
 
 import com.cobblemon.mod.common.util.pauseSounds
 import com.cobblemon.mod.common.util.resumeSounds
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.sound.SoundInstance
-import net.minecraft.client.sound.SoundManager
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvents
+import net.minecraft.client.Minecraft
+import net.minecraft.sounds.SoundSource
+import net.minecraft.sounds.SoundEvents
 
 /**
  * The controller for playing, switching, and stopping [BattleMusicInstance]s.
@@ -25,25 +23,25 @@ import net.minecraft.sound.SoundEvents
 object BattleMusicController {
 
     /** The last [BattleMusicInstance] played. */
-    var music = BattleMusicInstance(SoundEvents.INTENTIONALLY_EMPTY, 0.0F, 0.0F)
+    var music = BattleMusicInstance(SoundEvents.EMPTY, 0.0F, 0.0F)
         private set
 
     /**
-     * The [SoundCategory]s that are filtered while the [SoundManager] is playing a [BattleMusicInstance].
+     * The [SoundSource]s that are filtered while the [SoundManager] is playing a [BattleMusicInstance].
      *
      * Applicable [SoundInstance]s are blocked while a [BattleMusicInstance] is active, or paused if played before.
      */
-    val filteredCategories = listOf(SoundCategory.AMBIENT, SoundCategory.MUSIC, SoundCategory.RECORDS)
+    val filteredCategories = listOf(SoundSource.AMBIENT, SoundSource.MUSIC, SoundSource.RECORDS)
 
-    private val manager = MinecraftClient.getInstance().soundManager
+    private val manager = Minecraft.getInstance().soundManager
 
     /** Start a new [BattleMusicInstance] and pause all [filteredCategories] sounds currently playing. */
     fun initializeMusic(newMusic: BattleMusicInstance) {
         music = newMusic
         manager.play(music)
-        if (manager.isPlaying(music)) {
+        if (manager.isActive(music)) {
             filteredCategories.forEach { manager.pauseSounds(null, it) }
-            manager.resumeSounds(music.id, SoundCategory.MUSIC) // lazy :)
+            manager.resumeSounds(music.location, SoundSource.MUSIC) // lazy :)
         }
     }
 

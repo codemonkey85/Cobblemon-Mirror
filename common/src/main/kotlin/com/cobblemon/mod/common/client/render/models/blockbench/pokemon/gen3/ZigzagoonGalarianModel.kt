@@ -15,8 +15,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedF
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class ZigzagoonGalarianModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("zigzagoon_galarian")
@@ -28,10 +28,10 @@ class ZigzagoonGalarianModel (root: ModelPart) : PokemonPosableModel(root), Head
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 2.55F
-    override var portraitTranslation = Vec3d(-0.5, -2.2, 0.0)
+    override var portraitTranslation = Vec3(-0.5, -2.2, 0.0)
 
     override var profileScale = 1.0F
-    override var profileTranslation = Vec3d(0.0, 0.2, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.2, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

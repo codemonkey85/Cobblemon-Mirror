@@ -19,9 +19,9 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
 
 /**
  * A registry of assignments combining [SpeciesFeatures] and [PokemonSpecies]. This is a way around the issue
@@ -33,20 +33,20 @@ import net.minecraft.util.Identifier
  * @since December 1st, 2022
  */
 object SpeciesFeatureAssignments : JsonDataRegistry<SpeciesFeatureAssignment> {
-    override val id: Identifier = cobblemonResource("species_feature_assignments")
-    override val type: ResourceType = ResourceType.SERVER_DATA
+    override val id: ResourceLocation = cobblemonResource("species_feature_assignments")
+    override val type: PackType = PackType.SERVER_DATA
     override val observable = SimpleObservable<SpeciesFeatureAssignments>()
 
     override val gson: Gson = GsonBuilder().setPrettyPrinting().create()
     override val typeToken = TypeToken.get(SpeciesFeatureAssignment::class.java)
     override val resourcePath = "species_feature_assignments"
 
-    private val assignments = mutableMapOf<Identifier, MutableSet<String>>()
+    private val assignments = mutableMapOf<ResourceLocation, MutableSet<String>>()
 
-    override fun sync(player: ServerPlayerEntity) {
+    override fun sync(player: ServerPlayer) {
         player.sendPacket(SpeciesFeatureAssignmentSyncPacket(assignments))
     }
-    override fun reload(data: Map<Identifier, SpeciesFeatureAssignment>) {
+    override fun reload(data: Map<ResourceLocation, SpeciesFeatureAssignment>) {
         data.values.forEach {
             it.pokemon.forEach { pokemon ->
                 assignments.getOrPut(pokemon.asIdentifierDefaultingNamespace()) { mutableSetOf() }.addAll(it.features)
@@ -55,7 +55,7 @@ object SpeciesFeatureAssignments : JsonDataRegistry<SpeciesFeatureAssignment> {
         this.observable.emit(this)
     }
 
-    fun loadOnClient(data: Map<Identifier, MutableSet<String>>) {
+    fun loadOnClient(data: Map<ResourceLocation, MutableSet<String>>) {
         this.assignments.clear()
         this.assignments.putAll(data)
     }

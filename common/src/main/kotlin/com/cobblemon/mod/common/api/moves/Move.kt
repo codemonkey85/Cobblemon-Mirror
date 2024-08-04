@@ -18,12 +18,13 @@ import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeSizedInt
 import com.cobblemon.mod.common.util.writeString
 import com.google.gson.JsonObject
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.RegistryFriendlyByteBuf
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import kotlin.math.ceil
 import kotlin.properties.Delegates
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
 
 /**
  * Representing a Move based on some template and with current PP and the number of raised PP stages.
@@ -65,10 +66,10 @@ open class Move(
     val name: String
         get() = template.name
 
-    val displayName: MutableText
+    val displayName: MutableComponent
         get() = template.displayName
 
-    val description: MutableText
+    val description: MutableComponent
         get() = template.description
 
     val type: ElementalType
@@ -103,7 +104,7 @@ open class Move(
         return oldPp != maxPp
     }
 
-    fun saveToNBT(nbt: NbtCompound): NbtCompound {
+    fun saveToNBT(nbt: CompoundTag): CompoundTag {
         nbt.putString(DataKeys.POKEMON_MOVESET_MOVENAME, name)
         nbt.putInt(DataKeys.POKEMON_MOVESET_MOVEPP, currentPp)
         nbt.putInt(DataKeys.POKEMON_MOVESET_RAISED_PP_STAGES, raisedPpStages)
@@ -117,14 +118,14 @@ open class Move(
         return json
     }
 
-    fun saveToBuffer(buffer: RegistryByteBuf) {
+    fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(name)
         buffer.writeSizedInt(IntSize.U_BYTE, currentPp)
         buffer.writeSizedInt(IntSize.U_BYTE, raisedPpStages)
     }
 
     companion object {
-        fun loadFromNBT(nbt: NbtCompound): Move {
+        fun loadFromNBT(nbt: CompoundTag): Move {
             val moveName = nbt.getString(DataKeys.POKEMON_MOVESET_MOVENAME)
             val template = Moves.getByNameOrDummy(moveName)
             return template.create(nbt.getInt(DataKeys.POKEMON_MOVESET_MOVEPP), nbt.getInt(DataKeys.POKEMON_MOVESET_RAISED_PP_STAGES))
@@ -138,12 +139,20 @@ open class Move(
             return Move(template, currentPp, raisedPpStages)
         }
 
-        fun loadFromBuffer(buffer: RegistryByteBuf): Move {
+        fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): Move {
             val moveName = buffer.readString()
             val currentPp = buffer.readSizedInt(IntSize.U_BYTE)
             val raisedPpStages = buffer.readSizedInt(IntSize.U_BYTE)
             val template = Moves.getByNameOrDummy(moveName)
             return template.create(currentPp, raisedPpStages)
         }
+
+        @JvmStatic
+        val CODEC: Codec<Move> = RecordCodecBuilder.create { it.group(
+            MoveTemplate.BY_STRING_CODEC.fieldOf(DataKeys.POKEMON_MOVESET_MOVENAME).forGetter(Move::template),
+            Codec.intRange(0, Int.MAX_VALUE).fieldOf(DataKeys.POKEMON_MOVESET_MOVEPP).forGetter(Move::currentPp),
+            Codec.intRange(0, 3).fieldOf(DataKeys.POKEMON_MOVESET_RAISED_PP_STAGES).forGetter(Move::raisedPpStages)
+        ).apply(it) { template, currentPp, raisedPpStages -> template.create(currentPp, raisedPpStages) } }
+
     }
 }

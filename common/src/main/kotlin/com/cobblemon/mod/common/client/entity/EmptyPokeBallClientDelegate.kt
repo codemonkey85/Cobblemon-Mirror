@@ -16,7 +16,7 @@ import com.cobblemon.mod.common.client.render.pokeball.PokeBallPosableState
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity.CaptureState
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity.CaptureState.NOT
-import net.minecraft.entity.data.TrackedData
+import net.minecraft.network.syncher.EntityDataAccessor
 
 class EmptyPokeBallClientDelegate : PokeBallPosableState(), EntitySideDelegate<EmptyPokeBallEntity> {
     override val stateEmitter: SettableObservable<CaptureState> = SettableObservable(NOT)
@@ -34,7 +34,7 @@ class EmptyPokeBallClientDelegate : PokeBallPosableState(), EntitySideDelegate<E
 
     override fun initialize(entity: EmptyPokeBallEntity) {
         this.currentEntity = entity
-        age = entity.age
+        age = entity.tickCount
         initSubscriptions()
         this.runtime.environment.query.addFunctions(getEntity().struct.functions)
     }
@@ -44,8 +44,8 @@ class EmptyPokeBallClientDelegate : PokeBallPosableState(), EntitySideDelegate<E
         incrementAge(entity)
     }
 
-    override fun onTrackedDataSet(data: TrackedData<*>) {
-        super.onTrackedDataSet(data)
+    override fun onSyncedDataUpdated(data: EntityDataAccessor<*>) {
+        super.onSyncedDataUpdated(data)
         when (data) {
             EmptyPokeBallEntity.CAPTURE_STATE -> stateEmitter.set(currentEntity.captureState)
             EmptyPokeBallEntity.SHAKE -> shakeEmitter.emit(Unit)

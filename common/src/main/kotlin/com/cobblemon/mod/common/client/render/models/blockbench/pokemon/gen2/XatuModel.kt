@@ -17,8 +17,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTr
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class XatuModel(root: ModelPart) : PokemonPosableModel(root), BiWingedFrame, HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("xatu")
@@ -28,10 +28,10 @@ class XatuModel(root: ModelPart) : PokemonPosableModel(root), BiWingedFrame, Hea
     override val rightWing = getPart("wing_open_right")
 
     override var portraitScale = 1.91F
-    override var portraitTranslation = Vec3d(-0.04, 1.16, 0.0)
+    override var portraitTranslation = Vec3(-0.04, 1.16, 0.0)
 
     override var profileScale = 0.69F
-    override var profileTranslation = Vec3d(0.0, 0.75, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.75, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walking: CobblemonPose

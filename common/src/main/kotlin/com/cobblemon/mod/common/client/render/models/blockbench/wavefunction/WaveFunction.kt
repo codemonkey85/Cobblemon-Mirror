@@ -12,8 +12,8 @@ import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
-import net.minecraft.util.math.MathHelper.PI
-import net.minecraft.util.math.MathHelper.sqrt
+import net.minecraft.util.Mth.PI
+import net.minecraft.util.Mth.sqrt
 
 typealias WaveFunction = (Float) -> Float
 typealias CoFunction = (Float) -> Pair<Float, Float>

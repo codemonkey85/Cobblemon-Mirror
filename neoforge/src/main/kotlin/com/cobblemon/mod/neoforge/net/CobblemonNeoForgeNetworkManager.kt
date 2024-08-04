@@ -12,9 +12,12 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonNetwork
 import com.cobblemon.mod.common.NetworkManager
 import com.cobblemon.mod.common.api.net.NetworkPacket
-import net.minecraft.client.MinecraftClient
-import net.minecraft.server.network.ServerPlayerEntity
+import com.cobblemon.mod.common.client.net.data.DataRegistrySyncPacketHandler
+import net.minecraft.client.Minecraft
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
+import net.neoforged.neoforge.network.registration.HandlerThread
 
 // https://neoforged.net/news/20.4networking-rework/
 object CobblemonNeoForgeNetworkManager : NetworkManager {
@@ -24,15 +27,33 @@ object CobblemonNeoForgeNetworkManager : NetworkManager {
         val registrar = event
             .registrar(Cobblemon.MODID)
             .versioned(PROTOCOL_VERSION)
-        CobblemonNetwork.s2cPayloads.map { NeoForgePacketInfo(it) }.forEach { it.registerToClient(registrar) }
+
+        val netRegistrar = event
+            .registrar(Cobblemon.MODID)
+            .versioned(PROTOCOL_VERSION)
+            .executesOn(HandlerThread.NETWORK)
+
+        val syncPackets = HashSet<ResourceLocation>()
+        val asyncPackets = HashSet<ResourceLocation>()
+
+        CobblemonNetwork.s2cPayloads.map { NeoForgePacketInfo(it) }.forEach {
+            val handleAsync = it.info.handler is DataRegistrySyncPacketHandler<*, *>
+            if (handleAsync) asyncPackets += it.info.id
+            else syncPackets += it.info.id
+
+            it.registerToClient(if (handleAsync) netRegistrar else registrar)
+        }
         CobblemonNetwork.c2sPayloads.map { NeoForgePacketInfo(it) }.forEach { it.registerToServer(registrar) }
+
+        Cobblemon.LOGGER.info("Async packets: $asyncPackets")
+        Cobblemon.LOGGER.info("Sync packets: $syncPackets")
     }
 
-    override fun sendPacketToPlayer(player: ServerPlayerEntity, packet: NetworkPacket<*>) {
-        player.networkHandler.send(packet)
+    override fun sendPacketToPlayer(player: ServerPlayer, packet: NetworkPacket<*>) {
+        player.connection.send(packet)
     }
 
     override fun sendToServer(packet: NetworkPacket<*>) {
-        MinecraftClient.getInstance().networkHandler?.send(packet)
+        Minecraft.getInstance().connection?.send(packet)
     }
 }

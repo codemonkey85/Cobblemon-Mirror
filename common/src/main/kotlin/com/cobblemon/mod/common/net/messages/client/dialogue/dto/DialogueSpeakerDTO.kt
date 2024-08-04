@@ -9,9 +9,9 @@
 package com.cobblemon.mod.common.net.messages.client.dialogue.dto
 
 import com.cobblemon.mod.common.api.dialogue.DialogueFaceProvider
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
 
 class DialogueSpeakerDTO(
-    val name: MutableText? = null,
+    val name: MutableComponent? = null,
     val face: DialogueFaceProvider?
 )

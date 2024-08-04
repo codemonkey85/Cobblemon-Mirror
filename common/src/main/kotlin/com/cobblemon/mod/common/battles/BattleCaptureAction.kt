@@ -39,7 +39,7 @@ class BattleCaptureAction(
                 filter { it == EmptyPokeBallEntity.SHAKE },
                 emitWhile { pokeBallEntity.isAlive && this in battle.captureActions }
             )
-            .subscribe { battle.sendUpdate(BattleCaptureShakePacket(targetPokemon.getPNX(), pokeBallEntity.dataTracker.get(EmptyPokeBallEntity.SHAKE))) }
+            .subscribe { battle.sendUpdate(BattleCaptureShakePacket(targetPokemon.getPNX(), pokeBallEntity.entityData.get(EmptyPokeBallEntity.SHAKE))) }
 
         pokeBallEntity.captureFuture.thenAccept { successful ->
             if (successful) {

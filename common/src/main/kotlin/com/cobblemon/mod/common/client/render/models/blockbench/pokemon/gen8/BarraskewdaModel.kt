@@ -12,18 +12,18 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class BarraskewdaModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("barraskewda")
 
     override var portraitScale = 2.8F
-    override var portraitTranslation = Vec3d(-0.7, -2.8, 0.0)
+    override var portraitTranslation = Vec3(-0.7, -2.8, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.5, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.5, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose
@@ -40,7 +40,7 @@ class BarraskewdaModel (root: ModelPart) : PokemonPosableModel(root) {
             poseName = "sleeping",
             transformTicks = 10,
             poseType = PoseType.SLEEP,
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             animations = arrayOf(bedrock("barraskewda", "sleep"))
         )
 
@@ -48,7 +48,7 @@ class BarraskewdaModel (root: ModelPart) : PokemonPosableModel(root) {
             poseName = "water_sleeping",
             transformTicks = 10,
             poseType = PoseType.SLEEP,
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             animations = arrayOf(bedrock("barraskewda", "water_sleep"))
         )
 
@@ -96,7 +96,7 @@ class BarraskewdaModel (root: ModelPart) : PokemonPosableModel(root) {
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            condition = { it.isBattling && !it.isTouchingWater },
+            condition = { it.isBattling && !it.isInWater },
             animations = arrayOf(
                 bedrock("barraskewda", "battle_idle")
             )
@@ -107,7 +107,7 @@ class BarraskewdaModel (root: ModelPart) : PokemonPosableModel(root) {
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            condition = { it.isBattling && it.isTouchingWater },
+            condition = { it.isBattling && it.isInWater },
             animations = arrayOf(
                 bedrock("barraskewda", "water_battle_idle")
             )

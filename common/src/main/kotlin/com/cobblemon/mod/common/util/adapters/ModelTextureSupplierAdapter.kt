@@ -16,7 +16,7 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import java.lang.reflect.Type
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Adapter for reading a [ModelTextureSupplier] from JSON. This can be either a simple string field for a
@@ -28,12 +28,12 @@ import net.minecraft.util.Identifier
 object ModelTextureSupplierAdapter : JsonDeserializer<ModelTextureSupplier> {
     override fun deserialize(json: JsonElement, type: Type, ctx: JsonDeserializationContext): ModelTextureSupplier {
         if (json.isJsonPrimitive) {
-            return StaticModelTextureSupplier(Identifier.of(json.asString))
+            return StaticModelTextureSupplier(ResourceLocation.parse(json.asString))
         } else if (json.isJsonObject) {
             val jsonObject = json as JsonObject
             val loop = jsonObject.get("loop")?.asBoolean ?: true
             val fps = jsonObject.get("fps")?.asFloat ?: 1F
-            val frames = jsonObject.get("frames")?.asJsonArray?.map { Identifier.of(it.asString) }
+            val frames = jsonObject.get("frames")?.asJsonArray?.map { ResourceLocation.parse(it.asString) }
                 ?: throw IllegalArgumentException("Animated textures require a 'frames' value.")
             return AnimatedModelTextureSupplier(
                 loop = loop,
