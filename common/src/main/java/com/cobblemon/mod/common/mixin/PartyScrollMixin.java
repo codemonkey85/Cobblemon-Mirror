@@ -54,7 +54,7 @@ public class PartyScrollMixin {
                 accumulatedScrollY = 0;
                 PartySendBinding.INSTANCE.actioned();
             }
-        } else if (minecraft.player != null && minecraft.player.getMainHandItem().getItem() instanceof PokedexItem) {
+        } /*else if (minecraft.player != null && minecraft.player.getMainHandItem().getItem() instanceof PokedexItem) {
             PokedexItem pokedexItem = (PokedexItem) minecraft.player.getMainHandItem().getItem();
 
             // Check if isScanning is true
@@ -70,6 +70,7 @@ public class PartyScrollMixin {
                 }
             }
         }
+        */
 
     }
 }

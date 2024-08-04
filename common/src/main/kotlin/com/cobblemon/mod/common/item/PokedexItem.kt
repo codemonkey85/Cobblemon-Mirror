@@ -22,6 +22,7 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.net.messages.client.ui.PokedexUIPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.MapUpdatePacket
+import com.cobblemon.mod.common.pokedex.scanner.PokedexScanningContext
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.mojang.blaze3d.pipeline.RenderTarget
@@ -63,176 +64,74 @@ import javax.imageio.ImageIO
 
 class PokedexItem(val type: String) : CobblemonItem(Item.Properties()) {
 
-    @JvmField
-    var zoomLevel: Double = 1.0
-    var isScanning = false
+    val scanContext = PokedexScanningContext()
     var attackKeyHeldTicks = 0 // to help with detecting pressed and held states of the attack button
     var usageTicks = 0
-    var transitionTicks = 0
     var focusTicks = 0
     var gracePeriod = 0
-    var dexActive = false
-    var innerRingRotation = 0
-    var pokemonInFocus: PokemonEntity? = null
-    var lastPokemonInFocus: PokemonEntity? = null
-    var pokemonBeingScanned: PokemonEntity? = null
-    var scanningProgress: Int = 0
     var pokedexUser: ServerPlayer? = null
-    var originalHudHidden: Boolean = false
-    var bufferImageSnap:  Boolean = false
 
-    override fun getUseDuration(stack: ItemStack?, user: LivingEntity?): Int {
-        return 72000 // (vanilla bows use 72000 ticks -> 1 hour of hold time)
-    }
 
-    override fun hurtEnemy(stack: ItemStack?, target: LivingEntity?, attacker: LivingEntity?): Boolean {
-        return !isScanning && super.hurtEnemy(stack, target, attacker)
-    }
+    override fun getUseDuration(stack: ItemStack, user: LivingEntity): Int = 72000
 
-    override fun mineBlock(stack: ItemStack?, world: Level?, state: BlockState?, pos: BlockPos?, miner: LivingEntity?): Boolean {
-        return !isScanning && super.mineBlock(stack, world, state, pos, miner)
-    }
+    override fun hurtEnemy(
+        stack: ItemStack,
+        target: LivingEntity,
+        attacker: LivingEntity
+    ): Boolean = !scanContext.active && super.hurtEnemy(stack, target, attacker)
 
-    override fun canAttackBlock(state: BlockState?, world: Level?, pos: BlockPos?, miner: Player?): Boolean {
-        return !isScanning && super.canAttackBlock(state, world, pos, miner)
-    }
+    override fun mineBlock(
+        stack: ItemStack,
+        world: Level,
+        state: BlockState,
+        pos: BlockPos,
+        miner: LivingEntity
+    ) = !scanContext.active && super.mineBlock(stack, world, state, pos, miner)
+
+    override fun canAttackBlock(
+        state: BlockState,
+        world: Level,
+        pos: BlockPos,
+        miner: Player
+    ) = !scanContext.active && super.canAttackBlock(state, world, pos, miner)
 
     override fun use(world: Level, player: Player, usedHand: InteractionHand): InteractionResultHolder<ItemStack> {
-        println()
         val itemStack = player.getItemInHand(usedHand)
-        dexActive = false
-
         if (player !is ServerPlayer) return InteractionResultHolder.success(itemStack) else pokedexUser = player
-
-        player.startUsingItem(usedHand) // Start using the item
-
-        /*if (player.isSneaking) {
-            isScanning = true
-            //return TypedActionResult.consume(itemStack)
-        }
-        else {
-            openPokdexGUI(player)
-        }*/
-
+        player.startUsingItem(usedHand)
         return InteractionResultHolder.fail(itemStack)
-
-
-        /*// Check if the player is interacting with a Pokémon
-        val entity = player.world
-                .getOtherEntities(player, Box.of(player.pos, 16.0, 16.0, 16.0))
-                .filter { player.isLookingAt(it, stepDistance = 0.1F) }
-                .minByOrNull { it.distanceTo(player) } as? PokemonEntity?
-
-        if (!player.isSneaking) {
-            if (entity != null) {
-                val species = entity.pokemon.species.resourceIdentifier
-                val form = entity.pokemon.form.formOnlyShowdownId()
-
-                val pokedexData = Cobblemon.playerDataManager.getPokedexData(player)
-                pokedexData.onPokemonSeen(species, form)
-                player.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, pokedexData.toClientData(), false))
-                PokedexUIPacket(type, species).sendToPlayer(player)
-                player.playSoundToPlayer(CobblemonSounds.POKEDEX_SCAN, SoundCategory.PLAYERS, 1F, 1F)
-            } else {
-                PokedexUIPacket(type).sendToPlayer(player)
-            }
-            player.playSoundToPlayer(CobblemonSounds.POKEDEX_SHOW, SoundCategory.PLAYERS, 1F, 1F)
-        } else {
-            inUse = true
-            zoomLevel = 1.0
-            changeFOV(70.0)
-            player.setCurrentHand(usedHand) // Start using the item
-            return TypedActionResult.consume(itemStack)
-        }*/
-
-        //return TypedActionResult.success(itemStack)
     }
 
-    fun openPokdexGUI(player: ServerPlayer) {
-        // Check if the player is interacting with a Pokémon
-        /*val entity = player.world
-                .getOtherEntities(player, Box.of(player.pos, 16.0, 16.0, 16.0))
-                .filter { player.isLookingAt(it, stepDistance = 0.1F) }
-                .minByOrNull { it.distanceTo(player) } as? PokemonEntity?
-
-        if (!player.isSneaking) {
-            if (entity != null) {
-                val species = entity.pokemon.species.resourceIdentifier
-                val form = entity.pokemon.form.formOnlyShowdownId()
-
-                val pokedexData = Cobblemon.playerDataManager.getPokedexData(player)
-                pokedexData.onPokemonSeen(species, form)
-                player.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, pokedexData.toClientData(), false))
-                PokedexUIPacket(type, species).sendToPlayer(player)
-                playSound(CobblemonSounds.POKEDEX_SCAN)
-                //player.playSoundToPlayer(CobblemonSounds.POKEDEX_SCAN, SoundCategory.PLAYERS, 1F, 1F)
-            } else {*/
-        PokedexUIPacket(type).sendToPlayer(player)
-            //}
-        playSound(CobblemonSounds.POKEDEX_OPEN)
-        //player.playSoundToPlayer(CobblemonSounds.POKEDEX_OPEN, SoundCategory.PLAYERS, 1F, 1F)
-        //}
-    }
-
-    override fun inventoryTick(stack: ItemStack?, world: Level?, entity: Entity?, slot: Int, selected: Boolean) {
-        if (!isScanning) {
+    override fun inventoryTick(
+        stack: ItemStack,
+        world: Level,
+        entity: Entity,
+        slot: Int,
+        selected: Boolean
+    ) {
+        if (!scanContext.active) {
             if (focusTicks > 0) focusTicks--
-            if (transitionTicks > 0) transitionTicks--
         }
     }
 
-    override fun onUseTick(world: Level?, user: LivingEntity?, stack: ItemStack?, remainingUseTicks: Int) {
-        if (user is Player) {
-            // if the item has been used for more than 1 second activate scanning mode
-            if (getUseDuration(stack, user) - remainingUseTicks > 3 && !dexActive) {
-                usageTicks++
-                if (transitionTicks < 12) transitionTicks++
-                innerRingRotation = (if (pokemonInFocus != null) (innerRingRotation + 10) else (innerRingRotation + 1)) % 360
-
-                // play the Scanner Open sound only once
-                if (!isScanning) {
-                    playSound(CobblemonSounds.POKEDEX_SCAN_OPEN)
-                    val client = Minecraft.getInstance()
-
-                    // Hide the HUD during scan mode
-                    originalHudHidden = client.options.hideGui
-
-                    client.options.hideGui = true
-                }
-
-               // isScanning = true
-
-                // todo get it constantly scanning outwards to detect pokemon in focus
-                Minecraft.getInstance().player?.let {
-                    detectPokemon(it.level(), it, InteractionHand.MAIN_HAND, getUseDuration(stack, user) - remainingUseTicks)
-                }
-
-                // if there was a mouse click last tick and overlay is now down
-                if (bufferImageSnap) {
-                    Minecraft.getInstance().execute {
-                        Minecraft.getInstance().player?.let {
-                            //println("You have taken a picture")
-                            playSound(CobblemonSounds.POKEDEX_SNAP_PICTURE)
-                            //detectPokemon(it.world, it, Hand.MAIN_HAND)
-
-                            // Todo create a "shotgun" ray cast to determine all Pokemon in the picture to be used for later
-
-                            // take picture while overlay is down this tick
-                            snapPicture(it)
-                        }
-                    }
-
-                    // bring back overlay next tick
-                    bufferImageSnap = false
-                }
-
-                isScanning = true
-                // todo try to make it so that the player is able to walk normal speed while in scanner mode
-                //user.addStatusEffect(StatusEffectInstance(StatusEffects.SPEED, 3, 1, true, false, false)) // Remove slowness effect
-            }
+    override fun onUseTick(
+        world: Level,
+        user: LivingEntity,
+        stack: ItemStack,
+        remainingUseTicks: Int
+    ) {
+        if (user is LocalPlayer) {
+            scanContext.tick(user, usageTicks, true)
         }
-
+        //Might be more accurate to set this based on remaining use ticks
+        usageTicks++
         super.onUseTick(world, user, stack, remainingUseTicks)
+    }
+
+    /*
+    fun openPokdexGUI(player: ServerPlayer) {
+        PokedexUIPacket(type).sendToPlayer(player)
+        player.playSound(CobblemonSounds.POKEDEX_OPEN)
     }
 
     override fun releaseUsing(stack: ItemStack?, world: Level, entity: LivingEntity, timeLeft: Int) {
@@ -630,7 +529,7 @@ class PokedexItem(val type: String) : CobblemonItem(Item.Properties()) {
     fun detectPokemonInView(player: Player, maxDistance: Double): List<Species> {
         val detectedSpecies = mutableListOf<Species>()
         val eyePos = player.getEyePosition(1.0F)
-        val lookVec = player.getEyePosition(1.0F)
+        val lookVec = player.getViewVector(1.0F)
         val client = Minecraft.getInstance()
         val fov = client.options.fov().get()
         val screenWidth = client.window.guiScaledWidth
@@ -1021,4 +920,6 @@ class PokedexItem(val type: String) : CobblemonItem(Item.Properties()) {
 
         return TypedActionResult.success(itemStack, world.isClient)
     }*/
+
+     */
 }

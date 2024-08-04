@@ -103,6 +103,7 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
         })
 
         // Register the HUD render callback for pokedex
+        /*
         HudRenderCallback.EVENT.register { GuiGraphics, tickCounter ->
             val client = Minecraft.getInstance()
             val player = client.player
@@ -142,6 +143,8 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
                 }
             }
         })
+
+         */
 
 
         CobblemonKeyBinds.register(KeyBindingHelper::registerKeyBinding)

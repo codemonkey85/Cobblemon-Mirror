@@ -1,8 +1,7 @@
-package com.cobblemon.mod.common.server.net.pokedex
+package com.cobblemon.mod.common.client.net.pokedex
 
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.net.messages.server.pokedex.MapUpdatePacket
-import io.netty.util.internal.PlatformDependent.putByte
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
@@ -18,7 +17,6 @@ import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.saveddata.maps.MapId
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData
 import java.awt.Color
-import java.awt.Dimension
 import java.awt.Image
 import java.awt.image.BufferedImage
 import java.io.File
