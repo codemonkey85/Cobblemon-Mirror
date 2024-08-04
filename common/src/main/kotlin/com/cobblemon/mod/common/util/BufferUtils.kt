@@ -140,10 +140,6 @@ fun ByteBuf.writeIdentifier(id: ResourceLocation?) {
     }
 }
 
-fun ByteBuf.writeIdentifier(id: ResourceLocation) {
-    writeString(id.toString())
-}
-
 fun ByteBuf.writePartyPosition(partyPosition: PartyPosition) {
     writeSizedInt(IntSize.U_SHORT, partyPosition.slot)
 }

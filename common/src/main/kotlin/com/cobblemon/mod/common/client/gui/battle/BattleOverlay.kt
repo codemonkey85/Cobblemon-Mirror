@@ -286,7 +286,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
             )
             if (dexState == PokedexEntryProgress.ENCOUNTERED) {
                 blitk(
-                    matrixStack = matrices,
+                    matrixStack = matrixStack,
                     texture = seenIndicator,
                     x = x + 3,
                     y = y + 21,
@@ -300,7 +300,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
             }
             else if (dexState == PokedexEntryProgress.CAUGHT) {
                 blitk(
-                    matrixStack = matrices,
+                    matrixStack = matrixStack,
                     texture = seenIndicator,
                     x = x + 3,
                     y = y + 21,

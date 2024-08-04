@@ -31,6 +31,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.phys.Vec3
 import java.util.*
 
@@ -104,19 +105,19 @@ class BedrockSoundKeyframe(
         if (soundEvent != null) {
             if (entity != null) {
                 Minecraft.getInstance().soundManager.play(
-                    PositionedSoundInstance(
+                    SimpleSoundInstance(
                         soundEvent,
-                        SoundCategory.NEUTRAL,
+                        SoundSource.NEUTRAL,
                         1F,
                         1F,
-                        entity.world.random,
+                        entity.level().random,
                         entity.x,
                         entity.y,
                         entity.z
                     )
                 )
             } else {
-                Minecraft.getInstance().soundManager.play(PositionedSoundInstance.master(soundEvent, 1F))
+                Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1F))
             }
         }
     }

@@ -16,7 +16,7 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import kotlin.math.max
 
 class FormsWidget (val pX: Int, val pY: Int, val setFormData : (String) -> (Unit)): ScrollingWidget<FormsWidget.FormSlot>(
@@ -40,7 +40,7 @@ class FormsWidget (val pX: Int, val pY: Int, val setFormData : (String) -> (Unit
         }
     }
 
-    override fun getScrollbarX(): Int {
+    override fun getScrollbarPosition(): Int {
         return left + width - scrollBarWidth
     }
 
@@ -85,8 +85,8 @@ class FormsWidget (val pX: Int, val pY: Int, val setFormData : (String) -> (Unit
             )
         }
 
-        override fun getNarration(): Text {
-            return Text.of(form)
+        override fun getNarration(): Component {
+            return Component.literal(form)
         }
 
         override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {

@@ -187,11 +187,11 @@ fun drawScaledTextJustifiedRight(
     if (opacity.toFloat() < 0.05F) {
         return
     }
-    val textWidth = Minecraft.getInstance().textRenderer.getWidth(if (font != null) text.font(font) else text)
+    val textWidth = Minecraft.getInstance().font.width(if (font != null) text.font(font) else text)
     val extraScale = if (textWidth < maxCharacterWidth) 1F else (maxCharacterWidth / textWidth.toFloat())
     val fontHeight = if (font == null) 5F else 6F
     val matrixStack = context.pose()
-    matrixStack.push()
+    matrixStack.pushPose()
     matrixStack.scale(scale * extraScale, scale * extraScale, 1F)
     drawTextJustifiedRight(
         context = context,
@@ -202,7 +202,7 @@ fun drawScaledTextJustifiedRight(
         colour = colour,
         shadow = shadow
     )
-    matrixStack.pop()
+    matrixStack.popPose()
 }
 
 fun drawScaledTextJustifiedRight(
@@ -220,7 +220,7 @@ fun drawScaledTextJustifiedRight(
         return
     }
     val matrixStack = context.pose()
-    matrixStack.push()
+    matrixStack.pushPose()
     matrixStack.scale(scaleX, scaleY, 1F)
     drawTextJustifiedRight(
         context = context,
@@ -230,7 +230,7 @@ fun drawScaledTextJustifiedRight(
         colour = colour,
         shadow = shadow
     )
-    matrixStack.pop()
+    matrixStack.popPose()
 }
 
 fun renderBeaconBeam(

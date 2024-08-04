@@ -13,12 +13,12 @@ import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUI
 import com.cobblemon.mod.common.client.keybind.CobblemonKeyBinding
 import com.cobblemon.mod.common.client.keybind.KeybindCategories
-import net.minecraft.client.util.InputUtil
+import com.mojang.blaze3d.platform.InputConstants
 
 object PokedexBinding : CobblemonKeyBinding(
     "key.cobblemon.pokedex",
-    InputUtil.Type.KEYSYM,
-    InputUtil.GLFW_KEY_K,
+    InputConstants.Type.KEYSYM,
+    InputConstants.KEY_K,
     KeybindCategories.COBBLEMON_CATEGORY
 ) {
     override fun onPress() {

@@ -24,35 +24,35 @@ import com.cobblemon.mod.common.net.messages.client.ui.PokedexUIPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.MapUpdatePacket
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.mojang.blaze3d.pipeline.RenderTarget
+import com.mojang.blaze3d.platform.NativeImage
 import com.mojang.blaze3d.systems.RenderSystem
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.minecraft.block.BlockState
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gl.Framebuffer
+import net.minecraft.client.DeltaTracker
+import net.minecraft.client.Minecraft
+import net.minecraft.client.Screenshot
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.network.ClientPlayer
-import net.minecraft.client.render.RenderTickCounter
-import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.client.texture.NativeImage
-import net.minecraft.client.util.ScreenshotRecorder
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.player.Player
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayer
-import net.minecraft.sound.SoundEvent
-import net.minecraft.text.Text
-import net.minecraft.util.Hand
-import net.minecraft.util.Identifier
-import net.minecraft.util.TypedActionResult
-import net.minecraft.util.hit.EntityHitResult
-import net.minecraft.util.hit.HitResult
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.RaycastContext
-import net.minecraft.world.World
+import net.minecraft.client.player.LocalPlayer
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.core.BlockPos
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.ClipContext
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.EntityHitResult
+import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
@@ -61,7 +61,7 @@ import java.io.File
 import java.lang.Math.clamp
 import javax.imageio.ImageIO
 
-class PokedexItem(val type: String) : CobblemonItem(Settings()) {
+class PokedexItem(val type: String) : CobblemonItem(Item.Properties()) {
 
     @JvmField
     var zoomLevel: Double = 1.0
@@ -81,30 +81,30 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
     var originalHudHidden: Boolean = false
     var bufferImageSnap:  Boolean = false
 
-    override fun getMaxUseTime(stack: ItemStack?, user: LivingEntity?): Int {
+    override fun getUseDuration(stack: ItemStack?, user: LivingEntity?): Int {
         return 72000 // (vanilla bows use 72000 ticks -> 1 hour of hold time)
     }
 
-    override fun postHit(stack: ItemStack?, target: LivingEntity?, attacker: LivingEntity?): Boolean {
-        return !isScanning && super.postHit(stack, target, attacker)
+    override fun hurtEnemy(stack: ItemStack?, target: LivingEntity?, attacker: LivingEntity?): Boolean {
+        return !isScanning && super.hurtEnemy(stack, target, attacker)
     }
 
-    override fun postMine(stack: ItemStack?, world: World?, state: BlockState?, pos: BlockPos?, miner: LivingEntity?): Boolean {
-        return !isScanning && super.postMine(stack, world, state, pos, miner)
+    override fun mineBlock(stack: ItemStack?, world: Level?, state: BlockState?, pos: BlockPos?, miner: LivingEntity?): Boolean {
+        return !isScanning && super.mineBlock(stack, world, state, pos, miner)
     }
 
-    override fun canMine(state: BlockState?, world: World?, pos: BlockPos?, miner: Player?): Boolean {
-        return !isScanning && super.canMine(state, world, pos, miner)
+    override fun canAttackBlock(state: BlockState?, world: Level?, pos: BlockPos?, miner: Player?): Boolean {
+        return !isScanning && super.canAttackBlock(state, world, pos, miner)
     }
 
-    override fun use(world: World, player: Player, usedHand: Hand): TypedActionResult<ItemStack> {
+    override fun use(world: Level, player: Player, usedHand: InteractionHand): InteractionResultHolder<ItemStack> {
         println()
-        val itemStack = player.getStackInHand(usedHand)
+        val itemStack = player.getItemInHand(usedHand)
         dexActive = false
 
-        if (player !is ServerPlayer) return TypedActionResult.success(itemStack, world.isClient) else pokedexUser = player
+        if (player !is ServerPlayer) return InteractionResultHolder.success(itemStack) else pokedexUser = player
 
-        player.setCurrentHand(usedHand) // Start using the item
+        player.startUsingItem(usedHand) // Start using the item
 
         /*if (player.isSneaking) {
             isScanning = true
@@ -114,7 +114,7 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
             openPokdexGUI(player)
         }*/
 
-        return TypedActionResult.fail(itemStack)
+        return InteractionResultHolder.fail(itemStack)
 
 
         /*// Check if the player is interacting with a Pokémon
@@ -174,17 +174,17 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
         //}
     }
 
-    override fun inventoryTick(stack: ItemStack?, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
+    override fun inventoryTick(stack: ItemStack?, world: Level?, entity: Entity?, slot: Int, selected: Boolean) {
         if (!isScanning) {
             if (focusTicks > 0) focusTicks--
             if (transitionTicks > 0) transitionTicks--
         }
     }
 
-    override fun usageTick(world: World?, user: LivingEntity?, stack: ItemStack?, remainingUseTicks: Int) {
+    override fun onUseTick(world: Level?, user: LivingEntity?, stack: ItemStack?, remainingUseTicks: Int) {
         if (user is Player) {
             // if the item has been used for more than 1 second activate scanning mode
-            if (getMaxUseTime(stack, user) - remainingUseTicks > 3 && !dexActive) {
+            if (getUseDuration(stack, user) - remainingUseTicks > 3 && !dexActive) {
                 usageTicks++
                 if (transitionTicks < 12) transitionTicks++
                 innerRingRotation = (if (pokemonInFocus != null) (innerRingRotation + 10) else (innerRingRotation + 1)) % 360
@@ -195,16 +195,16 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
                     val client = Minecraft.getInstance()
 
                     // Hide the HUD during scan mode
-                    originalHudHidden = client.options.hudHidden
+                    originalHudHidden = client.options.hideGui
 
-                    client.options.hudHidden = true
+                    client.options.hideGui = true
                 }
 
                // isScanning = true
 
                 // todo get it constantly scanning outwards to detect pokemon in focus
                 Minecraft.getInstance().player?.let {
-                    detectPokemon(it.world, it, Hand.MAIN_HAND, getMaxUseTime(stack, user) - remainingUseTicks)
+                    detectPokemon(it.level(), it, InteractionHand.MAIN_HAND, getUseDuration(stack, user) - remainingUseTicks)
                 }
 
                 // if there was a mouse click last tick and overlay is now down
@@ -232,15 +232,15 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
             }
         }
 
-        super.usageTick(world, user, stack, remainingUseTicks)
+        super.onUseTick(world, user, stack, remainingUseTicks)
     }
 
-    override fun onStoppedUsing(stack: ItemStack?, world: World, entity: LivingEntity, timeLeft: Int) {
+    override fun releaseUsing(stack: ItemStack?, world: Level, entity: LivingEntity, timeLeft: Int) {
         // todo if less than a second then open GUI
-        if (entity is ServerPlayer && (getMaxUseTime(stack, entity) - timeLeft) <= 3) {
+        if (entity is ServerPlayer && (getUseDuration(stack, entity) - timeLeft) <= 3) {
             dexActive = true
             openPokdexGUI(entity)
-        } else if (entity !is ServerPlayer && (getMaxUseTime(stack, entity) - timeLeft) > 3){ // any other amount of time assume scanning mode was active
+        } else if (entity !is ServerPlayer && (getUseDuration(stack, entity) - timeLeft) > 3){ // any other amount of time assume scanning mode was active
             playSound(CobblemonSounds.POKEDEX_SCAN_CLOSE)
 
             // todo if solution is found to boost player speed during scanning mode, we might need to end it here
@@ -250,14 +250,14 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
         // reset all overlay values to make sure nothing gets stuck
         resetOverlay()
 
-        super.onStoppedUsing(stack, world, entity, timeLeft)
+        super.releaseUsing(stack, world, entity, timeLeft)
     }
 
     // for resetting certain values of overlay related things
     fun resetOverlay() {
         val client = Minecraft.getInstance()
         // Restore the HUD
-        client.options.hudHidden = originalHudHidden
+        client.options.hideGui = originalHudHidden
         isScanning = false
         bufferImageSnap = false
         dexActive = false
@@ -269,7 +269,7 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
 
 
     // todo idk if we ever will need this since it is only fired when maxUseTime is reached whcich for this item is currently at 3 hours
-    /*override fun finishUsing(stack: ItemStack?, world: World?, entity: LivingEntity?): ItemStack? {
+    /*override fun finishUsing(stack: ItemStack?, world: Level?, entity: LivingEntity?): ItemStack? {
         *//*if (timeLeft < 20) {
             // todo if less than a second then open GUI
             openPokdexGUI(entity as ServerPlayer)
@@ -304,7 +304,7 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
         // logging for testing
         //println("Setting FOV to: $newFov with zoomLevel: $zoomLevel")
 
-        client.options.fov.setValue(newFov)
+        client.options.fov().set(newFov)
     }
 
     // todo render detected pokemon details
@@ -397,10 +397,10 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
     @Environment(EnvType.CLIENT)
     fun renderPhotodexOverlay(GuiGraphics: GuiGraphics, tickDelta: Float, scale: Float) {
         val client = Minecraft.getInstance()
-        val matrices = GuiGraphics.matrices
+        val matrices = GuiGraphics.pose()
 
-        val screenWidth = client.window.scaledWidth
-        val screenHeight = client.window.scaledHeight
+        val screenWidth = client.window.width
+        val screenHeight = client.window.height
 
         // Texture dimensions
         val textureWidth = 345
@@ -414,7 +414,7 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
         val scanOverlayLines = cobblemonResource("textures/gui/pokedex/scan/overlay_scanlines.png")
 
         // Get player yaw and convert to degrees in a circle
-        val yaw = client.player?.yaw ?: 0f
+        val yaw = client.player?.yRot ?: 0f
         val degrees = (yaw % 360 + 360) % 360  // Normalize the angle
 
         // Compass configuration
@@ -506,40 +506,40 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
         val rotation = usageTicks % 360
 
         // Scan rings
-        matrices.push()
+        matrices.pushPose()
         matrices.translate((screenWidth / 2).toFloat(), (screenHeight / 2).toFloat(), 0.0f)
 
-        matrices.push()
-        matrices.multiply(Quaternionf().rotateZ(Math.toRadians((-rotation) * 0.5).toFloat()))
+        matrices.pushPose()
+        matrices.mulPose(Quaternionf().rotateZ(Math.toRadians((-rotation) * 0.5).toFloat()))
         blitk(matrixStack = matrices, texture = cobblemonResource("textures/gui/pokedex/scan/scan_ring_outer.png"), x = -58, y = -58, width = 116, height = 116, alpha = opacity)
-        matrices.pop()
+        matrices.popPose()
 
         for (i in 0 until 80) {
             val rotationQuaternion = Quaternionf().rotateZ(Math.toRadians((i * 4.5) + (rotation * 0.5)).toFloat())
-            matrices.push()
-            matrices.multiply(rotationQuaternion)
+            matrices.pushPose()
+            matrices.mulPose(rotationQuaternion)
             blitk(matrixStack = matrices, texture = cobblemonResource("textures/gui/pokedex/scan/scan_ring_middle.png"), x = -50, y = -0.5F, width = 100, height = 1, alpha = opacity)
-            matrices.pop()
+            matrices.popPose()
         }
 
-        matrices.push()
-        matrices.multiply(Quaternionf().rotateZ(Math.toRadians(-innerRingRotation.toDouble()).toFloat()))
+        matrices.pushPose()
+        matrices.mulPose(Quaternionf().rotateZ(Math.toRadians(-innerRingRotation.toDouble()).toFloat()))
         blitk(matrixStack = matrices, texture = cobblemonResource("textures/gui/pokedex/scan/scan_ring_inner.png"), x = -42, y = -42, width = 84, height = 84, alpha = opacity)
-        matrices.pop()
+        matrices.popPose()
 
-        matrices.pop()
+        matrices.popPose()
 
         RenderSystem.disableBlend()
     }
 
-    fun getCompassTexture(direction: String): Identifier {
+    fun getCompassTexture(direction: String): ResourceLocation {
         return cobblemonResource("textures/gui/pokedex/compass/$direction.png")
     }
 
     @Environment(EnvType.CLIENT)
-    fun onRenderOverlay(GuiGraphics: GuiGraphics, tickCounter: RenderTickCounter) {
+    fun onRenderOverlay(GuiGraphics: GuiGraphics, tickCounter: DeltaTracker) {
         if (!dexActive) {
-            val tickDelta = tickCounter.getTickDelta(false)
+            val tickDelta = tickCounter.getGameTimeDeltaPartialTick(false)
             renderPhotodexOverlay(GuiGraphics, tickDelta, 1.0F)
         }
         //if (isScanning) {
@@ -591,7 +591,7 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
                 } else {
                     pokemonBeingScanned = null
                 }
-                detectPokemon(it.world, it, Hand.MAIN_HAND)
+                detectPokemon(it.level(), it, InteractionHand.MAIN_HAND)
             }
         }
     }
@@ -629,12 +629,12 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
 
     fun detectPokemonInView(player: Player, maxDistance: Double): List<Species> {
         val detectedSpecies = mutableListOf<Species>()
-        val eyePos = player.getCameraPosVec(1.0F)
-        val lookVec = player.getRotationVec(1.0F)
+        val eyePos = player.getEyePosition(1.0F)
+        val lookVec = player.getEyePosition(1.0F)
         val client = Minecraft.getInstance()
-        val fov = client.options.fov.value
-        val screenWidth = client.window.scaledWidth
-        val screenHeight = client.window.scaledHeight
+        val fov = client.options.fov().get()
+        val screenWidth = client.window.guiScaledWidth
+        val screenHeight = client.window.guiScaledHeight
 
         // Number of raycasts in each dimension
         val raycastResolution = 10
@@ -651,14 +651,14 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
                 val offsetY = y * angleStep
 
                 val rayDirection = lookVec.rotatePitch(offsetY).rotateYaw(offsetX)
-                val rayEnd = eyePos.add(rayDirection.multiply(maxDistance * zoomLevel))  // Adjusted raycast distance based on zoomLevel
+                val rayEnd = eyePos.add(rayDirection.scale(maxDistance * zoomLevel))  // Adjusted raycast distance based on zoomLevel
 
-                val hitResult = player.world.raycast(
-                    RaycastContext(
+                val hitResult = player.level().clip(
+                    ClipContext(
                         eyePos,
                         rayEnd,
-                        RaycastContext.ShapeType.OUTLINE,
-                        RaycastContext.FluidHandling.NONE,
+                        ClipContext.Block.OUTLINE,
+                        ClipContext.Fluid.NONE,
                         player
                     )
                 )
@@ -676,43 +676,43 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
     }
 
     // Helper extension functions for rotating vectors
-    fun Vec3d.rotateYaw(angle: Double): Vec3d {
+    fun Vec3.rotateYaw(angle: Double): Vec3 {
         val cos = Math.cos(angle)
         val sin = Math.sin(angle)
-        return Vec3d(this.x * cos - this.z * sin, this.y, this.x * sin + this.z * cos)
+        return Vec3(this.x * cos - this.z * sin, this.y, this.x * sin + this.z * cos)
     }
 
-    fun Vec3d.rotatePitch(angle: Double): Vec3d {
+    fun Vec3.rotatePitch(angle: Double): Vec3 {
         val cos = Math.cos(angle)
         val sin = Math.sin(angle)
-        return Vec3d(this.x, this.y * cos - this.z * sin, this.y * sin + this.z * cos)
+        return Vec3(this.x, this.y * cos - this.z * sin, this.y * sin + this.z * cos)
     }
 
-    private fun detectPokemon(world: World, user: Player, hand: Hand, currentTick: Int = -1) {
+    private fun detectPokemon(world: Level, user: Player, hand: InteractionHand, currentTick: Int = -1) {
         if (isScanning) {
-            val eyePos = user.getCameraPosVec(1.0F)
-            val lookVec = user.getRotationVec(1.0F)
+            val eyePos = user.getEyePosition(1.0F)
+            val lookVec = user.getViewVector(1.0F)
             val maxDistance = 9.0 * zoomLevel  // Adjusted raycast distance based on zoomLevel
             val boundingBoxSize = 12.0 * zoomLevel
             var closestEntity: Entity? = null
             var closestDistance = maxDistance
 
             // Define a large bounding box around the player
-            val boundingBox = Box(
+            val boundingBox = AABB(
                 user.x - boundingBoxSize, user.y - boundingBoxSize, user.z - boundingBoxSize,
                 user.x + boundingBoxSize, user.y + boundingBoxSize, user.z + boundingBoxSize
             )
 
             // Get all entities within the boundingBox
-            val entities = user.world.getEntitiesByClass(Entity::class.java, boundingBox) { it != user }
+            val entities = user.level().getEntitiesOfClass(Entity::class.java, boundingBox) { it != user }
 
             for (entity in entities) {
-                val entityBox: Box = entity.boundingBox
+                val entityBox: AABB = entity.boundingBox
 
                 // Calculate the size of the bounding box
-                val boxWidth = entityBox.lengthX
-                val boxHeight = entityBox.lengthY
-                val boxDepth = entityBox.lengthZ
+                val boxWidth = entityBox.xsize
+                val boxHeight = entityBox.ysize
+                val boxDepth = entityBox.zsize
 
                 val boxVolume = boxWidth * boxHeight * boxDepth
 
@@ -729,13 +729,13 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
                 val inflationFactor = maxSizeScale + (minSizeScale - maxSizeScale) * Math.exp(-steepCoefficient * normalizedSize)
 
                 // Inflate the base bounding box
-                val inflatedBox = entityBox.expand(
+                val inflatedBox = entityBox.inflate(
                     (inflationFactor - 1) * boxWidth / 2,
                     (inflationFactor - 1) * boxHeight / 2,
                     (inflationFactor - 1) * boxDepth / 2
                 )
 
-                val intersection = inflatedBox.raycast(eyePos, eyePos.add(lookVec.multiply(maxDistance)))
+                val intersection = inflatedBox.clip(eyePos, eyePos.add(lookVec.scale(maxDistance)))
 
                 if (intersection.isPresent) {
                     val distanceToEntity = eyePos.distanceTo(intersection.get())
@@ -771,20 +771,20 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
     }
 
     @Environment(EnvType.CLIENT)
-    fun snapPicture(player: ClientPlayer) {
+    fun snapPicture(player: LocalPlayer) {
         Minecraft.getInstance().execute {
             val client = Minecraft.getInstance()
 
             // Hide the HUD
-            val originalHudHidden = client.options.hudHidden
-            client.options.hudHidden = true
+            val originalHudHidden = client.options.hideGui
+            client.options.hideGui = true
 
             // Take a screenshot
-            val framebuffer: Framebuffer = client.framebuffer
-            val nativeImage: NativeImage = ScreenshotRecorder.takeScreenshot(framebuffer)
+            val framebuffer: RenderTarget = client.mainRenderTarget
+            val nativeImage: NativeImage = Screenshot.takeScreenshot(framebuffer)
 
             // Convert NativeImage to BufferedImage
-            val imageBytes = nativeImage.bytes
+            val imageBytes = nativeImage.asByteArray()
             val bufferedImage: BufferedImage = ImageIO.read(ByteArrayInputStream(imageBytes))
 
             // Crop the image to a square centered on the original image
@@ -804,7 +804,7 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
             MapUpdatePacket(imageBytesToSend).sendToServer()
 
             // Restore the HUD
-            client.options.hudHidden = originalHudHidden
+            client.options.hideGui = originalHudHidden
         }
     }
 
@@ -825,7 +825,7 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
             val stack = inventory.getStack(i)
             if (stack.item == Items.MAP) {
                 val mapStack = ItemStack(Items.FILLED_MAP)
-                val world = player.world as ServerWorld
+                val world = player.world as ServerLevel
                 val mapId = world.increaseAndGetMapId().id
 
                 val nbt = NbtCompound()
@@ -929,7 +929,7 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
 
     fun playSound(soundEvent: SoundEvent) {
         Minecraft.getInstance().execute {
-            Minecraft.getInstance().soundManager.play(PositionedSoundInstance.master(soundEvent, 1.0F))
+            Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))
         }
     }
 
@@ -992,7 +992,7 @@ class PokedexItem(val type: String) : CobblemonItem(Settings()) {
         }
     }*/
 
-    /*override fun use(world: World, player: Player, usedHand: Hand): TypedActionResult<ItemStack> {
+    /*override fun use(world: Level, player: Player, usedHand: Hand): TypedActionResult<ItemStack> {
         val itemStack = player.getStackInHand(usedHand)
 
         if (player !is ServerPlayer) return TypedActionResult.success(itemStack, world.isClient)

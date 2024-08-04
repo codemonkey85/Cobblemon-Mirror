@@ -17,19 +17,19 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.HALF_OVER
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.SCALE
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.widget.TextFieldWidget
-import net.minecraft.text.Text
+import net.minecraft.client.gui.components.EditBox
+import net.minecraft.network.chat.Component
 
 class SearchWidget(
     val posX: Number,
     val posY: Number,
     width: Int,
     height: Int,
-    text: Text = "Search".text(),
-    val update: () -> (Unit)): TextFieldWidget(Minecraft.getInstance().textRenderer,
-    posX.toInt(), posY.toInt(), width, height, text) {
+    text: Component = "Search".text(),
+    val update: () -> (Unit)
+): EditBox(Minecraft.getInstance().font, posX.toInt(), posY.toInt(), width, height, text) {
 
     companion object {
         private val backgroundOverlay = cobblemonResource("textures/gui/pokedex/pokedex_screen_search_overlay.png")
@@ -38,7 +38,7 @@ class SearchWidget(
 
     init {
         this.setMaxLength(24)
-        this.setChangedListener {
+        this.setResponder {
             update.invoke()
         }
     }
@@ -77,23 +77,22 @@ class SearchWidget(
 //            drawScaledText(
 //                context = context,
 //                font = CobblemonResources.DEFAULT_LARGE,
-//                text = Text.translatable("cobblemon.ui.pokedex.search").bold(),
+//                text = Component.translatable("cobblemon.ui.pokedex.search").bold(),
 //                x = posX.toInt() + 13,
 //                y = posY.toInt() + 1,
 //                shadow = true
 //            )
 //        }
+        if (cursorPosition != value.length) moveCursorToEnd(false)
 
-        if (cursor != text.length) setCursorToEnd(false)
-
-        val input = if (isFocused) "${text}_".text()
-            else (if(text.isEmpty()) Text.translatable("cobblemon.ui.pokedex.search") else text.text())
+        val input = if (isFocused) "${value}_".text()
+            else (if(value.isEmpty()) Component.translatable("cobblemon.ui.pokedex.search") else value.text())
 
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
             text = input.bold(),
-            // text = Text.translatable(if (isFocused) "${text}_" else text).bold(),
+            // text = Component.translatable(if (isFocused) "${text}_" else text).bold(),
             x = posX.toInt() + 13,
             y = posY.toInt() + 1,
             shadow = true

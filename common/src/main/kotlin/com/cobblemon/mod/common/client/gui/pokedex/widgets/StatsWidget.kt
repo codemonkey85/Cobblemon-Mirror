@@ -22,7 +22,7 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
 import com.cobblemon.mod.common.util.lang
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 
 class StatsWidget(val pX: Int, val pY: Int) : SoundlessWidget(
     pX,
@@ -62,7 +62,7 @@ class StatsWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
-            text = Text.translatable("cobblemon.ui.pokedex.info.stats").bold(),
+            text = Component.translatable("cobblemon.ui.pokedex.info.stats").bold(),
             x = pX + 9,
             y = pY - 10,
             shadow = true

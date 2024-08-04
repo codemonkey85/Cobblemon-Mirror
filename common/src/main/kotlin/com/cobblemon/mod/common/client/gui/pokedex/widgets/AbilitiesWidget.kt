@@ -16,7 +16,7 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 
 class AbilitiesWidget(x: Int, y: Int): InfoTextScrollWidget(pX = x, pY = y) {
     companion object {
@@ -64,7 +64,7 @@ class AbilitiesWidget(x: Int, y: Int): InfoTextScrollWidget(pX = x, pY = y) {
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
-            text = Text.translatable("cobblemon.ui.pokedex.info.ability", abilitiesList[selectedAbilitiesIndex].displayName.asTranslated()).bold(),
+            text = Component.translatable("cobblemon.ui.pokedex.info.ability", abilitiesList[selectedAbilitiesIndex].displayName.asTranslated()).bold(),
             x = pX + 9,
             y = pY - 10,
             shadow = true

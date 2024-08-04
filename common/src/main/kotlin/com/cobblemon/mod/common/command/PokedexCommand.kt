@@ -26,35 +26,34 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.command.EntitySelector
-import net.minecraft.command.argument.ArgumentTypes
-import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.text.Text
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
+import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.commands.arguments.selector.EntitySelector
+import net.minecraft.network.chat.Component
 
 object PokedexCommand {
 
     private const val NAME = "pokedex"
     private const val GRANT_NAME = "grant"
     private const val REVOKE_NAME = "revoke"
-    fun register(dispatcher : CommandDispatcher<ServerCommandSource>) {
-        val commandArgumentBuilder = CommandManager.literal(NAME)
-        val grantCommandBuilder = CommandManager.literal(GRANT_NAME).then(
-            CommandManager.argument("player", EntityArgumentType.player())
-                .then(CommandManager.literal("all").executes(::executeGrantAll))
-                .then(CommandManager.literal("only").then(
-                    CommandManager.argument("species", SpeciesArgumentType.species()).then(
-                        CommandManager.argument("form", FormArgumentType.form()).executes(::executeGrantOnly)
+    fun register(dispatcher : CommandDispatcher<CommandSourceStack>) {
+        val commandArgumentBuilder = Commands.literal(NAME)
+        val grantCommandBuilder = Commands.literal(GRANT_NAME).then(
+            Commands.argument("player", EntityArgument.player())
+                .then(Commands.literal("all").executes(::executeGrantAll))
+                .then(Commands.literal("only").then(
+                    Commands.argument("species", SpeciesArgumentType.species()).then(
+                        Commands.argument("form", FormArgumentType.form()).executes(::executeGrantOnly)
                     )
                 ))
         )
-        val revokeCommandBuilder = CommandManager.literal(REVOKE_NAME).then(
-            CommandManager.argument("player", EntityArgumentType.player())
-                .then(CommandManager.literal("all").executes(::executeRemoveAll))
-                .then(CommandManager.literal("only").then(
-                    CommandManager.argument("species", SpeciesArgumentType.species()).then(
-                        CommandManager.argument("form", FormArgumentType.form()).executes(::executeRemoveOnly)
+        val revokeCommandBuilder = Commands.literal(REVOKE_NAME).then(
+            Commands.argument("player", EntityArgument.player())
+                .then(Commands.literal("all").executes(::executeRemoveAll))
+                .then(Commands.literal("only").then(
+                    Commands.argument("species", SpeciesArgumentType.species()).then(
+                        Commands.argument("form", FormArgumentType.form()).executes(::executeRemoveOnly)
                     )
                 ))
         )
@@ -67,8 +66,8 @@ object PokedexCommand {
         dispatcher.register(commandArgumentBuilder)
     }
 
-    private fun executeGrantOnly(context: CommandContext<ServerCommandSource>): Int {
-        val players = context.getArgument("player", EntitySelector::class.java).getPlayers(context.source)
+    private fun executeGrantOnly(context: CommandContext<CommandSourceStack>): Int {
+        val players = context.getArgument("player", EntitySelector::class.java).findPlayers(context.source)
         val species = context.getArgument("species", Species::class.java)
         val form = context.getArgument("form", FormData::class.java)
         players.forEach {
@@ -77,14 +76,14 @@ object PokedexCommand {
             it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"
-        context.source.sendMessage(
-            Text.of("Granted ${species.name}-${form.formOnlyShowdownId()} to $selectorStr")
+        context.source.sendSystemMessage(
+            Component.literal("Granted ${species.name}-${form.formOnlyShowdownId()} to $selectorStr")
         )
         return Command.SINGLE_SUCCESS
     }
 
-    private fun executeRemoveOnly(context: CommandContext<ServerCommandSource>): Int {
-        val players = context.getArgument("player", EntitySelector::class.java).getPlayers(context.source)
+    private fun executeRemoveOnly(context: CommandContext<CommandSourceStack>): Int {
+        val players = context.getArgument("player", EntitySelector::class.java).findPlayers(context.source)
         val species = context.getArgument("species", Species::class.java)
         val form = context.getArgument("form", FormData::class.java)
         players.forEach {
@@ -93,35 +92,35 @@ object PokedexCommand {
             it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"
-        context.source.sendMessage(
-            Text.of("Removed ${species.name}-${form.formOnlyShowdownId()} from $selectorStr")
+        context.source.sendSystemMessage(
+            Component.literal("Removed ${species.name}-${form.formOnlyShowdownId()} from $selectorStr")
         )
         return Command.SINGLE_SUCCESS
     }
-    private fun executeGrantAll(context: CommandContext<ServerCommandSource>): Int {
-        val players = context.getArgument("player", EntitySelector::class.java).getPlayers(context.source)
+    private fun executeGrantAll(context: CommandContext<CommandSourceStack>): Int {
+        val players = context.getArgument("player", EntitySelector::class.java).findPlayers(context.source)
         players.forEach {
             val dex = Cobblemon.playerDataManager.getPokedexData(it)
             dex.grantedWithCommand(null, null)
             it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"
-        context.source.sendMessage(
-            Text.of("Filled dex of $selectorStr")
+        context.source.sendSystemMessage(
+            Component.literal("Filled dex of $selectorStr")
         )
         return Command.SINGLE_SUCCESS
     }
 
-    private fun executeRemoveAll(context: CommandContext<ServerCommandSource>): Int {
-        val players = context.getArgument("player", EntitySelector::class.java).getPlayers(context.source)
+    private fun executeRemoveAll(context: CommandContext<CommandSourceStack>): Int {
+        val players = context.getArgument("player", EntitySelector::class.java).findPlayers(context.source)
         players.forEach {
             val dex = Cobblemon.playerDataManager.getPokedexData(it)
             dex.removedByCommand(null, null)
             it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"
-        context.source.sendMessage(
-            Text.of("Cleared dex of $selectorStr")
+        context.source.sendSystemMessage(
+            Component.literal("Cleared dex of $selectorStr")
         )
         return Command.SINGLE_SUCCESS
     }

@@ -11,9 +11,12 @@ package com.cobblemon.mod.common.net.messages.client.ui
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.client.net.gui.PokedexUIPacketHandler
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.readIdentifier
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeIdentifier
+import com.cobblemon.mod.common.util.writeString
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Tells the client to open the Pokédex interface.
@@ -24,7 +27,7 @@ class PokedexUIPacket(val type: String, val initSpecies: ResourceLocation? = nul
 
     override val id = ID
 
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(type)
         buffer.writeNullable(initSpecies) { pb, value -> pb.writeIdentifier(value) }
     }
@@ -32,6 +35,6 @@ class PokedexUIPacket(val type: String, val initSpecies: ResourceLocation? = nul
     companion object {
         val ID = cobblemonResource("pokedex_ui")
 
-        fun decode(buffer: RegistryByteBuf) = PokedexUIPacket(buffer.readString(), buffer.readNullable { it.readIdentifier() })
+        fun decode(buffer: RegistryFriendlyByteBuf) = PokedexUIPacket(buffer.readString(), buffer.readNullable { it.readIdentifier() })
     }
 }
