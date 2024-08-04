@@ -103,7 +103,7 @@ class BattleGeneralActionSelection(
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        if (backButton.isHovered(mouseX, mouseY)) {
+        if (lastAnwseredRequest != null && backButton.isHovered(mouseX, mouseY)) {
             playDownSound(Minecraft.getInstance().soundManager)
             CobblemonClient.battle?.cancelLastAnsweredRequest()
             battleGUI.selectAction(request, null)
