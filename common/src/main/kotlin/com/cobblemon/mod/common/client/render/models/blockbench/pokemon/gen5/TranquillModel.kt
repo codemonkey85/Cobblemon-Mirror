@@ -49,7 +49,7 @@ class TranquillModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame,
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("tranquill", "sleep"))
+//            animations = arrayOf(bedrock("tranquill", "sleep"))
 //        )
         val blink = quirk { bedrockStateful("tranquill", "blink") }
         stand = registerPose(

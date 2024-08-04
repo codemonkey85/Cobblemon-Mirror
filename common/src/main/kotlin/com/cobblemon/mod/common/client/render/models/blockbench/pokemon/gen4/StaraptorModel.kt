@@ -44,7 +44,7 @@ class StaraptorModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame,
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("staraptor", "sleep"))
+//            animations = arrayOf(bedrock("staraptor", "sleep"))
 //        )
 
         val blink = quirk { bedrockStateful("staraptor", "blink")}

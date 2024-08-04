@@ -40,7 +40,7 @@ class SceptileModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     override fun registerPoses() {
        // sleep = registerPose(
        //     poseType = PoseType.SLEEP,
-       //     idleAnimations = arrayOf(bedrock("sceptile", "sleep"))
+       //     animations = arrayOf(bedrock("sceptile", "sleep"))
         // )
         val blink = quirk { bedrockStateful("sceptile", "blink") }
         standing = registerPose(

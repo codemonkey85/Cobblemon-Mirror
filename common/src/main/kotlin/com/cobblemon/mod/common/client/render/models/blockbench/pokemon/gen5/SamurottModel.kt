@@ -47,7 +47,7 @@ class SamurottModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
         //sleep = registerPose(
         //    poseType = PoseType.SLEEP,
         //    transformTicks = 10,
-        //    idleAnimations = arrayOf(bedrock("samurott", "sleep"))
+        //    animations = arrayOf(bedrock("samurott", "sleep"))
         //)
 
         standing = registerPose(

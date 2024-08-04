@@ -66,7 +66,7 @@ import com.cobblemon.mod.common.pokemon.activestate.InactivePokemonState
 import com.cobblemon.mod.common.pokemon.activestate.ShoulderedState
 import com.cobblemon.mod.common.pokemon.ai.FormPokemonBehaviour
 import com.cobblemon.mod.common.pokemon.evolution.variants.ItemInteractionEvolution
-import com.cobblemon.mod.common.pokemon.misc.GimmighoulStashHandler
+import com.cobblemon.mod.common.pokemon.feature.StashHandler
 import com.cobblemon.mod.common.util.*
 import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules
 import net.minecraft.core.BlockPos
@@ -763,17 +763,8 @@ open class PokemonEntity(
                     pokemon.lastFlowerFed = itemStack
                     return InteractionResult.sidedSuccess(level().isClientSide)
                 }
-            } else if (!player.isShiftKeyDown && (itemStack.`is`(CobblemonItems.RELIC_COIN)
-                        || itemStack.`is`(CobblemonItems.RELIC_COIN_POUCH)
-                        || itemStack.`is`(CobblemonItems.RELIC_COIN_SACK)
-                        || itemStack.`is`(Items.NETHERITE_SCRAP)
-                        || itemStack.`is`(Items.NETHERITE_INGOT)
-                        || itemStack.`is`(Items.NETHERITE_BLOCK))
-            ) {
-
-                if (GimmighoulStashHandler.mobInteract(player, hand, pokemon)) {
-                    return InteractionResult.SUCCESS
-                }
+            } else if(!player.isShiftKeyDown && StashHandler.interactMob(player, pokemon, itemStack)) {
+                return InteractionResult.SUCCESS
             } else if (itemStack.item is DyeItem && colorFeatureType != null) {
                 val currentColor = colorFeature?.value ?: ""
                 val item = itemStack.item as DyeItem
@@ -1303,14 +1294,15 @@ open class PokemonEntity(
                 "cyan" -> Items.CYAN_WOOL
                 "gray" -> Items.GRAY_WOOL
                 "green" -> Items.GREEN_WOOL
-                "light-blue" -> Items.LIGHT_BLUE_WOOL
-                "light-gray" -> Items.LIGHT_GRAY_WOOL
+                "light_blue" -> Items.LIGHT_BLUE_WOOL
+                "light_gray" -> Items.LIGHT_GRAY_WOOL
                 "lime" -> Items.LIME_WOOL
                 "magenta" -> Items.MAGENTA_WOOL
                 "orange" -> Items.ORANGE_WOOL
                 "purple" -> Items.PURPLE_WOOL
                 "red" -> Items.RED_WOOL
                 "yellow" -> Items.YELLOW_WOOL
+                "pink" -> Items.PINK_WOOL
                 else -> Items.WHITE_WOOL
             }
             val itemEntity = this.spawnAtLocation(woolItem, 1) ?: return

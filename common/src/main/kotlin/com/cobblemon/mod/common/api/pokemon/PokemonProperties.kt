@@ -646,7 +646,7 @@ open class PokemonProperties {
     fun asString(separator: String = " "): String {
         val pieces = mutableListOf<String>()
         species?.let { pieces.add(it) }
-        nickname?.let { pieces.add("nickname=$${it.string}") }
+        nickname?.let { pieces.add("nickname=${it.string}") }
         form?.let { pieces.add("form=$it") }
         level?.let { pieces.add("level=$it") }
         shiny?.let { pieces.add("shiny=$it") }

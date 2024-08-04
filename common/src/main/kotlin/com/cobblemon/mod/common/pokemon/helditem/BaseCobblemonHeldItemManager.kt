@@ -78,4 +78,21 @@ abstract class BaseCobblemonHeldItemManager : HeldItemManager {
      * @return The amount of loaded item IDs.
      */
     protected fun loadedItemCount() = this.itemIds.size
+
+    /**
+     * Find the Showdown literal ID of the given [item].
+     * This only works for items under the [Cobblemon.MODID] namespace.
+     * If you wish to support your own items you need to implement your own [HeldItemManager].
+     *
+     * @param item The [Item] being queried.
+     * @return The literal Showdown ID if any.
+     */
+    fun showdownIdOf(item: Item): String? {
+        val identifier = BuiltInRegistries.ITEM.getKey(item)
+        val formattedPath = identifier.path.replace("_", "")
+        if (this.itemIds.containsKey(formattedPath)) {
+            return formattedPath
+        }
+        return null
+    }
 }

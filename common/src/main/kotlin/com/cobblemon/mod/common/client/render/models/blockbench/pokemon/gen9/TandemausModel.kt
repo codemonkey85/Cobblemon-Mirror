@@ -73,7 +73,7 @@ class TandemausModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
 //            poseType = PoseType.SLEEP,
 //            transformTicks = 10,
 //            quirks = arrayOf(blink1, blink2),
-//            idleAnimations = arrayOf(
+//            animations = arrayOf(
 //                bedrock("tandemaus", "sleep")
 //            )
 //        )

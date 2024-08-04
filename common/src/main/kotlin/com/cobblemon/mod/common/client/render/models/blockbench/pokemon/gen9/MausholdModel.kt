@@ -80,7 +80,7 @@ class MausholdModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         //    poseName = "sleep",
         //    poseType = PoseType.SLEEP,
         //    transformTicks = 10,
-        //    idleAnimations = arrayOf(
+        //    animations = arrayOf(
         //        bedrock("maushold_three", "sleep")
         //    )
         //)

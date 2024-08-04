@@ -1,0 +1,140 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.wobbuffet.ground_idle": {
+			"loop": true,
+			"bones": {
+				"arm_right": {
+					"rotation": [30, -10, -85],
+					"position": [0, 0, -1]
+				},
+				"arm_right2": {
+					"rotation": [0, 0, -28]
+				},
+				"arm_left": {
+					"rotation": [30, 10, 85],
+					"position": [0, 0, -1]
+				},
+				"arm_left2": {
+					"rotation": [0, 0, 28]
+				},
+				"tail": {
+					"rotation": [-9, 0, 0]
+				},
+				"tail2": {
+					"rotation": [5, 0, 0]
+				},
+				"tail3": {
+					"rotation": [10, 0, 0]
+				}
+			}
+		},
+		"animation.wobbuffet.pose": {
+			"loop": true,
+			"bones": {
+				"head": {
+					"rotation": [0, 0, -5]
+				},
+				"mouth_open_happy": {
+					"position": [0, 0, -0.1]
+				},
+				"arm_right": {
+					"rotation": [42, 0, -75]
+				},
+				"arm_right2": {
+					"rotation": [0, -40, 0]
+				},
+				"arm_left": {
+					"rotation": [-76.19117, 23.12911, -51.58627],
+					"position": [0, 4, 0]
+				},
+				"arm_left2": {
+					"rotation": [0, 70, 0]
+				},
+				"tail": {
+					"rotation": [20, -22.5, -32.5]
+				},
+				"tail2": {
+					"rotation": [17.5, 0, 0]
+				},
+				"tail3": {
+					"rotation": [30, 0, 0]
+				},
+				"mouth_closed": {
+					"position": [0, 0, 0.1]
+				}
+			}
+		},
+		"animation.wobbuffet.sleep": {
+			"loop": true,
+			"bones": {
+				"torso": {
+					"rotation": [-20, -5, -12]
+				},
+				"head": {
+					"rotation": [-18, -1, -10]
+				},
+				"arm_right": {
+					"rotation": [0, 37.5, -63]
+				},
+				"arm_left": {
+					"rotation": [2.5, -37, 84]
+				},
+				"arm_left2": {
+					"rotation": [0, 0, 25]
+				},
+				"tail": {
+					"rotation": [-13.5, 0, 0]
+				},
+				"tail2": {
+					"rotation": [7.5, 0, 0]
+				},
+				"tail3": {
+					"rotation": [6, 0, 0]
+				},
+				"tail_eye_right": {
+					"position": [0.1, -0.1, 0]
+				},
+				"tail_eye_left": {
+					"position": [-0.1, -0.1, 0]
+				},
+				"eye_left": {
+					"rotation": [0, 0, 10]
+				},
+				"eye_right": {
+					"rotation": [0, 0, -10]
+				}
+			}
+		},
+		"animation.wobbuffet.blink": {
+			"animation_length": 0.1667,
+			"bones": {
+				"tail_eye_right": {
+					"position": {
+						"0.0": [0.1, -0.1, 0],
+						"0.125": [0.1, -0.1, 0],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"tail_eye_left": {
+					"position": {
+						"0.0": [-0.1, -0.1, 0],
+						"0.125": [-0.1, -0.1, 0],
+						"0.1667": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.wobbuffet.mouth": {
+			"loop": true,
+			"bones": {
+				"mouth_open": {
+					"position": [0, 0, -0.1]
+				},
+				"mouth_closed": {
+					"position": [0, 0, 0.1]
+				}
+			}
+		}
+	}
+}

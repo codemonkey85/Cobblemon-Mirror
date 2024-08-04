@@ -147,6 +147,10 @@ object CobblemonSounds : PlatformRegistry<Registry<SoundEvent>, ResourceKey<Regi
     @JvmField
     val FISHING_ROD_REEL_IN = this.create("fishing.rod_reel_in")
     @JvmField
+    val FISHING_BAIT_ATTACH = this.create("fishing.bait_attach")
+    @JvmField
+    val FISHING_BAIT_DETACH = this.create("fishing.bait_detach")
+    @JvmField
     val TUMBLESTONE_BREAK = this.create("tumblestone.break")
     @JvmField
     val TUMBLESTONE_BLOCK_BREAK = this.create("tumblestone.block_break")

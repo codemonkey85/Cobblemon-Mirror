@@ -27,6 +27,7 @@ import net.minecraft.stats.Stats
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.SlotAccess
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.ClickAction
@@ -59,6 +60,19 @@ class PokerodItem(val pokeRodId: ResourceLocation, settings: Properties) : Fishi
             // add a new component that stores the itemStack as a component? Yes!
         }
 
+        fun consumeBait(stack: ItemStack) {
+            val baitStack = getBaitStackOnRod(stack)
+            val baitCount = baitStack.count
+            if (baitCount == 1) {
+                stack.set<RodBaitComponent>(CobblemonItemComponents.BAIT, null)
+                return
+            }
+            if (baitCount > 1) {
+                val fishingBait = FishingBaits.getFromBaitItemStack(baitStack) ?: return
+                stack.set<RodBaitComponent>(CobblemonItemComponents.BAIT, RodBaitComponent(fishingBait, ItemStack(baitStack.item, baitCount - 1)))
+            }
+        }
+
         fun getBaitEffects(stack: ItemStack): List<FishingBait.Effect> {
             return getBaitOnRod(stack)?.effects ?: return emptyList()
         }
@@ -85,6 +99,7 @@ class PokerodItem(val pokeRodId: ResourceLocation, settings: Properties) : Fishi
         if (itemStack2.isEmpty) {
             // Retrieve bait onto cursor
             if(baitStack != ItemStack.EMPTY) {
+                playDetachSound(player)
                 setBait(itemStack, ItemStack.EMPTY)
                 slotAccess.set(baitStack.copy())
                 return true
@@ -99,6 +114,8 @@ class PokerodItem(val pokeRodId: ResourceLocation, settings: Properties) : Fishi
                 // Add as much as possible
                 if (baitStack != ItemStack.EMPTY) {
                     if (baitStack.item == itemStack2.item) {
+
+                        playAttachSound(player)
                         // Calculate how much bait to add
                         val diff = (baitStack.maxStackSize - baitStack.count).coerceIn(0, itemStack2.count)
                         itemStack2.shrink(diff)
@@ -108,12 +125,14 @@ class PokerodItem(val pokeRodId: ResourceLocation, settings: Properties) : Fishi
                     }
 
                     // If Item on rod is different from cursor item, swap them
+                    playAttachSound(player)
                     setBait(itemStack, itemStack2.copy())
                     slotAccess.set(baitStack.copy())
                     return true
                 }
 
                 // If no bait currently on rod, add all
+                playAttachSound(player)
                 setBait(itemStack, itemStack2.copy())
                 itemStack2.shrink(itemStack2.count)
                 return true
@@ -179,6 +198,7 @@ class PokerodItem(val pokeRodId: ResourceLocation, settings: Properties) : Fishi
 
         // If rod is empty and offhand has bait, add bait from offhand
         if (!world.isClientSide && user.fishing == null && offHandBait != null && baitOnRod == null) {
+            playAttachSound(user)
             setBait(itemStack, offHandItem.copy())
             offHandItem.shrink(offHandItem.count)
         }
@@ -235,7 +255,7 @@ class PokerodItem(val pokeRodId: ResourceLocation, settings: Properties) : Fishi
                 )*/
 
 
-                val bobberEntity = PokeRodFishingBobberEntity(user, pokeRodId, getBaitOnRod(itemStack)?.toItemStack(world.itemRegistry) ?: ItemStack.EMPTY, world, luckLevel, lureLevel, castingSoundInstance)
+                val bobberEntity = PokeRodFishingBobberEntity(user, pokeRodId, getBaitOnRod(itemStack)?.toItemStack(world.itemRegistry) ?: ItemStack.EMPTY, world, luckLevel, lureLevel, castingSoundInstance, itemStack)
 
                 // Set the casting sound to the bobber entity
                 //bobberEntity.castingSound = castingSoundInstance
@@ -256,6 +276,14 @@ class PokerodItem(val pokeRodId: ResourceLocation, settings: Properties) : Fishi
 
     override fun getDescriptionId(): String {
         return "item.cobblemon.poke_rod"
+    }
+
+    private fun playAttachSound(entity: Entity) {
+        entity.playSound(CobblemonSounds.FISHING_BAIT_ATTACH, 1F, 1F)
+    }
+
+    private fun playDetachSound(entity: Entity) {
+        entity.playSound(CobblemonSounds.FISHING_BAIT_DETACH, 1F, 1F)
     }
 
 }

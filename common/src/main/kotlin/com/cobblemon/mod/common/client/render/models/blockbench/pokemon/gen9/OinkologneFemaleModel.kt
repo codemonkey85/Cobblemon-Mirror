@@ -42,7 +42,7 @@ class OinkologneFemaleModel (root: ModelPart) : PokemonPosableModel(root), Heade
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("oinkologne_female", "sleep"))
+//            animations = arrayOf(bedrock("oinkologne_female", "sleep"))
 //        )
 
         val blink = quirk { bedrockStateful("oinkologne_female", "blink") }

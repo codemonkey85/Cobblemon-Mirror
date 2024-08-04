@@ -34,7 +34,7 @@ object FishingRodTooltipGenerator : TooltipGenerator() {
         val client = Minecraft.getInstance()
         val itemRegistry = client.level?.registryAccess()?.registryOrThrow(Registries.ITEM)
         itemRegistry?.let { registry ->
-            FishingBaits.getFromRodItemStack(stack)?.toItemStack(registry)?.item?.description?.copy()?.gray()?.let {
+            FishingBaits.getFromRodItemStack(stack)?.toItemStack(registry)?.item?.description?.copy()?.gray()?.let { // maybe this can be simplified to not use the FishingBaits to get the stack and just use PokerodItem to get the stack since we have it already
                 resultLines.add(Component.literal("Bait: ").append(it).append(" x${PokerodItem.getBaitStackOnRod(stack).count}"))
             }
         }

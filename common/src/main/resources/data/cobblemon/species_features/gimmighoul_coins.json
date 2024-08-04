@@ -6,9 +6,14 @@
   "max": 999,
   "visible": true,
   "display": {
-    "name": "cobblemon.ui.gold_hoard",
+    "name": "cobblemon.ui.stash.gold",
     "colour": [229, 189, 29],
     "underlay": "cobblemon:textures/gui/summary/summary_stats_other_bar.png",
     "overlay": "cobblemon:textures/gui/summary/summary_stats_coin_overlay.png"
+  },
+  "itemPoints": {
+    "cobblemon:relic_coin": 1,
+    "cobblemon:relic_coin_pouch": 9,
+    "cobblemon:relic_coin_sack": 81
   }
 }

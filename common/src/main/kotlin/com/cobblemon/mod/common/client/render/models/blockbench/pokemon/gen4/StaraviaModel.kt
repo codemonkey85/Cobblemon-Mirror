@@ -47,7 +47,7 @@ class StaraviaModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("staravia", "sleep"))
+//            animations = arrayOf(bedrock("staravia", "sleep"))
 //        )
         val blink = quirk { bedrockStateful("staravia", "blink") }
         stand = registerPose(

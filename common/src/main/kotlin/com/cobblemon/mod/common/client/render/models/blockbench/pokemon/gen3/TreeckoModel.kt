@@ -35,7 +35,7 @@ class TreeckoModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override fun registerPoses() {
         //sleep = registerPose(
         //    poseType = PoseType.SLEEP,
-        //    idleAnimations = arrayOf(bedrock("treecko", "sleep"))
+        //    animations = arrayOf(bedrock("treecko", "sleep"))
         //)
 
         val blink = quirk { bedrockStateful("treecko", "blink") }

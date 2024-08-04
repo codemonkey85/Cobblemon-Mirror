@@ -58,7 +58,7 @@ class PidgeotModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
 //                wingOpenRight.createTransformation().withVisibility(visibility = false)
 //            ),
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("pidgeot", "sleep"))
+//            animations = arrayOf(bedrock("pidgeot", "sleep"))
 //        )
 
         stand = registerPose(

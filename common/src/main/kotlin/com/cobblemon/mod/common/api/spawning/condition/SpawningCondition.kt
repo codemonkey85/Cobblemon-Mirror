@@ -182,4 +182,14 @@ abstract class SpawningCondition<T : SpawningContext> {
         timeRange = merger.mergeSingle(timeRange, other.timeRange)
         structures = merger.merge(structures, other.structures)?.toMutableList()
     }
+
+    open fun isValid(): Boolean {
+        if(biomes != null && biomes!!.any {it == null})
+            return false
+        if(dimensions != null && dimensions!!.any {it == null})
+            return false
+        if(structures != null && structures!!.any {it == null})
+            return false
+        return true
+    }
 }

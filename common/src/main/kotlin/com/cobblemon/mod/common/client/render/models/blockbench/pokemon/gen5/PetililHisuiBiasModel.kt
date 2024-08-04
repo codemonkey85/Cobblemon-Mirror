@@ -14,6 +14,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvi
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
 import net.minecraft.client.model.geom.ModelPart
@@ -36,6 +37,10 @@ class PetililHisuiBiasModel (root: ModelPart) : PokemonPosableModel(root), Heade
     lateinit var walk: CobblemonPose
     lateinit var sleep: CobblemonPose
     lateinit var battleIdle: CobblemonPose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
+
+    val shoulderOffset = 3
 
     override val cryAnimation = CryProvider { bedrockStateful("petilil", "cry") }
 
@@ -97,6 +102,36 @@ class PetililHisuiBiasModel (root: ModelPart) : PokemonPosableModel(root), Heade
                         bedrock("petilil", "battle_idle")
                 ),
                 transformedParts = arrayOf(
+                        leaf_back.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, 6.5),
+                        leaf_left.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, -19.5),
+                        leaf_right.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, -19.5)
+                )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                quirks = arrayOf(blink),
+                animations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("petilil", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset),
+                        leaf_back.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, 6.5),
+                        leaf_left.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, -19.5),
+                        leaf_right.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, -19.5)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                quirks = arrayOf(blink),
+                animations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("petilil", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset),
                         leaf_back.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, 6.5),
                         leaf_left.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, -19.5),
                         leaf_right.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, -19.5)
