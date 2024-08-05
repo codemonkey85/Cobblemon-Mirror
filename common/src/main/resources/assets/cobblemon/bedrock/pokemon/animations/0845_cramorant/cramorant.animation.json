@@ -1,0 +1,110 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.cramorant.new": {
+			"animation_length": 0.0417,
+			"bones": {
+				"head": {
+					"rotation": [-35, 0, 0]
+				},
+				"jaw": {
+					"rotation": [42.5, 0, 0]
+				},
+				"wing_right": {
+					"rotation": [-90, 0, 0],
+					"position": [0, 0, 0]
+				},
+				"wing_right2": {
+					"rotation": [0, -45, 0]
+				},
+				"wing_left": {
+					"rotation": [-90, 0, -10]
+				},
+				"wing_left2": {
+					"rotation": [0, 45, 0]
+				},
+				"hair": {
+					"rotation": [-40, 0, 0]
+				},
+				"hair2": {
+					"rotation": [-30, 0, 25]
+				},
+				"hair3": {
+					"rotation": [-15, 0, 15]
+				},
+				"hair4": {
+					"rotation": [-35, 0, -27.5]
+				}
+			}
+		},
+		"animation.cramorant.new2": {
+			"loop": true,
+			"bones": {
+				"head": {
+					"rotation": [-50, 0, 0]
+				},
+				"jaw": {
+					"rotation": [67.5, 0, 0]
+				}
+			}
+		},
+		"animation.cramorant.ground_idle": {
+			"loop": true,
+			"bones": {
+				"wing_right": {
+					"rotation": [-90, 0, 32]
+				},
+				"wing_left": {
+					"rotation": [-90, 0, -32.5]
+				},
+				"hair": {
+					"rotation": [-22.5, 0, 0]
+				},
+				"hair2": {
+					"rotation": [-10.81661, -12.84247, 14.7097]
+				},
+				"hair3": {
+					"rotation": [-2.4905, -0.21782, -4.99527]
+				},
+				"hair4": {
+					"rotation": [-19.65924, 13.04213, -26.98182]
+				}
+			}
+		},
+		"animation.cramorant.blink": {
+			"animation_length": 0.0833,
+			"bones": {
+				"eyelid_right": {
+					"position": {
+						"0.0": [-0.1, 0, -0.1],
+						"0.0417": {"pre": [-0.1, 0, -0.1], "post": [0, 0, 0]}
+					}
+				},
+				"eyelid_left": {
+					"position": {
+						"0.0": [-0.1, 0, -0.1],
+						"0.0417": {"pre": [-0.1, 0, -0.1], "post": [0, 0, 0]}
+					}
+				}
+			}
+		},
+		"animation.cramorant.blink_unsynced": {
+			"animation_length": 0.1667,
+			"bones": {
+				"eyelid_right": {
+					"position": {
+						"0.0": [-0.1, 0, -0.1],
+						"0.0833": {"pre": [-0.1, 0, -0.1], "post": [0, 0, 0]}
+					}
+				},
+				"eyelid_left": {
+					"position": {
+						"0.0": [0, 0, 0],
+						"0.0833": {"pre": [0, 0, 0], "post": [0.1, 0, -0.1]},
+						"0.1667": {"pre": [0.1, 0, -0.1], "post": [0, 0, 0]}
+					}
+				}
+			}
+		}
+	}
+}
