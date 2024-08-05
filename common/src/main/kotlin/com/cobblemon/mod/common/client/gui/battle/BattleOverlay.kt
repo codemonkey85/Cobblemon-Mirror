@@ -22,6 +22,7 @@ import com.cobblemon.mod.common.client.gui.battle.widgets.BattleMessagePane
 import com.cobblemon.mod.common.client.keybind.boundKey
 import com.cobblemon.mod.common.client.keybind.keybinds.PartySendBinding
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
 import com.cobblemon.mod.common.client.render.getDepletableRedGreen
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokeBallModelRepository
@@ -165,11 +166,12 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         val mc = Minecraft.getInstance()
 
         val battlePokemon = activeBattlePokemon.battlePokemon ?: return
-        // First render the underlay
         val battle = CobblemonClient.battle ?: return
         val slotCount = battle.battleFormat.battleType.slotsPerActor
+        val playerNumberOffset = (activeBattlePokemon.getActorShowdownId()[1].digitToInt() - 1) / 2 * 10
+
         var x = HORIZONTAL_INSET + (slotCount - rank - 1) * HORIZONTAL_SPACING.toFloat()
-        val y = VERTICAL_INSET + rank * if(isCompact) COMPACT_VERTICAL_SPACING else VERTICAL_SPACING
+        val y = VERTICAL_INSET + rank * (if (isCompact) COMPACT_VERTICAL_SPACING else VERTICAL_SPACING) + (if (left) playerNumberOffset else (battle.battleFormat.battleType.actorsPerSide - 1) * 10 - playerNumberOffset)
         if (!left) {
             x = mc.window.guiScaledWidth - x - if(isCompact) COMPACT_TILE_WIDTH else TILE_WIDTH
         }
@@ -178,11 +180,11 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         } else {
             mc.window.guiScaledWidth.toFloat()
         }
-
         activeBattlePokemon.invisibleX = invisibleX
         activeBattlePokemon.xDisplacement = x
         activeBattlePokemon.animate(tickDelta)
         x = activeBattlePokemon.xDisplacement
+
 
         val hue = activeBattlePokemon.getHue()
         val r = ((hue shr 16) and 0b11111111) / 255F
@@ -190,7 +192,6 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         val b = (hue and 0b11111111) / 255F
 
         val truePokemon = activeBattlePokemon.actor.pokemon.find { it.uuid == activeBattlePokemon.battlePokemon?.uuid }
-
         drawBattleTile(
             context = context,
             x = x,
@@ -212,7 +213,8 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
             isFlatHealth = battlePokemon.isHpFlat,
             isSelected = hasCommand,
             isHovered = isHovered,
-            isCompact = isCompact
+            isCompact = isCompact,
+            actorDisplayName = if (!battle.isPvW && ((left && activeBattlePokemon.actor.activePokemon.first() == activeBattlePokemon) || (!left && activeBattlePokemon.actor.activePokemon.last() == activeBattlePokemon))) activeBattlePokemon.actor.displayName else null
         )
     }
 
@@ -237,7 +239,8 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         isFlatHealth: Boolean,
         isSelected: Boolean = false,
         isHovered: Boolean = false,
-        isCompact: Boolean = false
+        isCompact: Boolean = false,
+        actorDisplayName: MutableComponent? = null
     ) {
         val tileWidth = if (isCompact) COMPACT_TILE_WIDTH else TILE_WIDTH
         val portraitOffsetX = if (isCompact) COMPACT_PORTRAIT_OFFSET_X else PORTRAIT_OFFSET_X
@@ -398,7 +401,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         val (healthRed, healthGreen) = getDepletableRedGreen(hpRatio)
         val fullWidth = 97
         val barWidth = hpRatio * fullWidth
-        val barOffsetX = if (isCompact) (if (reversed) 1 else 2) else 2
+        val barOffsetX = if (isCompact) (if (reversed) 1 else 3) else 2
         val barX = if (!reversed) infoBoxX - barOffsetX else infoBoxX - barOffsetX + (fullWidth - barWidth)
         blitk(
             matrixStack = matrixStack,
@@ -442,6 +445,33 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
                     width = 10,
             )
         }
+
+        // Actor Display Name
+        if(actorDisplayName != null) {
+            if (!reversed) {
+                drawScaledText(
+                        context = context,
+                        text = actorDisplayName,
+                        x = x + 9,
+                        y = y - 5,
+                        scale = 0.5F,
+                        shadow = true,
+                        opacity = opacity,
+                        )
+            } else {
+                drawScaledTextJustifiedRight(
+                        context = context,
+                        text = actorDisplayName,
+                        x = x + tileWidth - 9,
+                        y = y - 5,
+                        scale = 0.5F,
+                        shadow = true,
+                        opacity = opacity
+                )
+            }
+
+        }
+
     }
 
     private fun drawPokeBall(

@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.battle
 
 import com.cobblemon.mod.common.CobblemonNetwork
+import com.cobblemon.mod.common.api.battles.model.actor.ActorType
 import com.cobblemon.mod.common.battles.BattleFormat
 import com.cobblemon.mod.common.battles.ForcePassActionResponse
 import com.cobblemon.mod.common.battles.PassActionResponse
@@ -72,4 +73,15 @@ class ClientBattle(
     fun getParticipatingActor(uuid: UUID): ClientBattleActor? {
         return sides.flatMap { it.actors }.find { it.uuid == uuid }
     }
+
+    /** Whether or not there is one side with at least one player, and the other only has wild Pokémon. */
+    val isPvW: Boolean
+        get() {
+            val playerSide = sides.find { it.actors.any { it.type == ActorType.PLAYER } } ?: return false
+            if (playerSide.actors.any { it.type != ActorType.PLAYER }) {
+                return false
+            }
+            val otherSide = sides.find { it != playerSide }!!
+            return otherSide.actors.all { it.type == ActorType.WILD }
+        }
 }

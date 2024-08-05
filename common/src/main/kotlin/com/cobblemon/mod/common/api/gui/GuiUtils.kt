@@ -115,6 +115,21 @@ fun drawCenteredText(
 }
 
 @JvmOverloads
+fun drawTextJustifiedRight(
+        context: GuiGraphics,
+        font: ResourceLocation? = null,
+        text: MutableComponent,
+        x: Number,
+        y: Number,
+        colour: Int,
+        shadow: Boolean = true
+) {
+    val comp = text.let { if (font != null) it.font(font) else it }
+    val font = Minecraft.getInstance().font
+    context.drawString(font, comp, x.toInt() - font.width(comp), y.toInt(), colour, shadow)
+}
+
+@JvmOverloads
 fun drawText(
     context: GuiGraphics,
     font: ResourceLocation? = null,
