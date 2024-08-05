@@ -13,16 +13,20 @@ import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.api.battles.model.actor.EntityBackedBattleActor
+import com.cobblemon.mod.common.api.scheduling.afterOnServer
 import com.cobblemon.mod.common.battles.ActiveBattlePokemon
 import com.cobblemon.mod.common.battles.ShowdownInterpreter
 import com.cobblemon.mod.common.battles.dispatch.*
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.entity.pokemon.effects.IllusionEffect
 import com.cobblemon.mod.common.net.messages.client.battle.BattleSwitchPokemonPacket
+import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler.SEND_OUT_STAGGER_BASE_DURATION
+import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler.SEND_OUT_STAGGER_RANDOM_MAX_DURATION
 import com.cobblemon.mod.common.util.swap
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.server.level.ServerLevel
 import java.util.concurrent.CompletableFuture
+import kotlin.random.Random
 
 /**
  * Format: |switch|POKEMON|DETAILS|HP STATUS
@@ -63,16 +67,18 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
                 val targetPos = ShowdownInterpreter.getSendoutPosition(battle, pnx, battleActor)
                 if (targetPos != null) {
                     actor.stillSendingOutCount++
-                    pokemon.effectedPokemon.sendOutWithAnimation(
-                            source = entity,
-                            battleId = battle.battleId,
-                            level = entity.level() as ServerLevel,
-                            doCry = false,
-                            position = targetPos,
-                            illusion = illusion?.let { IllusionEffect(it.effectedPokemon) }
-                    ).thenApply {
-                        actor.stillSendingOutCount--
-                    }
+                        afterOnServer(seconds = actor.stillSendingOutCount * SEND_OUT_STAGGER_BASE_DURATION + Random.nextFloat() * SEND_OUT_STAGGER_RANDOM_MAX_DURATION ) {
+                            pokemon.effectedPokemon.sendOutWithAnimation(
+                                    source = entity,
+                                    battleId = battle.battleId,
+                                    level = entity.level() as ServerLevel,
+                                    doCry = false,
+                                    position = targetPos,
+                                    illusion = illusion?.let { IllusionEffect(it.effectedPokemon) }
+                            ).thenApply {
+                                actor.stillSendingOutCount--
+                            }
+                        }
                 }
             }
             else if (pokemonEntity != null) {
