@@ -1,9 +1,7 @@
 package com.cobblemon.mod.common.api.reactive.collections.list
 
-import com.cobblemon.mod.common.api.PrioritizedList
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.reactive.Observable
-import com.cobblemon.mod.common.api.reactive.ObservableSubscription
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
 import com.cobblemon.mod.common.api.reactive.collections.MutableObservableCollection
 import com.cobblemon.mod.common.api.reactive.collections.subscriptions.ListSubscription
@@ -13,13 +11,11 @@ class MutableObservableSubList<T>(
     private val parentList: MutableObservableList<T>,
     private val fromIndex: Int,
     private val toIndex: Int,
-    private val elementHandler: (T) -> Set<Observable<*>>,
+    elementHandler: (T) -> Set<Observable<*>>,
 ) : MutableObservableCollection<T, List<T>>,
-    MutableList<T>,
-    Observable<Pair<List<T>, T>> {
+    ObservableSubList<T>(parentList, fromIndex, toIndex, elementHandler),
+    MutableList<T> {
 
-    private val subscriptions = PrioritizedList<ObservableSubscription<Pair<List<T>, T>>>()
-    private val subscriptionMap: MutableMap<Observable<*>, ObservableSubscription<*>> = mutableMapOf()
     private val additionObservable = SimpleObservable<Pair<List<T>, T>>()
     private val removalObservable = SimpleObservable<Pair<List<T>, T>>()
     private val setObservable = SimpleObservable<Pair<List<T>, Pair<T, T>>>()
@@ -29,31 +25,38 @@ class MutableObservableSubList<T>(
         get() = when {
             isEmpty() -> emptyList()
             parentList.size < maxSize -> parentList.elements.subList(fromIndex, parentList.size)
-            else -> parentList.elements.subList(fromIndex, toIndexInParent)
+            else -> parentList.elements.subList(fromIndex, currentToIndex)
         }
+    private val maxLastIndex: Int = toIndex - 1
     private val maxSize: Int = toIndex - fromIndex
     override val size: Int get() = when {
         isEmpty() -> 0
         parentList.size < toIndex -> parentList.lastIndex - fromIndex
-        else -> toIndex - 1
+        else -> maxLastIndex
     }
-    /** Last index in the sub list's window, or -1 if the window is empty. */
-    val lastIndex: Int get() = size - 1
-    private val lastIndexInParent: Int
-        get() = when {
-            isEmpty() -> fromIndex
-            parentList.lastIndex < toIndex ->  parentList.lastIndex
-            else -> toIndex - 1
-        }
-    private val toIndexInParent: Int
+    /** This is the last index in the sublist window, or -1 if the window is empty. */
+    val currentLastIndex: Int get() = size - 1
+    /** This is either [fromIndex] or -1 if the sublist window is empty. */
+    val currentFromIndex: Int get() = if (isEmpty()) -1 else fromIndex
+    /**
+     * If [parentList] size > [toIndex] this is the toIndex,
+     * if the parentList size is > [fromIndex] this is the parentList size,
+     * or this is the [currentFromIndex].
+     */
+    private val currentToIndex: Int
         get() = when {
             toIndex < parentList.size ->  toIndex
             fromIndex < parentList.size -> parentList.size
-            else -> fromIndex
+            else -> currentFromIndex
+        }
+    private val currentLastIndexInParent: Int
+        get() = when {
+            isEmpty() -> fromIndex
+            parentList.lastIndex < toIndex ->  parentList.lastIndex
+            else -> maxLastIndex
         }
 
     init {
-        this.elements.forEach { register(it) }
         parentList.subscribeIndexed(
             priority = Priority.NORMAL,
             additionHandler = { (_, element, index) -> emitAddition(element, index) },
@@ -61,25 +64,6 @@ class MutableObservableSubList<T>(
             setHandler = { (_, elements, index) -> emitSet(elements, index) },
             swapHandler = { (_, element, index) -> emitSwap(element, index) },
         )
-    }
-
-    override fun subscribe(
-        priority: Priority,
-        handler: (Pair<List<T>, T>) -> Unit,
-    ): ObservableSubscription<Pair<List<T>, T>> {
-        val subscription = ObservableSubscription(this, handler)
-        subscriptions.add(priority, subscription)
-        return subscription
-    }
-
-    fun subscribeAndHandle(
-        priority: Priority,
-        handler: (Pair<List<T>, T>) -> Unit
-    ): ObservableSubscription<Pair<List<T>, T>> {
-        val subscription = ObservableSubscription(this, handler)
-        subscriptions.add(priority, subscription)
-        elements.forEach { handler(this to it) }
-        return subscription
     }
 
     override fun subscribe(
@@ -135,57 +119,32 @@ class MutableObservableSubList<T>(
         return subscribe(priority, anyChangeHandler, additionHandler, removalHandler, setHandler, swapHandler)
     }
 
-    override fun unsubscribe(subscription: ObservableSubscription<Pair<List<T>, T>>) {
-        subscriptions.remove(subscription)
-    }
-
-    private fun register(element: T) {
-        elementHandler(element).forEach { observable ->
-            subscriptionMap[observable] = observable.subscribe { emitAnyChange(element) }
-        }
-    }
-
-    private fun unregister(element: T) {
-        elementHandler(element).forEach { subscriptionMap.remove(it)?.unsubscribe() }
-    }
-
-    private fun emitAnyChange(element: T): Boolean {
-        subscriptions.forEach { it.handle(elements to element) }
-        return true
-    }
-
     private fun emitAddition(element: T, index: Int) {
-        if (index.isInParentRelativeWindow()) {
-            val elements = this.elements
-            handleAddition(elements, element)
-            handlePreviousLastIndex(elements)
-        } else if(index < toIndex) {
-            val elements = this.elements
-            handleAddition(elements, parentList[fromIndex])
-            handlePreviousLastIndex(elements)
+        if (index >= toIndex) {
+            return
         }
-    }
-
-    private fun handlePreviousLastIndex(elements: List<T>) {
+        val elements = this.elements
+        if (index >= fromIndex) {
+            handleAddition(elements, element)
+        } else if(parentList.lastIndex >= fromIndex) {
+            handleAddition(elements, parentList[fromIndex])
+        }
         if (parentList.size > toIndex) {
             handleRemoval(elements, parentList[toIndex])
         }
     }
 
     private fun emitRemoval(element: T, index: Int) {
-        if (index.isInParentRelativeWindow()) {
-            val elements = this.elements
-            handleRemoval(elements, element)
-            handleNewLastIndex(elements)
-        } else if(index < fromIndex && lastIndexInParent >= fromIndex - 1) {
-            val elements = this.elements
-            handleRemoval(elements, parentList[fromIndex - 1])
-            handleNewLastIndex(elements)
+        if (index >= toIndex) {
+            return
         }
-    }
-
-    private fun handleNewLastIndex(elements: List<T>) {
-        if (lastIndexInParent >= toIndex - 1) {
+        val elements = this.elements
+        if (index >= fromIndex) {
+            handleRemoval(elements, element)
+        } else if(parentList.lastIndex >= fromIndex - 1) {
+            handleRemoval(elements, parentList[fromIndex - 1])
+        }
+        if (currentLastIndexInParent >= toIndex - 1) {
             handleAddition(elements, parentList[toIndex - 1])
         }
     }
@@ -233,57 +192,6 @@ class MutableObservableSubList<T>(
         unregister(element)
         removalObservable.emit(elements to element)
         emitAnyChange(element)
-    }
-
-    private fun Int.isInWindow(): Boolean = this in 0 until size
-
-    private fun Int.isInParentRelativeWindow(): Boolean = this in fromIndex until toIndexInParent
-
-    override fun isEmpty() = parentList.lastIndex < fromIndex
-
-    override fun isNotEmpty() = parentList.size > fromIndex
-
-    override fun contains(element: T) = elements.contains(element)
-
-    override fun containsAll(elements: Collection<T>) = this.elements.containsAll(elements)
-
-    /** @throws IndexOutOfBoundsException if sublist does not contain [subListIndex]. */
-    private fun parentIndex(subListIndex: Int) = throwIfOutOfBounds(subListIndex) + fromIndex
-
-    /**
-     * @throws IndexOutOfBoundsException [index] is above [lastIndex] or below [fromIndex]
-     * @return [index]
-     */
-    private fun throwIfOutOfBounds(index: Int): Int {
-        return if (index.isInWindow()) {
-            index
-        } else {
-            throw IndexOutOfBoundsException("Index $index is outside the sub list window.")
-        }
-    }
-
-    override operator fun get(index: Int): T {
-        return parentList[parentIndex(index)]
-    }
-
-    override fun indexOf(element: T): Int {
-        val endIndex = fromIndex + size
-        for (i in fromIndex until endIndex) {
-            if (elements[i] == element) {
-                return i
-            }
-        }
-        return -1
-    }
-
-    override fun lastIndexOf(element: T): Int {
-        val startIndex = fromIndex + size
-        for (i in startIndex downTo fromIndex) {
-            if (elements[i] == element) {
-                return i
-            }
-        }
-        return -1
     }
 
     override operator fun iterator() = MutableObservableSubListIterator(this)
@@ -353,7 +261,7 @@ class MutableObservableSubList<T>(
     override fun removeAt(index: Int): T = parentList.removeAt(parentIndex(index))
 
     override fun addAll(elements: Collection<T>): Boolean {
-        val parentIndex = if (lastIndex > -1) lastIndex + fromIndex else fromIndex
+        val parentIndex = if (currentLastIndex > -1) currentLastIndex + fromIndex else fromIndex
         return if (parentIndex > parentList.lastIndex) {
             parentList.addAll(elements)
         }  else {
@@ -382,9 +290,12 @@ class MutableObservableSubList<T>(
      * the window provided before the iteration, even when the iterator is mutable.
      */
     private fun removeAllIf(predicate: (T) -> Boolean): Boolean {
+        if (isEmpty()) {
+            return false
+        }
         var mutated = false
         val outOfParentBounds: (Int) -> Boolean = { it == parentList.size }
-        for (i in fromIndex until toIndexInParent) {
+        for (i in fromIndex until currentToIndex) {
             if (outOfParentBounds(i)) {
                 return mutated
             }
@@ -403,19 +314,4 @@ class MutableObservableSubList<T>(
             iterator().removeIf { true }
         }
     }
-
-    /** @return a read-only copy that will NOT mutate if the backing list mutates. */
-    override fun copy() = ObservableList(elements, elementHandler)
-
-    /** @return a mutable copy that will NOT mutate if the backing list mutates. */
-    override fun mutableCopy() = MutableObservableList(elements, elementHandler)
-
-    /** @return a read-only copy of [parentList] that will NOT mutate if the parent list mutates */
-    fun getParentCopy(): ObservableList<T> = parentList.copy()
-
-    /** @return a read-only copy of [parentList] that will NOT mutate if the parent list mutates */
-    fun getParentMutableCopy(): MutableObservableList<T> = parentList.mutableCopy()
-
-    /** @return a read-only version of [parentList] that WILL mutate if the backing list mutates */
-    fun getParent(): ObservableList<T> = parentList
 }

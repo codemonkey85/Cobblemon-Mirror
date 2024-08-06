@@ -4,44 +4,57 @@ package com.cobblemon.mod.common.api.reactive.collections.list
 import com.cobblemon.mod.common.api.reactive.collections.MutableObservableCollectionIterator
 
 open class MutableObservableListIterator<T>(
-    private val observableList: MutableObservableList<T>,
+    observableList: MutableObservableList<T>,
     index: Int = 0,
-) : MutableObservableCollectionIterator<T, Set<T>>,
-    ObservableListIterator<T>(observableList.elements.toMutableList().listIterator(index), index),
+) : MutableObservableCollectionIterator<T, Set<T>, ListIterator<T>>,
+    ObservableListIterator<T>(observableList, index),
     MutableListIterator<T> {
 
+    private val mutableList: MutableObservableList<T> = observableList
+
+    private var illegalSetOrRemoveState: Boolean? = null
+        set (value) { if (field != value) field = value }
+
+    override fun next(): T {
+        illegalSetOrRemoveState = false
+        return super.next()
+    }
+
+    override fun previous(): T {
+        illegalSetOrRemoveState = false
+        return super.previous()
+    }
+
     override fun remove() {
-        if (index < 0) {
-            throw IllegalStateException("Observable List iterator 'remove' was called before 'next' or 'previous'.")
-        } else if (removedOrAddedThisIteration) {
-            throw IllegalStateException(
-                "Observable List iterator 'remove' was called, but 'remove' or 'add' were already called this iteration."
-            )
-        }
-        iterator.remove()
-        observableList.removeAt(index--)
-        removedOrAddedThisIteration = true
+        throwIfIllegalState("remove")
+        mutableList.removeAt(--index)
+        illegalSetOrRemoveState = true
     }
 
     override fun set(element: T) {
-        if (index < 0) {
-            throw IllegalStateException("Observable List iterator 'set' was called before 'next' or 'previous'.")
-        } else if (removedOrAddedThisIteration) {
-            throw IllegalStateException(
-                "Observable List iterator 'set' was called, but 'remove' or 'add' were already called this iteration."
-            )
-        }
-        iterator.set(element)
-        observableList[index] = element
+        throwIfIllegalState("set")
+        mutableList[index -1] = element
     }
 
     override fun add(element: T) {
-        iterator.add(element)
         when {
-            observableList.isEmpty() -> observableList.add(element).run { index = 0 }
-            index < observableList.lastIndex -> observableList.add(++index, element)
-            else -> observableList.add(element).run { index++ }
+            mutableList.isEmpty() -> mutableList.add(element).run { index = 0 }
+            index < mutableList.size -> mutableList.add(index++, element)
+            else -> mutableList.add(element).run { index++ }
         }
-        removedOrAddedThisIteration = true
+        illegalSetOrRemoveState = true
+    }
+
+    private fun throwIfIllegalState(function: String) {
+        if (illegalSetOrRemoveState == null) {
+            throw IllegalStateException(
+                "Observable List iterator '$function' was called before 'next' or 'previous'."
+            )
+        } else if (illegalSetOrRemoveState == true) {
+            throw IllegalStateException(
+                "Observable List iterator '$function' was called, " +
+                        "but 'remove' or 'add' was already called this iteration."
+            )
+        }
     }
 }

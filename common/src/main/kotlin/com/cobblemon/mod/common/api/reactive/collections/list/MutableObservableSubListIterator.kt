@@ -4,76 +4,60 @@ package com.cobblemon.mod.common.api.reactive.collections.list
 import com.cobblemon.mod.common.api.reactive.collections.MutableObservableCollectionIterator
 
 open class MutableObservableSubListIterator<T>(
-    private val subList: MutableObservableSubList<T>,
-    private var index: Int = 0,
-) : MutableObservableCollectionIterator<T, Set<T>>,
+    subList: MutableObservableSubList<T>,
+    index: Int = 0,
+) : MutableObservableCollectionIterator<T, List<T>, ListIterator<T>>,
+    ObservableSubListIterator<T>(subList, index),
     MutableListIterator<T> {
 
-    private var removedOrAddedThisIteration: Boolean = false
+    private val mutableSubList: MutableObservableSubList<T> = subList
+
+    private var illegalSetOrRemoveState: Boolean? = null
         set (value) { if (field != value) field = value }
 
-    init {
-        index--
-    }
-
-    override fun hasNext(): Boolean = index + 1 < subList.size
-
-    override fun hasPrevious(): Boolean = index - 1 > 0
-
     override fun next(): T {
-        if (!hasNext()) {
-            throw NoSuchElementException(
-                "Observable Sub List iterator does not have next element from index $index."
-            )
-        }
-        return subList[++index].also { removedOrAddedThisIteration = false }
+        illegalSetOrRemoveState = false
+        return super.next()
     }
 
     override fun previous(): T {
-        if (!hasPrevious()) {
-            throw NoSuchElementException(
-                "Observable Sub List iterator does not have previous element from index $index."
-            )
-        }
-        return subList[--index].also { removedOrAddedThisIteration = false }
+        illegalSetOrRemoveState = false
+        return super.previous()
     }
 
-    override fun nextIndex(): Int = index + 1
-
-    override fun previousIndex(): Int = index - 1
-
     override fun remove() {
-        if (index < 0) {
-            throw IllegalStateException("Observable List iterator 'remove' was called before 'next' or 'previous'.")
-        } else if (removedOrAddedThisIteration) {
-            throw IllegalStateException(
-                "Observable List iterator 'remove' was called, but 'remove' or 'add' were already called this iteration."
-            )
-        }
-        subList.removeAt(index--)
-        removedOrAddedThisIteration = true
+        throwIfIllegalState("remove")
+        mutableSubList.removeAt(--index)
+        illegalSetOrRemoveState = true
     }
 
     override fun set(element: T) {
-        if (index < 0) {
-            throw IllegalStateException("Observable List iterator 'set' was called before 'next' or 'previous'.")
-        } else if (removedOrAddedThisIteration) {
-            throw IllegalStateException(
-                "Observable List iterator 'set' was called, but 'remove' or 'add' were already called this iteration."
-            )
-        }
-        subList[index] = element
+        throwIfIllegalState("set")
+        mutableSubList[index -1] = element
     }
 
     override fun add(element: T) {
         when {
             subList.isEmpty() -> {
-                subList.add(element)
-                index = if (subList.isEmpty()) -1 else 0
+                mutableSubList.add(element)
+                index = mutableSubList.currentFromIndex
             }
-            index < subList.lastIndex -> subList.add(++index, element)
-            else -> subList.add(element).run { index++ }
+            index < mutableSubList.currentLastIndex -> mutableSubList.add(index++, element)
+            else -> mutableSubList.add(element).run { index++ }
         }
-        removedOrAddedThisIteration = true
+        illegalSetOrRemoveState = true
+    }
+
+    private fun throwIfIllegalState(function: String) {
+        if (illegalSetOrRemoveState == null) {
+            throw IllegalStateException(
+                "Observable Sub List iterator '$function' was called before 'next' or 'previous'."
+            )
+        } else if (illegalSetOrRemoveState == true) {
+            throw IllegalStateException(
+                "Observable Sub List iterator '$function' was called, " +
+                        "but 'remove' or 'add' was already called this iteration."
+            )
+        }
     }
 }
