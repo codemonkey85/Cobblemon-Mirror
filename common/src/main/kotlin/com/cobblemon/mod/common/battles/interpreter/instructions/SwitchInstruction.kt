@@ -66,8 +66,9 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
             if (pokemonEntity == null && entity != null) {
                 val targetPos = ShowdownInterpreter.getSendoutPosition(battle, pnx, battleActor)
                 if (targetPos != null) {
+                    val battleSendoutCount = activePokemon.getActorShowdownId()[1].digitToInt() - 1 + actor.stillSendingOutCount
                     actor.stillSendingOutCount++
-                        afterOnServer(seconds = actor.stillSendingOutCount * SEND_OUT_STAGGER_BASE_DURATION + Random.nextFloat() * SEND_OUT_STAGGER_RANDOM_MAX_DURATION ) {
+                        afterOnServer(seconds = battleSendoutCount * SEND_OUT_STAGGER_BASE_DURATION + if (battleSendoutCount > 0) Random.nextFloat() * SEND_OUT_STAGGER_RANDOM_MAX_DURATION else 0F ) {
                             pokemon.effectedPokemon.sendOutWithAnimation(
                                     source = entity,
                                     battleId = battle.battleId,

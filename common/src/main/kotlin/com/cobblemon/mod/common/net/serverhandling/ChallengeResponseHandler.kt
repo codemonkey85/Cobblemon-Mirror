@@ -149,7 +149,7 @@ object ChallengeResponseHandler : ServerNetworkPacketHandler<BattleChallengeResp
                                 }
                                 existingChallengePokemon = targetedEntity.party().first().uuid
                             }
-                            BattleBuilder.pvp1v1(player, targetedEntity, leadingPokemon, existingChallengePokemon, battleFormat).ifErrored { it.sendTo(player) { it.red() }; it.sendTo(targetedEntity) { it.red() } }
+                            BattleBuilder.pvp1v1(targetedEntity, player, existingChallengePokemon, leadingPokemon, battleFormat).ifErrored { it.sendTo(player) { it.red() }; it.sendTo(targetedEntity) { it.red() } }
                             BattleRegistry.removeChallenge(targetedEntity.uuid, existingChallenge.challengeId)
                         }
 
