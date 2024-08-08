@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.net.battle
 
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
+import com.cobblemon.mod.common.api.text.yellow
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.battle.ClientBattleChallenge
 import com.cobblemon.mod.common.net.messages.client.battle.BattleChallengeNotificationPacket
@@ -18,13 +19,12 @@ import net.minecraft.client.Minecraft
 object BattleChallengeNotificationHandler : ClientNetworkPacketHandler<BattleChallengeNotificationPacket> {
     override fun handle(packet: BattleChallengeNotificationPacket, client: Minecraft) {
         CobblemonClient.requests.battleChallenges.add(ClientBattleChallenge(packet.battleChallengeId, packet.challengerIds, packet.battleFormat))
-        client.player?.displayClientMessage(
+        client.player?.sendSystemMessage(
             lang(
                 "challenge.receiver",
                 packet.challengerNames.first(),
-                packet.battleFormat.battleType.displayName,
-            ),
-            true
+                lang("battle.types.${packet.battleFormat.battleType.name}"),
+            ).yellow()
         )
     }
 }

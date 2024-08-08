@@ -117,11 +117,11 @@ object ChallengeHandler : ServerNetworkPacketHandler<BattleChallengePacket> {
                         }
 
                         val battleFormatLang = when (packet.battleFormat.battleType.name) {
-                            BattleTypes.DOUBLES.name -> "battle.types.double"
-                            BattleTypes.TRIPLES.name -> "battle.types.triple"
+                            BattleTypes.DOUBLES.name -> "battle.types.doubles"
+                            BattleTypes.TRIPLES.name -> "battle.types.triples"
                             BattleTypes.MULTI.name -> "battle.types.multi"
                             BattleTypes.ROYAL.name -> "battle.types.freeforall"
-                            else -> "battle.types.single"
+                            else -> "battle.types.singles"
                         }
 
                         targetedEntity.sendPacket(BattleChallengeNotificationPacket(challenge.challengeId, player.uuid, player.name.copy().aqua(), packet.battleFormat))
