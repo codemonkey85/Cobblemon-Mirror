@@ -90,7 +90,7 @@ class MoveInstruction(
             val providers = mutableListOf<Any>(battle)
             userPokemon.effectedPokemon.entity?.let { UsersProvider(it) }?.let(providers::add)
             if (spreadTargetPokemon.isNotEmpty()) {
-                providers.add(TargetsProvider( spreadTargetPokemon.filter { it?.effectedPokemon?.entity != null}.map { spreadTarget -> spreadTarget?.effectedPokemon?.entity!! } ))
+                providers.add(TargetsProvider( spreadTargetPokemon.filter { it?.effectedPokemon?.entity != null}.mapNotNull { spreadTarget -> spreadTarget?.effectedPokemon?.entity } ))
             } else {
                 targetPokemon?.effectedPokemon?.entity?.let { TargetsProvider(it) }?.let(providers::add)
             }
