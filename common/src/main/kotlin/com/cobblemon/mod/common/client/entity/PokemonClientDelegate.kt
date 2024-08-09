@@ -15,6 +15,7 @@ import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.entity.PokemonSideDelegate
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunctions
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
+import com.cobblemon.mod.common.api.scheduling.ScheduledTask
 import com.cobblemon.mod.common.api.scheduling.SchedulingTracker
 import com.cobblemon.mod.common.api.scheduling.afterOnClient
 import com.cobblemon.mod.common.api.scheduling.lerpOnClient
@@ -78,6 +79,7 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
     val secondsSinceBallThrown: Float
         get() = (System.currentTimeMillis() - ballStartTime) / 1000F
 
+    private var scaleAnimTask: ScheduledTask? = null
     private var cryAnimation: ActiveAnimation? = null
 
     override fun onSyncedDataUpdated(data: EntityDataAccessor<*>) {
@@ -179,12 +181,15 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
                                 }
                             }
                             currentEntity.after(seconds = BEAM_EXTEND_TIME) {
-                                lerpOnClient(BEAM_SHRINK_TIME) { entityScaleModifier = it }
-                                currentEntity.isInvisible = false
-                                currentEntity.after(seconds = POKEBALL_AIR_TIME*2){
-                                    ballOffset = 0f
-                                    ballRotOffset = 0f
-                                    sendOutPosition = null
+                                // Skip scaling task if the Pokémon is already being recalled
+                                if (scaleAnimTask == null || scaleAnimTask!!.expired) {
+                                    scaleAnimTask = lerpOnClient(BEAM_SHRINK_TIME) { entityScaleModifier = it }
+                                    currentEntity.isInvisible = false
+                                    currentEntity.after(seconds = POKEBALL_AIR_TIME*2){
+                                        ballOffset = 0f
+                                        ballRotOffset = 0f
+                                        sendOutPosition = null
+                                    }
                                 }
                             }
                         }
@@ -210,7 +215,7 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
                             )
                             playedSendOutSound = true
                         }
-                        lerpOnClient(BEAM_SHRINK_TIME) { entityScaleModifier = it }
+                        scaleAnimTask = lerpOnClient(BEAM_SHRINK_TIME) { entityScaleModifier = it } // TODO?
                         currentEntity.after(seconds = BEAM_SHRINK_TIME * 2) {
                             ballOffset = 0f
                             ballRotOffset = 0f
@@ -219,13 +224,16 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
                     }
                     3 -> {
                         // Scaling down into pokeball
-                        entityScaleModifier = 1F
                         beamStartTime = System.currentTimeMillis()
                         ballOffset = 0f
                         ballRotOffset = 0f
                         sendOutPosition = null
                         afterOnClient(seconds = BEAM_EXTEND_TIME) {
-                            lerpOnClient(BEAM_SHRINK_TIME) {
+                            entityScaleModifier = 1F
+
+                            // Cancel any ongoing scale animation tasks
+                            scaleAnimTask?.expire()
+                            scaleAnimTask = lerpOnClient(BEAM_SHRINK_TIME) {
                                 entityScaleModifier = (1 - it)
                             }
                         }
