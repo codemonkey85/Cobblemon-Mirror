@@ -51,6 +51,7 @@ class BattleGUI : Screen(battleLang("gui.title")) {
     override fun init() {
         super.init()
         messagePane = BattleMessagePane(CobblemonClient.battle!!.messages)
+        messagePane.opacity = CobblemonClient.battleOverlay.opacityRatio.toFloat().coerceAtLeast(0.3F)
         addRenderableWidget(messagePane)
     }
 
