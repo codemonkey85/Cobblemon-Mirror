@@ -46,7 +46,7 @@ class BattleConfigureGUI(
                                 tileTexture = cobblemonResource("textures/gui/interact/request/battle_request_single.png"),
                                 overlayTexture = cobblemonResource("textures/gui/interact/request/battle_request_overlay.png"),
                                 title = lang("challenge.request_battle_title").bold(),
-                                subTitle = lang("battle.types.single").bold(),
+                                subTitle = lang("battle.types.singles").bold(),
                                 onRequest = { packet, battleFormat -> sendBattleRequest(battleFormat, packet) },
                                 onResponse = { packet, accept -> sendBattleResponse(packet, accept) }
                         )
@@ -59,7 +59,7 @@ class BattleConfigureGUI(
                                 tileTexture = cobblemonResource("textures/gui/interact/request/battle_request_double.png"),
                                 overlayTexture = cobblemonResource("textures/gui/interact/request/battle_request_overlay.png"),
                                 title = lang("challenge.request_battle_title").bold(),
-                                subTitle = lang("battle.types.double").bold(),
+                                subTitle = lang("battle.types.doubles").bold(),
                                 onRequest = { packet, battleFormat -> sendBattleRequest(battleFormat, packet) },
                                 onResponse = { packet, accept -> sendBattleResponse(packet, accept) }
                         ),
@@ -72,7 +72,7 @@ class BattleConfigureGUI(
                                 tileTexture = cobblemonResource("textures/gui/interact/request/battle_request_triple.png"),
                                 overlayTexture = cobblemonResource("textures/gui/interact/request/battle_request_overlay.png"),
                                 title = lang("challenge.request_battle_title").bold(),
-                                subTitle = lang("battle.types.triple").bold(),
+                                subTitle = lang("battle.types.triples").bold(),
                                 onRequest = { packet, battleFormat -> sendBattleRequest(battleFormat, packet) },
                                 onResponse = { packet, accept -> sendBattleResponse(packet, accept) }
                         ),
