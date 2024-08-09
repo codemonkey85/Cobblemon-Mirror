@@ -215,7 +215,7 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
                             )
                             playedSendOutSound = true
                         }
-                        scaleAnimTask = lerpOnClient(BEAM_SHRINK_TIME) { entityScaleModifier = it } // TODO?
+                        scaleAnimTask = lerpOnClient(BEAM_SHRINK_TIME) { entityScaleModifier = it }
                         currentEntity.after(seconds = BEAM_SHRINK_TIME * 2) {
                             ballOffset = 0f
                             ballRotOffset = 0f

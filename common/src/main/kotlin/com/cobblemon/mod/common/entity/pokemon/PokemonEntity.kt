@@ -212,7 +212,8 @@ open class PokemonEntity(
     /**
      * 0 is do nothing,
      * 1 is appearing from a pokeball so needs to be small then grows,
-     * 2 is being captured/recalling so starts large and shrinks.
+     * 2 is 1 without extra animations like ball throwing and particles, used for pastures and wild capture fails
+     * 3 is being captured/recalling so starts large and shrinks.
      */
     var beamMode: Int
         get() = entityData.get(BEAM_MODE).toInt()
@@ -425,6 +426,11 @@ open class PokemonEntity(
             return true
         }
 
+        // Don't let Pokémon be hurt during sendout and recall animations
+        if (beamMode != 0) {
+            return true
+        }
+
         // Owned Pokémon cannot be hurt by players or suffocation
         if (ownerUUID != null && (damageSource.entity is Player || damageSource.`is`(DamageTypes.IN_WALL))) {
             return true
@@ -459,6 +465,12 @@ open class PokemonEntity(
                 entityData.set(PHASING_TARGET_ID, owner.id)
                 entityData.set(BEAM_MODE, 3)
                 val state = pokemon.state
+
+                // Let the Pokémon be intangible during recall
+                noPhysics = true
+                // This doesn't appear to actually prevent a livingEntity from falling, but is here as a precaution
+                isNoGravity = true
+
                 afterOnServer(seconds = SEND_OUT_DURATION) {
                     // only recall if the Pokémon hasn't been recalled yet for this state
                     if (state == pokemon.state) {
@@ -1151,8 +1163,10 @@ open class PokemonEntity(
 
     override fun travel(movementInput: Vec3) {
         val prevBlockPos = this.blockPosition()
-        super.travel(movementInput)
-        this.updateBlocksTraveled(prevBlockPos)
+        if (beamMode != 3) { // Don't let Pokémon move during recall
+            super.travel(movementInput)
+            this.updateBlocksTraveled(prevBlockPos)
+        }
     }
 
     private fun updateBlocksTraveled(fromBp: BlockPos) {
@@ -1162,6 +1176,11 @@ open class PokemonEntity(
         }
         val blocksTaken = this.blockPosition().distSqr(fromBp)
         if (blocksTaken > 0) this.blocksTraveled += blocksTaken
+    }
+
+    override fun pushEntities() {
+        // Don't collide with other entities when being recalled
+        if (beamMode != 3) super.pushEntities()
     }
 
     /*
