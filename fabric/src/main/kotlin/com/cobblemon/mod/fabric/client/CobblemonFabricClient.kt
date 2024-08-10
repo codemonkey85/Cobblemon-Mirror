@@ -11,6 +11,7 @@ package com.cobblemon.mod.fabric.client
 import com.cobblemon.mod.common.CobblemonClientImplementation
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.client.CobblemonClient
+import com.cobblemon.mod.common.client.CobblemonClient.pokedexUsageContext
 import com.cobblemon.mod.common.client.CobblemonClient.reloadCodedAssets
 import com.cobblemon.mod.common.client.keybind.CobblemonKeyBinds
 import com.cobblemon.mod.common.client.render.atlas.CobblemonAtlases
@@ -73,8 +74,6 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
             PokeBalls.all().forEach { ball ->
                 it.addModels(ball.model3d)
             }
-//            it.addModels()
-//            it.modifyModelBeforeBake().register(ModelModifier.BeforeBake { model, context ->  })
         }
 
         CobblemonFabric.networkManager.registerClientHandlers()
@@ -103,19 +102,17 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
         })
 
         // Register the HUD render callback for pokedex
-        /*
-        HudRenderCallback.EVENT.register { GuiGraphics, tickCounter ->
+        HudRenderCallback.EVENT.register { graphics, tickDelta ->
             val client = Minecraft.getInstance()
             val player = client.player
             if (player != null) {
                 val itemStack = player.mainHandItem
-                if (itemStack.item is PokedexItem && (itemStack.item as PokedexItem).transitionTicks > 0) {
-                    if (!(itemStack.item as PokedexItem).bufferImageSnap) {
-                        (itemStack.item as PokedexItem).onRenderOverlay(GuiGraphics, tickCounter)
-                    }
+                if (itemStack.item is PokedexItem) {
+                    pokedexUsageContext.tryRenderOverlay(graphics, tickDelta)
                 }
             }
         }
+        /*
 
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client ->
             // if player is holding pokedex item in their main hand look for other actions by them

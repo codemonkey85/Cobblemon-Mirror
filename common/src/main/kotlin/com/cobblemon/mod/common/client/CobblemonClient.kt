@@ -14,7 +14,6 @@ import com.cobblemon.mod.common.api.berry.Berries
 import com.cobblemon.mod.common.api.pokedex.ClientPokedex
 import com.cobblemon.mod.common.api.scheduling.ClientTaskTracker
 import com.cobblemon.mod.common.api.storage.player.client.ClientGeneralPlayerData
-import com.cobblemon.mod.common.api.text.gray
 import com.cobblemon.mod.common.client.battle.ClientBattle
 import com.cobblemon.mod.common.client.gui.PartyOverlay
 import com.cobblemon.mod.common.client.gui.battle.BattleOverlay
@@ -41,6 +40,7 @@ import com.cobblemon.mod.common.client.trade.ClientTrade
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatType
 import com.cobblemon.mod.common.platform.events.PlatformEvents
+import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
@@ -79,6 +79,7 @@ object CobblemonClient {
 
     val overlay: PartyOverlay by lazy { PartyOverlay() }
     val battleOverlay: BattleOverlay by lazy { BattleOverlay() }
+    val pokedexUsageContext: PokedexUsageContext by lazy { PokedexUsageContext() }
 
     fun onLogin() {
         clientPlayerData = ClientGeneralPlayerData()
