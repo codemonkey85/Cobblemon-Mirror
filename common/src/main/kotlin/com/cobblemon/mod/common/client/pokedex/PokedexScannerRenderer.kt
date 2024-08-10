@@ -171,6 +171,7 @@ class PokedexScannerRenderer {
             }
         }
 
+
         val rotation = usageContext.usageTicks % 360
 
         // Scan rings

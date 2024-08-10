@@ -13,6 +13,8 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import kotlin.math.max
+import kotlin.math.min
 
 class PokedexUsageContext {
     //PokedexGUI
@@ -51,6 +53,9 @@ class PokedexUsageContext {
             innerRingRotation = (if (pokemonInFocus != null) (innerRingRotation + 10) else (innerRingRotation + 1)) % 360
             usageTicks++
         }
+        if (pokemonInFocus != null) {
+            focusTicks = min(focusTicks + 1, 9)
+        }
     }
 
     fun tryOpenScanGui(user: LocalPlayer, ticksInUse: Int, inUse: Boolean) {
@@ -84,12 +89,15 @@ class PokedexUsageContext {
             scanningProgress++
             if (targetPokemon != pokemonInFocus) {
                 pokemonInFocus = targetPokemon
+                focusTicks = 0
                 StartScanningPacket(targetUUID).sendToServer()
             }
             user.playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
         }
         else {
+            pokemonInFocus = null
             scanningProgress = 0
+            focusTicks = 0
         }
     }
 
