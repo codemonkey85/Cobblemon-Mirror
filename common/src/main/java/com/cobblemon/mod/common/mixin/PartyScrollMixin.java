@@ -23,8 +23,6 @@ public class PartyScrollMixin {
     @Shadow
     private double accumulatedScrollY;
 
-    @Shadow private double accumulatedDY;
-
     @Inject(
             method = "onScroll",
             at = @At(
