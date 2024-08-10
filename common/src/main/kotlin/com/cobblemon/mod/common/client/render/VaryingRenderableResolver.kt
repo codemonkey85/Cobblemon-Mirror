@@ -11,10 +11,7 @@ package com.cobblemon.mod.common.client.render
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Bone
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
-import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
-import com.cobblemon.mod.common.util.adapters.ModelTextureSupplierAdapter
-import com.cobblemon.mod.common.util.adapters.Vector3fAdapter
-import com.cobblemon.mod.common.util.adapters.Vector4fAdapter
+import com.cobblemon.mod.common.util.adapters.*
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
@@ -52,6 +49,10 @@ class VaryingRenderableResolver<T : PosableModel>(
             ?: throw IllegalStateException("Unable to find a texture for $name with aspects ${aspects.joinToString()}. This shouldn't be possible if you've defined the fallback variation.")
     }
 
+    fun getSprite(aspects: Set<String>, type: SpriteType): ResourceLocation? {
+        return getVariationValue(aspects) { sprites }?.get(type)
+    }
+
     private fun <T> getVariationValue(aspects: Set<String>, selector: ModelAssetVariation.() -> T?): T? {
         return variations.lastOrNull { it.aspects.all { it in aspects } && selector(it) != null }?.let(selector)
     }
@@ -86,6 +87,7 @@ class VaryingRenderableResolver<T : PosableModel>(
             .registerTypeAdapter(Vector3f::class.java, Vector3fAdapter)
             .registerTypeAdapter(Vector4f::class.java, Vector4fAdapter)
             .registerTypeAdapter(ModelTextureSupplier::class.java, ModelTextureSupplierAdapter)
+            .registerTypeAdapter(SpriteType::class.java, SpriteTypeAdapter)
             .disableHtmlEscaping()
             .setLenient()
             .create()
@@ -160,7 +162,8 @@ class ModelAssetVariation(
     val poser: ResourceLocation? = null,
     val model: ResourceLocation? = null,
     val texture: ModelTextureSupplier? = null,
-    val layers: List<ModelLayer>? = null
+    val layers: List<ModelLayer>? = null,
+    val sprites: Map<SpriteType, ResourceLocation>? = null
 )
 
 /**
@@ -201,4 +204,9 @@ class ModelLayer {
     val texture: ModelTextureSupplier? = null
     val emissive: Boolean = false
     val translucent: Boolean = false
+}
+
+enum class SpriteType {
+    PORTRAIT,
+    PROFILE
 }
