@@ -9,6 +9,7 @@
 - Fixed Model loader generating misleading crash-reports when client is crashing.
 - Quickly sending out and recalling Pokémon now looks smoother and can no longer be spammed to cause desync issues.
 - Pokémon are now invulnerable during sendout animation and intangible during recall animation.
+- Pokémon are now invincible during sendout animation and intangible during recall animation.
 - Fixed scrolling while holding the sendout keybinding not fully overriding vanilla scroll with high scroll speeds.
 - Fixed battle log GUI flashing when Battle GUI is opened.
 
