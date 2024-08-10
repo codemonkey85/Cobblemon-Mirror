@@ -26,6 +26,7 @@
 - Fixed Tumbling Down advancement not being granted by tumblestone variants.
 - Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server
 - Fixed empty JsonPlayerData files resulting in players being unable to join server/world
+- Fixed crumbling_arch_ruins from generating a giant cube of air and removed the chest
 
 ### Additions
 - Added extra visuals to early berry growth stages
@@ -33,6 +34,7 @@
 - Moves impacted by the abilities Pixelate, Refrigerate, Aerilate, Galvanize, and Normalize now display as their altered typing.
 - Added Polished Tumblestone and Tumblestone Brick block sets from Tumblestone, Black Tumblestone, and Sky Tumblestone.
 - Added Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
+- Added ston_henge_ruins, luna_henge_ruins, and sol_henge_ruins structures.
 
 ### Added cries to the following Pokémon
 - Timburr, Gurdurr, Conkeldurr
