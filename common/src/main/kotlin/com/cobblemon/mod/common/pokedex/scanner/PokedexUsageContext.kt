@@ -26,8 +26,6 @@ class PokedexUsageContext {
     var pokemonInFocus: PokemonEntity? = null
     var scanningProgress: Int = 0
     var transitionTicks = 0
-    //Tracks whether the hud should be enabled or disabled after closing scan UI
-    var originalHudHidden: Boolean = false
     var innerRingRotation = 0
     var usageTicks = 0
     var focusTicks = 0
@@ -63,11 +61,7 @@ class PokedexUsageContext {
 
     fun tryOpenScanGui(user: LocalPlayer, ticksInUse: Int, inUse: Boolean) {
         if (inUse && ticksInUse == TIME_TO_OPEN_SCANNER) {
-            val client = Minecraft.getInstance()
 
-            // Hide the HUD during scan mode
-            originalHudHidden = client.options.hideGui
-            client.options.hideGui = true
             scanningGuiOpen = true
             user.playSound(CobblemonSounds.POKEDEX_SCAN_OPEN)
         }
@@ -105,8 +99,6 @@ class PokedexUsageContext {
     }
 
     fun resetState() {
-        val client = Minecraft.getInstance()
-        client.options.hideGui = originalHudHidden
         scanningGuiOpen = false
         pokemonInFocus = null
         innerRingRotation = 0
