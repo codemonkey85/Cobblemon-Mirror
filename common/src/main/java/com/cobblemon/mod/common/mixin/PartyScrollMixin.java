@@ -36,16 +36,16 @@ public class PartyScrollMixin {
     )
     public void onMouseScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
         if (PartySendBinding.INSTANCE.getWasDown()) {
-            int i = (int)accumulatedScrollY;
+            int i = (int) accumulatedScrollY;
             if (i > 0) {
-                while (i-- > 0) CobblemonClient.INSTANCE.getStorage().shiftSelected(false);
+                accumulatedScrollY -= i;
+                CobblemonClient.INSTANCE.getStorage().shiftSelected(false);
                 ci.cancel();
-                accumulatedScrollY = 0;
                 PartySendBinding.INSTANCE.actioned();
             } else if (i < 0) {
-                while (i++ < 0) CobblemonClient.INSTANCE.getStorage().shiftSelected(true);
+                accumulatedScrollY -= i;
+                CobblemonClient.INSTANCE.getStorage().shiftSelected(true);
                 ci.cancel();
-                accumulatedScrollY = 0;
                 PartySendBinding.INSTANCE.actioned();
             }
         }
