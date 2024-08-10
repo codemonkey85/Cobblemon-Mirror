@@ -10,14 +10,19 @@
       "delay": 1.2
     },
     {
-      "type": "entity_particles",
-      "effect": "cobblemon:mudsport_actor",
-      "locator": "root"
-    },
-    {
-      "type": "entity_particles",
-      "effect": "cobblemon:mudsport_actorbubbles",
-      "locator": "root"
+      "type": "sequence",
+      "keyframes": [
+        {
+          "type": "entity_particles",
+          "effect": "cobblemon:mudsport_actor",
+          "locator": "root"
+        },
+        {
+          "type": "entity_particles",
+          "effect": "cobblemon:mudsport_actorbubbles",
+          "locator": "root"
+        }
+      ]
     },
     {
       "type": "pause",
