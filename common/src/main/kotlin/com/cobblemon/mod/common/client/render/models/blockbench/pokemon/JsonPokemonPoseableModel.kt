@@ -39,6 +39,7 @@ import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 import java.util.function.Supplier
+import net.minecraft.client.model.ModelPart
 import net.minecraft.util.math.Vec3d
 
 /**
@@ -49,7 +50,8 @@ import net.minecraft.util.math.Vec3d
  * @author Hiroku
  * @since August 7th, 2022
  */
-class JsonPokemonPoseableModel(override val rootPart: Bone) : PokemonPoseableModel(), HeadedFrame {
+class JsonPokemonPoseableModel(rootPart: Bone) : PokemonPoseableModel(), HeadedFrame {
+    override val rootPart = (rootPart as ModelPart).children.entries.first().let { rootPart.registerChildWithAllChildren(it.key) }
     companion object {
         val gson = GsonBuilder()
             .setPrettyPrinting()
@@ -130,6 +132,7 @@ class JsonPokemonPoseableModel(override val rootPart: Bone) : PokemonPoseableMod
         override fun createInstance(type: Type): JsonPokemonPoseableModel {
             return JsonPokemonPoseableModel(modelPart!!).also {
                 model = it
+                modelPart as ModelPart
                 it.loadAllNamedChildren(modelPart!!)
             }
         }

@@ -172,9 +172,6 @@ class CobblemonConfig {
     var baseApricornTreeGenerationChance = 0.1F
 
     @NodeCategory(Category.Pokemon)
-    var ninjaskCreatesShedinja = true
-
-    @NodeCategory(Category.Pokemon)
     var displayEntityLevelLabel = true
 
     @NodeCategory(Category.Spawning)

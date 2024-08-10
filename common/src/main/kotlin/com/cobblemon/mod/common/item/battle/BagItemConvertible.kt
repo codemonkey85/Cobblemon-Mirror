@@ -53,7 +53,7 @@ interface BagItemConvertible {
 
         battlePokemon.actor.forceChoose(BagItemActionResponse(bagItem, battlePokemon))
         stack.decrement(1)
-        CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(battlePokemon.entity!!.pokemon.species.resourceIdentifier, Registries.ITEM.getId(stack.item)))
+        CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(battlePokemon.effectedPokemon.species.resourceIdentifier, Registries.ITEM.getId(stack.item)))
         return true
     }
 }

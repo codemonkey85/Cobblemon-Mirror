@@ -135,6 +135,7 @@ abstract class PoseableEntityState<T : Entity> : Schedulable {
 
                     val storm = ParticleStorm(
                         effect = effect,
+                        entity = entity,
                         matrixWrapper = matrixWrapper,
                         world = world,
                         runtime = particleRuntime,

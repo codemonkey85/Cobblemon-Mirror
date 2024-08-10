@@ -20,7 +20,7 @@
 				"max_lifetime": 0.5
 			},
 			"minecraft:particle_initial_spin": {
-				"rotation": "math.random(0,90)"
+				"rotation": "math.random_integer(0,3)*90"
 			},
 			"minecraft:particle_appearance_billboard": {
 				"size": [1, 1],

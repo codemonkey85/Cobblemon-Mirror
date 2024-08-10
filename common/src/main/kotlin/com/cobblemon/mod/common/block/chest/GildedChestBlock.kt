@@ -131,7 +131,6 @@ class GildedChestBlock(settings: Settings, val type: Type = Type.RED) : BlockWit
             if (isFake() && (player is ServerPlayerEntity)) {
                 spawnPokemon(world, pos, state, player)
             }
-            world.setBlockState(pos, if (state.fluidState.isOf(Fluids.WATER)) Blocks.WATER.defaultState else Blocks.AIR.defaultState)
             val bEntity = world.getBlockEntity(pos) as? GildedChestBlockEntity
             bEntity?.markRemoved()
         } else super.onBreak(world, pos, state, player)
@@ -186,10 +185,6 @@ class GildedChestBlock(settings: Settings, val type: Type = Type.RED) : BlockWit
         player.openHandledScreen(entity)
         if (!player.world.isClient) {
             PiglinBrain.onGuardedBlockInteracted(player, true)
-        }
-        val state = entity.poseableState
-        state.currentModel?.let {
-            it.moveToPose(null, state, it.getPose("OPEN")!!)
         }
         return ActionResult.SUCCESS
     }

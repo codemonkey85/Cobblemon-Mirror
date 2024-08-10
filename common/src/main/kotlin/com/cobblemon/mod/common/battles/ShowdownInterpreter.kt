@@ -98,6 +98,7 @@ object ShowdownInterpreter {
         updateInstructionParser["-sidestart"]            = { _, _, message, _ -> SideStartInstruction(message) }
         updateInstructionParser["-singlemove"]           = { _, _, message, _ -> SingleMoveInstruction(message) }
         updateInstructionParser["-singleturn"]           = { _, _, message, _ -> SingleTurnInstruction(message) }
+        updateInstructionParser["start"]                 = { _, instructionSet, message, _ -> InitializeInstruction(instructionSet, message) }
         updateInstructionParser["-start"]                = { _, _, message, _ -> StartInstruction(message) }
         updateInstructionParser["-status"]               = { _, _, message, _ -> StatusInstruction(message) }
         updateInstructionParser["-supereffective"]       = { _, _, message, _ -> SuperEffectiveInstruction(message) }
@@ -206,7 +207,7 @@ object ShowdownInterpreter {
 
     // Broadcasts a generic lang to notify players of ability activations (effects are broadcasted separately)
     fun broadcastAbility(battle: PokemonBattle, effect: Effect, pokemon: BattlePokemon) {
-        battle.dispatchGo {
+        battle.dispatchWaiting(0.5F) {
             val lang = battleLang("ability.generic", pokemon.getName(), effect.typelessData).yellow()
             battle.broadcastChatMessage(lang)
         }

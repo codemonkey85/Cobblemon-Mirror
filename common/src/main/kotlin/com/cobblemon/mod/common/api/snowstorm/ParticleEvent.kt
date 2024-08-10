@@ -79,15 +79,15 @@ class ParticleEvent(
         particleEffect?.let { effect ->
             val bedrockParticleEffect = BedrockParticleEffectRepository.getEffect(effect.effect) ?: return@let
             val rootMatrix = when (effect.type) {
-                EventParticleEffect.EventParticleType.EMITTER -> MatrixWrapper().updatePosition(storm.matrixWrapper.getOrigin())
-                EventParticleEffect.EventParticleType.EMITTER_BOUND -> storm.matrixWrapper
+                EventParticleEffect.EventParticleType.EMITTER,// -> MatrixWrapper().updatePosition(storm.matrixWrapper.getOrigin())
+                EventParticleEffect.EventParticleType.EMITTER_BOUND,// -> storm.matrixWrapper
                 EventParticleEffect.EventParticleType.PARTICLE,
                 EventParticleEffect.EventParticleType.PARTICLE_WITH_VELOCITY -> (particle?.let { Vec3d(it.getX(), it.getY(), it.getZ()) } ?: Vec3d(storm.getX(), storm.getY(), storm.getZ())).let { MatrixWrapper().updatePosition(it) }
             }
 
             val sourceVelocity = when (effect.type) {
-                EventParticleEffect.EventParticleType.EMITTER -> storm.sourceVelocity().let { { it } }
-                EventParticleEffect.EventParticleType.EMITTER_BOUND -> storm.sourceVelocity
+                EventParticleEffect.EventParticleType.EMITTER,// -> storm.sourceVelocity().let { { it } }
+                EventParticleEffect.EventParticleType.EMITTER_BOUND,// -> storm.sourceVelocity
                 EventParticleEffect.EventParticleType.PARTICLE -> { { Vec3d.ZERO } }
                 EventParticleEffect.EventParticleType.PARTICLE_WITH_VELOCITY -> (particle?.let { Vec3d(it.getVelocityX(), it.getVelocityY(), it.getVelocityZ()) } ?: Vec3d.ZERO).let { { it } }
             }

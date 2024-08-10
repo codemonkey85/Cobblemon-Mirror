@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.battle.ClientBattlePokemon
 import com.cobblemon.mod.common.client.battle.animations.MoveTileOffscreenAnimation
-import com.cobblemon.mod.common.client.battle.animations.SwapAndMoveTileOnscreenAnimation
+import com.cobblemon.mod.common.client.battle.animations.MoveTileOnscreenAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonFloatingState
 import com.cobblemon.mod.common.net.messages.client.battle.BattleSwitchPokemonPacket
 import net.minecraft.client.MinecraftClient
@@ -23,30 +23,40 @@ object BattleSwitchPokemonHandler : ClientNetworkPacketHandler<BattleSwitchPokem
         val (actor, activeBattlePokemon) = battle.getPokemonFromPNX(packet.pnx)
 
         val lastAnimation = activeBattlePokemon.animations.lastOrNull()
-        if (lastAnimation !is MoveTileOffscreenAnimation) {
+        if (activeBattlePokemon.battlePokemon != null && lastAnimation !is MoveTileOffscreenAnimation) {
             activeBattlePokemon.animations.add(MoveTileOffscreenAnimation())
         }
 
-        activeBattlePokemon.animations.add(
-            SwapAndMoveTileOnscreenAnimation(
-                with(packet.newPokemon) {
-                    ClientBattlePokemon(
-                        uuid = uuid,
-                        displayName = displayName,
-                        properties = properties,
-                        aspects = aspects,
-                        hpValue = hpValue,
-                        maxHp = maxHp,
-                        isHpFlat = packet.isAlly,
-                        status = status,
-                        statChanges = statChanges
-                    ).also {
-                        it.actor = actor
-                        it.state = PokemonFloatingState()
-                    }
-                }
+        val newPokemon = with(packet.newPokemon) {
+            ClientBattlePokemon(
+                uuid = uuid,
+                displayName = displayName,
+                properties = properties,
+                aspects = aspects,
+                hpValue = hpValue,
+                maxHp = maxHp,
+                isHpFlat = packet.isAlly,
+                status = status,
+                statChanges = statChanges
+            ).also {
+                it.actor = actor
+                it.state = PokemonFloatingState()
+            }
+        }
+
+        // battlePokemon is null when sending out a pokemon (from an InactivePokemonState) on turn 0
+        if (activeBattlePokemon.battlePokemon == null) {
+            // battlePokemon needs to be present before the respective tile can actually be rendered
+            activeBattlePokemon.battlePokemon = newPokemon
+            activeBattlePokemon.animations.add(
+                MoveTileOnscreenAnimation(null)
             )
-        )
+        }
+        else {
+            activeBattlePokemon.animations.add(
+                MoveTileOnscreenAnimation(newPokemon)
+            )
+        }
 
         // Only update currently selected Pokémon if it's our Pokémon being switched in
         if (actor == battle.getParticipatingActor(client.session.profile.id)) {

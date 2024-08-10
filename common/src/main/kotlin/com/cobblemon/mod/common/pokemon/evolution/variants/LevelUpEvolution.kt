@@ -25,6 +25,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 open class LevelUpEvolution(
     override val id: String,
     override val result: PokemonProperties,
+    override val shedder: PokemonProperties?,
     override var optional: Boolean,
     override var consumeHeldItem: Boolean,
     override val requirements: MutableSet<EvolutionRequirement>,
@@ -36,6 +37,7 @@ open class LevelUpEvolution(
     constructor(): this(
         id = "id",
         result = PokemonProperties(),
+        shedder = null,
         optional = true,
         consumeHeldItem = true,
         requirements = mutableSetOf(),

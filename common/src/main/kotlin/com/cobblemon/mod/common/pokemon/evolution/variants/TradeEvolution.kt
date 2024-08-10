@@ -26,6 +26,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 open class TradeEvolution(
     override val id: String,
     override val result: PokemonProperties,
+    override val shedder: PokemonProperties?,
     override val requiredContext: PokemonProperties,
     override var optional: Boolean,
     override var consumeHeldItem: Boolean,
@@ -35,6 +36,7 @@ open class TradeEvolution(
     constructor(): this(
         id = "id",
         result = PokemonProperties(),
+        shedder = null,
         requiredContext = PokemonProperties(),
         optional = true,
         consumeHeldItem = true,

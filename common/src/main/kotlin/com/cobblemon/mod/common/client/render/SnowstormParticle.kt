@@ -118,7 +118,7 @@ class SnowstormParticle(
 
     init {
         setVelocity(initialVelocity.x, initialVelocity.y, initialVelocity.z)
-        angle = storm.effect.particle.rotation.getInitialRotation(storm.runtime).toFloat()
+        angle = -storm.effect.particle.rotation.getInitialRotation(storm.runtime).toFloat()
         prevAngle = angle
         angularVelocity = storm.effect.particle.rotation.getInitialAngularVelocity(storm.runtime)
         velocityMultiplier = 1F
@@ -256,24 +256,20 @@ class SnowstormParticle(
         setParticleAgeInRuntime()
         storm.effect.curves.forEach { it.apply(storm.runtime) }
         storm.runtime.execute(storm.effect.particle.updateExpressions)
-        angularVelocity += storm.effect.particle.rotation.getAngularAcceleration(storm.runtime, angularVelocity) / 20
+        angularVelocity = storm.effect.particle.rotation.getAngularVelocity(storm.runtime, -angle.toDouble(), angularVelocity) / 20
 
-        if (age > maxAge || storm.runtime.resolveBoolean(storm.effect.particle.killExpression)) {
+        if (age >= maxAge || storm.runtime.resolveBoolean(storm.effect.particle.killExpression)) {
             runExpirationEvents()
             markDead()
             return
         } else {
-            val acceleration = storm.effect.particle.motion.getAcceleration(
-                storm.runtime,
-                Vec3d(velocityX, velocityY, velocityZ).multiply(20.0) // Uses blocks per second, not blocks per tick
-            ).multiply(1 / 20.0).multiply(1 / 20.0) // blocks per second per second -> blocks per tick per tick
-
-            velocityX += acceleration.x
-            velocityY += acceleration.y
-            velocityZ += acceleration.z
-
+            val velocity = storm.effect.particle.motion.getVelocity(storm.runtime, this, Vec3d(velocityX, velocityY, velocityZ))
+            velocityX = velocity.x
+            velocityY = velocity.y
+            velocityZ = velocity.z
             prevAngle = angle
-            angle = prevAngle + angularVelocity.toFloat()
+            // Subtract because Bedrock particles are counter-clockwise and Java Edition is clockwise.
+            angle = prevAngle - angularVelocity.toFloat()
         }
 
         viewDirection = storm.effect.particle.viewDirection.getDirection(

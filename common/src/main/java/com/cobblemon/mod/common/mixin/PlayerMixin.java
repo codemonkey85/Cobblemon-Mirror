@@ -18,9 +18,11 @@ import com.cobblemon.mod.common.api.tags.CobblemonItemTags;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.util.CompoundTagExtensionsKt;
 import com.cobblemon.mod.common.util.DataKeys;
+import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -156,6 +158,16 @@ public abstract class PlayerMixin extends LivingEntity {
                     }
                 );
             }
+        }
+    }
+
+    @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
+    public void isInvulnerableTo(DamageSource source, CallbackInfoReturnable<Boolean> ci) {
+        if (!getWorld().isClient) {
+            ServerPlayerEntity player = (ServerPlayerEntity)(Object)this;
+            boolean invulnerableInBattle = this.getWorld().getGameRules().getBoolean(CobblemonGameRules.BATTLE_INVULNERABILITY);
+            boolean inBattle = Cobblemon.INSTANCE.getBattleRegistry().getBattleByParticipatingPlayer(player) != null;
+            if (invulnerableInBattle && inBattle) ci.setReturnValue(true);
         }
     }
 }

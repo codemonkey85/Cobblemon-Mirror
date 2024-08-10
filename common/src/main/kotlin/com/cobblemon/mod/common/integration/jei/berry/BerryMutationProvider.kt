@@ -10,10 +10,9 @@ package com.cobblemon.mod.common.integration.jei.berry
 
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.integration.jei.CobblemonJeiProvider
-import com.cobblemon.mod.common.item.BerryItem
+import com.cobblemon.mod.common.item.berry.BerryItem
 import mezz.jei.api.registration.IRecipeCategoryRegistration
 import mezz.jei.api.registration.IRecipeRegistration
-import net.minecraft.item.ItemStack
 
 class BerryMutationProvider : CobblemonJeiProvider {
     override fun registerCategory(registration: IRecipeCategoryRegistration) {

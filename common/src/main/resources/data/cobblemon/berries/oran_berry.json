@@ -1,32 +1,24 @@
 {
   "baseYield": {
-    "min": 3,
-    "max": 6
+    "min": 2,
+    "max": 3
   },
   "preferredBiomeTags": [
     "cobblemon:is_temperate"
   ],
   "growthTime": {
-    "min": 35,
-    "max": 45
+    "min": 36,
+    "max": 44
   },
   "refreshRate": {
-    "min": 12,
+    "min": 18,
     "max": 22
   },
   "favoriteMulches": [
     "peat",
     "loamy"
   ],
-  "growthFactors": [
-    {
-      "variant": "cobblemon:preferred_biome",
-      "bonusYield": {
-        "min": 1,
-        "max": 2
-      }
-    }
-  ],
+  "growthFactors": [],
   "randomizedGrowthPoints": true,
   "spawnConditions": [
     {
@@ -157,6 +149,18 @@
       }
     }
   ],
+  "stageOnePositioning": {
+    "position": {
+      "x": 8.15,
+      "y": 2.25,
+      "z": 8.1
+    },
+    "rotation": {
+      "x": 5.0,
+      "y": -10.0,
+      "z": -7.5
+    }
+  },
   "mutations": {
     "cobblemon:cheri_berry": "cobblemon:lum_berry",
     "cobblemon:chesto_berry": "cobblemon:lum_berry",
@@ -172,16 +176,17 @@
   "sproutShape": "tall-sprout",
   "matureShape": "tall-mature",
   "flavors": {
-    "SPICY": 10,
-    "DRY": 10,
-    "SWEET": 10,
-    "BITTER": 10,
-    "SOUR": 10
+    "SPICY": 5,
+    "DRY": 5,
+    "SWEET": 5,
+    "BITTER": 5,
+    "SOUR": 5
   },
   "weight": 25.0,
   "tintIndexes": [],
   "flowerModel": "cobblemon:flower.geo",
   "flowerTexture": "cobblemon:flower",
   "fruitModel": "cobblemon:oran_berry.geo",
-  "fruitTexture": "cobblemon:oran"
+  "fruitTexture": "cobblemon:oran",
+  "boneMealChance": 0.56
 }

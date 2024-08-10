@@ -36,6 +36,7 @@ class ConkeldurrModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, B
     lateinit var battleidle: PokemonPose
 
     override val cryAnimation = CryProvider { _, _ -> bedrockStateful("conkeldurr", "cry") }
+
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("conkeldurr", "blink") }
 

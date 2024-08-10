@@ -43,7 +43,7 @@ class EnergyRootItem(block: EnergyRootBlock, settings: Settings) : AliasedBlockI
 
     fun getHealAmount() = CobblemonMechanics.remedies.getHealingAmount("root", runtime, 150)
 
-    override fun canUseOnPokemon(pokemon: Pokemon) = !pokemon.isFullHealth()
+    override fun canUseOnPokemon(pokemon: Pokemon) = !pokemon.isFullHealth() && !pokemon.isFainted()
 
     override fun applyToPokemon(player: ServerPlayerEntity, stack: ItemStack, pokemon: Pokemon): TypedActionResult<ItemStack> {
         return if (this.canUseOnPokemon(pokemon)) {

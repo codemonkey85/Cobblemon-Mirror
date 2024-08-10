@@ -16,4 +16,9 @@ import net.minecraft.util.Identifier
  *
  * @author Deltric
  */
-class VolatileStatus(name: Identifier) : Status(name, "", "", "")
+open class VolatileStatus(
+    name: Identifier,
+    showdownName: String,
+    applyMessage: String,
+    removeMessage: String,
+) : Status(name, showdownName, applyMessage, removeMessage)

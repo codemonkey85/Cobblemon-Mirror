@@ -8,6 +8,11 @@
 
 package com.cobblemon.mod.common.api.pokemon.evolution
 
+import com.cobblemon.mod.common.Cobblemon.playerData
+import com.cobblemon.mod.common.CobblemonItems
+import com.cobblemon.mod.common.CobblemonSounds
+import com.cobblemon.mod.common.advancement.CobblemonCriteria
+import com.cobblemon.mod.common.advancement.criterion.EvolvePokemonContext
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionTestedEvent
@@ -16,15 +21,22 @@ import com.cobblemon.mod.common.api.moves.MoveTemplate
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
 import com.cobblemon.mod.common.api.scheduling.afterOnServer
+import com.cobblemon.mod.common.api.tags.CobblemonItemTags
+import com.cobblemon.mod.common.entity.generic.GenericBedrockEntity
+import com.cobblemon.mod.common.item.PokeBallItem
 import com.cobblemon.mod.common.net.messages.client.animation.PlayPoseableAnimationPacket
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.activestate.ShoulderedState
 import com.cobblemon.mod.common.pokemon.evolution.variants.ItemInteractionEvolution
 import com.cobblemon.mod.common.pokemon.evolution.variants.LevelUpEvolution
 import com.cobblemon.mod.common.pokemon.evolution.variants.TradeEvolution
+import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import net.minecraft.entity.Entity
+import com.cobblemon.mod.common.util.party
 import net.minecraft.item.ItemStack
+import net.minecraft.sound.SoundCategory
+import net.minecraft.sound.SoundCategory.*
 
 /**
  * Represents an evolution of a [Pokemon], this is the server side counterpart of [EvolutionDisplay].
@@ -41,6 +53,11 @@ interface Evolution : EvolutionLike {
      * The result of this evolution.
      */
     val result: PokemonProperties
+
+    /**
+     * The shed result of this evolution.
+     */
+    val shedder: PokemonProperties?
 
     /**
      * If this evolution allows the user to choose when to start it or not.
@@ -93,6 +110,36 @@ interface Evolution : EvolutionLike {
         return true
     }
 
+    fun shed(pokemon: Pokemon): Boolean {
+        val innerShedder = shedder ?: return false
+
+        val owner = pokemon.getOwnerPlayer() ?: return false
+        // If the player has at least one Pokeball in their inventory.
+        var pokeballStack: ItemStack? = null
+        if (!owner.isCreative) {
+            for (i in 0 until owner.inventory.size()) {
+                val stackI = owner.inventory.getStack(i)
+                if (stackI.isIn(CobblemonItemTags.POKE_BALLS)) {
+                    pokeballStack = stackI
+                }
+            }
+            if (pokeballStack == null) return false
+        }
+        // If the player has at least one empty spot in their party.
+        val emptySlot = owner.party().getFirstAvailablePosition() ?: return false
+
+        // Add shed Pokemon to player's party
+        val shedPokemon = pokemon.clone()
+        shedPokemon.removeHeldItem()
+        innerShedder.apply(shedPokemon)
+        shedPokemon.caughtBall = ((pokeballStack?.item ?: CobblemonItems.POKE_BALL) as PokeBallItem).pokeBall
+        pokemon.storeCoordinates.get()?.store?.add(shedPokemon)
+        CobblemonCriteria.EVOLVE_POKEMON.trigger(owner, EvolvePokemonContext(pokemon.preEvolution!!.species.resourceIdentifier, shedPokemon.species.resourceIdentifier, playerData.get(owner).advancementData.totalEvolvedCount))
+        // Consume one of the balls
+        pokeballStack?.decrement(1)
+
+        return true
+    }
 
     /**
      * Starts this evolution as soon as possible.
@@ -149,6 +196,9 @@ interface Evolution : EvolutionLike {
         }
         // we want to instantly tick for example you might only evolve your Bulbasaur at level 34 so Venusaur should be immediately available
         pokemon.evolutions.filterIsInstance<PassiveEvolution>().forEach { evolution -> evolution.attemptEvolution(pokemon) }
+        pokemon.lockedEvolutions.filterIsInstance<PassiveEvolution>().forEach { evolution -> evolution.attemptEvolution(pokemon) }
+        pokemon.getOwnerPlayer()?.playSound(CobblemonSounds.EVOLVING, NEUTRAL, 1F, 1F)
+        this.shed(pokemon)
         CobblemonEvents.EVOLUTION_COMPLETE.post(EvolutionCompleteEvent(pokemon, this))
     }
 

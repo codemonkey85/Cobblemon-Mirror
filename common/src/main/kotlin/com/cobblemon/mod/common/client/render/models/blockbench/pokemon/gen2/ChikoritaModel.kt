@@ -47,7 +47,6 @@ class ChikoritaModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
             idleAnimations = arrayOf(
-                singleBoneLook(),
                 bedrock("chikorita", "ground_idle")
             )
         )
@@ -58,7 +57,6 @@ class ChikoritaModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             transformTicks = 10,
             quirks = arrayOf(blink),
             idleAnimations = arrayOf(
-                singleBoneLook(),
                 bedrock("chikorita", "ground_walk")
             )
         )
@@ -70,7 +68,6 @@ class ChikoritaModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             quirks = arrayOf(blink),
             condition = { it.isBattling },
             idleAnimations = arrayOf(
-                singleBoneLook(),
                 bedrock("chikorita", "battle_idle")
             )
         )

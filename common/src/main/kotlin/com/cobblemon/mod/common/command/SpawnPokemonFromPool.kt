@@ -24,7 +24,6 @@ import com.mojang.brigadier.context.CommandContext
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.text.Text
 
 /**
  * Spawn Pokemon From Surrounding Pool
@@ -84,14 +83,15 @@ object SpawnPokemonFromPool {
 
             val spawnAction = result.second.doSpawn(ctx = result.first)
 
-            spawnAction.future.thenApply {
-                if (it is EntitySpawnResult) {
-                    for (entity in it.entities) {
-                        player.sendMessage(commandLang("spawnpokemonfrompool.success", entity.displayName).green())
+            spawnAction.future
+                .thenApply {
+                    if (it is EntitySpawnResult) {
+                        for (entity in it.entities) {
+                            player.sendMessage(commandLang("spawnpokemonfrompool", entity.displayName).green())
+                        }
                     }
                 }
-            }
-
+            spawnAction.complete()
             spawnsTriggered++
         }
 

@@ -390,7 +390,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
                                 .map { template ->
                                     val benched = pokemon.benchedMoves.find { it.moveTemplate == template }
                                     MoveSwapScreen.MoveSlot(switchPane, template, benched?.ppRaisedStages
-                                            ?: 0)
+                                            ?: 0, pokemon)
                                 }
                                 .forEach { switchPane.addEntry(it) }
                     }

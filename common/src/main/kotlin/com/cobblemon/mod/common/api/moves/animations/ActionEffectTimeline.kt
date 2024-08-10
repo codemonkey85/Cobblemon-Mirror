@@ -10,9 +10,7 @@ package com.cobblemon.mod.common.api.moves.animations
 
 import com.bedrockk.molang.Expression
 import com.bedrockk.molang.runtime.MoLangRuntime
-import com.bedrockk.molang.runtime.struct.VariableStruct
 import com.cobblemon.mod.common.api.moves.animations.keyframes.ActionEffectKeyframe
-import com.cobblemon.mod.common.api.scheduling.ScheduledTask
 import com.cobblemon.mod.common.util.asExpression
 import com.cobblemon.mod.common.util.resolveBoolean
 import java.util.concurrent.CompletableFuture
@@ -43,6 +41,9 @@ class ActionEffectTimeline(
             // .toList copy because I'm paranoid about iterators being trying to share between identical effects playing
             chainKeyframes(context, timeline.toList().iterator(), finalFuture)
             finalFuture
+        }.exceptionallyCompose {
+            it.printStackTrace()
+            CompletableFuture.completedFuture(Unit)
         }
     }
 
@@ -55,6 +56,7 @@ class ActionEffectTimeline(
             keyframe.play(context)
                 .thenRun { context.currentKeyframes.remove(keyframe) }
                 .thenApply { chainKeyframes(context, iterator, finalFuture) }
+                .exceptionally { finalFuture.completeExceptionally(it) }
         }
     }
 }

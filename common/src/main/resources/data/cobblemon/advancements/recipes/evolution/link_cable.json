@@ -1,12 +1,12 @@
 {
   "parent": "cobblemon:recipes/root",
   "criteria": {
-    "has_chorus": {
+    "has_pearl": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:popped_chorus_fruit"
+              "minecraft:ender_pearl"
             ]
           }
         ]
@@ -22,7 +22,7 @@
   },
   "requirements": [
     [
-      "has_chorus",
+      "has_pearl",
       "has_the_recipe"
     ]
   ],

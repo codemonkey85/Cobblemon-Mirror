@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.api.pokemon.status
 
+import com.cobblemon.mod.common.api.moves.animations.ActionEffectTimeline
+import com.cobblemon.mod.common.api.moves.animations.ActionEffects
+import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import net.minecraft.util.Identifier
 
 /**
@@ -20,4 +23,6 @@ open class Status(
     val showdownName: String = "",
     val applyMessage: String,
     val removeMessage: String
-)
+) {
+    fun getActionEffect() = ActionEffects.actionEffects[name]
+}

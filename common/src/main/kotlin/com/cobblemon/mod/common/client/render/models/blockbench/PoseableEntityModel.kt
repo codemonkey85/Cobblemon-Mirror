@@ -263,6 +263,41 @@ abstract class PoseableEntityModel<T : Entity>(
                 )
             )
         }
+            .addFunction("bedrock_primary_quirk") { params ->
+                val animationGroup = params.getString(0)
+                val animationNames = params.get<MoValue>(1)?.let { if (it is ArrayStruct) it.map.values.map { it.asString() } else listOf(it.asString()) } ?: listOf()
+                val minSeconds = params.getDoubleOrNull(2) ?: 8F
+                val maxSeconds = params.getDoubleOrNull(3) ?: 30F
+                val loopTimes = params.getDoubleOrNull(4)?.toInt() ?: 1
+                val excludedLabels = mutableSetOf<String>()
+                var curve: WaveFunction = { t ->
+                    if (t < 0.1) {
+                        t * 10
+                    } else if (t < 0.9) {
+                        1F
+                    } else {
+                        1F
+                    }
+                }
+                for (index in 5 until params.params.size) {
+                    val param = params.get<MoValue>(index)
+                    if (param is ObjectValue<*>) {
+                        curve = param.obj as WaveFunction
+                        continue
+                    }
+
+                    val label = params.getString(index) ?: continue
+                    excludedLabels.add(label)
+                }
+                ObjectValue(
+                        quirk(
+                                secondsBetweenOccurrences = minSeconds.toFloat() to maxSeconds.toFloat(),
+                                condition = { true },
+                                loopTimes = 1..loopTimes,
+                                animation = { PrimaryAnimation(bedrockStateful(animationGroup, animationNames.random()), excludedLabels = excludedLabels, curve = curve) }
+                        )
+                )
+            }
 
     @Transient
     val runtime = MoLangRuntime().setup().setupClient().also { it.environment.getQueryStruct().addFunctions(functions.functions) }

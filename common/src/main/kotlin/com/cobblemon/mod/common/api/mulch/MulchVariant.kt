@@ -16,16 +16,20 @@ import net.minecraft.util.StringIdentifiable
  */
 enum class MulchVariant(val duration: Int = -1) : StringIdentifiable {
     COARSE,
-    GROWTH(3),
+    GROWTH(5),
     HUMID,
     LOAMY,
     PEAT,
-    RICH(3),
+    RICH(5),
     SANDY,
     SURPRISE(3),
     NONE;
 
     override fun asString(): String {
         return name.lowercase()
+    }
+
+    companion object {
+        const val GROWTH_TIME_MULTIPLIER = 0.5
     }
 }

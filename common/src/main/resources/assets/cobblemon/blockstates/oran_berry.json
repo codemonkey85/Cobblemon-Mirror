@@ -2,7 +2,14 @@
   "multipart": [
     {
       "when": {
-        "age": "0"
+        "AND": [
+          {
+            "age": 0
+          },
+          {
+            "rooted": false
+          }
+        ]
       },
       "apply": {
         "model": "cobblemon:block/berries/planted",
@@ -11,16 +18,62 @@
     },
     {
       "when": {
-        "age": "1"
+        "AND": [
+          {
+            "age": 0
+          },
+          {
+            "rooted": true
+          }
+        ]
       },
       "apply": {
-        "model": "cobblemon:block/berries/sprout",
+        "model": "cobblemon:block/berries/planted_bound",
         "uvlock": false
       }
     },
     {
       "when": {
-        "age": "2"
+        "AND": [
+          {
+            "age": 1
+          },
+          {
+            "rooted": false
+          }
+        ]
+      },
+      "apply": {
+        "model": "cobblemon:block/berries/oran_sprout",
+        "uvlock": false
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "age": 1
+          },
+          {
+            "rooted": true
+          }
+        ]
+      },
+      "apply": {
+        "model": "cobblemon:block/berries/oran_sprout",
+        "uvlock": false
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "age": 2
+          },
+          {
+            "rooted": false
+          }
+        ]
       },
       "apply": {
         "model": "cobblemon:block/berries/oran_young",
@@ -29,7 +82,30 @@
     },
     {
       "when": {
-        "age": "3"
+        "AND": [
+          {
+            "age": 2
+          },
+          {
+            "rooted": true
+          }
+        ]
+      },
+      "apply": {
+        "model": "cobblemon:block/berries/oran_young",
+        "uvlock": false
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "age": 3
+          },
+          {
+            "rooted": false
+          }
+        ]
       },
       "apply": {
         "model": "cobblemon:block/berries/oran_mature",
@@ -38,7 +114,14 @@
     },
     {
       "when": {
-        "age": "4"
+        "AND": [
+          {
+            "age": 3
+          },
+          {
+            "rooted": true
+          }
+        ]
       },
       "apply": {
         "model": "cobblemon:block/berries/oran_mature",
@@ -47,7 +130,62 @@
     },
     {
       "when": {
-        "age": "5"
+        "AND": [
+          {
+            "age": 4
+          },
+          {
+            "rooted": false
+          }
+        ]
+      },
+      "apply": {
+        "model": "cobblemon:block/berries/oran_mature",
+        "uvlock": false
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "age": 4
+          },
+          {
+            "rooted": true
+          }
+        ]
+      },
+      "apply": {
+        "model": "cobblemon:block/berries/oran_mature",
+        "uvlock": false
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "age": 5
+          },
+          {
+            "rooted": false
+          }
+        ]
+      },
+      "apply": {
+        "model": "cobblemon:block/berries/oran_mature",
+        "uvlock": false
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "age": 5
+          },
+          {
+            "rooted": true
+          }
+        ]
       },
       "apply": {
         "model": "cobblemon:block/berries/oran_mature",

@@ -269,7 +269,6 @@ class PokemonDTO : Encodable, Decodable {
                 val featureProviders = SpeciesFeatures
                     .getFeaturesFor(species)
                     .filterIsInstance<SynchronizedSpeciesFeatureProvider<*>>()
-                    .filter { it.visible }
                 val feature = featureProviders.firstNotNullOfOrNull { it(featuresBuffer, speciesFeatureName) }
                     ?: throw IllegalArgumentException("Couldn't find a feature provider to deserialize this feature. Something's wrong.")
                 it.features.removeIf { it.name == feature.name }

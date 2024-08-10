@@ -77,7 +77,7 @@ abstract class BaseCobblemonHeldItemManager : HeldItemManager {
      * @param item The [Item] being queried.
      * @return The literal Showdown ID if any.
      */
-    private fun showdownIdOf(item: Item): String? {
+    fun showdownIdOf(item: Item): String? {
         val identifier = Registries.ITEM.getId(item)
         val formattedPath = identifier.path.replace("_", "")
         if (this.itemIds.containsKey(formattedPath)) {

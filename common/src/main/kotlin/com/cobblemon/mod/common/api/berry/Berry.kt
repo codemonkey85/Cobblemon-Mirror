@@ -16,7 +16,7 @@ import com.cobblemon.mod.common.api.events.berry.BerryYieldCalculationEvent
 import com.cobblemon.mod.common.api.mulch.MulchVariant
 import com.cobblemon.mod.common.block.BerryBlock
 import com.cobblemon.mod.common.block.entity.BerryBlockEntity
-import com.cobblemon.mod.common.item.BerryItem
+import com.cobblemon.mod.common.item.berry.BerryItem
 import com.cobblemon.mod.common.pokemon.Nature
 import com.cobblemon.mod.common.util.readBox
 import com.cobblemon.mod.common.util.writeBox
@@ -45,9 +45,8 @@ import net.minecraft.world.biome.Biome
  * @property identifier The [Identifier] of this berry.
  * @property baseYield The [IntRange] possible for the berry tree before [bonusYield] is calculated.
  * @property preferredBiomeTags The [TagKey]s of the berries preffered biomes. Determines spawning and yield
- * @property growthTime The [IntRange] possible in minutes for how long the berry tree takes to grow.
- * @property refreshRate The [IntRange] possible in minutes for how long the berry tree takes to regrow its berries once it has been harvested.
- * @depreciated @property lifeCycles The [IntRange] possible for the berry to live for between harvests.
+ * @property growthTime The [IntRange] possible in minutes for how long the berry tree takes to grow frome age 0 to age 3
+ * @property refreshRate The [IntRange] possible in minutes for how long the berry tree takes to grow from age 3 to age 5
  * @property favoriteMulches The types of mulches that benefit this berries yield
  * @property growthFactors An array of [GrowthFactor]s that will affect this berry. The client is not aware of these.
  * @property mutations A map of the partner berry as the key and the value as the resulting mutation with this berry.
@@ -60,6 +59,7 @@ import net.minecraft.world.biome.Biome
  * @property flowerTexture The [Identifier] for the texture of the berry in flower form. This is resolved into a [ModelPart] on the client.
  * @property fruitModelIdentifier The [Identifier] for the model of the berry in flower form. This is resolved into a [ModelPart] on the client.
  * @property fruitTexture The [Identifier] for the texture of the berry in flower form.
+ * @property stageOnePositioning Transformation of the berry model for age 0
  *
  * @throws IllegalArgumentException if the any yield range argument is not a positive range.
  */
@@ -69,7 +69,6 @@ class Berry(
     val preferredBiomeTags: List<TagKey<Biome>>,
     val growthTime: IntRange,
     val refreshRate: IntRange,
-    //val lifeCycles: IntRange,
     val favoriteMulches: EnumSet<MulchVariant>,
     val growthFactors: Collection<GrowthFactor>,
     val spawnConditions: List<BerrySpawnCondition>,
@@ -88,7 +87,9 @@ class Berry(
     @SerializedName("fruitModel")
     val fruitModelIdentifier: Identifier,
     val fruitTexture: Identifier,
-    val weight: Float
+    val stageOnePositioning: GrowthPoint,
+    val weight: Float,
+    val boneMealChance: Float
 ) {
 
     @Transient
@@ -161,8 +162,9 @@ class Berry(
         val bonus = this.bonusYield(world, state, pos)
         var yield = base + bonus.first
         val treeEntity = world.getBlockEntity(pos) as BerryBlockEntity
-        if (BerryBlock.getMulch(state) == MulchVariant.RICH) {
-            yield = min(yield + 1, maxYield())
+        if (BerryBlock.getMulch(treeEntity) == MulchVariant.RICH) {
+            //I hope the upper bound isnt exclusive, especially when there's a method called nextBetweenExclusive
+            yield += world.random.nextBetween(1, 3)
             treeEntity.decrementMulchDuration(world, pos, state)
         }
         val event = BerryYieldCalculationEvent(this, world, state, pos, placer, yield, bonus.second)
@@ -279,6 +281,13 @@ class Berry(
         buffer.writeIdentifier(this.flowerTexture)
         buffer.writeIdentifier(this.fruitModelIdentifier)
         buffer.writeIdentifier(this.fruitTexture)
+        buffer.writeDouble(stageOnePositioning.position.x)
+        buffer.writeDouble(stageOnePositioning.position.y)
+        buffer.writeDouble(stageOnePositioning.position.z)
+        buffer.writeDouble(stageOnePositioning.rotation.x)
+        buffer.writeDouble(stageOnePositioning.rotation.y)
+        buffer.writeDouble(stageOnePositioning.rotation.z)
+        buffer.writeFloat(boneMealChance)
     }
 
     /**
@@ -292,7 +301,8 @@ class Berry(
     private fun bonusYield(world: World, state: BlockState, pos: BlockPos): Pair<Int, Collection<GrowthFactor>> {
         var bonus = 0
         val passed = arrayListOf<GrowthFactor>()
-        val mulchVariant = BerryBlock.getMulch(state)
+        val treeEntity = world.getBlockEntity(pos) as? BerryBlockEntity ?: return 0 to passed
+        val mulchVariant = BerryBlock.getMulch(treeEntity)
         val hasBiomeMulch = mulchVariant in favoriteMulches
         this.growthFactors.forEach { factor ->
             if (factor.isValid(world, state, pos)) {
@@ -339,7 +349,9 @@ class Berry(
             val flowerTexture = buffer.readIdentifier()
             val fruitModelIdentifier = buffer.readIdentifier()
             val fruitTexture = buffer.readIdentifier()
-            return Berry(identifier, baseYield, emptyList(), growthTime, refreshRate, favMulchs, emptySet(), emptyList(), growthPoints, randomizedGrowthPoints, mutations, sproutShapeBoxes, matureShapeBoxes, flavors, tintIndexes, flowerModelIdentifier, flowerTexture, fruitModelIdentifier, fruitTexture, 0F)
+            val stageOneYPos = GrowthPoint(Vec3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()), Vec3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()))
+            val boneMealChance = buffer.readFloat()
+            return Berry(identifier, baseYield, emptyList(), growthTime, refreshRate, favMulchs, emptySet(), emptyList(), growthPoints, randomizedGrowthPoints, mutations, sproutShapeBoxes, matureShapeBoxes, flavors, tintIndexes, flowerModelIdentifier, flowerTexture, fruitModelIdentifier, fruitTexture, stageOneYPos, 0F, boneMealChance)
         }
 
     }

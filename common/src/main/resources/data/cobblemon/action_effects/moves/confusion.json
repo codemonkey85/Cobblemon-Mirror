@@ -1,0 +1,79 @@
+{
+  "timeline": [
+    {
+      "type": "add_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "animation",
+      "animation": ["confusion", "psychic", "special"],
+      "delay": 0.92
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:confusion_actor",
+      "locator": "special_attack",
+      "delay": 0.03
+    },
+    {
+      "type": "pause",
+      "pause": 0.38
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:confusion_release",
+      "locator": "special_attack",
+      "delay": 0.02
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:confusion_releasering",
+      "locator": "special_attack"
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:confusion_releasedots",
+      "locator": "special_attack",
+      "delay": 0.03
+    },
+    {
+      "type": "pause",
+      "pause": 0.6
+    },
+    {
+      "type": "entity_particles",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "effect": "cobblemon:confusion_target",
+      "locator": "target",
+      "delay": 0.03
+    },
+    {
+      "type": "pause",
+      "pause": 0.4
+    },
+    {
+      "type": "entity_particles",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "effect": "cobblemon:confusion_impact",
+      "locator": "target"
+    },
+    {
+      "type": "entity_particles",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "effect": "cobblemon:confusion_impactdots",
+      "locator": "target"
+    },
+    {
+      "type": "pause",
+      "pause": 0.01
+    },
+    {
+      "type": "remove_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "pause",
+      "pause": 1.9
+    }
+  ]
+}

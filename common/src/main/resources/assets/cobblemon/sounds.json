@@ -407,11 +407,35 @@
       "cobblemon:block/gilded_chest/gilded_chest_step_4"
     ]
   },
-  "flamethrower.cast": {
-    "sounds": [ "cobblemon:attacks/flamethrower/flamethrower_cast" ]
+  "move.flamethrower.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/flamethrower/flamethrower_cast", "volume": 0.8 } ]
   },
-  "flamethrower.impact": {
-    "sounds": [ "cobblemon:attacks/flamethrower/flamethrower_impact" ]
+  "move.flamethrower.impact": {
+    "sounds": [ { "name": "cobblemon:attacks/flamethrower/flamethrower_impact", "volume": 0.8 } ]
+  },
+  "move.sandattack.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/sandattack/sand_attack_actor", "volume": 0.8 } ]
+  },
+  "move.sandattack.target": {
+    "sounds": [ { "name": "cobblemon:attacks/sandattack/sand_attack_target", "volume": 0.8 } ]
+  },
+  "move.confusion.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/confusion/confusion_actor", "volume": 0.9 } ]
+  },
+  "move.confusion.target": {
+      "sounds": [ { "name": "cobblemon:attacks/confusion/confusion_target", "volume": 0.8 } ]
+  },
+  "move.swordsdance.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/swordsdance/swords_dance_actor", "volume": 0.8 } ]
+  },
+  "move.thunderwave.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/thunderwave/thunder_wave_actor", "volume": 0.8 } ]
+  },
+  "move.thunderwave.target": {
+      "sounds": [ { "name": "cobblemon:attacks/thunderwave/thunder_wave_target", "volume": 0.8 } ]
+  },
+  "move.protect.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/protect/protect_actor", "volume": 0.8 } ]
   },
   "effective": {
     "sounds": [ "cobblemon:effective" ]
@@ -637,6 +661,38 @@
       { "name": "cobblemon:attacks/impact_generic/impact_generic_fairy_7", "volume": 0.8 },
       { "name": "cobblemon:attacks/impact_generic/impact_generic_fairy_8", "volume": 0.8 }
     ]
+  },
+  "status.paralysis.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/status/status_paralysis_actor", "volume": 0.8 } ]
+  },
+  "status.poison.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/status/status_poison_actor", "volume": 0.8 } ]
+  },
+  "status.badlypoison.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/status/status_toxpoison_actor", "volume": 0.8 } ]
+  },
+  "powder.poison.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/powder_attacks/poison_powder_actor", "volume": 1.0 } ]
+  },
+  "powder.sleep.actor": {
+      "sounds": [ { "name": "cobblemon:attacks/powder_attacks/sleep_powder_actor", "volume": 1.0 } ]
+  },
+  "powder.stun.actor": {
+      "sounds": [ { "name": "cobblemon:attacks/powder_attacks/stun_spore_actor", "volume": 1.0 } ]
+  },
+  "powder.generic.actor": {
+      "sounds": [ { "name": "cobblemon:attacks/powder_attacks/generic_powder_actor", "volume": 1.0 } ]
+  },
+  "powder.generic.target": {
+      "sounds": [ { "name": "cobblemon:attacks/powder_attacks/generic_powder_target", "volume": 1.0 } ]
+  },
+  "powder.spore.mushroom": {
+      "sounds": [
+        { "name": "cobblemon:attacks/powder_attacks/spore_mushroom_1", "volume": 0.3 },
+        { "name": "cobblemon:attacks/powder_attacks/spore_mushroom_2", "volume": 0.1 },
+        { "name": "cobblemon:attacks/powder_attacks/spore_mushroom_3", "volume": 0.1 },
+        { "name": "cobblemon:attacks/powder_attacks/spore_mushroom_4", "volume": 0.1 }
+      ]
   },
   "pokemon.bulbasaur.ambient": {
     "sounds": [ "cobblemon:pokemon/bulbasaur/bulbasaur_ambient" ]

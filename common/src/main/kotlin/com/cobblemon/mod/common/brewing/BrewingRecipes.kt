@@ -44,7 +44,9 @@ object BrewingRecipes {
             convert(CobblemonItems.SUPER_POTION, CobblemonItems.AGUAV_BERRY, CobblemonItems.HYPER_POTION),
             convert(CobblemonItems.SUPER_POTION, CobblemonItems.IAPAPA_BERRY, CobblemonItems.HYPER_POTION),
             convert(CobblemonItems.HYPER_POTION, CobblemonItems.VIVICHOKE, CobblemonItems.MAX_POTION),
-            convert(CobblemonItems.MAX_POTION, CobblemonItems.LUM_BERRY, CobblemonItems.FULL_RESTORE)
+            convert(CobblemonItems.MAX_POTION, CobblemonItems.LUM_BERRY, CobblemonItems.FULL_RESTORE),
+
+            convert(CobblemonItems.POTION, CobblemonItems.PETAYA_BERRY, CobblemonItems.THROAT_SPRAY)
         )
     }
     

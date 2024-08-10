@@ -49,7 +49,7 @@ open class AreaSpawningContext(
      * This is not considering the provided state as what the entity would be on top of,
      * but rather the space its hitbox would fill.
      */
-    open fun isSafeSpace(world: ServerWorld, pos: BlockPos, state: BlockState): Boolean = !state.isFullCube(world, pos)
+    open fun isSafeSpace(world: ServerWorld, pos: BlockPos, state: BlockState): Boolean = !state.isSolid
 
     override fun postFilter(detail: SpawnDetail): Boolean {
         if (!super.postFilter(detail)) {

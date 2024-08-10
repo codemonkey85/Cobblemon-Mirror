@@ -100,7 +100,7 @@ open class PokemonBattle(
     var ended = false
     // TEMP battle showcase stuff
     var announcingRules = false
-    var turn: Int = 1
+    var turn: Int = 0
         private set
 
     private var ticks: Int = 0

@@ -1,60 +1,196 @@
 # Changelog
 
-## [1.5.1](#1-5-1)
+## [1.5.3](#1-5-3)
+### Fixes
+- Scaled down Amaura's fetus model to avoid clipping through the tank while animating
+- Fixed Cubone's cry not having a sound.
+- Fixed the Seafloor spawning context not being a usable context.
+- Fixed Pokemon spawning in non-full blocks like slabs.
+- Fixed Gilded Chests not dropping the chest itself when broken, only the contents.
+- Fixed Pokémon losing their Hidden Ability through evolution if the middle stage did not have a Hidden Ability.
+- Hidden Power no longer plays the water type action effect. (It now plays the normal type action effect.)
+- Fixed Chimchar and Monferno T posing whenever they sleep.
+- Fixed the Magby line not having any placeholder walk animations.
+- Fixed Duskull and Dusclops using skylight levels for their nether spawn data. There is no sun in the Nether!
+- Fixed Hisuian Zoroark using base Zoroark stats. 
+- Fixed Bellossom clipping into the player head when shoulder mounted.
+- Fixed Shroomish's look range to prevent it from looking higher than it should. 
+- Fixed Crumbling Arch not blending in with the world.
+- Fixed Energy Root applying being usable on a fainted Pokemon.
+- Fixed Pokémon entity not spawning when starting a battle while recalling said Pokémon
+- Fixed species comparison not using namespace for both sides in PokemonProperties.isSubsetOf.
+- Fixed PokemonProperties#asString prefixing nicknames with a '$'
+- Fixed reviving items throwing an exception when used in battle
+- Fixed messages for Focus Sash, Confusion, Mummy, Ice Face, Own Tempo, and Revive
+- Fixed PC not saving when Pokemon was changed outside.
+- Fixed shearble Pokemon not dropping correct wool colors.
+- Fixed pasture spawning Pokemon inside solid blocks when closest spawning position is blocked off.
+- Fixed Tumbling Down advancement not being granted by tumblestone variants.
+- Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server
+- Fixed empty JsonPlayerData files resulting in players being unable to join server/world
+- Fixed crumbling_arch_ruins from generating a giant cube of air and removed the chest
+
+### Additions
+- Added extra visuals to early berry growth stages
+- Hidden Power now displays its effective typing.
+- Moves impacted by the abilities Pixelate, Refrigerate, Aerilate, Galvanize, and Normalize now display as their altered typing.
+- Added Polished Tumblestone and Tumblestone Brick block sets from Tumblestone, Black Tumblestone, and Sky Tumblestone.
+- Added Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
+- Added ston_henge_ruins, luna_henge_ruins, and sol_henge_ruins structures.
+- Added Eject Pack, Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
+- Added a `battleInvulnerability` gamerule to make players invulnerable to any damage during a battle
+- Added a `mobTargetInBattle` gamerule to exclude players from being targeted by mobs during a battle
+- Added battle log messages for switching out Pokémon
+
+### Added cries to the following Pokémon
+- Timburr, Gurdurr, Conkeldurr
+- Golett, Golurk
+
+### Changes
+- Altered the item model for Medicinal Leeks and Roasted Leeks to be held like sticks and other rod items. 
+- Adjusted some berry balance values like yield and growth times
+- Changes to mulch buffs/durations
+- Weedle, Caterpie, Spearow, Smoochum, Mew, Murkrow, Larvitar, Taillow, Plusle, Minun, Beldum, Starly, Buneary, Combee, Pachirisu, Pidove, Petilil, Hisui Bias Petilil, Zorua, Hisuian Zorua, Elgyem, Fletchling, Skrelp, Klefki, Fomantis, Morelull, Dreepy, Shroodle, Tatsugiri, Glimmet, and Roaming Gimmighoul are now shoulder mountable
+- Chikorita's ability to look around removed due to the awkwardness of it.
+- Link Cable recipe has been redesigned
+- Updated potion sprites
+- Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users. 
+
+### Pokémon Added
+#### Gen 2
+- Ledyba
+- Ledian
+- Sunkern
+- Sunflora
+- Wobbuffet
+- Girafarig
+
+#### Gen 3
+- Wynaut
+
+#### Gen 9
+- Farigiraf
+
+### Changes
+- Kakuna, Beedrill, Snorlax, Munchlax, and Lurantis received model updates
+
+### Developer
+- PokemonBattle now starts on turn 0.
+
+### Data Pack & Resource Pack Creators
+- Added support for "shedders" similar to Shedinja's evolution logic.
+- Fixed the placeholder WingFlapIdle animation so the wings are not rotating opposite to each other.
+
+## [1.5.2 (May 27th, 2024)](#1-5-2)
+### Fixes
+- Fixed Wooloo and Dubwool dyeing making your game start dying. Only if you do it on a server.
+- Fixed Gimmighoul causing PCs and parties to look glitched out, also only in a server.
+- Fixed players being able to dye other people's sheep Pokémon.
+
+## [1.5.1 (May 27th, 2024)](#1-5-1)
 
 ### Additions
 - Added unique send out particles for Cherish, Dream, Beast, and Ancient Origin balls.
-- Made Wooloo and Dubwool dye-able like sheep
-- Semi-implemented Smeargle. It's temporarily using the "color" feature. Spawn it with "/pokespawn smeargle color=(color)" or else you'll get the bald one.
+- Made Wooloo and Dubwool dye-able like sheep. So cute!
+- Added stat up and down particles.
+- Most status effects now have particles! These include: Paralysis, Poison, Sleep, Confusion, Infatuation.
+#### Move Particle Effects
+- Confusion
+- Cotton Guard
+- Growl
+- Ice Punch
+- Fire Punch
+- Thunder Punch
+- Minimize
+- Quick Attack
+- Protect
+- Swords Dance
+- Sand Attack
+- Poison Powder
+- Sleep Powder
+- Stun Spore
+- Powder
+- Rage Powder
+- Spore
+- Thunder Wave
 
 ### Changes
 - Sounds for Relic Coin Sacks have been correctly renamed. Relic Coin Pouches received new sounds for breaking and placing.
-- Readjusted Petilil portraits
-- Changed "dimensions" spawn condition to check with dimension IDs instead of effects, so custom dimension IDs can be used.
-- Fossil Machine no longer stores a pokemon instance when the machine completes, instead the pokemon is generated when it is retrieved from the machine.
+- Readjusted Petilil portraits so they fit a bit better.
+- Improved handling of Pokémon taken from the Restoration Tank block to be a bit more stable. 
 - Made Mulch cheaper to craft.
 
 ### Fixes
-- Fixed a bug in which adding organic material to the restoration tank via right click was adding the full count of the stack currently in hand.
+- Fixed a bug in which adding organic material to the restoration tank via right click was adding the full count of the stack currently in hand - but only taking 1 of the item.
 - Fixed a niche issue where some properties of entities were not initialized correctly, causing Pokémon that appeared to be level 1 until you battle them.
 - Fixed Fossilized Drake being missing from the Fossils item tag.
-- Fixed Gilded Chest block entity not being cleared on block break.
-- Fixed sherd brokenness on Forge/Supplementaries incompat.
+- Fixed Gilded Chest block entity not being cleared on block break, creating spooky ghost blocks. Old ones can be fixed by placing something like a furnace where it was, then breaking the furnace.
+- Fixed sherd brokenness on Forge.
+- Fixed Supplementaries incompatibility.
 - Fixed Fossil Compartment crash with Jade / WAILA forks.
-- Fixed PCStore#resize not allowing PC boxes size reduction.
 - Fixed pasture block PC lookups when the player is offline.
 - Fixed an untranslated battle message that occurs when using a move that just ran out of PP (e.g. Fire Blast that just got spited mid-turn). 
 - Fixed held items being eaten even when the held item evolutions are already unlocked.
 - Fixed Hisuian Decidueye not being Grass/Fighting.
 - Fixed both Decidueye forms learning both Triple Arrows and Spirit Shackle.
 - Fixed Pineco being unable to evolve into Shulker Forretress.
-- Fixed Kabutops T-posing when underwater. It still does not have proper swimming animations yet though. 
+- Fixed Kabutops T-posing when underwater. It doesn't have proper swimming animations yet, though. 
 - Fixed Pidgey's missing walk animation.
 - Fixed Cyndaquil's hidden flames clipping if it was swimming.
-- Fixed Chimecho and Chingling being unable to spawn near bells.
-- Fixed Tyrantrum and Wailord Party Overlay models peeking through the chat box.
-- Fixed hitbox sizes for the Seedot, Nuzleaf, and Shiftry.
-- Fixed recoil evo condition.
+- Fixed Chimecho and Chingling being unable to spawn near bells. They are meant to!
+- Fixed Tyrantrum and Wailord Party Overlay models peeking through the chat box. It was kinda funny though.
+- Fixed hitbox sizes for Seedot, Nuzleaf, and Shiftry.
+- Fixed Budew and Lechonk sliding if they walked for too long. 
+- Fixed Shedinja T-posing in battle. 
+- Fixed recoil evolution condition not working, making things like Basculegion unobtainable.
 - Fixed issue where poser debug tools didn't work on JSON posers.
 - Fixed issue where gilded chests don't close when going far away.
-- Fixed issue where the restoration tank's renderer was reading old data.
-- Fixed issue where the lights on the restoration tank would not animate if it was facing east.
-- Fixed client crash with the fossil machine when updating block state on a chunk that is unloaded in the client.
-- Fixed Restoration Tank crash with Create upon the Tank's block destruction.
+- Fixed issue where the restoration tank's renderer was reading old data, making it appear wrong.
+- Fixed issue where the lights on the restoration tank would not animate if it was facing east. Very specific.
+- Fixed client crash with the fossil machine when updating block state on a chunk that is unloaded in the client. I don't understand this but the devs are sure that all of those are real words.
+- Fixed Restoration Tank crash with Create upon the tank block's destruction.
 - Fixed Restoration Tank over consuming items when interacting with Create blocks.
-- Fixed addons that add very many moves to a learn-set syncing causing issues on servers.
-- Fixed Hyper Cutter and Big Peck incorrectly stating that it prevented accuracy from being lowered in battle
-- Added English lang keys for Rough Skin and Iron Barbs's battle messages
-- Fixed bug where sometimes pokemon sendouts wouldnt create an entity or the entity would spawn at 0 0 0
-- Fixed a bug where aspects of a form would not be properly reflected on form changes (eg. Normal -> Hisui)
+- Fixed addons that add very many moves to a learn-set causing disappearing Pokémon (visually) issues on servers.
+- Fixed Hyper Cutter and Big Pecks incorrectly stating that it prevented accuracy from being lowered in battle.
+- Fixed missing messages for Rough Skin and Iron Barbs in battle.
+- Fixed a bug where sometimes Pokémon sendouts wouldn't create an entity, or the entity would spawn at 0 0 0 which is not a good place for a Pokémon to be. Or any of us, really.
+- Fixed issue in which a locked gilded chest would animate to the open state when the client fails to open it, such as when it is locked.
+- Fixed a bug where aspects of a form would not be properly reflected on form changes (eg. Normal -> Hisui).
+- Fixed generic battle effect sounds not sounding the way they were intended to.
+- Fixed particle effects often not having access to some specific entity functions from MoLang.
+- Fixed particles sometimes lasting a single tick too long, causing (very quick) visual glitches.
+- Fixed particle rotations being inverted. 
+- Fixed particle events not spawning at the instigating particle's location.
+- Fixed a bunch of spam during world generation.
+- Fixed a bug in which throwing a Poké Ball at a player owned Pokémon with the ability Illusion would reveal its true species. Hilarious meta strategy.
+- Fixed root-part animations not working for JSON posed Pokémon. You didn't notice this but if we didn't fix this in this update then if you use Quick Attack a lot you'd have seen a whole lot of [this](https://cdn.discordapp.com/attachments/1076993968803434627/1242660506783715369/Minecraft__1.20.1_-_Singleplayer_2024-05-21_22-08-17.mp4?ex=66549408&is=66534288&hm=ff95ee293eb15634fd63e6546534ea279540a1c892605e8d561593ca2c5600c5&) which is damn funny but very unintended.
 
 ### Developer
-- Changed SpawnAction#complete to return a nullable generic R (the spawn action result) instead of a boolean. More information this way.
-- Added an event when a fossil is revived, with or without a player.
+- Changed SpawnAction#complete to return a nullable generic R (the spawn action result) instead of a boolean. Provides more information this way.
+- Added an event that fires when a fossil is revived, with or without a player.
+- Added IVS and EVS property extractors.
+- Fixed PCStore#resize not allowing PC boxes size reduction.
 
 ### Data Pack & Resource Pack Creators
 - Added support for MoLang conditions for quirks and poses.
-- Changed the AttackDefenceRatio requirement to StatCompare and StatEqual.
+- Changed the AttackDefenceRatio requirement to StatCompare and StatEqual. There is some backwards compatibility for AttackDefenceRatio, though.
+- Changed "dimensions" spawn condition to check with dimension IDs instead of effects, so custom dimension IDs can be used.
+- Added parametric motion and rotation support to particle effects.
+- Added entity_scale as a molang var for particles (likely only applicable to Pokemon)
+- Added support for primary quirk animations using the following format:
+```JSON
+{
+  "quirks": [
+    "q.bedrock_primary_quirk('<pokemon>', '<animation>', <minSeconds>, <maxSeconds>, <loopTimes>, '<excludedLabels>', q.curve('<waveFunction>'))"
+  ]
+}
+```
+- Added support for custom stashes, similar to Gimmighoul's coin and scrap stashes.
+
+### Localization
+- Updated translations for:
+  - Simplified and Traditional Chinese.
+  - Spanish.
 
 ## [1.5.0 - The Ruins and Revival Update (May 12th, 2024)](#1-5-0)
 #### "You're telling me that Mojang has added archaeology to the game? Hmm... that gives me an idea."
@@ -436,7 +572,6 @@ These are our compromise for having both regular and Hisuian forms of these Pok�
 - Added a /bedrockparticle command to run Snowstorm-format particle effects.
 - Added data for Dipplin, Fezandipiti, Munkidori, Ogerpon, Okidogi, Poltchageist and Sinistcha.
 - Added additional nickname trigger "Grumm" for Inkay's evolution.
-- Added a animation and particles to Pokemon evolving while in the overworld.
 
 ### Changes
 - Using Potions, Status Heals, Ethers, and Antidotes will now return a glass bottle

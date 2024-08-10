@@ -43,6 +43,7 @@ object SnowstormParticleReader {
         val emitterShapeEntityBoundingBoxJson = componentsJson.get("minecraft:emitter_shape_entity_aabb")?.asJsonObject
         val emitterLifetimeEventsJson = componentsJson.get("minecraft:emitter_lifetime_events")?.asJsonObject
         val dynamicMotionJson = componentsJson.get("minecraft:particle_motion_dynamic")?.asJsonObject
+        val parametricMotionJson = componentsJson.get("minecraft:particle_motion_parametric")?.asJsonObject
         val particleAppearanceJson = componentsJson.get("minecraft:particle_appearance_billboard").asJsonObject
         val sizeJson = particleAppearanceJson.get("size")?.asJsonArray
         val particleLifetimeJson = componentsJson.get("minecraft:particle_lifetime_expression")?.asJsonObject
@@ -234,12 +235,21 @@ object SnowstormParticleReader {
         val motion = if (dynamicMotionJson != null) {
             val accelerationExpressions = dynamicMotionJson.get("linear_acceleration")?.asJsonArray?.map { it.asString.asExpression() }
                 ?: listOf(0.0.asExpression(), 0.0.asExpression(), 0.0.asExpression())
-            val drag= dynamicMotionJson.get("linear_drag_coefficient")?.asString?.asExpression() ?: 0.0.asExpression()
+            val drag = dynamicMotionJson.get("linear_drag_coefficient")?.asString?.asExpression() ?: 0.0.asExpression()
             DynamicParticleMotion(
                 direction = direction!!,
                 speed = speed,
                 acceleration = Triple(accelerationExpressions[0], accelerationExpressions[1], accelerationExpressions[2]),
                 drag = drag
+            )
+        } else if (parametricMotionJson != null) {
+            val offsetExpressions = parametricMotionJson.get("relative_position")?.asJsonArray?.map { it.asString.asExpression() }
+                ?: listOf(0.0.asExpression(), 0.0.asExpression(), 0.0.asExpression())
+            val directionExpressions = parametricMotionJson.get("direction")?.asJsonArray?.map { it.asString.asExpression() }
+                ?: listOf(0.0.asExpression(), 0.0.asExpression(), 0.0.asExpression())
+            ParametricParticleMotion(
+                offset = Triple(offsetExpressions[0], offsetExpressions[1], offsetExpressions[2]),
+                direction = Triple(directionExpressions[0], directionExpressions[1], directionExpressions[2])
             )
         } else {
             StaticParticleMotion()
@@ -299,12 +309,19 @@ object SnowstormParticleReader {
                 textureSizeY = uvModeJson.get("texture_height")?.asInt ?: 128
             )
         }
-        val rotation = DynamicParticleRotation(
-            startRotation = startRotation,
-            speed = rotationSpeed,
-            acceleration = dynamicMotionJson?.get("rotation_acceleration")?.asString?.asExpression() ?: 0.0.asExpression(),
-            drag = dynamicMotionJson?.get("rotation_drag_coefficient")?.asString?.asExpression() ?: 0.0.asExpression()
-        )
+
+        val motionJson = dynamicMotionJson ?: parametricMotionJson
+        val parametricParticleRotation = motionJson?.get("rotation")?.asString?.asExpression()
+        val rotation = if (parametricParticleRotation != null) {
+            ParametricParticleRotation(expression = parametricParticleRotation)
+        } else {
+            DynamicParticleRotation(
+                startRotation = startRotation,
+                speed = rotationSpeed,
+                acceleration = dynamicMotionJson?.get("rotation_acceleration")?.asString?.asExpression() ?: 0.0.asExpression(),
+                drag = dynamicMotionJson?.get("rotation_drag_coefficient")?.asString?.asExpression() ?: 0.0.asExpression()
+            )
+        }
         val tinting = if (colourJson is JsonObject) {
             GradientParticleTinting(
                 interpolant = colourJson.get("interpolant").asString.asExpression(),

@@ -75,6 +75,21 @@ object CobblemonHeldItemManager : BaseCobblemonHeldItemManager() {
         return original
     }
 
+    fun showdownId(itemStack: ItemStack): String? {
+        if (remaps.containsKey(itemStack.item)) {
+            return remaps[itemStack.item]
+        }
+
+        for (remap in stackRemaps) {
+            val id = remap.apply(itemStack)
+            if (id != null) {
+                return id
+            }
+        }
+
+        return this.showdownIdOf(itemStack.item)
+    }
+
     override fun handleStartInstruction(pokemon: BattlePokemon, battle: PokemonBattle, battleMessage: BattleMessage) {
         val itemID = battleMessage.effectAt(1)?.id ?: return
         val consumeHeldItems = this.shouldConsumeItem(pokemon, battle, itemID)
@@ -98,6 +113,7 @@ object CobblemonHeldItemManager : BaseCobblemonHeldItemManager() {
             "magician", "pickpocket", "covet", "thief" -> battleLang("item.thief", battlerName, itemName, sourceName) // The "source" is actually the target here
             "pickup", "recycle" -> battleLang("item.recycle", battlerName, itemName)
             "switcheroo", "trick" -> battleLang("item.trick", battlerName, itemName)
+            "focussash" -> battleLang("item.trick", battlerName, itemName)
             else -> battleLang("item.$effectId", battlerName, itemName, sourceName)
         }
         battle.broadcastChatMessage(text)

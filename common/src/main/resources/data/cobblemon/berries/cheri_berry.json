@@ -1,31 +1,23 @@
 {
   "baseYield": {
-    "min": 3,
-    "max": 6
+    "min": 2,
+    "max": 3
   },
   "preferredBiomeTags": [
     "cobblemon:is_plains"
   ],
   "growthTime": {
-    "min": 45,
-    "max": 55
+    "min": 36,
+    "max": 44
   },
   "refreshRate": {
-    "min": 15,
-    "max": 25
+    "min": 18,
+    "max": 22
   },
   "favoriteMulches": [
     "loamy"
   ],
-  "growthFactors": [
-    {
-      "variant": "cobblemon:preferred_biome",
-      "bonusYield": {
-        "min": 1,
-        "max": 2
-      }
-    }
-  ],
+  "growthFactors": [],
   "randomizedGrowthPoints": true,
   "spawnConditions": [
     {
@@ -132,6 +124,18 @@
       }
     }
   ],
+  "stageOnePositioning": {
+    "position": {
+      "x": 8.2,
+      "y": 3.0,
+      "z": 8.1
+    },
+    "rotation": {
+      "x": 5.0,
+      "y": -10.0,
+      "z": -7.5
+    }
+  },
   "mutations": {
     "cobblemon:oran_berry": "cobblemon:lum_berry",
     "cobblemon:persim_berry": "cobblemon:figy_berry"
@@ -146,5 +150,6 @@
   "flowerModel": "cobblemon:flower.geo",
   "flowerTexture": "cobblemon:flower",
   "fruitModel": "cobblemon:cheri_berry.geo",
-  "fruitTexture": "cobblemon:cheri"
+  "fruitTexture": "cobblemon:cheri",
+  "boneMealChance": 0.56
 }

@@ -15,9 +15,6 @@ import com.cobblemon.mod.common.client.render.MatrixWrapper
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormParticlePacket
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.util.math.RotationAxis.NEGATIVE_X
-import net.minecraft.util.math.RotationAxis.POSITIVE_X
-import net.minecraft.util.math.RotationAxis.POSITIVE_Y
 
 object SpawnSnowstormParticleHandler : ClientNetworkPacketHandler<SpawnSnowstormParticlePacket> {
     override fun handle(packet: SpawnSnowstormParticlePacket, client: MinecraftClient) {

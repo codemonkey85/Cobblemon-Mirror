@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.integration.jei.berry
 
-import com.cobblemon.mod.common.item.BerryItem
+import com.cobblemon.mod.common.item.berry.BerryItem
 
 //Dont make these ItemStacks, they do not have consistent hash codes, breaks stuff
 data class BerryMutationRecipe(
