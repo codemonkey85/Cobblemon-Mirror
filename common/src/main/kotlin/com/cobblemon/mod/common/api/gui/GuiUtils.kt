@@ -10,7 +10,9 @@ package com.cobblemon.mod.common.api.gui
 
 import com.cobblemon.mod.common.api.text.font
 import com.cobblemon.mod.common.client.gui.battle.BattleOverlay.Companion.PORTRAIT_DIAMETER
+import com.cobblemon.mod.common.client.render.SpriteType
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.cobblemon.mod.common.entity.PoseType
@@ -201,58 +203,71 @@ fun drawPosablePortrait(
     headYaw: Float = 0F,
     headPitch: Float = 0F
 ) {
-    val model = repository.getPoser(identifier, aspects)
-    state.currentAspects = aspects
-    state.currentModel = model
-    val texture = repository.getTexture(identifier, aspects, state.animationSeconds)
-
-    val context = RenderContext()
-    model.context = context
-    repository.getTextureNoSubstitute(identifier, aspects, 0f).let { context.put(RenderContext.TEXTURE, it) }
-    context.put(RenderContext.SCALE, contextScale)
-    context.put(RenderContext.SPECIES, identifier)
-    context.put(RenderContext.ASPECTS, aspects)
-    context.put(RenderContext.POSABLE_STATE, state)
-
-    val renderType = RenderType.entityCutout(texture)
-
     RenderSystem.applyModelViewMatrix()
-    val quaternion1 = Axis.YP.rotationDegrees(-32F * if (reversed) -1F else 1F)
-    val quaternion2 = Axis.XP.rotationDegrees(5F)
-
-    val originalPose = state.currentPose
-    state.setPoseToFirstSuitable(PoseType.PORTRAIT)
-    state.updatePartialTicks(partialTicks)
-    model.applyAnimations(null, state, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch)
-    originalPose?.let { state.setPose(it) }
-
     matrixStack.pushPose()
     matrixStack.translate(0.0, PORTRAIT_DIAMETER.toDouble() + 2.0, 0.0)
     matrixStack.scale(scale, scale, -scale)
     matrixStack.translate(0.0, -PORTRAIT_DIAMETER / 18.0, 0.0)
-    matrixStack.translate(model.portraitTranslation.x * if (reversed) -1F else 1F, model.portraitTranslation.y, model.portraitTranslation.z - 4)
-    matrixStack.scale(model.portraitScale, model.portraitScale, 1 / model.portraitScale)
-    matrixStack.mulPose(quaternion1) // TODO (techdaan): correct?
-    matrixStack.mulPose(quaternion2)
 
-    val light1 = Vector3f(0.2F, 1.0F, -1.0F)
-    val light2 = Vector3f(0.1F, 0.0F, 8.0F)
-    RenderSystem.setShaderLights(light1, light2)
-    quaternion1.conjugate()
+    val sprite = repository.getSprite(identifier, aspects, SpriteType.PORTRAIT);
 
-    val immediate = Minecraft.getInstance().renderBuffers().bufferSource()
-    val buffer = immediate.getBuffer(renderType)
-    val packedLight = LightTexture.pack(11, 7)
+    if(sprite == null) {
 
-    model.withLayerContext(immediate, state, repository.getLayers(identifier, aspects)) {
-        model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
-        immediate.endBatch()
+        val model = repository.getPoser(identifier, aspects)
+        state.currentAspects = aspects
+        state.currentModel = model
+        val texture = repository.getTexture(identifier, aspects, state.animationSeconds)
+
+        val context = RenderContext()
+        model.context = context
+        repository.getTextureNoSubstitute(identifier, aspects, 0f).let { context.put(RenderContext.TEXTURE, it) }
+        context.put(RenderContext.SCALE, contextScale)
+        context.put(RenderContext.SPECIES, identifier)
+        context.put(RenderContext.ASPECTS, aspects)
+        context.put(RenderContext.POSABLE_STATE, state)
+
+        val renderType = RenderType.entityCutout(texture)
+
+        val quaternion1 = Axis.YP.rotationDegrees(-32F * if (reversed) -1F else 1F)
+        val quaternion2 = Axis.XP.rotationDegrees(5F)
+
+        val originalPose = state.currentPose
+        state.setPoseToFirstSuitable(PoseType.PORTRAIT)
+        state.updatePartialTicks(partialTicks)
+        model.applyAnimations(null, state, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch)
+        originalPose?.let { state.setPose(it) }
+
+        matrixStack.translate(
+            model.portraitTranslation.x * if (reversed) -1F else 1F,
+            model.portraitTranslation.y,
+            model.portraitTranslation.z - 4
+        )
+        matrixStack.scale(model.portraitScale, model.portraitScale, 1 / model.portraitScale)
+        matrixStack.mulPose(quaternion1) // TODO (techdaan): correct?
+        matrixStack.mulPose(quaternion2)
+
+        val light1 = Vector3f(0.2F, 1.0F, -1.0F)
+        val light2 = Vector3f(0.1F, 0.0F, 8.0F)
+        RenderSystem.setShaderLights(light1, light2)
+        quaternion1.conjugate()
+
+        val immediate = Minecraft.getInstance().renderBuffers().bufferSource()
+        val buffer = immediate.getBuffer(renderType)
+        val packedLight = LightTexture.pack(11, 7)
+
+        model.withLayerContext(immediate, state, repository.getLayers(identifier, aspects)) {
+            model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
+            immediate.endBatch()
+        }
+
+        model.setDefault()
+
+        Lighting.setupFor3DItems()
+    } else {
+        renderSprite(matrixStack, sprite)
     }
 
     matrixStack.popPose()
-    model.setDefault()
-
-    Lighting.setupFor3DItems()
 }
 
 fun drawProfile(
@@ -264,50 +279,75 @@ fun drawProfile(
     partialTicks: Float,
     scale: Float = 20F
 ) {
-    val model = repository.getPoser(resourceIdentifier, aspects)
-    val texture = repository.getTexture(resourceIdentifier, aspects, state.animationSeconds)
-
-    val context = RenderContext()
-    model.context = context
-    repository.getTextureNoSubstitute(resourceIdentifier, aspects, 0f).let { context.put(RenderContext.TEXTURE, it) }
-    context.put(RenderContext.SCALE, 1F)
-    context.put(RenderContext.SPECIES, resourceIdentifier)
-    context.put(RenderContext.ASPECTS, aspects)
-    context.put(RenderContext.POSABLE_STATE, state)
-    state.currentAspects = aspects
-    state.currentModel = model
-
-    val renderType = RenderType.entityCutout(texture)//model.getLayer(texture)
-
     RenderSystem.applyModelViewMatrix()
     matrixStack.scale(scale, scale, -scale)
 
-    state.setPoseToFirstSuitable(PoseType.PORTRAIT)
-    state.updatePartialTicks(partialTicks)
-    model.applyAnimations(null, state, 0F, 0F, 0F, 0F, 0F)
-    matrixStack.translate(model.profileTranslation.x, model.profileTranslation.y,  model.profileTranslation.z - 4.0)
-    matrixStack.scale(model.profileScale, model.profileScale, 1 / model.profileScale)
+    val sprite = repository.getSprite(resourceIdentifier, aspects, SpriteType.PROFILE);
+
+    if(sprite == null) {
+
+        val model = repository.getPoser(resourceIdentifier, aspects)
+        val texture = repository.getTexture(resourceIdentifier, aspects, state.animationSeconds)
+
+        val context = RenderContext()
+        model.context = context
+        repository.getTextureNoSubstitute(resourceIdentifier, aspects, 0f)
+            .let { context.put(RenderContext.TEXTURE, it) }
+        context.put(RenderContext.SCALE, 1F)
+        context.put(RenderContext.SPECIES, resourceIdentifier)
+        context.put(RenderContext.ASPECTS, aspects)
+        context.put(RenderContext.POSABLE_STATE, state)
+        state.currentAspects = aspects
+        state.currentModel = model
+
+        val renderType = RenderType.entityCutout(texture)//model.getLayer(texture)
+
+        state.setPoseToFirstSuitable(PoseType.PORTRAIT)
+        state.updatePartialTicks(partialTicks)
+        model.applyAnimations(null, state, 0F, 0F, 0F, 0F, 0F)
+        matrixStack.translate(model.profileTranslation.x, model.profileTranslation.y, model.profileTranslation.z - 4.0)
+        matrixStack.scale(model.profileScale, model.profileScale, 1 / model.profileScale)
 //    matrixStack.multiply(rotation)
-    val quaternion1 = Axis.YP.rotationDegrees(-32F * if (false) -1F else 1F)
-    val quaternion2 = Axis.XP.rotationDegrees(5F)
-    matrixStack.mulPose(quaternion1)
-    matrixStack.mulPose(quaternion2)
-    Lighting.setupForEntityInInventory() // TODO (techdaan): Does this map correctly?
-    val entityRenderDispatcher = Minecraft.getInstance().entityRenderDispatcher
-    entityRenderDispatcher.setRenderShadow(true)
+        val quaternion1 = Axis.YP.rotationDegrees(-32F * if (false) -1F else 1F)
+        val quaternion2 = Axis.XP.rotationDegrees(5F)
+        matrixStack.mulPose(quaternion1)
+        matrixStack.mulPose(quaternion2)
+        Lighting.setupForEntityInInventory() // TODO (techdaan): Does this map correctly?
+        val entityRenderDispatcher = Minecraft.getInstance().entityRenderDispatcher
+        entityRenderDispatcher.setRenderShadow(true)
 
-    val bufferSource = Minecraft.getInstance().renderBuffers().bufferSource()
-    val buffer = bufferSource.getBuffer(renderType)
-    val light1 = Vector3f(-1F, 1F, 1.0F)
-    val light2 = Vector3f(1.3F, -1F, 1.0F)
-    RenderSystem.setShaderLights(light1, light2)
-    val packedLight = LightTexture.pack(11, 7)
+        val bufferSource = Minecraft.getInstance().renderBuffers().bufferSource()
+        val buffer = bufferSource.getBuffer(renderType)
+        val light1 = Vector3f(-1F, 1F, 1.0F)
+        val light2 = Vector3f(1.3F, -1F, 1.0F)
+        RenderSystem.setShaderLights(light1, light2)
+        val packedLight = LightTexture.pack(11, 7)
 
-    model.withLayerContext(bufferSource, state, repository.getLayers(resourceIdentifier, aspects)) {
-        model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
-        bufferSource.endBatch()
+        model.withLayerContext(bufferSource, state, repository.getLayers(resourceIdentifier, aspects)) {
+            model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
+            bufferSource.endBatch()
+        }
+        model.setDefault()
+        entityRenderDispatcher.setRenderShadow(true)
+        Lighting.setupFor3DItems()
+    } else {
+        renderSprite(matrixStack, sprite)
     }
-    model.setDefault()
-    entityRenderDispatcher.setRenderShadow(true)
-    Lighting.setupFor3DItems()
+}
+
+fun renderSprite(matrixStack: PoseStack, sprite: ResourceLocation) {
+    val matrix: PoseStack.Pose = matrixStack.last()
+    matrix.pose().translate(-1f, 0f, 0f)
+
+    RenderSystem.setShaderTexture(0, sprite);
+    RenderSystem.setShader(GameRenderer::getPositionTexShader)
+
+    var buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX)
+
+    buffer.addVertex(matrix, 2f, 0f, 0.0f).setUv(1f, 0f)
+    buffer.addVertex(matrix, 0f, 0f, 0.0f).setUv(0f, 0f)
+    buffer.addVertex(matrix, 0f, 2f, 0.0f).setUv(0f, 1f)
+    buffer.addVertex(matrix, 2f, 2f, 0.0f).setUv(1f, 1f)
+
+    BufferUploader.drawWithShader(buffer.buildOrThrow())
 }
