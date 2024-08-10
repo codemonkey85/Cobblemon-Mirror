@@ -68,6 +68,7 @@ import com.cobblemon.mod.common.battles.BattleSide
 import com.cobblemon.mod.common.battles.ShowdownThread
 import com.cobblemon.mod.common.battles.actor.PokemonBattleActor
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
+import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.command.argument.DialogueArgumentType
 import com.cobblemon.mod.common.command.argument.MoveArgumentType
 import com.cobblemon.mod.common.command.argument.PartySlotArgumentType
@@ -230,6 +231,9 @@ object Cobblemon {
                         evolution.attemptEvolution(pokemon, BlockClickEvolution.BlockInteractionContext(block, player.level()))
                     }
             }
+        }
+        PlatformEvents.CLIENT_TICK_POST.subscribe { event ->
+            CobblemonClient.requests.onTick()
         }
 
         // Register the grow_tumblestone advancement
