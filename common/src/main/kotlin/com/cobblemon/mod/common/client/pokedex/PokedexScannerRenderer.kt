@@ -22,6 +22,11 @@ import org.joml.Quaternionf
 import kotlin.math.cos
 import kotlin.math.sin
 
+/**
+ * Renders the UI for scanning a pokemon
+ *
+ * @author Village
+ */
 class PokedexScannerRenderer {
     fun renderScanProgress(graphics: GuiGraphics, progress: Int) {
         val client = Minecraft.getInstance()

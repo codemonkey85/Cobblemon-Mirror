@@ -8,11 +8,13 @@ import com.cobblemon.mod.common.client.pokedex.PokedexScannerRenderer
 import com.cobblemon.mod.common.client.sound.CancellableSoundController.playSound
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.StartScanningPacket
+import com.ibm.icu.impl.duration.impl.DataRecord.EGender.F
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.util.Mth.clamp
 import kotlin.math.max
 import kotlin.math.min
 
@@ -29,6 +31,7 @@ class PokedexUsageContext {
     var innerRingRotation = 0
     var usageTicks = 0
     var focusTicks = 0
+    var zoomLevel = 0F
 
     val renderer = PokedexScannerRenderer()
 
@@ -111,14 +114,24 @@ class PokedexUsageContext {
         transitionTicks = 0
         usageTicks = 0
         focusTicks = 0
+        zoomLevel = 0F
     }
 
+    //Entrypoint to UI called by platform events
     fun tryRenderOverlay(graphics: GuiGraphics, tickCounter: DeltaTracker) {
         renderer.onRenderOverlay(graphics, tickCounter)
     }
 
+    fun adjustZoom(verticalScrollAmount: Double) {
+        zoomLevel = clamp(zoomLevel + verticalScrollAmount.toFloat(), 0F, NUM_ZOOM_STAGES.toFloat())
+    }
+
+    //Higher multiplier = more zoomed out
+    fun getFovMultiplier() = 1 - (zoomLevel / NUM_ZOOM_STAGES)
+
     companion object {
         //Time it takes before UI is opened, in ticks
-        val TIME_TO_OPEN_SCANNER = 20
+        const val TIME_TO_OPEN_SCANNER = 20
+        const val NUM_ZOOM_STAGES = 10
     }
 }

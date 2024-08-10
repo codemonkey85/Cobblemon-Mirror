@@ -80,72 +80,8 @@ class PokedexItem(val type: String) : CobblemonItem(Item.Properties()) {
         super.releaseUsing(stack, world, user, remainingUseTicks)
     }
 }
-
     /*
-
-    fun getCompassTexture(direction: String): ResourceLocation {
-        return cobblemonResource("textures/gui/pokedex/compass/$direction.png")
-    }
-
     @Environment(EnvType.CLIENT)
-    fun onMouseHeld() {
-        if (isScanning) {
-            Minecraft.getInstance().player?.let {
-                //println("You are scanning")
-                //playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
-
-                // if pokemonInFocus is not null start scanning it
-                if (pokemonInFocus != null) {
-                    // todo if the pokemonInFocus is equal to pokemonBeingScanned
-                    if (pokemonInFocus == pokemonBeingScanned) {
-                        scanPokemon(pokemonInFocus!!, pokedexUser!!)
-                    } else {
-                        // reset scanning progress
-                        scanningProgress = 0
-                        pokemonBeingScanned = pokemonInFocus
-
-
-                    }
-                } else {
-                    pokemonBeingScanned = null
-                }
-                detectPokemon(it.level(), it, InteractionHand.MAIN_HAND)
-            }
-        }
-    }
-
-    fun scanPokemon(pokemonEntity: PokemonEntity, player: ServerPlayer) {
-        // increment scan progress
-        if (scanningProgress < 100)
-            scanningProgress += 2
-
-        if (scanningProgress % 2 == 0) { // 20 for 1 second
-
-            // todo get a better (maybe shorter) looping sound so it ends nicer
-            //playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
-
-            // play this temp sound for now
-            playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
-        }
-
-        // if scan progress is 100 then send packet to Pokedex
-        if (scanningProgress == 100) {
-            val species = pokemonEntity.pokemon.species.resourceIdentifier
-            val form = pokemonEntity.pokemon.form.formOnlyShowdownId()
-
-            val pokedexData = Cobblemon.playerDataManager.getPokedexData(player)
-            pokedexData.onPokemonSeen(species, form)
-            // kill overlay before opening dex
-            dexActive = true
-            player.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, pokedexData.toClientData(), false))
-            PokedexUIPacket(type, species).sendToPlayer(player)
-            playSound(CobblemonSounds.POKEDEX_SCAN)
-
-            scanningProgress = 0
-        }
-    }
-
-    /*@Environment(EnvType.CLIENT)
     private fun registerInputHandlers() {
         val windowHandle = Minecraft.getInstance().window.handle
 

@@ -112,37 +112,6 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
                 }
             }
         }
-        /*
-
-        ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client ->
-            // if player is holding pokedex item in their main hand look for other actions by them
-            if (client != null && client.screen == null && client.player != null && client.player!!.mainHandItem.item is PokedexItem) {
-                val pokedexItem = client.player!!.mainHandItem.item as PokedexItem
-
-                // if the player is currently scanning with the pokedex
-                if (pokedexItem.isScanning) {
-                    val attackKey = client.options.keyAttack
-
-                    // If the attack key is currently pressed
-                    if (attackKey.isDown) {
-                        pokedexItem.attackKeyHeldTicks++
-                        if (pokedexItem.attackKeyHeldTicks > 3) { // Adjust the threshold for considering it as a hold
-                            pokedexItem.onMouseHeld()
-                        }
-                    } else {
-                        // If the attack key was released and held for less than the threshold
-                        if (pokedexItem.attackKeyHeldTicks in 1..3) {
-                            pokedexItem.onMouseClick()
-                        }
-                        // Reset the held ticks count when the key is released
-                        pokedexItem.attackKeyHeldTicks = 0
-                    }
-                }
-            }
-        })
-
-         */
-
 
         CobblemonKeyBinds.register(KeyBindingHelper::registerKeyBinding)
 

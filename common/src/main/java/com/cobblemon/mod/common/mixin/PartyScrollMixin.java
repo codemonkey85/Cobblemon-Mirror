@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.mixin;
 import com.cobblemon.mod.common.client.CobblemonClient;
 import com.cobblemon.mod.common.client.keybind.keybinds.PartySendBinding;
 import com.cobblemon.mod.common.item.PokedexItem;
+import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.util.Mth;
@@ -40,7 +41,7 @@ public class PartyScrollMixin {
             ),
             cancellable = true
     )
-    public void onMouseScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
+    public void cobblemon$scrollParty(long window, double horizontal, double vertical, CallbackInfo ci) {
         if (PartySendBinding.INSTANCE.getWasDown()) {
             int i = (int)accumulatedScrollY;
             if (i > 0) {
@@ -54,23 +55,23 @@ public class PartyScrollMixin {
                 accumulatedScrollY = 0;
                 PartySendBinding.INSTANCE.actioned();
             }
-        } /*else if (minecraft.player != null && minecraft.player.getMainHandItem().getItem() instanceof PokedexItem) {
-            PokedexItem pokedexItem = (PokedexItem) minecraft.player.getMainHandItem().getItem();
-
-            // Check if isScanning is true
-            if (pokedexItem.isScanning()) {
-                // Adjust zoom level based on scroll direction
-                if (vertical != 0) {
-                    pokedexItem.zoomLevel += vertical * 0.1;
-                    pokedexItem.zoomLevel = Mth.clamp(pokedexItem.zoomLevel, 1.0, 2.3);
-                    pokedexItem.changeFOV(70.0); // Update the FOV
-
-                    ci.cancel();
-                    accumulatedScrollY = 0;
-                }
-            }
         }
-        */
-
     }
+
+    @Inject(
+        method = "onScroll",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/player/Inventory;swapPaint(D)V"
+        ),
+        cancellable = true
+    )
+    public void cobblemon$doPokedexZoom(long window, double horizontal, double vertical, CallbackInfo ci) {
+        PokedexUsageContext usageContext = CobblemonClient.INSTANCE.getPokedexUsageContext();
+        if (usageContext.getScanningGuiOpen()) {
+            usageContext.adjustZoom(vertical);
+            ci.cancel();
+        }
+    }
+
 }
