@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.api.pokedex.trackeddata
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.events.battles.BattleStartedPostEvent
+import com.cobblemon.mod.common.api.events.pokedex.scanning.PokemonScannedEvent
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent
 import com.cobblemon.mod.common.api.events.pokemon.TradeCompletedEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEvent
@@ -31,6 +32,10 @@ abstract class GlobalTrackedData {
     @Transient
     val syncToClient = false
     open fun onCatch(event: PokemonCapturedEvent): Boolean {
+        return false
+    }
+
+    open fun onScan(event: PokemonScannedEvent): Boolean {
         return false
     }
 

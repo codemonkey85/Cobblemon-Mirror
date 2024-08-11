@@ -7,6 +7,7 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUI
 import com.cobblemon.mod.common.client.pokedex.PokedexScannerRenderer
 import com.cobblemon.mod.common.client.sound.CancellableSoundController.playSound
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.FinishScanningPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.StartScanningPacket
 import com.ibm.icu.impl.duration.impl.DataRecord.EGender.F
 import net.minecraft.client.DeltaTracker
@@ -50,7 +51,7 @@ class PokedexUsageContext {
         }
 
         if (inUse) {
-            if (scanningGuiOpen && transitionTicks < 12) transitionTicks++
+            if (scanningGuiOpen && transitionTicks < ENTRY_ANIM_STAGES) transitionTicks++
             innerRingRotation = (if (pokemonInFocus != null) (innerRingRotation + 10) else (innerRingRotation + 1)) % 360
             usageTicks++
         }
@@ -90,6 +91,9 @@ class PokedexUsageContext {
                 StartScanningPacket(targetUUID).sendToServer()
             }
             user.playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
+            if (scanningProgress > TICKS_TO_SCAN){
+                FinishScanningPacket().sendToServer()
+            }
         }
         else {
             pokemonInFocus = null
@@ -125,5 +129,7 @@ class PokedexUsageContext {
         //Time it takes before UI is opened, in ticks
         const val TIME_TO_OPEN_SCANNER = 20
         const val NUM_ZOOM_STAGES = 10
+        const val TICKS_TO_SCAN = 60
+        const val ENTRY_ANIM_STAGES = 12
     }
 }

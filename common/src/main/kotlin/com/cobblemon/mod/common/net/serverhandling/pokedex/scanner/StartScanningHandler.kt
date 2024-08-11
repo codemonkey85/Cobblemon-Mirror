@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.pokedex.scanner.PlayerScanningDetails
 import com.cobblemon.mod.common.pokedex.scanner.PokemonScanner
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
+import java.time.Instant
 
 object StartScanningHandler : ServerNetworkPacketHandler<StartScanningPacket> {
     override fun handle(
@@ -16,7 +17,7 @@ object StartScanningHandler : ServerNetworkPacketHandler<StartScanningPacket> {
         val targetedPokemon = PokemonScanner.findPokemon(player)
         if (targetedPokemon != null) {
             PlayerScanningDetails.playerToEntityMap[player.uuid] = packet.targetedUuid
-            println("Targeted Pokemon: ${targetedPokemon.pokemon}")
+            PlayerScanningDetails.playerToTickMap[player.uuid] = server.tickCount
         }
 
 

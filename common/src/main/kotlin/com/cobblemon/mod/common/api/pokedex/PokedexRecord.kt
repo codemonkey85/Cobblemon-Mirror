@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.api.pokedex
 
 import com.cobblemon.mod.common.api.events.battles.BattleStartedPostEvent
+import com.cobblemon.mod.common.api.events.pokedex.scanning.PokemonScannedEvent
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent
 import com.cobblemon.mod.common.api.events.pokemon.TradeCompletedEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEvent
@@ -61,6 +62,22 @@ class PokedexRecord(
         val speciesId = event.pokemon.species.resourceIdentifier
         val speciesEntry = getSpeciesEntry(speciesId)
         speciesEntry.pokemonCaught(event)
+    }
+
+    fun pokemonScanned(event: PokemonScannedEvent) {
+        var haveUpdated = false
+        if (!gennedFactories.contains(EventTriggerType.SCANNED)) {
+            genFactories(EventTriggerType.SCANNED)
+        }
+        globalTrackedData.forEach {
+            val changed = it.onScan(event)
+            if (changed) {
+                haveUpdated = true
+            }
+        }
+        val speciesId = event.pokemon.species.resourceIdentifier
+        val speciesEntry = getSpeciesEntry(speciesId)
+        speciesEntry.pokemonScanned(event)
     }
 
     fun pokemonEvolved(event: EvolutionCompleteEvent) {

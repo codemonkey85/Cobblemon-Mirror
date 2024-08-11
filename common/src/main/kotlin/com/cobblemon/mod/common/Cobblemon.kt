@@ -25,6 +25,7 @@ import com.cobblemon.mod.common.api.events.CobblemonEvents.DATA_SYNCHRONIZED
 import com.cobblemon.mod.common.api.events.CobblemonEvents.EVOLUTION_COMPLETE
 import com.cobblemon.mod.common.api.events.CobblemonEvents.LEVEL_UP_EVENT
 import com.cobblemon.mod.common.api.events.CobblemonEvents.POKEMON_CAPTURED
+import com.cobblemon.mod.common.api.events.CobblemonEvents.POKEMON_SCANNED
 import com.cobblemon.mod.common.api.events.CobblemonEvents.STARTER_CHOSEN
 import com.cobblemon.mod.common.api.events.CobblemonEvents.TRADE_COMPLETED
 import com.cobblemon.mod.common.api.permission.PermissionValidator
@@ -378,6 +379,9 @@ object Cobblemon {
 
         STARTER_CHOSEN.subscribe {
             PokedexHandler.onStarterSelect(it)
+        }
+        POKEMON_SCANNED.subscribe {
+            PokedexHandler.onScan(it)
         }
 
 //        EGG_HATCH.subscribe { AdvancementHandler.onHatch(it) }

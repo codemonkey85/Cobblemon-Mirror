@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.pokedex
 
+import com.cobblemon.mod.common.api.events.pokedex.scanning.PokemonScannedEvent
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent
 import com.cobblemon.mod.common.api.events.pokemon.TradeCompletedEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEvent
@@ -47,6 +48,14 @@ class SpeciesPokedexEntry(
             formEntries[formStr] = FormPokedexRecords()
         }
         formEntries[formStr]?.knowledge = PokedexEntryProgress.CAUGHT
+    }
+
+    fun pokemonScanned(event: PokemonScannedEvent) {
+        val formStr = event.pokemon.form.formOnlyShowdownId()
+        if (!formEntries.containsKey(formStr)) {
+            formEntries[formStr] = FormPokedexRecords()
+        }
+        formEntries[formStr]?.knowledge = PokedexEntryProgress.ENCOUNTERED
     }
 
     fun pokemonEvolved(event: EvolutionCompleteEvent) {
