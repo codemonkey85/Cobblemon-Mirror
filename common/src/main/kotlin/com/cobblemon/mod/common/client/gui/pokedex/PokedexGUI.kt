@@ -320,14 +320,8 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Poked
     }
 
     fun setSelectedPokemon(species: ResourceLocation) {
-        run loop@{
-            for (dexData in filteredPokedex) {
-                if (dexData.species == PokemonSpecies.getByIdentifier(species)) {
-                    setSelectedPokemon(dexData)
-                    return@loop
-                }
-            }
-        }
+        val selectedPokemon = filteredPokedex.find { it.species?.resourceIdentifier == species } ?: return
+        setSelectedPokemon(selectedPokemon)
     }
 
     fun setUpTabs() {
