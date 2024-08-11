@@ -7,19 +7,19 @@ import com.cobblemon.mod.common.util.writeUUID
 import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
-class StartScanningPacket(val targetedUuid: UUID) : NetworkPacket<StartScanningPacket> {
+class StartScanningPacket(val targetedId: Int) : NetworkPacket<StartScanningPacket> {
     override val id = ID
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeUUID(targetedUuid)
+        buffer.writeInt(targetedId)
     }
 
     companion object {
         val ID = cobblemonResource("start_scanning_packet")
 
         fun decode(buffer: RegistryFriendlyByteBuf): StartScanningPacket {
-            val targetUuid = buffer.readUUID()
-            return StartScanningPacket(targetUuid)
+            val targetId = buffer.readInt()
+            return StartScanningPacket(targetId)
         }
     }
 }

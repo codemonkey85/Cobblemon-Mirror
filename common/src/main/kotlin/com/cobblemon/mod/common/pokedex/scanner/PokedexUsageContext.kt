@@ -2,11 +2,14 @@ package com.cobblemon.mod.common.pokedex.scanner
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonSounds
+import com.cobblemon.mod.common.api.scheduling.afterOnClient
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUI
 import com.cobblemon.mod.common.client.pokedex.PokedexScannerRenderer
+import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.cobblemon.mod.common.client.sound.CancellableSoundController.playSound
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.cobblemon.mod.common.item.PokedexItem
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.FinishScanningPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.StartScanningPacket
 import com.ibm.icu.impl.duration.impl.DataRecord.EGender.F
@@ -15,7 +18,9 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth.clamp
+import net.minecraft.world.item.ItemStack
 import kotlin.math.max
 import kotlin.math.min
 
@@ -31,11 +36,12 @@ class PokedexUsageContext {
     var usageTicks = 0
     var focusTicks = 0
     var zoomLevel = 0F
+    var type = PokedexTypes.RED
 
     val renderer = PokedexScannerRenderer()
 
-    fun startUsing() {
-
+    fun startUsing(item: PokedexItem) {
+        type = item.type
     }
 
     fun stopUsing(user: LocalPlayer, ticksInUse: Int) {
@@ -75,24 +81,30 @@ class PokedexUsageContext {
         }
     }
 
-    fun openPokedexGUI(user: LocalPlayer) {
-        PokedexGUI.open(CobblemonClient.clientPokedexData, "red", null)
+    fun openPokedexGUI(user: LocalPlayer, speciesId: ResourceLocation? = null) {
+        PokedexGUI.open(CobblemonClient.clientPokedexData, PokedexTypes.PINK, speciesId)
         user.playSound(CobblemonSounds.POKEDEX_OPEN)
     }
 
     fun tryScanPokemon(user: LocalPlayer) {
         val targetPokemon = PokemonScanner.findPokemon(user)
-        val targetUUID = targetPokemon?.uuid
-        if (targetPokemon != null && targetUUID != null) {
+        val targetId = targetPokemon?.id
+        if (targetPokemon != null && targetId != null) {
             scanningProgress++
             if (targetPokemon != pokemonInFocus) {
                 pokemonInFocus = targetPokemon
                 focusTicks = 0
-                StartScanningPacket(targetUUID).sendToServer()
+                StartScanningPacket(targetId).sendToServer()
             }
             user.playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
-            if (scanningProgress > TICKS_TO_SCAN){
-                FinishScanningPacket().sendToServer()
+            if (scanningProgress == TICKS_TO_SCAN + 1) {
+                FinishScanningPacket(targetId).sendToServer()
+                //Need to wait for server to process
+                //We could just have the server send a packet back but I don't think its necessary in this case, this works fine
+                afterOnClient(10, 0F) {
+                    resetState()
+                    openPokedexGUI(user, targetPokemon.pokemon.species.resourceIdentifier)
+                }
             }
         }
         else {

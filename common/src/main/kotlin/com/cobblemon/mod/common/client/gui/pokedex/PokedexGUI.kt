@@ -28,6 +28,7 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.TAB_ICON_
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.TAB_SIZE
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.TAB_STATS
 import com.cobblemon.mod.common.client.gui.pokedex.widgets.*
+import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.pokedex.DexPokemonData
 import com.cobblemon.mod.common.pokemon.FormData
@@ -49,7 +50,7 @@ import net.minecraft.sounds.SoundEvent
  * @author JPAK
  * @since February 24, 2024
  */
-class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: String, val initSpecies: ResourceLocation?): Screen(Component.translatable("cobblemon.ui.pokedex.title")) {
+class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: PokedexTypes, val initSpecies: ResourceLocation?): Screen(Component.translatable("cobblemon.ui.pokedex.title")) {
 
     companion object {
         private val screenBackground = cobblemonResource("textures/gui/pokedex/pokedex_screen.png")
@@ -68,7 +69,7 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Strin
         /**
          * Attempts to open this screen for a client.
          */
-        fun open(pokedex: ClientPokedex, type: String, species: ResourceLocation? = null) {
+        fun open(pokedex: ClientPokedex, type: PokedexTypes, species: ResourceLocation? = null) {
             val mc = Minecraft.getInstance()
             val screen = PokedexGUI(pokedex, type, species)
             mc.setScreen(screen)
@@ -140,7 +141,7 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Strin
         // Render Base Resource
         blitk(
             matrixStack = matrices,
-            texture = cobblemonResource("textures/gui/pokedex/pokedex_base_${type}.png"),
+            texture = type.getTexturePath(),
             x = x, y = y,
             width = BASE_WIDTH,
             height = BASE_HEIGHT

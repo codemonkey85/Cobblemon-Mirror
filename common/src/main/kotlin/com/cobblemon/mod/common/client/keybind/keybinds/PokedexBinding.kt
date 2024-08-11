@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUI
 import com.cobblemon.mod.common.client.keybind.CobblemonKeyBinding
 import com.cobblemon.mod.common.client.keybind.KeybindCategories
+import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.mojang.blaze3d.platform.InputConstants
 
 object PokedexBinding : CobblemonKeyBinding(
@@ -23,7 +24,7 @@ object PokedexBinding : CobblemonKeyBinding(
 ) {
     override fun onPress() {
         try {
-            PokedexGUI.open(CobblemonClient.clientPokedexData, "red")
+            PokedexGUI.open(CobblemonClient.clientPokedexData, PokedexTypes.RED)
         } catch (e: Exception) {
             Cobblemon.LOGGER.debug("Failed to open the Pokedex from the Pokedex keybind", e)
         }

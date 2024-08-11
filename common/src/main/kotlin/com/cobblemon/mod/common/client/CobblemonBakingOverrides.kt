@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client
 
 import com.cobblemon.mod.common.BakingOverride
+import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.cobblemon.mod.common.util.cobblemonModel
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.resources.model.ModelResourceLocation
@@ -133,16 +134,16 @@ object CobblemonBakingOverrides {
         cobblemonModel("pokedex_yellow_model", "inventory")
     )
 
-    fun getPokedexOverride(type: String): BakingOverride {
-        when (type) {
-            "black" -> return POKEDEX_BLACK
-            "blue" -> return POKEDEX_BLUE
-            "green" -> return POKEDEX_GREEN
-            "pink" -> return POKEDEX_PINK
-            "white" -> return POKEDEX_WHITE
-            "yellow" -> return POKEDEX_YELLOW
+    fun getPokedexOverride(type: PokedexTypes): BakingOverride {
+        return when (type) {
+            PokedexTypes.BLACK -> POKEDEX_BLACK
+            PokedexTypes.BLUE -> POKEDEX_BLUE
+            PokedexTypes.GREEN -> POKEDEX_GREEN
+            PokedexTypes.PINK -> POKEDEX_PINK
+            PokedexTypes.WHITE -> POKEDEX_WHITE
+            PokedexTypes.YELLOW -> POKEDEX_YELLOW
+            PokedexTypes.RED -> POKEDEX_RED
         }
-        return POKEDEX_RED
     }
 
     fun registerOverride(modelLocation: ResourceLocation, modelIdentifier: ModelResourceLocation): BakingOverride {

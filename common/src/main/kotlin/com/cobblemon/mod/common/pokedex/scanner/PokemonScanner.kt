@@ -5,6 +5,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.EntityHitResult
+import java.util.UUID
 
 //Handles the actual raycasting to figure out what pokemon we are looking at
 object PokemonScanner {
@@ -71,6 +72,10 @@ object PokemonScanner {
     fun findPokemon(castingEntity: Entity): PokemonEntity? {
         val targetedEntity = detectEntity(castingEntity)
         return targetedEntity as? PokemonEntity
+    }
+
+    fun isEntityInRange(castingEntity: Entity, targetEntity: Entity): Boolean {
+        return targetEntity.position().distanceTo(castingEntity.position()) <= RAY_LENGTH
     }
 
     val RAY_LENGTH = 10.0

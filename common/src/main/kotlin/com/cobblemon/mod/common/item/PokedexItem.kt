@@ -8,8 +8,10 @@
 
 package com.cobblemon.mod.common.item
 
+import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.client.CobblemonClient
+import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.server.level.ServerPlayer
@@ -22,7 +24,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
-class PokedexItem(val type: String) : CobblemonItem(Item.Properties()) {
+class PokedexItem(val type: PokedexTypes) : CobblemonItem(Item.Properties()) {
 
     override fun getUseDuration(stack: ItemStack, user: LivingEntity): Int = 72000
 
@@ -32,23 +34,13 @@ class PokedexItem(val type: String) : CobblemonItem(Item.Properties()) {
         usedHand: InteractionHand
     ): InteractionResultHolder<ItemStack> {
         val itemStack = player.getItemInHand(usedHand)
+        if (player is LocalPlayer) {
+            CobblemonClient.pokedexUsageContext.type = type
+        }
         if (player !is ServerPlayer) return InteractionResultHolder.success(itemStack)
         //Disables breaking blocks and damaging entities
         player.startUsingItem(usedHand)
         return InteractionResultHolder.fail(itemStack)
-    }
-
-    override fun inventoryTick(
-        stack: ItemStack,
-        world: Level,
-        entity: Entity,
-        slot: Int,
-        selected: Boolean
-    ) {
-        if (world.isClientSide) {
-            val scanContext = CobblemonClient.pokedexUsageContext
-            //if (focusTicks > 0) focusTicks--
-        }
     }
 
     override fun onUseTick(

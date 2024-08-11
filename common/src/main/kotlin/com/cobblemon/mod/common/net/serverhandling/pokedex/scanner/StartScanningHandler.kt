@@ -14,12 +14,11 @@ object StartScanningHandler : ServerNetworkPacketHandler<StartScanningPacket> {
         server: MinecraftServer,
         player: ServerPlayer
     ) {
-        val targetedPokemon = PokemonScanner.findPokemon(player)
-        if (targetedPokemon != null) {
-            PlayerScanningDetails.playerToEntityMap[player.uuid] = packet.targetedUuid
+        val targetEntity = player.level().getEntity(packet.targetedId) ?: return
+
+        if (PokemonScanner.isEntityInRange(player, targetEntity)) {
+            PlayerScanningDetails.playerToEntityMap[player.uuid] = targetEntity.uuid
             PlayerScanningDetails.playerToTickMap[player.uuid] = server.tickCount
         }
-
-
     }
 }
