@@ -45,6 +45,7 @@ class ElementalTypeAssetProvider(
         consumer.accept(export("rock", 0xAA9666))
         consumer.accept(export("steel", 0xC3CCE0))
         consumer.accept(export("water", 0x4A9BE8))
+        // TODO: We need asset team to tell us what color here
         consumer.accept(export("stellar", 0))
     }
 

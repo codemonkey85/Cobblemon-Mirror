@@ -8,6 +8,10 @@
 
 package com.cobblemon.mod.common.api.pokemon.egg
 
+import com.cobblemon.mod.common.api.data.ShowdownIdentifiable
+import com.mojang.serialization.Codec
+import net.minecraft.util.StringRepresentable
+
 /**
  * These represent categories which determine which Pokémon are able to interbreed.
  *
@@ -15,7 +19,7 @@ package com.cobblemon.mod.common.api.pokemon.egg
  *
  * @property showdownID used for data synchronization with Showdown data format.
  */
-enum class EggGroup(internal val showdownID: String) {
+enum class EggGroup(private val showdownID: String) : ShowdownIdentifiable, StringRepresentable {
 
     MONSTER("Monster"),
     WATER_1("Water 1"),
@@ -31,6 +35,14 @@ enum class EggGroup(internal val showdownID: String) {
     WATER_2("Water 2"),
     DITTO("Ditto"),
     DRAGON("Dragon"),
-    UNDISCOVERED("Undiscovered")
+    UNDISCOVERED("Undiscovered");
 
+    override fun showdownId(): String = this.showdownID
+
+    override fun getSerializedName(): String = this.name
+
+    companion object {
+        @JvmStatic
+        val CODEC: Codec<EggGroup> = StringRepresentable.fromEnum(EggGroup::values)
+    }
 }

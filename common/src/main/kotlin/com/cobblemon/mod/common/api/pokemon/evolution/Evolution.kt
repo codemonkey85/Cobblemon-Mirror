@@ -29,6 +29,7 @@ import com.cobblemon.mod.common.pokemon.activestate.ShoulderedState
 import com.cobblemon.mod.common.pokemon.evolution.variants.ItemInteractionEvolution
 import com.cobblemon.mod.common.pokemon.evolution.variants.LevelUpEvolution
 import com.cobblemon.mod.common.pokemon.evolution.variants.TradeEvolution
+import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.party
@@ -130,7 +131,10 @@ interface Evolution : EvolutionLike {
         innerShedder.apply(shedPokemon)
         shedPokemon.caughtBall = ((pokeballStack?.item ?: CobblemonItems.POKE_BALL) as PokeBallItem).pokeBall
         pokemon.storeCoordinates.get()?.store?.add(shedPokemon)
-        CobblemonCriteria.EVOLVE_POKEMON.trigger(owner, EvolvePokemonContext(pokemon.preEvolution!!.species.resourceIdentifier, shedPokemon.species.resourceIdentifier, playerData.get(owner).advancementData.totalEvolvedCount))
+        pokemon.preEvolution?.let { holder ->
+            val preEvolution = holder.value()
+            CobblemonCriteria.EVOLVE_POKEMON.trigger(owner, EvolvePokemonContext(preEvolution.resourceLocation(), shedPokemon.species.resourceIdentifier, playerData.get(owner).advancementData.totalEvolvedCount))
+        }
         // Consume one of the balls
         pokeballStack?.shrink(1)
 

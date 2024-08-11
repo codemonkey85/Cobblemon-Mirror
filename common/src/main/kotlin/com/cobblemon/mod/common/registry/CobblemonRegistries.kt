@@ -14,6 +14,7 @@ import com.cobblemon.mod.common.api.abilities.Abilities
 import com.cobblemon.mod.common.api.abilities.AbilityTemplate
 import com.cobblemon.mod.common.api.moves.MoveTemplate
 import com.cobblemon.mod.common.api.moves.Moves
+import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.Minecraft
@@ -36,6 +37,8 @@ object CobblemonRegistries {
     @JvmStatic val MOVE get() = this.getRegistry(MOVE_KEY)
     @JvmStatic val ELEMENTAL_TYPE_KEY = this.create<ElementalType>("elemental_type")
     @JvmStatic val ELEMENTAL_TYPE get() = this.getRegistry(ELEMENTAL_TYPE_KEY)
+    @JvmStatic val SPECIES_KEY = this.create<Species>("species")
+    @JvmStatic val SPECIES get() = this.getRegistry(SPECIES_KEY)
 
     private fun <T> create(name: String): ResourceKey<Registry<T>> = ResourceKey.createRegistryKey(cobblemonResource(name))
 
@@ -43,6 +46,7 @@ object CobblemonRegistries {
         Cobblemon.implementation.registerBuiltInRegistry(ABILITY_KEY, false, Abilities::register)
         Cobblemon.implementation.registerBuiltInRegistry(MOVE_KEY, false, Moves::register)
         Cobblemon.implementation.registerDynamicRegistry(ELEMENTAL_TYPE_KEY, ElementalType.CODEC, ElementalType.CODEC)
+        Cobblemon.implementation.registerDynamicRegistry(SPECIES_KEY, Species.CODEC, Species.PACKET_CODEC)
     }
 
     private fun <T> getRegistry(key: ResourceKey<Registry<T>>): Registry<T> {

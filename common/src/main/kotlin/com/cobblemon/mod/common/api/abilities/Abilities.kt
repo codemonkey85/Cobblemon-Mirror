@@ -11,7 +11,6 @@ package com.cobblemon.mod.common.api.abilities
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.registry.CobblemonRegistry
 import com.cobblemon.mod.common.battles.runner.ShowdownService
-import com.cobblemon.mod.common.pokemon.abilities.HiddenAbilityType
 import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.cobblemon.mod.common.util.cobblemonResource
@@ -346,9 +345,6 @@ object Abilities : CobblemonRegistry<AbilityTemplate>() {
     @ApiStatus.Internal
     fun register(consumer: (ResourceKey<AbilityTemplate>, AbilityTemplate) -> Unit) {
         var count = 0
-        PotentialAbility.types.clear()
-        PotentialAbility.types.add(CommonAbilityType)
-        PotentialAbility.types.add(HiddenAbilityType)
         val baseKeys = this.keys()
         val abilityFlagsByShowdownId = AbilityFlag.entries.associateBy { it.showdownId() }
         ShowdownService.service.getAbilities().forEach { jElement ->

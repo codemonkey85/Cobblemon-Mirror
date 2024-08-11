@@ -8,10 +8,10 @@
 
 package com.cobblemon.mod.common.pokemon.properties
 
+import com.cobblemon.mod.common.api.abilities.PotentialAbilityType
 import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
 import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.pokemon.abilities.HiddenAbilityType
 
 /**
  * A type of [CustomPokemonPropertyType] which asserts that the Pokémon's ability
@@ -31,7 +31,7 @@ class HiddenAbilityProperty : CustomPokemonProperty {
     override fun asString() = "hiddenability"
     override fun apply(pokemon: Pokemon) {
         val possible = pokemon.form.abilities.mapping.flatMap { it.value }
-            .filter { it.type == HiddenAbilityType }
+            .filter { it.type == PotentialAbilityType.HIDDEN }
         val picked = possible.randomOrNull() ?: return
         pokemon.updateAbility(picked.template.create(false))
     }
@@ -39,5 +39,5 @@ class HiddenAbilityProperty : CustomPokemonProperty {
     override fun matches(pokemon: Pokemon) = pokemon.form.abilities.mapping
         .flatMap { it.value }
         .find { it.template == pokemon.ability.template }
-        ?.type == HiddenAbilityType
+        ?.type == PotentialAbilityType.HIDDEN
 }

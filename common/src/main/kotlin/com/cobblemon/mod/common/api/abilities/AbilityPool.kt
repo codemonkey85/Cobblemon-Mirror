@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.api.PrioritizedList
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.registry.CobblemonRegistries
+import com.mojang.serialization.Codec
 import net.minecraft.util.RandomSource
 
 /**
@@ -36,5 +37,15 @@ open class AbilityPool : PrioritizedList<PotentialAbility>() {
         LOGGER.error("Usually this happens when a client is doing logic it shouldn't. Please show this to the Cobblemon developers!")
         Exception().printStackTrace()
         return CobblemonRegistries.ABILITY.getRandom(RandomSource.create()).get().value().create() to Priority.LOWEST
+    }
+
+    companion object {
+        @JvmStatic
+        val CODEC: Codec<AbilityPool> = Codec.list(PotentialAbility.CODEC, 1, Int.MAX_VALUE)
+            .xmap({ list ->
+                val pool = AbilityPool()
+                list.forEach { type -> pool.add(type.priority, type) }
+                pool
+            }, { it.toList() })
     }
 }

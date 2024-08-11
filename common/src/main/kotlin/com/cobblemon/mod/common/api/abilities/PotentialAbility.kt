@@ -9,11 +9,37 @@
 package com.cobblemon.mod.common.api.abilities
 
 import com.cobblemon.mod.common.api.Priority
-import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
-import com.google.gson.JsonElement
+import com.cobblemon.mod.common.pokemon.abilities.HiddenAbility
+import com.cobblemon.mod.common.util.cobblemonResource
+import com.mojang.serialization.*
+import net.minecraft.core.MappedRegistry
+import net.minecraft.core.Registry
+import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 
-interface PotentialAbilityType<T : PotentialAbility> {
-    fun parseFromJSON(element: JsonElement): T?
+fun interface PotentialAbilityType<T : PotentialAbility> {
+    fun codec(): MapCodec<T>
+
+    companion object {
+
+        internal val REGISTRY: Registry<PotentialAbilityType<*>> = MappedRegistry(
+            ResourceKey.createRegistryKey(cobblemonResource("potential_ability")),
+            Lifecycle.stable()
+        )
+
+        @JvmStatic
+        val COMMON = this.register(cobblemonResource("common"), CommonAbility.CODEC)
+
+        @JvmStatic
+        val HIDDEN = this.register(cobblemonResource("hidden"), HiddenAbility.CODEC)
+
+        @JvmStatic
+        fun <T : PotentialAbility> register(id: ResourceLocation, codec: MapCodec<T>): PotentialAbilityType<T> {
+            return Registry.register(REGISTRY, id, PotentialAbilityType { codec })
+        }
+
+    }
+
 }
 
 /**
@@ -30,27 +56,10 @@ interface PotentialAbility {
     val type: PotentialAbilityType<*>
     fun isSatisfiedBy(aspects: Set<String>): Boolean
     companion object {
-        val types = mutableListOf<PotentialAbilityType<*>>()
+        @JvmStatic
+        val CODEC: Codec<PotentialAbility> = PotentialAbilityType.REGISTRY
+            .byNameCodec()
+            .dispatch(PotentialAbility::type) { it.codec() }
     }
-}
-
-object CommonAbilityType : PotentialAbilityType<CommonAbility> {
-    override fun parseFromJSON(element: JsonElement): CommonAbility? {
-        val str = if (element.isJsonPrimitive) element.asString else null
-        return str?.let {
-            val ability = Abilities.get(it.asIdentifierDefaultingNamespace())
-            if (ability != null) {
-                return@let CommonAbility(ability)
-            } else {
-                return@let null
-            }
-        }
-    }
-}
-
-open class CommonAbility(override val template: AbilityTemplate) : PotentialAbility {
-    override val priority = Priority.LOWEST
-    override val type = CommonAbilityType
-    override fun isSatisfiedBy(aspects: Set<String>) = true
 }
 

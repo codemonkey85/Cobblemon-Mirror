@@ -97,6 +97,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.InteractionHand
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
 import net.minecraft.nbt.*
 import net.minecraft.network.chat.contents.PlainTextContents
 import net.minecraft.network.codec.ByteBufCodecs
@@ -477,7 +478,7 @@ open class Pokemon : ShowdownIdentifiable {
     val lockedEvolutions: Iterable<Evolution>
         get() = evolutions.filter { it !in evolutionProxy.current() }
 
-    val preEvolution: PreEvolution? get() = this.form.preEvolution
+    val preEvolution: Holder<Species>? get() = this.form.preEvolution
 
     /**
      * Provides the sided [EvolutionController]s, these operations can be done safely with a simple side check.

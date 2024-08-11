@@ -8,6 +8,10 @@
 
 package com.cobblemon.mod.common.pokemon.lighthing
 
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.util.StringRepresentable
+
 /**
  * Represents light emitting properties of a species/form.
  * This has no use in the base mod and is instead used for dynamic lighting mod compatibility.
@@ -24,12 +28,29 @@ data class LightingData(val lightLevel: Int, val liquidGlowMode: LiquidGlowMode)
      * @property glowsUnderwater If this allows activation while underwater.
      */
     @Suppress("unused")
-    enum class LiquidGlowMode(val glowsInLand: Boolean, val glowsUnderwater: Boolean) {
+    enum class LiquidGlowMode(val glowsInLand: Boolean, val glowsUnderwater: Boolean) : StringRepresentable {
 
         LAND(true, false),
         UNDERWATER(false, true),
-        BOTH(true, true)
+        BOTH(true, true);
 
+        override fun getSerializedName(): String = this.name
+
+        companion object {
+            @JvmStatic
+            val CODEC: Codec<LiquidGlowMode> = StringRepresentable.fromEnum(LiquidGlowMode::values)
+        }
+
+    }
+
+    companion object {
+        @JvmStatic
+        val CODEC: Codec<LightingData> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Codec.intRange(0, 15).fieldOf("lightLevel").forGetter(LightingData::lightLevel),
+                LiquidGlowMode.CODEC.fieldOf("liquidGlowMode").forGetter(LightingData::liquidGlowMode),
+            ).apply(instance, ::LightingData)
+        }
     }
 
 }

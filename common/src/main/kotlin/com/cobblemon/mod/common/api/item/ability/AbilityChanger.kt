@@ -12,7 +12,6 @@ import com.cobblemon.mod.common.api.abilities.*
 import com.cobblemon.mod.common.item.interactive.ability.AbilityTypeChanger
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.abilities.HiddenAbility
-import com.cobblemon.mod.common.pokemon.abilities.HiddenAbilityType
 
 /**
  * Represents a change operation for a [Pokemon.ability].
@@ -54,20 +53,20 @@ interface AbilityChanger<T : PotentialAbility> {
     companion object {
 
         /**
-         * An implementation of [AbilityChanger] for [CommonAbility].
+         * An implementation of [AbilityChanger] for [PotentialAbilityType.COMMON].
          *
          * While this can be used in custom data scenarios this functions most "game-like" if the Pokémon only has 2 common abilities.
          */
         @JvmStatic
-        val COMMON_ABILITY: AbilityChanger<CommonAbility> = AbilityTypeChanger(CommonAbilityType) { other -> other == CommonAbilityType }
+        val COMMON_ABILITY: AbilityChanger<CommonAbility> = AbilityTypeChanger(PotentialAbilityType.COMMON) { other -> other == PotentialAbilityType.COMMON }
 
         /**
-         * An implementation of [AbilityChanger] for [HiddenAbility].
+         * An implementation of [AbilityChanger] for [PotentialAbilityType.HIDDEN].
          *
          * While this can be used in custom data scenarios this functions most "game-like" if the Pokémon only has 1 hidden ability.
          */
         @JvmStatic
-        val HIDDEN_ABILITY: AbilityChanger<HiddenAbility> = AbilityTypeChanger(HiddenAbilityType) { other -> other == CommonAbilityType || other == HiddenAbilityType }
+        val HIDDEN_ABILITY: AbilityChanger<HiddenAbility> = AbilityTypeChanger(PotentialAbilityType.HIDDEN) { other -> other == PotentialAbilityType.COMMON || other == PotentialAbilityType.HIDDEN }
 
     }
 

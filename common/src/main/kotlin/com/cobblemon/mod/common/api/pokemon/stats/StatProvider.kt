@@ -10,7 +10,6 @@ package com.cobblemon.mod.common.api.pokemon.stats
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.pokemon.EVs
-import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.IVs
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.Species

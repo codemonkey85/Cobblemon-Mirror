@@ -9,11 +9,16 @@
 package com.cobblemon.mod.common.pokemon.effects
 
 import com.cobblemon.mod.common.api.pokemon.effect.ShoulderEffect
+import com.cobblemon.mod.common.api.pokemon.effect.ShoulderEffectType
 import com.cobblemon.mod.common.mixin.accessor.StatusEffectInstanceAccessor
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.core.registries.BuiltInRegistries
+import com.mojang.serialization.Codec
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.Holder
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.util.ExtraCodecs
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.LivingEntity
@@ -21,7 +26,7 @@ import java.util.*
 
 @Suppress("MemberVisibilityCanBePrivate")
 class PotionBaseEffect(
-    val effect: MobEffect,
+    val effect: Holder<MobEffect>,
     val amplifier: Int,
     val ambient: Boolean,
     val showParticles: Boolean,
@@ -29,7 +34,7 @@ class PotionBaseEffect(
 ) : ShoulderEffect {
 
     override fun applyEffect(pokemon: Pokemon, player: ServerPlayer, isLeft: Boolean) {
-        val effect = player.getEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect))
+        val effect = player.getEffect(this.effect)
         // We handle part of our own type.
         if (effect is ShoulderStatusEffectInstance && effect.amplifier >= this.amplifier) {
             // If the effect is the same strength simply add another source for it.
@@ -45,11 +50,13 @@ class PotionBaseEffect(
     }
 
     override fun removeEffect(pokemon: Pokemon, player: ServerPlayer, isLeft: Boolean) {
-        val effect = player.getEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect)) as? ShoulderStatusEffectInstance ?: return
+        val effect = player.getEffect(this.effect) as? ShoulderStatusEffectInstance ?: return
         if (effect.amplifier == this.amplifier && effect.ambient == this.ambient && effect.isVisible() == this.showParticles && effect.showIcon() == this.showIcon) {
             effect.shoulderSources.remove(pokemon.uuid)
         }
     }
+
+    override fun type(): ShoulderEffectType<*> = ShoulderEffectType.POTION_EFFECT
 
     // Note on the -1 on level, we do this because we want to be user-friendly and not make them think about indexes :)
     private fun createStatus(pokemon: Pokemon): ShoulderStatusEffectInstance = ShoulderStatusEffectInstance(this.effect, this.amplifier, this.ambient, this.showParticles, this.showIcon, pokemon)
@@ -61,13 +68,13 @@ class PotionBaseEffect(
      but it won't have even been added because of the uniqueness constraint. Unclear how best to solve this.
      */
     class ShoulderStatusEffectInstance(
-        effect: MobEffect,
+        effect: Holder<MobEffect>,
         amplifier: Int,
         ambient: Boolean,
         showParticles: Boolean,
         showIcon: Boolean,
         startingPokemon: Pokemon
-    ) : MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), -1, amplifier, ambient, showParticles, showIcon) {
+    ) : MobEffectInstance(effect, -1, amplifier, ambient, showParticles, showIcon) {
 
         internal val shoulderSources: MutableSet<UUID> = hashSetOf(startingPokemon.uuid)
         private var upgrade: MobEffectInstance? = null
@@ -141,6 +148,19 @@ class PotionBaseEffect(
             accessor.setShowParticles(other.isVisible)
         }
 
+    }
+
+    companion object {
+        @JvmStatic
+        val CODEC: MapCodec<PotionBaseEffect> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                MobEffect.CODEC.fieldOf("effect").forGetter(PotionBaseEffect::effect),
+                ExtraCodecs.NON_NEGATIVE_INT.fieldOf("amplifier").forGetter(PotionBaseEffect::amplifier),
+                Codec.BOOL.fieldOf("ambient").forGetter(PotionBaseEffect::ambient),
+                Codec.BOOL.fieldOf("showParticles").forGetter(PotionBaseEffect::showParticles),
+                Codec.BOOL.fieldOf("showIcon").forGetter(PotionBaseEffect::showIcon),
+            ).apply(instance, ::PotionBaseEffect)
+        }
     }
 
 }

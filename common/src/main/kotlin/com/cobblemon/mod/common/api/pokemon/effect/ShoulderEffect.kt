@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.api.pokemon.effect
 
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.mojang.serialization.Codec
 import net.minecraft.server.level.ServerPlayer
 
 /**
@@ -20,4 +21,12 @@ import net.minecraft.server.level.ServerPlayer
 interface ShoulderEffect {
     fun applyEffect(pokemon: Pokemon, player: ServerPlayer, isLeft: Boolean)
     fun removeEffect(pokemon: Pokemon, player: ServerPlayer, isLeft: Boolean)
+    fun type(): ShoulderEffectType<*>
+
+    companion object {
+        @JvmStatic
+        val CODEC: Codec<ShoulderEffect> = ShoulderEffectType.REGISTRY
+            .byNameCodec()
+            .dispatch(ShoulderEffect::type) { it.codec() }
+    }
 }

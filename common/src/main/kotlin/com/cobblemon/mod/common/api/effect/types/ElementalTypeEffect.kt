@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.api.effect.Effect
 import com.cobblemon.mod.common.api.effect.EffectType
 import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.registry.CobblemonRegistries
+import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.resources.ResourceKey

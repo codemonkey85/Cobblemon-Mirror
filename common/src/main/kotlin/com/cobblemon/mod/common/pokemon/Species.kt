@@ -11,37 +11,38 @@ package com.cobblemon.mod.common.pokemon
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.abilities.AbilityPool
-import com.cobblemon.mod.common.api.data.ClientDataSynchronizer
 import com.cobblemon.mod.common.api.data.ShowdownIdentifiable
 import com.cobblemon.mod.common.api.drop.DropTable
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
-import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.effect.ShoulderEffect
 import com.cobblemon.mod.common.api.pokemon.egg.EggGroup
 import com.cobblemon.mod.common.api.pokemon.evolution.Evolution
-import com.cobblemon.mod.common.api.pokemon.evolution.PreEvolution
-import com.cobblemon.mod.common.api.pokemon.experience.ExperienceGroups
 import com.cobblemon.mod.common.api.pokemon.moves.Learnset
 import com.cobblemon.mod.common.api.pokemon.stats.Stat
+import com.cobblemon.mod.common.api.registry.RegistryElement
 import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.entity.PoseType.Companion.FLYING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.SWIMMING_POSES
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.pokemon.ai.PokemonBehaviour
 import com.cobblemon.mod.common.pokemon.lighthing.LightingData
 import com.cobblemon.mod.common.registry.CobblemonRegistries
-import com.cobblemon.mod.common.util.codec.CodecUtils
 import com.cobblemon.mod.common.util.*
+import com.cobblemon.mod.common.util.codec.internal.species.SpeciesP1
+import com.cobblemon.mod.common.util.codec.internal.species.SpeciesP2
 import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.Holder
+import net.minecraft.core.Registry
 import net.minecraft.world.entity.EntityDimensions
-import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.TagKey
 import net.minecraft.util.RandomSource
 
-class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
+class Species : RegistryElement<Species>, ShowdownIdentifiable {
     var name: String = "Bulbasaur"
     val translatedName: MutableComponent
         get() = Component.translatable("${this.resourceIdentifier.namespace}.species.${this.unformattedShowdownId()}.name")
@@ -70,19 +71,22 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
         private set
     var shoulderMountable: Boolean = false
         private set
-    var shoulderEffects = mutableListOf<ShoulderEffect>()
+    var shoulderEffects = setOf<ShoulderEffect>()
         private set
     var moves = Learnset()
         private set
+    // TODO: Hiro said we could drop this but validate opinions of public first
     var features = mutableSetOf<String>()
         private set
-    private var standingEyeHeight: Float? = null
-    private var swimmingEyeHeight: Float? = null
-    private var flyingEyeHeight: Float? = null
+    internal var standingEyeHeight: Float? = null
+    internal var swimmingEyeHeight: Float? = null
+    internal var flyingEyeHeight: Float? = null
     var behaviour = PokemonBehaviour()
         private set
+    // TODO: Confirm if it will be dropped
     var pokedex = mutableListOf<String>()
         private set
+    // TODO: Migrate to loot tables.
     var drops = DropTable()
         private set
     var eggCycles = 120
@@ -109,6 +113,7 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
 
     val standardForm by lazy { FormData(_evolutions = this.evolutions).initialize(this) }
 
+    // TODO: Move to tags
     var labels = hashSetOf<String>()
         private set
 
@@ -122,7 +127,7 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
     var evolutions: MutableSet<Evolution> = hashSetOf()
         private set
 
-    var preEvolution: PreEvolution? = null
+    var preEvolution: Holder<Species>? = null
         private set
 
     @Transient
@@ -175,9 +180,12 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
         else -> this.standingEyeHeight
     }
 
-    fun canGmax() = this.forms.find { it.formOnlyShowdownId() == "gmax" } != null
+    // TODO: Redo me
+    //fun canGmax() = this.forms.find { it.formOnlyShowdownId() == "gmax" } != null
 
-    override fun encode(buffer: RegistryFriendlyByteBuf) {
+
+    // TODO: Use me as reference for packet codec
+    /*override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(this.implemented)
         buffer.writeString(this.name)
         buffer.writeInt(this.nationalPokedexNumber)
@@ -185,7 +193,6 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
             { _, stat -> Cobblemon.statProvider.encode(buffer, stat)},
             { _, value -> buffer.writeSizedInt(IntSize.U_SHORT, value) }
         )
-        // ToDo remake once we have custom typing support
         buffer.writeResourceKey(this.primaryType.resourceKey())
         buffer.writeNullable(this.secondaryType) { pb, type -> pb.writeResourceKey(type.resourceKey()) }
         buffer.writeString(this.experienceGroup.name)
@@ -255,47 +262,36 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
                 || this.moves.shouldSynchronize(other.moves)
                 || other.battleTheme != this.battleTheme
                 || other.features != this.features
-    }
+    }*/
 
-    /**
-     * The literal Showdown ID of this species.
-     * This will be a lowercase version of the [name] with all the non-alphanumeric characters removed. For example, "Mr. Mime" becomes "mrmime".
-     * If a Species is not a part of the Cobblemon mon the [resourceIdentifier] will have the namespace appended at the start of the ID resulting in something such as 'somemodaspecies'
-     *
-     * @return The literal Showdown ID of this species.
-     */
     override fun showdownId(): String {
-        val id = this.unformattedShowdownId()
-        if (this.resourceIdentifier.namespace == Cobblemon.MODID) {
-            return id
-        }
-        return this.resourceIdentifier.namespace + id
+        return ShowdownIdentifiable.EXCLUSIVE_REGEX.replace(this.resourceLocation().simplify(), "")
     }
 
-    /**
-     * The unformatted literal Showdown ID of this species.
-     * This will be a lowercase version of the [name] with all the non-alphanumeric characters removed. For example, "Mr. Mime" becomes "mrmime".
-     * Unlike [showdownId] the [resourceIdentifier] namespace will not be appended at the start regardless if the species is from Cobblemon or a 3rd party addon.
-     * The primary purpose of this is for lang keys.
-     *
-     * @return The unformatted literal Showdown ID of this species.
-     */
-    private fun unformattedShowdownId(): String = ShowdownIdentifiable.EXCLUSIVE_REGEX.replace(this.name.lowercase(), "")
+    override fun registry(): Registry<Species> = CobblemonRegistries.SPECIES
 
-    override fun toString() = this.showdownId()
+    override fun resourceKey(): ResourceKey<Species> = this.registry().getResourceKey(this)
+        .orElseThrow { IllegalStateException("Unregistered Species") }
+
+    override fun isTaggedBy(tag: TagKey<Species>): Boolean = this.registry()
+        .getHolder(this.resourceKey())
+        .orElseThrow { IllegalStateException("Unregistered Species") }
+        .`is`(tag)
 
     companion object {
         private const val VANILLA_DEFAULT_EYE_HEIGHT = .85F
 
-        // TODO: Registries have dedicated Codecs, migrate to that once this is a proper registry impl
-        /**
-         * A [Codec] that maps to/from an [Identifier] associated as [Species.resourceIdentifier].
-         * Uses [PokemonSpecies.getByIdentifier] to query.
-         */
         @JvmStatic
-        val BY_IDENTIFIER_CODEC: Codec<Species> = CodecUtils.createByIdentifierCodec(
-            PokemonSpecies::getByIdentifier,
-            Species::resourceIdentifier
-        ) { identifier -> "No species for ID $identifier" }
+        val CODEC: Codec<Species> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                SpeciesP1.CODEC.forGetter(SpeciesP1::from),
+                SpeciesP2.CODEC.forGetter(SpeciesP2::from),
+            ).apply(instance, Companion::fromPartials)
+        }
+
+        @JvmStatic
+        val PACKET_CODEC: Codec<Species> = Codec.unit(Species())
+
+        internal fun fromPartials(p1: SpeciesP1, p2: SpeciesP2): Species = TODO("Not yet implemented")
     }
 }

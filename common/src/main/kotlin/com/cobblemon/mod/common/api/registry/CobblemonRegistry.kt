@@ -50,9 +50,7 @@ abstract class CobblemonRegistry<T> : Iterable<T> {
      */
     protected fun key(name: String): ResourceKey<T> {
         val key = this.createKey(name.asIdentifierDefaultingNamespace())
-        if (!this.registeredKeys.add(key)) {
-            throw IllegalStateException("Attempted to create key $key twice")
-        }
+        check(this.registeredKeys.add(key)) { "Attempted to create key $key twice" }
         return key
     }
 

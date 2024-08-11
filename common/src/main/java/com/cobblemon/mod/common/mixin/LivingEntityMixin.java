@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.mixin;
 
-import com.cobblemon.mod.common.api.pokemon.effect.ShoulderEffectRegistry;
+import com.cobblemon.mod.common.api.pokemon.effect.ShoulderEffectType;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,7 +24,7 @@ public abstract class LivingEntityMixin {
     private void cobblemon$onEffectRemoved(MobEffectInstance effect, CallbackInfo ci) {
         final LivingEntity entity = (LivingEntity) (Object) this;
         if (entity instanceof ServerPlayer) {
-            ShoulderEffectRegistry.INSTANCE.onEffectEnd((ServerPlayer) entity);
+            ShoulderEffectType.onEffectEnd((ServerPlayer) entity);
         }
     }
 

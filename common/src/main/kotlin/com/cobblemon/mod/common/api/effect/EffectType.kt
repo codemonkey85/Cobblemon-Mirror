@@ -35,6 +35,8 @@ fun interface EffectType<T : Effect> {
         @JvmStatic
         val ELEMENTAL_TYPE = this.register(cobblemonResource("elemental_type"), ElementalTypeEffect.CODEC)
 
+        // TODO: Add specific move, ability and status as those get registry
+
         fun <T : Effect> register(id: ResourceLocation, codec: MapCodec<T>): EffectType<T> {
             return Registry.register(REGISTRY, id, EffectType { codec })
         }

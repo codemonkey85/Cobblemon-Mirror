@@ -8,8 +8,6 @@
 
 package com.cobblemon.mod.common.util.adapters
 
-import com.cobblemon.mod.common.api.abilities.AbilityPool
-import com.cobblemon.mod.common.api.abilities.PotentialAbility
 import com.cobblemon.mod.common.api.mulch.MulchVariant
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer

@@ -23,7 +23,6 @@ import com.cobblemon.mod.common.api.fossil.NaturalMaterials
 import com.cobblemon.mod.common.api.moves.animations.ActionEffects
 import com.cobblemon.mod.common.api.npc.NPCClasses
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
-import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.feature.GlobalSpeciesFeatures
 import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatureAssignments
 import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatures
@@ -32,8 +31,6 @@ import com.cobblemon.mod.common.api.spawning.CobblemonSpawnPools
 import com.cobblemon.mod.common.api.spawning.CobblemonSpawnRules
 import com.cobblemon.mod.common.api.spawning.SpawnDetailPresets
 import com.cobblemon.mod.common.battles.BagItems
-import com.cobblemon.mod.common.net.messages.client.data.UnlockReloadPacket
-import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.cobblemon.mod.common.pokemon.SpeciesAdditions
 import com.cobblemon.mod.common.pokemon.properties.PropertiesCompletionProvider
 import com.cobblemon.mod.common.util.cobblemonResource
@@ -62,7 +59,6 @@ object CobblemonDataProvider : DataProvider {
         this.register(GlobalSpeciesFeatures)
         this.register(SpeciesFeatureAssignments)
         this.register(ActionEffects)
-        this.register(PokemonSpecies)
         this.register(SpeciesAdditions)
         this.register(PokeBalls)
         this.register(PropertiesCompletionProvider)
@@ -79,11 +75,6 @@ object CobblemonDataProvider : DataProvider {
         this.register(PokeRods)
         this.register(Berries)
         this.register(FishingBaits)
-
-        PlatformEvents.SERVER_PLAYER_LOGOUT.subscribe {
-            synchronizedPlayerIds.remove(it.player.uuid)
-            UnlockReloadPacket().sendToPlayer(it.player)
-        }
 
         ifClient {
             Cobblemon.implementation.registerResourceReloader(cobblemonResource("client_resources"), SimpleResourceReloader(PackType.CLIENT_RESOURCES), PackType.CLIENT_RESOURCES, emptyList())

@@ -8,27 +8,24 @@
 
 package com.cobblemon.mod.common.api.pokemon.moves
 
-import com.cobblemon.mod.common.api.data.ClientDataSynchronizer
 import com.cobblemon.mod.common.api.moves.MoveTemplate
 import com.cobblemon.mod.common.api.moves.Moves
-import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.registry.CobblemonRegistries
-import com.cobblemon.mod.common.util.isInt
-import com.cobblemon.mod.common.util.readSizedInt
-import com.cobblemon.mod.common.util.writeSizedInt
-import com.google.gson.JsonElement
+import com.mojang.serialization.Codec
 import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
+import net.minecraft.util.ExtraCodecs
 
-open class Learnset : ClientDataSynchronizer<Learnset> {
+open class Learnset {
     class Interpreter(
-        val loadMove: (JsonElement, Learnset) -> Boolean
+        val loadMove: (String, Learnset) -> Boolean
     ) {
         companion object {
             fun parseFromPrefixIntoList(prefix: String, list: (Learnset) -> MutableList<MoveTemplate>): Interpreter {
-                return Interpreter { element, learnset ->
-                    val str = element.takeIf { it.isJsonPrimitive }?.asString ?: return@Interpreter false
-                    if (str.startsWith(prefix)) {
-                        Moves.get(str.substringAfter(":"))
+                return Interpreter { string, learnset ->
+                    if (string.startsWith(prefix)) {
+                        Moves.get(string.substringAfter(":"))
                             ?.let {
                                 list(learnset).add(it)
                                 return@Interpreter true
@@ -41,28 +38,67 @@ open class Learnset : ClientDataSynchronizer<Learnset> {
     }
 
     companion object {
+
+        @JvmStatic
+        val CODEC: Codec<Learnset> = Codec.STRING.listOf()
+            .xmap({ list ->
+                val learnset = Learnset()
+                list.forEach { element ->
+                    interpreters.forEach { interpreter ->
+                        interpreter.loadMove(element, learnset)
+                    }
+                }
+                learnset
+            },
+            { learnset ->
+                val list = arrayListOf<String>()
+                learnset.levelUpMoves.forEach { (level, moves) ->
+                    moves.forEach { move ->
+                        list.add("$level:${move.resourceLocation()}")
+                    }
+                }
+                learnset.tmMoves.forEach { move ->
+                    list.add("tm:${move.resourceLocation()}")
+                }
+                learnset.eggMoves.forEach { move ->
+                    list.add("egg:${move.resourceLocation()}")
+                }
+                learnset.tutorMoves.forEach { move ->
+                    list.add("tutor:${move.resourceLocation()}")
+                }
+                learnset.formChangeMoves.forEach { move ->
+                    list.add("form_change:${move.resourceLocation()}")
+                }
+                list
+            })
+
+        @JvmStatic
+        val CLIENT_CODEC: Codec<Learnset> = Codec.unboundedMap(ExtraCodecs.POSITIVE_INT, CobblemonRegistries.MOVE.byNameCodec().listOf())
+            .xmap(
+                { map ->
+                    val learnset = Learnset()
+                    learnset.levelUpMoves += map
+                    learnset
+                },
+                Learnset::levelUpMoves
+            )
+
+        @JvmStatic
+        val S2C_CODEC: StreamCodec<RegistryFriendlyByteBuf, Learnset> = ByteBufCodecs.fromCodecWithRegistriesTrusted(CLIENT_CODEC)
+
         val tmInterpreter = Interpreter.parseFromPrefixIntoList("tm") { it.tmMoves }
         val eggInterpreter = Interpreter.parseFromPrefixIntoList("egg") { it.eggMoves }
         val tutorInterpreter = Interpreter.parseFromPrefixIntoList("tutor") { it.tutorMoves }
         val formChangeInterpreter = Interpreter.parseFromPrefixIntoList("form_change") { it.formChangeMoves }
-        val levelUpInterpreter = Interpreter { element, learnset ->
-            val str = element.takeIf { it.isJsonPrimitive }?.asString ?: return@Interpreter false
-            val splits = str.split(":")
-            if (splits.size != 2) {
-                return@Interpreter false
-            } else if (!splits[0].isInt()) {
-                return@Interpreter false
-            }
-
-            val level = splits[0].toInt()
-            val moveName = splits[1]
-            val move = Moves.get(moveName) ?: return@Interpreter false
-
+        val levelUpInterpreter = Interpreter { string, learnset ->
+            val prefix = string.substringBefore(":")
+            val level = prefix.toIntOrNull() ?: return@Interpreter false
+            val moveId = string.substringAfter(":")
+            val move = Moves.get(moveId) ?: return@Interpreter false
             val levelLearnset = learnset.levelUpMoves.getOrPut(level) { mutableListOf() }
             if (move !in levelLearnset) {
                 levelLearnset.add(move)
             }
-
             return@Interpreter true
 
         }
@@ -94,31 +130,4 @@ open class Learnset : ClientDataSynchronizer<Learnset> {
         .flatMap { it.value }
         .toSet()
 
-    // We only sync level up moves atm
-    override fun shouldSynchronize(other: Learnset) = other.levelUpMoves != this.levelUpMoves
-
-    override fun decode(buffer: RegistryFriendlyByteBuf) {
-        val moveRegistry = buffer.registryAccess().registryOrThrow(CobblemonRegistries.MOVE_KEY)
-        this.levelUpMoves.clear()
-        repeat(times = buffer.readSizedInt(IntSize.U_BYTE)) {
-            val level = buffer.readSizedInt(IntSize.U_SHORT)
-            val moves = mutableListOf<MoveTemplate>()
-            repeat(times = buffer.readSizedInt(IntSize.U_SHORT)) {
-                moveRegistry.byId(buffer.readInt())?.let(moves::add)
-            }
-            levelUpMoves[level] = moves
-        }
-    }
-
-    override fun encode(buffer: RegistryFriendlyByteBuf) {
-        val moveRegistry = buffer.registryAccess().registryOrThrow(CobblemonRegistries.MOVE_KEY)
-        buffer.writeSizedInt(IntSize.U_BYTE, levelUpMoves.size)
-        for ((level, moves) in levelUpMoves) {
-            buffer.writeSizedInt(IntSize.U_SHORT, level)
-            buffer.writeSizedInt(IntSize.U_SHORT, moves.size)
-            for (move in moves) {
-                buffer.writeInt(moveRegistry.getId(move))
-            }
-        }
-    }
 }

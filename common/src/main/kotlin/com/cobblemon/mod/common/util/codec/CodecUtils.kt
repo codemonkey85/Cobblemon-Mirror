@@ -10,7 +10,10 @@ package com.cobblemon.mod.common.util.codec
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.ExtraCodecs
+import net.minecraft.world.entity.EntityDimensions
 
 object CodecUtils {
 
@@ -60,6 +63,17 @@ object CodecUtils {
     @JvmStatic
     fun dynamicIntRange(min: () -> Int, max: Int): Codec<Int> = dynamicIntRange(min) { max }
 
+    fun <T> setOf(codec: Codec<T>): Codec<Set<T>> = codec.listOf()
+        .xmap({ it.toSet() }, { it.toList() })
+
+    @JvmStatic
+    val ENTITY_DIMENSION: Codec<EntityDimensions> = RecordCodecBuilder.create { instance ->
+        instance.group(
+            ExtraCodecs.POSITIVE_FLOAT.fieldOf("width").forGetter(EntityDimensions::width),
+            ExtraCodecs.POSITIVE_FLOAT.fieldOf("height").forGetter(EntityDimensions::height),
+            Codec.BOOL.optionalFieldOf("fixed", false).forGetter(EntityDimensions::fixed)
+        ).apply(instance) { width, height, fixed -> if (fixed) EntityDimensions.fixed(width, height) else EntityDimensions.scalable(width, height) }
+    }
 
     private fun dynamicRangeChecker(min: () -> Int, max: () -> Int): (Int) -> DataResult<Int> = { number ->
         val minAsNum = min()
