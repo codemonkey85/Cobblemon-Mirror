@@ -15,6 +15,6 @@ import net.minecraft.client.Minecraft
 
 object TeamRequestExpiredHandler : ClientNetworkPacketHandler<TeamRequestExpiredPacket> {
     override fun handle(packet: TeamRequestExpiredPacket, client: Minecraft) {
-        CobblemonClient.requests.multiBattleTeamRequests.removeIf { it.challengeId == packet.teamRequestId }
+        CobblemonClient.requests.onMultiChallengeExpired(packet.teamRequestId)
     }
 }

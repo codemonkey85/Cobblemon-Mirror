@@ -232,9 +232,6 @@ object Cobblemon {
                     }
             }
         }
-        PlatformEvents.CLIENT_TICK_POST.subscribe { event ->
-            CobblemonClient.requests.onTick()
-        }
 
         // Register the grow_tumblestone advancement
         PlatformEvents.RIGHT_CLICK_BLOCK.subscribe { AdvancementHandler.onTumbleStonePlaced(it) }

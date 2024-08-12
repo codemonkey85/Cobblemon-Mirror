@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.battles.BattleFormat
 import java.util.UUID
 
 class ClientBattleChallenge(
-        val challengeId: UUID,
-        val challengerIds: List<UUID>,
-        val battleFormat: BattleFormat? = null
+    val challengeId: UUID,
+    val challengerIds: List<UUID>,
+    val battleFormat: BattleFormat? = null
 )
