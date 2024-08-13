@@ -8,9 +8,22 @@
 
 package com.cobblemon.mod.common.pokemon.ai
 
+import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.util.asExpressionLike
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 
-class FlyBehaviour {
-    val canFly = false
-    val flySpeedHorizontal = "0.3".asExpressionLike()
+data class FlyBehaviour(
+    val canFly: Boolean = false,
+    val flySpeedHorizontal: ExpressionLike = "0.3".asExpressionLike()
+) {
+    companion object {
+        @JvmStatic
+        val CODEC: Codec<FlyBehaviour> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Codec.BOOL.optionalFieldOf("canFly", false).forGetter(FlyBehaviour::canFly),
+                ExpressionLike.CODEC.optionalFieldOf("flySpeedHorizontal", "0.3".asExpressionLike()).forGetter(FlyBehaviour::flySpeedHorizontal)
+            ).apply(instance, ::FlyBehaviour)
+        }
+    }
 }

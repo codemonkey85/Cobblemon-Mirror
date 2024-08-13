@@ -57,14 +57,6 @@ interface StatProvider {
     fun provide(species: Species)
 
     /**
-     * Populate a [FormData] with base stats during initialization.
-     * This should only provide stats with the type of [Stat.Type.PERMANENT].
-     *
-     * @param form The [FormData] requesting provision.
-     */
-    fun provide(form: FormData)
-
-    /**
      * Generates an empty IVs stat holder.
      *
      * @return The [EVs] generated.
@@ -83,10 +75,9 @@ interface StatProvider {
      * Creates a literal representation of the stats in showdown format.
      *
      * @param species The [Species] being created in a showdown format.
-     * @param form The form being used if any, if it's still writing the base species this will be null.
      * @return The literal representation.
      */
-    fun toShowdown(species: Species, form: FormData?): String
+    fun toShowdown(species: Species): String
 
     /**
      * Resolves the value of a stat for Pokémon.

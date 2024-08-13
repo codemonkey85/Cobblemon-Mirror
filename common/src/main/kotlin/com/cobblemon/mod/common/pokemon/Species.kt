@@ -17,6 +17,7 @@ import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.effect.ShoulderEffect
 import com.cobblemon.mod.common.api.pokemon.egg.EggGroup
 import com.cobblemon.mod.common.api.pokemon.evolution.Evolution
+import com.cobblemon.mod.common.api.pokemon.experience.ExperienceGroup
 import com.cobblemon.mod.common.api.pokemon.moves.Learnset
 import com.cobblemon.mod.common.api.pokemon.stats.Stat
 import com.cobblemon.mod.common.api.registry.RegistryElement
@@ -41,47 +42,86 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import net.minecraft.util.RandomSource
+import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
-class Species : RegistryElement<Species>, ShowdownIdentifiable {
+class Species(
+    nationalPokedexNumber: Int,
+    baseStats: Map<Stat, Int>,
+    maleRatio: Float,
+    catchRate: Int,
+    baseScale: Float,
+    baseExperienceYield: Int,
+    baseFriendship: Int,
+    evYield: Map<Stat, Int>,
+    experienceGroup: ExperienceGroup,
+    hitbox: EntityDimensions,
+    primaryType: ElementalType,
+    secondaryType: Optional<ElementalType>,
+    abilityPool: AbilityPool,
+    shoulderMountable: Boolean,
+    shoulderEffects: Set<ShoulderEffect>,
+    learnset: Learnset,
+    standingEyeHeight: Optional<Float>,
+    swimmingEyeHeight: Optional<Float>,
+    flyingEyeHeight: Optional<Float>,
+    behaviour: PokemonBehaviour,
+    eggCycles: Int,
+    eggGroups: Set<EggGroup>,
+    dynamaxBlocked: Boolean,
+    implemented: Boolean,
+    height: Float,
+    weight: Float,
+    preEvolution: Optional<Holder<Species>>,
+    battleTheme: ResourceLocation,
+    lightingData: Optional<LightingData>,
+) : RegistryElement<Species>, ShowdownIdentifiable {
+
     var name: String = "Bulbasaur"
     val translatedName: MutableComponent
         get() = Component.translatable("${this.resourceIdentifier.namespace}.species.${this.unformattedShowdownId()}.name")
-    var nationalPokedexNumber = 1
+    var nationalPokedexNumber: Int = nationalPokedexNumber
+        private set
 
-    var baseStats = hashMapOf<Stat, Int>()
+    var baseStats = baseStats
         private set
     /** The ratio of the species being male. If -1, the Pokémon is genderless. */
-    var maleRatio: Float = 0.5F
+    var maleRatio = maleRatio
         private set
-    var catchRate = 45
+    var catchRate = catchRate
         private set
     // Only modifiable for debugging sizes
-    var baseScale = 1F
-    var baseExperienceYield = 10
-    var baseFriendship = 0
-    var evYield = hashMapOf<Stat, Int>()
+    var baseScale = baseScale
         private set
-    var experienceGroup = ExperienceGroups.first()
-    var hitbox = EntityDimensions.fixed(1F, 1F)
-    var primaryType: ElementalType = CobblemonRegistries.ELEMENTAL_TYPE.getRandom(RandomSource.create()).get().value()
+    var baseExperienceYield = baseExperienceYield
+        private set
+    var baseFriendship = baseFriendship
+        private set
+    var evYield = evYield
+        private set
+    var experienceGroup = experienceGroup
+        private set
+    var hitbox = hitbox
+        private set
+    var primaryType: ElementalType = primaryType
         internal set
-    var secondaryType: ElementalType? = null
+    var secondaryType: ElementalType? = secondaryType.getOrNull()
         internal set
-    var abilities = AbilityPool()
+    var abilities = abilityPool
         private set
-    var shoulderMountable: Boolean = false
+    var shoulderMountable = shoulderMountable
         private set
-    var shoulderEffects = setOf<ShoulderEffect>()
+    var shoulderEffects = shoulderEffects
         private set
-    var moves = Learnset()
+    var moves = learnset
         private set
     // TODO: Hiro said we could drop this but validate opinions of public first
     var features = mutableSetOf<String>()
         private set
-    internal var standingEyeHeight: Float? = null
-    internal var swimmingEyeHeight: Float? = null
-    internal var flyingEyeHeight: Float? = null
-    var behaviour = PokemonBehaviour()
+    internal var standingEyeHeight: Float? = standingEyeHeight.getOrNull()
+    internal var swimmingEyeHeight: Float? = swimmingEyeHeight.getOrNull()
+    internal var flyingEyeHeight: Float? = flyingEyeHeight.getOrNull()
+    var behaviour = behaviour
         private set
     // TODO: Confirm if it will be dropped
     var pokedex = mutableListOf<String>()
@@ -89,29 +129,29 @@ class Species : RegistryElement<Species>, ShowdownIdentifiable {
     // TODO: Migrate to loot tables.
     var drops = DropTable()
         private set
-    var eggCycles = 120
+    var eggCycles = eggCycles
         private set
-    var eggGroups = hashSetOf<EggGroup>()
+    var eggGroups = eggGroups
         private set
-    var dynamaxBlocked = false
-    var implemented = false
+    var dynamaxBlocked = dynamaxBlocked
+        private set
+    var implemented = implemented
+        private set
 
     /**
      * The height in decimeters
      */
-    var height = 1F
+    var height = height
         private set
 
     /**
      * The weight in hectograms
      */
-    var weight = 1F
+    var weight = weight
         private set
 
-    var forms = mutableListOf<FormData>()
-        private set
-
-    val standardForm by lazy { FormData(_evolutions = this.evolutions).initialize(this) }
+    // TODO: Property to define base form aka base species
+    //val standardForm by lazy { FormData(_evolutions = this.evolutions).initialize(this) }
 
     // TODO: Move to tags
     var labels = hashSetOf<String>()
@@ -127,7 +167,7 @@ class Species : RegistryElement<Species>, ShowdownIdentifiable {
     var evolutions: MutableSet<Evolution> = hashSetOf()
         private set
 
-    var preEvolution: Holder<Species>? = null
+    var preEvolution: Holder<Species>? = preEvolution.getOrNull()
         private set
 
     @Transient
@@ -143,26 +183,19 @@ class Species : RegistryElement<Species>, ShowdownIdentifiable {
 
     fun initialize() {
         Cobblemon.statProvider.provide(this)
-        this.forms.forEach { it.initialize(this) }
-        if (this.forms.isNotEmpty() && this.forms.none { it == this.standardForm }) {
-            this.forms.add(0, this.standardForm)
-        }
         this.lightingData?.let { this.lightingData = it.copy(lightLevel = it.lightLevel.coerceIn(0, 15)) }
         // These properties are lazy, these need all species to be reloaded but SpeciesAdditions is what will eventually trigger this after all species have been loaded
-        this.preEvolution?.species
-        this.preEvolution?.form
         this.evolutions.size
     }
 
-    // Ran after initialize due to us creating a Pokémon here which requires all the properties in #initialize to be present for both this and the results, this is the easiest way to quickly resolve species + form
+    // Ran after initialize due to us creating a Pokémon here which requires all the properties in #initialize to be present for both this and the results, this is the easiest way to quickly resolve species
     internal fun resolveEvolutionMoves() {
         this.evolutions.forEach { evolution ->
             if (evolution.learnableMoves.isNotEmpty() && evolution.result.species != null) {
                 val pokemon = evolution.result.create()
-                pokemon.form.moves.evolutionMoves += evolution.learnableMoves
+                pokemon.species.moves.evolutionMoves += evolution.learnableMoves
             }
         }
-        this.forms.forEach(FormData::resolveEvolutionMoves)
     }
 
     fun create(level: Int = 10) = PokemonProperties.parse("species=\"${this.name}\" level=${level}").create()
@@ -182,7 +215,6 @@ class Species : RegistryElement<Species>, ShowdownIdentifiable {
 
     // TODO: Redo me
     //fun canGmax() = this.forms.find { it.formOnlyShowdownId() == "gmax" } != null
-
 
     // TODO: Use me as reference for packet codec
     /*override fun encode(buffer: RegistryFriendlyByteBuf) {
@@ -292,6 +324,36 @@ class Species : RegistryElement<Species>, ShowdownIdentifiable {
         @JvmStatic
         val PACKET_CODEC: Codec<Species> = Codec.unit(Species())
 
-        internal fun fromPartials(p1: SpeciesP1, p2: SpeciesP2): Species = TODO("Not yet implemented")
+        private fun fromPartials(p1: SpeciesP1, p2: SpeciesP2): Species = Species(
+            p1.nationalPokedexNumber,
+            p1.baseStats,
+            p1.maleRatio,
+            p1.catchRate,
+            p1.baseScale,
+            p1.baseExperienceYield,
+            p1.baseFriendship,
+            p1.evYield,
+            p1.experienceGroup,
+            p1.hitbox,
+            p1.primaryType,
+            p1.secondaryType,
+            p1.abilityPool,
+            p1.shoulderMountable,
+            p1.shoulderEffects,
+            p1.learnset,
+            p2.standingEyeHeight,
+            p2.swimmingEyeHeight,
+            p2.flyingEyeHeight,
+            p2.behaviour,
+            p2.eggCycles,
+            p2.eggGroups,
+            p2.dynamaxBlocked,
+            p2.implemented,
+            p2.height,
+            p2.weight,
+            p2.preEvolution,
+            p2.battleTheme,
+            p2.lightingData,
+        )
     }
 }

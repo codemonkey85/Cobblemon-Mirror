@@ -14,7 +14,6 @@ import com.cobblemon.mod.common.api.pokemon.stats.StatTypeAdapter
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.pokemon.EVs
-import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.IVs
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.Species
@@ -50,12 +49,8 @@ object CobblemonStatProvider : StatProvider {
         this.allocate(species.baseStats)
     }
 
-    override fun provide(form: FormData) {
-        form._baseStats?.let { this.allocate(it) }
-    }
-
-    override fun toShowdown(species: Species, form: FormData?): String {
-        val baseStats = form?.baseStats ?: species.baseStats
+    override fun toShowdown(species: Species): String {
+        val baseStats = species.baseStats
         return "baseStats: { hp: ${baseStats[Stats.HP]}, atk: ${baseStats[Stats.ATTACK]}, def: ${baseStats[Stats.DEFENCE]}, spa: ${baseStats[Stats.SPECIAL_ATTACK]}, spd: ${baseStats[Stats.SPECIAL_DEFENCE]}, spe: ${baseStats[Stats.SPEED]} }"
     }
 

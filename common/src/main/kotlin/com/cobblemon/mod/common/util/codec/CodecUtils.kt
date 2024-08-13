@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.util.codec
 
+import com.bedrockk.molang.Expression
+import com.cobblemon.mod.common.api.molang.ExpressionLike
+import com.cobblemon.mod.common.util.asExpressionLike
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -74,6 +77,15 @@ object CodecUtils {
             Codec.BOOL.optionalFieldOf("fixed", false).forGetter(EntityDimensions::fixed)
         ).apply(instance) { width, height, fixed -> if (fixed) EntityDimensions.fixed(width, height) else EntityDimensions.scalable(width, height) }
     }
+
+    @JvmStatic
+    val INT_RANGE: Codec<IntRange> = intRange(Codec.INT)
+
+    fun intRange(codec: Codec<Int>): Codec<IntRange> = Codec.list(codec, 2, 2)
+        .xmap(
+            { list -> IntRange(list[0], list[1]) },
+            { range -> listOf(range.first, range.last) }
+        )
 
     private fun dynamicRangeChecker(min: () -> Int, max: () -> Int): (Int) -> DataResult<Int> = { number ->
         val minAsNum = min()

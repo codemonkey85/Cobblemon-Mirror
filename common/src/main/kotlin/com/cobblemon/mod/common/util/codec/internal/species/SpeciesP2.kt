@@ -3,6 +3,7 @@ package com.cobblemon.mod.common.util.codec.internal.species
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.pokemon.egg.EggGroup
 import com.cobblemon.mod.common.pokemon.Species
+import com.cobblemon.mod.common.pokemon.ai.PokemonBehaviour
 import com.cobblemon.mod.common.pokemon.lighthing.LightingData
 import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.codec.CodecUtils
@@ -18,7 +19,7 @@ internal data class SpeciesP2(
     val standingEyeHeight: Optional<Float>,
     val swimmingEyeHeight: Optional<Float>,
     val flyingEyeHeight: Optional<Float>,
-    // TODO: PokemonBehaviour
+    val behaviour: PokemonBehaviour,
     val eggCycles: Int,
     val eggGroups: Set<EggGroup>,
     val dynamaxBlocked: Boolean,
@@ -36,10 +37,11 @@ internal data class SpeciesP2(
                 Codec.FLOAT.optionalFieldOf("standingEyeHeight").forGetter(SpeciesP2::standingEyeHeight),
                 Codec.FLOAT.optionalFieldOf("swimmingEyeHeight").forGetter(SpeciesP2::swimmingEyeHeight),
                 Codec.FLOAT.optionalFieldOf("flyingEyeHeight").forGetter(SpeciesP2::flyingEyeHeight),
+                PokemonBehaviour.CODEC.optionalFieldOf("behaviour", PokemonBehaviour()).forGetter(SpeciesP2::behaviour),
                 ExtraCodecs.POSITIVE_INT.fieldOf("eggCycles").forGetter(SpeciesP2::eggCycles),
                 CodecUtils.setOf(EggGroup.CODEC).fieldOf("eggGroups").forGetter(SpeciesP2::eggGroups),
                 Codec.BOOL.fieldOf("dynamaxBlocked").forGetter(SpeciesP2::dynamaxBlocked),
-                Codec.BOOL.optionalFieldOf("implemented", false).forGetter(SpeciesP2::implemented),
+                Codec.BOOL.optionalFieldOf("implemented", true).forGetter(SpeciesP2::implemented),
                 Codec.FLOAT.fieldOf("height").forGetter(SpeciesP2::height),
                 Codec.FLOAT.fieldOf("weight").forGetter(SpeciesP2::weight),
                 CobblemonRegistries.SPECIES.holderByNameCodec().optionalFieldOf("preEvolution").forGetter(SpeciesP2::preEvolution),
@@ -52,6 +54,7 @@ internal data class SpeciesP2(
             Optional.ofNullable(species.standingEyeHeight),
             Optional.ofNullable(species.swimmingEyeHeight),
             Optional.ofNullable(species.flyingEyeHeight),
+            species.behaviour,
             species.eggCycles,
             species.eggGroups,
             species.dynamaxBlocked,
