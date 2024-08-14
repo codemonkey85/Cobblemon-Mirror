@@ -9,24 +9,26 @@
 package com.cobblemon.mod.common.api.pokeball.catching.modifiers
 
 import com.cobblemon.mod.common.api.pokeball.catching.CatchRateModifier
-import com.cobblemon.mod.common.api.pokemon.labels.CobblemonPokemonLabels
+import com.cobblemon.mod.common.api.tags.CobblemonSpeciesTags
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.pokemon.Species
+import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.LivingEntity
 
 /**
- * A [CatchRateModifier] based on the presence of [Pokemon] literal labels.
- * This is checked against [Pokemon.hasLabels].
- * See [CobblemonPokemonLabels] for some default labels.
+ * A [CatchRateModifier] based on the presence of [Species] [TagKey]s.
+ * This is checked against [Pokemon.isTaggedBy].
+ * 
+ * @see [CobblemonSpeciesTags]
  *
  * @property multiplier The multiplier if the label is present.
  * @property matching Will this multiplier should be applied if the labels match?
- * @property labels The literal labels being queried.
+ * @property tags The [TagKey]s being queried.
  */
-@Deprecated("No longer supported", ReplaceWith("SpeciesTagModifier(multiplier, matching, tags)", "com.cobblemon.mod.common.api.pokeball.catching.modifiers.SpeciesTagModifier"))
-class LabelModifier(
+class SpeciesTagModifier(
     val multiplier: Float,
     val matching: Boolean,
-    vararg val labels: String
+    vararg val tags: TagKey<Species>,
 ) : CatchRateModifier {
 
     override fun isGuaranteed(): Boolean = false
@@ -35,7 +37,10 @@ class LabelModifier(
 
     override fun behavior(thrower: LivingEntity, pokemon: Pokemon): CatchRateModifier.Behavior = CatchRateModifier.Behavior.MULTIPLY
 
-    override fun isValid(thrower: LivingEntity, pokemon: Pokemon): Boolean = if (this.matching) pokemon.hasLabels(*this.labels) else !pokemon.hasLabels(*this.labels)
+    override fun isValid(thrower: LivingEntity, pokemon: Pokemon): Boolean {
+        val result = this.tags.any { pokemon.isTaggedBy(it) }
+        return if (matching) result else !result
+    }
 
     override fun modifyCatchRate(currentCatchRate: Float, thrower: LivingEntity, pokemon: Pokemon): Float = this.behavior(thrower, pokemon).mutator(currentCatchRate, this.value(thrower, pokemon))
 

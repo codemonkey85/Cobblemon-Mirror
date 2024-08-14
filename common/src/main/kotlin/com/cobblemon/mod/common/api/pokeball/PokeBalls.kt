@@ -16,10 +16,10 @@ import com.cobblemon.mod.common.api.pokeball.catching.CatchRateModifier
 import com.cobblemon.mod.common.api.pokeball.catching.effects.CaptureEffects
 import com.cobblemon.mod.common.api.pokeball.catching.effects.FriendshipEarningBoostEffect
 import com.cobblemon.mod.common.api.pokeball.catching.modifiers.*
-import com.cobblemon.mod.common.api.pokemon.labels.CobblemonPokemonLabels
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.api.pokemon.status.Statuses
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
+import com.cobblemon.mod.common.api.tags.CobblemonSpeciesTags
 import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.pokeball.PokeBall
 import com.cobblemon.mod.common.util.cobblemonResource
@@ -185,7 +185,7 @@ object PokeBalls : JsonDataRegistry<PokeBall> {
         createDefault("cherish_ball")
         createDefault("park_ball", CatchRateModifiers.PARK)
         createDefault("dream_ball", CatchRateModifiers.statusBoosting(4F, Statuses.SLEEP))
-        createDefault("beast_ball", LabelModifier(5F, true, CobblemonPokemonLabels.ULTRA_BEAST)/*, LabelModifier(0.1F, false, CobblemonPokemonLabels.ULTRA_BEAST))*/)
+        createDefault("beast_ball", SpeciesTagModifier(5F, true, CobblemonSpeciesTags.ULTRA_BEAST))
         createDefault("ancient_poke_ball", ancient = true)
         createDefault("ancient_citrine_ball", ancient = true)
         createDefault("ancient_verdant_ball", ancient = true)

@@ -37,7 +37,6 @@ import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatures
 import com.cobblemon.mod.common.api.pokemon.feature.SynchronizedSpeciesFeature
 import com.cobblemon.mod.common.api.pokemon.feature.SynchronizedSpeciesFeatureProvider
 import com.cobblemon.mod.common.api.pokemon.friendship.FriendshipMutationCalculator
-import com.cobblemon.mod.common.api.pokemon.labels.CobblemonPokemonLabels
 import com.cobblemon.mod.common.api.pokemon.moves.LearnsetQuery
 import com.cobblemon.mod.common.api.pokemon.stats.Stat
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
@@ -51,6 +50,7 @@ import com.cobblemon.mod.common.api.storage.party.NPCPartyStore
 import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore
 import com.cobblemon.mod.common.api.storage.pc.PCStore
 import com.cobblemon.mod.common.api.tags.CobblemonElementalTypeTags
+import com.cobblemon.mod.common.api.tags.CobblemonSpeciesTags
 import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.config.CobblemonConfig
@@ -103,6 +103,7 @@ import net.minecraft.network.chat.contents.PlainTextContents
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.tags.FluidTags
+import net.minecraft.tags.TagKey
 import net.minecraft.util.Mth.ceil
 import net.minecraft.util.Mth.clamp
 import net.minecraft.util.RandomSource
@@ -774,37 +775,36 @@ open class Pokemon : ShowdownIdentifiable {
     }
 
     /**
-     * A utility method that checks if this Pokémon species or form data contains the [CobblemonPokemonLabels.LEGENDARY] label.
-     * This is used in Pokémon officially considered legendary.
+     * A utility method that checks if this Pokémon species is tagged by [CobblemonSpeciesTags.LEGENDARY].
      *
      * @return If the Pokémon is legendary.
      */
-    fun isLegendary() = this.hasLabels(CobblemonPokemonLabels.LEGENDARY)
+    fun isLegendary() = this.isTaggedBy(CobblemonSpeciesTags.LEGENDARY)
 
     /**
-     * A utility method that checks if this Pokémon species or form data contains the [CobblemonPokemonLabels.MYTHICAL] label.
-     * This is used in Pokémon officially considered mythical.
+     * A utility method that checks if this Pokémon species is tagged by [CobblemonSpeciesTags.MYTHICAL].
      *
      * @return If the Pokémon is mythical.
      */
-    fun isMythical() = this.hasLabels(CobblemonPokemonLabels.MYTHICAL)
+    fun isMythical() = this.isTaggedBy(CobblemonSpeciesTags.MYTHICAL)
 
     /**
-     * A utility method that checks if this Pokémon species or form data contains the [CobblemonPokemonLabels.ULTRA_BEAST] label.
-     * This is used in Pokémon officially considered an ultra beast.
+     * A utility method that checks if this Pokémon species is tagged by [CobblemonSpeciesTags.ULTRA_BEAST].
      *
      * @return If the Pokémon is an ultra beast.
      */
-    fun isUltraBeast() = this.hasLabels(CobblemonPokemonLabels.ULTRA_BEAST)
+    fun isUltraBeast() = this.isTaggedBy(CobblemonSpeciesTags.ULTRA_BEAST)
+
+    @Deprecated("No longer used, always returns false", ReplaceWith("this.isTaggedBy(tagKey)"))
+    fun hasLabels(vararg labels: String) = false
 
     /**
-     * Checks if a Pokémon has all the given labels.
-     * Tags used by the mod can be found in [CobblemonPokemonLabels].
+     * Checks if the [species] is tagged by the given [tag].
      *
-     * @param labels The different tags being queried.
-     * @return If the Pokémon has all the given labels.
+     * @param tag The [TagKey] getting checked.
+     * @return The query result.
      */
-    fun hasLabels(vararg labels: String) = labels.all { label -> this.form.labels.any { it.equals(label, true) } }
+    fun isTaggedBy(tag: TagKey<Species>) = this.species.isTaggedBy(tag)
 
     /**
      * A utility method that checks if this Pokémon has the [UncatchableProperty.uncatchable] property.
@@ -820,7 +820,6 @@ open class Pokemon : ShowdownIdentifiable {
      * @return A copy of the [ItemStack] held by this Pokémon.
      */
     fun heldItem(): ItemStack = this.heldItem.copy()
-
 
     /**
      * Returns the backing held item, this is intended to skip the unnecessary copy operation for our internal use.
@@ -845,6 +844,7 @@ open class Pokemon : ShowdownIdentifiable {
      */
     fun swapHeldItem(stack: ItemStack, decrement: Boolean = true): ItemStack {
         val existing = this.heldItem()
+        this.hasLabels()
         CobblemonEvents.HELD_ITEM_PRE.postThen(HeldItemEvent.Pre(this, stack, existing, decrement), ifSucceeded = { event ->
             val giving = event.receiving.copy().apply { count = 1 }
             if (event.decrement) {

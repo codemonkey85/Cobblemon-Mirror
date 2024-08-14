@@ -142,12 +142,12 @@ object CatchRateModifiers {
     val WEIGHT_BASED: CatchRateModifier = DynamicMultiplierModifier({ _, pokemon ->
         // Remember we use hectograms not kilograms
         when {
-            pokemon.form.weight >= 3000F -> 4F
-            pokemon.form.weight in 2000F..2999F -> 2.5F
-            pokemon.form.weight in 1000F..1999F -> 1.5F
+            pokemon.species.weight >= 3000F -> 4F
+            pokemon.species.weight in 2000F..2999F -> 2.5F
+            pokemon.species.weight in 1000F..1999F -> 1.5F
             else -> 1F
         }
-    }) { _, pokemon -> pokemon.form.weight >= 1000F }
+    }) { _, pokemon -> pokemon.species.weight >= 1000F }
 
     /**
      * Used by [PokeBalls.NET_BALL].
