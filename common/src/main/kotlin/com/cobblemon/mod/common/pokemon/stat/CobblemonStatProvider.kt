@@ -41,7 +41,7 @@ object CobblemonStatProvider : StatProvider {
     private val identifierToOrdinal = Stats.values().associate { it.identifier to it.ordinal }
 
     val statOverrides = mapOf(
-        "shedinja" to mapOf(
+        "ability=wonderguard" to mapOf(
             Stats.HP to 1
         )
     )

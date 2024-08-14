@@ -402,7 +402,7 @@ open class PokemonProperties {
         friendship?.takeIf { it != pokemon.friendship }?.let { return false }
         pokeball?.takeIf { it != pokemon.caughtBall.name.toString() }?.let { return false }
         nature?.takeIf { it != pokemon.nature.name.toString() }?.let { return false }
-        ability?.takeIf { it != pokemon.ability.name }?.let { return false }
+        ability?.takeIf { it != pokemon.ability?.name }?.let { return false }
         status?.takeIf { it != pokemon.status?.status?.showdownName }?.let { return false }
         ivs?.forEach{ stat ->
             if (stat.value != pokemon.ivs[stat.key]) { return false }
