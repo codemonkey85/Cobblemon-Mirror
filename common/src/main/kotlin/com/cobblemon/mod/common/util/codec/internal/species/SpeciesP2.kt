@@ -52,7 +52,7 @@ internal data class SpeciesP2(
                 Codec.BOOL.optionalFieldOf("implemented", true).forGetter(SpeciesP2::implemented),
                 Codec.FLOAT.fieldOf("height").forGetter(SpeciesP2::height),
                 Codec.FLOAT.fieldOf("weight").forGetter(SpeciesP2::weight),
-                CobblemonRegistries.SPECIES.holderByNameCodec().optionalFieldOf("preEvolution").forGetter(SpeciesP2::preEvolution),
+                Codec.lazyInitialized { CobblemonRegistries.SPECIES.holderByNameCodec() }.optionalFieldOf("preEvolution").forGetter(SpeciesP2::preEvolution),
                 ResourceLocation.CODEC.optionalFieldOf("battleTheme", CobblemonSounds.PVW_BATTLE.location).forGetter(SpeciesP2::battleTheme),
                 LightingData.CODEC.optionalFieldOf("lightingData").forGetter(SpeciesP2::lightingData),
             ).apply(instance, ::SpeciesP2)

@@ -113,9 +113,6 @@ class Species(
         private set
     var moves = learnset
         private set
-    // TODO: Hiro said we could drop this but validate opinions of public first
-    var features = mutableSetOf<String>()
-        private set
     internal var standingEyeHeight: Float? = standingEyeHeight.getOrNull()
     internal var swimmingEyeHeight: Float? = swimmingEyeHeight.getOrNull()
     internal var flyingEyeHeight: Float? = flyingEyeHeight.getOrNull()
@@ -150,10 +147,6 @@ class Species(
 
     // TODO: Property to define base form aka base species
     //val standardForm by lazy { FormData(_evolutions = this.evolutions).initialize(this) }
-
-    // TODO: Move to tags
-    var labels = hashSetOf<String>()
-        private set
 
     /**
      * Contains the evolutions of this species.
@@ -316,8 +309,9 @@ class Species(
             ).apply(instance, Companion::fromPartials)
         }
 
+        // TODO: Implement me
         @JvmStatic
-        val PACKET_CODEC: Codec<Species> = TODO("Not yet implemented")
+        val PACKET_CODEC: Codec<Species> = Codec.unit(null)
 
         private fun fromPartials(p1: SpeciesP1, p2: SpeciesP2): Species = Species(
             p1.nationalPokedexNumber,

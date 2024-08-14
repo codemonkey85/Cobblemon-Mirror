@@ -73,7 +73,7 @@ open class Learnset {
             })
 
         @JvmStatic
-        val CLIENT_CODEC: Codec<Learnset> = Codec.unboundedMap(ExtraCodecs.POSITIVE_INT, CobblemonRegistries.MOVE.byNameCodec().listOf())
+        val CLIENT_CODEC: Codec<Learnset> = Codec.unboundedMap(ExtraCodecs.POSITIVE_INT, Codec.lazyInitialized { CobblemonRegistries.MOVE.byNameCodec() }.listOf())
             .xmap(
                 { map ->
                     val learnset = Learnset()

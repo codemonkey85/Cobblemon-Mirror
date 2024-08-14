@@ -77,11 +77,10 @@ object SpeciesFeatures : JsonDataRegistry<SpeciesFeatureProvider<*>> {
 
     fun getFeatures() = (resourceFeatures.keys + codeFeatures.keys).mapNotNull(this::getFeature)
     fun getFeaturesFor(species: Species): List<SpeciesFeatureProvider<*>> {
-        val mentionedFeatures = species.features.mapNotNull(this::getFeature)
         val globalFeatures = GlobalSpeciesFeatures.getFeatures()
         val assignedFeatures = SpeciesFeatureAssignments.getFeatures(species).mapNotNull(this::getFeature)
 
-        return (mentionedFeatures + globalFeatures + assignedFeatures).distinct()
+        return (globalFeatures + assignedFeatures).distinct()
     }
 
     private fun register(name: String, provider: SpeciesFeatureProvider<*>, isCoded: Boolean) {

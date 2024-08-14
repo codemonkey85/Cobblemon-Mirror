@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.pokemon.abilities
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.abilities.*
 import com.cobblemon.mod.common.registry.CobblemonRegistries
+import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 
@@ -30,7 +31,7 @@ class HiddenAbility(override val template: AbilityTemplate) : PotentialAbility {
         @JvmStatic
         val CODEC: MapCodec<HiddenAbility> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                CobblemonRegistries.ABILITY.byNameCodec().fieldOf("ability").forGetter(HiddenAbility::template)
+                Codec.lazyInitialized { CobblemonRegistries.ABILITY.byNameCodec() }.fieldOf("ability").forGetter(HiddenAbility::template)
             ).apply(instance, ::HiddenAbility)
         }
     }
