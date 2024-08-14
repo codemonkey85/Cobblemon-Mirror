@@ -21,7 +21,7 @@ fun interface ExperienceCalculator {
 
 object StandardExperienceCalculator : ExperienceCalculator {
     override fun calculate(battlePokemon: BattlePokemon, opponentPokemon: BattlePokemon, participationMultiplier: Double): Int {
-        val baseExp = opponentPokemon.originalPokemon.form.baseExperienceYield
+        val baseExp = opponentPokemon.originalPokemon.species.baseExperienceYield
         val opponentLevel = opponentPokemon.effectedPokemon.level
         val term1 = (baseExp * opponentLevel) / 5.0
         // This is meant to be a division but this is due to the intended behavior of handling the 2.0 sent over from Exp. All in modern Pokémon

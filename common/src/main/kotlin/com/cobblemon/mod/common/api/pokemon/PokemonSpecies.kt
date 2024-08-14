@@ -24,12 +24,10 @@ import com.cobblemon.mod.common.api.pokemon.evolution.Evolution
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.api.pokemon.stats.Stat
-import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
 import com.cobblemon.mod.common.api.spawning.TimeRange
 import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.api.types.adapters.ElementalTypeAdapter
-import com.cobblemon.mod.common.net.messages.client.data.SpeciesRegistrySyncPacket
 import com.cobblemon.mod.common.pokemon.SpeciesAdditions
 import com.cobblemon.mod.common.pokemon.evolution.adapters.CobblemonEvolutionAdapter
 import com.cobblemon.mod.common.pokemon.evolution.adapters.CobblemonRequirementAdapter
@@ -175,22 +173,23 @@ object PokemonSpecies : JsonDataRegistry<Species> {
         }
     }
 
-    override fun sync(player: ServerPlayer) {
-        SpeciesRegistrySyncPacket(species.toList()).sendToPlayer(player)
-    }
+    override fun sync(player: ServerPlayer) {}
 
     /**
      * The representation of a [Species] and/or [FormData] in the context of showdown.
      * This is intended as a sort of DTO that can be easily converted between JSON and Java/JS objects.
      *
      * @param species The [Species] being converted or the base species if the form is not null.
-     * @param form The [FormData] being converted int o species (Showdown considers them species) will be null when dealing with the base form.
      */
     @Suppress("unused")
-    internal class ShowdownSpecies(species: Species, form: FormData?) {
+    internal class ShowdownSpecies(species: Species) {
+        init {
+            TODO("Rework ShowdownSpecies")
+        }
+        /*
         val num = species.nationalPokedexNumber
-        val name = if (form != null) "${createShowdownName(species)}-${form.name}" else createShowdownName(species)
-        val baseSpecies = if (form != null) createShowdownName(species) else this.name
+        val name = createShowdownName(species)
+        val baseSpecies = ???
         val forme = form?.name
         // ToDo baseForme
         val otherFormes = if (form == null && species.forms.isNotEmpty()) species.forms.map { "${this.name}-${it.name}" } else emptyList()
@@ -237,6 +236,7 @@ object PokemonSpecies : JsonDataRegistry<Species> {
         val requiredMove = form?.requiredMove
         val requiredItem = form?.requiredItem
         val requiredItems = form?.requiredItems
+         */
     }
 
     private fun createShowdownName(species: Species): String {

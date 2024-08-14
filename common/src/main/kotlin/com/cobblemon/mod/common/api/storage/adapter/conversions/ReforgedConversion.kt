@@ -90,10 +90,14 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<CompoundTag> {
     override fun translate(nbt: CompoundTag) : Pokemon {
         val result = Pokemon()
         result.uuid = nbt.getUUID("UUID")
-        result.species = PokemonSpecies.getByPokedexNumber(nbt.getInt("ndex"))
+        var species = PokemonSpecies.getByPokedexNumber(nbt.getInt("ndex"))
             ?: throw IllegalStateException("Failed to read a species with pokedex identifier ${nbt.getInt("ndex")}")
-        PokemonProperties.parse((result.species.forms.find { it.name == nbt.getString("Variant") } ?: result.species.standardForm).name).apply(result)
-
+        val variant = nbt.getString("Variant")
+        if (variant.isNotEmpty()) {
+            val id = ResourceLocation.fromNamespaceAndPath(species.resourceIdentifier.namespace, "${species.resourceIdentifier.path}/${variant.lowercase()}")
+            species = PokemonSpecies.getByIdentifier(id) ?: throw IllegalStateException("Unable to resolve the target species with variant $variant tried to generate ID $id")
+        }
+        result.species = species
         result.gender = Gender.entries.toTypedArray()[nbt.getInt("Gender")]
         result.shiny = this.find(nbt, "IsShiny", CompoundTag::getBoolean) ?:
                         this.find(nbt, "palette", CompoundTag::getString)?.equals("shiny") ?: false
@@ -101,7 +105,7 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<CompoundTag> {
         result.addExperience(SidemodExperienceSource("Reforged"), nbt.getInt("EXP"))
         result.setFriendship(nbt.getInt("Friendship"))
         Abilities.get(nbt.getString("Ability").asIdentifierDefaultingNamespace())?.let { template ->
-            result.updateAbility(template.create(forced = result.form.abilities.none { it.template == template }))
+            result.updateAbility(template.create(forced = result.species.abilities.none { it.template == template }))
         }
         result.nature = Natures.getNature(ResourceLocation.parse(ReforgedNatures.entries[nbt.getInt("Nature")].name.lowercase())) ?: Natures.getRandomNature()
         result.mintedNature = Natures.getNature(ResourceLocation.parse(ReforgedNatures.entries[nbt.getInt("MintNature")].name.lowercase()))

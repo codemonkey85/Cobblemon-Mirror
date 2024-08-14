@@ -14,7 +14,6 @@ import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.battles.BagItems
 import com.cobblemon.mod.common.battles.ShowdownInterpreter
 import com.cobblemon.mod.common.battles.runner.ShowdownService
-import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.google.gson.Gson
@@ -124,8 +123,8 @@ class SocketShowdownService(val host: String = "localhost", val port: Int = 1846
         return gson.fromJson(response, JsonArray::class.java)
     }
 
-    private fun sendSpeciesData(species: Species, form: FormData?) {
-        writer.write(">receiveSpeciesData ${gson.toJson(PokemonSpecies.ShowdownSpecies(species, form))}\n")
+    private fun sendSpeciesData(species: Species) {
+        writer.write(">receiveSpeciesData ${gson.toJson(PokemonSpecies.ShowdownSpecies(species))}\n")
         acknowledge()
     }
 
@@ -138,12 +137,7 @@ class SocketShowdownService(val host: String = "localhost", val port: Int = 1846
         writer.write(">resetSpeciesData\n")
         acknowledge()
         PokemonSpecies.species.forEach { species ->
-            sendSpeciesData(species, null)
-            species.forms.forEach { form ->
-                if (form != species.standardForm) {
-                    sendSpeciesData(species, form)
-                }
-            }
+            sendSpeciesData(species)
         }
     }
 

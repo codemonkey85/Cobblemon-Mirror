@@ -108,7 +108,6 @@ open class PokemonProperties {
             props.level = parseIntProperty(keyPairs, listOf("level", "lvl", "l"))?.coerceIn(1, Cobblemon.config.maxPokemonLevel)
             props.shiny = parseBooleanProperty(keyPairs, listOf("shiny", "s"))
             props.species = parseSpeciesIdentifier(keyPairs)
-            props.form = parseForm(keyPairs)
             props.friendship = parseIntProperty(keyPairs, listOf("friendship"))?.coerceIn(0, Cobblemon.config.maxPokemonFriendship)
             props.pokeball = parseIdentifierOfRegistry(keyPairs, listOf("pokeball")) { identifier -> PokeBalls.getPokeBall(identifier)?.name?.toString() }
             props.nature = parseIdentifierOfRegistry(keyPairs, listOf("nature")) { identifier -> Natures.getNature(identifier)?.name?.toString() }
@@ -223,12 +222,6 @@ open class PokemonProperties {
             }
         }
 
-        private fun parseForm(keyPairs: MutableList<Pair<String, String?>>): String? {
-            val matchingKeyPair = getMatchedKeyPair(keyPairs, listOf("form")) ?: return null
-            keyPairs.remove(matchingKeyPair)
-            return matchingKeyPair.second
-        }
-
         private fun parseBooleanProperty(keyPairs: MutableList<Pair<String, String?>>, labels: Iterable<String>): Boolean? {
             val matchingKeyPair = getMatchedKeyPair(keyPairs, labels) ?: return null
             keyPairs.remove(matchingKeyPair)
@@ -288,7 +281,6 @@ open class PokemonProperties {
 
     var species: String? = null
     var nickname: MutableComponent? = null
-    var form: String? = null
     var shiny: Boolean? = null
     var gender: Gender? = null
     var level: Int? = null
@@ -346,14 +338,13 @@ open class PokemonProperties {
             }
         }?.let { pokemon.species = it }
         nickname?.let { pokemon.nickname = it }
-        form?.let { formID -> pokemon.species.forms.firstOrNull { it.formOnlyShowdownId().equals(formID, true) } }?.let { form -> pokemon.form = form }
         shiny?.let { pokemon.shiny = it }
         gender?.let { pokemon.gender = it }
         level?.let { pokemon.level = it }
         friendship?.let { pokemon.setFriendship(it) }
         pokeball?.let { PokeBalls.getPokeBall(it.asIdentifierDefaultingNamespace())?.let { pokeball -> pokemon.caughtBall = pokeball } }
         nature?.let  { Natures.getNature(it.asIdentifierDefaultingNamespace())?.let { nature -> pokemon.nature = nature } }
-        ability?.let { this.createAbility(it, pokemon.form)?.let(pokemon::updateAbility) }
+        ability?.let { this.createAbility(it, pokemon.species)?.let(pokemon::updateAbility) }
         status?.let { Statuses.getStatus(it)?.let { status -> if (status is PersistentStatus) pokemon.applyStatus(status) } }
         customProperties.forEach { it.apply(pokemon) }
         ivs?.let { ivs ->
@@ -424,7 +415,6 @@ open class PokemonProperties {
             }
         }
         nickname?.takeIf { it.string != pokemon.nickname?.string }?.let { return false }
-        form?.takeIf { !it.equals(pokemon.form.name, true) }?.let { return false }
         friendship?.takeIf { it != pokemon.friendship }?.let { return false }
         pokeball?.takeIf { it != pokemon.caughtBall.name.toString() }?.let { return false }
         nature?.takeIf { it != pokemon.nature.name.toString() }?.let { return false }
@@ -465,7 +455,6 @@ open class PokemonProperties {
             } catch (_: ResourceLocationException) {}
         }
         nickname?.takeIf { it.string != properties.nickname?.string }?.let { return false }
-        form?.takeIf { !it.equals(properties.form, true) }?.let { return false }
         friendship?.takeIf { it != properties.friendship }?.let { return false }
         pokeball?.takeIf { it != properties.pokeball }?.let { return false }
         nature?.takeIf { it != properties.nature }?.let { return false }
@@ -526,7 +515,6 @@ open class PokemonProperties {
         gender?.let { nbt.putString(DataKeys.POKEMON_GENDER, it.name) }
         species?.let { nbt.putString(DataKeys.POKEMON_SPECIES_TEXT, it) }
         nickname?.let { nbt.putString(DataKeys.POKEMON_NICKNAME, Component.Serializer.toJson(it, registryLookup)) }
-        form?.let { nbt.putString(DataKeys.POKEMON_FORM_ID, it) }
         friendship?.let { nbt.putInt(DataKeys.POKEMON_FRIENDSHIP, it) }
         pokeball?.let { nbt.putString(DataKeys.POKEMON_CAUGHT_BALL, it) }
         nature?.let { nbt.putString(DataKeys.POKEMON_NATURE, it) }
@@ -555,7 +543,6 @@ open class PokemonProperties {
         gender = if (tag.contains(DataKeys.POKEMON_GENDER)) Gender.valueOf(tag.getString(DataKeys.POKEMON_GENDER)) else null
         species = if (tag.contains(DataKeys.POKEMON_SPECIES_TEXT)) tag.getString(DataKeys.POKEMON_SPECIES_TEXT) else null
         nickname = if (tag.contains(DataKeys.POKEMON_NICKNAME)) Component.Serializer.fromJson(tag.getString(DataKeys.POKEMON_NICKNAME), registryLookup) else null
-        form = if (tag.contains(DataKeys.POKEMON_FORM_ID)) tag.getString(DataKeys.POKEMON_FORM_ID) else null
         friendship = if (tag.contains(DataKeys.POKEMON_FRIENDSHIP)) tag.getInt(DataKeys.POKEMON_FRIENDSHIP) else null
         pokeball = if (tag.contains(DataKeys.POKEMON_CAUGHT_BALL)) tag.getString(DataKeys.POKEMON_CAUGHT_BALL) else null
         nature = if (tag.contains(DataKeys.POKEMON_NATURE)) tag.getString(DataKeys.POKEMON_NATURE) else null
@@ -586,7 +573,6 @@ open class PokemonProperties {
         gender?.let { json.addProperty(DataKeys.POKEMON_GENDER, it.name) }
         species?.let { json.addProperty(DataKeys.POKEMON_SPECIES_TEXT, it) }
         //nickname?.let { json.addProperty(DataKeys.POKEMON_NICKNAME, Text.Serialization.toJsonString(it)) }
-        form?.let { json.addProperty(DataKeys.POKEMON_FORM_ID, it) }
         friendship?.let { json.addProperty(DataKeys.POKEMON_FRIENDSHIP, it) }
         pokeball?.let { json.addProperty(DataKeys.POKEMON_CAUGHT_BALL, it) }
         nature?.let { json.addProperty(DataKeys.POKEMON_NATURE, it) }
@@ -616,7 +602,6 @@ open class PokemonProperties {
         gender = json.get(DataKeys.POKEMON_GENDER)?.asString?.let { Gender.valueOf(it) }
         species = json.get(DataKeys.POKEMON_SPECIES_TEXT)?.asString
         //nickname = json.get(DataKeys.POKEMON_NICKNAME)?.asString?.let { Text.Serialization.fromJson(it) }
-        form = json.get(DataKeys.POKEMON_FORM_ID)?.asString
         friendship = json.get(DataKeys.POKEMON_FRIENDSHIP)?.asInt
         pokeball = json.get(DataKeys.POKEMON_CAUGHT_BALL)?.asString
         nature = json.get(DataKeys.POKEMON_NATURE)?.asString
@@ -642,7 +627,6 @@ open class PokemonProperties {
         val pieces = mutableListOf<String>()
         species?.let { pieces.add(it) }
         nickname?.let { pieces.add("nickname=$${it.string}") }
-        form?.let { pieces.add("form=$it") }
         level?.let { pieces.add("level=$it") }
         shiny?.let { pieces.add("shiny=$it") }
         gender?.let { pieces.add("gender=$it")}
@@ -696,12 +680,12 @@ open class PokemonProperties {
      * Attempts to find an ability by ID and resolve if it should be forced or if it's legal for the given form.
      *
      * @param id The literal ID of the [Ability] being mapped.
-     * @param form The [FormData] whose [FormData.abilities] is queried for legality.
+     * @param species The [Species] whose [Species.abilities] is queried for legality.
      * @return The [Ability] with the [Ability.forced] state necessary for the given [form].
      */
-    private fun createAbility(id: String, form: FormData): Ability? {
+    private fun createAbility(id: String, species: Species): Ability? {
         val ability = Abilities.get(id.asIdentifierDefaultingNamespace()) ?: return null
-        val potentialAbility = form.abilities.firstOrNull { potential -> potential.template == ability } ?: return ability.create(true)
+        val potentialAbility = species.abilities.firstOrNull { potential -> potential.template == ability } ?: return ability.create(true)
         return potentialAbility.template.create(false)
     }
 

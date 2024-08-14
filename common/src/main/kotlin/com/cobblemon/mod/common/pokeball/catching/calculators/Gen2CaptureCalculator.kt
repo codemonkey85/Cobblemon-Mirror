@@ -42,7 +42,7 @@ class Gen2CaptureCalculator(val bugsFixed: Boolean) : CaptureCalculator {
         if (pokeBall.catchRateModifier.isGuaranteed()) {
             return CaptureContext.successful()
         }
-        val catchRate = getCatchRate(thrower, pokeBallEntity, target, pokemon.form.catchRate.toFloat())
+        val catchRate = getCatchRate(thrower, pokeBallEntity, target, pokemon.species.catchRate.toFloat())
         val modifiedRate = if (pokeBall.catchRateModifier.isValid(thrower, pokemon)) pokeBall.catchRateModifier.modifyCatchRate(catchRate, thrower, pokemon) else catchRate
         val status = pokemon.status?.status
         val bonusStatus = when {

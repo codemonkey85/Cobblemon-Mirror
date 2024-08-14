@@ -246,7 +246,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
                 aspects = aspects,
                 matrixStack = matrixStack,
                 scale = 18F * (ballState?.scale ?: 1F),
-                contextScale = species.getForm(aspects).baseScale,
+                contextScale = species.baseScale,
                 repository = PokemonModelRepository,
                 reversed = reversed,
                 state = state,

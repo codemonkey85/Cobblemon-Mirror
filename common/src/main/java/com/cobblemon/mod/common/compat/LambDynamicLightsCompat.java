@@ -8,16 +8,14 @@
 
 package com.cobblemon.mod.common.compat;
 
-import com.cobblemon.mod.common.CobblemonEntities;
 import com.cobblemon.mod.common.client.render.layer.PokemonOnShoulderRenderer;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
-import com.cobblemon.mod.common.pokemon.FormData;
+import com.cobblemon.mod.common.pokemon.Species;
 import com.cobblemon.mod.common.pokemon.lighthing.LightingData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 
 // Java class due to relying on entrypoint on Fabric side
@@ -62,7 +60,7 @@ public class LambDynamicLightsCompat {
     }
 
     private static int resolvedPokemonLightLevel(PokemonEntity pokemon, boolean underwater) {
-        return extractFormLightLevel(pokemon.getForm(), underwater).orElse(0);
+        return extractFormLightLevel(pokemon.getExposedSpecies(), underwater).orElse(0);
     }
 
     private static int resolvedShoulderLightLevel(Player player, boolean underwater) {
@@ -72,18 +70,18 @@ public class LambDynamicLightsCompat {
         return Math.max(leftLightLevel.orElse(0), rightLightLevel.orElse(0));
     }
 
-    private static Optional<Integer> extractFormLightLevel(@NotNull FormData form, boolean underwater) {
-        if (form.getLightingData() == null || !liquidGlowModeSupport(form.getLightingData().getLiquidGlowMode(), underwater)) {
+    private static Optional<Integer> extractFormLightLevel(@NotNull Species species, boolean underwater) {
+        if (species.getLightingData() == null || !liquidGlowModeSupport(species.getLightingData().getLiquidGlowMode(), underwater)) {
             return Optional.empty();
         }
-        return Optional.of(form.getLightingData().getLightLevel());
+        return Optional.of(species.getLightingData().getLightLevel());
     }
 
     private static Optional<Integer> extractShoulderLightLevel(@Nullable PokemonOnShoulderRenderer.ShoulderData shoulderData, boolean underwater) {
         if (shoulderData == null) {
             return Optional.empty();
         }
-        return extractFormLightLevel(shoulderData.getForm(), underwater);
+        return extractFormLightLevel(shoulderData.getSpecies(), underwater);
     }
 
     private static boolean liquidGlowModeSupport(@NotNull LightingData.LiquidGlowMode liquidGlowMode, boolean underwater) {

@@ -14,7 +14,6 @@ import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.util.DataKeys
@@ -106,8 +105,8 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
             val model = PokemonModelRepository.getPoser(shoulderData.species.resourceIdentifier, shoulderData.aspects)
             context.put(RenderContext.SPECIES, shoulderData.species.resourceIdentifier)
             context.put(RenderContext.ASPECTS, shoulderData.aspects)
-            val scale = shoulderData.form.baseScale * shoulderData.scaleModifier
-            val width = shoulderData.form.hitbox.width
+            val scale = shoulderData.species.baseScale * shoulderData.scaleModifier
+            val width = shoulderData.species.hitbox.width
             val heightOffset = -1.5 * scale
             val widthOffset = width / 2 - 0.7
             // If they're sneaking, the pokemon needs to rotate a little bit and push forward
@@ -172,15 +171,13 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
         if (!shoulderNbt.contains(DataKeys.SHOULDER_SPECIES)) {
             return Pokemon.CLIENT_CODEC.decode(NbtOps.INSTANCE, shoulderNbt.getCompound(DataKeys.POKEMON))
                 .map { it.first }
-                .mapOrElse({ ShoulderData(pokemonUUID, it.species, it.form, it.aspects, it.scaleModifier) }, { null })
+                .mapOrElse({ ShoulderData(pokemonUUID, it.species, it.aspects, it.scaleModifier) }, { null })
         }
         val species = PokemonSpecies.getByIdentifier(ResourceLocation.parse(shoulderNbt.getString(DataKeys.SHOULDER_SPECIES)))
             ?: return null
-        val formName = shoulderNbt.getString(DataKeys.SHOULDER_FORM)
-        val form = species.forms.firstOrNull { it.name == formName } ?: species.standardForm
         val aspects = shoulderNbt.getList(DataKeys.SHOULDER_ASPECTS, Tag.TAG_STRING.toInt()).map { it.asString }.toSet()
         val scaleModifier = shoulderNbt.getFloat(DataKeys.SHOULDER_SCALE_MODIFIER)
-        return ShoulderData(pokemonUUID, species, form, aspects, scaleModifier)
+        return ShoulderData(pokemonUUID, species, aspects, scaleModifier)
     }
 
     private data class ShoulderCache(
@@ -191,7 +188,6 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
     data class ShoulderData(
         val uuid: UUID,
         val species: Species,
-        val form: FormData,
         val aspects: Set<String>,
         val scaleModifier: Float
     )

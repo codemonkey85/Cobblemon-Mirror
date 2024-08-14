@@ -208,7 +208,7 @@ class ShoulderedState() : ActivePokemonState() {
 
     private fun removeShoulderEffects(player: ServerPlayer) {
         val partyPokemon = player.party().find { pokemon -> pokemon.uuid == this.pokemonUUID }
-        partyPokemon?.form?.shoulderEffects?.forEach { effect -> effect.removeEffect(partyPokemon, player, isLeftShoulder) }
+        partyPokemon?.species?.shoulderEffects?.forEach { effect -> effect.removeEffect(partyPokemon, player, isLeftShoulder) }
     }
 
     private fun isShoulderedPokemon(nbt: CompoundTag): Boolean = nbt.isPokemonEntity()

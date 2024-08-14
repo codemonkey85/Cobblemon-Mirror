@@ -159,7 +159,7 @@ class PartyOverlay : Gui(Minecraft.getInstance()) {
                     aspects = pokemon.aspects,
                     matrixStack = matrices,
                     partialTicks = 0F, // partialDeltaTicks, //Before you get any funny ideas about party animated pokemon, make sure they each get their own state instead of sharing.
-                    contextScale = pokemon.form.baseScale,
+                    contextScale = pokemon.species.baseScale,
                     repository = PokemonModelRepository,
                     state = state
                 )

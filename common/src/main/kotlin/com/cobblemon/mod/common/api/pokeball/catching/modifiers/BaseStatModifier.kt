@@ -42,7 +42,7 @@ class BaseStatModifier(
 
     override fun behavior(thrower: LivingEntity, pokemon: Pokemon): CatchRateModifier.Behavior = CatchRateModifier.Behavior.MULTIPLY
 
-    override fun isValid(thrower: LivingEntity, pokemon: Pokemon): Boolean = pokemon.form.baseStats[this.stat] != null
+    override fun isValid(thrower: LivingEntity, pokemon: Pokemon): Boolean = pokemon.species.baseStats[this.stat] != null
 
     override fun modifyCatchRate(currentCatchRate: Float, thrower: LivingEntity, pokemon: Pokemon): Float = this.behavior(thrower, pokemon).mutator(currentCatchRate, this.value(thrower, pokemon))
 

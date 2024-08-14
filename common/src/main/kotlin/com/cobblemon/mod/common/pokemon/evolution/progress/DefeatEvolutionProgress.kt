@@ -44,7 +44,7 @@ class DefeatEvolutionProgress : EvolutionProgress<DefeatEvolutionProgress.Progre
     }
 
     override fun shouldKeep(pokemon: Pokemon): Boolean {
-        return pokemon.form.evolutions.any { evolution ->
+        return pokemon.species.evolutions.any { evolution ->
             evolution.requirements.any { requirement ->
                 requirement is DefeatRequirement && requirement.target.originalString.equals(this.progress.target.originalString, true)
             }

@@ -20,7 +20,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf
  * @since August 1st, 2022
  */
 data class RenderablePokemon(var species: Species, var aspects: Set<String>) {
-    val form: FormData by lazy { species.getForm(aspects) }
 
     fun saveToBuffer(buffer: RegistryFriendlyByteBuf): RegistryFriendlyByteBuf {
         buffer.writeIdentifier(species.resourceIdentifier)

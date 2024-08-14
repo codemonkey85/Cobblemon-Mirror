@@ -402,7 +402,7 @@ object TestCommand {
         val pokemon = context.source.playerOrException.party().get(0) ?: Pokemon()
         pokemon.nickname = pokemon.species.translatedName
             .withStyle {
-                it.withColor(ElementalTypeDisplays.displayOf(pokemon.form.primaryType).tint.rgba)
+                it.withColor(ElementalTypeDisplays.displayOf(pokemon.species.primaryType).tint.rgba)
                     .withBold(true)
             }
         val jsonElement = Pokemon.CODEC.encodeStart(JsonOps.INSTANCE, pokemon).orThrow

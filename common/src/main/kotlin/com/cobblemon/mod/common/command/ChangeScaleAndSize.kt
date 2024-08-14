@@ -10,7 +10,6 @@ package com.cobblemon.mod.common.command
 
 import com.cobblemon.mod.common.api.permission.CobblemonPermissions
 import com.cobblemon.mod.common.command.argument.PokemonArgumentType
-import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.util.permission
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
@@ -45,8 +44,6 @@ object ChangeScaleAndSize {
 
         pkm.baseScale = scale
         pkm.hitbox = EntityDimensions.scalable(width, height)
-        pkm.forms.clear()
-        pkm.forms.add(FormData().also { it.initialize(pkm) })
         return Command.SINGLE_SUCCESS
     }
 }

@@ -294,7 +294,7 @@ class StatWidget(
                 maximum = 400
             )
             BASE -> drawStatHexagon(
-                pokemon.form.baseStats,
+                pokemon.species.baseStats,
                 colour = Vector3f(1F, 107F/255, 50F/255),
                 maximum = 200
             )
@@ -440,7 +440,7 @@ class StatWidget(
     private fun getStatValueAsText(stat: Stat): MutableComponent {
         val value = when(statTabIndex) {
             STATS -> if (stat == Stats.HP) "${pokemon.currentHealth} / ${pokemon.hp}" else pokemon.getStat(stat).toString()
-            BASE -> pokemon.form.baseStats[stat].toString()
+            BASE -> pokemon.species.baseStats[stat].toString()
             IV -> pokemon.ivs.getOrDefault(stat).toString()
             EV -> pokemon.evs.getOrDefault(stat).toString()
             else -> "0"

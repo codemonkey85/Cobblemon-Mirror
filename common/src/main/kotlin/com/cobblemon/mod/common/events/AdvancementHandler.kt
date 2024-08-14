@@ -64,7 +64,7 @@ object AdvancementHandler {
                 Cobblemon.playerData.saveSingle(playerData)
                 CobblemonCriteria.EVOLVE_POKEMON.trigger(
                     player, EvolvePokemonContext(
-                        event.pokemon.preEvolution!!.species.resourceIdentifier,
+                        event.pokemon.preEvolution!!.unwrapKey().get().location(),
                         event.pokemon.species.resourceIdentifier,
                         advancementData.totalEvolvedCount
                     )

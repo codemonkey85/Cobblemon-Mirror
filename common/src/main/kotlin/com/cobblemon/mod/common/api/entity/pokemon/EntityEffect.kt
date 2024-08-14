@@ -13,7 +13,6 @@ import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.entity.pokemon.effects.IllusionEffect
 import com.cobblemon.mod.common.entity.pokemon.effects.TransformEffect
-import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.util.DataKeys
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
@@ -90,9 +89,4 @@ interface MocKEffect : PhysicalEffect {
 
     val exposedSpecies: Species?
         get() = this.mock.species?.let { PokemonSpecies.getByIdentifier(it.asIdentifierDefaultingNamespace()) }
-
-    val exposedForm: FormData?
-        get() = this.mock.form?.let {
-            formID -> this.exposedSpecies?.forms?.firstOrNull { it.formOnlyShowdownId().equals(formID, true) } }
-                ?: this.exposedSpecies?.standardForm
 }

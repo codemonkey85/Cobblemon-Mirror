@@ -18,7 +18,6 @@ import com.cobblemon.mod.common.client.gui.summary.SummaryButton
 import com.cobblemon.mod.common.client.gui.summary.widgets.common.SummaryScrollList
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
-import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
@@ -64,7 +63,6 @@ class EvolutionSelectScreen(
     class EvolveSlot(private val pokemon: Pokemon, private val evolution: EvolutionDisplay) : Entry<EvolveSlot>() {
         val client: Minecraft = Minecraft.getInstance()
         val state = FloatingState()
-        val form: FormData = evolution.species.getForm(evolution.aspects)
         val selectButton: SummaryButton = SummaryButton(
             buttonX = 0F,
             buttonY = 0F,
@@ -121,8 +119,8 @@ class EvolutionSelectScreen(
             TypeIcon(
                 x = x + 12,
                 y = y + 13.5,
-                type = form.primaryType,
-                secondaryType = form.secondaryType,
+                type = evolution.species.primaryType,
+                secondaryType = evolution.species.secondaryType,
                 doubleCenteredOffset = 5F,
                 secondaryOffset = 9.5F,
                 small = true,

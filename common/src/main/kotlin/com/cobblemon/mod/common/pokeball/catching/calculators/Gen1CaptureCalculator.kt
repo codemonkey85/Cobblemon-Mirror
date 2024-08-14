@@ -63,7 +63,7 @@ object Gen1CaptureCalculator : CaptureCalculator {
             usedThreshold = PARA_BRN_PSN_THRESHOLD
             return CaptureContext.successful()
         }
-        if (n - usedThreshold > pokemon.form.catchRate) {
+        if (n - usedThreshold > pokemon.species.catchRate) {
             return CaptureContext(numberOfShakes = 0, isSuccessfulCapture = false, isCriticalCapture = false)
         }
         val m = Random.nextInt(256)
@@ -75,7 +75,7 @@ object Gen1CaptureCalculator : CaptureCalculator {
         if (f >= m) {
             return CaptureContext.successful()
         }
-        return CaptureContext(numberOfShakes = this.calculateShakes(pokemon, getCatchRate(thrower, pokeBallEntity, target, pokemon.form.catchRate.toFloat()), nBound, f), isSuccessfulCapture = false, isCriticalCapture = false)
+        return CaptureContext(numberOfShakes = this.calculateShakes(pokemon, getCatchRate(thrower, pokeBallEntity, target, pokemon.species.catchRate.toFloat()), nBound, f), isSuccessfulCapture = false, isCriticalCapture = false)
     }
 
     private fun calculateShakes(pokemon: Pokemon, catchRate: Float, ballValue: Int, f: Int): Int {

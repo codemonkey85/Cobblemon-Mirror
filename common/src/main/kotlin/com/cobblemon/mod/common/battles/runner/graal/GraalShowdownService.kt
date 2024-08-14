@@ -159,12 +159,7 @@ class GraalShowdownService : ShowdownService {
         val jsArray = this.context.eval("js", "new Array();")
         var index = 0L
         PokemonSpecies.species.forEach { species ->
-            jsArray.setArrayElement(index++, this.gson.toJson(PokemonSpecies.ShowdownSpecies(species, null)))
-            species.forms.forEach { form ->
-                if (form != species.standardForm) {
-                    jsArray.setArrayElement(index++, this.gson.toJson(PokemonSpecies.ShowdownSpecies(species, form)))
-                }
-            }
+            jsArray.setArrayElement(index++, this.gson.toJson(PokemonSpecies.ShowdownSpecies(species)))
         }
         receiveSpeciesDataFn.execute(jsArray)
     }

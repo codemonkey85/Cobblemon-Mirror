@@ -214,7 +214,7 @@ class StarterSelectionScreen(private val categories: List<RenderableStarterCateg
             width = BASE_WIDTH, height = BASE_HEIGHT
         )
         // Render Frame
-        val (r, g, b) = ElementalTypeDisplays.displayOf(currentPokemon.form.primaryType).tint.rgba.toRGB()
+        val (r, g, b) = ElementalTypeDisplays.displayOf(currentPokemon.species.primaryType).tint.rgba.toRGB()
         blitk(
             matrixStack = matrices,
             texture = baseFrame,
@@ -257,7 +257,7 @@ class StarterSelectionScreen(private val categories: List<RenderableStarterCateg
 
         // TODO use all pokedex lines across multiple clickable pages in this screen
         MultiLineLabelK.create(
-            component = currentPokemon.form.pokedex.first().asTranslated(),
+            component = currentPokemon.species.pokedex.first().asTranslated(),
             width = 127,
             maxLines = 4
         ).renderLeftAligned(
@@ -271,9 +271,9 @@ class StarterSelectionScreen(private val categories: List<RenderableStarterCateg
         // Render the type background
         blitk(
             matrixStack = matrices,
-            texture = currentPokemon.form.secondaryType?.let { doubleTypeBackground } ?: singleTypeBackground,
-            x = (currentPokemon.form.secondaryType?.let { x + 76.75 } ?: (x + 85.25)), y = y + 29.4,
-            width = currentPokemon.form.secondaryType?.let { 35.25 } ?: 19, height = 19.25
+            texture = currentPokemon.species.secondaryType?.let { doubleTypeBackground } ?: singleTypeBackground,
+            x = (currentPokemon.species.secondaryType?.let { x + 76.75 } ?: (x + 85.25)), y = y + 29.4,
+            width = currentPokemon.species.secondaryType?.let { 35.25 } ?: 19, height = 19.25
         )
         // Render the type widget
         typeWidget.render(context, mouseX, mouseY, delta)
@@ -314,17 +314,17 @@ class StarterSelectionScreen(private val categories: List<RenderableStarterCateg
     }
 
     private fun typeWidget(pokemon: RenderablePokemon, x: Int, y: Int) : TypeWidget {
-        return pokemon.form.secondaryType?.let {
+        return pokemon.species.secondaryType?.let {
             DualTypeWidget(
                 pX = x + 77, pY = y + 30,
                 pWidth = 18, pHeight = 18,
                 pMessage = Component.literal("What?"),
-                mainType = pokemon.form.primaryType, secondaryType = it
+                mainType = pokemon.species.primaryType, secondaryType = it
             )
         } ?: SingleTypeWidget(
             pX = x + 85, pY = y + 30,
             pWidth = 18, pHeight = 18,
-            type = pokemon.form.primaryType,
+            type = pokemon.species.primaryType,
             renderText = false
         )
     }

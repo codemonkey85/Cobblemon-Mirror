@@ -54,7 +54,7 @@ object TeachCommand {
         val pokemon = PartySlotArgumentType.getPokemonOf(context, SLOT, player)
         val move = ResourceArgument.getResource(context, MOVE, CobblemonRegistries.MOVE_KEY).value()
 
-        if (!Cobblemon.permissionValidator.hasPermission(context.source, CobblemonPermissions.TEACH_BYPASS_LEARNSET) && !LearnsetQuery.ANY.canLearn(move, pokemon.form.moves)) {
+        if (!Cobblemon.permissionValidator.hasPermission(context.source, CobblemonPermissions.TEACH_BYPASS_LEARNSET) && !LearnsetQuery.ANY.canLearn(move, pokemon.species.moves)) {
             throw CANT_LEARN_EXCEPTION.create(pokemon.getDisplayName(), move.displayName)
         }
 

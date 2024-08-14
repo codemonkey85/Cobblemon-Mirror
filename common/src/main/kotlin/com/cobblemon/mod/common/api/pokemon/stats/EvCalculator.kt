@@ -67,7 +67,7 @@ object Generation8EvCalculator : EvCalculator {
         val heldItem = battlePokemon.effectedPokemon.heldItemNoCopy()
         val evYield = mutableMapOf<Stat, Int>()
 
-        for ((stat, value) in opponentPokemon.originalPokemon.form.evYield) {
+        for ((stat, value) in opponentPokemon.originalPokemon.species.evYield) {
             val boost = if (!heldItem.isEmpty && heldItem.`is`(powerItems[stat])) 8 else 0
             evYield[stat] = evYield.getOrDefault(stat, 0) + value + boost
         }

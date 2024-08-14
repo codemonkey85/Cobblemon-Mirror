@@ -47,7 +47,7 @@ object QueryLearnsetCommand {
         val player = context.player(PLAYER)
         val pokemon = PartySlotArgumentType.getPokemonOf(context, SLOT, player)
         val move = ResourceArgument.getResource(context, MOVE, CobblemonRegistries.MOVE_KEY)
-        return if (LearnsetQuery.ANY.canLearn(move.value(), pokemon.form.moves)) Command.SINGLE_SUCCESS else NO_SUCCESS
+        return if (LearnsetQuery.ANY.canLearn(move.value(), pokemon.species.moves)) Command.SINGLE_SUCCESS else NO_SUCCESS
     }
 
 }

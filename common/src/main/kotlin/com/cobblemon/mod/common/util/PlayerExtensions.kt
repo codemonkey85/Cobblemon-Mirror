@@ -323,9 +323,9 @@ fun ServerPlayer.raycastSafeSendout(pokemon: Pokemon, maxDistance: Double, dropH
     } else if (result.direction != Direction.UP) {
         // If the player targets the side or bottom of a block, try to find a valid spot in front of / below that block
         val offset: Double = if (result.direction == Direction.DOWN) {
-            0.125 + pokemon.form.hitbox.height*pokemon.form.baseScale*0.5
+            0.125 + pokemon.species.hitbox.height*pokemon.species.baseScale*0.5
         } else {
-            0.125 + pokemon.form.hitbox.width*pokemon.form.baseScale*0.5
+            0.125 + pokemon.species.hitbox.width*pokemon.species.baseScale*0.5
         }
 
         val posOffset = result.location.relative(result.direction, offset)

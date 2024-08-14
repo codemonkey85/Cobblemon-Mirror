@@ -49,7 +49,7 @@ class PokemonServerDelegate : PokemonSideDelegate {
     }
 
     fun updatePathfindingPenalties(pokemon: Pokemon) {
-        val moving = pokemon.form.behaviour.moving
+        val moving = pokemon.species.behaviour.moving
         entity.setPathfindingMalus(PathType.LAVA, if (moving.swim.canSwimInLava) 12F else -1F)
         entity.setPathfindingMalus(PathType.WATER, if (moving.swim.canSwimInWater) 12F else -1F)
         entity.setPathfindingMalus(PathType.WATER_BORDER, if (moving.swim.canSwimInWater) 6F else -1F)
@@ -73,7 +73,7 @@ class PokemonServerDelegate : PokemonSideDelegate {
     fun updateMaxHealth() {
         val currentHealthRatio = entity.health.toDouble() / entity.maxHealth
         // Why you would remove HP is beyond me but protects us from obscure crash due to crappy addon
-        acknowledgedHPStat = entity.form.baseStats[Stats.HP] ?: return
+        acknowledgedHPStat = entity.pokemon.species.baseStats[Stats.HP] ?: return
 
         val minStat = 50 // Metapod's base HP
         val maxStat = 150 // Slaking's base HP
@@ -169,7 +169,7 @@ class PokemonServerDelegate : PokemonSideDelegate {
             }
         }
 
-        if (entity.form.baseStats[Stats.HP] != acknowledgedHPStat) {
+        if (entity.pokemon.species.baseStats[Stats.HP] != acknowledgedHPStat) {
             updateMaxHealth()
         }
 
@@ -248,7 +248,7 @@ class PokemonServerDelegate : PokemonSideDelegate {
             if (entity.owner == null) {
                 entity.level().broadcastEntityEvent(entity, 60.toByte()) // Sends smoke effect
                 if(entity.level().gameRules.getBoolean(CobblemonGameRules.DO_POKEMON_LOOT)) {
-                    (entity.drops ?: entity.pokemon.form.drops).drop(entity, entity.level() as ServerLevel, entity.position(), entity.killer)
+                    (entity.drops ?: entity.pokemon.species.drops).drop(entity, entity.level() as ServerLevel, entity.position(), entity.killer)
                 }
             }
 

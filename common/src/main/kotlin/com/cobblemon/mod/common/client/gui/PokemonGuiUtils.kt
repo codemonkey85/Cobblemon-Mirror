@@ -57,7 +57,7 @@ fun drawProfilePokemon(
     val context = RenderContext()
     model.context = context
     PokemonModelRepository.getTextureNoSubstitute(species, aspects, 0f).let { context.put(RenderContext.TEXTURE, it) }
-    context.put(RenderContext.SCALE, PokemonSpecies.getByIdentifier(species)!!.getForm(aspects).baseScale)
+    context.put(RenderContext.SCALE, PokemonSpecies.getByIdentifier(species)!!.baseScale)
     context.put(RenderContext.SPECIES, species)
     context.put(RenderContext.ASPECTS, aspects)
     context.put(RenderContext.RENDER_STATE, RenderContext.RenderState.PROFILE)

@@ -153,23 +153,6 @@ open class Pokemon : ShowdownIdentifiable {
             _species.emit(value)
         }
 
-    var form = species.standardForm
-        set(value) {
-            val old = field
-            // Species updates already update HP but just a form change may require it
-            // Moved to before the field was set else it won't actually do the hp calc proper <3
-            val quotient = clamp(currentHealth / hp.toFloat(), 0F, 1F)
-            field = value
-            this.sanitizeFormChangeMoves(old)
-            // Evo proxy is already cleared on species update but the form may be changed by itself, this is fine and no unnecessary packets will be sent out
-            this.evolutionProxy.current().clear()
-            findAndLearnFormChangeMoves()
-            checkGender()
-            updateHP(quotient)
-            this.attemptAbilityUpdate()
-            _form.emit(value)
-        }
-
     // Floating Platform for surface water battles
     var battleSurface: Boat? = null
 
@@ -279,7 +262,7 @@ open class Pokemon : ShowdownIdentifiable {
      * Use [setFriendship], [incrementFriendship] and [decrementFriendship] for safe mutation with return feedback.
      * See this [page](https://bulbapedia.bulbagarden.net/wiki/Friendship) for more information.
      */
-    var friendship = this.form.baseFriendship
+    var friendship = this.species.baseFriendship
         private set(value) {
             // Don't check on client, that way we don't need to actually sync the config value it doesn't affect anything
             if (!this.isClient || !this.isPossibleFriendship(value)) {
@@ -301,13 +284,13 @@ open class Pokemon : ShowdownIdentifiable {
         get() = state.let { if (it is ActivePokemonState) it.entity else null }
 
     val primaryType: ElementalType
-        get() = form.primaryType
+        get() = species.primaryType
 
     val secondaryType: ElementalType?
-        get() = form.secondaryType
+        get() = species.secondaryType
 
     val types: Iterable<ElementalType>
-        get() = form.types
+        get() = species.types
 
     var teraType: ElementalType = this.primaryType
         set(value) {
@@ -327,7 +310,7 @@ open class Pokemon : ShowdownIdentifiable {
      */
     var gmaxFactor = false
         set(value) {
-            val evolutions = species.standardForm.evolutions.mapNotNull { it.result.species }.mapNotNull { PokemonSpecies.getByName(it) }
+            val evolutions = species.evolutions.mapNotNull { it.result.species }.mapNotNull { PokemonSpecies.getByName(it) }
             if (species.canGmax() || evolutions.find { it.canGmax() } != null) {
                 field = value
                 _gmaxFactor.emit(value)
@@ -358,7 +341,7 @@ open class Pokemon : ShowdownIdentifiable {
         internal set
 
     val experienceGroup: ExperienceGroup
-        get() = form.experienceGroup
+        get() = species.experienceGroup
 
     var faintedTimer: Int = -1
         set(value) {
@@ -475,11 +458,11 @@ open class Pokemon : ShowdownIdentifiable {
     val storeCoordinates = SettableObservable<StoreCoordinates<*>?>(null)
 
     // We want non-optional evolutions to trigger first to avoid unnecessary packets and any cost associate with an optional one that would just be lost
-    val evolutions: Iterable<Evolution> get() = this.form.evolutions.sortedBy { evolution -> evolution.optional }
+    val evolutions: Iterable<Evolution> get() = this.species.evolutions.sortedBy { evolution -> evolution.optional }
     val lockedEvolutions: Iterable<Evolution>
         get() = evolutions.filter { it !in evolutionProxy.current() }
 
-    val preEvolution: Holder<Species>? get() = this.form.preEvolution
+    val preEvolution: Holder<Species>? get() = this.species.preEvolution
 
     /**
      * Provides the sided [EvolutionController]s, these operations can be done safely with a simple side check.
@@ -515,12 +498,7 @@ open class Pokemon : ShowdownIdentifiable {
      *
      * @return The literal Showdown ID of this Pokémon.
      */
-    override fun showdownId(): String {
-        if (this.form == this.species.standardForm) {
-            return this.species.showdownId()
-        }
-        return this.form.showdownId()
-    }
+    override fun showdownId(): String = this.species.showdownId()
 
     fun sendOut(level: ServerLevel, position: Vec3, illusion: IllusionEffect?, mutation: (PokemonEntity) -> Unit = {}): PokemonEntity? {
         CobblemonEvents.POKEMON_SENT_PRE.postThen(PokemonSentPreEvent(this, level, position)) {
@@ -635,10 +613,10 @@ open class Pokemon : ShowdownIdentifiable {
 
         // get the current position of the cobblemon on the players shoulder
         val isLeftShoulder = (state as ShoulderedState).isLeftShoulder
-        val arbitraryXOffset = player.bbWidth * 0.3 + this.form.hitbox.width * 0.3
+        val arbitraryXOffset = player.bbWidth * 0.3 + this.species.hitbox.width * 0.3
         val shoulderHorizontalOffset = if (isLeftShoulder) arbitraryXOffset else -arbitraryXOffset
         val rotation = player.yRot
-        val approxShoulderMonHight = player.bbHeight.toDouble() - this.form.hitbox.height * 0.4
+        val approxShoulderMonHight = player.bbHeight.toDouble() - this.species.hitbox.height * 0.4
         val rotatedOffset = Vec3(
             shoulderHorizontalOffset,
             approxShoulderMonHight,
@@ -729,7 +707,7 @@ open class Pokemon : ShowdownIdentifiable {
     }
 
     fun isFireImmune(): Boolean {
-        return this.types.any { it.isTaggedBy(CobblemonElementalTypeTags.FIRE_IMMUNE) } || !form.behaviour.moving.swim.hurtByLava
+        return this.types.any { it.isTaggedBy(CobblemonElementalTypeTags.FIRE_IMMUNE) } || !species.behaviour.moving.swim.hurtByLava
     }
 
     fun isPositionSafe(world: Level, pos: Vec3): Boolean {
@@ -910,7 +888,6 @@ open class Pokemon : ShowdownIdentifiable {
         // This is done beforehand so the ability is legalized by species/form change
         this.ability = other.ability
         this.species = other.species
-        this.form = other.form
         this.nickname = other.nickname
         this.level = other.level
         this.experience = other.experience
@@ -1096,7 +1073,7 @@ open class Pokemon : ShowdownIdentifiable {
     }
 
     val allAccessibleMoves: Set<MoveTemplate>
-        get() = form.moves.getLevelUpMovesUpTo(level) + benchedMoves.map { it.moveTemplate } + form.moves.evolutionMoves
+        get() = species.moves.getLevelUpMovesUpTo(level) + benchedMoves.map { it.moveTemplate } + this.species.moves.evolutionMoves
 
     fun updateAspects() {
         aspects = emptySet()
@@ -1111,11 +1088,7 @@ open class Pokemon : ShowdownIdentifiable {
     }
 
     fun updateForm() {
-        val newForm = species.getForm(aspects)
-        if (form != newForm) {
-            // Form updated!
-            form = newForm
-        }
+        TODO("Rework me")
     }
 
     fun initialize(): Pokemon {
@@ -1137,20 +1110,20 @@ open class Pokemon : ShowdownIdentifiable {
 
     fun checkGender() {
         var reassess = false
-        if (form.maleRatio !in 0F..1F && gender != Gender.GENDERLESS) {
+        if (species.maleRatio !in 0F..1F && gender != Gender.GENDERLESS) {
             reassess = true
-        } else if (form.maleRatio == 0F && gender != Gender.FEMALE) {
+        } else if (species.maleRatio == 0F && gender != Gender.FEMALE) {
             reassess = true
-        } else if (form.maleRatio == 1F && gender != Gender.MALE) {
+        } else if (species.maleRatio == 1F && gender != Gender.MALE) {
             reassess = true
-        } else if (form.maleRatio in 0F..1F && gender == Gender.GENDERLESS) {
+        } else if (species.maleRatio in 0F..1F && gender == Gender.GENDERLESS) {
             reassess = true
         }
 
         if (reassess) {
-            gender = if (form.maleRatio !in 0F..1F) {
+            gender = if (species.maleRatio !in 0F..1F) {
                 Gender.GENDERLESS
-            } else if (form.maleRatio == 1F || Random.nextFloat() <= form.maleRatio) {
+            } else if (species.maleRatio == 1F || Random.nextFloat() <= species.maleRatio) {
                 Gender.MALE
             } else {
                 Gender.FEMALE
@@ -1170,7 +1143,7 @@ open class Pokemon : ShowdownIdentifiable {
         if (this.isClient) {
             return this.ability
         }
-        val (ability, _) = this.form.abilities.select(this.species, this.aspects)
+        val (ability, _) = this.species.abilities.select(this.species, this.aspects)
         return this.updateAbility(ability.template.create(false))
     }
 
@@ -1207,7 +1180,7 @@ open class Pokemon : ShowdownIdentifiable {
             this.rollAbility()
             return
         }
-        val potentials = this.form.abilities.mapping[this.ability.priority]
+        val potentials = this.species.abilities.mapping[this.ability.priority]
         // Step 1 try to get the same exact index and priority
         var potential = potentials?.getOrNull(this.ability.index)
         // Step 2 Disclaimer I don't really know the best course of action here
@@ -1247,9 +1220,9 @@ open class Pokemon : ShowdownIdentifiable {
         if (this.isClient || ability.forced || ability.template == Abilities.DUMMY) {
             return ability
         }
-        val found = this.form.abilities.firstOrNull { potential -> potential.template == ability.template }
+        val found = this.species.abilities.firstOrNull { potential -> potential.template == ability.template }
             ?: return ability.apply { this.forced = true }
-        val index = this.form.abilities.mapping[found.priority]
+        val index = this.species.abilities.mapping[found.priority]
             ?.indexOf(found)
             ?.takeIf { it != -1 }
             ?: return ability.apply { this.forced = true }
@@ -1259,7 +1232,7 @@ open class Pokemon : ShowdownIdentifiable {
     }
 
     fun initializeMoveset(preferLatest: Boolean = true) {
-        val possibleMoves = form.moves.getLevelUpMovesUpTo(level).toMutableList()
+        val possibleMoves = this.species.moves.getLevelUpMovesUpTo(level).toMutableList()
         moveSet.doWithoutEmitting {
             moveSet.clear()
             if (possibleMoves.isEmpty()) {
@@ -1347,7 +1320,7 @@ open class Pokemon : ShowdownIdentifiable {
             return AddExperienceResult(level, level, emptySet(), 0) // no negatives!
         }
         val oldLevel = level
-        val previousLevelUpMoves = form.moves.getLevelUpMovesUpTo(oldLevel)
+        val previousLevelUpMoves = this.species.moves.getLevelUpMovesUpTo(oldLevel)
         var appliedXP = xp
         CobblemonEvents.EXPERIENCE_GAINED_EVENT_PRE.postThen(
             event = ExperienceGainedPreEvent(this, source, appliedXP),
@@ -1368,7 +1341,7 @@ open class Pokemon : ShowdownIdentifiable {
             level = newLevel
         }
 
-        val newLevelUpMoves = form.moves.getLevelUpMovesUpTo(newLevel)
+        val newLevelUpMoves = this.species.moves.getLevelUpMovesUpTo(newLevel)
         val differences = (newLevelUpMoves - previousLevelUpMoves).filter { this.moveSet.none { move -> move.template == it } }.toMutableSet()
         differences.forEach {
             if (moveSet.hasSpace()) {
@@ -1482,25 +1455,27 @@ open class Pokemon : ShowdownIdentifiable {
      */
     open fun self(): Pokemon = this
 
+    // TODO: Rework me
     private fun findAndLearnFormChangeMoves() {
-        this.form.moves.formChangeMoves.forEach { move ->
+        this.species.moves.formChangeMoves.forEach { move ->
             if (this.benchedMoves.none { it.moveTemplate == move }) {
                 this.benchedMoves.add(BenchedMove(move, 0))
             }
         }
     }
 
-    private fun sanitizeFormChangeMoves(old: FormData) {
+    // TODO: Rework me
+    private fun sanitizeFormChangeMoves(old: Species) {
         for (i in 0 until MoveSet.MOVE_COUNT) {
             val move = this.moveSet[i]
-            if (move != null && LearnsetQuery.FORM_CHANGE.canLearn(move.template, old.moves) && !LearnsetQuery.ANY.canLearn(move.template, this.form.moves)) {
+            if (move != null && LearnsetQuery.FORM_CHANGE.canLearn(move.template, old.moves) && !LearnsetQuery.ANY.canLearn(move.template, this.species.moves)) {
                 this.moveSet.setMove(i, null)
             }
         }
         val benchedIterator = this.benchedMoves.iterator()
         while (benchedIterator.hasNext()) {
             val benchedMove = benchedIterator.next()
-            if (LearnsetQuery.FORM_CHANGE.canLearn(benchedMove.moveTemplate, old.moves) && !LearnsetQuery.ANY.canLearn(benchedMove.moveTemplate, this.form.moves)) {
+            if (LearnsetQuery.FORM_CHANGE.canLearn(benchedMove.moveTemplate, old.moves) && !LearnsetQuery.ANY.canLearn(benchedMove.moveTemplate, this.species.moves)) {
                 benchedIterator.remove()
             }
         }
@@ -1514,7 +1489,6 @@ open class Pokemon : ShowdownIdentifiable {
         }
     }
 
-    private val _form = registerObservable(SimpleObservable<FormData>()) { FormUpdatePacket({ this }, it) }
     private val _species = registerObservable(SimpleObservable<Species>()) { SpeciesUpdatePacket({ this }, it) }
     private val _nickname = registerObservable(SimpleObservable<MutableComponent?>()) { NicknameUpdatePacket({ this }, it) }
     private val _experience = registerObservable(SimpleObservable<Int>()) { ExperienceUpdatePacket({ this }, it) }

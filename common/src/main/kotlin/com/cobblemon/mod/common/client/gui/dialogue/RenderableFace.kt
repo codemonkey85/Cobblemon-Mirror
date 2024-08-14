@@ -83,7 +83,7 @@ class ReferenceRenderableFace(val entity: PosableEntity): RenderableFace {
                 identifier = state.currentEntity.pokemon.species.resourceIdentifier,
                 aspects = state.currentEntity.pokemon.aspects,
                 repository = PokemonModelRepository,
-                contextScale = state.currentEntity.pokemon.form.baseScale,
+                contextScale = state.currentEntity.pokemon.species.baseScale,
                 matrixStack = drawContext.pose(),
                 state = state,
                 partialTicks = 0F // It's already being rendered potentially so we don't need to tick the state.
@@ -127,7 +127,7 @@ class ArtificialRenderableFace(
                 identifier = species.resourceIdentifier,
                 aspects = aspects,
                 matrixStack = drawContext.pose(),
-                contextScale = species.getForm(aspects).baseScale,
+                contextScale = species.baseScale,
                 state = state,
                 repository = PokemonModelRepository,
                 partialTicks = partialTicks

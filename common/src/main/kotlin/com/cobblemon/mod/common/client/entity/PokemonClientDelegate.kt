@@ -269,9 +269,6 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
             "shiny" to java.util.function.Function {
                 return@Function DoubleValue(currentEntity.pokemon.shiny)
             },
-            "form" to java.util.function.Function {
-                return@Function StringValue(currentEntity.pokemon.form.name)
-            },
             "width" to java.util.function.Function {
                 return@Function DoubleValue(currentEntity.boundingBox.xsize)
             },

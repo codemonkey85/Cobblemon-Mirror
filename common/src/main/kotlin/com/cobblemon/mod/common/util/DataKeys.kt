@@ -146,7 +146,6 @@ object DataKeys {
     // Shoulder Mount
     const val SHOULDER_UUID = "shoulder_uuid"
     const val SHOULDER_SPECIES = "shoulder_species"
-    const val SHOULDER_FORM = "shoulder_form"
     const val SHOULDER_ASPECTS = "shoulder_aspects"
     const val SHOULDER_SCALE_MODIFIER = "shoulder_scale"
 

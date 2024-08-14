@@ -79,11 +79,11 @@ class Species(
 
     var name: String = "Bulbasaur"
     val translatedName: MutableComponent
-        get() = Component.translatable("${this.resourceIdentifier.namespace}.species.${this.unformattedShowdownId()}.name")
+        get() = Component.translatable("${this.resourceIdentifier.namespace}.species.${this.resourceIdentifier.path.replace("/", ".")}.name")
     var nationalPokedexNumber: Int = nationalPokedexNumber
         private set
 
-    var baseStats = baseStats
+    var baseStats = baseStats.toMutableMap()
         private set
     /** The ratio of the species being male. If -1, the Pokémon is genderless. */
     var maleRatio = maleRatio
@@ -92,7 +92,6 @@ class Species(
         private set
     // Only modifiable for debugging sizes
     var baseScale = baseScale
-        private set
     var baseExperienceYield = baseExperienceYield
         private set
     var baseFriendship = baseFriendship
@@ -102,7 +101,6 @@ class Species(
     var experienceGroup = experienceGroup
         private set
     var hitbox = hitbox
-        private set
     var primaryType: ElementalType = primaryType
         internal set
     var secondaryType: ElementalType? = secondaryType.getOrNull()
@@ -200,8 +198,6 @@ class Species(
 
     fun create(level: Int = 10) = PokemonProperties.parse("species=\"${this.name}\" level=${level}").create()
 
-    fun getForm(aspects: Set<String>) = forms.lastOrNull { it.aspects.all { it in aspects } } ?: standardForm
-
     fun eyeHeight(entity: PokemonEntity): Float {
         val multiplier = this.resolveEyeHeight(entity) ?: VANILLA_DEFAULT_EYE_HEIGHT
         return entity.bbHeight * multiplier
@@ -213,8 +209,7 @@ class Species(
         else -> this.standingEyeHeight
     }
 
-    // TODO: Redo me
-    //fun canGmax() = this.forms.find { it.formOnlyShowdownId() == "gmax" } != null
+    fun canGmax() = this.resourceIdentifier.path.endsWith("gmax")
 
     // TODO: Use me as reference for packet codec
     /*override fun encode(buffer: RegistryFriendlyByteBuf) {
@@ -322,7 +317,7 @@ class Species(
         }
 
         @JvmStatic
-        val PACKET_CODEC: Codec<Species> = Codec.unit(Species())
+        val PACKET_CODEC: Codec<Species> = TODO("Not yet implemented")
 
         private fun fromPartials(p1: SpeciesP1, p2: SpeciesP2): Species = Species(
             p1.nationalPokedexNumber,

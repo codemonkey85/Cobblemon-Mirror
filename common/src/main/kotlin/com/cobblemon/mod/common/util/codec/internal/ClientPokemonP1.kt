@@ -16,6 +16,7 @@ import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatures
 import com.cobblemon.mod.common.api.pokemon.feature.SynchronizedSpeciesFeature
 import com.cobblemon.mod.common.api.pokemon.feature.SynchronizedSpeciesFeatureProvider
 import com.cobblemon.mod.common.pokemon.*
+import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.DataKeys
 import com.cobblemon.mod.common.util.codec.CodecUtils
 import com.mojang.serialization.Codec
@@ -32,7 +33,6 @@ import java.util.*
 internal class ClientPokemonP1(
     val uuid: UUID,
     val species: Species,
-    val form: FormData,
     val nickname: Optional<Component>,
     val level: Int,
     val experience: Int,
@@ -53,7 +53,6 @@ internal class ClientPokemonP1(
         // This is done beforehand so the ability is legalized by species/form change
         other.ability = this.ability
         other.species = this.species
-        other.form = this.form
         this.nickname.ifPresent { other.nickname = it.copy() }
         other.level = this.level
         other.experience = this.experience
@@ -94,8 +93,7 @@ internal class ClientPokemonP1(
         internal val CODEC: MapCodec<ClientPokemonP1> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 UUIDUtil.LENIENT_CODEC.fieldOf(DataKeys.POKEMON_UUID).forGetter(ClientPokemonP1::uuid),
-                Species.BY_IDENTIFIER_CODEC.fieldOf(DataKeys.POKEMON_SPECIES_IDENTIFIER).forGetter(ClientPokemonP1::species),
-                Codec.STRING.fieldOf(DataKeys.POKEMON_FORM_ID).forGetter { pokemon -> pokemon.form.formOnlyShowdownId() },
+                CobblemonRegistries.SPECIES.byNameCodec().fieldOf(DataKeys.POKEMON_SPECIES_IDENTIFIER).forGetter(ClientPokemonP1::species),
                 ComponentSerialization.CODEC.optionalFieldOf(DataKeys.POKEMON_NICKNAME).forGetter(ClientPokemonP1::nickname),
                 CodecUtils.dynamicIntRange(1) { Cobblemon.config.maxPokemonLevel }.fieldOf(DataKeys.POKEMON_LEVEL).forGetter(ClientPokemonP1::level),
                 Codec.intRange(0, Int.MAX_VALUE).fieldOf(DataKeys.POKEMON_EXPERIENCE).forGetter(ClientPokemonP1::experience),
@@ -109,16 +107,12 @@ internal class ClientPokemonP1(
                 Codec.FLOAT.fieldOf(DataKeys.POKEMON_SCALE_MODIFIER).forGetter(ClientPokemonP1::scaleModifier),
                 Codec.list(CompoundTag.CODEC).fieldOf(FEATURES).forGetter(ClientPokemonP1::features),
                 Ability.CODEC.fieldOf(DataKeys.POKEMON_ABILITY).forGetter(ClientPokemonP1::ability)
-            ).apply(instance) { uuid, species, formId, nickname, level, experience, friendship, currentHealth, gender, ivs, evs, moveSet, benchedMoves, scaleModifier, shiny, ability ->
-                val form = species.forms.firstOrNull { it.formOnlyShowdownId() == formId } ?: species.standardForm
-                ClientPokemonP1(uuid, species, form, nickname, level, experience, friendship, currentHealth, gender, ivs, evs, moveSet, benchedMoves, scaleModifier, shiny, ability)
-            }
+            ).apply(instance, ::ClientPokemonP1)
         }
 
         internal fun from(pokemon: Pokemon): ClientPokemonP1 = ClientPokemonP1(
             pokemon.uuid,
             pokemon.species,
-            pokemon.form,
             Optional.ofNullable(pokemon.nickname),
             pokemon.level,
             pokemon.experience,

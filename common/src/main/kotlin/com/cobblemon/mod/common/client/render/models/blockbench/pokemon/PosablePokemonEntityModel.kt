@@ -18,7 +18,7 @@ class PosablePokemonEntityModel : PosableEntityModel<PokemonEntity>() {
     override fun setupEntityTypeContext(entity: Entity?) {
         super.setupEntityTypeContext(entity)
         (entity as? PokemonEntity)?.let {
-            context.put(RenderContext.SCALE, it.pokemon.form.baseScale)
+            context.put(RenderContext.SCALE, it.pokemon.species.baseScale)
             context.put(RenderContext.SPECIES, it.pokemon.species.resourceIdentifier)
             context.put(RenderContext.ASPECTS, it.pokemon.aspects)
             PokemonModelRepository.getTexture(it.pokemon.species.resourceIdentifier, it.pokemon.aspects, 0f).let { texture -> context.put(

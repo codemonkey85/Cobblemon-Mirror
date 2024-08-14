@@ -859,7 +859,7 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
             matrixStack.mulPose(Axis.YP.rotationDegrees(180 - entity.yBodyRot))
             matrixStack.pushPose()
             matrixStack.scale(-1F, -1F, 1F)
-            scale = entity.pokemon.form.baseScale * entity.pokemon.scaleModifier * (entity.delegate as PokemonClientDelegate).entityScaleModifier
+            scale = entity.pokemon.species.baseScale * entity.pokemon.scaleModifier * (entity.delegate as PokemonClientDelegate).entityScaleModifier
             matrixStack.scale(scale, scale, scale)
         } else if (entity is EmptyPokeBallEntity) {
             matrixStack.mulPose(Axis.YP.rotationDegrees(entity.yRot))

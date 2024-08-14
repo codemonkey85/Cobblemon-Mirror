@@ -46,7 +46,7 @@ object Gen7CaptureCalculator : CaptureCalculator, CriticalCaptureProvider, Poked
         }
         // We don't have dark grass so we're just gonna pretend everything is that.
         val darkGrass = if (thrower is ServerPlayer) this.caughtMultiplierFor(thrower).roundToInt() else 1
-        val catchRate = getCatchRate(thrower, pokeBallEntity, target, pokemon.form.catchRate.toFloat())
+        val catchRate = getCatchRate(thrower, pokeBallEntity, target, pokemon.species.catchRate.toFloat())
         val validModifier = pokeBall.catchRateModifier.isValid(thrower, pokemon)
         val bonusStatus = when (pokemon.status?.status) {
             is SleepStatus, is FrozenStatus -> 2.5F

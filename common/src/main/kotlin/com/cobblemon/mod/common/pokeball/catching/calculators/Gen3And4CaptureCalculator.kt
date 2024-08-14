@@ -51,7 +51,7 @@ object Gen3And4CaptureCalculator : CaptureCalculator {
         if (pokeBall.catchRateModifier.isGuaranteed()) {
             return CaptureContext.successful()
         }
-        val catchRate = getCatchRate(thrower, pokeBallEntity, target, pokemon.form.catchRate.toFloat())
+        val catchRate = getCatchRate(thrower, pokeBallEntity, target, pokemon.species.catchRate.toFloat())
         val validModifier = pokeBall.catchRateModifier.isValid(thrower, pokemon)
         val bonusStatus = when (pokemon.status?.status) {
             is SleepStatus, is FrozenStatus -> 2F

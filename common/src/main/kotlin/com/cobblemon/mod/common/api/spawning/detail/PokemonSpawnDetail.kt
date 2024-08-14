@@ -79,11 +79,11 @@ class PokemonSpawnDetail : SpawnDetail() {
                 )
 
                 if (height == -1) {
-                    height = ceil(pokemonExample.form.hitbox.height * pokemonExample.form.baseScale).toInt()
+                    height = ceil(pokemonExample.species.hitbox.height * pokemonExample.species.baseScale).toInt()
                 }
 
                 if (width == -1) {
-                    width = ceil(pokemonExample.form.hitbox.width * pokemonExample.form.baseScale).toInt()
+                    width = ceil(pokemonExample.species.hitbox.width * pokemonExample.species.baseScale).toInt()
                 }
             }
         }

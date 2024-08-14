@@ -56,7 +56,7 @@ class LastBattleCriticalHitsEvolutionProgress : EvolutionProgress<LastBattleCrit
         }
 
         fun supports(pokemon: Pokemon): Boolean {
-            return pokemon.form.evolutions.any { evolution ->
+            return pokemon.species.evolutions.any { evolution ->
                 evolution.requirements.any { requirement ->
                     requirement is BattleCriticalHitsRequirement
                 }

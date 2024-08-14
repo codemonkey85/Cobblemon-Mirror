@@ -35,7 +35,7 @@ class TransformEffect(
 
     constructor(mimic: Pokemon, doCry: Boolean = true) : this(
         mock = mimic.createPokemonProperties(PokemonPropertyExtractor.TRANSFORM),
-        scale = mimic.form.baseScale * mimic.scaleModifier,
+        scale = mimic.species.baseScale * mimic.scaleModifier,
         doCry = doCry
     )
 

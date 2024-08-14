@@ -72,7 +72,7 @@ class UseMoveEvolutionProgress : EvolutionProgress<UseMoveEvolutionProgress.Prog
         }
 
         fun supports(pokemon: Pokemon, move: MoveTemplate): Boolean {
-            return pokemon.form.evolutions.any { evolution ->
+            return pokemon.species.evolutions.any { evolution ->
                 evolution.requirements.any { requirement ->
                     requirement is UseMoveRequirement && requirement.move == move
                 }

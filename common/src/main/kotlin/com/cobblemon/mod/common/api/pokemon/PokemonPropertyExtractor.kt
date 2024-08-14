@@ -27,8 +27,6 @@ fun interface PokemonPropertyExtractor {
         @JvmField
         val SPECIES = add { pokemon, properties -> properties.species = pokemon.species.resourceIdentifier.toString() }
         @JvmField
-        val FORM = add { pokemon, properties -> properties.form = pokemon.form.formOnlyShowdownId() }
-        @JvmField
         val SHINY = add { pokemon, properties -> properties.shiny = pokemon.shiny }
         @JvmField
         val ASPECTS = add { pokemon, properties -> properties.aspects = pokemon.aspects }
@@ -54,9 +52,9 @@ fun interface PokemonPropertyExtractor {
         val EVS = add { pokemon, properties -> properties.evs = pokemon.evs }
 
         @JvmField
-        val ILLUSION = mutableListOf(SPECIES, FORM, ASPECTS, GENDER, NICKNAME, SHINY)
+        val ILLUSION = mutableListOf(SPECIES, ASPECTS, GENDER, NICKNAME, SHINY)
         @JvmField
-        val TRANSFORM = mutableListOf(SPECIES, FORM, ASPECTS, GENDER)
+        val TRANSFORM = mutableListOf(SPECIES, ASPECTS, GENDER)
 
         fun add(extractor: PokemonPropertyExtractor): PokemonPropertyExtractor {
             ALL.add(extractor)

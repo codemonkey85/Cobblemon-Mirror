@@ -59,13 +59,11 @@ import com.cobblemon.mod.common.net.messages.client.sound.UnvalidatedPlaySoundS2
 import com.cobblemon.mod.common.net.messages.client.spawn.SpawnPokemonPacket
 import com.cobblemon.mod.common.net.messages.client.ui.InteractPokemonUIPacket
 import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler.SEND_OUT_DURATION
-import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.pokemon.activestate.ActivePokemonState
 import com.cobblemon.mod.common.pokemon.activestate.InactivePokemonState
 import com.cobblemon.mod.common.pokemon.activestate.ShoulderedState
-import com.cobblemon.mod.common.pokemon.ai.FormPokemonBehaviour
 import com.cobblemon.mod.common.pokemon.evolution.variants.ItemInteractionEvolution
 import com.cobblemon.mod.common.pokemon.misc.GimmighoulStashHandler
 import com.cobblemon.mod.common.util.*
@@ -161,10 +159,7 @@ open class PokemonEntity(
 
     override val schedulingTracker = SchedulingTracker()
 
-    val form: FormData
-        get() = pokemon.form
-    val behaviour: FormPokemonBehaviour
-        get() = form.behaviour
+    val behaviour get() = pokemon.species.behaviour
 
     var pokemon: Pokemon = pokemon
         set(value) {
@@ -240,15 +235,11 @@ open class PokemonEntity(
     /** The species exposed to the client and used on entity spawn. */
     val exposedSpecies: Species get() = this.effects.mockEffect?.exposedSpecies ?: this.pokemon.species
 
-    /** The form exposed to the client and used for calculating hitbox and height. */
-    val exposedForm: FormData get() = this.effects.mockEffect?.exposedForm ?: this.pokemon.form
-
     override val struct: QueryStruct = QueryStruct(hashMapOf())
         .addStandardFunctions()
         .addFunction("in_battle") { DoubleValue(isBattling) }
         .addFunction("is_wild") { DoubleValue(pokemon.isWild()) }
         .addFunction("is_shiny") { DoubleValue(pokemon.shiny) }
-        .addFunction("form") { StringValue(pokemon.form.name) }
         .addFunction("width") { DoubleValue(boundingBox.xsize) }
         .addFunction("height") { DoubleValue(boundingBox.ysize) }
         .addFunction("horizontal_velocity") { DoubleValue(deltaMovement.horizontalDistance()) }
@@ -685,7 +676,7 @@ open class PokemonEntity(
     override fun getBreedOffspring(serverLevel: ServerLevel, ageableMob: AgeableMob) = null
 
     override fun canSitOnShoulder(): Boolean {
-        return pokemon.form.shoulderMountable
+        return pokemon.species.shoulderMountable
     }
 
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
@@ -828,8 +819,8 @@ open class PokemonEntity(
     }
 
     override fun getDimensions(pose: Pose): EntityDimensions {
-        val scale = effects.mockEffect?.scale ?: (form.baseScale * pokemon.scaleModifier)
-        return this.exposedForm.hitbox.scale(scale)
+        val scale = effects.mockEffect?.scale ?: (pokemon.species.baseScale * pokemon.scaleModifier)
+        return this.exposedSpecies.hitbox.scale(scale)
     }
 
     override fun canBeSeenAsEnemy() = super.canBeSeenAsEnemy() && !isBusy
@@ -1048,7 +1039,7 @@ open class PokemonEntity(
                         if (isLeft || player.shoulderEntityRight.isEmpty) {
                             pokemon.state = ShoulderedState(player.uuid, isLeft, pokemon.uuid)
                             this.setEntityOnShoulder(player)
-                            this.pokemon.form.shoulderEffects.forEach { it.applyEffect(this.pokemon, player, isLeft) }
+                            this.pokemon.species.shoulderEffects.forEach { it.applyEffect(this.pokemon, player, isLeft) }
                             this.level().playSoundServer(
                                 position = this.position(),
                                 sound = SoundEvents.ITEM_PICKUP,
@@ -1080,7 +1071,6 @@ open class PokemonEntity(
         }
         nbt.putUUID(DataKeys.SHOULDER_UUID, this.pokemon.uuid)
         nbt.putString(DataKeys.SHOULDER_SPECIES, this.pokemon.species.resourceIdentifier.toString())
-        nbt.putString(DataKeys.SHOULDER_FORM, this.pokemon.form.name)
         nbt.put(DataKeys.SHOULDER_ASPECTS, this.pokemon.aspects.map(StringTag::valueOf).toNbtList())
         nbt.putFloat(DataKeys.SHOULDER_SCALE_MODIFIER, this.pokemon.scaleModifier)
         return true
@@ -1362,7 +1352,7 @@ open class PokemonEntity(
 //    }
 
     /** Retrieves the battle theme associated with this Pokemon's Species/Form, or the default PVW theme if not found. */
-    fun getBattleTheme() = BuiltInRegistries.SOUND_EVENT.get(this.form.battleTheme) ?: CobblemonSounds.PVW_BATTLE
+    fun getBattleTheme() = BuiltInRegistries.SOUND_EVENT.get(this.pokemon.species.battleTheme) ?: CobblemonSounds.PVW_BATTLE
 
     /**
      * A utility method to instance a [Pokemon] aware if the [world] is client sided or not.

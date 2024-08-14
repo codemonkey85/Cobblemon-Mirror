@@ -13,7 +13,6 @@ import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.util.*
 import java.util.UUID
@@ -27,7 +26,6 @@ class SpawnPokemonPacket(
     private val ownerId: UUID?,
     private val scaleModifier: Float,
     private val species: Species,
-    private val form: FormData,
     private val aspects: Set<String>,
     private val battleId: UUID?,
     private val phasingTargetId: Int,
@@ -49,7 +47,6 @@ class SpawnPokemonPacket(
         entity.ownerUUID,
         entity.pokemon.scaleModifier,
         entity.exposedSpecies,
-        entity.pokemon.form,
         entity.pokemon.aspects,
         entity.battleId,
         entity.phasingTargetId,
@@ -69,7 +66,6 @@ class SpawnPokemonPacket(
         buffer.writeNullable(ownerId) { _, v -> buffer.writeUUID(v) }
         buffer.writeFloat(this.scaleModifier)
         buffer.writeIdentifier(this.species.resourceIdentifier)
-        buffer.writeString(this.form.formOnlyShowdownId())
         buffer.writeCollection(this.aspects) { pb, value -> pb.writeString(value) }
         buffer.writeNullable(this.battleId) { pb, value -> pb.writeUUID(value) }
         buffer.writeInt(this.phasingTargetId)
@@ -89,7 +85,6 @@ class SpawnPokemonPacket(
         entity.pokemon.apply {
             scaleModifier = this@SpawnPokemonPacket.scaleModifier
             species = this@SpawnPokemonPacket.species
-            form = this@SpawnPokemonPacket.form
             forcedAspects = this@SpawnPokemonPacket.aspects
             nickname = this@SpawnPokemonPacket.nickname
             PokeBalls.getPokeBall(this@SpawnPokemonPacket.caughtBall)?.let { caughtBall = it }
@@ -117,7 +112,6 @@ class SpawnPokemonPacket(
             val identifier = buffer.readIdentifier()
             val species = requireNotNull(PokemonSpecies.getByIdentifier(identifier)) { "received unknown PokemonSpecies: $identifier" }
             val showdownId = buffer.readString()
-            val form = species.forms.firstOrNull { it.formOnlyShowdownId() == showdownId } ?: species.standardForm
             val aspects = buffer.readList { it.readString() }.toSet()
             val battleId = buffer.readNullable { buffer.readUUID() }
             val phasingTargetId = buffer.readInt()
@@ -132,7 +126,7 @@ class SpawnPokemonPacket(
             val friendship = buffer.readInt()
             val vanillaPacket = decodeVanillaPacket(buffer)
 
-            return SpawnPokemonPacket(ownerId, scaleModifier, species, form, aspects, battleId, phasingTargetId, beamModeEmitter, nickname, labelLevel, poseType, unbattlable, hideLabel, caughtBall, spawnAngle, friendship, vanillaPacket)
+            return SpawnPokemonPacket(ownerId, scaleModifier, species, aspects, battleId, phasingTargetId, beamModeEmitter, nickname, labelLevel, poseType, unbattlable, hideLabel, caughtBall, spawnAngle, friendship, vanillaPacket)
         }
     }
 

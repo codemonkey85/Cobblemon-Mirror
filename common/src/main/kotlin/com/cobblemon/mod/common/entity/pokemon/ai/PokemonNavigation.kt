@@ -237,7 +237,7 @@ class PokemonNavigation(val world: Level, val pokemonEntity: PokemonEntity) : Gr
 //            pokemonEntity.discard()
 //            return false
             // If we just started moving and it's to an open node, fly
-            if (node.type == PathType.OPEN && pokemonEntity.form.behaviour.moving.fly.canFly && !pokemonEntity.isFlying()) {
+            if (node.type == PathType.OPEN && pokemonEntity.pokemon.species.behaviour.moving.fly.canFly && !pokemonEntity.isFlying()) {
                 pokemonEntity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, true)
             }
         }

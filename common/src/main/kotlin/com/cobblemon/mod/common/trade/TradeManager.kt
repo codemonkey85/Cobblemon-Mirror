@@ -92,8 +92,8 @@ object TradeManager {
         party1.remove(pokemon1)
         party2.remove(pokemon2)
 
-        pokemon1.setFriendship(pokemon1.form.baseFriendship)
-        pokemon2.setFriendship(pokemon2.form.baseFriendship)
+        pokemon1.setFriendship(pokemon1.species.baseFriendship)
+        pokemon2.setFriendship(pokemon2.species.baseFriendship)
 
         party2.add(pokemon1)
         party1.add(pokemon2)
