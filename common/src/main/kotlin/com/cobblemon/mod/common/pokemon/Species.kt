@@ -29,6 +29,7 @@ import com.cobblemon.mod.common.pokemon.ai.PokemonBehaviour
 import com.cobblemon.mod.common.pokemon.lighthing.LightingData
 import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.*
+import com.cobblemon.mod.common.util.codec.internal.species.ClientSpeciesP1
 import com.cobblemon.mod.common.util.codec.internal.species.SpeciesP1
 import com.cobblemon.mod.common.util.codec.internal.species.SpeciesP2
 import com.mojang.serialization.Codec
@@ -204,86 +205,6 @@ class Species(
 
     fun canGmax() = this.resourceIdentifier.path.endsWith("gmax")
 
-    // TODO: Use me as reference for packet codec
-    /*override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeBoolean(this.implemented)
-        buffer.writeString(this.name)
-        buffer.writeInt(this.nationalPokedexNumber)
-        buffer.writeMap(this.baseStats,
-            { _, stat -> Cobblemon.statProvider.encode(buffer, stat)},
-            { _, value -> buffer.writeSizedInt(IntSize.U_SHORT, value) }
-        )
-        buffer.writeResourceKey(this.primaryType.resourceKey())
-        buffer.writeNullable(this.secondaryType) { pb, type -> pb.writeResourceKey(type.resourceKey()) }
-        buffer.writeString(this.experienceGroup.name)
-        buffer.writeFloat(this.height)
-        buffer.writeFloat(this.weight)
-        buffer.writeFloat(this.baseScale)
-        // Hitbox start
-        buffer.writeFloat(this.hitbox.width)
-        buffer.writeFloat(this.hitbox.height)
-        buffer.writeBoolean(this.hitbox.fixed)
-        // Hitbox end
-        this.moves.encode(buffer)
-        buffer.writeCollection(this.pokedex) { pb, line -> pb.writeString(line) }
-        buffer.writeCollection(this.forms) { _, form -> form.encode(buffer) }
-        buffer.writeIdentifier(this.battleTheme)
-        buffer.writeCollection(this.features) { pb, feature -> pb.writeString(feature) }
-        buffer.writeNullable(this.lightingData) { pb, data ->
-            pb.writeInt(data.lightLevel)
-            pb.writeEnumConstant(data.liquidGlowMode)
-        }
-    }
-
-    override fun decode(buffer: RegistryFriendlyByteBuf) {
-        this.implemented = buffer.readBoolean()
-        this.name = buffer.readString()
-        this.nationalPokedexNumber = buffer.readInt()
-        this.baseStats.putAll(buffer.readMap(
-            { _ -> Cobblemon.statProvider.decode(buffer) },
-            { _ -> buffer.readSizedInt(IntSize.U_SHORT) })
-        )
-        val typeRegistry = buffer.registryAccess().registryOrThrow(CobblemonRegistries.ELEMENTAL_TYPE_KEY)
-        this.primaryType = typeRegistry.getOrThrow(buffer.readResourceKey(CobblemonRegistries.ELEMENTAL_TYPE_KEY))
-        this.secondaryType = buffer.readNullable { pb -> typeRegistry.getOrThrow(pb.readResourceKey(CobblemonRegistries.ELEMENTAL_TYPE_KEY)) }
-        this.experienceGroup = ExperienceGroups.findByName(buffer.readString())!!
-        this.height = buffer.readFloat()
-        this.weight = buffer.readFloat()
-        this.baseScale = buffer.readFloat()
-        this.hitbox = buffer.readEntityDimensions()
-        this.moves.decode(buffer)
-        this.pokedex.clear()
-        this.pokedex += buffer.readList { pb -> pb.readString() }
-        this.forms.clear()
-        this.forms += buffer.readList{ FormData().apply { decode(buffer) } }.filterNotNull()
-        this.battleTheme = buffer.readIdentifier()
-        this.features.clear()
-        this.features += buffer.readList { pb -> pb.readString() }
-        this.lightingData = buffer.readNullable { pb -> LightingData(pb.readInt(), pb.readEnumConstant(LightingData.LiquidGlowMode::class.java)) }
-        this.initialize()
-    }
-
-    override fun shouldSynchronize(other: Species): Boolean {
-        if (other.resourceIdentifier.toString() != other.resourceIdentifier.toString())
-            return false
-        return other.showdownId() != this.showdownId()
-                || other.nationalPokedexNumber != this.nationalPokedexNumber
-                || other.baseStats != this.baseStats
-                || other.hitbox != this.hitbox
-                || other.primaryType != this.primaryType
-                || other.secondaryType != this.secondaryType
-                || other.standingEyeHeight != this.standingEyeHeight
-                || other.swimmingEyeHeight != this.swimmingEyeHeight
-                || other.flyingEyeHeight != this.flyingEyeHeight
-                || other.dynamaxBlocked != this.dynamaxBlocked
-                || other.pokedex != this.pokedex
-                || other.forms != this.forms
-                // We only sync level up moves atm
-                || this.moves.shouldSynchronize(other.moves)
-                || other.battleTheme != this.battleTheme
-                || other.features != this.features
-    }*/
-
     override fun showdownId(): String {
         return ShowdownIdentifiable.EXCLUSIVE_REGEX.replace(this.resourceLocation().simplify(), "")
     }
@@ -309,9 +230,12 @@ class Species(
             ).apply(instance, Companion::fromPartials)
         }
 
-        // TODO: Implement me
         @JvmStatic
-        val PACKET_CODEC: Codec<Species> = Codec.unit(null)
+        val PACKET_CODEC: Codec<Species> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                ClientSpeciesP1.CODEC.forGetter(ClientSpeciesP1::from),
+            ).apply(instance, Companion::fromClientPartials)
+        }
 
         private fun fromPartials(p1: SpeciesP1, p2: SpeciesP2): Species = Species(
             p1.nationalPokedexNumber,
@@ -343,6 +267,38 @@ class Species(
             p2.preEvolution,
             p2.battleTheme,
             p2.lightingData,
+        )
+
+        private fun fromClientPartials(p1: ClientSpeciesP1): Species = Species(
+            p1.nationalPokedexNumber,
+            p1.baseStats,
+            0F,
+            0,
+            p1.baseScale,
+            0,
+            0,
+            emptyMap(),
+            p1.experienceGroup,
+            p1.hitbox,
+            p1.primaryType,
+            p1.secondaryType,
+            AbilityPool(),
+            false,
+            emptySet(),
+            p1.learnset,
+            Optional.empty(),
+            Optional.empty(),
+            Optional.empty(),
+            PokemonBehaviour(),
+            0,
+            emptySet(),
+            false,
+            p1.implemented,
+            p1.height,
+            p1.weight,
+            Optional.empty(),
+            p1.battleTheme,
+            p1.lightingData,
         )
     }
 }
