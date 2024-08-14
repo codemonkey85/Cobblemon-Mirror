@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.pokemon.stat
 
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.stats.Stat
 import com.cobblemon.mod.common.api.pokemon.stats.StatProvider
 import com.cobblemon.mod.common.api.pokemon.stats.StatTypeAdapter
@@ -38,6 +39,12 @@ object CobblemonStatProvider : StatProvider {
     private val stats = Stats.values().associateBy { it.identifier }
     private val ordinalToStat = Stats.values().associateBy { it.ordinal }
     private val identifierToOrdinal = Stats.values().associate { it.identifier to it.ordinal }
+
+    val statOverrides = mapOf(
+        "shedinja" to mapOf(
+            Stats.HP to 1
+        )
+    )
 
     override fun all(): Collection<Stat> = Stats.ALL
 
@@ -86,19 +93,21 @@ object CobblemonStatProvider : StatProvider {
     }
 
     override fun getStatForPokemon(pokemon: Pokemon, stat: Stat): Int {
+        val override =
+            statOverrides.entries.find { (props) -> PokemonProperties.parse(props).matches(pokemon) }?.value?.get(stat)
+        if (override != null) {
+            return override
+        }
+
         val stats = pokemon.form.baseStats
         val iv = pokemon.ivs.getOrDefault(stat)
         val base = pokemon.form.baseStats[stat]!!
         val ev = pokemon.evs.getOrDefault(stat)
         val level = pokemon.level
         return if (stat == Stats.HP) {
-            if (pokemon.species.resourceIdentifier == Pokemon.SHEDINJA) {
-                1
-            } else {
-                // Why does showdown have the + 100 inside the numerator instead of + level at the end? It's the same mathematically but odd choice.
-                // modStats['hp'] = tr(tr(2 * stat + set.ivs['hp'] + tr(set.evs['hp'] / 4) + 100) * set.level / 100 + 10);
-                truncate(truncate(2.0 * base + iv + truncate(ev / 4.0) + 100) * level / 100.0 + 10).toInt()
-            }
+            // Why does showdown have the + 100 inside the numerator instead of + level at the end? It's the same mathematically but odd choice.
+            // modStats['hp'] = tr(tr(2 * stat + set.ivs['hp'] + tr(set.evs['hp'] / 4) + 100) * set.level / 100 + 10);
+            truncate(truncate(2.0 * base + iv + truncate(ev / 4.0) + 100) * level / 100.0 + 10).toInt()
         } else {
             pokemon.effectiveNature.modifyStat(stat, ((2 * base + iv + (ev / 4)) * level) / 100 + 5)
         }
