@@ -8,18 +8,16 @@
 
 package com.cobblemon.mod.common.net.messages.client.pokemon.update
 
-import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.Species
+import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readIdentifier
-import com.cobblemon.mod.common.util.writeIdentifier
 import net.minecraft.network.RegistryFriendlyByteBuf
 
 class SpeciesUpdatePacket(pokemon: () -> Pokemon, value: Species) : SingleUpdatePacket<Species, SpeciesUpdatePacket>(pokemon, value) {
     override val id = ID
     override fun encodeValue(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeIdentifier(this.value.resourceIdentifier)
+        buffer.writeResourceKey(value.resourceKey())
     }
 
     override fun set(pokemon: Pokemon, value: Species) {
@@ -30,7 +28,9 @@ class SpeciesUpdatePacket(pokemon: () -> Pokemon, value: Species) : SingleUpdate
         val ID = cobblemonResource("species_update")
         fun decode(buffer: RegistryFriendlyByteBuf): SpeciesUpdatePacket {
             val pokemon = decodePokemon(buffer)
-            val species = PokemonSpecies.getByIdentifier(buffer.readIdentifier())!!
+            val species = buffer.registryAccess()
+                .registryOrThrow(CobblemonRegistries.SPECIES_KEY)
+                .getOrThrow(buffer.readResourceKey(CobblemonRegistries.SPECIES_KEY))
             return SpeciesUpdatePacket(pokemon, species)
         }
     }

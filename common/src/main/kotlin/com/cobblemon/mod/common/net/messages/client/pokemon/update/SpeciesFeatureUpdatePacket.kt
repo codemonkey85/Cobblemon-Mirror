@@ -8,18 +8,16 @@
 
 package com.cobblemon.mod.common.net.messages.client.pokemon.update
 
-import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatures
 import com.cobblemon.mod.common.api.pokemon.feature.SynchronizedSpeciesFeature
 import com.cobblemon.mod.common.api.pokemon.feature.SynchronizedSpeciesFeatureProvider
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.pokemon.Species
+import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readIdentifier
 import com.cobblemon.mod.common.util.readString
-import com.cobblemon.mod.common.util.writeIdentifier
 import com.cobblemon.mod.common.util.writeString
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.resources.ResourceLocation
 
 /**
  * Updates the state of a particular [SynchronizedSpeciesFeature].
@@ -27,25 +25,25 @@ import net.minecraft.resources.ResourceLocation
  * @author Hiroku
  * @since November 13th, 2023
  */
-class SpeciesFeatureUpdatePacket(pokemon: () -> Pokemon, val species: ResourceLocation, speciesFeature: SynchronizedSpeciesFeature) : SingleUpdatePacket<SynchronizedSpeciesFeature, SpeciesFeatureUpdatePacket>(pokemon, speciesFeature) {
+class SpeciesFeatureUpdatePacket(pokemon: () -> Pokemon, val species: Species, speciesFeature: SynchronizedSpeciesFeature) : SingleUpdatePacket<SynchronizedSpeciesFeature, SpeciesFeatureUpdatePacket>(pokemon, speciesFeature) {
     companion object {
         val ID = cobblemonResource("species_feature_update")
         fun decode(buffer: RegistryFriendlyByteBuf): SpeciesFeatureUpdatePacket {
             val pokemon = decodePokemon(buffer)
-            val speciesIdentifier = buffer.readIdentifier()
-            val species = PokemonSpecies.getByIdentifier(speciesIdentifier)
-                ?: throw IllegalStateException("Pokémon unable to be found during species feature update packet: $speciesIdentifier")
+            val species = buffer.registryAccess()
+                .registryOrThrow(CobblemonRegistries.SPECIES_KEY)
+                .getOrThrow(buffer.readResourceKey(CobblemonRegistries.SPECIES_KEY))
             val speciesFeatureName = buffer.readString()
             val featureProviders = SpeciesFeatures.getFeaturesFor(species).filterIsInstance<SynchronizedSpeciesFeatureProvider<*>>()
-            val feature = featureProviders.firstNotNullOfOrNull { it(buffer, speciesFeatureName) } as? SynchronizedSpeciesFeature
+            val feature = featureProviders.firstNotNullOfOrNull { it(buffer, speciesFeatureName) }
                 ?: throw IllegalArgumentException("Couldn't find a feature provider to deserialize this feature. Something's wrong.")
-            return SpeciesFeatureUpdatePacket(pokemon, speciesIdentifier, feature)
+            return SpeciesFeatureUpdatePacket(pokemon, species, feature)
         }
     }
 
     override val id = ID
     override fun encodeValue(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeIdentifier(species)
+        buffer.writeResourceKey(species.resourceKey())
         buffer.writeString(value.name)
         value.saveToBuffer(buffer, toClient = true)
     }

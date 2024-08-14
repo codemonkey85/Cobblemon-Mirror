@@ -1518,7 +1518,7 @@ open class Pokemon : ShowdownIdentifiable {
     private val _features = registerObservable(SimpleObservable<SpeciesFeature>()) {
         val featureProvider = SpeciesFeatures.getFeature(it.name)
         if (it is SynchronizedSpeciesFeature && featureProvider is SynchronizedSpeciesFeatureProvider && featureProvider.visible) {
-            SpeciesFeatureUpdatePacket({ this }, species.resourceIdentifier, it)
+            SpeciesFeatureUpdatePacket({ this }, species, it)
         } else {
             null
         }

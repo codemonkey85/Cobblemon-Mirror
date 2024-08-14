@@ -10,12 +10,12 @@ package com.cobblemon.mod.common.net.messages.client.pokemon.update.evolution
 
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionDisplayEvent
-import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.evolution.Evolution
 import com.cobblemon.mod.common.api.pokemon.evolution.EvolutionDisplay
 import com.cobblemon.mod.common.net.messages.client.pokemon.update.SingleUpdatePacket
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.CobblemonEvolutionDisplay
+import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.*
 import io.netty.buffer.ByteBuf
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -57,9 +57,9 @@ class AddEvolutionPacket(pokemon: () -> Pokemon, value: EvolutionDisplay) : Sing
 
         internal fun decodeDisplay(buffer: RegistryFriendlyByteBuf): EvolutionDisplay {
             val id = buffer.readString()
-            val speciesIdentifier = buffer.readIdentifier()
-            val species = PokemonSpecies.getByIdentifier(speciesIdentifier)
-                ?: throw IllegalArgumentException("Cannot resolve species from $speciesIdentifier")
+            val species = buffer.registryAccess()
+                .registryOrThrow(CobblemonRegistries.SPECIES_KEY)
+                .getOrThrow(buffer.readResourceKey(CobblemonRegistries.SPECIES_KEY))
             val aspects = buffer.readList(ByteBuf::readString).toSet()
             return CobblemonEvolutionDisplay(id, species, aspects)
         }

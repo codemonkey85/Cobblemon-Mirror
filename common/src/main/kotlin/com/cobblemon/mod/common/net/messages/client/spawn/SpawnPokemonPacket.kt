@@ -10,10 +10,10 @@ package com.cobblemon.mod.common.net.messages.client.spawn
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
-import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.Species
+import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.*
 import java.util.UUID
 import net.minecraft.world.entity.Entity
@@ -65,7 +65,7 @@ class SpawnPokemonPacket(
     override fun encodeEntityData(buffer: RegistryFriendlyByteBuf) {
         buffer.writeNullable(ownerId) { _, v -> buffer.writeUUID(v) }
         buffer.writeFloat(this.scaleModifier)
-        buffer.writeIdentifier(this.species.resourceIdentifier)
+        buffer.writeResourceKey(this.species.resourceKey())
         buffer.writeCollection(this.aspects) { pb, value -> pb.writeString(value) }
         buffer.writeNullable(this.battleId) { pb, value -> pb.writeUUID(value) }
         buffer.writeInt(this.phasingTargetId)
@@ -109,9 +109,9 @@ class SpawnPokemonPacket(
         fun decode(buffer: RegistryFriendlyByteBuf): SpawnPokemonPacket {
             val ownerId = buffer.readNullable { buffer.readUUID() }
             val scaleModifier = buffer.readFloat()
-            val identifier = buffer.readIdentifier()
-            val species = requireNotNull(PokemonSpecies.getByIdentifier(identifier)) { "received unknown PokemonSpecies: $identifier" }
-            val showdownId = buffer.readString()
+            val species = buffer.registryAccess()
+                .registryOrThrow(CobblemonRegistries.SPECIES_KEY)
+                .getOrThrow(buffer.readResourceKey(CobblemonRegistries.SPECIES_KEY))
             val aspects = buffer.readList { it.readString() }.toSet()
             val battleId = buffer.readNullable { buffer.readUUID() }
             val phasingTargetId = buffer.readInt()

@@ -9,17 +9,17 @@
 package com.cobblemon.mod.common.net.messages.client.trade
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
-import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
+import com.cobblemon.mod.common.pokemon.Species
+import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.*
 import java.util.UUID
 import net.minecraft.world.item.ItemStack
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceLocation
 
 /**
  * A packet that initializes a trade with a player. Information about the other party is included.
@@ -36,7 +36,7 @@ class TradeStartedPacket(
 ) : NetworkPacket<TradeStartedPacket> {
     class TradeablePokemon(
         val pokemonId: UUID,
-        val species: ResourceLocation,
+        val species: Species,
         val aspects: Set<String>,
         val level: Int,
         val gender: Gender,
@@ -46,10 +46,12 @@ class TradeStartedPacket(
         companion object {
             fun decode(buffer: RegistryFriendlyByteBuf) = TradeablePokemon(
                 buffer.readUUID(),
-                buffer.readIdentifier(),
+                buffer.registryAccess()
+                    .registryOrThrow(CobblemonRegistries.SPECIES_KEY)
+                    .getOrThrow(buffer.readResourceKey(CobblemonRegistries.SPECIES_KEY)),
                 buffer.readList { it.readString() }.toSet(),
                 buffer.readSizedInt(IntSize.U_SHORT),
-                Gender.values()[buffer.readSizedInt(IntSize.U_BYTE)],
+                Gender.entries[buffer.readSizedInt(IntSize.U_BYTE)],
                 buffer.readItemStack(),
                 buffer.readBoolean()
             )
@@ -57,7 +59,7 @@ class TradeStartedPacket(
 
         constructor(pokemon: Pokemon): this(
             pokemon.uuid,
-            pokemon.species.resourceIdentifier,
+            pokemon.species,
             pokemon.aspects,
             pokemon.level,
             pokemon.gender,
@@ -67,7 +69,7 @@ class TradeStartedPacket(
 
         fun encode(buffer: RegistryFriendlyByteBuf) {
             buffer.writeUUID(pokemonId)
-            buffer.writeIdentifier(species)
+            buffer.writeResourceKey(species.resourceKey())
             buffer.writeCollection(aspects) { _, v -> buffer.writeString(v) }
             buffer.writeSizedInt(IntSize.U_SHORT, level)
             buffer.writeSizedInt(IntSize.U_BYTE, gender.ordinal)
@@ -76,7 +78,7 @@ class TradeStartedPacket(
         }
 
         fun asRenderablePokemon() = RenderablePokemon(
-            species = PokemonSpecies.getByIdentifier(species)!!,
+            species = species,
             aspects = aspects
         )
     }
@@ -86,7 +88,7 @@ class TradeStartedPacket(
         fun decode(buffer: RegistryFriendlyByteBuf) = TradeStartedPacket(
             buffer.readUUID(),
             buffer.readText().copy(),
-            buffer.readList { buffer.readNullable { TradeablePokemon.decode(buffer) } }
+            buffer.readCollection { buffer.readNullable { TradeablePokemon.decode(buffer) } }
         )
     }
 
