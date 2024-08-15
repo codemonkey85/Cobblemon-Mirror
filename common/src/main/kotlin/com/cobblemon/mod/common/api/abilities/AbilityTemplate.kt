@@ -14,9 +14,13 @@ import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.simplify
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.Holder
+import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
+import net.minecraft.core.RegistryCodecs
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
+import net.minecraft.resources.RegistryFileCodec
 import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.TagKey
 
@@ -72,7 +76,7 @@ class AbilityTemplate(
         private const val MAX_RATING = 5F
 
         @JvmStatic
-        val CODEC: Codec<AbilityTemplate> = RecordCodecBuilder.create { instance ->
+        val DIRECT_CODEC: Codec<AbilityTemplate> = RecordCodecBuilder.create { instance ->
             instance.group(
                 Codec.floatRange(MIN_RATING, MAX_RATING).fieldOf("rating").forGetter(AbilityTemplate::rating),
                 Codec.BOOL.optionalFieldOf("suppressWeather", false).forGetter(AbilityTemplate::suppressWeather),
@@ -86,6 +90,10 @@ class AbilityTemplate(
                 ComponentSerialization.CODEC.fieldOf("description").forGetter(AbilityTemplate::description),
             ).apply(instance, ::AbilityTemplate)
         }
+        @JvmStatic
+        val CODEC: Codec<Holder<AbilityTemplate>> = RegistryFileCodec.create(CobblemonRegistries.ABILITY_KEY, DIRECT_CODEC)
+        @JvmStatic
+        val LIST_CODEC: Codec<HolderSet<AbilityTemplate>> = RegistryCodecs.homogeneousList(CobblemonRegistries.ABILITY_KEY, DIRECT_CODEC)
 
     }
 

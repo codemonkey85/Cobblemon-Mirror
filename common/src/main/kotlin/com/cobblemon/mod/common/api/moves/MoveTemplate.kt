@@ -20,8 +20,13 @@ import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.battles.MoveTarget
 import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.simplify
+import com.mojang.serialization.Codec
+import net.minecraft.core.Holder
+import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
+import net.minecraft.core.RegistryCodecs
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.RegistryFixedCodec
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
@@ -123,5 +128,12 @@ class MoveTemplate(
 
     override fun showdownId(): String {
         return ShowdownIdentifiable.EXCLUSIVE_REGEX.replace(this.resourceLocation().simplify(), "")
+    }
+
+    companion object {
+        @JvmStatic
+        val CODEC: Codec<Holder<MoveTemplate>> = RegistryFixedCodec.create(CobblemonRegistries.MOVE_KEY)
+        @JvmStatic
+        val LIST_CODEC: Codec<HolderSet<MoveTemplate>> = RegistryCodecs.homogeneousList(CobblemonRegistries.MOVE_KEY)
     }
 }

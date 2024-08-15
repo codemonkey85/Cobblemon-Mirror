@@ -10,7 +10,6 @@ package com.cobblemon.mod.common.client.entity
 
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
-import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.entity.PokemonSideDelegate
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunctions
@@ -86,7 +85,7 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
             if (data == PokemonEntity.SPECIES) {
                 val identifier = ResourceLocation.parse(currentEntity.entityData.get(PokemonEntity.SPECIES))
                 currentPose = null
-                currentEntity.pokemon.species = PokemonSpecies.getByIdentifier(identifier)!! // TODO exception handling
+                currentEntity.pokemon.species = PokemonSpecies.get(identifier)!! // TODO exception handling
                 // force a model update - handles edge case where the PosableState's tracked PosableModel isn't updated until the LivingEntityRenderer render is run
                 currentModel = PokemonModelRepository.getPoser(identifier, currentEntity.aspects)
             } else if (data == PokemonEntity.ASPECTS) {

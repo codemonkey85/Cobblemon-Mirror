@@ -40,6 +40,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.RandomSource
 import net.minecraft.world.level.Level
 import java.util.*
+import kotlin.jvm.optionals.getOrNull
 import kotlin.random.Random
 
 /**
@@ -190,7 +191,7 @@ open class PokemonProperties {
                     "random"
                 } else {
                     try {
-                        val species = PokemonSpecies.getByIdentifier(value.asIdentifierDefaultingNamespace()) ?: return null
+                        val species = PokemonSpecies.get(value.asIdentifierDefaultingNamespace()) ?: return null
                         return if (species.resourceIdentifier.namespace == Cobblemon.MODID) species.resourceIdentifier.path else species.resourceIdentifier.toString()
                     } catch (e: ResourceLocationException) {
                         return null
@@ -205,7 +206,7 @@ open class PokemonProperties {
                     } else {
                         try {
                             val identifier = cleanSpeciesName(pair.first).asIdentifierDefaultingNamespace()
-                            val found = PokemonSpecies.getByIdentifier(identifier) ?: return@find false
+                            val found = PokemonSpecies.get(identifier) ?: return@find false
                             if (found.resourceIdentifier.namespace == Cobblemon.MODID) found.resourceIdentifier.path else found.resourceIdentifier.toString()
                         } catch (e: ResourceLocationException) {
                             return@find false
@@ -305,7 +306,7 @@ open class PokemonProperties {
     fun asRenderablePokemon() = RenderablePokemon(
         species = species?.let {
             return@let try {
-                PokemonSpecies.getByIdentifier(it.asIdentifierDefaultingNamespace())
+                PokemonSpecies.get(it.asIdentifierDefaultingNamespace())
             } catch (e: ResourceLocationException) {
                 PokemonSpecies.random()
             }
@@ -331,7 +332,7 @@ open class PokemonProperties {
                 if (it == "random") {
                     PokemonSpecies.implemented.random()
                 } else {
-                    PokemonSpecies.getByIdentifier(it.asIdentifierDefaultingNamespace())
+                    PokemonSpecies.get(it.asIdentifierDefaultingNamespace())
                 }
             } catch (e: ResourceLocationException) {
                 null
@@ -403,9 +404,9 @@ open class PokemonProperties {
         species?.run {
             try {
                 val species = if (this == "random") {
-                    PokemonSpecies.species.random()
+                    PokemonSpecies.registry().getRandom(RandomSource.create())
                 } else {
-                    PokemonSpecies.getByIdentifier(this.asIdentifierDefaultingNamespace()) ?: return@run
+                    PokemonSpecies.get(this.asIdentifierDefaultingNamespace()) ?: return@run
                 }
                 if (pokemon.species != species) {
                     return false
@@ -445,11 +446,11 @@ open class PokemonProperties {
             try {
                 // TODO get context on this bit, it's highly unlikely two randoms would result in the same Pokémon, doesn't mean the prop is not equal?
                 val species = if (this == "random") {
-                    PokemonSpecies.species.random()
+                    PokemonSpecies.registry().getRandom(RandomSource.create()).getOrNull()?.value() ?: return@run
                 } else {
-                    PokemonSpecies.getByIdentifier(this.asIdentifierDefaultingNamespace()) ?: return@run
+                    PokemonSpecies.get(this.asIdentifierDefaultingNamespace()) ?: return@run
                 }
-                if (properties.species != species.resourceIdentifier.toString()) {
+                if (properties.species != species.toString()) {
                     return false
                 }
             } catch (_: ResourceLocationException) {}

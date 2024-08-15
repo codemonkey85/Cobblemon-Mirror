@@ -130,8 +130,7 @@ interface Evolution : EvolutionLike {
         innerShedder.apply(shedPokemon)
         shedPokemon.caughtBall = ((pokeballStack?.item ?: CobblemonItems.POKE_BALL) as PokeBallItem).pokeBall
         pokemon.storeCoordinates.get()?.store?.add(shedPokemon)
-        pokemon.preEvolution?.let { holder ->
-            val preEvolution = holder.value()
+        pokemon.preEvolution?.let { preEvolution ->
             CobblemonCriteria.EVOLVE_POKEMON.trigger(owner, EvolvePokemonContext(preEvolution.resourceLocation(), shedPokemon.species.resourceIdentifier, playerData.get(owner).advancementData.totalEvolvedCount))
         }
         // Consume one of the balls

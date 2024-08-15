@@ -30,13 +30,13 @@ internal object SpeciesAdditions : JsonDataRegistry<SpeciesAdditions.AdditionPar
     override val id = cobblemonResource("species_additions")
     override val type = PackType.SERVER_DATA
     override val observable  = SimpleObservable<SpeciesAdditions>()
-    override val gson: Gson = PokemonSpecies.gson.newBuilder().registerTypeAdapter(AdditionParameter::class.java, AdditionParameterAdapter).create()
+    override val gson: Gson = GsonBuilder().registerTypeAdapter(AdditionParameter::class.java, AdditionParameterAdapter).create()
     override val typeToken: TypeToken<AdditionParameter> = TypeToken.get(AdditionParameter::class.java)
     override val resourcePath: String = this.id.path
 
     override fun reload(data: Map<ResourceLocation, AdditionParameter>) {
         for ((identifier,parameter) in data) {
-            val species = PokemonSpecies.getByIdentifier(parameter.targetIdentifier)
+            val species = PokemonSpecies.get(parameter.targetIdentifier)
             if (species == null) {
                 Cobblemon.LOGGER.warn("Cannot find species {} for addition {}, skipping", parameter.targetIdentifier.toString(), identifier.toString())
                 continue

@@ -37,7 +37,7 @@ class PokemonArgumentType : ArgumentType<Species> {
     }
 
     override fun parse(reader: StringReader): Species {
-        return PokemonSpecies.getByIdentifier(reader.asIdentifierDefaultingNamespace())
+        return PokemonSpecies.get(reader.asIdentifierDefaultingNamespace())
             ?: throw SimpleCommandExceptionType(INVALID_POKEMON).createWithContext(reader)
     }
 
@@ -46,7 +46,7 @@ class PokemonArgumentType : ArgumentType<Species> {
         builder: SuggestionsBuilder
     ): CompletableFuture<Suggestions> {
         // Just a neat shortcut for our own Pokémon since that will be the most common setup no need to overcomplicate
-        return SharedSuggestionProvider.suggest(PokemonSpecies.species.map { if (it.resourceIdentifier.namespace == Cobblemon.MODID) it.resourceIdentifier.path else it.resourceIdentifier.toString() }, builder)
+        return SharedSuggestionProvider.suggest(PokemonSpecies.map { if (it.resourceIdentifier.namespace == Cobblemon.MODID) it.resourceIdentifier.path else it.resourceIdentifier.toString() }, builder)
     }
 
     override fun getExamples() = EXAMPLES

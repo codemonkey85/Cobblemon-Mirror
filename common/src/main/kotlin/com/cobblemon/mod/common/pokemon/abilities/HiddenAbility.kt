@@ -10,10 +10,9 @@ package com.cobblemon.mod.common.pokemon.abilities
 
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.abilities.*
-import com.cobblemon.mod.common.registry.CobblemonRegistries
-import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.Holder
 
 /**
  * Crappy Pokémon feature
@@ -21,17 +20,18 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
  * @author Hiroku
  * @since July 28th, 2022
  */
-class HiddenAbility(override val template: AbilityTemplate) : PotentialAbility {
+class HiddenAbility(private val templateHolder: Holder<AbilityTemplate>) : PotentialAbility {
 
     override val priority: Priority = Priority.LOW
     override val type = PotentialAbilityType.HIDDEN
+    override val template: AbilityTemplate = this.templateHolder.value()
     override fun isSatisfiedBy(aspects: Set<String>) = false // TODO: actually implement hidden abilities ig? Chance in config or aspect check?
 
     companion object {
         @JvmStatic
         val CODEC: MapCodec<HiddenAbility> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.lazyInitialized { CobblemonRegistries.ABILITY.byNameCodec() }.fieldOf("ability").forGetter(HiddenAbility::template)
+                AbilityTemplate.CODEC.fieldOf("ability").forGetter(HiddenAbility::templateHolder)
             ).apply(instance, ::HiddenAbility)
         }
     }

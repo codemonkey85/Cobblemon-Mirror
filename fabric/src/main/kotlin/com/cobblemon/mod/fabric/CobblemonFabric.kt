@@ -306,7 +306,7 @@ object CobblemonFabric : CobblemonImplementation {
             builder.attribute(RegistryAttribute.SYNCED)
         }
         val registry = builder.buildAndRegister()
-        Cobblemon.LOGGER.info("Registered built-in registry {}", key.toString())
+        Cobblemon.LOGGER.info("Registered built-in registry {}", key.location().toString())
         callback.accept { elementKey, element -> Registry.register(registry, elementKey, element) }
     }
 
@@ -320,7 +320,7 @@ object CobblemonFabric : CobblemonImplementation {
         } else {
             DynamicRegistries.register(key, elementCodec)
         }
-        Cobblemon.LOGGER.info("Registered dynamic registry {}", key.toString())
+        Cobblemon.LOGGER.info("Registered dynamic registry {}", key.location().toString())
     }
 
     override fun server(): MinecraftServer? = if (this.environment() == Environment.CLIENT) Minecraft.getInstance().singleplayerServer else this.server

@@ -19,6 +19,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.core.Holder
+import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.ExtraCodecs
 import java.util.*
@@ -34,7 +35,7 @@ internal data class SpeciesP2(
     val implemented: Boolean,
     val height: Float,
     val weight: Float,
-    val preEvolution: Optional<Holder<Species>>,
+    val preEvolution: Optional<ResourceKey<Species>>,
     val battleTheme: ResourceLocation,
     val lightingData: Optional<LightingData>,
 ) {
@@ -52,7 +53,7 @@ internal data class SpeciesP2(
                 Codec.BOOL.optionalFieldOf("implemented", true).forGetter(SpeciesP2::implemented),
                 Codec.FLOAT.fieldOf("height").forGetter(SpeciesP2::height),
                 Codec.FLOAT.fieldOf("weight").forGetter(SpeciesP2::weight),
-                Codec.lazyInitialized { CobblemonRegistries.SPECIES.holderByNameCodec() }.optionalFieldOf("preEvolution").forGetter(SpeciesP2::preEvolution),
+                ResourceKey.codec(CobblemonRegistries.SPECIES_KEY).optionalFieldOf("preEvolution").forGetter(SpeciesP2::preEvolution),
                 ResourceLocation.CODEC.optionalFieldOf("battleTheme", CobblemonSounds.PVW_BATTLE.location).forGetter(SpeciesP2::battleTheme),
                 LightingData.CODEC.optionalFieldOf("lightingData").forGetter(SpeciesP2::lightingData),
             ).apply(instance, ::SpeciesP2)
@@ -69,7 +70,7 @@ internal data class SpeciesP2(
             species.implemented,
             species.height,
             species.weight,
-            Optional.ofNullable(species.preEvolution),
+            species.preEvolutionKey,
             species.battleTheme,
             Optional.ofNullable(species.lightingData),
         )

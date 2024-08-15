@@ -45,8 +45,8 @@ object CobblemonRegistries {
     internal fun register() {
         Cobblemon.implementation.registerBuiltInRegistry(ABILITY_KEY, false, Abilities::register)
         Cobblemon.implementation.registerBuiltInRegistry(MOVE_KEY, false, Moves::register)
-        Cobblemon.implementation.registerDynamicRegistry(ELEMENTAL_TYPE_KEY, ElementalType.CODEC, ElementalType.CODEC)
-        Cobblemon.implementation.registerDynamicRegistry(SPECIES_KEY, Species.CODEC, Species.PACKET_CODEC)
+        Cobblemon.implementation.registerDynamicRegistry(ELEMENTAL_TYPE_KEY, ElementalType.DIRECT_CODEC, ElementalType.DIRECT_CODEC)
+        Cobblemon.implementation.registerDynamicRegistry(SPECIES_KEY, Species.DIRECT_CODEC, Species.PACKET_CODEC)
     }
 
     private fun <T> getRegistry(key: ResourceKey<Registry<T>>): Registry<T> {

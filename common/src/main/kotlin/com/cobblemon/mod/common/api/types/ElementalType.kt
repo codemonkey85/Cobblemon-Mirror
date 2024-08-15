@@ -20,13 +20,16 @@ import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.simplify
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.Holder
+import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
+import net.minecraft.core.RegistryCodecs
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
+import net.minecraft.resources.RegistryFileCodec
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
-import net.minecraft.util.ColorRGBA
 
 class ElementalType(
     val displayName: Component,
@@ -83,12 +86,16 @@ class ElementalType(
 
     companion object {
         @JvmStatic
-        val CODEC: Codec<ElementalType> = RecordCodecBuilder.create { instance ->
+        val DIRECT_CODEC: Codec<ElementalType> = RecordCodecBuilder.create { instance ->
             instance.group(
                 ComponentSerialization.CODEC.fieldOf("displayName").forGetter(ElementalType::displayName),
                 ResistanceMap.CODEC.fieldOf("damageTaken").forGetter(ElementalType::damageTaken)
             ).apply(instance, ::ElementalType)
         }
+        @JvmStatic
+        val CODEC: Codec<Holder<ElementalType>> = RegistryFileCodec.create(CobblemonRegistries.ELEMENTAL_TYPE_KEY, DIRECT_CODEC)
+        @JvmStatic
+        val LIST_CODEC: Codec<HolderSet<ElementalType>> = RegistryCodecs.homogeneousList(CobblemonRegistries.ELEMENTAL_TYPE_KEY, DIRECT_CODEC)
     }
 
 }

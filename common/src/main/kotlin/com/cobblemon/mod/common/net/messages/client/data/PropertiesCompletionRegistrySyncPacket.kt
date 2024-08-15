@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.net.messages.client.data
 
+import com.cobblemon.mod.common.pokemon.properties.DynamicPropertiesCompletionProvider
 import com.cobblemon.mod.common.pokemon.properties.PropertiesCompletionProvider
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readString
@@ -29,12 +30,12 @@ internal class PropertiesCompletionRegistrySyncPacket(suggestions: Collection<Pr
     override fun decodeEntry(buffer: RegistryFriendlyByteBuf): PropertiesCompletionProvider.SuggestionHolder? {
         val keys = buffer.readList { pb -> pb.readString() }
         val suggestions = buffer.readList { pb -> pb.readString() }
-        return PropertiesCompletionProvider.SuggestionHolder(keys, suggestions)
+        return PropertiesCompletionProvider.SuggestionHolder(keys.toSet(), suggestions)
     }
 
     override fun synchronizeDecoded(entries: Collection<PropertiesCompletionProvider.SuggestionHolder>) {
         entries.forEach { suggestionHolder ->
-            PropertiesCompletionProvider.inject(suggestionHolder.keys, suggestionHolder.suggestions)
+            DynamicPropertiesCompletionProvider.inject(suggestionHolder.keys, suggestionHolder.suggestions)
         }
     }
 

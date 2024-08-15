@@ -88,5 +88,5 @@ interface MocKEffect : PhysicalEffect {
     val mock: PokemonProperties
 
     val exposedSpecies: Species?
-        get() = this.mock.species?.let { PokemonSpecies.getByIdentifier(it.asIdentifierDefaultingNamespace()) }
+        get() = this.mock.species?.let { PokemonSpecies.get(it.asIdentifierDefaultingNamespace()) }
 }

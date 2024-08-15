@@ -354,13 +354,15 @@ object Cobblemon {
         TRADE_COMPLETED.subscribe { AdvancementHandler.onTradeCompleted(it) }
 
         BagItems.observable.subscribe {
-            LOGGER.info("Starting dummy Showdown battle to force it to pre-load data.")
+            LOGGER.error("REIMPLEMENT: Starting dummy Showdown battle to force it to pre-load data.")
+            /*
             battleRegistry.startBattle(
                 BattleFormat.GEN_9_SINGLES,
                 BattleSide(PokemonBattleActor(UUID.randomUUID(), BattlePokemon(Pokemon().initialize()), -1F)),
                 BattleSide(PokemonBattleActor(UUID.randomUUID(), BattlePokemon(Pokemon().initialize()), -1F)),
                 true
             ).ifSuccessful { it.mute = true }
+             */
         }
 
         //To whomever is merging, this is moved out of Cobblemon and into the CobblemonImplementations
@@ -424,7 +426,8 @@ object Cobblemon {
         this.saveConfig()
 
         bestSpawner.loadConfig()
-        PokemonSpecies.observable.subscribe { starterConfig = this.loadStarterConfig() }
+        // TODO: load starter config alongside species
+        //PokemonSpecies.observable.subscribe { starterConfig = this.loadStarterConfig() }
     }
 
     fun loadStarterConfig(): StarterConfig {

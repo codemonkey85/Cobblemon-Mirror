@@ -32,7 +32,7 @@ import com.cobblemon.mod.common.api.spawning.CobblemonSpawnRules
 import com.cobblemon.mod.common.api.spawning.SpawnDetailPresets
 import com.cobblemon.mod.common.battles.BagItems
 import com.cobblemon.mod.common.pokemon.SpeciesAdditions
-import com.cobblemon.mod.common.pokemon.properties.PropertiesCompletionProvider
+import com.cobblemon.mod.common.pokemon.properties.DynamicPropertiesCompletionProvider
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.ifClient
 import com.cobblemon.mod.common.util.server
@@ -61,7 +61,7 @@ object CobblemonDataProvider : DataProvider {
         this.register(ActionEffects)
         this.register(SpeciesAdditions)
         this.register(PokeBalls)
-        this.register(PropertiesCompletionProvider)
+        this.register(DynamicPropertiesCompletionProvider)
         this.register(SpawnDetailPresets)
         this.register(CobblemonSpawnRules)
         this.register(CobblemonMechanics)

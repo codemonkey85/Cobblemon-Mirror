@@ -57,7 +57,7 @@ class PokemonSpawnDetail : SpawnDetail() {
                 return lang("species.random")
             }
             // ToDo exception handling
-            val species = PokemonSpecies.getByIdentifier(speciesString.asIdentifierDefaultingNamespace())
+            val species = PokemonSpecies.get(speciesString.asIdentifierDefaultingNamespace())
             return if (species == null) {
                 lang("species.unknown")
             } else {
@@ -71,7 +71,7 @@ class PokemonSpawnDetail : SpawnDetail() {
     override fun autoLabel() {
         val pokemonStruct = pokemon.asStruct()
         if (pokemon.species != null) {
-            val species = PokemonSpecies.getByIdentifier(pokemon.species!!.asIdentifierDefaultingNamespace())
+            val species = PokemonSpecies.get(pokemon.species!!.asIdentifierDefaultingNamespace())
             if (species != null) {
                 labels.addAll(
                     species.secondaryType?.let { listOf(species.primaryType.resourceLocation().toString(), it.resourceLocation().toString()) }

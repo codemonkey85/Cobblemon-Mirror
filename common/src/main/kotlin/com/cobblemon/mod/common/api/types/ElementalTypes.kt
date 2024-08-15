@@ -20,7 +20,7 @@ object ElementalTypes : CobblemonRegistry<ElementalType>() {
     @JvmStatic val FIRE = this.key("fire")
     @JvmStatic val WATER = this.key("water")
     @JvmStatic val GRASS = this.key("grass")
-    @JvmStatic val ELECTRIC = this.key("eletric")
+    @JvmStatic val ELECTRIC = this.key("electric")
     @JvmStatic val ICE = this.key("ice")
     @JvmStatic val FIGHTING = this.key("fighting")
     @JvmStatic val POISON = this.key("poison")

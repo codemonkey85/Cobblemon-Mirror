@@ -8,11 +8,19 @@
 
 package com.cobblemon.mod.fabric.data
 
+import com.cobblemon.mod.common.api.resistance.ResistanceMap
+import com.cobblemon.mod.common.api.types.ElementalType
+import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.data.elemental.ElementalTypeAssetProvider
 import com.cobblemon.mod.common.data.elemental.ElementalTypeProvider
 import com.cobblemon.mod.common.data.elemental.ElementalTypeTagProvider
+import com.cobblemon.mod.common.data.species.SpeciesProvider
+import com.cobblemon.mod.common.registry.CobblemonRegistries
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
+import net.minecraft.core.RegistrySetBuilder
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceKey
 
 class CobblemonFabricDataGeneratorEntrypoint : DataGeneratorEntrypoint {
 
@@ -20,10 +28,22 @@ class CobblemonFabricDataGeneratorEntrypoint : DataGeneratorEntrypoint {
         this.commonDataGen(fabricDataGenerator.createPack())
     }
 
+    override fun buildRegistry(registryBuilder: RegistrySetBuilder) {
+        registryBuilder.add(CobblemonRegistries.ELEMENTAL_TYPE_KEY) { context -> buildDummyElementalTypes(context::register) }
+    }
+
     private fun commonDataGen(pack: FabricDataGenerator.Pack) {
         pack.addProvider(::ElementalTypeProvider)
         pack.addProvider(::ElementalTypeTagProvider)
         pack.addProvider(::ElementalTypeAssetProvider)
+        pack.addProvider(::SpeciesProvider)
+    }
+
+    private fun buildDummyElementalTypes(consumer: (ResourceKey<ElementalType>, ElementalType) -> Unit) {
+        ElementalTypes.keys().forEach { key ->
+            val type = ElementalType(Component.empty(), ResistanceMap(emptyMap()))
+            consumer(key, type)
+        }
     }
 
 }

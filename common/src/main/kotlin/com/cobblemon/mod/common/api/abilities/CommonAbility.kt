@@ -9,23 +9,23 @@
 package com.cobblemon.mod.common.api.abilities
 
 import com.cobblemon.mod.common.api.Priority
-import com.cobblemon.mod.common.registry.CobblemonRegistries
-import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.Holder
 
-class CommonAbility(override val template: AbilityTemplate) : PotentialAbility {
+class CommonAbility(private val templateHolder: Holder<AbilityTemplate>) : PotentialAbility {
 
     override val priority = Priority.LOWEST
 
     override val type = PotentialAbilityType.COMMON
+    override val template: AbilityTemplate = this.templateHolder.value()
     override fun isSatisfiedBy(aspects: Set<String>) = true
 
     companion object {
         @JvmStatic
         val CODEC: MapCodec<CommonAbility> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.lazyInitialized { CobblemonRegistries.ABILITY.byNameCodec() }.fieldOf("ability").forGetter(CommonAbility::template)
+                AbilityTemplate.CODEC.fieldOf("ability").forGetter(CommonAbility::templateHolder)
             ).apply(instance, ::CommonAbility)
         }
     }

@@ -9,11 +9,11 @@
 package com.cobblemon.mod.common.pokemon
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.abilities.AbilityPool
 import com.cobblemon.mod.common.api.data.ShowdownIdentifiable
 import com.cobblemon.mod.common.api.drop.DropTable
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
+import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.effect.ShoulderEffect
 import com.cobblemon.mod.common.api.pokemon.egg.EggGroup
 import com.cobblemon.mod.common.api.pokemon.evolution.Evolution
@@ -35,14 +35,16 @@ import com.cobblemon.mod.common.util.codec.internal.species.SpeciesP2
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.core.Holder
+import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
+import net.minecraft.core.RegistryCodecs
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.RegistryFileCodec
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
-import net.minecraft.util.RandomSource
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -73,7 +75,7 @@ class Species(
     implemented: Boolean,
     height: Float,
     weight: Float,
-    preEvolution: Optional<Holder<Species>>,
+    internal val preEvolutionKey: Optional<ResourceKey<Species>>,
     battleTheme: ResourceLocation,
     lightingData: Optional<LightingData>,
 ) : RegistryElement<Species>, ShowdownIdentifiable {
@@ -159,8 +161,7 @@ class Species(
     var evolutions: MutableSet<Evolution> = hashSetOf()
         private set
 
-    var preEvolution: Holder<Species>? = preEvolution.getOrNull()
-        private set
+    val preEvolution: Species? get() = this.preEvolutionKey.map { PokemonSpecies.get(it) }.orElse(null)
 
     @Transient
     lateinit var resourceIdentifier: ResourceLocation
@@ -168,9 +169,9 @@ class Species(
     val types: Iterable<ElementalType>
         get() = secondaryType?.let { listOf(primaryType, it) } ?: listOf(primaryType)
 
-    var battleTheme: ResourceLocation = CobblemonSounds.PVW_BATTLE.location
+    var battleTheme: ResourceLocation = battleTheme
 
-    var lightingData: LightingData? = null
+    var lightingData: LightingData? = lightingData.getOrNull()
         private set
 
     fun initialize() {
@@ -223,7 +224,7 @@ class Species(
         private const val VANILLA_DEFAULT_EYE_HEIGHT = .85F
 
         @JvmStatic
-        val CODEC: Codec<Species> = RecordCodecBuilder.create { instance ->
+        val DIRECT_CODEC: Codec<Species> = RecordCodecBuilder.create { instance ->
             instance.group(
                 SpeciesP1.CODEC.forGetter(SpeciesP1::from),
                 SpeciesP2.CODEC.forGetter(SpeciesP2::from),
@@ -237,6 +238,11 @@ class Species(
             ).apply(instance, Companion::fromClientPartials)
         }
 
+        @JvmStatic
+        val CODEC: Codec<Holder<Species>> = RegistryFileCodec.create(CobblemonRegistries.SPECIES_KEY, DIRECT_CODEC)
+        @JvmStatic
+        val LIST_CODEC: Codec<HolderSet<Species>> = RegistryCodecs.homogeneousList(CobblemonRegistries.SPECIES_KEY, DIRECT_CODEC)
+
         private fun fromPartials(p1: SpeciesP1, p2: SpeciesP2): Species = Species(
             p1.nationalPokedexNumber,
             p1.baseStats,
@@ -248,8 +254,8 @@ class Species(
             p1.evYield,
             p1.experienceGroup,
             p1.hitbox,
-            p1.primaryType,
-            p1.secondaryType,
+            p1.primaryType.value(),
+            p1.secondaryType.map { it.value() },
             p1.abilityPool,
             p1.shoulderMountable,
             p1.shoulderEffects,
@@ -280,8 +286,8 @@ class Species(
             emptyMap(),
             p1.experienceGroup,
             p1.hitbox,
-            p1.primaryType,
-            p1.secondaryType,
+            p1.primaryType.value(),
+            p1.secondaryType.map { it.value() },
             AbilityPool(),
             false,
             emptySet(),

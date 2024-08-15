@@ -45,7 +45,7 @@ class ClientBattlePokemon(
 ) {
     lateinit var actor: ClientBattleActor
     val species: Species
-        get() = PokemonSpecies.getByIdentifier(properties.species!!.asIdentifierDefaultingNamespace())!!
+        get() = PokemonSpecies.get(properties.species!!.asIdentifierDefaultingNamespace())!!
     val level: Int
         get() = properties.level ?: 0
 

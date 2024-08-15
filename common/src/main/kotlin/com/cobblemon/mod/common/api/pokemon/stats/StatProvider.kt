@@ -29,11 +29,6 @@ import net.minecraft.resources.ResourceLocation
 interface StatProvider {
 
     /**
-     * The [StatTypeAdapter] implementation.
-     */
-    val typeAdapter: StatTypeAdapter
-
-    /**
      * Collects all the stats currently implemented.
      *
      * @return A collection of stats.

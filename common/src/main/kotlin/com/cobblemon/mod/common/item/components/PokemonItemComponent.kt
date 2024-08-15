@@ -9,7 +9,6 @@
 package com.cobblemon.mod.common.item.components
 
 import com.cobblemon.mod.common.pokemon.Species
-import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import io.netty.buffer.ByteBuf
@@ -26,7 +25,7 @@ data class PokemonItemComponent(
 ) {
     companion object {
         val CODEC: Codec<PokemonItemComponent> = RecordCodecBuilder.create { builder -> builder.group(
-            Codec.lazyInitialized { CobblemonRegistries.SPECIES.byNameCodec() }.fieldOf("species").forGetter(PokemonItemComponent::species),
+            Species.DIRECT_CODEC.fieldOf("species").forGetter(PokemonItemComponent::species),
             Codec.STRING.listOf().fieldOf("aspects").forGetter { it.aspects.toList() },
             Codec.FLOAT.listOf().optionalFieldOf("tint").forGetter { Optional.ofNullable(it.tint?.let { listOf(it.x, it.y, it.z, it.w) }) }
         ).apply(builder) { species, aspects, tint -> PokemonItemComponent(species, aspects.toSet(), tint.getOrNull()?.let { Vector4f(it[0], it[1], it[2], it[3]) } ) } }

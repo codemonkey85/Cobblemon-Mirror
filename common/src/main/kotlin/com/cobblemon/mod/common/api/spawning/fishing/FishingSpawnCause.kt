@@ -73,7 +73,7 @@ class FishingSpawnCause(
     override fun affectWeight(detail: SpawnDetail, ctx: SpawningContext, weight: Float): Float {
         if (bait != null){
             if (detail is PokemonSpawnDetail) {
-               val detailSpecies = detail.pokemon.species?.let { PokemonSpecies.getByName(it) }
+               val detailSpecies = detail.pokemon.species?.let { PokemonSpecies.get(it) }
 
                 val baitEVEffect = bait.effects.firstOrNull { it.type == FishingBait.Effects.EV && detailSpecies?.evYield?.get(Stats.getStat(it.subcategory?.path.toString()))!! > 0 }
 
@@ -140,7 +140,7 @@ class FishingSpawnCause(
     }
 
     private fun alterHAAttempt(pokemonEntity: PokemonEntity) {
-        val species = pokemonEntity.pokemon.species.let { PokemonSpecies.getByName(it.name) } ?: return
+        val species = pokemonEntity.pokemon.species.let { PokemonSpecies.get(it.name) } ?: return
         val ability = species.abilities.mapping[Priority.LOW]?.first()?.template ?: return
         pokemonEntity.pokemon.ability = ability.create()
 

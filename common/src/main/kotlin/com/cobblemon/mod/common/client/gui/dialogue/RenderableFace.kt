@@ -119,9 +119,9 @@ class ArtificialRenderableFace(
         val state = this.state
         state.currentAspects = aspects
         if (modelType == "pokemon") {
-            val species = PokemonSpecies.getByIdentifier(identifier) ?: run {
+            val species = PokemonSpecies.get(identifier) ?: run {
                 Cobblemon.LOGGER.error("Unable to find species for $identifier for a dialogue face. Defaulting to first species.")
-                PokemonSpecies.species.first()
+                PokemonSpecies.first()
             }
             drawPosablePortrait(
                 identifier = species.resourceIdentifier,

@@ -12,7 +12,6 @@ import com.cobblemon.mod.common.api.abilities.Abilities
 import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.api.pokemon.Natures
-import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.experience.SidemodExperienceSource
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
@@ -95,7 +94,7 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<CompoundTag> {
         val variant = nbt.getString("Variant")
         if (variant.isNotEmpty()) {
             val id = ResourceLocation.fromNamespaceAndPath(species.resourceIdentifier.namespace, "${species.resourceIdentifier.path}/${variant.lowercase()}")
-            species = PokemonSpecies.getByIdentifier(id) ?: throw IllegalStateException("Unable to resolve the target species with variant $variant tried to generate ID $id")
+            species = PokemonSpecies.get(id) ?: throw IllegalStateException("Unable to resolve the target species with variant $variant tried to generate ID $id")
         }
         result.species = species
         result.gender = Gender.entries.toTypedArray()[nbt.getInt("Gender")]

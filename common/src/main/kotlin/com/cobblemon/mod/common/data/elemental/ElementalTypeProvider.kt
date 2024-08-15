@@ -270,7 +270,7 @@ class ElementalTypeProvider(
     ) : DataExport<ElementalType> {
         override fun id(): ResourceLocation = this.id
 
-        override fun codec(): Codec<ElementalType> = ElementalType.CODEC
+        override fun codec(): Codec<ElementalType> = ElementalType.DIRECT_CODEC
 
         override fun value(): ElementalType = this.value
     }

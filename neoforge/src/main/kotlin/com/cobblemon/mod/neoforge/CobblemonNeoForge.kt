@@ -428,7 +428,7 @@ class CobblemonNeoForge : CobblemonImplementation {
                     ) { element }
                 }
             }
-            Cobblemon.LOGGER.info("Registered built-in registry {}", key.toString())
+            Cobblemon.LOGGER.info("Registered built-in registry {}", key.location().toString())
         }
     }
 
@@ -439,7 +439,7 @@ class CobblemonNeoForge : CobblemonImplementation {
     ) {
         MOD_BUS.addListener<DataPackRegistryEvent.NewRegistry> { event ->
             event.dataPackRegistry(key, elementCodec, networkCodec)
-            Cobblemon.LOGGER.info("Registered dynamic registry {}", key.toString())
+            Cobblemon.LOGGER.info("Registered dynamic registry {}", key.location().toString())
         }
     }
 

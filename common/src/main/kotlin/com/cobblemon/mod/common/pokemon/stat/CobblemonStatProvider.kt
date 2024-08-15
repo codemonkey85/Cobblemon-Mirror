@@ -33,7 +33,6 @@ import net.minecraft.resources.ResourceLocation
  */
 object CobblemonStatProvider : StatProvider {
 
-    override val typeAdapter: StatTypeAdapter = CobblemonStatTypeAdapter
     private val stats = Stats.entries.associateBy { it.identifier }
     private val ordinalToStat = Stats.entries.associateBy { it.ordinal }
     private val identifierToOrdinal = Stats.entries.associate { it.identifier to it.ordinal }

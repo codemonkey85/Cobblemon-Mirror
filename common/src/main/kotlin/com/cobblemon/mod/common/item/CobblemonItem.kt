@@ -8,16 +8,7 @@
 
 package com.cobblemon.mod.common.item
 
-import com.cobblemon.mod.common.api.text.blue
-import com.cobblemon.mod.common.api.types.ElementalTypes
-import com.cobblemon.mod.common.item.interactive.PokerodItem.Companion.getBaitEffects
-import com.cobblemon.mod.common.pokemon.Gender
-import com.cobblemon.mod.common.util.lang
-import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.TooltipFlag
-import java.math.BigDecimal
 
 /**
  * Base for custom items in Cobblemon.

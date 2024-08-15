@@ -12,6 +12,8 @@ import com.cobblemon.mod.common.api.moves.MoveTemplate
 import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.mojang.serialization.Codec
+import net.minecraft.core.Holder
+import net.minecraft.core.HolderSet
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
@@ -73,14 +75,16 @@ open class Learnset {
             })
 
         @JvmStatic
-        val CLIENT_CODEC: Codec<Learnset> = Codec.unboundedMap(ExtraCodecs.POSITIVE_INT, Codec.lazyInitialized { CobblemonRegistries.MOVE.byNameCodec() }.listOf())
+        val CLIENT_CODEC: Codec<Learnset> = Codec.unboundedMap(ExtraCodecs.POSITIVE_INT, MoveTemplate.LIST_CODEC)
             .xmap(
                 { map ->
                     val learnset = Learnset()
-                    learnset.levelUpMoves += map
+                    map.forEach { (level, moves) ->
+                        learnset.levelUpMoves[level] = moves.map { it.value() }.toMutableList()
+                    }
                     learnset
                 },
-                Learnset::levelUpMoves
+                { learnset -> learnset.levelUpMoves.entries.associate { pair -> pair.key to HolderSet.direct(pair.value.map { Holder.direct(it) } )} }
             )
 
         @JvmStatic

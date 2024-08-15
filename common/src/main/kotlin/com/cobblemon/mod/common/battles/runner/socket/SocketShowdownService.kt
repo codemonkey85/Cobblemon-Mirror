@@ -102,6 +102,10 @@ class SocketShowdownService(val host: String = "localhost", val port: Int = 1846
         ShowdownInterpreter.interpretMessage(battleId, message)
     }
 
+    override fun getBaseSpecies(): JsonArray {
+        TODO("Not yet implemented")
+    }
+
     override fun getAbilities(): JsonArray {
         writer.write(">getAbilities")
         writer.flush()
@@ -136,7 +140,7 @@ class SocketShowdownService(val host: String = "localhost", val port: Int = 1846
     override fun registerSpecies() {
         writer.write(">resetSpeciesData\n")
         acknowledge()
-        PokemonSpecies.species.forEach { species ->
+        PokemonSpecies.forEach { species ->
             sendSpeciesData(species)
         }
     }

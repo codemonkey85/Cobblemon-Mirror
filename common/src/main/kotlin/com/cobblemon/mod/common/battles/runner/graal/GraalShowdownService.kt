@@ -136,6 +136,12 @@ class GraalShowdownService : ShowdownService {
         sendToShowdown(battleId, messages)
     }
 
+    override fun getBaseSpecies(): JsonArray {
+        val fn = context.getBindings("js").getMember("getBaseSpecies")
+        val arrayResult = fn.execute().asString()
+        return JsonParser.parseString(arrayResult).asJsonArray
+    }
+
     override fun getAbilities(): JsonArray {
         val fn = context.getBindings("js").getMember("getAbilities")
         val arrayResult = fn.execute().asString()
@@ -158,7 +164,7 @@ class GraalShowdownService : ShowdownService {
         val receiveSpeciesDataFn = this.context.getBindings("js").getMember("receiveSpeciesData")
         val jsArray = this.context.eval("js", "new Array();")
         var index = 0L
-        PokemonSpecies.species.forEach { species ->
+        PokemonSpecies.forEach { species ->
             jsArray.setArrayElement(index++, this.gson.toJson(PokemonSpecies.ShowdownSpecies(species)))
         }
         receiveSpeciesDataFn.execute(jsArray)

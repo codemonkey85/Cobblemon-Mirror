@@ -173,7 +173,7 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
                 .map { it.first }
                 .mapOrElse({ ShoulderData(pokemonUUID, it.species, it.aspects, it.scaleModifier) }, { null })
         }
-        val species = PokemonSpecies.getByIdentifier(ResourceLocation.parse(shoulderNbt.getString(DataKeys.SHOULDER_SPECIES)))
+        val species = PokemonSpecies.get(ResourceLocation.parse(shoulderNbt.getString(DataKeys.SHOULDER_SPECIES)))
             ?: return null
         val aspects = shoulderNbt.getList(DataKeys.SHOULDER_ASPECTS, Tag.TAG_STRING.toInt()).map { it.asString }.toSet()
         val scaleModifier = shoulderNbt.getFloat(DataKeys.SHOULDER_SCALE_MODIFIER)

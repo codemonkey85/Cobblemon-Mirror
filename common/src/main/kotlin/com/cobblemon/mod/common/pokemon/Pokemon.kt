@@ -97,7 +97,6 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.InteractionHand
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Holder
 import net.minecraft.nbt.*
 import net.minecraft.network.chat.contents.PlainTextContents
 import net.minecraft.network.codec.ByteBufCodecs
@@ -134,7 +133,7 @@ open class Pokemon : ShowdownIdentifiable {
     var uuid = UUID.randomUUID()
     var species = PokemonSpecies.random()
         set(value) {
-            if (PokemonSpecies.getByIdentifier(value.resourceIdentifier) == null) {
+            if (PokemonSpecies.get(value.resourceIdentifier) == null) {
                 throw IllegalArgumentException("Cannot set a species that isn't registered")
             }
             val quotient = clamp(currentHealth / hp.toFloat(), 0F, 1F)
@@ -310,7 +309,7 @@ open class Pokemon : ShowdownIdentifiable {
      */
     var gmaxFactor = false
         set(value) {
-            val evolutions = species.evolutions.mapNotNull { it.result.species }.mapNotNull { PokemonSpecies.getByName(it) }
+            val evolutions = species.evolutions.mapNotNull { it.result.species }.mapNotNull { PokemonSpecies.get(it) }
             if (species.canGmax() || evolutions.find { it.canGmax() } != null) {
                 field = value
                 _gmaxFactor.emit(value)
@@ -462,7 +461,7 @@ open class Pokemon : ShowdownIdentifiable {
     val lockedEvolutions: Iterable<Evolution>
         get() = evolutions.filter { it !in evolutionProxy.current() }
 
-    val preEvolution: Holder<Species>? get() = this.species.preEvolution
+    val preEvolution: Species? get() = this.species.preEvolution
 
     /**
      * Provides the sided [EvolutionController]s, these operations can be done safely with a simple side check.

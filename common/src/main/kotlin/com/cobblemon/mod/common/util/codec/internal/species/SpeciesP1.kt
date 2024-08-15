@@ -15,11 +15,11 @@ import com.cobblemon.mod.common.api.pokemon.moves.Learnset
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.api.pokemon.stats.Stat
 import com.cobblemon.mod.common.api.types.ElementalType
-import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.codec.CodecUtils
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.Holder
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.world.entity.EntityDimensions
 import java.util.Optional
@@ -35,8 +35,8 @@ internal data class SpeciesP1(
     val evYield: Map<Stat, Int>,
     val experienceGroup: ExperienceGroup,
     val hitbox: EntityDimensions,
-    val primaryType: ElementalType,
-    val secondaryType: Optional<ElementalType>,
+    val primaryType: Holder<ElementalType>,
+    val secondaryType: Optional<Holder<ElementalType>>,
     val abilityPool: AbilityPool,
     val shoulderMountable: Boolean,
     val shoulderEffects: Set<ShoulderEffect>,
@@ -56,8 +56,8 @@ internal data class SpeciesP1(
                 Codec.unboundedMap(Stat.PERMANENT_ONLY_CODEC, ExtraCodecs.POSITIVE_INT).fieldOf("evYield").forGetter(SpeciesP1::evYield),
                 ExperienceGroup.CODEC.fieldOf("experienceGroup").forGetter(SpeciesP1::experienceGroup),
                 CodecUtils.ENTITY_DIMENSION.fieldOf("hitbox").forGetter(SpeciesP1::hitbox),
-                Codec.lazyInitialized { CobblemonRegistries.ELEMENTAL_TYPE.byNameCodec() }.fieldOf("primaryType").forGetter(SpeciesP1::primaryType),
-                Codec.lazyInitialized { CobblemonRegistries.ELEMENTAL_TYPE.byNameCodec() }.optionalFieldOf("secondaryType").forGetter(SpeciesP1::secondaryType),
+                ElementalType.CODEC.fieldOf("primaryType").forGetter(SpeciesP1::primaryType),
+                ElementalType.CODEC.optionalFieldOf("secondaryType").forGetter(SpeciesP1::secondaryType),
                 AbilityPool.CODEC.fieldOf("abilities").forGetter(SpeciesP1::abilityPool),
                 Codec.BOOL.fieldOf("shoulderMountable").forGetter(SpeciesP1::shoulderMountable),
                 CodecUtils.setOf(ShoulderEffect.CODEC).fieldOf("shoulderEffects").forGetter(SpeciesP1::shoulderEffects),
@@ -76,8 +76,8 @@ internal data class SpeciesP1(
             species.evYield,
             species.experienceGroup,
             species.hitbox,
-            species.primaryType,
-            Optional.ofNullable(species.secondaryType),
+            Holder.direct(species.primaryType),
+            Optional.ofNullable(species.secondaryType?.let { Holder.direct(it) }),
             species.abilities,
             species.shoulderMountable,
             species.shoulderEffects,

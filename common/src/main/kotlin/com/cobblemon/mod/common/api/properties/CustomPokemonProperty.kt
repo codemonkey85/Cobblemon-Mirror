@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.api.properties
 import com.cobblemon.mod.common.api.properties.CustomPokemonProperty.Companion.register
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.pokemon.properties.PropertiesCompletionProvider
+import com.cobblemon.mod.common.pokemon.properties.DynamicPropertiesCompletionProvider
 import com.cobblemon.mod.common.util.server
 
 /**
@@ -56,8 +56,8 @@ interface CustomPokemonProperty {
         private fun triggerSyncAttempt() {
             val server = server() ?: return
             if (!server.isSingleplayer) {
-                PropertiesCompletionProvider.reload()
-                server.playerList.players.forEach { player -> PropertiesCompletionProvider.sync(player) }
+                DynamicPropertiesCompletionProvider.reload()
+                server.playerList.players.forEach { player -> DynamicPropertiesCompletionProvider.sync(player) }
             }
         }
     }

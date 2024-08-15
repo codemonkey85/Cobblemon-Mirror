@@ -12,7 +12,8 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
-import com.cobblemon.mod.common.pokemon.properties.PropertiesCompletionProvider
+import com.cobblemon.mod.common.pokemon.properties.BuiltinPropertiesCompletionProvider
+import com.cobblemon.mod.common.pokemon.properties.DynamicPropertiesCompletionProvider
 import com.mojang.brigadier.StringReader
 import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.context.CommandContext
@@ -54,19 +55,23 @@ class PokemonPropertiesArgumentType: ArgumentType<PokemonProperties> {
         if (currentSection.contains(ASSIGNER)) {
             val propertyKey = currentSection.substringBefore(ASSIGNER)
             val currentValue = currentSection.substringAfter(ASSIGNER)
-            return PropertiesCompletionProvider.suggestValues(propertyKey, currentValue, builder)
+            BuiltinPropertiesCompletionProvider.suggestValues(propertyKey, currentValue, builder)
+            DynamicPropertiesCompletionProvider.suggestValues(propertyKey, currentValue, builder)
+            return builder.buildFuture()
         }
         // We will always assume a species identifier has the priority as the first command argument as that's the most traditional approach as such lets provide property keys for the suggestion
         else if (sections.size >= 2) {
             val usedKeys = sections.filter { it.contains("=") }.map { it.substringBefore("=") }.toSet()
-            return PropertiesCompletionProvider.suggestKeys(currentSection, usedKeys, builder)
+            BuiltinPropertiesCompletionProvider.suggestKeys(currentSection, usedKeys, builder)
+            DynamicPropertiesCompletionProvider.suggestKeys(currentSection, usedKeys, builder)
+            return builder.buildFuture()
         }
         return this.suggestSpeciesAndPropertyKeys(builder)
     }
 
-    private fun suggestSpeciesAndPropertyKeys(builder: SuggestionsBuilder) = SharedSuggestionProvider.suggest(this.collectSpeciesIdentifiers() + PropertiesCompletionProvider.keys(), builder)
+    private fun suggestSpeciesAndPropertyKeys(builder: SuggestionsBuilder) = SharedSuggestionProvider.suggest(this.collectSpeciesIdentifiers() + DynamicPropertiesCompletionProvider.keys(), builder)
 
-    private fun collectSpeciesIdentifiers() = PokemonSpecies.species.map { if (it.resourceIdentifier.namespace == Cobblemon.MODID) it.resourceIdentifier.path else it.resourceIdentifier.toString() }
+    private fun collectSpeciesIdentifiers() = PokemonSpecies.map { if (it.resourceIdentifier.namespace == Cobblemon.MODID) it.resourceIdentifier.path else it.resourceIdentifier.toString() }
 
     override fun getExamples() = EXAMPLES
 }

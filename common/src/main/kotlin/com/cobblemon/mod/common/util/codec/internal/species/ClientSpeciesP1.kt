@@ -20,6 +20,7 @@ import com.cobblemon.mod.common.util.codec.CodecUtils
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.Holder
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.world.entity.EntityDimensions
@@ -33,8 +34,8 @@ internal data class ClientSpeciesP1(
     val weight: Float,
     val experienceGroup: ExperienceGroup,
     val hitbox: EntityDimensions,
-    val primaryType: ElementalType,
-    val secondaryType: Optional<ElementalType>,
+    val primaryType: Holder<ElementalType>,
+    val secondaryType: Optional<Holder<ElementalType>>,
     val learnset: Learnset,
     val battleTheme: ResourceLocation,
     val lightingData: Optional<LightingData>,
@@ -52,8 +53,8 @@ internal data class ClientSpeciesP1(
                 Codec.FLOAT.fieldOf("weight").forGetter(ClientSpeciesP1::weight),
                 ExperienceGroup.CODEC.fieldOf("experienceGroup").forGetter(ClientSpeciesP1::experienceGroup),
                 CodecUtils.ENTITY_DIMENSION.fieldOf("hitbox").forGetter(ClientSpeciesP1::hitbox),
-                Codec.lazyInitialized { CobblemonRegistries.ELEMENTAL_TYPE.byNameCodec() }.fieldOf("primaryType").forGetter(ClientSpeciesP1::primaryType),
-                Codec.lazyInitialized { CobblemonRegistries.ELEMENTAL_TYPE.byNameCodec() }.optionalFieldOf("secondaryType").forGetter(ClientSpeciesP1::secondaryType),
+                ElementalType.CODEC.fieldOf("primaryType").forGetter(ClientSpeciesP1::primaryType),
+                ElementalType.CODEC.optionalFieldOf("secondaryType").forGetter(ClientSpeciesP1::secondaryType),
                 Learnset.CLIENT_CODEC.fieldOf("moves").forGetter(ClientSpeciesP1::learnset),
                 ResourceLocation.CODEC.optionalFieldOf("battleTheme", CobblemonSounds.PVW_BATTLE.location).forGetter(ClientSpeciesP1::battleTheme),
                 LightingData.CODEC.optionalFieldOf("lightingData").forGetter(ClientSpeciesP1::lightingData),
@@ -69,8 +70,8 @@ internal data class ClientSpeciesP1(
             species.weight,
             species.experienceGroup,
             species.hitbox,
-            species.primaryType,
-            Optional.ofNullable(species.secondaryType),
+            Holder.direct(species.primaryType),
+            Optional.ofNullable(species.secondaryType?.let { Holder.direct(it) }),
             species.moves,
             species.battleTheme,
             Optional.ofNullable(species.lightingData),

@@ -30,7 +30,7 @@ data class RenderablePokemon(var species: Species, var aspects: Set<String>) {
 
     companion object {
         fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): RenderablePokemon {
-            val species = PokemonSpecies.getByIdentifier(buffer.readIdentifier())!!
+            val species = PokemonSpecies.get(buffer.readIdentifier())!!
             val aspects = mutableSetOf<String>()
             repeat(times = buffer.readSizedInt(IntSize.U_BYTE)) {
                 aspects.add(buffer.readString())
