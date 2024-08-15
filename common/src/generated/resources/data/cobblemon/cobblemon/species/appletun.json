@@ -1,0 +1,73 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:thickfat"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:ripen"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:gluttony"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 85,
+    "cobblemon:defence": 80,
+    "cobblemon:hp": 110,
+    "cobblemon:special_attack": 100,
+    "cobblemon:special_defence": 80,
+    "cobblemon:speed": 30
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "GRASS",
+    "DRAGON"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 4.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 842,
+  "preEvolution": "cobblemon:applin",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 130.0
+}

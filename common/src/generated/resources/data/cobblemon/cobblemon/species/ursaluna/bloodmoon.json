@@ -1,0 +1,63 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:mindseye"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 70,
+    "cobblemon:defence": 120,
+    "cobblemon:hp": 113,
+    "cobblemon:special_attack": 135,
+    "cobblemon:special_defence": 65,
+    "cobblemon:speed": 52
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "FIELD"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 27.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 901,
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 3330.0
+}

@@ -1,0 +1,72 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:sheerforce"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:poisonpoint"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:rivalry"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 92,
+    "cobblemon:defence": 87,
+    "cobblemon:hp": 90,
+    "cobblemon:special_attack": 75,
+    "cobblemon:special_defence": 85,
+    "cobblemon:speed": 76
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "UNDISCOVERED"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 13.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 31,
+  "preEvolution": "cobblemon:nidorina",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 600.0
+}

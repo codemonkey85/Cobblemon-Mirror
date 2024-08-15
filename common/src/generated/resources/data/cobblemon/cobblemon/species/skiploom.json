@@ -1,0 +1,73 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:infiltrator"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:chlorophyll"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:leafguard"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 45,
+    "cobblemon:defence": 50,
+    "cobblemon:hp": 55,
+    "cobblemon:special_attack": 45,
+    "cobblemon:special_defence": 65,
+    "cobblemon:speed": 80
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "FAIRY",
+    "GRASS"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 6.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 188,
+  "preEvolution": "cobblemon:hoppip",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 10.0
+}

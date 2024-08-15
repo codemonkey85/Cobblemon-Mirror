@@ -1,0 +1,64 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:grassysurge"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:overgrow"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 125,
+    "cobblemon:defence": 90,
+    "cobblemon:hp": 100,
+    "cobblemon:special_attack": 60,
+    "cobblemon:special_defence": 70,
+    "cobblemon:speed": 85
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "FIELD",
+    "GRASS"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 280.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 812,
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 0.0
+}

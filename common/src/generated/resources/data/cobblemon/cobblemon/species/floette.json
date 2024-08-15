@@ -1,0 +1,64 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:symbiosis"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:flowerveil"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 45,
+    "cobblemon:defence": 47,
+    "cobblemon:hp": 54,
+    "cobblemon:special_attack": 75,
+    "cobblemon:special_defence": 98,
+    "cobblemon:speed": 52
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "FAIRY"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 2.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 670,
+  "preEvolution": "cobblemon:flabebe",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 9.0
+}

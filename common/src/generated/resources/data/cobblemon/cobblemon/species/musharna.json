@@ -1,0 +1,68 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:telepathy"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:forewarn"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:synchronize"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 55,
+    "cobblemon:defence": 85,
+    "cobblemon:hp": 116,
+    "cobblemon:special_attack": 107,
+    "cobblemon:special_defence": 95,
+    "cobblemon:speed": 29
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "FIELD"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 11.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 518,
+  "preEvolution": "cobblemon:munna",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 605.0
+}

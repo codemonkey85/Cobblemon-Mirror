@@ -1,0 +1,71 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:waterveil"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:swiftswim"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:waterabsorb"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 20,
+    "cobblemon:defence": 50,
+    "cobblemon:hp": 45,
+    "cobblemon:special_attack": 60,
+    "cobblemon:special_defence": 120,
+    "cobblemon:speed": 50
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "UNDISCOVERED"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 10.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 458,
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 650.0
+}

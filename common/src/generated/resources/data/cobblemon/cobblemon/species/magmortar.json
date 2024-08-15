@@ -1,0 +1,64 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:vitalspirit"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:flamebody"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 95,
+    "cobblemon:defence": 67,
+    "cobblemon:hp": 75,
+    "cobblemon:special_attack": 125,
+    "cobblemon:special_defence": 95,
+    "cobblemon:speed": 83
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "HUMAN_LIKE"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 16.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 467,
+  "preEvolution": "cobblemon:magmar",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 680.0
+}

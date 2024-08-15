@@ -1,0 +1,69 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:unnerve"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:rivalry"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:moldbreaker"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 117,
+    "cobblemon:defence": 70,
+    "cobblemon:hp": 66,
+    "cobblemon:special_attack": 40,
+    "cobblemon:special_defence": 50,
+    "cobblemon:speed": 67
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "MONSTER",
+    "DRAGON"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 10.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 611,
+  "preEvolution": "cobblemon:axew",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 360.0
+}

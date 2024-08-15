@@ -1,0 +1,71 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:friendguard"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:cutecharm"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:competitive"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 30,
+    "cobblemon:defence": 15,
+    "cobblemon:hp": 90,
+    "cobblemon:special_attack": 40,
+    "cobblemon:special_defence": 20,
+    "cobblemon:speed": 15
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "UNDISCOVERED"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 3.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 174,
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 10.0
+}

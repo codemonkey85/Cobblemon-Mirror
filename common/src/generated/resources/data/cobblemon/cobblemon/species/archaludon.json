@@ -1,0 +1,73 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:stalwart"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:stamina"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:sturdy"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 105,
+    "cobblemon:defence": 130,
+    "cobblemon:hp": 90,
+    "cobblemon:special_attack": 125,
+    "cobblemon:special_defence": 65,
+    "cobblemon:speed": 85
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "MINERAL",
+    "DRAGON"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 20.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 1018,
+  "preEvolution": "cobblemon:duraludon",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 600.0
+}

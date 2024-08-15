@@ -1,0 +1,65 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:unburden"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:overgrow"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 85,
+    "cobblemon:defence": 65,
+    "cobblemon:hp": 70,
+    "cobblemon:special_attack": 105,
+    "cobblemon:special_defence": 85,
+    "cobblemon:speed": 120
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "MONSTER",
+    "DRAGON"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 17.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 254,
+  "preEvolution": "cobblemon:grovyle",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 522.0
+}

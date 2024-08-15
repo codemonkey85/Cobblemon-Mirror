@@ -1,0 +1,72 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:hydration"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:oblivious"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:anticipation"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 78,
+    "cobblemon:defence": 73,
+    "cobblemon:hp": 110,
+    "cobblemon:special_attack": 76,
+    "cobblemon:special_defence": 71,
+    "cobblemon:speed": 60
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "WATER_2"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 9.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 340,
+  "preEvolution": "cobblemon:barboach",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 236.0
+}

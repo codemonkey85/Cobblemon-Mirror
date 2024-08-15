@@ -1,0 +1,69 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:damp"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:poisonpoint"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:sniper"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 65,
+    "cobblemon:defence": 95,
+    "cobblemon:hp": 55,
+    "cobblemon:special_attack": 95,
+    "cobblemon:special_defence": 45,
+    "cobblemon:speed": 85
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "WATER_1",
+    "DRAGON"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 12.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 117,
+  "preEvolution": "cobblemon:horsea",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 250.0
+}

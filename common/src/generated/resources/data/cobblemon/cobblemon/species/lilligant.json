@@ -1,0 +1,68 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:leafguard"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:chlorophyll"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:owntempo"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 60,
+    "cobblemon:defence": 75,
+    "cobblemon:hp": 70,
+    "cobblemon:special_attack": 110,
+    "cobblemon:special_defence": 75,
+    "cobblemon:speed": 90
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "GRASS"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 11.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 549,
+  "preEvolution": "cobblemon:petilil",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 163.0
+}

@@ -1,0 +1,73 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:sweetveil"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:honeygather"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:shielddust"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 55,
+    "cobblemon:defence": 60,
+    "cobblemon:hp": 60,
+    "cobblemon:special_attack": 95,
+    "cobblemon:special_defence": 70,
+    "cobblemon:speed": 124
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "BUG",
+    "FAIRY"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 2.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 743,
+  "preEvolution": "cobblemon:cutiefly",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 5.0
+}

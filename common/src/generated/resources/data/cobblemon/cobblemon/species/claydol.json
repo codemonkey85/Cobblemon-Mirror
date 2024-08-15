@@ -1,0 +1,64 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:levitate"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 70,
+    "cobblemon:defence": 105,
+    "cobblemon:hp": 60,
+    "cobblemon:special_attack": 70,
+    "cobblemon:special_defence": 120,
+    "cobblemon:speed": 75
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "MINERAL"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 15.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 344,
+  "preEvolution": "cobblemon:baltoy",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 1080.0
+}

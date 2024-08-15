@@ -1,0 +1,72 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:rivalry"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:bigpecks"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:superluck"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 77,
+    "cobblemon:defence": 62,
+    "cobblemon:hp": 62,
+    "cobblemon:special_attack": 50,
+    "cobblemon:special_defence": 42,
+    "cobblemon:speed": 65
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "FLYING"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 6.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 520,
+  "preEvolution": "cobblemon:pidove",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 150.0
+}

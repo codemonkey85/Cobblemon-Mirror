@@ -1,0 +1,68 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:prankster"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:limber"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:unburden"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 88,
+    "cobblemon:defence": 50,
+    "cobblemon:hp": 64,
+    "cobblemon:special_attack": 88,
+    "cobblemon:special_defence": 50,
+    "cobblemon:speed": 106
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "FIELD"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 11.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 510,
+  "preEvolution": "cobblemon:purrloin",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 375.0
+}

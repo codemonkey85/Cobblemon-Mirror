@@ -1,0 +1,72 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:harvest"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:chlorophyll"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:solarpower"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 68,
+    "cobblemon:defence": 83,
+    "cobblemon:hp": 99,
+    "cobblemon:special_attack": 72,
+    "cobblemon:special_defence": 87,
+    "cobblemon:speed": 51
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "MONSTER",
+    "GRASS"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 20.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 357,
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 1000.0
+}

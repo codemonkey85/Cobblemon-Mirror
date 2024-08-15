@@ -1,0 +1,65 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:leafguard"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:overgrow"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 82,
+    "cobblemon:defence": 100,
+    "cobblemon:hp": 80,
+    "cobblemon:special_attack": 83,
+    "cobblemon:special_defence": 100,
+    "cobblemon:speed": 80
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "MONSTER",
+    "GRASS"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 18.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 154,
+  "preEvolution": "cobblemon:bayleef",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 1005.0
+}

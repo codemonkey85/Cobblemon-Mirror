@@ -1,0 +1,73 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:sturdy"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:strongjaw"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:icebody"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 127,
+    "cobblemon:defence": 184,
+    "cobblemon:hp": 95,
+    "cobblemon:special_attack": 34,
+    "cobblemon:special_defence": 36,
+    "cobblemon:speed": 38
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "MONSTER",
+    "MINERAL"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 14.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 713,
+  "preEvolution": "cobblemon:bergmite",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 2624.0
+}

@@ -1,0 +1,64 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:bulletproof"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:overgrow"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 78,
+    "cobblemon:defence": 95,
+    "cobblemon:hp": 61,
+    "cobblemon:special_attack": 56,
+    "cobblemon:special_defence": 58,
+    "cobblemon:speed": 57
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "FIELD"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 7.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 651,
+  "preEvolution": "cobblemon:chespin",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 290.0
+}

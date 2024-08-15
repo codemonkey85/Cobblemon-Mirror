@@ -1,0 +1,68 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:hustle"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:poisonpoint"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:rivalry"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 62,
+    "cobblemon:defence": 67,
+    "cobblemon:hp": 70,
+    "cobblemon:special_attack": 55,
+    "cobblemon:special_defence": 55,
+    "cobblemon:speed": 56
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "UNDISCOVERED"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 8.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 30,
+  "preEvolution": "cobblemon:nidoran/f",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 200.0
+}

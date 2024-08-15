@@ -1,0 +1,68 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:prankster"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:oblivious"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:tintedlens"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 47,
+    "cobblemon:defence": 75,
+    "cobblemon:hp": 65,
+    "cobblemon:special_attack": 73,
+    "cobblemon:special_defence": 85,
+    "cobblemon:speed": 85
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "BUG",
+    "HUMAN_LIKE"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 6.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 314,
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 177.0
+}

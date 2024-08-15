@@ -1,0 +1,72 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:noguard"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:ironfist"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:klutz"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 124,
+    "cobblemon:defence": 80,
+    "cobblemon:hp": 89,
+    "cobblemon:special_attack": 55,
+    "cobblemon:special_defence": 80,
+    "cobblemon:speed": 55
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "MINERAL"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 28.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 623,
+  "preEvolution": "cobblemon:golett",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 3300.0
+}

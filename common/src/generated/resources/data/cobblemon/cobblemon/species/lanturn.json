@@ -1,0 +1,72 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:waterabsorb"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:voltabsorb"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:illuminate"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 58,
+    "cobblemon:defence": 58,
+    "cobblemon:hp": 125,
+    "cobblemon:special_attack": 76,
+    "cobblemon:special_defence": 76,
+    "cobblemon:speed": 67
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "WATER_2"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 12.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 171,
+  "preEvolution": "cobblemon:chinchou",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 225.0
+}

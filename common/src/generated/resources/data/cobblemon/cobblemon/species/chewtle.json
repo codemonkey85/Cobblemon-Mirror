@@ -1,0 +1,68 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:swiftswim"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:strongjaw"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:shellarmor"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 64,
+    "cobblemon:defence": 50,
+    "cobblemon:hp": 50,
+    "cobblemon:special_attack": 38,
+    "cobblemon:special_defence": 38,
+    "cobblemon:speed": 44
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "MONSTER",
+    "WATER_1"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 3.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 833,
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 85.0
+}

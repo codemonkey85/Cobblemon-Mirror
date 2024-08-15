@@ -1,0 +1,72 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:poisontouch"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:anticipation"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:dryskin"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 106,
+    "cobblemon:defence": 65,
+    "cobblemon:hp": 83,
+    "cobblemon:special_attack": 86,
+    "cobblemon:special_defence": 65,
+    "cobblemon:speed": 85
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "HUMAN_LIKE"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 13.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 454,
+  "preEvolution": "cobblemon:croagunk",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 444.0
+}

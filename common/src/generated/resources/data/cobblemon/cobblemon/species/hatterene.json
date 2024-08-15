@@ -1,0 +1,72 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:magicbounce"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:healer"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:anticipation"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 90,
+    "cobblemon:defence": 95,
+    "cobblemon:hp": 57,
+    "cobblemon:special_attack": 136,
+    "cobblemon:special_defence": 103,
+    "cobblemon:speed": 29
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "FAIRY"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 21.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 858,
+  "preEvolution": "cobblemon:hattrem",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 51.0
+}

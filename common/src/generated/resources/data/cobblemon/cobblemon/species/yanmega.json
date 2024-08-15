@@ -1,0 +1,72 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:frisk"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:speedboost"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:tintedlens"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 76,
+    "cobblemon:defence": 86,
+    "cobblemon:hp": 86,
+    "cobblemon:special_attack": 116,
+    "cobblemon:special_defence": 56,
+    "cobblemon:speed": 95
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "BUG"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 19.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 469,
+  "preEvolution": "cobblemon:yanma",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 515.0
+}

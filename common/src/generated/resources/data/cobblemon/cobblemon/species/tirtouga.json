@@ -1,0 +1,72 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:swiftswim"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:solidrock"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:sturdy"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 78,
+    "cobblemon:defence": 103,
+    "cobblemon:hp": 54,
+    "cobblemon:special_attack": 53,
+    "cobblemon:special_defence": 45,
+    "cobblemon:speed": 22
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "WATER_1",
+    "WATER_3"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 7.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 564,
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 165.0
+}

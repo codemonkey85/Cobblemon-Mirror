@@ -1,0 +1,72 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:frisk"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:cutecharm"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:competitive"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 70,
+    "cobblemon:defence": 45,
+    "cobblemon:hp": 140,
+    "cobblemon:special_attack": 85,
+    "cobblemon:special_defence": 50,
+    "cobblemon:speed": 45
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "FAIRY"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 10.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 40,
+  "preEvolution": "cobblemon:jigglypuff",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 120.0
+}

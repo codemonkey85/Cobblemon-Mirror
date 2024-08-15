@@ -1,0 +1,73 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:hidden",
+      "ability": "cobblemon:competitive"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:windpower"
+    },
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:voltabsorb"
+    }
+  ],
+  "baseExperienceYield": 1,
+  "baseFriendship": 1,
+  "baseStats": {
+    "cobblemon:attack": 70,
+    "cobblemon:defence": 60,
+    "cobblemon:hp": 70,
+    "cobblemon:special_attack": 105,
+    "cobblemon:special_defence": 60,
+    "cobblemon:speed": 125
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 1,
+  "dynamaxBlocked": true,
+  "eggCycles": 1,
+  "eggGroups": [
+    "WATER_1",
+    "FLYING"
+  ],
+  "evYield": {},
+  "experienceGroup": "cobblemon:slow",
+  "height": 14.0,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [],
+  "nationalPokedexNumber": 941,
+  "preEvolution": "cobblemon:wattrel",
+  "primaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "secondaryType": {
+    "damageTaken": [],
+    "displayName": ""
+  },
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 386.0
+}
