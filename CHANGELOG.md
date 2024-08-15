@@ -50,7 +50,7 @@
 ### Changes
 - Altered the item model for Medicinal Leeks and Roasted Leeks to be held like sticks and other rod items. 
 - Adjusted some berry balance values like yield and growth times
-- Adjusted volumes of most block sounds
+- Adjusted volumes of sounds made by Display Cases, Berry Bushes, Energy Root, Medicinal Leek, Vivichoke, Mints, Revival Herbs and Gilded Chests.
 - Changes to mulch buffs/durations
 - Weedle, Caterpie, Spearow, Smoochum, Mew, Murkrow, Larvitar, Taillow, Plusle, Minun, Beldum, Starly, Buneary, Combee, Pachirisu, Pidove, Petilil, Hisui Bias Petilil, Zorua, Hisuian Zorua, Elgyem, Fletchling, Skrelp, Klefki, Fomantis, Morelull, Dreepy, Shroodle, Tatsugiri, Glimmet, and Roaming Gimmighoul are now shoulder mountable
 - Chikorita's ability to look around removed due to the awkwardness of it.
