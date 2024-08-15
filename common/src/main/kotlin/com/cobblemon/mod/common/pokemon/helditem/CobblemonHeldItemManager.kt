@@ -113,6 +113,7 @@ object CobblemonHeldItemManager : BaseCobblemonHeldItemManager() {
             "magician", "pickpocket", "covet", "thief" -> battleLang("item.thief", battlerName, itemName, sourceName) // The "source" is actually the target here
             "pickup", "recycle" -> battleLang("item.recycle", battlerName, itemName)
             "switcheroo", "trick" -> battleLang("item.trick", battlerName, itemName)
+            "focussash" -> battleLang("item.trick", battlerName, itemName)
             else -> battleLang("item.$effectId", battlerName, itemName, sourceName)
         }
         battle.broadcastChatMessage(text)

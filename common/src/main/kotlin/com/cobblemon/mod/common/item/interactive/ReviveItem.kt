@@ -75,7 +75,7 @@ class ReviveItem(val max: Boolean): CobblemonItem(Settings()) {
                             if (!player.isCreative) {
                                 stack.decrement(1)
                             }
-                            CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(bp.entity?.pokemon?.species!!.resourceIdentifier, Registries.ITEM.getId(stack.item)))
+                            CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(bp.effectedPokemon.species.resourceIdentifier, Registries.ITEM.getId(stack.item)))
                         }
                     }
                 }

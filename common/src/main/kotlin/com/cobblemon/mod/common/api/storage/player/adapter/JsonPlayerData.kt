@@ -8,11 +8,13 @@
 
 package com.cobblemon.mod.common.api.storage.player.adapter
 
+import com.cobblemon.mod.common.Cobblemon.LOGGER
 import com.cobblemon.mod.common.api.storage.player.PlayerData
 import com.cobblemon.mod.common.api.storage.player.PlayerDataExtension
 import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.cobblemon.mod.common.util.fromJson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonSyntaxException
 import java.io.BufferedReader
 import java.io.FileReader
 import java.io.PrintWriter
@@ -50,28 +52,45 @@ class JsonPlayerData: PlayerDataStoreAdapter {
         }
     }
     private fun file(uuid: UUID) = savePath.resolve("cobblemonplayerdata/${getSubFile(uuid)}").toFile()
+    private fun oldFile(uuid: UUID) = savePath.resolve("cobblemonplayerdata/${getSubFile(uuid)}.old").toFile()
 
     override fun load(uuid: UUID): PlayerData {
         val playerFile = file(uuid)
         playerFile.parentFile.mkdirs()
-        return if (playerFile.exists()) {
-            gson.fromJson<PlayerData>(BufferedReader(FileReader(playerFile))).also {
-                // Resolves old data that's missing new properties
-                val newProps = it::class.memberProperties.filterIsInstance<KMutableProperty<*>>().filter { member -> member.getter.call(it) == null }
-                if (newProps.isNotEmpty()) {
-                    val defaultData = PlayerData.defaultData(uuid)
-                    newProps.forEach { member -> member.setter.call(it, member.getter.call(defaultData)) }
+        if (playerFile.exists()) {
+            val fileReader = FileReader(playerFile)
+            val bufferedReader = BufferedReader(fileReader)
+            try {
+                return gson.fromJson<PlayerData>(bufferedReader).also {
+                    if(it == null) {
+                        LOGGER.error("Detected empty player data file at $playerFile - Resetting to default data")
+                        return PlayerData.defaultData(uuid).also(::save)
+                    }
+                    // Resolves old data that's missing new properties
+                    val newProps = it::class.memberProperties.filterIsInstance<KMutableProperty<*>>().filter { member -> member.getter.call(it) == null }
+                    if (newProps.isNotEmpty()) {
+                        val defaultData = PlayerData.defaultData(uuid)
+                        newProps.forEach { member -> member.setter.call(it, member.getter.call(defaultData)) }
+                    }
                 }
+            } catch (e: JsonSyntaxException) {
+                bufferedReader.close()
+                fileReader.close()
+                LOGGER.error("Failed to read player data at $playerFile - appending .old to prevent player lockout.")
+                LOGGER.error(e)
+                if(!playerFile.renameTo(oldFile(uuid))) {
+                    LOGGER.error("Failed to rename player data to $playerFile.old - data loss imminent")
+                }
+                return PlayerData.defaultData(uuid).also(::save)
             }
-        } else {
-            PlayerData.defaultData(uuid).also(::save)
         }
+        return PlayerData.defaultData(uuid).also(::save)
     }
 
     override fun save(playerData: PlayerData) {
         val file = file(playerData.uuid)
         file.parentFile.mkdirs()
-        val pw = PrintWriter(file(playerData.uuid))
+        val pw = PrintWriter(file)
         pw.write(gson.toJson(playerData))
         pw.flush()
         pw.close()
