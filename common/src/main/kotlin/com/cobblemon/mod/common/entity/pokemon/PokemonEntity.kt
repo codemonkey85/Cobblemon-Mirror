@@ -86,8 +86,11 @@ import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import com.mojang.serialization.Codec
+import net.minecraft.SharedConstants
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.nbt.NbtOps
 import net.minecraft.network.protocol.game.DebugPackets
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import net.minecraft.resources.ResourceLocation
@@ -850,12 +853,11 @@ open class PokemonEntity(
                     player
                 )
             } else {
-                // TODO #105
                 if (this.attemptItemInteraction(player, player.getItemInHand(hand))) return InteractionResult.SUCCESS
+
+                onHeadpat(pokemon, player)
             }
         }
-
-        onHeadpat(hand, pokemon, player)
 
         return super.mobInteract(player, hand)
     }
@@ -1390,43 +1392,39 @@ open class PokemonEntity(
         }
     }
 
-    fun onHeadpat(hand: Hand, pokemon: Pokemon, player: PlayerEntity){
-        if (hand == Hand.MAIN_HAND && player is ServerPlayerEntity) {
-            var timeWhenHeadpatted = world.timeOfDay
-            val eyePos = pokemon.entity?.eyePos
-            world
-            if(pokemon.getOwnerPlayer() == player){
-                if(timeWhenHeadpatted - 30 < lastHeadpat){
-                    return
+    fun onHeadpat(pokemon: Pokemon, player: ServerPlayer) {
+        val currentTime = level().dayTime
+        if(currentTime - 30 < lastHeadpat){
+            return
+        }
+
+        lastHeadpat = currentTime
+        cry()
+        player.swing(InteractionHand.MAIN_HAND, true)
+        if(currentTime > (pokemon.headpatTime + SharedConstants.TICKS_PER_GAME_DAY)){
+            pokemon.headpatTime = currentTime
+            pokemon.incrementFriendship(2)
+            val eyePos = pokemon.entity?.eyePosition
+            val newX = (eyePos?.x ?: 0.0) + (level().random.nextDouble() * 0.5)
+            val newY = (eyePos?.y ?: 0.0) + (level().random.nextDouble() * 0.5)
+            val newZ = (eyePos?.z ?: 0.0) + (level().random.nextDouble() * 0.5)
+            for(i in 0 .. 2){
+                ClientboundLevelParticlesPacket(
+                    ParticleTypes.HEART, true, newX, newY, newZ,
+                    Math.PI.toFloat() * Math.cos(i.toDouble()).toFloat() * 0.1f,
+                    Math.PI.toFloat() * 0.1f,
+                    Math.PI.toFloat() * Math.sin(i.toDouble()).toFloat() * 0.1f, .2f, 1
+                ).also {
+                    server?.playerList?.broadcast(
+                        null,
+                        (eyePos?.x ?: 0.0),
+                        (eyePos?.y ?: 0.0),
+                        (eyePos?.z ?: 0.0),
+                        64.0,
+                        level().dimension(),
+                        it
+                    )
                 }
-                lastHeadpat = world.timeOfDay
-                this.cry()
-                player.swingHand(Hand.MAIN_HAND, true)
-                if(pokemon.headpatTime == 0L || world.timeOfDay > (pokemon.headpatTime + TICKS_IN_A_DAY)){
-                    pokemon.headpatTime = world.timeOfDay
-                    pokemon.incrementFriendship(2)
-                    val newX = (eyePos?.x ?: 0.0) + (world.random.nextDouble() * 0.5)
-                    val newY = (eyePos?.y ?: 0.0) + (world.random.nextDouble() * 0.5)
-                    val newZ = (eyePos?.z ?: 0.0) + (world.random.nextDouble() * 0.5)
-                    for(i in 0 .. 2){
-                        ParticleS2CPacket(
-                            ParticleTypes.HEART, true, newX, newY, newZ , Math.PI.toFloat() * Math.cos(i.toDouble()).toFloat() * 0.1f, Math.PI.toFloat() * 0.1f, Math.PI.toFloat() * Math.sin(i.toDouble()).toFloat() * 0.1f, .2f, 1
-                        ).also {
-                            (this.world as ServerWorld).server.playerManager.sendToAround(
-                                null,
-                                (eyePos?.x ?: 0.0),
-                                (eyePos?.y ?: 0.0),
-                                (eyePos?.z ?: 0.0),
-                                64.0,
-                                this.world.registryKey,
-                                it
-                            )
-                        }
-                    }
-                }
-            }
-            else{
-                this.cry()
             }
         }
     }

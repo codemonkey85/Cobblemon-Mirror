@@ -12,6 +12,50 @@
 - Added support for Double Battles, Triple Battles, and Multi-battles. 
 - CriticalCaptures and Pokédex progress capture multiplier now work with the Pokédex.
 - Added extra visuals to early berry growth stages.
+- Adjusted Pokémon sendout positions for single battles.
+- Wild Pokémon interaction range increased to 12 blocks (from 10 blocks)
+- Player trade range increased to 12 blocks (from 10 blocks)
+- PvP battle range increased to 32 blocks (from 10 blocks)
+- Spectate range increased to 64 blocks (from 10 blocks)
+- CriticalCaptures and Pokedex progress capture multiplier now work with dex
+- Added the ability to pat your own Pokémon as an additional method to increase their happiness once a day.
+
+### Developer
+- SpawnCause is now an implementation of SpawningInfluence.
+- Added "forcedAspects" to Pokemon to make it easier to easily add basic aspects to a Pokémon in a way that persists. We already know that everyone is going to overuse this.
+- Made the Pokemon.aspects setter private. This could technically break sidemods but if you are affected by this then you were using it wrong! Use Pokemon.forcedAspects to fix it.
+- Many types related to ``Pokemon`` including itself now have dedicated ``Codec``, please migrate to them from the NBT/JSON/PacketBuffer write/read methods.
+- ``TeraTypes`` now implements ``Iterable``.
+
+## [1.5.3](#1-5-3)
+### Fixes
+- Scaled down Amaura's fetus model to avoid clipping through the tank while animating
+- Fixed Cubone's cry not having a sound.
+- Fixed the Seafloor spawning context not being a usable context.
+- Fixed Pokemon spawning in non-full blocks like slabs.
+- Fixed Gilded Chests not dropping the chest itself when broken, only the contents.
+- Fixed Pokémon losing their Hidden Ability through evolution if the middle stage did not have a Hidden Ability.
+- Hidden Power no longer plays the water type action effect. (It now plays the normal type action effect.)
+- Fixed Chimchar and Monferno T posing whenever they sleep.
+- Fixed the Magby line not having any placeholder walk animations.
+- Fixed Duskull and Dusclops using skylight levels for their nether spawn data. There is no sun in the Nether!
+- Fixed Hisuian Zoroark using base Zoroark stats. 
+- Fixed Bellossom clipping into the player head when shoulder mounted.
+- Fixed Shroomish's look range to prevent it from looking higher than it should. 
+- Fixed Crumbling Arch not blending in with the world.
+- Fixed Energy Root applying being usable on a fainted Pokemon.
+- Fixed Pokémon entity not spawning when starting a battle while recalling said Pokémon
+- Fixed species comparison not using namespace for both sides in PokemonProperties.isSubsetOf.
+- Fixed PokemonProperties#asString prefixing nicknames with a '$'
+- Fixed PC not saving when Pokemon was changed outside.
+- Fixed shearble Pokemon not dropping correct wool colors.
+- Fixed pasture spawning Pokemon inside solid blocks when closest spawning position is blocked off.
+- Fixed Tumbling Down advancement not being granted by tumblestone variants.
+- Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server
+- Fixed empty JsonPlayerData files resulting in players being unable to join server/world
+
+### Additions
+- Added extra visuals to early berry growth stages
 - Hidden Power now displays its effective typing.
 - Moves impacted by the abilities Pixelate, Refrigerate, Aerilate, Galvanize, and Normalize now display as their altered typing.
 - Added Polished Tumblestone and Tumblestone Brick block sets from Tumblestone, Black Tumblestone, and Sky Tumblestone.
