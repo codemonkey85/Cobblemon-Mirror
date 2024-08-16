@@ -79,7 +79,7 @@ class ParticleEvent(
         particleEffect?.let { effect ->
             val bedrockParticleEffect = BedrockParticleEffectRepository.getEffect(effect.effect) ?: return@let
             val rootMatrix = when (effect.type) {
-                EventParticleEffect.EventParticleType.EMITTER-> MatrixWrapper().updatePosition(storm.matrixWrapper.getOrigin())
+                EventParticleEffect.EventParticleType.EMITTER-> MatrixWrapper().updatePosition(storm.matrixWrapper.position).updateMatrix(storm.matrixWrapper.matrix)
                 EventParticleEffect.EventParticleType.EMITTER_BOUND -> storm.matrixWrapper
                 EventParticleEffect.EventParticleType.PARTICLE,
                 EventParticleEffect.EventParticleType.PARTICLE_WITH_VELOCITY -> (particle?.let { Vec3d(it.getX(), it.getY(), it.getZ()) } ?: Vec3d(storm.getX(), storm.getY(), storm.getZ())).let { MatrixWrapper().updatePosition(it) }
