@@ -10,6 +10,7 @@ import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.cobblemon.mod.common.client.sound.CancellableSoundController.playSound
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.item.PokedexItem
+import com.cobblemon.mod.common.net.messages.client.pokedex.ServerConfirmedScanPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.FinishScanningPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.StartScanningPacket
 import com.ibm.icu.impl.duration.impl.DataRecord.EGender.F
@@ -99,13 +100,8 @@ class PokedexUsageContext {
             }
             user.playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
             if (scanningProgress == TICKS_TO_SCAN + 1) {
+                //This ends up sending back a [ServerConfirmedScanPacket] that gets processed by onConfirmedScan
                 FinishScanningPacket(targetId).sendToServer()
-                //Need to wait for server to process
-                //We could just have the server send a packet back but I don't think its necessary in this case, this works fine
-                afterOnClient(10, 0F) {
-                    resetState()
-                    openPokedexGUI(user, type, targetPokemon.pokemon.species.resourceIdentifier)
-                }
             }
         }
         else {
@@ -113,6 +109,12 @@ class PokedexUsageContext {
             scanningProgress = 0
             focusTicks = 0
         }
+    }
+
+    fun onServerConfirmedScan(packet: ServerConfirmedScanPacket) {
+        val player = Minecraft.getInstance().player ?: return
+        resetState()
+        openPokedexGUI(player, type, packet.species)
     }
 
     fun resetState() {
