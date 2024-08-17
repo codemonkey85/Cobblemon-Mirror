@@ -16,11 +16,13 @@ import com.cobblemon.mod.common.client.pokedex.PokedexScannerRenderer
 import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.item.PokedexItem
+import com.cobblemon.mod.common.net.messages.client.pokedex.ServerConfirmedScanPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.FinishScanningPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.StartScanningPacket
 import kotlin.math.min
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth.clamp
@@ -67,7 +69,7 @@ class PokedexUsageContext {
         }
     }
 
-    fun tryOpenScanGui(user: LocalPlayer, ticksInUse: Int, inUse: Boolean) {
+    fun tryOpenScanGui(user: AbstractClientPlayer, ticksInUse: Int, inUse: Boolean) {
         if (inUse && ticksInUse == TIME_TO_OPEN_SCANNER) {
 
             scanningGuiOpen = true
@@ -77,13 +79,13 @@ class PokedexUsageContext {
 
     fun tryOpenInfoGui(user: LocalPlayer, ticksInUse: Int) {
         if (ticksInUse < TIME_TO_OPEN_SCANNER) {
-            openPokedexGUI(user)
+            openPokedexGUI(user, type)
             infoGuiOpen = true
         }
     }
 
-    fun openPokedexGUI(user: LocalPlayer, speciesId: ResourceLocation? = null) {
-        PokedexGUI.open(CobblemonClient.clientPokedexData, PokedexTypes.PINK, speciesId)
+    fun openPokedexGUI(user: LocalPlayer, types: PokedexTypes = PokedexTypes.RED, speciesId: ResourceLocation? = null) {
+        PokedexGUI.open(CobblemonClient.clientPokedexData, types, speciesId)
         user.playSound(CobblemonSounds.POKEDEX_OPEN)
     }
 
@@ -99,22 +101,20 @@ class PokedexUsageContext {
             }
             user.playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
             if (scanningProgress == TICKS_TO_SCAN + 1) {
+                //This ends up sending back a [ServerConfirmedScanPacket] that gets processed by onConfirmedScan
                 FinishScanningPacket(targetId).sendToServer()
-                //Need to wait for server to process
-                //We could just have the server send a packet back but I don't think its necessary in this case, this works fine
-                // Wrong, this is unreliable with lag and I have experienced it opening the GUI and showing me a question mark pokemon
-                // TODO make it work using a server response packet
-                afterOnClient(10, 0F) {
-                    resetState()
-                    openPokedexGUI(user, targetPokemon.pokemon.species.resourceIdentifier)
-                }
             }
-        }
-        else {
+        } else {
             pokemonInFocus = null
             scanningProgress = 0
             focusTicks = 0
         }
+    }
+
+    fun onServerConfirmedScan(packet: ServerConfirmedScanPacket) {
+        val player = Minecraft.getInstance().player ?: return
+        resetState()
+        openPokedexGUI(player, type, packet.species)
     }
 
     fun resetState() {

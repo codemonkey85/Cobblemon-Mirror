@@ -34,7 +34,7 @@ class PokedexItem(val type: PokedexTypes) : CobblemonItem(Item.Properties()) {
         usedHand: InteractionHand
     ): InteractionResultHolder<ItemStack> {
         val itemStack = player.getItemInHand(usedHand)
-        if (player is LocalPlayer) {
+        if (world.isClientSide && player is LocalPlayer) {
             CobblemonClient.pokedexUsageContext.type = type
         }
         if (player !is ServerPlayer) return InteractionResultHolder.success(itemStack)
@@ -49,7 +49,7 @@ class PokedexItem(val type: PokedexTypes) : CobblemonItem(Item.Properties()) {
         stack: ItemStack,
         remainingUseTicks: Int
     ) {
-        if (user is LocalPlayer) {
+        if (world.isClientSide && user is LocalPlayer) {
             val scanContext = CobblemonClient.pokedexUsageContext
             val ticksInUse = getUseDuration(stack, user) - remainingUseTicks
             scanContext.tick(user, ticksInUse, true)
@@ -63,7 +63,7 @@ class PokedexItem(val type: PokedexTypes) : CobblemonItem(Item.Properties()) {
         user: LivingEntity,
         remainingUseTicks: Int
     ) {
-        if (user is LocalPlayer) {
+        if (world.isClientSide && user is LocalPlayer) {
             val usageContext = CobblemonClient.pokedexUsageContext
             val ticksInUse = getUseDuration(stack, user) - remainingUseTicks
             usageContext.stopUsing(user, ticksInUse)

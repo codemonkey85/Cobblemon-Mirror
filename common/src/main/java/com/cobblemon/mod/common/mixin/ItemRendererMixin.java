@@ -24,6 +24,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/*
+    I think it would be nice to maybe use the existing mixin we have for custom item rendering [BuiltinModelItemRendererMixin]
+    Obviously that would require changes. Potentially each item renderer defines what modes it overrides for?
+ */
 @Mixin(ItemRenderer.class)
 public abstract class ItemRendererMixin {
 
