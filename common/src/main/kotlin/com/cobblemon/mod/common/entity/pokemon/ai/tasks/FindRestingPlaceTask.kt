@@ -13,35 +13,35 @@ import com.cobblemon.mod.common.api.pokemon.status.Statuses
 import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.getBlockPositions
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.WalkTarget
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
-import net.minecraft.util.math.Box
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
+import net.minecraft.world.entity.ai.memory.WalkTarget
+import net.minecraft.world.phys.AABB
 
 object FindRestingPlaceTask {
-    fun create(horizontalSearchDistance: Int, verticalSearchDistance: Int): SingleTickTask<PokemonEntity> {
-        return TaskTriggerer.task {
+    fun create(horizontalSearchDistance: Int, verticalSearchDistance: Int): OneShot<PokemonEntity> {
+        return BehaviorBuilder.create {
             it.group(
-                it.queryMemoryAbsent(MemoryModuleType.ANGRY_AT),
-                it.queryMemoryAbsent(MemoryModuleType.ATTACK_TARGET),
-                it.queryMemoryAbsent(MemoryModuleType.WALK_TARGET),
-                it.queryMemoryAbsent(CobblemonMemories.POKEMON_BATTLE),
-                it.queryMemoryValue(CobblemonMemories.POKEMON_DROWSY),
-                it.queryMemoryAbsent(CobblemonMemories.REST_PATH_COOLDOWN),
-                it.queryMemoryAbsent(CobblemonMemories.POKEMON_SLEEPING),
-                    ).apply(it) { _, _, walkTarget, _, pokemonDrowsy, restPathCooldown, _ ->
-                TaskRunnable { world, entity, _ ->
-                    return@TaskRunnable if (it.getValue(pokemonDrowsy) && entity.pokemon.status?.status != Statuses.SLEEP && entity.pokemon.storeCoordinates.get()?.store !is PartyStore) {
-                        entity.brain.remember(CobblemonMemories.REST_PATH_COOLDOWN, true, 40)
-                        val position = entity.world
-                            .getBlockPositions(Box.of(entity.pos, horizontalSearchDistance.toDouble(), verticalSearchDistance.toDouble(), horizontalSearchDistance.toDouble()))
+                it.absent(MemoryModuleType.ANGRY_AT),
+                it.absent(MemoryModuleType.ATTACK_TARGET),
+                it.absent(MemoryModuleType.WALK_TARGET),
+                it.absent(CobblemonMemories.POKEMON_BATTLE),
+                it.present(CobblemonMemories.POKEMON_DROWSY),
+                it.absent(CobblemonMemories.REST_PATH_COOLDOWN),
+                it.absent(CobblemonMemories.POKEMON_SLEEPING),
+            ).apply(it) { _, _, walkTarget, _, pokemonDrowsy, restPathCooldown, _ ->
+                Trigger { world, entity, _ ->
+                    return@Trigger if (it.get(pokemonDrowsy) && entity.pokemon.status?.status != Statuses.SLEEP && entity.pokemon.storeCoordinates.get()?.store !is PartyStore) {
+                        entity.brain.setMemoryWithExpiry(CobblemonMemories.REST_PATH_COOLDOWN, true, 40)
+                        val position = entity.level()
+                            .getBlockPositions(AABB.ofSize(entity.position(), horizontalSearchDistance.toDouble(), verticalSearchDistance.toDouble(), horizontalSearchDistance.toDouble()))
                             .filter(entity::canSleepAt)
 //                            .randomOrNull()
-                            .minByOrNull { it.getSquaredDistance(entity.pos) }
+                            .minByOrNull { it.distToCenterSqr(entity.position()) }
                         if (position != null) {
-                            walkTarget.remember(WalkTarget(position.down(), 0.3F, 1))
+                            walkTarget.set(WalkTarget(position.below(), 0.3F, 1))
                         }
                         true
                     } else {

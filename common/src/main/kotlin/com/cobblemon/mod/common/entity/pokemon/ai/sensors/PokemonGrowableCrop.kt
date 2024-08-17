@@ -1,27 +1,35 @@
+/*
+ * Copyright (C) 2023 Cobblemon Contributors
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.cobblemon.mod.common.entity.pokemon.ai.sensors
 
 import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.block.CropBlock
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.sensor.Sensor
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.BlockPos
-import java.util.*
+import java.util.Optional
+import net.minecraft.core.BlockPos
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
+import net.minecraft.world.entity.ai.sensing.Sensor
+import net.minecraft.world.level.block.CropBlock
 
 class PokemonGrowableCropSensor : Sensor<PokemonEntity>() {
-    override fun sense(world: ServerWorld, entity: PokemonEntity) {
+    override fun doTick(world: ServerLevel, entity: PokemonEntity) {
         findBoneMealPos(world, entity).ifPresent {
-            entity.brain.remember(CobblemonMemories.NEARBY_GROWABLE_CROPS, it)
+            entity.brain.setMemory(CobblemonMemories.NEARBY_GROWABLE_CROPS, it)
         }
     }
 
-    override fun getOutputMemoryModules(): Set<MemoryModuleType<*>> {
+    override fun requires(): Set<MemoryModuleType<*>> {
         return setOf(CobblemonMemories.NEARBY_GROWABLE_CROPS)
     }
 
-    private fun findBoneMealPos(world: ServerWorld, entity: PokemonEntity): Optional<BlockPos> {
-        val mutable = BlockPos.Mutable()
+    private fun findBoneMealPos(world: ServerLevel, entity: PokemonEntity): Optional<BlockPos> {
+        val mutable = BlockPos.MutableBlockPos()
         var optional = Optional.empty<BlockPos>()
         var i = 0
 
@@ -29,11 +37,11 @@ class PokemonGrowableCropSensor : Sensor<PokemonEntity>() {
         for (j in -1..1) {
             for (k in -1..1) {
                 for (l in -1..1) {
-                    mutable[entity.blockPos, j, k] = l
+                    mutable.set(j, k, l)
                     if (canBoneMeal(mutable, world)) {
                         ++i
                         if (world.random.nextInt(i) == 0) {
-                            optional = Optional.of(mutable.toImmutable())
+                            optional = Optional.of(mutable.immutable())
                         }
                     }
                 }
@@ -43,10 +51,10 @@ class PokemonGrowableCropSensor : Sensor<PokemonEntity>() {
         return optional
     }
 
-    private fun canBoneMeal(pos: BlockPos, world: ServerWorld): Boolean {
+    private fun canBoneMeal(pos: BlockPos, world: ServerLevel): Boolean {
         val blockState = world.getBlockState(pos)
         val block = blockState.block
 
-        return block is CropBlock && !block.isMature(blockState)
+        return block is CropBlock && !block.isMaxAge(blockState)
     }
 }

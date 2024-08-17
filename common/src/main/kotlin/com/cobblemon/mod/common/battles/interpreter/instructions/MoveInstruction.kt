@@ -69,7 +69,7 @@ class MoveInstruction(
 
             val targetPokemonEntity = targetPokemon?.entity
             if (targetPokemonEntity != null) {
-                userPokemon.entity?.brain?.remember(CobblemonMemories.TARGETED_BATTLE_POKEMON, targetPokemonEntity.uuid)
+                userPokemon.entity?.brain?.setMemory(CobblemonMemories.TARGETED_BATTLE_POKEMON, targetPokemonEntity.uuid)
             }
 
             userPokemon.effectedPokemon.let { pokemon ->
@@ -135,7 +135,7 @@ class MoveInstruction(
             return@dispatch UntilDispatch { "effects" !in holds }.andThen {
                 val userPokemonId = userPokemon.entity?.uuid ?: return@andThen
                 val targets = hurtTargets.mapNotNull { it.entity }
-                userPokemonId.let { id -> targets.forEach { it.brain.remember(CobblemonMemories.TARGETED_BATTLE_POKEMON, id) } }
+                userPokemonId.let { id -> targets.forEach { it.brain.setMemory(CobblemonMemories.TARGETED_BATTLE_POKEMON, id) } }
             }
         }
     }

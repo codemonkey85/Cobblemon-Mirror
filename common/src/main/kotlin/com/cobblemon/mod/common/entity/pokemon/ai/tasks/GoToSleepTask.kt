@@ -14,32 +14,32 @@ import com.cobblemon.mod.common.api.pokemon.status.Statuses
 import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.status.PersistentStatusContainer
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
 
 object GoToSleepTask {
-    fun create(): SingleTickTask<PokemonEntity> {
-        return TaskTriggerer.task {
+    fun create(): OneShot<PokemonEntity> {
+        return BehaviorBuilder.create {
             it.group(
-                it.queryMemoryAbsent(MemoryModuleType.ANGRY_AT),
-                it.queryMemoryAbsent(MemoryModuleType.ATTACK_TARGET),
-                it.queryMemoryAbsent(MemoryModuleType.WALK_TARGET),
-                it.queryMemoryAbsent(CobblemonMemories.POKEMON_BATTLE),
-                it.queryMemoryOptional(CobblemonMemories.POKEMON_DROWSY)
+                it.absent(MemoryModuleType.ANGRY_AT),
+                it.absent(MemoryModuleType.ATTACK_TARGET),
+                it.absent(MemoryModuleType.WALK_TARGET),
+                it.absent(CobblemonMemories.POKEMON_BATTLE),
+                it.registered(CobblemonMemories.POKEMON_DROWSY)
             ).apply(it) { _, _, _, _, pokemonDrowsy ->
-                TaskRunnable { world, entity, _ ->
+                Trigger { world, entity, _ ->
                     val hasSleepStatus = entity.pokemon.status?.status === Statuses.SLEEP
-                    if (entity.behaviour.resting.canSleep && ((it.getOptionalValue(pokemonDrowsy).orElse(false) && entity.canSleepAt(entity.blockPos.down())) || hasSleepStatus) && entity.pokemon.storeCoordinates.get()?.store !is PartyStore) {
+                    if (entity.behaviour.resting.canSleep && ((it.tryGet(pokemonDrowsy).orElse(false) && entity.canSleepAt(entity.blockPosition().below())) || hasSleepStatus) && entity.pokemon.storeCoordinates.get()?.store !is PartyStore) {
                         if (!hasSleepStatus) {
                             entity.pokemon.status = PersistentStatusContainer(Statuses.SLEEP)
                         }
-                        entity.brain.resetPossibleActivities(listOf(CobblemonActivities.POKEMON_SLEEPING_ACTIVITY))
-                        entity.brain.remember(CobblemonMemories.POKEMON_SLEEPING, true)
-                        return@TaskRunnable true
+                        entity.brain.setActiveActivityToFirstValid(listOf(CobblemonActivities.POKEMON_SLEEPING_ACTIVITY))
+                        entity.brain.setMemory(CobblemonMemories.POKEMON_SLEEPING, true)
+                        return@Trigger true
                     } else {
-                        return@TaskRunnable false
+                        return@Trigger false
                     }
                 }
             }

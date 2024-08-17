@@ -99,7 +99,7 @@ class SleepOnTrainerGoal(private val pokemonEntity: PokemonEntity) : Goal() {
 //        )
 //        mutable.set(cat.blockPos)
 //        val lootTable = cat.world.server!!.lootManager.getTable(LootTables.CAT_MORNING_GIFT_GAMEPLAY)
-//        val builder = LootContext.Builder(cat.world as ServerWorld)
+//        val builder = LootContext.Builder(cat.world as ServerLevel)
 //            .parameter(LootContextParameters.ORIGIN, cat.pos).parameter(
 //                LootContextParameters.THIS_ENTITY,
 //                cat

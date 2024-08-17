@@ -11,11 +11,11 @@ package com.cobblemon.mod.common.entity.pokemon.ai.tasks
 import com.cobblemon.mod.common.CobblemonActivities
 import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.entity.ai.brain.Activity
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
+import net.minecraft.world.entity.schedule.Activity
 
 /**
  * Moves Pokémon in and out of the battling activity.
@@ -24,28 +24,28 @@ import net.minecraft.entity.ai.brain.task.TaskTriggerer
  * @since April 8th, 2024
  */
 object HandleBattleActivityGoal {
-    fun create(): SingleTickTask<PokemonEntity> {
-        return TaskTriggerer.task {
+    fun create(): OneShot<PokemonEntity> {
+        return BehaviorBuilder.create {
             it.group(
-                it.queryMemoryOptional(CobblemonMemories.POKEMON_BATTLE),
-                it.queryMemoryOptional(MemoryModuleType.WALK_TARGET),
-                it.queryMemoryOptional(MemoryModuleType.LOOK_TARGET),
+                it.registered(CobblemonMemories.POKEMON_BATTLE),
+                it.registered(MemoryModuleType.WALK_TARGET),
+                it.registered(MemoryModuleType.LOOK_TARGET),
             ).apply(it) { battle, walkTarget, lookTarget ->
-                TaskRunnable { world, entity, _ ->
-                    val battleUUID = it.getOptionalValue(battle).orElse(null)
-                    if (battleUUID != null && !entity.brain.hasActivity(CobblemonActivities.BATTLING_ACTIVITY)) {
-                        entity.brain.resetPossibleActivities(listOf(CobblemonActivities.BATTLING_ACTIVITY))
-                        entity.brain.forget(MemoryModuleType.WALK_TARGET)
-                        entity.brain.forget(MemoryModuleType.LOOK_TARGET)
+                Trigger { world, entity, _ ->
+                    val battleUUID = it.tryGet(battle).orElse(null)
+                    if (battleUUID != null && !entity.brain.isActive(CobblemonActivities.BATTLING_ACTIVITY)) {
+                        entity.brain.setActiveActivityToFirstValid(listOf(CobblemonActivities.BATTLING_ACTIVITY))
+                        entity.brain.eraseMemory(MemoryModuleType.WALK_TARGET)
+                        entity.brain.eraseMemory(MemoryModuleType.LOOK_TARGET)
                         entity.navigation.stop()
-                        return@TaskRunnable true
-                    } else if (battleUUID == null && entity.brain.hasActivity(CobblemonActivities.BATTLING_ACTIVITY)) {
-                        entity.brain.resetPossibleActivities(listOf(Activity.IDLE))
-                        entity.brain.forget(MemoryModuleType.WALK_TARGET)
-                        entity.brain.forget(MemoryModuleType.LOOK_TARGET)
-                        return@TaskRunnable true
+                        return@Trigger true
+                    } else if (battleUUID == null && entity.brain.isActive(CobblemonActivities.BATTLING_ACTIVITY)) {
+                        entity.brain.setActiveActivityToFirstValid(listOf(Activity.IDLE))
+                        entity.brain.eraseMemory(MemoryModuleType.WALK_TARGET)
+                        entity.brain.eraseMemory(MemoryModuleType.LOOK_TARGET)
+                        return@Trigger true
                     }
-                    return@TaskRunnable false
+                    return@Trigger false
                 }
             }
         }

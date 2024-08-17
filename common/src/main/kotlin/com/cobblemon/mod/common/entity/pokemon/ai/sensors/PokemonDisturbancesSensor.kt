@@ -8,24 +8,24 @@
 
 package com.cobblemon.mod.common.pokemon.ai
 
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.sensor.Sensor
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.BlockPos
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import net.minecraft.core.BlockPos
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
+import net.minecraft.world.entity.ai.sensing.Sensor
 
 class PokemonDisturbancesSensor : Sensor<PokemonEntity>() {
-    override fun sense(world: ServerWorld, entity: PokemonEntity) {
-        val nearestPlayers = world.players
-                .filter { it.isAlive && entity.squaredDistanceTo(it) <= 16 * 16 }
-                .minByOrNull { entity.squaredDistanceTo(it) }
+    override fun doTick(world: ServerLevel, entity: PokemonEntity) {
+        val nearestPlayers = world.players()
+                .filter { it.isAlive && entity.distanceToSqr(it) <= 16 * 16 }
+                .minByOrNull { entity.distanceToSqr(it) }
 
         nearestPlayers?.let {
-            entity.brain.remember(MemoryModuleType.DISTURBANCE_LOCATION, BlockPos(it.blockPos))
+            entity.brain.setMemory(MemoryModuleType.DISTURBANCE_LOCATION, BlockPos(it.blockPosition()))
         }
     }
 
-    override fun getOutputMemoryModules(): Set<MemoryModuleType<*>> {
+    override fun requires(): Set<MemoryModuleType<*>> {
         return setOf(MemoryModuleType.DISTURBANCE_LOCATION)
     }
 }

@@ -10,12 +10,12 @@ package com.cobblemon.mod.common.entity.pokemon.ai.sensors
 
 import com.cobblemon.mod.common.Cobblemon.LOGGER
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.brain.LivingTargetCache
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.sensor.Sensor
-import net.minecraft.entity.passive.PassiveEntity
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.AgeableMob
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
+import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities
+import net.minecraft.world.entity.ai.sensing.Sensor
 
 /**
  * Senses when the Pokémon is near an adult of the same species.
@@ -24,20 +24,20 @@ import net.minecraft.server.world.ServerWorld
  * @since May 15th, 2024
  */
 class PokemonAttackablesSensor : Sensor<PokemonEntity>(100) {
-    override fun getOutputMemoryModules() = setOf(MemoryModuleType.NEAREST_VISIBLE_ADULT, MemoryModuleType.VISIBLE_MOBS)
+    override fun requires() = setOf(MemoryModuleType.NEAREST_VISIBLE_ADULT, MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES)
 
-    override fun sense(world: ServerWorld, entity: PokemonEntity) {
-        entity.brain.getOptionalRegisteredMemory(MemoryModuleType.VISIBLE_MOBS).ifPresent { visibleMobs ->
+    override fun doTick(world: ServerLevel, entity: PokemonEntity) {
+        entity.brain.getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES).ifPresent { visibleMobs ->
             setNearestPokemonAdult(entity, visibleMobs)
         }
     }
 
-    private fun setNearestPokemonAdult(entity: PokemonEntity, visibleMobs: LivingTargetCache) {
-        val nearestAdult = visibleMobs.findFirst { mob ->
+    private fun setNearestPokemonAdult(entity: PokemonEntity, visibleMobs: NearestVisibleLivingEntities) {
+        val nearestAdult = visibleMobs.findClosest { mob ->
             targetIsValidForChild(entity, mob)
-        }.map { mob -> mob as PassiveEntity }
+        }.map { mob -> mob as AgeableMob }
 
-        entity.brain.remember(MemoryModuleType.NEAREST_VISIBLE_ADULT, nearestAdult)
+        entity.brain.setMemory(MemoryModuleType.NEAREST_VISIBLE_ADULT, nearestAdult)
     }
 
     private fun targetIsValidForChild(child: PokemonEntity, entity: LivingEntity): Boolean {

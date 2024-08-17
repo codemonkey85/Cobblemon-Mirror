@@ -13,14 +13,14 @@ import com.cobblemon.mod.common.api.pokemon.feature.FlagSpeciesFeature
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.DataKeys
 import com.google.common.collect.ImmutableMap
-import net.minecraft.block.Block
-import net.minecraft.block.Blocks
-import net.minecraft.entity.ai.brain.MemoryModuleState
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.task.MultiTickTask
-import net.minecraft.predicate.block.BlockStatePredicate
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.world.GameRules
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.ai.behavior.Behavior
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
+import net.minecraft.world.entity.ai.memory.MemoryStatus
+import net.minecraft.world.level.GameRules
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.state.predicate.BlockStatePredicate
 
 /**
  * The baa's eat the graa's
@@ -28,57 +28,57 @@ import net.minecraft.world.GameRules
  * @author Hiroku
  * @since April 6th, 2024
  */
-class EatGrassTask : MultiTickTask<PokemonEntity>(
+class EatGrassTask : Behavior<PokemonEntity>(
     ImmutableMap.of(
-        MemoryModuleType.ANGRY_AT, MemoryModuleState.VALUE_ABSENT,
-        MemoryModuleType.ATTACK_TARGET, MemoryModuleState.VALUE_ABSENT,
-        MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT,
-        CobblemonMemories.POKEMON_BATTLE, MemoryModuleState.VALUE_ABSENT
+        MemoryModuleType.ANGRY_AT, MemoryStatus.VALUE_ABSENT,
+        MemoryModuleType.ATTACK_TARGET, MemoryStatus.VALUE_ABSENT,
+        MemoryModuleType.WALK_TARGET, MemoryStatus.VALUE_ABSENT,
+        CobblemonMemories.POKEMON_BATTLE, MemoryStatus.VALUE_ABSENT
     )
 ) {
-    val grassPredicate = BlockStatePredicate.forBlock(Blocks.GRASS)
+    val grassPredicate = BlockStatePredicate.forBlock(Blocks.GRASS_BLOCK)
     var timer = -1
 
-    override fun shouldRun(world: ServerWorld, entity: PokemonEntity): Boolean {
+    override fun checkExtraStartConditions(world: ServerLevel, entity: PokemonEntity): Boolean {
         if (entity.random.nextInt(500) != 0) {
             return false
         } else {
             entity.pokemon.getFeature<FlagSpeciesFeature>(DataKeys.HAS_BEEN_SHEARED)?.enabled?.takeIf { it } ?: run {
                 return false
             }
-            val blockPos = entity.blockPos
+            val blockPos = entity.blockPosition()
             if (grassPredicate.test(world.getBlockState(blockPos)) ) {
                 return true
-            } else if (world.getBlockState(blockPos.down()).isOf(Blocks.GRASS_BLOCK)) {
+            } else if (world.getBlockState(blockPos.below()).`is`(Blocks.GRASS_BLOCK)) {
                 return true
             }
             return false
         }
     }
 
-    override fun run(world: ServerWorld, entity: PokemonEntity, time: Long) {
+    override fun start(world: ServerLevel, entity: PokemonEntity, time: Long) {
         timer = 40
-        world.sendEntityStatus(entity, 10.toByte())
+        world.broadcastEntityEvent(entity, 10.toByte())
     }
 
-    override fun shouldKeepRunning(world: ServerWorld, entity: PokemonEntity, time: Long): Boolean {
+    override fun canStillUse(world: ServerLevel, entity: PokemonEntity, time: Long): Boolean {
         timer--
         if (timer < 0) {
-            val blockPos = entity.blockPos
+            val blockPos = entity.blockPosition()
             if (grassPredicate.test(world.getBlockState(blockPos)) ) {
-                if (world.gameRules.getBoolean(GameRules.DO_MOB_GRIEFING)) {
-                    world.breakBlock(blockPos, false)
+                if (world.gameRules.getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                    world.destroyBlock(blockPos, false)
                 }
-                entity.onEatingGrass()
-            } else if (world.getBlockState(blockPos.down()).isOf(Blocks.GRASS_BLOCK)) {
-                val blockPos2 = blockPos.down()
-                if (world.getBlockState(blockPos2).isOf(Blocks.GRASS_BLOCK)) {
-                    if (world.gameRules.getBoolean(GameRules.DO_MOB_GRIEFING)) {
-                        world.syncWorldEvent(2001, blockPos2, Block.getRawIdFromState(Blocks.GRASS_BLOCK.defaultState))
-                        world.setBlockState(blockPos2, Blocks.DIRT.defaultState, 2)
+                entity.ate()
+            } else if (world.getBlockState(blockPos.below()).`is`(Blocks.GRASS_BLOCK)) {
+                val blockPos2 = blockPos.below()
+                if (world.getBlockState(blockPos2).`is`(Blocks.GRASS_BLOCK)) {
+                    if (world.gameRules.getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                        world.globalLevelEvent(2001, blockPos2, Block.getId(Blocks.GRASS_BLOCK.defaultBlockState()))
+                        world.setBlock(blockPos2, Blocks.DIRT.defaultBlockState(), 2)
                     }
 
-                    entity.onEatingGrass()
+                    entity.ate()
                 }
             }
             return false

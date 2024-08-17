@@ -9,29 +9,29 @@
 package com.cobblemon.mod.common.entity.ai
 
 import com.cobblemon.mod.common.CobblemonMemories
-import net.minecraft.entity.ai.FuzzyTargeting
-import net.minecraft.entity.ai.brain.BlockPosLookTarget
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.WalkTarget
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
-import net.minecraft.entity.mob.PathAwareEntity
+import net.minecraft.world.entity.PathfinderMob
+import net.minecraft.world.entity.ai.behavior.BlockPosTracker
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
+import net.minecraft.world.entity.ai.memory.WalkTarget
+import net.minecraft.world.entity.ai.util.LandRandomPos
 
 object ChooseLandWanderTargetTask {
-    fun create(chance: Int, horizontalRange: Int, verticalRange: Int, walkSpeed: Float, completionRange: Int): SingleTickTask<PathAwareEntity> {
-        return TaskTriggerer.task {
+    fun create(chance: Int, horizontalRange: Int, verticalRange: Int, walkSpeed: Float, completionRange: Int): OneShot<PathfinderMob> {
+        return BehaviorBuilder.create {
             it.group(
-                it.queryMemoryAbsent(MemoryModuleType.WALK_TARGET),
-                it.queryMemoryOptional(MemoryModuleType.LOOK_TARGET),
-                it.queryMemoryAbsent(CobblemonMemories.POKEMON_SLEEPING),
-                    ).apply(it) { walkTarget, lookTarget, isSleeping ->
-                TaskRunnable { world, entity, time ->
-                    if (world.random.nextInt(chance) != 0) return@TaskRunnable false
-                    val targetVec = FuzzyTargeting.find(entity, horizontalRange, verticalRange) ?: return@TaskRunnable false
-                    walkTarget.remember(WalkTarget(targetVec, walkSpeed, completionRange))
-                    lookTarget.remember(BlockPosLookTarget(targetVec.add(0.0, 1.5, 0.0)))
-                    return@TaskRunnable true
+                it.absent(MemoryModuleType.WALK_TARGET),
+                it.registered(MemoryModuleType.LOOK_TARGET),
+                it.absent(CobblemonMemories.POKEMON_SLEEPING),
+            ).apply(it) { walkTarget, lookTarget, isSleeping ->
+                Trigger { world, entity, time ->
+                    if (world.random.nextInt(chance) != 0) return@Trigger false
+                    val targetVec = LandRandomPos.getPos(entity, horizontalRange, verticalRange) ?: return@Trigger false
+                    walkTarget.set(WalkTarget(targetVec, walkSpeed, completionRange))
+                    lookTarget.set(BlockPosTracker(targetVec.add(0.0, 1.5, 0.0)))
+                    return@Trigger true
                 }
             }
         }

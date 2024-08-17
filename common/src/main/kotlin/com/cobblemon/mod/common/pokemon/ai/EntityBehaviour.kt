@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.pokemon.ai
 
 import com.cobblemon.mod.common.pokemon.activestate.ShoulderedState
 import com.cobblemon.mod.common.util.party
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 
 /**
@@ -23,11 +23,11 @@ class EntityBehaviour {
     val avoidedBySkeleton = false
 
     companion object {
-        fun hasCreeperFearedShoulderMount(player: ServerPlayerEntity) : Boolean {
+        fun hasCreeperFearedShoulderMount(player: ServerPlayer) : Boolean {
             return player.party().any { pokemon -> pokemon.state is ShoulderedState && pokemon.species.behaviour.entityInteract.avoidedByCreeper }
         }
 
-        fun hasSkeletonFearedShoulderMount(player: ServerPlayerEntity) : Boolean {
+        fun hasSkeletonFearedShoulderMount(player: ServerPlayer) : Boolean {
             return player.party().any { pokemon -> pokemon.state is ShoulderedState && pokemon.species.behaviour.entityInteract.avoidedBySkeleton }
         }
     }

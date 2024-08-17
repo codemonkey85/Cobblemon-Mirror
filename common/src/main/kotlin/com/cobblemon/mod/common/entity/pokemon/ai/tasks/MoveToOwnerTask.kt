@@ -11,47 +11,47 @@ package com.cobblemon.mod.common.entity.pokemon.ai.tasks
 import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import kotlin.math.abs
-import net.minecraft.entity.Entity
-import net.minecraft.entity.ai.brain.EntityLookTarget
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.WalkTarget
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
-import net.minecraft.entity.ai.pathing.LandPathNodeMaker
-import net.minecraft.entity.ai.pathing.PathNodeType
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.random.Random
+import net.minecraft.core.BlockPos
+import net.minecraft.util.RandomSource
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.ai.behavior.EntityTracker
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
+import net.minecraft.world.entity.ai.memory.WalkTarget
+import net.minecraft.world.level.pathfinder.PathType
+import net.minecraft.world.level.pathfinder.WalkNodeEvaluator
 
 object MoveToOwnerTask {
-    fun create(completionRange: Int, maxDistance: Float, teleportDistance: Float): SingleTickTask<PokemonEntity> = TaskTriggerer.task {
+    fun create(completionRange: Int, maxDistance: Float, teleportDistance: Float): OneShot<PokemonEntity> = BehaviorBuilder.create {
         it.group(
-            it.queryMemoryOptional(MemoryModuleType.WALK_TARGET),
-            it.queryMemoryAbsent(MemoryModuleType.ANGRY_AT)
+            it.registered(MemoryModuleType.WALK_TARGET),
+            it.absent(MemoryModuleType.ANGRY_AT)
         ).apply(it) { walkTarget, _ ->
-            TaskRunnable { _, entity, _ ->
-                val owner = entity.owner ?: return@TaskRunnable false
+            Trigger { _, entity, _ ->
+                val owner = entity.owner ?: return@Trigger false
                 if (entity.pokemon.storeCoordinates.get()?.store !is PartyStore) {
-                    return@TaskRunnable false
+                    return@Trigger false
                 }
                 if (entity.distanceTo(owner) > teleportDistance) {
                     if (tryTeleport(entity, owner)) {
-                        entity.brain.forget(MemoryModuleType.LOOK_TARGET)
-                        entity.brain.forget(MemoryModuleType.WALK_TARGET)
+                        entity.brain.eraseMemory(MemoryModuleType.LOOK_TARGET)
+                        entity.brain.eraseMemory(MemoryModuleType.WALK_TARGET)
                     }
-                    return@TaskRunnable true
-                } else if (entity.distanceTo(owner) > maxDistance && it.getOptionalValue(walkTarget).isEmpty) {
-                    entity.brain.remember(MemoryModuleType.LOOK_TARGET, EntityLookTarget(owner, true))
-                    entity.brain.remember(MemoryModuleType.WALK_TARGET, WalkTarget(owner, 0.4F, completionRange))
-                    return@TaskRunnable true
+                    return@Trigger true
+                } else if (entity.distanceTo(owner) > maxDistance && it.tryGet(walkTarget).isEmpty) {
+                    entity.brain.setMemory(MemoryModuleType.LOOK_TARGET, EntityTracker(owner, true))
+                    entity.brain.setMemory(MemoryModuleType.WALK_TARGET, WalkTarget(owner, 0.4F, completionRange))
+                    return@Trigger true
                 }
-                return@TaskRunnable false
+                return@Trigger false
             }
         }
     }
 
     private fun tryTeleport(entity: PokemonEntity, owner: Entity): Boolean {
-        val blockPos = owner.blockPos
+        val blockPos = owner.blockPosition()
         for (i in 0..9) {
             val j = this.getRandomInt(entity.random, -3, 3)
             val k = this.getRandomInt(entity.random, -1, 1)
@@ -70,10 +70,10 @@ object MoveToOwnerTask {
         } else if (!this.canTeleportTo(entity, BlockPos(x, y, z))) {
             return false
         } else {
-            entity.refreshPositionAndAngles(
+            entity.moveTo(
                 x.toDouble() + 0.5, y.toDouble(), z.toDouble() + 0.5,
-                entity.yaw,
-                entity.pitch
+                entity.yRot,
+                entity.xRot
             )
             entity.navigation.stop()
             return true
@@ -81,16 +81,16 @@ object MoveToOwnerTask {
     }
 
     private fun canTeleportTo(entity: PokemonEntity, pos: BlockPos): Boolean {
-        val pathNodeType = LandPathNodeMaker.getLandNodeType(entity.world, pos.mutableCopy())
-        if (pathNodeType != PathNodeType.WALKABLE) {
+        val pathNodeType = WalkNodeEvaluator.getPathTypeStatic(entity, pos.mutable())
+        if (pathNodeType != PathType.WALKABLE) {
             return false
         } else {
-            val blockPos = pos.subtract(entity.blockPos)
-            return entity.world.isSpaceEmpty(entity, entity.boundingBox.offset(blockPos))
+            val blockPos = pos.subtract(entity.blockPosition())
+            return entity.level().noCollision(entity, entity.boundingBox.move(blockPos))
         }
     }
 
-    private fun getRandomInt(random: Random, min: Int, max: Int): Int {
+    private fun getRandomInt(random: RandomSource, min: Int, max: Int): Int {
         return random.nextInt(max - min + 1) + min
     }
 }

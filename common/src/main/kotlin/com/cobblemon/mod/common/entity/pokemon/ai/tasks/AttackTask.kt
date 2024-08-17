@@ -8,21 +8,16 @@
 
 package com.cobblemon.mod.common.entity.pokemon.ai.tasks
 
-import com.mojang.datafixers.kinds.Const
-import com.mojang.datafixers.kinds.IdF
-import com.mojang.datafixers.kinds.OptionalBox
-import com.mojang.datafixers.util.Unit
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.brain.*
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.MathHelper
-import net.minecraft.entity.ai.brain.EntityLookTarget
-import net.minecraft.entity.ai.brain.LivingTargetCache
-import net.minecraft.entity.ai.brain.MemoryModuleType
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.util.Mth
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.behavior.EntityTracker
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
+import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities
 
 
 /**
@@ -31,21 +26,24 @@ import net.minecraft.entity.ai.brain.MemoryModuleType
  * @author Plastered_Crab
  * @since May 20th, 2024
  */
-
-
 object AttackTask {
-    fun create(distance: Int, forwardMovement: Float): SingleTickTask<MobEntity> {
-        return TaskTriggerer.task { context: TaskTriggerer.TaskContext<MobEntity> ->
-            context.group(context.queryMemoryAbsent(MemoryModuleType.WALK_TARGET), context.queryMemoryOptional(MemoryModuleType.LOOK_TARGET), context.queryMemoryValue(MemoryModuleType.ATTACK_TARGET), context.queryMemoryValue(MemoryModuleType.VISIBLE_MOBS)).apply(context) { walkTarget: MemoryQueryResult<Const.Mu<Unit?>?, WalkTarget?>?, lookTarget: MemoryQueryResult<OptionalBox.Mu?, LookTarget?>, attackTarget: MemoryQueryResult<IdF.Mu?, LivingEntity>?, visibleMobs: MemoryQueryResult<IdF.Mu?, LivingTargetCache>? ->
-                TaskRunnable { world: ServerWorld?, entity: MobEntity, time: Long ->
-                    val livingEntity = context.getValue(attackTarget) as LivingEntity
-                    if (livingEntity.isInRange(entity, distance.toDouble()) && (context.getValue(visibleMobs) as LivingTargetCache).contains(livingEntity)) {
-                        lookTarget.remember(EntityLookTarget(livingEntity, true))
-                        entity.moveControl.strafeTo(-forwardMovement, 0.0f)
-                        entity.yaw = MathHelper.clampAngle(entity.yaw, entity.headYaw, 0.0f)
-                        return@TaskRunnable true
+    fun create(distance: Int, forwardMovement: Float): OneShot<Mob> {
+        return BehaviorBuilder.create { context: BehaviorBuilder.Instance<Mob> ->
+            context.group(
+                context.absent(MemoryModuleType.WALK_TARGET),
+                context.registered(MemoryModuleType.LOOK_TARGET),
+                context.present(MemoryModuleType.ATTACK_TARGET),
+                context.present(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES)
+            ).apply(context) { walkTarget, lookTarget, attackTarget, visibleMobs ->
+                Trigger { world: ServerLevel, entity: Mob, time: Long ->
+                    val livingEntity = context.get(attackTarget) as LivingEntity
+                    if (livingEntity.closerThan(entity, distance.toDouble()) && (context.get(visibleMobs) as NearestVisibleLivingEntities).contains(livingEntity)) {
+                        lookTarget.set(EntityTracker(livingEntity, true))
+                        entity.moveControl.strafe(-forwardMovement, 0.0f)
+                        entity.yRot = Mth.clamp(entity.yRot, entity.yHeadRot, 0.0f)
+                        return@Trigger true
                     } else {
-                        return@TaskRunnable false
+                        return@Trigger false
                     }
                 }
             }

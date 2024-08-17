@@ -13,12 +13,10 @@ import com.mojang.serialization.codecs.ListCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import net.minecraft.core.UUIDUtil
 import net.minecraft.world.entity.ai.memory.MemoryModuleType
-import net.minecraft.entity.LivingEntity
 import java.util.Optional
 import java.util.UUID
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.util.Uuids
-import net.minecraft.util.math.BlockPos
+import net.minecraft.core.BlockPos
+import net.minecraft.world.entity.LivingEntity
 
 object CobblemonMemories {
     val memories = mutableMapOf<String, MemoryModuleType<*>>()

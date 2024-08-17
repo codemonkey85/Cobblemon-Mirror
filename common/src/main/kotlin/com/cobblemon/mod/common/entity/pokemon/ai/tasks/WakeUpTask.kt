@@ -12,29 +12,29 @@ import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.api.pokemon.status.Statuses
 import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
 
 object WakeUpTask {
-    fun create(): SingleTickTask<PokemonEntity> {
-        return TaskTriggerer.task {
+    fun create(): OneShot<PokemonEntity> {
+        return BehaviorBuilder.create {
             it.group(
-                it.queryMemoryAbsent(CobblemonMemories.POKEMON_BATTLE),
-                it.queryMemoryAbsent(CobblemonMemories.POKEMON_DROWSY),
-                it.queryMemoryOptional(MemoryModuleType.HURT_BY),
-                it.queryMemoryOptional(MemoryModuleType.HURT_BY_ENTITY),
-                it.queryMemoryOptional(MemoryModuleType.ANGRY_AT),
-                    ).apply(it) { _, _, hurtBy, hurtByEntity, angerTarget ->
-                TaskRunnable { world, entity, _ ->
+                it.absent(CobblemonMemories.POKEMON_BATTLE),
+                it.absent(CobblemonMemories.POKEMON_DROWSY),
+                it.registered(MemoryModuleType.HURT_BY),
+                it.registered(MemoryModuleType.HURT_BY_ENTITY),
+                it.registered(MemoryModuleType.ANGRY_AT),
+            ).apply(it) { _, _, hurtBy, hurtByEntity, angerTarget ->
+                Trigger { world, entity, _ ->
                     if (entity.pokemon.status?.status == Statuses.SLEEP && entity.pokemon.storeCoordinates.get()?.store !is PartyStore) {
                         entity.pokemon.status = null
-                        entity.brain.forget(CobblemonMemories.POKEMON_SLEEPING)
-                        entity.brain.resetPossibleActivities()
-                        return@TaskRunnable true
+                        entity.brain.eraseMemory(CobblemonMemories.POKEMON_SLEEPING)
+                        entity.brain.useDefaultActivity()
+                        return@Trigger true
                     } else {
-                        return@TaskRunnable false
+                        return@Trigger false
                     }
                 }
             }

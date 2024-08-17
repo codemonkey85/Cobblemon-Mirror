@@ -10,11 +10,11 @@ package com.cobblemon.mod.common.entity.pokemon.ai.tasks
 
 import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.entity.ai.brain.EntityLookTarget
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
+import net.minecraft.world.entity.ai.behavior.EntityTracker
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
 
 /**
  * Manages the look target of a Pokémon in battle.
@@ -23,36 +23,36 @@ import net.minecraft.entity.ai.brain.task.TaskTriggerer
  * @since April 8th, 2024
  */
 object LookAtTargetedBattlePokemonTask {
-    fun create(): SingleTickTask<PokemonEntity> {
-        return TaskTriggerer.task {
+    fun create(): OneShot<PokemonEntity> {
+        return BehaviorBuilder.create {
             it.group(
-                it.queryMemoryValue(CobblemonMemories.POKEMON_BATTLE),
-                it.queryMemoryOptional(CobblemonMemories.TARGETED_BATTLE_POKEMON),
-                it.queryMemoryOptional(MemoryModuleType.LOOK_TARGET),
+                it.present(CobblemonMemories.POKEMON_BATTLE),
+                it.registered(CobblemonMemories.TARGETED_BATTLE_POKEMON),
+                it.registered(MemoryModuleType.LOOK_TARGET),
             ).apply(it) { _, targetedBattlePokemon, lookTarget ->
-                TaskRunnable { world, entity, _ ->
-                    val targeted = it.getOptionalValue(targetedBattlePokemon).orElse(null)
+                Trigger { world, entity, _ ->
+                    val targeted = it.tryGet(targetedBattlePokemon).orElse(null)
                     val targetedEntity = targeted?.let { world.getEntity(it) as? PokemonEntity }
-                    val look = it.getOptionalValue(lookTarget).orElse(null) as? EntityLookTarget
+                    val look = it.tryGet(lookTarget).orElse(null) as? EntityTracker
                     if (targeted != null && targetedEntity == null) {
-                        entity.brain.forget(CobblemonMemories.TARGETED_BATTLE_POKEMON)
-                        return@TaskRunnable false
+                        entity.brain.eraseMemory(CobblemonMemories.TARGETED_BATTLE_POKEMON)
+                        return@Trigger false
                     } else if (targetedEntity != null && look?.entity != targetedEntity) {
-                        entity.brain.remember(MemoryModuleType.LOOK_TARGET, EntityLookTarget(targetedEntity, true))
-                        return@TaskRunnable true
+                        entity.brain.setMemory(MemoryModuleType.LOOK_TARGET, EntityTracker(targetedEntity, true))
+                        return@Trigger true
                     } else if (targetedEntity == null) {
-                        val battle = entity.battle ?: return@TaskRunnable false
+                        val battle = entity.battle ?: return@Trigger false
                         val nearestOpposingPokemon = battle.sides
                             .find { entity in it.actors.flatMap { it.pokemonList.map { it.entity } } }
                             ?.getOppositeSide()?.actors
                             ?.flatMap { it.pokemonList.mapNotNull { it.entity } }
                             ?.minByOrNull { it.distanceTo(entity) }
                         if (nearestOpposingPokemon != null) {
-                            entity.brain.remember(MemoryModuleType.LOOK_TARGET, EntityLookTarget(nearestOpposingPokemon, true))
-                            return@TaskRunnable true
+                            entity.brain.setMemory(MemoryModuleType.LOOK_TARGET, EntityTracker(nearestOpposingPokemon, true))
+                            return@Trigger true
                         }
                     }
-                    return@TaskRunnable false
+                    return@Trigger false
                 }
             }
         }

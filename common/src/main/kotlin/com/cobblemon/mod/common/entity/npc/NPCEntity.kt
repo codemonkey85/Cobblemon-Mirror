@@ -14,7 +14,6 @@ import com.cobblemon.mod.common.CobblemonEntities
 import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.CobblemonSensors
-import com.cobblemon.mod.common.GenericsCheatClass.createNPCBrain
 import com.cobblemon.mod.common.api.entity.PokemonSender
 import com.cobblemon.mod.common.api.molang.MoLangFunctions
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunctions
@@ -182,7 +181,7 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
         const val WIN_ANIMATION = "win"
     }
 
-    override fun brainProvider() = createNPCBrain(MEMORY_MODULES, SENSORS)
+    override fun brainProvider(): Brain.Provider<out NPCEntity> = Brain.provider(MEMORY_MODULES, SENSORS)
     override fun getBreedOffspring(world: ServerLevel, entity: AgeableMob) = null // No lovemaking! Unless...
     override fun getCurrentPoseType() = this.entityData.get(POSE_TYPE)
 
@@ -194,7 +193,7 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
         builder.define(BATTLE_IDS, setOf())
     }
 
-    override fun makeBrain(dynamic: Dynamic<*>): Brain<NPCEntity> {
+    override fun makeBrain(dynamic: Dynamic<*>): Brain<out NPCEntity> {
         val brain = brainProvider().makeBrain(dynamic)
         brain.addActivity(
             Activity.CORE, ImmutableList.of(

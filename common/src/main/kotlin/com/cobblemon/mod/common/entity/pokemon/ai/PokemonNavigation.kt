@@ -15,6 +15,9 @@ import com.cobblemon.mod.common.pokemon.ai.OmniPathNodeMaker
 import com.cobblemon.mod.common.util.getWaterAndLavaIn
 import com.cobblemon.mod.common.util.toVec3d
 import com.google.common.collect.ImmutableSet
+import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.acos
 import net.minecraft.core.BlockPos
 import net.minecraft.tags.FluidTags
 import net.minecraft.util.Mth
@@ -28,9 +31,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType
 import net.minecraft.world.level.pathfinder.PathFinder
 import net.minecraft.world.level.pathfinder.PathType
 import net.minecraft.world.phys.Vec3
-import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.acos
 
 class PokemonNavigation(val world: Level, val pokemonEntity: PokemonEntity) : GroundPathNavigation(pokemonEntity, world) {
     // Lazy init because navigation is instantiated during entity construction and pokemonEntity.form isn't set yet.
@@ -58,29 +58,29 @@ class PokemonNavigation(val world: Level, val pokemonEntity: PokemonEntity) : Gr
         return PathFinder(nodeEvaluator, range)
     }
 
-    override fun isValidPosition(pos: BlockPos?): Boolean {
-        return if(pokemonEntity.behaviour.moving.swim.canSwimInWater) {
-            !super.isValidPosition(pos)
+    override fun isStableDestination(pos: BlockPos?): Boolean {
+        return if (pokemonEntity.behaviour.moving.swim.canSwimInWater) {
+            !super.isStableDestination(pos)
         } else {
-            super.isValidPosition(pos)
+            super.isStableDestination(pos)
         }
     }
 
-    override fun canPathDirectlyThrough(origin: Vec3d?, target: Vec3d?): Boolean {
+    override fun canMoveDirectly(origin: Vec3, target: Vec3): Boolean {
         return if(pokemonEntity.behaviour.moving.swim.canSwimInWater) {
-            doesNotCollide(this.entity, origin!!, target!!, false)
+            isClearForMovementBetween(this.mob, origin, target, false)
         } else {
-            super.canPathDirectlyThrough(origin, target)
+            super.canMoveDirectly(origin, target)
         }
     }
 
     override fun canUpdatePath(): Boolean {
-        val (_, isTouchingLava) = mob.level().getWaterAndLavaIn(mob.boundingBox)
+        val (isInLiquid, isTouchingLava) = mob.level().getWaterAndLavaIn(mob.boundingBox)
         val isAtValidPosition = (!mob.isInLava && !mob.isEyeInFluid(FluidTags.LAVA)) ||
                 (isTouchingLava && moving.swim.canSwimInLava) ||
                 this.mob.isPassenger
-        if(pokemonEntity.behaviour.moving.swim.canSwimInWater) {
-            return isInLiquid || super.isAtValidPosition()
+        if (pokemonEntity.behaviour.moving.swim.canSwimInWater) {
+            return isInLiquid || super.canUpdatePath()
         } else {
             return isAtValidPosition
         }
@@ -185,7 +185,7 @@ class PokemonNavigation(val world: Level, val pokemonEntity: PokemonEntity) : Gr
 //            }
 //        } else if (!isFlying && canFly && isAirborne(pokemonEntity.world, pokemonEntity.blockPos)) {
 //            pokemonEntity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, true)
-//        } else if (isFlying && canWalk && !pokemonEntity.world.getBlockState(pokemonEntity.blockPos).canPathfindThrough(pokemonEntity.world, pokemonEntity.blockPos.down(), NavigationType.LAND)) {
+//        } else if (isFlying && canWalk && !pokemonEntity.world.getBlockState(pokemonEntity.blockPos).canPathfindThrough(pokemonEntity.world, pokemonEntity.blockPos.below(), NavigationType.LAND)) {
 //            pokemonEntity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, false)
 //        }
     }
@@ -231,7 +231,7 @@ class PokemonNavigation(val world: Level, val pokemonEntity: PokemonEntity) : Gr
 //                    } else {
 //                        Blocks.COAL_BLOCK.defaultState
 //                    }
-//                    entity.world.setBlockState(node.blockPos, blockState)
+//                    entity.level().setBlockState(node.blockPos, blockState)
 //                    i++
 //                }
 //            } catch(e: Exception) {

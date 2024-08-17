@@ -8,43 +8,35 @@
 
 package com.cobblemon.mod.common.entity.pokemon.ai.tasks
 
-import net.minecraft.entity.ai.brain.*
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
-import net.minecraft.entity.passive.PassiveEntity
-import net.minecraft.util.math.intprovider.UniformIntProvider
+import net.minecraft.util.valueproviders.UniformInt
+import net.minecraft.world.entity.AgeableMob
+import net.minecraft.world.entity.ai.behavior.EntityTracker
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
+import net.minecraft.world.entity.ai.memory.WalkTarget
 
 // modified mojang task for Pokémon species specific behaviour
 object WalkTowardsParentSpeciesTask {
     fun create(
-        executionRange: UniformIntProvider,
+        executionRange: UniformInt,
         speed: Float
-    ): SingleTickTask<PassiveEntity> = TaskTriggerer.task { context ->
+    ): OneShot<AgeableMob> = BehaviorBuilder.create { context ->
         context.group(
-            context.queryMemoryValue(MemoryModuleType.NEAREST_VISIBLE_ADULT),
-            context.queryMemoryOptional(MemoryModuleType.LOOK_TARGET),
-            context.queryMemoryAbsent(MemoryModuleType.WALK_TARGET)
+            context.present(MemoryModuleType.NEAREST_VISIBLE_ADULT),
+            context.registered(MemoryModuleType.LOOK_TARGET),
+            context.absent(MemoryModuleType.WALK_TARGET)
         ).apply(context) { nearestVisibleAdult , lookTarget, walkTarget ->
-            TaskRunnable { _, entity, _ ->
-                val passiveEntity = context.getValue(nearestVisibleAdult) as PassiveEntity
+            Trigger { _, entity, _ ->
+                val passiveEntity = context.get(nearestVisibleAdult) as AgeableMob
                 if (
-                    entity.isInRange(passiveEntity, (executionRange.max + 1).toDouble())
-                    && !entity.isInRange(passiveEntity, executionRange.min.toDouble())
+                    entity.closerThan(passiveEntity, (executionRange.maxValue + 1).toDouble())
+                    && !entity.closerThan(passiveEntity, executionRange.minValue.toDouble())
                 ) {
-                    val walkTargetx = WalkTarget(
-                        EntityLookTarget(passiveEntity, false),
-                        speed, executionRange.min - 1
-                    )
-
-                    lookTarget.remember(
-                        EntityLookTarget(
-                            passiveEntity,
-                            true
-                        )
-                    )
-
-                    walkTarget.remember(walkTargetx)
+                    val walkTargetX = WalkTarget(EntityTracker(passiveEntity, false), speed, executionRange.minValue - 1)
+                    lookTarget.set(EntityTracker(passiveEntity, true))
+                    walkTarget.set(walkTargetX)
                     true
                 } else {
                     false

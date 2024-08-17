@@ -11,30 +11,39 @@ package com.cobblemon.mod.common.pokemon.ai
 import com.cobblemon.mod.common.CobblemonActivities
 import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.CobblemonSensors
-import com.cobblemon.mod.common.entity.ai.*
+import com.cobblemon.mod.common.entity.ai.AttackAngryAtTask
+import com.cobblemon.mod.common.entity.ai.ChooseLandWanderTargetTask
+import com.cobblemon.mod.common.entity.ai.FollowWalkTargetTask
+import com.cobblemon.mod.common.entity.ai.GetAngryAtAttackerTask
+import com.cobblemon.mod.common.entity.ai.LookAroundTaskWrapper
+import com.cobblemon.mod.common.entity.ai.LookAtMobTaskWrapper
+import com.cobblemon.mod.common.entity.ai.MoveToAttackTargetTask
+import com.cobblemon.mod.common.entity.ai.StayAfloatTask
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.entity.pokemon.ai.tasks.*
-import com.cobblemon.mod.common.entity.pokemon.ai.tasks.WakeUpTask
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.toDF
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableSet
 import com.mojang.datafixers.util.Pair
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.brain.*
-import net.minecraft.entity.ai.brain.sensor.Sensor
-import net.minecraft.entity.ai.brain.sensor.SensorType
-import net.minecraft.entity.ai.brain.task.*
-import net.minecraft.util.TimeHelper
-import net.minecraft.util.math.intprovider.UniformIntProvider
+import net.minecraft.util.TimeUtil
+import net.minecraft.util.valueproviders.UniformInt
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.Brain
+import net.minecraft.world.entity.ai.behavior.*
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
+import net.minecraft.world.entity.ai.memory.MemoryStatus
+import net.minecraft.world.entity.ai.sensing.Sensor
+import net.minecraft.world.entity.ai.sensing.SensorType
+import net.minecraft.world.entity.schedule.Activity
 
 // brain sensors / memory definitions split from PokemonEntity
 // to better represent vanillas layout.
 object PokemonBrain {
 
-    private val ADULT_FOLLOW_RANGE = UniformIntProvider.create(5, 16)
-    private val AVOID_MEMORY_DURATION = TimeHelper.betweenSeconds(5, 20)
+    private val ADULT_FOLLOW_RANGE = UniformInt.of(5, 16)
+    private val AVOID_MEMORY_DURATION = TimeUtil.rangeOfSeconds(5, 20)
 
     val SENSORS: Collection<SensorType<out Sensor<in PokemonEntity>>> = listOf(
         SensorType.NEAREST_LIVING_ENTITIES,
@@ -58,7 +67,7 @@ object PokemonBrain {
         MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
         MemoryModuleType.PATH,
         MemoryModuleType.IS_PANICKING,
-        MemoryModuleType.VISIBLE_MOBS,
+        MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
         CobblemonMemories.POKEMON_FLYING,
         CobblemonMemories.NEAREST_VISIBLE_ATTACKER,
 
@@ -84,63 +93,63 @@ object PokemonBrain {
     )
 
     fun makeBrain(pokemon: Pokemon, brain: Brain<out PokemonEntity>): Brain<*> {
-        brain.setTaskList(
+        brain.addActivity(
             Activity.CORE,
             ImmutableList.copyOf(coreTasks(pokemon))
         )
-        brain.setTaskList(
+        brain.addActivity(
             Activity.IDLE,
             ImmutableList.copyOf(idleTasks(pokemon))
         )
-        brain.setTaskList(
+        brain.addActivity(
             CobblemonActivities.BATTLING_ACTIVITY,
             ImmutableList.copyOf(battlingTasks())
         )
-        brain.setTaskList(
+        brain.addActivity(
             CobblemonActivities.POKEMON_SLEEPING_ACTIVITY,
             ImmutableList.copyOf(sleepingTasks())
         )
-        brain.setTaskList(
+        brain.addActivityAndRemoveMemoryWhenStopped(
             Activity.FIGHT,
             0,
             ImmutableList.of(
-                MeleeAttackTask.create(10)
+                MeleeAttack.create(10)
             ),
             MemoryModuleType.ATTACK_TARGET
         )
-        brain.setTaskList(
+        brain.addActivityAndRemoveMemoryWhenStopped(
             Activity.AVOID,
             10,
             ImmutableList.of(
-                    GoToRememberedPositionTask.createEntityBased(
-                            MemoryModuleType.AVOID_TARGET,
-                            1.5f,
-                            15,
-                            false
-                    ),
-                    makeRandomWalkTask(),
-                    LookAtMobWithIntervalTask.follow(
-                            8.0f,
-                            UniformIntProvider.create(30, 60)
-                    ),
+                SetWalkTargetAwayFrom.entity(
+                    MemoryModuleType.AVOID_TARGET,
+                    1.5f,
+                    15,
+                    false
+                ),
+                makeRandomWalkTask(),
+                SetEntityLookTargetSometimes.create(
+                    8.0f,
+                    UniformInt.of(30, 60)
+                ),
             ),
             MemoryModuleType.AVOID_TARGET
         )
-        brain.setTaskList(
+        brain.addActivityWithConditions(
             CobblemonActivities.POKEMON_GROW_CROP,
             ImmutableList.copyOf(growingPlantTasks(pokemon)),
-            ImmutableSet.of(Pair.of(MemoryModuleType.LOOK_TARGET, MemoryModuleState.VALUE_PRESENT))
+            ImmutableSet.of(Pair.of(MemoryModuleType.LOOK_TARGET, MemoryStatus.VALUE_PRESENT))
         )
 
         brain.setCoreActivities(setOf(Activity.CORE))
         brain.setDefaultActivity(Activity.IDLE)
-        brain.resetPossibleActivities()
+        brain.useDefaultActivity()
 
         return brain
     }
 
     fun updateActivities(pokemon:PokemonEntity) {
-        pokemon.brain.resetPossibleActivities(
+        pokemon.brain.setActiveActivityToFirstValid(
             ImmutableList.of(
 //                Activity.CORE,
                 Activity.AVOID,
@@ -153,20 +162,20 @@ object PokemonBrain {
         )
     }
 
-    private fun coreTasks(pokemon: Pokemon) = buildList<Pair<Int, Task<in PokemonEntity>>> {
+    private fun coreTasks(pokemon: Pokemon) = buildList<Pair<Int, BehaviorControl<in PokemonEntity>>> {
         if (!pokemon.form.behaviour.moving.swim.canBreatheUnderwater) {
             add(0 toDF StayAfloatTask(0.8F))
         }
 
         add(0 toDF GetAngryAtAttackerTask.create())
-        add(0 toDF ForgetAngryAtTargetTask.create())
+        add(0 toDF StopBeingAngryIfTargetDead.create())
         add(0 toDF HandleBattleActivityGoal.create())
         add(0 toDF FollowWalkTargetTask())
         add(0 toDF DefendOwnerTask()) // try to defend owners here as a test
     }
 
 
-    private fun idleTasks(pokemon: Pokemon) = buildList<Pair<Int, Task<in PokemonEntity>>> {
+    private fun idleTasks(pokemon: Pokemon) = buildList<Pair<Int, BehaviorControl<in PokemonEntity>>> {
         add(0 toDF WakeUpTask.create() )
         if (pokemon.form.behaviour.moving.canLook) {
             if (pokemon.form.behaviour.moving.looksAtEntities) {
@@ -203,29 +212,29 @@ object PokemonBrain {
 
     }
 
-    private fun makeRandomWalkTask(): RandomTask<PokemonEntity> {
-        return RandomTask(ImmutableList.of(Pair.of(StrollTask.create(0.4f), 2), Pair.of(GoTowardsLookTargetTask.create(0.4f, 3), 2), Pair.of(WaitTask(30, 60), 1)))
+    private fun makeRandomWalkTask(): RunOne<PokemonEntity> {
+        return RunOne(ImmutableList.of(Pair.of(RandomStroll.stroll(0.4f), 2), Pair.of(SetWalkTargetFromLookTarget.create(0.4f, 3), 2), Pair.of(DoNothing(30, 60), 1)))
     }
 
-    private fun battlingTasks() = buildList<Pair<Int, Task<in PokemonEntity>>> {
+    private fun battlingTasks() = buildList<Pair<Int, BehaviorControl<in PokemonEntity>>> {
         add(0 toDF LookAtTargetedBattlePokemonTask.create())
-        add(0 toDF LookAroundTask(Int.MAX_VALUE - 1, Int.MAX_VALUE - 1))
+        add(0 toDF LookAtTargetSink(Int.MAX_VALUE - 1, Int.MAX_VALUE - 1))
     }
 
-    private fun sleepingTasks() = buildList<Pair<Int, Task<in PokemonEntity>>> {
+    private fun sleepingTasks() = buildList<Pair<Int, BehaviorControl<in PokemonEntity>>> {
         add(1 toDF WakeUpTask.create())
     }
-    private fun growingPlantTasks(pokemon: Pokemon) = buildList<Pair<Int, Task<in PokemonEntity>>> {
+    private fun growingPlantTasks(pokemon: Pokemon) = buildList<Pair<Int, BehaviorControl<in PokemonEntity>>> {
         if (pokemon.species.primaryType.name.equals("grass", true)){
             add(1 toDF FertilizerTask())
         }
     }
 
-    public fun onCaptureFailed(pokemonEntity: PokemonEntity, capturer: Entity) {
+    fun onCaptureFailed(pokemonEntity: PokemonEntity, capturer: Entity) {
         if (pokemonEntity.pokemon.isWild() && pokemonEntity.battleId == null && capturer is LivingEntity) {
-            pokemonEntity.getBrain().forget<LivingEntity>(MemoryModuleType.ATTACK_TARGET)
-            pokemonEntity.getBrain().forget<WalkTarget>(MemoryModuleType.WALK_TARGET)
-            pokemonEntity.getBrain().remember<LivingEntity>(MemoryModuleType.AVOID_TARGET, capturer, AVOID_MEMORY_DURATION[pokemonEntity.world.random].toLong())
+            pokemonEntity.brain.eraseMemory(MemoryModuleType.ATTACK_TARGET)
+            pokemonEntity.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET)
+            pokemonEntity.getBrain().setMemoryWithExpiry(MemoryModuleType.AVOID_TARGET, capturer, AVOID_MEMORY_DURATION.sample(pokemonEntity.random).toLong())
         }
     }
 }
