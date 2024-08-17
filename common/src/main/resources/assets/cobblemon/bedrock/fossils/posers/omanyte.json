@@ -2,19 +2,19 @@
   "maxScale": 0.9,
   "yTranslation": 0,
   "yGrowthPoint": 0.4375,
-
-  "animations": [
-    "bedrock(omanyte_fetus, sleep)"
-  ],
-  "quirks": [
-    {
-      "name": "quirk",
-      "animations": [
-        "bedrock(omanyte_fetus, quirk)"
-      ],
-      "loopTimes": 1,
-      "minSeconds": 30,
-      "maxSeconds": 60
+  "poses": {
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('omanyte_fetus', 'sleep')"],
+      "quirks": [
+        {
+          "name": "quirk",
+          "animations": ["q.bedrock_stateful('omanyte_fetus', 'quirk')"],
+          "loopTimes": 1,
+          "minSecondsBetweenOccurrences": 30,
+          "maxSecondsBetweenOccurrences": 60
+        }
+      ]
     }
-  ]
+  }
 }

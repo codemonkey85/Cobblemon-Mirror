@@ -8,17 +8,17 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.QuadrupedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class LaironModel  (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class LaironModel  (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("lairon")
     override val head = getPart("head")
 
@@ -28,15 +28,15 @@ class LaironModel  (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
     override val hindRightLeg = getPart("leg_back_right3")
 
     override var portraitScale = 1.76F
-    override var portraitTranslation = Vec3d(-0.68, -1.01, 0.0)
+    override var portraitTranslation = Vec3(-0.68, -1.01, 0.0)
 
     override var profileScale = 0.72F
-    override var profileTranslation = Vec3d(0.0, 0.59, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.59, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("lairon", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("lairon", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("lairon", "blink") }
@@ -45,7 +45,7 @@ class LaironModel  (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
             poseName = "standing",
             poseTypes = PoseType.UI_POSES + PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("lairon", "ground_idle")
             )
@@ -55,7 +55,7 @@ class LaironModel  (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 QuadrupedWalkAnimation(this, amplitudeMultiplier = 1.0F, periodMultiplier = 0.7F),
                 singleBoneLook(),
                 bedrock("lairon", "ground_idle")
@@ -65,6 +65,6 @@ class LaironModel  (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("lairon", "faint") else null
 }

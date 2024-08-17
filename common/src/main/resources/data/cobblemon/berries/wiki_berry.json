@@ -1,31 +1,23 @@
 {
   "baseYield": {
     "min": 2,
-    "max": 4
+    "max": 3
   },
   "preferredBiomeTags": [
     "cobblemon:is_arid"
   ],
   "growthTime": {
-    "min": 55,
-    "max": 65
+    "min": 41,
+    "max": 49
   },
   "refreshRate": {
-    "min": 15,
-    "max": 25
+    "min": 20,
+    "max": 24
   },
   "favoriteMulches": [
     "sandy"
   ],
-  "growthFactors": [
-    {
-      "variant": "cobblemon:preferred_biome",
-      "bonusYield": {
-        "min": 1,
-        "max": 2
-      }
-    }
-  ],
+  "growthFactors": [],
   "randomizedGrowthPoints": true,
   "spawnConditions": [],
   "growthPoints": [
@@ -102,6 +94,18 @@
       }
     }
   ],
+  "stageOnePositioning": {
+    "position": {
+      "x": 8.15,
+      "y": 2.5,
+      "z": 8.1
+    },
+    "rotation": {
+      "x": 5.0,
+      "y": -10.0,
+      "z": -7.5
+    }
+  },
   "mutations": {
     "cobblemon:lum_berry": "cobblemon:sitrus_berry",
     "cobblemon:bluk_berry": "cobblemon:cornn_berry"
@@ -116,5 +120,6 @@
   "flowerModel": "cobblemon:flower.geo",
   "flowerTexture": "cobblemon:flower",
   "fruitModel": "cobblemon:wiki_berry.geo",
-  "fruitTexture": "cobblemon:wiki"
+  "fruitTexture": "cobblemon:wiki",
+  "boneMealChance": 0.48
 }

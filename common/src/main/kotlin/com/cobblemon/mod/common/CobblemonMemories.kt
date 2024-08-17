@@ -9,7 +9,10 @@
 package com.cobblemon.mod.common
 
 import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.ListCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
+import net.minecraft.core.UUIDUtil
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
 import net.minecraft.entity.LivingEntity
 import java.util.Optional
 import java.util.UUID
@@ -20,6 +23,8 @@ import net.minecraft.util.math.BlockPos
 object CobblemonMemories {
     val memories = mutableMapOf<String, MemoryModuleType<*>>()
 
+    val BATTLING_POKEMON = register("battling_pokemon", ListCodec(UUIDUtil.CODEC, 0, 31))
+    val NPC_BATTLING = register("npc_battling", PrimitiveCodec.BOOL)
     val POKEMON_FLYING = register("pokemon_flying", PrimitiveCodec.BOOL)
     val POKEMON_DROWSY = register("pokemon_drowsy", PrimitiveCodec.BOOL)
     val POKEMON_SLEEPING = register("pokemon_sleeping", PrimitiveCodec.BOOL)

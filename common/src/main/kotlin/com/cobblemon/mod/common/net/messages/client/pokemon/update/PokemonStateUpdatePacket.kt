@@ -11,13 +11,13 @@ package com.cobblemon.mod.common.net.messages.client.pokemon.update
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.activestate.PokemonState
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class PokemonStateUpdatePacket(pokemon: () -> Pokemon, value: PokemonState): SingleUpdatePacket<PokemonState, PokemonStateUpdatePacket>(pokemon, value) {
 
     override val id = ID
 
-    override fun encodeValue(buffer: PacketByteBuf) {
+    override fun encodeValue(buffer: RegistryFriendlyByteBuf) {
         value.writeToBuffer(buffer)
     }
 
@@ -25,7 +25,7 @@ class PokemonStateUpdatePacket(pokemon: () -> Pokemon, value: PokemonState): Sin
 
     companion object {
         val ID = cobblemonResource("state_update")
-        fun decode(buffer: PacketByteBuf): PokemonStateUpdatePacket {
+        fun decode(buffer: RegistryFriendlyByteBuf): PokemonStateUpdatePacket {
             val pokemon = decodePokemon(buffer)
             val state = PokemonState.fromBuffer(buffer)
             return PokemonStateUpdatePacket(pokemon, state)

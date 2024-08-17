@@ -9,38 +9,37 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.PoseType.Companion.ALL_POSES
-import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class OmastarModel(root: ModelPart) : PokemonPoseableModel() {
+class OmastarModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("omastar")
 
-    override var portraitTranslation = Vec3d(0.02, -2.20, 0.0)
+    override var portraitTranslation = Vec3(0.02, -2.20, 0.0)
     override var portraitScale = 2.4F
 
-    override var profileTranslation = Vec3d(0.0, 0.066, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.066, 0.0)
     override var profileScale = 1.1F
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var float: PokemonPose
-    lateinit var swim: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var float: CobblemonPose
+    lateinit var swim: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var battleidle: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("omastar", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("omastar", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("omastar", "blink") }
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("omastar", "sleep"))
+            animations = arrayOf(bedrock("omastar", "sleep"))
         )
 
         standing = registerPose(
@@ -49,7 +48,7 @@ class OmastarModel(root: ModelPart) : PokemonPoseableModel() {
             quirks = arrayOf(blink),
             transformTicks = 10,
             condition = { !it.isBattling},
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("omastar", "ground_idle")
             )
         )
@@ -59,7 +58,7 @@ class OmastarModel(root: ModelPart) : PokemonPoseableModel() {
             poseTypes = PoseType.MOVING_POSES - PoseType.SWIM,
             quirks = arrayOf(blink),
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("omastar", "ground_walk")
             )
         )
@@ -69,7 +68,7 @@ class OmastarModel(root: ModelPart) : PokemonPoseableModel() {
             poseTypes = setOf(PoseType.FLOAT, PoseType.HOVER),
             quirks = arrayOf(blink),
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("omastar", "water_idle")
             )
         )
@@ -79,7 +78,7 @@ class OmastarModel(root: ModelPart) : PokemonPoseableModel() {
             poseTypes = setOf(PoseType.SWIM, PoseType.FLY),
             quirks = arrayOf(blink),
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("omastar", "water_swim")
             )
         )
@@ -90,7 +89,7 @@ class OmastarModel(root: ModelPart) : PokemonPoseableModel() {
             quirks = arrayOf(blink),
             transformTicks = 10,
             condition = { it.isBattling},
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("omastar", "battle_idle")
             )
         )
@@ -98,6 +97,6 @@ class OmastarModel(root: ModelPart) : PokemonPoseableModel() {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("omastar", "faint") else null
 }

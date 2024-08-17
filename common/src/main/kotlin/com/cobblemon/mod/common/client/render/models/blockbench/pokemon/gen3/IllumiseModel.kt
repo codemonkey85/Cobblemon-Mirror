@@ -12,14 +12,17 @@ import com.cobblemon.mod.common.client.render.models.blockbench.createTransforma
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import com.cobblemon.mod.common.util.isUnderWater
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class IllumiseModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BiWingedFrame {
+class IllumiseModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("illumise")
     override val leftWing = getPart("left_wing")
     override val rightWing = getPart("right_wing")
@@ -28,19 +31,19 @@ class IllumiseModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
     override val head = getPart("head")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.2, -0.3, 0.0)
+    override var portraitTranslation = Vec3(-0.2, -0.3, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.3, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.3, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var stand: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var hover: PokemonPose
-    lateinit var fly: PokemonPose
-    lateinit var battleidle: PokemonPose
-    lateinit var water_surface_idle: PokemonPose
-    lateinit var water_surface_fly: PokemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var stand: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var hover: CobblemonPose
+    lateinit var fly: CobblemonPose
+    lateinit var battleidle: CobblemonPose
+    lateinit var water_surface_idle: CobblemonPose
+    lateinit var water_surface_fly: CobblemonPose
 
     val wateroffset = -15
 
@@ -51,7 +54,7 @@ class IllumiseModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("illumise", "sleep"))
+            animations = arrayOf(bedrock("illumise", "sleep"))
         )
 
         water_surface_idle = registerPose(
@@ -59,11 +62,11 @@ class IllumiseModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink, flicker),
-            condition = { it.isTouchingWater && !it.isSubmergedInWater },
+            condition = { it.isInWater && !it.isUnderWater },
             transformedParts = arrayOf(
                 rootPart.createTransformation().addPosition(ModelPartTransformation.Y_AXIS, wateroffset)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("illumise", "air_idle")
             )
@@ -74,11 +77,11 @@ class IllumiseModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink, flicker),
-            condition = { it.isTouchingWater && !it.isSubmergedInWater },
+            condition = { it.isInWater && !it.isUnderWater },
             transformedParts = arrayOf(
                 rootPart.createTransformation().addPosition(ModelPartTransformation.Y_AXIS, wateroffset)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("illumise", "air_fly")
             )
@@ -90,7 +93,7 @@ class IllumiseModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             transformTicks = 10,
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("illumise", "ground_idle")
             )
@@ -101,7 +104,7 @@ class IllumiseModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseTypes = PoseType.MOVING_POSES - PoseType.FLY,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("illumise", "ground_walk")
             )
@@ -112,7 +115,7 @@ class IllumiseModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseType = PoseType.HOVER,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("illumise", "air_idle")
             )
@@ -123,7 +126,7 @@ class IllumiseModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseType = PoseType.FLY,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("illumise", "air_fly")
             )
@@ -135,7 +138,7 @@ class IllumiseModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("illumise", "battle_idle")
             )

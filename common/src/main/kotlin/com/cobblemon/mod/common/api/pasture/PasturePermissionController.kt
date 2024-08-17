@@ -9,7 +9,7 @@
 package com.cobblemon.mod.common.api.pasture
 
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Interface for a route to which a player might be permitted to use a pasture block. This is registered
@@ -19,5 +19,5 @@ import net.minecraft.server.network.ServerPlayerEntity
  * @since July 2nd, 2023
  */
 fun interface PasturePermissionController {
-    fun permit(player: ServerPlayerEntity, pastureBlockEntity: PokemonPastureBlockEntity): PasturePermissions?
+    fun permit(player: ServerPlayer, pastureBlockEntity: PokemonPastureBlockEntity): PasturePermissions?
 }

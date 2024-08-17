@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:remedy"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.craft_remedy"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.craft_remedy.description"
+    }
+  },
+  "parent": "cobblemon:obtain_big_root",
+  "criteria": {
+    "check_inv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:remedy"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

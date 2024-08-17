@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.pokemon.evolution.requirements.template
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
 
 /**
  * An [EvolutionRequirement] that expects a [LivingEntity] to be attached to the [Pokemon].

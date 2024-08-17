@@ -11,9 +11,9 @@ package com.cobblemon.mod.common.util
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.tree.LiteralCommandNode
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
 
-fun <T : ArgumentBuilder<ServerCommandSource, T>> ArgumentBuilder<ServerCommandSource, T>.appendRequirement(requirement: (src: ServerCommandSource) -> Boolean): T = this.requires(this.requirement.and(requirement))
+fun <T : ArgumentBuilder<CommandSourceStack, T>> ArgumentBuilder<CommandSourceStack, T>.appendRequirement(requirement: (src: CommandSourceStack) -> Boolean): T = this.requires(this.requirement.and(requirement))
 
 // Taken from the Velocity project
 /**

@@ -1,6 +1,6 @@
 plugins {
     id("cobblemon.root-conventions")
-    id ("net.nemerosa.versioning") version "2.8.2"
+    id ("net.nemerosa.versioning") version "3.1.0"
 }
 
 version = "${project.property("mod_version")}+${project.property("mc_version")}"

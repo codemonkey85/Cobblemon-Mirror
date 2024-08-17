@@ -93,11 +93,6 @@ class ScheduledTask(
 
         private var tracker: SchedulingTracker? = null
 
-        fun identifier(identifier: String): Builder {
-            this.identifier = identifier
-            return this
-        }
-
         /**
          * Sets the consumer to be executed by the task.
          *

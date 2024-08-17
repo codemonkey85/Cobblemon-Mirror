@@ -9,10 +9,10 @@
 package com.cobblemon.mod.fabric.mixin;
 
 import com.cobblemon.mod.common.brewing.BrewingRecipes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.BrewingStandScreenHandler;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.BrewingStandMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * @author Aethen
  * @since 02/20/2024
  */
-@Mixin(BrewingStandScreenHandler.class)
+@Mixin(BrewingStandMenu.class)
 public abstract class BrewingStandScreenHandlerMixin {
 
     /**
@@ -34,14 +34,14 @@ public abstract class BrewingStandScreenHandlerMixin {
      * @param index Index of the slot that the item is being moved from
      * @param cir CallbackInfoReturnable that allows the return value to be modified
      */
-    @Inject(method = "quickMove", at = @At(value = "HEAD"), cancellable = true)
-    private void cobblemon$quickMove(PlayerEntity player, int index, CallbackInfoReturnable<ItemStack> cir) {
-        final BrewingStandScreenHandler brewingStandScreenHandler = (BrewingStandScreenHandler) (Object) this;
+    @Inject(method = "quickMoveStack", at = @At(value = "HEAD"), cancellable = true)
+    private void cobblemon$quickMoveStack(Player player, int index, CallbackInfoReturnable<ItemStack> cir) {
+        final BrewingStandMenu brewingStandScreenHandler = (BrewingStandMenu) (Object) this;
 
         Slot screenSlot = brewingStandScreenHandler.slots.get(index);
-        if (screenSlot.hasStack())
+        if (screenSlot.hasItem())
         {
-            ItemStack stackInSlot = screenSlot.getStack();
+            ItemStack stackInSlot = screenSlot.getItem();
 
             // We don't care if:
             // - this item is being taken FROM the stand
@@ -50,7 +50,7 @@ public abstract class BrewingStandScreenHandlerMixin {
             if (index < 5 || BrewingRecipes.INSTANCE.getRecipes().stream().noneMatch(recipe -> recipe.component1().matches(stackInSlot)))
                 return;
 
-            if (!BrewingStandScreenHandler.PotionSlot.matches(stackInSlot))
+            if (!BrewingStandMenu.PotionSlot.mayPlaceItem(stackInSlot))
                 return;
 
             if (customInsertItem(stackInSlot, 0, 3))
@@ -73,7 +73,7 @@ public abstract class BrewingStandScreenHandlerMixin {
      */
     @Unique
     protected boolean customInsertItem(ItemStack stack, int startIndex, int endIndex) {
-        final BrewingStandScreenHandler brewingStandScreenHandler = (BrewingStandScreenHandler) (Object) this;
+        final BrewingStandMenu brewingStandScreenHandler = (BrewingStandMenu) (Object) this;
 
         ItemStack itemStack;
         Slot slot;
@@ -82,14 +82,14 @@ public abstract class BrewingStandScreenHandlerMixin {
         if (!stack.isEmpty()) {
             while (i < endIndex) {
                 slot = brewingStandScreenHandler.slots.get(i);
-                itemStack = slot.getStack();
-                if (itemStack.isEmpty() && slot.canInsert(stack)) {
-                    if (stack.getCount() > slot.getMaxItemCount()) {
-                        slot.setStack(stack.split(slot.getMaxItemCount()));
+                itemStack = slot.getItem();
+                if (itemStack.isEmpty() && slot.mayPlace(stack)) {
+                    if (stack.getCount() > slot.getMaxStackSize()) {
+                        slot.setByPlayer(stack.split(slot.getMaxStackSize()));
                     } else {
-                        slot.setStack(stack.split(stack.getCount()));
+                        slot.setByPlayer(stack.split(stack.getCount()));
                     }
-                    slot.markDirty();
+                    slot.setChanged();
                     bl = true;
                     break;
                 }

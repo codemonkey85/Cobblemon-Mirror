@@ -8,21 +8,19 @@
 
 package com.cobblemon.mod.common.api.pokemon.feature
 
-import com.cobblemon.mod.common.api.net.Decodable
-import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
 import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
+import com.cobblemon.mod.common.api.serialization.BufferSerializer
 import com.cobblemon.mod.common.client.gui.summary.featurerenderers.BarSummarySpeciesFeatureRenderer
 import com.cobblemon.mod.common.client.gui.summary.featurerenderers.SummarySpeciesFeatureRenderer
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.util.asTranslated
-import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.*
 import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.Vec3d
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.phys.Vec3
 
 /**
  * A species feature value that's just an integer. Complex stuff.
@@ -36,12 +34,12 @@ class IntSpeciesFeature(override var name: String) : SynchronizedSpeciesFeature,
         this.value = value
     }
 
-    override fun saveToNBT(pokemonNBT: NbtCompound): NbtCompound {
+    override fun saveToNBT(pokemonNBT: CompoundTag): CompoundTag {
         pokemonNBT.putInt(name, value)
         return pokemonNBT
     }
 
-    override fun loadFromNBT(pokemonNBT: NbtCompound): SynchronizedSpeciesFeature {
+    override fun loadFromNBT(pokemonNBT: CompoundTag): SynchronizedSpeciesFeature {
         value = pokemonNBT.getInt(name)
         return this
     }
@@ -56,11 +54,11 @@ class IntSpeciesFeature(override var name: String) : SynchronizedSpeciesFeature,
         return this
     }
 
-    override fun encode(buffer: PacketByteBuf) {
+    override fun saveToBuffer(buffer: RegistryFriendlyByteBuf, toClient: Boolean) {
         buffer.writeInt(value)
     }
 
-    override fun decode(buffer: PacketByteBuf) {
+    override fun loadFromBuffer(buffer: RegistryFriendlyByteBuf) {
         value = buffer.readInt()
     }
 
@@ -82,21 +80,25 @@ class IntSpeciesFeature(override var name: String) : SynchronizedSpeciesFeature,
 }
 
 class IntSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<IntSpeciesFeature>, CustomPokemonPropertyType<IntSpeciesFeature> {
-    class DisplayData : Encodable, Decodable {
+    class DisplayData : BufferSerializer {
         var name: String = ""
         @SerializedName(value = "colour" /* fuck you we use real english */, alternate = ["color"])
-        var colour = Vec3d(255.0, 255.0, 255.0)
-        var underlay: Identifier? = null
-        var overlay: Identifier? = null
+        var colour = Vec3(255.0, 255.0, 255.0)
+        var underlay: ResourceLocation? = null
+        var overlay: ResourceLocation? = null
 
-        override fun decode(buffer: PacketByteBuf) {
+        override fun loadFromBuffer(buffer: RegistryFriendlyByteBuf) {
             name = buffer.readString()
-            colour = Vec3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble())
+            colour = Vec3(
+                buffer.readDouble(),
+                buffer.readDouble(),
+                buffer.readDouble()
+            )
             underlay = buffer.readNullable { buffer.readIdentifier() }
             overlay = buffer.readNullable { buffer.readIdentifier() }
         }
 
-        override fun encode(buffer: PacketByteBuf) {
+        override fun saveToBuffer(buffer: RegistryFriendlyByteBuf, toClient: Boolean) {
             buffer.writeString(name)
             buffer.writeDouble(colour.x)
             buffer.writeDouble(colour.y)
@@ -118,7 +120,7 @@ class IntSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<IntSpeciesF
     override fun fromString(value: String?) = value?.toIntOrNull()?.takeIf { it in min..max }?.let { IntSpeciesFeature(keys.first(), it) }
 
     override fun examples() = emptyList<String>()
-    override fun invoke(buffer: PacketByteBuf, name: String): IntSpeciesFeature? {
+    override fun invoke(buffer: RegistryFriendlyByteBuf, name: String): IntSpeciesFeature? {
         return if (name in keys) {
             IntSpeciesFeature(name, buffer.readInt())
         } else {
@@ -130,7 +132,7 @@ class IntSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<IntSpeciesF
         return get(pokemon) ?: default?.let { IntSpeciesFeature(keys.first(), it) }
     }
 
-    override fun invoke(nbt: NbtCompound): IntSpeciesFeature? {
+    override fun invoke(nbt: CompoundTag): IntSpeciesFeature? {
         return if (nbt.contains(keys.first())) {
             IntSpeciesFeature(keys.first(), nbt.getInt(keys.first()))
         } else {
@@ -148,20 +150,20 @@ class IntSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<IntSpeciesF
 
     override fun get(pokemon: Pokemon) = pokemon.features.filterIsInstance<IntSpeciesFeature>().find { it.name in keys }
 
-    override fun encode(buffer: PacketByteBuf) {
+    override fun saveToBuffer(buffer: RegistryFriendlyByteBuf, toClient: Boolean) {
         buffer.writeCollection(keys) { _, value -> buffer.writeString(value) }
         buffer.writeNullable(default) { _, value -> buffer.writeInt(value) }
         buffer.writeInt(min)
         buffer.writeInt(max)
-        buffer.writeNullable(display) { _, value -> value.encode(buffer) }
+        buffer.writeNullable(display) { _, value -> value.saveToBuffer(buffer, toClient) }
     }
 
-    override fun decode(buffer: PacketByteBuf) {
+    override fun loadFromBuffer(buffer: RegistryFriendlyByteBuf) {
         keys = buffer.readList { buffer.readString() }
         default = buffer.readNullable { buffer.readInt() }
         min = buffer.readInt()
         max = buffer.readInt()
-        display = buffer.readNullable { DisplayData().also { it.decode(buffer) } }
+        display = buffer.readNullable { DisplayData().also { it.loadFromBuffer(buffer) } }
     }
 
     override fun getRenderer(pokemon: Pokemon): SummarySpeciesFeatureRenderer<IntSpeciesFeature>? {

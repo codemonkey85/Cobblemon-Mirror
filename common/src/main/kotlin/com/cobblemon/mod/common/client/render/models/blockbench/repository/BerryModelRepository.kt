@@ -17,11 +17,11 @@ import com.cobblemon.mod.common.client.render.models.blockbench.TexturedModel
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import net.minecraft.client.model.ModelPart
+import net.minecraft.client.model.geom.ModelPart
 
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.server.packs.PackType
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.resources.ResourceLocation
 
 /**
  * The data registry responsible for berry fruit and flower models.
@@ -30,17 +30,17 @@ import net.minecraft.util.Identifier
 object BerryModelRepository : JsonDataRegistry<TexturedModel> {
 
     override val id = cobblemonResource("berry_models")
-    override val type = ResourceType.CLIENT_RESOURCES
+    override val type = PackType.CLIENT_RESOURCES
     override val observable = SimpleObservable<BerryModelRepository>()
     override val gson: Gson = TexturedModel.GSON
     override val typeToken: TypeToken<TexturedModel> = TypeToken.get(TexturedModel::class.java)
     override val resourcePath = "bedrock/berries"
-    private val rawModels = hashMapOf<Identifier, TexturedModel>()
-    private val processedModels = hashMapOf<Identifier, ModelPart>()
+    private val rawModels = hashMapOf<ResourceLocation, TexturedModel>()
+    private val processedModels = hashMapOf<ResourceLocation, ModelPart>()
 
-    override fun sync(player: ServerPlayerEntity) {}
+    override fun sync(player: ServerPlayer) {}
 
-    override fun reload(data: Map<Identifier, TexturedModel>) {
+    override fun reload(data: Map<ResourceLocation, TexturedModel>) {
         data.forEach { (identifier, model) ->
             this.rawModels[identifier] = model
         }
@@ -61,18 +61,18 @@ object BerryModelRepository : JsonDataRegistry<TexturedModel> {
                 false,
                 fruitTex.x,
                 fruitTex.y,
-                CobblemonAtlases.BERRY_SPRITE_ATLAS.atlas.width,
-                CobblemonAtlases.BERRY_SPRITE_ATLAS.atlas.height
-            )?.createModel()!!
+                CobblemonAtlases.BERRY_SPRITE_ATLAS.textureAtlas.width,
+                CobblemonAtlases.BERRY_SPRITE_ATLAS.textureAtlas.height
+            )?.bakeRoot()!!
             processedModels[it.flowerModelIdentifier] = flowerModel?.createWithUvOverride(
                 false,
                 flowerTex.x,
                 flowerTex.y,
-                CobblemonAtlases.BERRY_SPRITE_ATLAS.atlas.width,
-                CobblemonAtlases.BERRY_SPRITE_ATLAS.atlas.height
-            )?.createModel()!!
+                CobblemonAtlases.BERRY_SPRITE_ATLAS.textureAtlas.width,
+                CobblemonAtlases.BERRY_SPRITE_ATLAS.textureAtlas.height
+            )?.bakeRoot()!!
         }
     }
 
-    fun modelOf(identifier: Identifier) = this.processedModels[identifier]
+    fun modelOf(identifier: ResourceLocation) = this.processedModels[identifier]
 }

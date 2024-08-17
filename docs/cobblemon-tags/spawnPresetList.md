@@ -13,6 +13,16 @@ This file contains all current spawn presets of cobblemon.
 | **maxY** | `62` |  |
 | **neededNearbyBlocks** | `minecraft:chiseled_deepslate`; `minecraft:cobbled_deepslate_wall`; `minecraft:cracked_deepslate_bricks`; `minecraft:cracked_deepslate_tiles`; `minecraft:deepslate_brick_slab`; `minecraft:deepslate_brick_stairs`; `minecraft:deepslate_brick_wall`; `minecraft:deepslate_bricks`; `minecraft:deepslate_tile_slab`; `minecraft:deepslate_tile_stairs`; `minecraft:deepslate_tile_wall`; `minecraft:deepslate_tiles`; `minecraft:polished_basalt`; `minecraft:polished_deepslate`; `minecraft:polished_deepslate_slab`; `minecraft:polished_deepslate_wall` |  |
 | **structures** | `minecraft:ancient_city` |  |
+## apricorns
+
+| Key | Conditions | Anticonditions |
+| --- | ---------- | -------------- |
+| **neededNearbyBlocks** | `cobblemon:black_apricorn`; `cobblemon:blue_apricorn`; `cobblemon:green_apricorn`; `cobblemon:pink_apricorn`; `cobblemon:red_apricorn`; `cobblemon:white_apricorn`; `cobblemon:yellow_apricorn` |  |
+## blue_flowers
+
+| Key | Conditions | Anticonditions |
+| --- | ---------- | -------------- |
+| **neededNearbyBlocks** | `minecraft:blue_orchid`; `minecraft:cornflower`; `aether_redux:pink_prismatic_petals`; `aether_redux:mixed_prismatic_petals`; `aether_redux:teal_prismatic_petals`; `biomesoplenty:blue_hydrangea`; `biomesoplenty:blue_hydrangea_bottom`; `biomesoplenty:blue_hydrangea_top`; `biomesoplenty:icy_iris`; `blue_skies:moonlit_bloom`; `blue_skies:nightcress`; `botania:blue_double_flower`; `botania:blue_floating_flower`; `botania:blue_mystical_flower`; `botania:blue_shiny_flower`; `botania:cyan_double_flower`; `botania:cyan_floating_flower`; `botania:cyan_mystical_flower`; `botania:cyan_shiny_flower`; `botania:floating_hydroangeas`; `botania:floating_labellia`; `botania:floating_manastar`; `botania:floating_marimorphosis`; `botania:floating_marimorphosis_chibi`; `botania:floating_spectrolus`; `botania:floating_tangleberrie`; `botania:floating_tangleberrie_chibi`; `botania:hydroangeas`; `botania:hydroangeas_motif`; `botania:labellia`; `botania:light_blue_double_flower`; `botania:light_blue_floating_flower`; `botania:light_blue_mystical_flower`; `botania:light_blue_shiny_flower`; `botania:manastar`; `botania:marimorphosis`; `botania:marimorphosis_chibi`; `botania:spectrolus`; `botania:tangleberrie`; `botania:tangleberrie_chibi`; `etcetera:bouquet`; `goodending:pastel_wildflowers`; `goodending:twilight_wildflowers`; `mythicbotany:aquapanthus`; `mythicbotany:aquapanthus_floating`; `mythicbotany:raindeletia`; `mythicbotany:raindeletia_floating`; `outer_end:azure_bud`; `wilderwild:blue_giany_glory_of_the_snow` |  |
 ## derelict
 
 | Key | Conditions | Anticonditions |
@@ -39,7 +49,7 @@ This file contains all current spawn presets of cobblemon.
 
 | Key | Conditions | Anticonditions |
 | --- | ---------- | -------------- |
-| **neededNearbyBlocks** | `#minecraft:flowers`; `#c:flowers` |  |
+| **neededNearbyBlocks** | `#minecraft:flowers`; `#c:flowers`; `aether_redux:pink_prismatic_petals`; `aether_redux:mixed_prismatic_petals`; `aether_redux:teal_prismatic_petals`; `deep_aether:aerlavender`; `deep_aether:enchanted_blossom`; `deep_aether:golden_flower`; `deep_aether:radiant_orchid`; `deep_aether:tall_aerlavender`; `etcetera:bouquet`; `mythicbotany:aquapanthus`; `mythicbotany:aquapanthus_floating`; `mythicbotany:exoblaze`; `mythicbotany:exoblaze_floating`; `mythicbotany:feysythia`; `mythicbotany:feysythia_floating`; `mythicbotany:hellebore`; `mythicbotany:hellebore_floating`; `mythicbotany:petrunia`; `mythicbotany:petrunia_floating`; `mythicbotany:raindeletia`; `mythicbotany:raindeletia_floating`; `mythicbotany:wither_aconite`; `mythicbotany:wither_aconite_floating`; `twilightforest:thorn_rose` |  |
 ## foliage
 
 | Key | Conditions | Anticonditions |
@@ -60,13 +70,13 @@ This file contains all current spawn presets of cobblemon.
 | Key | Conditions | Anticonditions |
 | --- | ---------- | -------------- |
 | **minY** | `62` |  |
-| **structures** | `minecraft:pillager_outpost`; `minecraft:swamp_hut`; `minecraft:woodland_mansion` |  |
+| **structures** | `minecraft:pillager_outpost`; `minecraft:swamp_hut`; `minecraft:mansion` |  |
 ## jungle_pyramid
 
 | Key | Conditions | Anticonditions |
 | --- | ---------- | -------------- |
 | **minY** | `62` |  |
-| **neededBaseBlocks** | `#minecraft:cobblestone`; `#minecraft:mossy_cobblestone` |  |
+| **neededBaseBlocks** | `minecraft:cobblestone`; `#minecraft:mossy_cobblestone` |  |
 | **neededNearbyBlocks** | `minecraft:chiseled_stone_bricks`; `minecraft:cobblestone`; `minecraft:cobblestone_stairs`; `minecraft:mossy_cobblestone` |  |
 | **structures** | `minecraft:jungle_pyramid` |  |
 ## lava_surface
@@ -114,6 +124,11 @@ This file contains all current spawn presets of cobblemon.
 | **maxY** | `62` |  |
 | **neededNearbyBlocks** | `minecraft:chiseled_sandstone`; `minecraft:chiseled_stone_bricks`; `minecraft:cracked_stone_bricks`; `minecraft:cut_sandstone`; `minecraft:mossy_cobblestone`; `minecraft:mossy_stone_bricks`; `minecraft:polished_granite`; `minecraft:stone_bricks` |  |
 | **structures** | `#minecraft:ocean_ruin` |  |
+## orange_flowers
+
+| Key | Conditions | Anticonditions |
+| --- | ---------- | -------------- |
+| **neededNearbyBlocks** | `minecraft:orange_tulip`; `minecraft:torchflower`; `aether_redux:aurum`; `biomemakeover:marigold`; `biomemakeover:moth_blossom`; `biomesoplenty:burning_blossom`; `biomesoplenty:orange_cosmos`; `blue_skies:blaze_bud`; `botania:entropinnyum`; `botania:floating_entropinnyum`; `botania:floating_pollidisiac`; `botania:floating_spectrolus`; `botania:floating_tigerseye`; `botania:floating_thermalily`; `botania:orange_double_flower`; `botania:orange_floating_flower`; `botania:orange_mystical_flower`; `botania:orange_shiny_flower`; `botania:pollidisiac`; `botania:spectrolus`; `botania:tigerseye`; `botania:thermalily`; `deep_aether:golden_flower`; `goodending:spicy_wildflowers` |  |
 ## pillager_outpost
 
 | Key | Conditions | Anticonditions |
@@ -121,11 +136,22 @@ This file contains all current spawn presets of cobblemon.
 | **minY** | `62` |  |
 | **neededNearbyBlocks** | `minecraft:cobblestone`; `minecraft:cobblestone_slab`; `minecraft:cobblestone_stairs`; `minecraft:cobblestone_wall`; `minecraft:dark_oak_fence`; `minecraft:dark_oak_slab`; `minecraft:dark_oak_stairs`; `minecraft:mossy_cobblestone`; `minecraft:mossy_cobblestone_slab`; `minecraft:mossy_cobblestone_stairs`; `minecraft:mossy_cobblestone_wall`; `#minecraft:logs`; `#minecraft:planks` |  |
 | **structures** | `minecraft:pillager_outpost` |  |
+## pink_flowers
+
+| Key | Conditions | Anticonditions |
+| --- | ---------- | -------------- |
+| **neededNearbyBlocks** | `minecraft:allium`; `minecraft:lilac`; `minecraft:peony`; `minecraft:pink_tulip`; `aether_redux:iridia`; `aether_redux:pink_prismatic_petals`; `aether_redux:mixed_prismatic_petals`; `aether_redux:sweet_blossom`; `ancient_aether:highland_viola`; `biomemakeover:foxglove`; `biomesoplenty:pink_daffodil`; `biomesoplenty:pink_hibiscus`; `biomesoplenty:wildflower`; `blue_skies:blush_blossom`; `blue_skies:briskbloom`; `blue_skies:camellia`; `blue_skies:midday_bayhop`; `botania:floating_hyacidus`; `botania:floating_jaded_amaranthus`; `botania:floating_jiyuulia`; `botania:floating_jiyuulia_chibi`; `botania:floating_marimorphosis`; `botania:floating_marimorphosis_chibi`; `botania:floating_rafflowsia`; `botania:floating_rosa_arcana`; `botania:hyacidus`; `botania:jaded_amaranthus`; `botania:jiyuulia`; `botania:jiyuulia_chibi`; `botania:magenta_double_flower`; `botania:magenta_floating_flower`; `botania:magenta_mystical_flower`; `botania:magenta_shiny_flower`; `botania:marimorphosis`; `botania:marimorphosis_chibi`; `botania:pink_double_flower`; `botania:pink_floating_flower`; `botania:pink_mystical_flower`; `botania:pink_shiny_flower`; `botania:rafflowsia`; `botania:rosa_arcana`; `deep_aether:aerlavender`; `deep_aether:radiant_orchid`; `deep_aether:tall_aerlavender`; `enlightened_end:open_odd_roots`; `etcetera:bouquet`; `farmersdelight:wild_onions`; `overweight_farming:allium_bush` |  |
 ## redstone
 
 | Key | Conditions | Anticonditions |
 | --- | ---------- | -------------- |
+| **neededBaseBlocks** |  | `minecraft:activator_rail`; `minecraft:daylight_detector`; `minecraft:detector_rail`; `minecraft:dispenser`; `minecraft:dropper`; `minecraft:hopper`; `minecraft:observer`; `minecraft:piston`; `minecraft:powered_comparator`; `minecraft:powered_rail`; `minecraft:powered_repeater`; `minecraft:redstone_block`; `minecraft:redstone_lamp`; `minecraft:redstone_torch`; `minecraft:redstone_wire`; `minecraft:sticky_piston`; `minecraft:unlit_redstone_torch`; `minecraft:unpowered_comparator`; `minecraft:unpowered_repeater`; `#c:redstone_blocks` |
 | **neededNearbyBlocks** | `minecraft:activator_rail`; `minecraft:daylight_detector`; `minecraft:detector_rail`; `minecraft:dispenser`; `minecraft:dropper`; `minecraft:hopper`; `minecraft:observer`; `minecraft:piston`; `minecraft:powered_comparator`; `minecraft:powered_rail`; `minecraft:powered_repeater`; `minecraft:redstone_block`; `minecraft:redstone_lamp`; `minecraft:redstone_torch`; `minecraft:redstone_wire`; `minecraft:sticky_piston`; `minecraft:unlit_redstone_torch`; `minecraft:unpowered_comparator`; `minecraft:unpowered_repeater`; `#minecraft:redstone_ores`; `#c:redstone_blocks`; `#c:redstone_ores` |  |
+## red_flowers
+
+| Key | Conditions | Anticonditions |
+| --- | ---------- | -------------- |
+| **neededNearbyBlocks** | `minecraft:poppy`; `minecraft:red_tulip`; `minecraft:rose_bush`; `ancient_aether:sakura_blossoms`; `ancient_aether:trapped_sakura_blossoms`; `biomesoplenty:rose`; `blue_skies:flare_floret`; `botania:bellethorn`; `botania:bellethorn_chibi`; `botania:exoflame`; `botania:floating_bellethorn`; `botania:floating_bellethorn_chibi`; `botania:floating_exoflame`; `botania:floating_kekimurus`; `botania:floating_manastar`; `botania:floating_munchdew`; `botania:floating_orechid_ignem`; `botania:floating_pollidisiac`; `botania:floating_spectrolus`; `botania:kekimurus`; `botania:manastar`; `botania:munchdew`; `botania:orechid_ignem`; `botania:pollidisiac`; `botania:red_double_flower`; `botania:red_floating_flower`; `botania:red_mystical_flower`; `botania:red_shiny_flower`; `botania:spectrolus`; `etcetera:bouquet`; `goodending:balmy_wildflowers`; `mythicbotany:petrunia`; `mythicbotany:petrunia_floating`; `twilightforest:thorn_rose`; `wilderwild:milkweed` |  |
 ## river
 
 | Key | Conditions | Anticonditions |
@@ -137,12 +163,21 @@ This file contains all current spawn presets of cobblemon.
 | --- | ---------- | -------------- |
 | **neededNearbyBlocks** | `minecraft:crying_obsidian`; `minecraft:netherack`; `minecraft:obsidian` |  |
 | **structures** | `#minecraft:ruined_portal` |  |
+## ruins
+
+| Key | Conditions | Anticonditions |
+| --- | ---------- | -------------- |
+| **structures** | `cobblemon:ruins/decaying_crypt_ruins`; `cobblemon:ruins/deserted_gimmi_tower`; `cobblemon:ruins/deserted_house_ruins`; `cobblemon:ruins/deserted_tower_ruins`; `cobblemon:ruins/deserted_town_center_ruins`; `cobblemon:ruins/fallen_statue_ruins`; `cobblemon:ruins/frozen_gimmi_tower`; `cobblemon:ruins/hidden_bunker_ruins`; `cobblemon:ruins/lush_gimmi_tower`; `cobblemon:ruins/mossy_oubliette_ruins`; `cobblemon:ruins/rooted_gimmi_tower`; `cobblemon:ruins/sunscorched_gimmi_tower`; `cobblemon:ruins/temperate_gimmi_tower`; `cobblemon:ruins/toppled_pillars_ruins`; `cobblemon:ruins/unstable_cave_ruins` |  |
+## salt
+
+| Key | Conditions | Anticonditions |
+| --- | ---------- | -------------- |
+| **biomes** | `biomesoplenty:hot_springs`; `biomesoplenty:wasteland`; `biomesoplenty:wasteland_steppe`; `terralith:amethyst_canyon`; `terralith:amethyst_rainforest`; `terralith:skylands_winter`; `terralith:yellowstone`; `wythers:calcite_caverns`; `wythers:calcite_coast`; `wythers:mediterranean_island_thermal_spring`; `wythers:salt_lakes_pink`; `wythers:salt_lakes_turquoise`; `wythers:salt_lakes_white`; `wythers:thermal_taiga` |  |
 ## shipwreck
 
 | Key | Conditions | Anticonditions |
 | --- | ---------- | -------------- |
-| **maxY** | `62` |  |
-| **neededNearbyBlocks** | `#minecraft:logs`; `#minecraft:planks` |  |
+| **structures** | `#minecraft:shipwreck` |  |
 ## stronghold
 
 | Key | Conditions | Anticonditions |
@@ -159,11 +194,21 @@ This file contains all current spawn presets of cobblemon.
 | **neededBaseBlocks** | `minecraft:black_glazed_terracotta`; `minecraft:blue_glazed_terracotta`; `minecraft:bricks`; `minecraft:brown_glazed_terracotta`; `minecraft:cobblestone`; `minecraft:cyan_glazed_terracotta`; `minecraft:gray_glazed_terracotta`; `minecraft:green_glazed_terracotta`; `minecraft:light_blue_glazed_terracotta`; `minecraft:light_gray_glazed_terracotta`; `minecraft:lime_glazed_terracotta`; `minecraft:magenta_glazed_terracotta`; `minecraft:mud_bricks`; `minecraft:orange_glazed_terracotta`; `minecraft:pink_glazed_terracotta`; `minecraft:purple_glazed_terracotta`; `minecraft:red_glazed_terracotta`; `minecraft:stone`; `minecraft:stone_bricks`; `minecraft:suspicious_gravel`; `minecraft:white_glazed_terracotta`; `minecraft:yellow_glazed_terracotta`; `#minecraft:convertable_to_mud`; `#minecraft:sand`; `#minecraft:terracotta`; `#minecraft:trail_ruins_replaceable` |  |
 | **neededNearbyBlocks** | `minecraft:black_glazed_terracotta`; `minecraft:blue_glazed_terracotta`; `minecraft:bricks`; `minecraft:brown_glazed_terracotta`; `minecraft:cyan_glazed_terracotta`; `minecraft:gray_glazed_terracotta`; `minecraft:green_glazed_terracotta`; `minecraft:light_blue_glazed_terracotta`; `minecraft:light_gray_glazed_terracotta`; `minecraft:lime_glazed_terracotta`; `minecraft:magenta_glazed_terracotta`; `minecraft:mud_bricks`; `minecraft:orange_glazed_terracotta`; `minecraft:pink_glazed_terracotta`; `minecraft:purple_glazed_terracotta`; `minecraft:red_glazed_terracotta`; `minecraft:suspicious_gravel`; `minecraft:white_glazed_terracotta`; `minecraft:yellow_glazed_terracotta`; `#minecraft:terracotta` |  |
 | **structures** | `minecraft:trail_ruins` |  |
+## trash
+
+| Key | Conditions | Anticonditions |
+| --- | ---------- | -------------- |
+| **neededNearbyBlocks** | `minecraft:composter`; `etcetera:prickly_can`; `farmersdelight:organic_compost`; `manatrashcan:mana_trashcan`; `nethersdelight:soul_compost`; `overweight_farming:vegetable_compost`; `rats:trash_can`; `rats:garbage_pile`; `rats:cursed_garbage`; `rats:purified_garbage`; `rats:pied_garbage`; `rats:compressed_garbage`; `trashcans:item_trash_can`; `trashcans:liquid_trash_can`; `trashcans:energy_trash_can`; `trashcans:ultimate_trash_can` |  |
 ## treetop
 
 | Key | Conditions | Anticonditions |
 | --- | ---------- | -------------- |
 | **neededBaseBlocks** | `#minecraft:leaves`; `#minecraft:logs`; `#minecraft:overworld_natural_logs`; `#c:leaves`; `#c:logs` |  |
+## underground_ruins
+
+| Key | Conditions | Anticonditions |
+| --- | ---------- | -------------- |
+| **structures** | `cobblemon:ruins/crumbling_arch_ruins`; `cobblemon:ruins/rooted_arch_ruins` |  |
 ## underlava
 
 | Key | Conditions | Anticonditions |
@@ -190,17 +235,24 @@ This file contains all current spawn presets of cobblemon.
 | Key | Conditions | Anticonditions |
 | --- | ---------- | -------------- |
 | **fluid** | `#minecraft:water` |  |
+## webs
+
+| Key | Conditions | Anticonditions |
+| --- | ---------- | -------------- |
+| **biomes** | `biomesoplenty:spider_nest`; `terralith:cave/infested_caves`; `wythers:forbidden_forest`; `wythers:phantasmal_forest`; `wythers:phantasmal_swamp` |  |
+## white_flowers
+
+| Key | Conditions | Anticonditions |
+| --- | ---------- | -------------- |
+| **neededNearbyBlocks** | `minecraft:azure_bluet`; `minecraft:lily_of_the_valley`; `minecraft:oxeye_daisy`; `minecraft:white_tulip`; `aether:white_flower`; `aether_redux:frostbud`; `aether_redux:gilded_white_flower`; `biomemakeover:buttonbush`; `biomesoplenty:glowflower`; `blue_skies:crystal_flower`; `blue_skies:snowbloom`; `botania:floating_dandelifeon`; `botania:floating_kekimurus`; `botania:floating_pure_daisy`; `botania:floating_spectrolus`; `botania:spectrolus`; `botania:white_double_flower`; `botania:white_floating_flower`; `botania:white_mystical_flower`; `botania:white_shiny_flower`; `botania:pure_daisy`; `botania:fallen_kanade`; `botania:floating_fallen_kanade`; `botania:spectranthemum`; `botania:floating_spectranthemum`; `botania:kekimurus`; `botania:dandelifeon`; `deep_aether:enchanted_blossom`; `farmersdelight:wild_carrots`; `miners_delight:gossypium`; `miners_delight:wild_cave_carrots`; `wilderwild:alba_giany_glory_of_the_snow`; `wilderwild:datura` |  |
 ## wild
 
 | Key | Conditions | Anticonditions |
 | --- | ---------- | -------------- |
 | **neededNearbyBlocks** |  | `minecraft:white_concrete`; `minecraft:orange_concrete`; `minecraft:magenta_concrete`; `minecraft:light_blue_concrete`; `minecraft:yellow_concrete`; `minecraft:lime_concrete`; `minecraft:pink_concrete`; `minecraft:gray_concrete`; `minecraft:light_gray_concrete`; `minecraft:cyan_concrete`; `minecraft:purple_concrete`; `minecraft:blue_concrete`; `minecraft:brown_concrete`; `minecraft:green_concrete`; `minecraft:red_concrete`; `minecraft:black_concrete` |
 | **structures** |  | `#minecraft:village` |
-## woodland_mansion
+## yellow_flowers
 
 | Key | Conditions | Anticonditions |
 | --- | ---------- | -------------- |
-| **minY** | `62` |  |
-| **neededBaseBlocks** | `minecraft:birch_planks`; `minecraft:double_smooth_stone_slab`; `minecraft:oak_planks`; `minecraft:polished_andesite`; `#minecraft:wool`; `#minecraft:wool_carpets` |  |
-| **neededNearbyBlocks** | `minecraft:birch_planks`; `minecraft:cobblestone_stairs`; `minecraft:cobblestone_wall`; `minecraft:dark_oak_planks` |  |
-| **structures** | `minecraft:woodland_mansion` |  |
+| **neededNearbyBlocks** | `minecraft:dandelion`; `minecraft:sunflower`; `biomesoplenty:goldenrod`; `botania:daffomill`; `botania:endoflame`; `botania:floating_daffomill`; `botania:floating_endoflame`; `botania:floating_gourmaryllis`; `botania:floating_labellia`; `botania:floating_marimorphosis`; `botania:floating_marimorphosis_chibi`; `botania:floating_rafflowsia`; `botania:floating_solegnolia`; `botania:floating_solegnolia_chibi`; `botania:floating_spectrolus`; `botania:gourmaryllis`; `botania:labellia`; `botania:marimorphosis`; `botania:marimorphosis_chibi`; `botania:rafflowsia`; `botania:solegnolia`; `botania:solegnolia_chibi`; `botania:spectrolus`; `botania:yellow_double_flower`; `botania:yellow_floating_flower`; `botania:yellow_mystical_flower`; `botania:yellow_shiny_flower`; `etcetera:bouquet`; `farmersdelight:wild_cabbages`; `goodending:balmy_wildflowers`; `goodending:pastel_wildflowers`; `mythicbotany:feysythia`; `mythicbotany:feysythia_floating` |  |

@@ -171,8 +171,9 @@
           "minLevel": 20
         },
         {
-          "variant": "attack_defence_ratio",
-          "ratio": "ATTACK_HIGHER"
+          "variant": "stat_compare",
+          "highStat": "atk",
+          "lowStat": "def"
         }
       ]
     },
@@ -188,8 +189,9 @@
           "minLevel": 20
         },
         {
-          "variant": "attack_defence_ratio",
-          "ratio": "DEFENCE_HIGHER"
+          "variant": "stat_compare",
+          "highStat": "def",
+          "lowStat": "atk"
         }
       ]
     },
@@ -207,8 +209,9 @@
           "minLevel": 20
         },
         {
-          "variant": "attack_defence_ratio",
-          "ratio": "EQUAL"
+          "variant": "stat_equal",
+          "statOne": "atk",
+          "statTwo": "def"
         }
       ]
     }

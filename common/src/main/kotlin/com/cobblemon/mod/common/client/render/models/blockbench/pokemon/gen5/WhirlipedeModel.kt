@@ -9,27 +9,28 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen5
 
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class WhirlipedeModel (root: ModelPart) : PokemonPoseableModel() {
+class WhirlipedeModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("whirlipede")
 
     override var portraitScale = 1.1F
-    override var portraitTranslation = Vec3d(-0.05, 0.2, 0.0)
+    override var portraitTranslation = Vec3(-0.05, 0.2, 0.0)
 
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.0, 0.7, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.7, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var sleep: Pose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var battleidle: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("whirlipede", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("whirlipede", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("whirlipede", "blink") }
@@ -40,14 +41,14 @@ class WhirlipedeModel (root: ModelPart) : PokemonPoseableModel() {
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             quirks = arrayOf(blink),
             condition = { !it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("whirlipede", "ground_idle")
             )
         )
 
         sleep = registerPose(
                 poseType = PoseType.SLEEP,
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                     bedrock("whirlipede", "sleep")
                 )
         )
@@ -56,7 +57,7 @@ class WhirlipedeModel (root: ModelPart) : PokemonPoseableModel() {
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("whirlipede", "ground_walk")
             )
         )
@@ -67,7 +68,7 @@ class WhirlipedeModel (root: ModelPart) : PokemonPoseableModel() {
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("whirlipede", "battle_idle")
             )
 
@@ -76,6 +77,6 @@ class WhirlipedeModel (root: ModelPart) : PokemonPoseableModel() {
 
 //    override fun getFaintAnimation(
 //            pokemonEntity: PokemonEntity,
-//            state: PoseableEntityState<PokemonEntity>
+//            state: PosableState<PokemonEntity>
 //    ) = if (state.isNotPosedIn(sleep)) bedrockStateful("whirlipede", "faint") else null
 }

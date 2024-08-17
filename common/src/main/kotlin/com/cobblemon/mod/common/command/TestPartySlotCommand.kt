@@ -18,9 +18,9 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
+import net.minecraft.commands.arguments.EntityArgument
 
 object TestPartySlotCommand {
 
@@ -30,18 +30,18 @@ object TestPartySlotCommand {
     private const val PROPERTIES = "properties"
     private const val NO_SUCCESS = 0
 
-    fun register(dispatcher : CommandDispatcher<ServerCommandSource>) {
+    fun register(dispatcher : CommandDispatcher<CommandSourceStack>) {
         dispatcher.register(
-            CommandManager.literal(NAME)
+            Commands.literal(NAME)
                 .permission(CobblemonPermissions.TEST_PARTY_SLOT)
-                .then(CommandManager.argument(PLAYER, EntityArgumentType.player())
-                    .then(CommandManager.argument(SLOT, IntegerArgumentType.integer(1, 6))
-                        .then(CommandManager.argument(PROPERTIES, PokemonPropertiesArgumentType.properties())
+                .then(Commands.argument(PLAYER, EntityArgument.player())
+                    .then(Commands.argument(SLOT, IntegerArgumentType.integer(1, 6))
+                        .then(Commands.argument(PROPERTIES, PokemonPropertiesArgumentType.properties())
                             .executes(this::execute))))
         )
     }
 
-    private fun execute(context: CommandContext<ServerCommandSource>): Int {
+    private fun execute(context: CommandContext<CommandSourceStack>): Int {
         val player = context.player(PLAYER)
         val slot = IntegerArgumentType.getInteger(context, SLOT)
         val properties = PokemonPropertiesArgumentType.getPokemonProperties(context, PROPERTIES)

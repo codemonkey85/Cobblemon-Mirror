@@ -19,15 +19,16 @@ import com.cobblemon.mod.common.util.codec.EXPRESSION_CODEC
 import com.cobblemon.mod.common.util.getString
 import com.cobblemon.mod.common.util.math.CatmullRomCurve
 import com.cobblemon.mod.common.util.math.CubedBezierCurve
+import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.resolveDouble
+import com.cobblemon.mod.common.util.writeString
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DynamicOps
-import com.mojang.serialization.codecs.ListCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.mojang.serialization.codecs.UnboundedMapCodec
+import net.minecraft.network.RegistryFriendlyByteBuf
 import kotlin.math.floor
-import net.minecraft.network.PacketByteBuf
 
 /**
  * A type of interpolating curve used in MoLang.
@@ -71,7 +72,7 @@ class LinearMoLangCurve(
                 PrimitiveCodec.STRING.fieldOf("name").forGetter { it.name },
                 EXPRESSION_CODEC.fieldOf("input").forGetter { it.input },
                 EXPRESSION_CODEC.fieldOf("horizontalRange").forGetter { it.horizontalRange },
-                ListCodec(PrimitiveCodec.DOUBLE).fieldOf("nodes").forGetter { it.nodes }
+                PrimitiveCodec.DOUBLE.listOf().fieldOf("nodes").forGetter { it.nodes }
             ).apply(instance) { _, name, input, horizontalRange, nodes ->
                 LinearMoLangCurve(name, input, horizontalRange, nodes)
             }
@@ -97,14 +98,14 @@ class LinearMoLangCurve(
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         name = buffer.readString()
         input = MoLang.createParser(buffer.readString()).parseExpression()
         horizontalRange = MoLang.createParser(buffer.readString()).parseExpression()
         nodes = buffer.readList { buffer.readDouble() }
     }
 
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(name)
         buffer.writeString(input.getString())
         buffer.writeString(horizontalRange.getString())
@@ -132,7 +133,7 @@ class CatmullRomMoLangCurve(
                 PrimitiveCodec.STRING.fieldOf("name").forGetter { it.name },
                 EXPRESSION_CODEC.fieldOf("input").forGetter { it.input },
                 EXPRESSION_CODEC.fieldOf("horizontalRange").forGetter { it.horizontalRange },
-                ListCodec(PrimitiveCodec.DOUBLE).fieldOf("nodes").forGetter { it.nodes }
+                PrimitiveCodec.DOUBLE.listOf().fieldOf("nodes").forGetter { it.nodes }
             ).apply(instance) { _, name, input, horizontalRange, nodes -> CatmullRomMoLangCurve(name, input, horizontalRange, nodes) }
         }
     }
@@ -149,7 +150,7 @@ class CatmullRomMoLangCurve(
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         name = buffer.readString()
         input = MoLang.createParser(buffer.readString()).parseExpression()
         horizontalRange = MoLang.createParser(buffer.readString()).parseExpression()
@@ -158,7 +159,7 @@ class CatmullRomMoLangCurve(
         curve = CatmullRomCurve(nodes)
     }
 
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(name)
         buffer.writeString(input.getString())
         buffer.writeString(horizontalRange.getString())
@@ -190,12 +191,12 @@ class BezierChainMoLangCurve(
     }
 
     class BezierChainNode(var value: Double, var slope: Double) {
-        fun writeToBuffer(buffer: PacketByteBuf) {
+        fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
             buffer.writeDouble(value)
             buffer.writeDouble(slope)
         }
 
-        fun readFromBuffer(buffer: PacketByteBuf) {
+        fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
             value = buffer.readDouble()
             slope = buffer.readDouble()
         }
@@ -249,17 +250,17 @@ class BezierChainMoLangCurve(
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         name = buffer.readString()
         input = MoLang.createParser(buffer.readString()).parseExpression()
         nodes = buffer.readMap({ buffer.readDouble() }, { BezierChainNode(0.0, 0.0).also { it.readFromBuffer(buffer) } })
         deriveNodePairs()
     }
 
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(name)
         buffer.writeString(input.getString())
-        buffer.writeMap(nodes, { pb, key -> pb.writeDouble(key) }, { pb, value -> value.writeToBuffer(pb) })
+        buffer.writeMap(nodes, { pb, key -> pb.writeDouble(key) }, { pb, value -> value.writeToBuffer(buffer) })
     }
 }
 
@@ -301,7 +302,7 @@ class BezierMoLangCurve(
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         name = buffer.readString()
         input = MoLang.createParser(buffer.readString()).parseExpression()
         horizontalRange = MoLang.createParser(buffer.readString()).parseExpression()
@@ -312,7 +313,7 @@ class BezierMoLangCurve(
         curve = CubedBezierCurve(v0, v1, v2, v3)
     }
 
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(name)
         buffer.writeString(input.getString())
         buffer.writeString(horizontalRange.getString())

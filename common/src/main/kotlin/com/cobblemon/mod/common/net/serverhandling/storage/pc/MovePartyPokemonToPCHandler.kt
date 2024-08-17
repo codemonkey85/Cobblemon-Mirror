@@ -14,10 +14,10 @@ import com.cobblemon.mod.common.api.storage.pc.link.PCLinkManager
 import com.cobblemon.mod.common.net.messages.client.storage.pc.ClosePCPacket
 import com.cobblemon.mod.common.net.messages.server.storage.pc.MovePartyPokemonToPCPacket
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object MovePartyPokemonToPCHandler : ServerNetworkPacketHandler<MovePartyPokemonToPCPacket> {
-    override fun handle(packet: MovePartyPokemonToPCPacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: MovePartyPokemonToPCPacket, server: MinecraftServer, player: ServerPlayer) {
         val party = Cobblemon.storage.getParty(player)
         val pc = PCLinkManager.getPC(player) ?: return run { ClosePCPacket(null).sendToPlayer(player) }
         val pokemon = party[packet.partyPosition] ?: return

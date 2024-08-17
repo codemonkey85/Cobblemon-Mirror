@@ -24,7 +24,7 @@ inline fun <reified T> Gson.fromJson(string: String) = fromJson(string, T::class
  * the list value identified by the plural name. During runtime only the plural exists, but when
  * configuring the JSON the user can use the singular form for a cleaner document.
  */
-fun JsonObject.singularToPluralList(rootName: String, pluralName: String = "${rootName}s") {
+fun JsonObject.singularToPluralList(rootName: String, pluralName: String = "${rootName}s"): JsonObject {
     if (has(rootName)) {
         if (!has(pluralName)) {
             add(pluralName, JsonArray())
@@ -32,6 +32,7 @@ fun JsonObject.singularToPluralList(rootName: String, pluralName: String = "${ro
         get(pluralName).asJsonArray.add(get(rootName))
         remove(rootName)
     }
+    return this
 }
 
 fun JsonElement.normalizeToArray(): JsonArray {

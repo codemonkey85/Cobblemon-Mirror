@@ -1,8 +1,8 @@
-import utilities.isSnapshot
-import utilities.version
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import utilities.isSnapshot
+import utilities.version
 
 /*
  *
@@ -20,16 +20,17 @@ plugins {
 
     id("net.kyori.blossom")
     id("org.jetbrains.gradle.plugin.idea-ext")
-    id("net.nemerosa.versioning") version "2.8.2"
+    id("net.nemerosa.versioning")
 }
 
 architectury {
-    common("forge", "fabric")
+    common("neoforge", "fabric")
 }
 
 repositories {
     maven(url = "${rootProject.projectDir}/deps")
     maven(url = "https://api.modrinth.com/maven")
+    maven(url = "https://maven.neoforged.net/releases")
     mavenLocal()
 }
 
@@ -39,7 +40,7 @@ dependencies {
     modApi(libs.molang)
 
     // Integrations
-    compileOnlyApi(libs.jei.api)
+//    compileOnlyApi(libs.jei.api)
     modCompileOnly(libs.bundles.fabric.integrations.compileOnly) {
         isTransitive = false
     }
@@ -89,6 +90,7 @@ sourceSets {
                 property("gitCommit", versioning.info.commit)
                 property("branch", versioning.info.branch)
                 System.getProperty("buildNumber")?.let { property("buildNumber", it) }
+                property("timestamp", OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss")) + " UTC")
             }
         }
     }

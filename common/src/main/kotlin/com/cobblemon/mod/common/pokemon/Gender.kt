@@ -8,8 +8,21 @@
 
 package com.cobblemon.mod.common.pokemon
 
-enum class Gender(val showdownName: String) {
+import com.mojang.serialization.Codec
+import net.minecraft.util.StringRepresentable
+
+enum class Gender(val showdownName: String) : StringRepresentable {
     MALE("M"),
     FEMALE("F"),
-    GENDERLESS("N")
+    GENDERLESS("N");
+
+    override fun getSerializedName() = this.name
+
+    companion object {
+
+        @JvmStatic
+        val CODEC: Codec<Gender> = StringRepresentable.fromEnum(Gender::values)
+
+    }
+
 }

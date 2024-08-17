@@ -8,8 +8,8 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.repository
 
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.JsonPokemonPoseableModel
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1.*
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen2.*
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3.*
@@ -19,12 +19,12 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen6.*
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen7.*
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen8.*
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen9.*
-import com.cobblemon.mod.common.client.render.models.blockbench.pose.Bone
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.isBattling
 import com.google.gson.JsonObject
 
-object PokemonModelRepository : VaryingModelRepository<PokemonEntity, PokemonPoseableModel>() {
+object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
+    override val poserClass = PokemonPosableModel::class.java
     override val title = "Pokémon"
     override val type = "pokemon"
     override val variationDirectories = listOf("bedrock/$type/resolvers", "bedrock/species")
@@ -714,17 +714,16 @@ object PokemonModelRepository : VaryingModelRepository<PokemonEntity, PokemonPos
         inbuilt("rowlet_hisui_bias", ::RowletHisuiBiasModel)
         inbuilt("dartrix_hisui_bias", ::DartrixHisuiBiasModel)
         inbuilt("decidueye_hisuian", ::DecidueyeHisuianModel)
+        inbuilt("smeargle", ::SmeargleModel)
     }
 
-    override fun loadJsonPoser(json: String): (Bone) -> PokemonPoseableModel {
-        // Faster to deserialize during asset load rather than rerunning this every time a poser is constructed.
-        val jsonObject = JsonPokemonPoseableModel.gson.fromJson(json, JsonObject::class.java)
-        return {
-            JsonPokemonPoseableModel.JsonPokemonPoseableModelAdapter.modelPart = it
-            JsonPokemonPoseableModel.gson.fromJson(jsonObject, JsonPokemonPoseableModel::class.java).also {
-                it.poses.forEach { poseName, pose -> pose.poseName = poseName }
-            }
+    override fun conditionParser(json: JsonObject): List<(PosableState) -> Boolean> {
+        val conditions = mutableListOf<(PosableState) -> Boolean>()
+        val mustBeInBattle = json.get("isBattle")?.asBoolean
+        if (mustBeInBattle != null) {
+            conditions.add { mustBeInBattle == it.isBattling }
         }
+        return conditions
     }
 }
 

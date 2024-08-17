@@ -45,6 +45,25 @@
                 ],
                 "timeRange": "night"
             }
+        },
+        {
+            "id": "chimecho-3",
+            "pokemon": "chimecho",
+            "presets": [],
+            "type": "pokemon",
+            "context": "grounded",
+            "bucket": "uncommon",
+            "level": "24-46",
+            "weight": 10,
+            "condition": {
+                "timeRange": "night",
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ],
+                "neededNearbyBlocks": [
+                    "minecraft:bell"
+                ]
+            }
         }
     ]
 }

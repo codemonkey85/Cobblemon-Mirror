@@ -1,0 +1,63 @@
+{
+	"format_version": "1.10.0",
+	"particle_effect": {
+		"description": {
+			"identifier": "cobblemon:ember_firesparks",
+			"basic_render_parameters": {
+				"material": "particles_alpha",
+				"texture": "textures/particles/powder"
+			}
+		},
+		"components": {
+			"minecraft:emitter_rate_steady": {
+				"spawn_rate": 20,
+				"max_particles": 10
+			},
+			"minecraft:emitter_lifetime_once": {
+				"active_time": 0.4
+			},
+			"minecraft:emitter_shape_point": {
+				"offset": ["math.random(-0.31,0.31)*(v.emitter_age*3)", "math.random(-0.31,0.31)*(v.emitter_age*3)", "math.random(-0.35,0.35)-v.emitter_age*9"],
+				"direction": ["math.random(-0.25,0.25)*(v.emitter_age*2)", "math.random(-0.25,0.25)*(v.emitter_age*2)", "math.random(-2.05,-0.55)"]
+			},
+			"minecraft:particle_lifetime_expression": {
+				"max_lifetime": 0.7
+			},
+			"minecraft:particle_initial_spin": {
+				"rotation": "math.random_integer(0,3)*90"
+			},
+			"minecraft:particle_initial_speed": "math.random(2.75,4.25)*0.75",
+			"minecraft:particle_motion_dynamic": {
+				"linear_acceleration": [0, 3, 0],
+				"linear_drag_coefficient": 2
+			},
+			"minecraft:particle_appearance_billboard": {
+				"size": [0.25, 0.25],
+				"facing_camera_mode": "rotate_xyz",
+				"uv": {
+					"texture_width": 99,
+					"texture_height": 9,
+					"flipbook": {
+						"base_UV": [0, 0],
+						"size_UV": [9, 9],
+						"step_UV": [9, 0],
+						"frames_per_second": 24,
+						"max_frame": 11
+					}
+				}
+			},
+			"minecraft:particle_appearance_tinting": {
+				"color": {
+					"interpolant": "v.particle_age / v.particle_lifetime",
+					"gradient": {
+						"0.0": "#FFFFEB72",
+						"0.18": "#FFFFEB72",
+						"0.28": "#FFFFB64D",
+						"0.42": "#FFFF6F3D",
+						"0.5": "#FFFF6F3D"
+					}
+				}
+			}
+		}
+	}
+}

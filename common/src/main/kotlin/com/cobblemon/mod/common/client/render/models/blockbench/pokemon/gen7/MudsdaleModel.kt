@@ -8,16 +8,16 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen7
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class MudsdaleModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class MudsdaleModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("mudsdale")
     override val head = getPart("neck")
 
@@ -27,23 +27,23 @@ class MudsdaleModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qua
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 1.5F
-    override var portraitTranslation = Vec3d(-1.0, 1.76, 0.0)
+    override var portraitTranslation = Vec3(-1.0, 1.76, 0.0)
 
     override var profileScale = 0.5F
-    override var profileTranslation = Vec3d(0.0, 1.0, 0.0)
+    override var profileTranslation = Vec3(0.0, 1.0, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var sleep: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("mudsdale", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("mudsdale", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("mudsdale", "blink") }
 
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("mudsdale", "sleep"))
+            animations = arrayOf(bedrock("mudsdale", "sleep"))
         )
 
         standing = registerPose(
@@ -51,7 +51,7 @@ class MudsdaleModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qua
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(disableY = true),
                 bedrock("mudsdale", "ground_idle")
             )
@@ -62,7 +62,7 @@ class MudsdaleModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qua
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(disableY = true),
                 bedrock("mudsdale", "ground_walk")
             )
@@ -71,6 +71,6 @@ class MudsdaleModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qua
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("mudsdale", "faint") else null
 }

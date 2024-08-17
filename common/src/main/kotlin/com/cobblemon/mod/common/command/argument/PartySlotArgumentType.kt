@@ -19,10 +19,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType
 import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.server.level.ServerPlayer
 import java.util.concurrent.CompletableFuture
-import net.minecraft.command.CommandSource
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.network.ServerPlayerEntity
 
 class PartySlotArgumentType : ArgumentType<Int> {
 
@@ -35,7 +35,8 @@ class PartySlotArgumentType : ArgumentType<Int> {
         }
     }
 
-    override fun <S : Any> listSuggestions(context: CommandContext<S>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> = CommandSource.suggestMatching(EXAMPLES, builder)
+    override fun <S : Any> listSuggestions(context: CommandContext<S>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> =
+        SharedSuggestionProvider.suggest(EXAMPLES, builder)
 
     override fun getExamples() = EXAMPLES
 
@@ -50,13 +51,13 @@ class PartySlotArgumentType : ArgumentType<Int> {
 
         fun <S> getPokemon(context: CommandContext<S>, name: String): Pokemon {
             val slot = context.getArgument(name, Int::class.java)
-            val source = context.source as? ServerCommandSource ?: throw ServerCommandSource.REQUIRES_PLAYER_EXCEPTION.create()
-            val player = source.entity as? ServerPlayerEntity ?: throw ServerCommandSource.REQUIRES_PLAYER_EXCEPTION.create()
+            val source = context.source as? CommandSourceStack ?: throw CommandSourceStack.ERROR_NOT_PLAYER.create()
+            val player = source.entity as? ServerPlayer ?: throw CommandSourceStack.ERROR_NOT_PLAYER.create()
             val party = Cobblemon.storage.getParty(player)
             return party.get(slot - 1) ?: throw INVALID_SLOT.create(slot)
         }
 
-        fun <S> getPokemonOf(context: CommandContext<S>, name: String, player: ServerPlayerEntity): Pokemon {
+        fun <S> getPokemonOf(context: CommandContext<S>, name: String, player: ServerPlayer): Pokemon {
             val slot = context.getArgument(name, Int::class.java)
             val party = Cobblemon.storage.getParty(player)
             return party.get(slot - 1) ?: throw INVALID_SLOT.create(slot)

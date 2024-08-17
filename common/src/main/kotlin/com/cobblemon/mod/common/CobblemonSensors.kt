@@ -13,14 +13,21 @@ import com.cobblemon.mod.common.entity.pokemon.ai.sensors.DrowsySensor
 import com.cobblemon.mod.common.entity.pokemon.ai.sensors.PokemonAdultSensor
 import com.cobblemon.mod.common.entity.pokemon.ai.sensors.PokemonGrowableCropSensor
 import com.cobblemon.mod.common.pokemon.ai.PokemonDisturbancesSensor
+import com.cobblemon.mod.common.entity.sensor.BattlingPokemonSensor
+import com.cobblemon.mod.common.entity.sensor.NPCBattlingSensor
 import java.util.function.Supplier
 import net.minecraft.entity.Entity
 import net.minecraft.entity.ai.brain.sensor.Sensor
 import net.minecraft.entity.ai.brain.sensor.SensorType
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.ai.sensing.Sensor
+import net.minecraft.world.entity.ai.sensing.SensorType
 
 object CobblemonSensors {
     val sensors = mutableMapOf<String, SensorType<*>>()
 
+    val NPC_BATTLING = register("npc_battling", ::NPCBattlingSensor)
+    val BATTLING_POKEMON = register("battling_pokemon", ::BattlingPokemonSensor)
 //    val NPC_BATTLING = register("npc_battling", ::NPCBattlingSensor)
     val POKEMON_DROWSY = register("pokemon_drowsy", ::DrowsySensor)
 

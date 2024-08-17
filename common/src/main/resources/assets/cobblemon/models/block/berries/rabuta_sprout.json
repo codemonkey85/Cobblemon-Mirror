@@ -1,0 +1,115 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "block/farmland_moist",
+		"3": "cobblemon:block/rabuta_sprout",
+		"particle": "block/farmland_moist"
+	},
+	"elements": [
+		{
+			"name": "soil1",
+			"from": [3.99, -1.01, 3.99],
+			"to": [12.01, 0.01, 12.01],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-1, -1, -1]},
+			"faces": {
+				"north": {"uv": [5, 4, 13, 5], "texture": "#0"},
+				"east": {"uv": [12, 6, 13, 14], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [5, 4, 13, 5], "texture": "#0"},
+				"west": {"uv": [12, 6, 13, 14], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [4, 4, 12, 12], "texture": "#0"},
+				"down": {"uv": [4, 4, 12, 12], "texture": "#0"}
+			}
+		},
+		{
+			"name": "soil2",
+			"from": [5, 0, 5],
+			"to": [11, 1, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-1, 0, -1]},
+			"faces": {
+				"north": {"uv": [5, 14, 11, 15], "texture": "#0"},
+				"east": {"uv": [7, 5, 8, 11], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [5, 14, 11, 15], "texture": "#0"},
+				"west": {"uv": [7, 5, 8, 11], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [5, 5, 11, 11], "texture": "#0"},
+				"down": {"uv": [5, 5, 11, 11], "texture": "#0"}
+			}
+		},
+		{
+			"name": "stem",
+			"from": [7.5, 1, 8],
+			"to": [8.5, 3, 8],
+			"rotation": {"angle": -45, "axis": "y", "origin": [8, 2, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 8], "texture": "#3"},
+				"east": {"uv": [0, 0, 1, 2], "texture": "#3"},
+				"south": {"uv": [0, 0, 2, 8], "texture": "#3"},
+				"west": {"uv": [0, 0, 1, 2], "texture": "#3"},
+				"up": {"uv": [1, 1, 0, 0], "texture": "#3"},
+				"down": {"uv": [1, 1, 0, 2], "texture": "#3"}
+			}
+		},
+		{
+			"name": "stem",
+			"from": [8, 1, 7.5],
+			"to": [8, 3, 8.5],
+			"rotation": {"angle": -45, "axis": "y", "origin": [8, 2, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 2], "texture": "#3"},
+				"east": {"uv": [0, 0, 2, 8], "texture": "#3"},
+				"south": {"uv": [0, 0, 1, 2], "texture": "#3"},
+				"west": {"uv": [0, 0, 2, 8], "texture": "#3"},
+				"up": {"uv": [1, 1, 0, 0], "rotation": 270, "texture": "#3"},
+				"down": {"uv": [1, 1, 0, 2], "rotation": 90, "texture": "#3"}
+			}
+		},
+		{
+			"name": "leaf_right",
+			"from": [8, 3, 8],
+			"to": [12, 3, 12],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 3, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 3, 0], "texture": "#3"},
+				"east": {"uv": [0, 0, 3, 0], "texture": "#3"},
+				"south": {"uv": [0, 0, 3, 0], "texture": "#3"},
+				"west": {"uv": [0, 0, 3, 0], "texture": "#3"},
+				"up": {"uv": [10, 16, 2, 0], "rotation": 180, "texture": "#3"},
+				"down": {"uv": [10, 0, 2, 16], "rotation": 180, "texture": "#3"}
+			}
+		},
+		{
+			"name": "leaf_left",
+			"from": [4, 3, 4],
+			"to": [8, 3, 8],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 3, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 3, 0], "texture": "#3"},
+				"east": {"uv": [0, 0, 3, 0], "texture": "#3"},
+				"south": {"uv": [0, 0, 3, 0], "texture": "#3"},
+				"west": {"uv": [0, 0, 3, 0], "texture": "#3"},
+				"up": {"uv": [10, 16, 2, 0], "texture": "#3"},
+				"down": {"uv": [10, 0, 2, 16], "texture": "#3"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "cobblemon:block/rabuta_sprout",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "soil",
+					"origin": [-1, 0, -1],
+					"color": 0,
+					"children": [0, 1]
+				},
+				{
+					"name": "cobblemon:block/rabuta_sprout",
+					"origin": [8, 3, 8],
+					"color": 0,
+					"children": [2, 3, 4, 5]
+				}
+			]
+		}
+	]
+}

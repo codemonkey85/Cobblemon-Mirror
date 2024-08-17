@@ -18,19 +18,19 @@ import com.cobblemon.mod.common.battles.actor.PlayerBattleActor
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.pokemon.status.statuses.BurnStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.FrozenStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.ParalysisStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.PoisonBadlyStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.PoisonStatus
-import com.cobblemon.mod.common.pokemon.status.statuses.SleepStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.BurnStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.FrozenStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.ParalysisStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.PoisonBadlyStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.PoisonStatus
+import com.cobblemon.mod.common.pokemon.status.statuses.persistent.SleepStatus
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.random.Random
-import net.minecraft.entity.LivingEntity
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.server.level.ServerPlayer
 
 object CobblemonCaptureCalculator: CaptureCalculator, CriticalCaptureProvider, PokedexProgressCaptureMultiplierProvider {
 
@@ -75,14 +75,14 @@ object CobblemonCaptureCalculator: CaptureCalculator, CriticalCaptureProvider, P
             .behavior(thrower, pokemon)
             .mutator((3F * pokemon.hp - 2F * pokemon.currentHealth) * darkGrass * catchRate * inBattleModifier, ballBonus) / (3F * pokemon.hp)
         modifiedCatchRate *= bonusStatus * bonusLevel
-        if (thrower is ServerPlayerEntity) {
+        if (thrower is ServerPlayer) {
             val highestLevelThrower = this.findHighestThrowerLevel(thrower, pokemon)
             if (highestLevelThrower != null && highestLevelThrower < pokemon.level) {
                 val config = Cobblemon.config
                 modifiedCatchRate *= max(0.1F, min(1F, 1F - ((pokemon.level - highestLevelThrower) / (config.maxPokemonLevel / 2))))
             }
         }
-        val critical = if (thrower is ServerPlayerEntity) this.shouldHaveCriticalCapture(thrower, modifiedCatchRate) else false
+        val critical = if (thrower is ServerPlayer) this.shouldHaveCriticalCapture(thrower, modifiedCatchRate) else false
         val shakeProbability = (65536F / (255F / modifiedCatchRate).pow(0.1875F)).roundToInt()
         var shakes = 0
         repeat(4) {
@@ -98,7 +98,7 @@ object CobblemonCaptureCalculator: CaptureCalculator, CriticalCaptureProvider, P
         return CaptureContext(numberOfShakes = shakes, isSuccessfulCapture = shakes == 4, isCriticalCapture = false)
     }
 
-    private fun findHighestThrowerLevel(player: ServerPlayerEntity, pokemon: Pokemon): Int? {
+    private fun findHighestThrowerLevel(player: ServerPlayer, pokemon: Pokemon): Int? {
         val entity = pokemon.entity ?: return null
         val battleId = entity.battleId ?: return null
         val battle = BattleRegistry.getBattle(battleId) ?: return null

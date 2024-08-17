@@ -22,10 +22,9 @@ import com.google.gson.JsonObject
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.ReplaceOptions
-import net.minecraft.util.WorldSavePath
+import net.minecraft.world.level.storage.LevelResource
 import org.bson.Document
-import java.util.UUID
-import java.util.Date
+import java.util.*
 
 /**
  * A [FileStoreAdapter] for MongoDB. This allows a [PokemonStore] to be serialized to a MongoDB database.
@@ -54,7 +53,7 @@ open class MongoDBStoreAdapter(
 
     override fun <E : StorePosition, T : PokemonStore<E>> provide(storeClass: Class<T>, uuid: UUID): T? {
         val server = server()!!
-        val pokemonStoreRoot = server.getSavePath(WorldSavePath.ROOT).resolve("pokemon").toFile()
+        val pokemonStoreRoot = server.getWorldPath(LevelResource.ROOT).resolve("pokemon").toFile()
         val jsonAdapter = JSONStoreAdapter(
             pokemonStoreRoot.absolutePath,
             useNestedFolders = true,

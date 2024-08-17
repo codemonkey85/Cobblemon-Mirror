@@ -8,31 +8,31 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class GoldeenModel(root: ModelPart) : PokemonPoseableModel() {
+class GoldeenModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("goldeen")
 
     override var portraitScale = 3.2F
-    override var portraitTranslation = Vec3d(-0.05, -3.3, 0.0)
+    override var portraitTranslation = Vec3(-0.05, -3.3, 0.0)
 
     override var profileScale = 1.4F
-    override var profileTranslation = Vec3d(0.0, -0.5, 0.0)
+    override var profileTranslation = Vec3(0.0, -0.5, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var float: PokemonPose
-    lateinit var swim: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var float: Pose
+    lateinit var swim: Pose
 
     override fun registerPoses() {
         standing = registerPose(
             poseName = "standing",
             poseType = PoseType.STAND,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("goldeen", "ground_idle")
             )
         )
@@ -40,7 +40,7 @@ class GoldeenModel(root: ModelPart) : PokemonPoseableModel() {
         walk = registerPose(
             poseName = "walk",
             poseType = PoseType.WALK,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("goldeen", "ground_idle")
             )
         )
@@ -48,7 +48,7 @@ class GoldeenModel(root: ModelPart) : PokemonPoseableModel() {
         float = registerPose(
             poseName = "float",
             poseType = PoseType.FLOAT,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("goldeen", "water_idle")
             )
         )
@@ -56,7 +56,7 @@ class GoldeenModel(root: ModelPart) : PokemonPoseableModel() {
         swim = registerPose(
             poseName = "swim",
             poseType = PoseType.SWIM,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("goldeen", "water_swim")
             )
         )
@@ -64,6 +64,6 @@ class GoldeenModel(root: ModelPart) : PokemonPoseableModel() {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("goldeen", "faint") else null
 }

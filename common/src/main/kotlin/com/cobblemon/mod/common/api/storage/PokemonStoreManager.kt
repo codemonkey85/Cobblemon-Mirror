@@ -18,7 +18,7 @@ import com.cobblemon.mod.common.api.storage.pc.PCStore
 import com.cobblemon.mod.common.block.entity.PCBlockEntity
 import com.cobblemon.mod.common.net.messages.client.storage.party.SetPartyReferencePacket
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Manages the providing of [PokemonStore]s for party, PC, and custom use. The main utilities of this class
@@ -45,7 +45,7 @@ open class PokemonStoreManager {
         factories.toList().forEach(::unregisterFactory)
     }
 
-    open fun getParty(player: ServerPlayerEntity) = getParty(player.uuid)
+    open fun getParty(player: ServerPlayer) = getParty(player.uuid)
 
     @Throws(NoPokemonStoreException::class)
     open fun getParty(playerID: UUID): PlayerPartyStore {
@@ -63,7 +63,7 @@ open class PokemonStoreManager {
             )
     }
 
-    open fun getPCForPlayer(player: ServerPlayerEntity, pcBlockEntity: PCBlockEntity): PCStore? {
+    open fun getPCForPlayer(player: ServerPlayer, pcBlockEntity: PCBlockEntity): PCStore? {
         return factories.firstNotNullOfOrNull { it.getPCForPlayer(player, pcBlockEntity) }
     }
 
@@ -91,14 +91,14 @@ open class PokemonStoreManager {
         return null
     }
 
-    open fun onPlayerDataSync(player: ServerPlayerEntity) {
+    open fun onPlayerDataSync(player: ServerPlayer) {
         val parties = getParties(player.uuid)
         parties.forEach { party -> party.sendTo(player) }
         getPCs(player.uuid).forEach { pc -> pc.sendTo(player) }
         player.sendPacket(SetPartyReferencePacket(parties.first().uuid))
     }
 
-    open fun onPlayerDisconnect(player: ServerPlayerEntity) {
+    open fun onPlayerDisconnect(player: ServerPlayer) {
         for (factory in factories) {
             factory.onPlayerDisconnect(player.uuid)
         }

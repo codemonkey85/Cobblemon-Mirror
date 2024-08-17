@@ -1,0 +1,36 @@
+{
+  "type": "botanypots:crop",
+  "seed": {
+    "item": "cobblemon:revival_herb"
+  },
+  "categories": [
+    "dirt",
+	"farmland"
+  ],
+  "growthTicks": 1200,
+  "display": {
+    "type": "botanypots:aging",
+    "block": "cobblemon:revival_herb"
+  },
+  "drops": [
+    {
+      "chance": 1.00,
+      "output": {
+        "item": "cobblemon:revival_herb"
+      }
+    },{
+      "chance": 0.10,
+      "output": {
+        "item": "cobblemon:pep_up_flower"
+      }
+    }
+  ],
+  "fabric:load_conditions": [{
+    "condition": "fabric:all_mods_loaded",
+    "values": ["botanypots"]
+  }],
+  "neoforge:conditions": [{
+    "type": "neoforge:mod_loaded",
+    "modid": "botanypots"
+  }]
+}

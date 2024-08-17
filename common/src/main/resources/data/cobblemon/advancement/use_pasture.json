@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:pasture"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.use_pasture"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.use_pasture.description"
+    }
+  },
+  "parent": "cobblemon:full_party",
+  "criteria": {
+    "use_pasture": {
+      "trigger": "cobblemon:pasture_use"
+    }
+  },
+  "sends_telemetry_event": false
+}

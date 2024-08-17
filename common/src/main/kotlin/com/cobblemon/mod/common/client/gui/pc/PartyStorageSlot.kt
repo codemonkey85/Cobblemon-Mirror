@@ -17,7 +17,7 @@ class PartyStorageSlot(
     private val parent: StorageWidget,
     private val party: ClientParty,
     val position: PartyPosition,
-    onPress: PressAction
+    onPress: OnPress
 ) : StorageSlot(x, y, parent, onPress) {
 
     override fun getPokemon(): Pokemon? {

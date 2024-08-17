@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.pokemon.EVs
 import com.cobblemon.mod.common.pokemon.IVs
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Packet used for when EVs have changed.
@@ -22,7 +22,7 @@ import net.minecraft.network.PacketByteBuf
  */
 class EVsUpdatePacket(pokemon: () -> Pokemon, eVs: EVs) : SingleUpdatePacket<EVs, EVsUpdatePacket>(pokemon, eVs) {
     override val id = ID
-    override fun encodeValue(buffer: PacketByteBuf) {
+    override fun encodeValue(buffer: RegistryFriendlyByteBuf) {
         this.value.saveToBuffer(buffer)
     }
     override fun set(pokemon: Pokemon, value: EVs) {
@@ -32,7 +32,7 @@ class EVsUpdatePacket(pokemon: () -> Pokemon, eVs: EVs) : SingleUpdatePacket<EVs
     }
     companion object {
         val ID = cobblemonResource("ev_update")
-        fun decode(buffer: PacketByteBuf) = EVsUpdatePacket(decodePokemon(buffer), EVs().apply { loadFromBuffer(buffer) })
+        fun decode(buffer: RegistryFriendlyByteBuf) = EVsUpdatePacket(decodePokemon(buffer), EVs().apply { loadFromBuffer(buffer) })
     }
 }
 
@@ -44,7 +44,7 @@ class EVsUpdatePacket(pokemon: () -> Pokemon, eVs: EVs) : SingleUpdatePacket<EVs
  */
 class IVsUpdatePacket(pokemon: () -> Pokemon, iVs: IVs) : SingleUpdatePacket<IVs, IVsUpdatePacket>(pokemon, iVs) {
     override val id = ID
-    override fun encodeValue(buffer: PacketByteBuf) {
+    override fun encodeValue(buffer: RegistryFriendlyByteBuf) {
         this.value.saveToBuffer(buffer)
     }
     override fun set(pokemon: Pokemon, value: IVs) {
@@ -54,6 +54,6 @@ class IVsUpdatePacket(pokemon: () -> Pokemon, iVs: IVs) : SingleUpdatePacket<IVs
     }
     companion object {
         val ID = cobblemonResource("iv_update")
-        fun decode(buffer: PacketByteBuf) = IVsUpdatePacket(decodePokemon(buffer), IVs().apply { loadFromBuffer(buffer) })
+        fun decode(buffer: RegistryFriendlyByteBuf) = IVsUpdatePacket(decodePokemon(buffer), IVs().apply { loadFromBuffer(buffer) })
     }
 }

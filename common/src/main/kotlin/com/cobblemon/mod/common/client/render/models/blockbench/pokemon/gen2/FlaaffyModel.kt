@@ -8,38 +8,37 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen2
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class FlaaffyModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class FlaaffyModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("flaaffy")
     override val head = getPart("head_back")
 
     override var portraitScale = 2.4F
-    override var portraitTranslation = Vec3d(-0.4, -0.1, 0.0)
+    override var portraitTranslation = Vec3(-0.4, -0.1, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.5, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.5, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walking: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var battleidle: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("flaaffy", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("flaaffy", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("flaaffy", "blink") }
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("flaaffy", "sleep"))
+            animations = arrayOf(bedrock("flaaffy", "sleep"))
         )
 
         standing = registerPose(
@@ -48,7 +47,7 @@ class FlaaffyModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             transformTicks = 10,
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(maxPitch = 0F),
                 bedrock("flaaffy", "ground_idle")
             )
@@ -59,7 +58,7 @@ class FlaaffyModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(maxPitch = 0F),
                 bedrock("flaaffy", "ground_walk")
             )
@@ -71,7 +70,7 @@ class FlaaffyModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(maxPitch = 0F),
                 bedrock("flaaffy", "battle_idle")
             )
@@ -79,7 +78,7 @@ class FlaaffyModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
     }
     //override fun getFaintAnimation(
     //    pokemonEntity: PokemonEntity,
-    //    state: PoseableEntityState<PokemonEntity>
+    //    state: PosableState<PokemonEntity>
     //) = if (state.isPosedIn(standing, walking, sleep)) bedrockStateful("flaaffy", "faint") else
     //    if (state.isPosedIn(battleidle)) bedrockStateful("flaaffy", "battle_faint")
     //    else null

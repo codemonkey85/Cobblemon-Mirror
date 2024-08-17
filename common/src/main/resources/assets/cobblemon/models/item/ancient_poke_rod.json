@@ -1,0 +1,14 @@
+{
+    "parent": "item/handheld_rod",
+    "textures": {
+        "layer0": "cobblemon:item/fishing/ancient_poke_rod"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "cast": 1
+            },
+            "model": "cobblemon:item/ancient_poke_rod_cast"
+        }
+    ]
+}

@@ -5,7 +5,7 @@
 			"identifier": "cobblemon:cherishball/casual/sendflash",
 			"basic_render_parameters": {
 				"material": "particles_alpha",
-				"texture": "textures/particles/balls/pokeball/casual/sendcasual"
+				"texture": "textures/particles/balls/cherishball/casual/cherishsendcasual"
 			}
 		},
 		"components": {
@@ -27,14 +27,25 @@
 				"size": [1.25, 1.25],
 				"facing_camera_mode": "rotate_xyz",
 				"uv": {
-					"texture_width": 384,
+					"texture_width": 416,
 					"texture_height": 32,
 					"flipbook": {
 						"base_UV": [0, 0],
 						"size_UV": [32, 32],
 						"step_UV": [32, 0],
 						"frames_per_second": 24,
-						"max_frame": 12
+						"max_frame": 13
+					}
+				}
+			},
+			"minecraft:particle_appearance_tinting": {
+				"color": {
+					"interpolant": "v.particle_age / v.particle_lifetime",
+					"gradient": {
+						"0.0": "#FF8DFFC6",
+						"0.2": "#ffffffff",
+						"0.35": "#ffffffff",
+						"0.53": "#FFFF8845"
 					}
 				}
 			}

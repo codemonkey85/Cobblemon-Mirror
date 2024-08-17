@@ -13,16 +13,13 @@ import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.item.battle.BagItem
 import com.cobblemon.mod.common.net.IntSize
-import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.hasKeyItem
-import com.cobblemon.mod.common.util.readSizedInt
-import com.cobblemon.mod.common.util.writeSizedInt
+import com.cobblemon.mod.common.util.*
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.lang.Integer.max
-import java.util.UUID
-import net.minecraft.network.PacketByteBuf
 import java.lang.reflect.Type
+import java.util.*
 
 class ShowdownActionRequest(
     var wait: Boolean = false,
@@ -43,7 +40,7 @@ class ShowdownActionRequest(
         return responses
     }
 
-    fun saveToBuffer(buffer: PacketByteBuf) {
+    fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(wait)
         buffer.writeSizedInt(IntSize.U_BYTE, active?.size ?: 0)
         active?.forEach { it.saveToBuffer(buffer) }
@@ -54,7 +51,7 @@ class ShowdownActionRequest(
         side?.saveToBuffer(buffer)
     }
 
-    fun loadFromBuffer(buffer: PacketByteBuf): ShowdownActionRequest {
+    fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): ShowdownActionRequest {
         wait = buffer.readBoolean()
         val activeSize = buffer.readSizedInt(IntSize.U_BYTE)
         if (activeSize > 0) {
@@ -89,7 +86,7 @@ class ShowdownActionRequest(
     }
 }
 
-enum class ShowdownActionResponseType(val loader: (PacketByteBuf) -> ShowdownActionResponse) {
+enum class ShowdownActionResponseType(val loader: (RegistryFriendlyByteBuf) -> ShowdownActionResponse) {
     SWITCH({ SwitchActionResponse(UUID.randomUUID()) }),
     MOVE({ MoveActionResponse("", null) }),
     DEFAULT({ DefaultActionResponse() }),
@@ -101,17 +98,17 @@ enum class ShowdownActionResponseType(val loader: (PacketByteBuf) -> ShowdownAct
 
 abstract class ShowdownActionResponse(val type: ShowdownActionResponseType) {
     companion object {
-        fun loadFromBuffer(buffer: PacketByteBuf): ShowdownActionResponse {
+        fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): ShowdownActionResponse {
             val type = ShowdownActionResponseType.values()[buffer.readSizedInt(IntSize.U_BYTE)]
             return type.loader(buffer).loadFromBuffer(buffer)
         }
     }
 
-    open fun saveToBuffer(buffer: PacketByteBuf) {
+    open fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeSizedInt(IntSize.U_BYTE, type.ordinal)
     }
 
-    open fun loadFromBuffer(buffer: PacketByteBuf): ShowdownActionResponse = this
+    open fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): ShowdownActionResponse = this
     abstract fun isValid(activeBattlePokemon: ActiveBattlePokemon, showdownMoveSet: ShowdownMoveset?, forceSwitch: Boolean): Boolean
     abstract fun toShowdownString(activeBattlePokemon: ActiveBattlePokemon, showdownMoveSet: ShowdownMoveset?): String
 }
@@ -154,14 +151,14 @@ data class MoveActionResponse(var moveName: String, var targetPnx: String? = nul
         }.plus(gimmickID?.let { " $gimmickID" } ?: "")
     }
 
-    override fun saveToBuffer(buffer: PacketByteBuf) {
+    override fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
         super.saveToBuffer(buffer)
         buffer.writeString(moveName)
         buffer.writeNullable(targetPnx) { _, targetPnx -> buffer.writeString(targetPnx) }
         buffer.writeNullable(gimmickID) { _, gimmickID -> buffer.writeString(gimmickID) }
     }
 
-    override fun loadFromBuffer(buffer: PacketByteBuf): ShowdownActionResponse {
+    override fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): ShowdownActionResponse {
         super.loadFromBuffer(buffer)
         moveName = buffer.readString()
         targetPnx = buffer.readNullable { buffer.readString() }
@@ -171,12 +168,12 @@ data class MoveActionResponse(var moveName: String, var targetPnx: String? = nul
 }
 
 data class HealItemActionResponse(var item: String) : ShowdownActionResponse(ShowdownActionResponseType.FORCE_PASS) {
-    override fun saveToBuffer(buffer: PacketByteBuf) {
+    override fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
         super.saveToBuffer(buffer)
         buffer.writeString(item)
     }
 
-    override fun loadFromBuffer(buffer: PacketByteBuf): ShowdownActionResponse {
+    override fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): ShowdownActionResponse {
         super.loadFromBuffer(buffer)
         item = buffer.readString()
         return this
@@ -192,14 +189,14 @@ data class HealItemActionResponse(var item: String) : ShowdownActionResponse(Sho
 }
 
 data class SwitchActionResponse(var newPokemonId: UUID) : ShowdownActionResponse(ShowdownActionResponseType.SWITCH) {
-    override fun saveToBuffer(buffer: PacketByteBuf) {
+    override fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
         super.saveToBuffer(buffer)
-        buffer.writeUuid(newPokemonId)
+        buffer.writeUUID(newPokemonId)
     }
 
-    override fun loadFromBuffer(buffer: PacketByteBuf): ShowdownActionResponse {
+    override fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): ShowdownActionResponse {
         super.loadFromBuffer(buffer)
-        newPokemonId = buffer.readUuid()
+        newPokemonId = buffer.readUUID()
         return this
     }
 
@@ -281,7 +278,7 @@ class ShowdownMoveset {
     var maxMoves: List<InBattleGimmickMove?>? = null
     var canTerastallize: String? = null
 
-    fun saveToBuffer(buffer: PacketByteBuf) {
+    fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeSizedInt(IntSize.U_BYTE, moves.size)
         moves.forEach { it.saveToBuffer(buffer) }
         buffer.writeBoolean(trapped)
@@ -301,7 +298,7 @@ class ShowdownMoveset {
         buffer.writeNullable(canTerastallize) { _, teraType -> buffer.writeString(teraType) }
     }
 
-    fun loadFromBuffer(buffer: PacketByteBuf): ShowdownMoveset {
+    fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): ShowdownMoveset {
         val moves = mutableListOf<InBattleMove>()
         repeat(times = buffer.readSizedInt(IntSize.U_BYTE)) {
             moves.add(InBattleMove.loadFromBuffer(buffer))
@@ -367,14 +364,14 @@ class ShowdownSide {
     lateinit var name: UUID
     lateinit var id: String
     lateinit var pokemon: List<ShowdownPokemon>
-    fun saveToBuffer(buffer: PacketByteBuf) {
-        buffer.writeUuid(name)
+    fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(name)
         buffer.writeString(id)
         buffer.writeSizedInt(IntSize.U_BYTE, pokemon.size)
         pokemon.forEach { it.saveToBuffer(buffer) }
     }
-    fun loadFromBuffer(buffer: PacketByteBuf): ShowdownSide {
-        name = buffer.readUuid()
+    fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): ShowdownSide {
+        name = buffer.readUUID()
         id = buffer.readString()
         val pokemon = mutableListOf<ShowdownPokemon>()
         repeat(times = buffer.readSizedInt(IntSize.U_BYTE)) {
@@ -396,7 +393,7 @@ class ShowdownPokemon {
     var reviving: Boolean = false
 
     val uuid: UUID by lazy { UUID.fromString(details.split(",")[1].trim()) }
-    fun saveToBuffer(buffer: PacketByteBuf) {
+    fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(ident)
         buffer.writeString(details)
         buffer.writeString(condition)
@@ -409,7 +406,7 @@ class ShowdownPokemon {
         buffer.writeString(ability)
 
     }
-    fun loadFromBuffer(buffer: PacketByteBuf): ShowdownPokemon {
+    fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): ShowdownPokemon {
         ident = buffer.readString()
         details = buffer.readString()
         condition = buffer.readString()

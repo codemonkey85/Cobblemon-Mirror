@@ -1,32 +1,24 @@
 {
   "baseYield": {
     "min": 1,
-    "max": 3
+    "max": 1
   },
   "preferredBiomeTags": [
     "cobblemon:is_mountain",
     "cobblemon:is_taiga"
   ],
   "growthTime": {
-    "min": 75,
-    "max": 85
+    "min": 54,
+    "max": 66
   },
   "refreshRate": {
-    "min": 15,
-    "max": 25
+    "min": 27,
+    "max": 33
   },
   "favoriteMulches": [
     "coarse"
   ],
-  "growthFactors": [
-    {
-      "variant": "cobblemon:preferred_biome",
-      "bonusYield": {
-        "min": 1,
-        "max": 1
-      }
-    }
-  ],
+  "growthFactors": [],
   "randomizedGrowthPoints": true,
   "spawnConditions": [],
   "growthPoints": [
@@ -79,6 +71,18 @@
       }
     }
   ],
+  "stageOnePositioning": {
+    "position": {
+      "x": 8.15,
+      "y": 3.25,
+      "z": 8.1
+    },
+    "rotation": {
+      "x": 5.0,
+      "y": -10.0,
+      "z": -7.5
+    }
+  },
   "mutations": {},
   "sproutShape": "volcano-sprout",
   "matureShape": "volcano-mature",
@@ -91,5 +95,6 @@
   "flowerModel": "cobblemon:flower.geo",
   "flowerTexture": "cobblemon:flower",
   "fruitModel": "cobblemon:rowap_berry.geo",
-  "fruitTexture": "cobblemon:rowap"
+  "fruitTexture": "cobblemon:rowap",
+  "boneMealChance": 0.24
 }

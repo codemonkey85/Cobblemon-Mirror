@@ -8,15 +8,15 @@
 
 package com.cobblemon.mod.common.world.predicate
 
-import com.mojang.serialization.Codec
+import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.registry.tag.TagKey
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.StructureWorldAccess
-import net.minecraft.world.biome.Biome
-import net.minecraft.world.gen.blockpredicate.BlockPredicate
-import java.util.Optional
+import net.minecraft.core.BlockPos
+import net.minecraft.core.registries.Registries
+import net.minecraft.tags.TagKey
+import net.minecraft.world.level.WorldGenLevel
+import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate
+import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -30,20 +30,21 @@ class BiomePredicate(
     val excludedBiomes: Optional<MutableList<TagKey<Biome>>>
 ) : BlockPredicate {
 
-    override fun test(world: StructureWorldAccess, block: BlockPos): Boolean {
+    override fun test(world: WorldGenLevel, block: BlockPos): Boolean {
         val biome = world.getBiome(block)
         // If biomes are not specified, default to true -- exclusions override inclusions
         return (
-                (includedBiomes.getOrNull()?.any { biome.isIn(it) } ?: true) &&
-                !(excludedBiomes.getOrNull()?.any { biome.isIn(it) } ?: false))
+                (includedBiomes.getOrNull()?.any { biome.`is`(it) } ?: true) &&
+                !(excludedBiomes.getOrNull()?.any { biome.`is`(it) } ?: false))
     }
-    override fun getType() = CobblemonBlockPredicates.BIOME
+
+    override fun type() = CobblemonBlockPredicates.BIOME
 
     companion object {
-        val CODEC : Codec<BiomePredicate> = RecordCodecBuilder.create { instance ->
+        val CODEC : MapCodec<BiomePredicate> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                TagKey.codec(RegistryKeys.BIOME).listOf().optionalFieldOf("includedBiomes").forGetter { it.includedBiomes },
-                TagKey.codec(RegistryKeys.BIOME).listOf().optionalFieldOf("excludedBiomes").forGetter { it.excludedBiomes }
+                TagKey.hashedCodec(Registries.BIOME).listOf().optionalFieldOf("includedBiomes").forGetter { it.includedBiomes },
+                TagKey.hashedCodec(Registries.BIOME).listOf().optionalFieldOf("excludedBiomes").forGetter { it.excludedBiomes }
             ).apply(instance, ::BiomePredicate)
         }
     }

@@ -8,33 +8,34 @@
 
 package com.cobblemon.mod.common.util
 
-import net.minecraft.client.sound.MovingSoundInstance
-import net.minecraft.client.sound.SoundInstance
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvent
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance
+import net.minecraft.client.resources.sounds.SoundInstance
+import net.minecraft.sounds.SoundSource
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.world.phys.Vec3
 
 class MovingSoundInstance(
     val sound: SoundEvent,
-    private val category: SoundCategory,
-    val pos: () -> Vec3d?,
+    private val category: SoundSource,
+    val pos: () -> Vec3?,
     private val startingVol: Float,
     private val pitch: Float,
-    var looping: Boolean = true,
+    var loop: Boolean = true,
     var duration: Int = 20,
     private val repeatDelay: Int = 0
-) : MovingSoundInstance (sound, category, SoundInstance.createRandom()) {
+) : AbstractTickableSoundInstance (sound, category, SoundInstance.createUnseededRandom()) {
     var time = 0
     init {
-        this.repeat = looping
+        this.looping = loop
         this.x = pos.invoke()?.x ?: 0.0
         this.y = pos.invoke()?.y ?: 0.0
         this.z = pos.invoke()?.z ?: 0.0
         this.volume = startingVol
     }
+
     override fun tick() {
-        if(!looping && time > duration) {
-            this.setDone()
+        if(!loop && time > duration) {
+            this.stop()
         } else {
             this.x = pos.invoke()?.x ?: 0.0
             this.y = pos.invoke()?.y ?: 0.0

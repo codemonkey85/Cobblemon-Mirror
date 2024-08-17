@@ -12,10 +12,10 @@ import com.cobblemon.mod.common.api.callback.MoveSelectCallbacks
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.net.messages.server.callback.move.MoveSelectedPacket
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object MoveSelectedHandler : ServerNetworkPacketHandler<MoveSelectedPacket> {
-    override fun handle(packet: MoveSelectedPacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: MoveSelectedPacket, server: MinecraftServer, player: ServerPlayer) {
         MoveSelectCallbacks.handleCallback(player, packet.uuid, packet.index)
     }
 }

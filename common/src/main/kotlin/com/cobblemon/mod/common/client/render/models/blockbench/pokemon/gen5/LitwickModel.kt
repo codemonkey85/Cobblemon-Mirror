@@ -8,34 +8,34 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen5
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
-import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class LitwickModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class LitwickModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("litwick")
     override val head = getPart("head")
 
     override var portraitScale = 2.33F
-    override var portraitTranslation = Vec3d(0.01, -1.9, 0.0)
+    override var portraitTranslation = Vec3(0.01, -1.9, 0.0)
 
     override var profileScale = 0.86F
-    override var profileTranslation = Vec3d(0.0, 0.44, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.44, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battle_idle: PokemonPose
-    lateinit var shoulderLeft: PokemonPose
-    lateinit var shoulderRight: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var battle_idle: CobblemonPose
+    lateinit var shoulderLeft: CobblemonPose
+    lateinit var shoulderRight: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("litwick", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("litwick", "cry") }
 
     val shoulderOffset = 5.5
     val wax = getPart("wax_trail")
@@ -46,7 +46,7 @@ class LitwickModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("litwick", "sleep")
             )
         )
@@ -56,7 +56,7 @@ class LitwickModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("litwick", "ground_idle")
             )
         )
@@ -65,7 +65,7 @@ class LitwickModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("litwick", "ground_walk")
             )
         )
@@ -75,7 +75,7 @@ class LitwickModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("litwick", "battle_idle")
             )
         )
@@ -83,7 +83,7 @@ class LitwickModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         shoulderLeft = registerPose(
                 poseType = PoseType.SHOULDER_LEFT,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         bedrock("litwick", "ground_idle")
                 ),
                 transformedParts = arrayOf(
@@ -94,7 +94,7 @@ class LitwickModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         shoulderRight = registerPose(
                 poseType = PoseType.SHOULDER_RIGHT,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         bedrock("litwick", "ground_idle")
                 ),
                 transformedParts = arrayOf(
@@ -105,6 +105,6 @@ class LitwickModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("litwick", "faint") else null
 }

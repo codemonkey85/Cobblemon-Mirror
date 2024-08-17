@@ -1,0 +1,45 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "block/farmland_moist",
+		"particle": "block/farmland_moist"
+	},
+	"elements": [
+		{
+			"name": "soil1",
+			"from": [3.99, -1.01, 3.99],
+			"to": [12.01, 0.01, 12.01],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-1, -1, -1]},
+			"faces": {
+				"north": {"uv": [5, 4, 13, 5], "texture": "#0"},
+				"east": {"uv": [12, 6, 13, 14], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [5, 4, 13, 5], "texture": "#0"},
+				"west": {"uv": [12, 6, 13, 14], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [4, 4, 12, 12], "texture": "#0"},
+				"down": {"uv": [4, 4, 12, 12], "texture": "#0"}
+			}
+		},
+		{
+			"name": "soil2",
+			"from": [5, 0, 5],
+			"to": [11, 1, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-1, 0, -1]},
+			"faces": {
+				"north": {"uv": [5, 14, 11, 15], "texture": "#0"},
+				"east": {"uv": [7, 5, 8, 11], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [5, 14, 11, 15], "texture": "#0"},
+				"west": {"uv": [7, 5, 8, 11], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [5, 5, 11, 11], "texture": "#0"},
+				"down": {"uv": [5, 5, 11, 11], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "planted",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}

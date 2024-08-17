@@ -15,8 +15,8 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:all_signs</summary>
 
-- #cobblemon:signs
 - #cobblemon:all_hanging_signs
+- #cobblemon:signs
 
 </details>
 
@@ -66,74 +66,74 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:berries</summary>
 
+- cobblemon:aguav_berry
+- cobblemon:apicot_berry
+- cobblemon:aspear_berry
+- cobblemon:babiri_berry
+- cobblemon:belue_berry
+- cobblemon:bluk_berry
+- cobblemon:charti_berry
 - cobblemon:cheri_berry
 - cobblemon:chesto_berry
-- cobblemon:pecha_berry
-- cobblemon:rawst_berry
-- cobblemon:aspear_berry
-- cobblemon:oran_berry
-- cobblemon:persim_berry
-- cobblemon:razz_berry
-- cobblemon:bluk_berry
-- cobblemon:nanab_berry
-- cobblemon:wepear_berry
-- cobblemon:pinap_berry
-- cobblemon:leppa_berry
-- cobblemon:lum_berry
-- cobblemon:figy_berry
-- cobblemon:wiki_berry
-- cobblemon:mago_berry
-- cobblemon:aguav_berry
-- cobblemon:iapapa_berry
-- cobblemon:sitrus_berry
-- cobblemon:touga_berry
-- cobblemon:cornn_berry
-- cobblemon:magost_berry
-- cobblemon:rabuta_berry
-- cobblemon:nomel_berry
-- cobblemon:enigma_berry
-- cobblemon:pomeg_berry
-- cobblemon:kelpsy_berry
-- cobblemon:qualot_berry
-- cobblemon:hondew_berry
-- cobblemon:grepa_berry
-- cobblemon:tamato_berry
-- cobblemon:spelon_berry
-- cobblemon:pamtre_berry
-- cobblemon:watmel_berry
-- cobblemon:durin_berry
-- cobblemon:belue_berry
-- cobblemon:kee_berry
-- cobblemon:maranga_berry
-- cobblemon:hopo_berry
-- cobblemon:liechi_berry
-- cobblemon:ganlon_berry
-- cobblemon:salac_berry
-- cobblemon:petaya_berry
-- cobblemon:apicot_berry
-- cobblemon:lansat_berry
-- cobblemon:starf_berry
-- cobblemon:micle_berry
-- cobblemon:custap_berry
-- cobblemon:jaboca_berry
-- cobblemon:rowap_berry
-- cobblemon:babiri_berry
-- cobblemon:charti_berry
 - cobblemon:chilan_berry
 - cobblemon:chople_berry
 - cobblemon:coba_berry
 - cobblemon:colbur_berry
+- cobblemon:cornn_berry
+- cobblemon:custap_berry
+- cobblemon:durin_berry
+- cobblemon:enigma_berry
+- cobblemon:figy_berry
+- cobblemon:ganlon_berry
+- cobblemon:grepa_berry
 - cobblemon:haban_berry
+- cobblemon:hondew_berry
+- cobblemon:hopo_berry
+- cobblemon:iapapa_berry
+- cobblemon:jaboca_berry
 - cobblemon:kasib_berry
 - cobblemon:kebia_berry
+- cobblemon:kee_berry
+- cobblemon:kelpsy_berry
+- cobblemon:lansat_berry
+- cobblemon:leppa_berry
+- cobblemon:liechi_berry
+- cobblemon:lum_berry
+- cobblemon:mago_berry
+- cobblemon:magost_berry
+- cobblemon:maranga_berry
+- cobblemon:micle_berry
+- cobblemon:nanab_berry
+- cobblemon:nomel_berry
 - cobblemon:occa_berry
+- cobblemon:oran_berry
+- cobblemon:pamtre_berry
 - cobblemon:passho_berry
 - cobblemon:payapa_berry
+- cobblemon:pecha_berry
+- cobblemon:persim_berry
+- cobblemon:petaya_berry
+- cobblemon:pinap_berry
+- cobblemon:pomeg_berry
+- cobblemon:qualot_berry
+- cobblemon:rabuta_berry
+- cobblemon:rawst_berry
+- cobblemon:razz_berry
 - cobblemon:rindo_berry
 - cobblemon:roseli_berry
+- cobblemon:rowap_berry
+- cobblemon:salac_berry
 - cobblemon:shuca_berry
+- cobblemon:sitrus_berry
+- cobblemon:spelon_berry
+- cobblemon:starf_berry
+- cobblemon:tamato_berry
 - cobblemon:tanga_berry
+- cobblemon:touga_berry
 - cobblemon:wacan_berry
+- cobblemon:watmel_berry
+- cobblemon:wepear_berry
+- cobblemon:wiki_berry
 - cobblemon:yache_berry
 
 </details>
@@ -141,51 +141,70 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:berry_replaceable</summary>
 
-- minecraft:air
-- minecraft:grass
-- minecraft:fern
-- minecraft:dead_bush
-- minecraft:fire
-- minecraft:soul_fire
-- minecraft:snow
-- minecraft:vine
-- minecraft:glow_lichen
-- minecraft:light
-- minecraft:tall_grass
-- minecraft:large_fern
-- minecraft:structure_void
-- minecraft:void_air
-- minecraft:cave_air
 - #minecraft:leaves
+- minecraft:air
+- minecraft:cave_air
+- minecraft:dead_bush
+- minecraft:fern
+- minecraft:fire
+- minecraft:glow_lichen
+- minecraft:grass
+- minecraft:large_fern
+- minecraft:light
+- minecraft:snow
+- minecraft:soul_fire
+- minecraft:structure_void
+- minecraft:tall_grass
+- minecraft:vine
+- minecraft:void_air
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #blocks:berry_soil</summary>
 
-- minecraft:farmland
 - #c:farmlands
 - #forge:farmlands
+- minecraft:farmland
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #blocks:berry_wild_soil</summary>
 
+- #cobblemon:snow_block
 - #minecraft:dirt
 - #minecraft:sand
-- #cobblemon:snow_block
+- #minecraft:terracotta
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #blocks:black_tumblestones</summary>
 
-- cobblemon:small_budding_black_tumblestone
-- cobblemon:medium_budding_black_tumblestone
-- cobblemon:large_budding_black_tumblestone
-- cobblemon:black_tumblestone_cluster
 - cobblemon:black_tumblestone_block
+- cobblemon:black_tumblestone_brick_slab
+- cobblemon:black_tumblestone_brick_stairs
+- cobblemon:black_tumblestone_brick_wall
+- cobblemon:black_tumblestone_bricks
+- cobblemon:black_tumblestone_cluster
+- cobblemon:chiseled_black_tumblestone_bricks
+- cobblemon:chiseled_polished_black_tumblestone
+- cobblemon:large_budding_black_tumblestone
+- cobblemon:medium_budding_black_tumblestone
+- cobblemon:polished_black_tumblestone
+- cobblemon:polished_black_tumblestone_slab
+- cobblemon:polished_black_tumblestone_stairs
+- cobblemon:polished_black_tumblestone_wall
+- cobblemon:small_budding_black_tumblestone
+
+</details>
+
+<details>
+<summary><b>Tag:</b> #blocks:black_tumblestone_bricks</summary>
+
+- cobblemon:black_tumblestone_bricks
+- cobblemon:chiseled_black_tumblestone_bricks
 
 </details>
 
@@ -199,10 +218,10 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:crops</summary>
 
+- #cobblemon:mints
+- cobblemon:medicinal_leek
 - cobblemon:revival_herb
 - cobblemon:vivichoke_seeds
-- cobblemon:medicinal_leek
-- #cobblemon:mints
 
 </details>
 
@@ -217,8 +236,8 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:dripstone_growable</summary>
 
-- dripstone_block
 - cobblemon:dripstone_moon_stone_ore
+- dripstone_block
 
 </details>
 
@@ -232,16 +251,16 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:dusk_stone_ores</summary>
 
-- cobblemon:dusk_stone_ore
 - cobblemon:deepslate_dusk_stone_ore
+- cobblemon:dusk_stone_ore
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #blocks:fire_stone_ores</summary>
 
-- cobblemon:fire_stone_ore
 - cobblemon:deepslate_fire_stone_ore
+- cobblemon:fire_stone_ore
 - cobblemon:nether_fire_stone_ore
 
 </details>
@@ -256,56 +275,56 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:fossil_machine_parts</summary>
 
-- cobblemon:restoration_tank
-- cobblemon:monitor
 - cobblemon:fossil_analyzer
+- cobblemon:monitor
+- cobblemon:restoration_tank
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #blocks:ice_stone_ores</summary>
 
-- cobblemon:ice_stone_ore
 - cobblemon:deepslate_ice_stone_ore
+- cobblemon:ice_stone_ore
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #blocks:leaf_stone_ores</summary>
 
-- cobblemon:leaf_stone_ore
 - cobblemon:deepslate_leaf_stone_ore
+- cobblemon:leaf_stone_ore
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #blocks:machines</summary>
 
-- cobblemon:healing_machine
-- cobblemon:pc
-- cobblemon:pasture
-- cobblemon:restoration_tank
-- cobblemon:monitor
 - cobblemon:fossil_analyzer
+- cobblemon:healing_machine
+- cobblemon:monitor
+- cobblemon:pasture
+- cobblemon:pc
+- cobblemon:restoration_tank
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #blocks:medicinal_leek_plantable</summary>
 
-- minecraft:water
 - #minecraft:slabs
+- minecraft:water
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #blocks:mints</summary>
 
-- cobblemon:red_mint
 - cobblemon:blue_mint
 - cobblemon:cyan_mint
-- cobblemon:pink_mint
 - cobblemon:green_mint
+- cobblemon:pink_mint
+- cobblemon:red_mint
 - cobblemon:white_mint
 
 </details>
@@ -313,20 +332,38 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:moon_stone_ores</summary>
 
-- cobblemon:moon_stone_ore
 - cobblemon:deepslate_moon_stone_ore
 - cobblemon:dripstone_moon_stone_ore
+- cobblemon:moon_stone_ore
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #blocks:red_tumblestones</summary>
 
-- cobblemon:small_budding_tumblestone
-- cobblemon:medium_budding_tumblestone
+- cobblemon:chiseled_polished_tumblestone
+- cobblemon:chiseled_tumblestone_bricks
 - cobblemon:large_budding_tumblestone
-- cobblemon:tumblestone_cluster
+- cobblemon:medium_budding_tumblestone
+- cobblemon:polished_tumblestone
+- cobblemon:polished_tumblestone_slab
+- cobblemon:polished_tumblestone_stairs
+- cobblemon:polished_tumblestone_wall
+- cobblemon:small_budding_tumblestone
 - cobblemon:tumblestone_block
+- cobblemon:tumblestone_brick_slab
+- cobblemon:tumblestone_brick_stairs
+- cobblemon:tumblestone_brick_wall
+- cobblemon:tumblestone_bricks
+- cobblemon:tumblestone_cluster
+
+</details>
+
+<details>
+<summary><b>Tag:</b> #blocks:red_tumblestone_bricks</summary>
+
+- cobblemon:chiseled_tumblestone_bricks
+- cobblemon:tumblestone_bricks
 
 </details>
 
@@ -341,37 +378,37 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:roots_spreadable</summary>
 
-- #minecraft:dirt
-- minecraft:stone
-- minecraft:infested_stone
-- minecraft:andesite
-- minecraft:diorite
-- minecraft:granite
-- minecraft:deepslate
-- minecraft:infested_deepslate
-- minecraft:tuff
-- minecraft:cobblestone
-- minecraft:mossy_cobblestone
-- minecraft:infested_cobblestone
-- minecraft:cobbled_deepslate
+- #c:cobblestone
 - #c:dirt
 - #c:stone
-- #c:cobblestone
-- #forge:stone
-- #forge:cobblestone/normal
-- #forge:cobblestone/mossy
-- #forge:cobblestone/infested
 - #forge:cobblestone/deepslate
+- #forge:cobblestone/infested
+- #forge:cobblestone/mossy
+- #forge:cobblestone/normal
+- #forge:stone
+- #minecraft:dirt
+- minecraft:andesite
+- minecraft:cobbled_deepslate
+- minecraft:cobblestone
+- minecraft:deepslate
+- minecraft:diorite
+- minecraft:granite
+- minecraft:infested_cobblestone
+- minecraft:infested_deepslate
+- minecraft:infested_stone
+- minecraft:mossy_cobblestone
+- minecraft:stone
+- minecraft:tuff
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #blocks:sees_sky</summary>
 
-- #minecraft:replaceable
-- #minecraft:leaves
 - #minecraft:climbable
 - #minecraft:fences
+- #minecraft:leaves
+- #minecraft:replaceable
 - minecraft:ice
 
 </details>
@@ -379,8 +416,8 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:shiny_stone_ores</summary>
 
-- cobblemon:shiny_stone_ore
 - cobblemon:deepslate_shiny_stone_ore
+- cobblemon:shiny_stone_ore
 
 </details>
 
@@ -395,11 +432,29 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:sky_tumblestones</summary>
 
-- cobblemon:small_budding_sky_tumblestone
-- cobblemon:medium_budding_sky_tumblestone
+- cobblemon:chiseled_polished_sky_tumblestone
+- cobblemon:chiseled_sky_tumblestone_bricks
 - cobblemon:large_budding_sky_tumblestone
-- cobblemon:sky_tumblestone_cluster
+- cobblemon:medium_budding_sky_tumblestone
+- cobblemon:polished_sky_tumblestone
+- cobblemon:polished_sky_tumblestone_slab
+- cobblemon:polished_sky_tumblestone_stairs
+- cobblemon:polished_sky_tumblestone_wall
 - cobblemon:sky_tumblestone_block
+- cobblemon:sky_tumblestone_brick_slab
+- cobblemon:sky_tumblestone_brick_stairs
+- cobblemon:sky_tumblestone_brick_wall
+- cobblemon:sky_tumblestone_bricks
+- cobblemon:sky_tumblestone_cluster
+- cobblemon:small_budding_sky_tumblestone
+
+</details>
+
+<details>
+<summary><b>Tag:</b> #blocks:sky_tumblestone_bricks</summary>
+
+- cobblemon:chiseled_sky_tumblestone_bricks
+- cobblemon:sky_tumblestone_bricks
 
 </details>
 
@@ -427,8 +482,8 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:sun_stone_ores</summary>
 
-- cobblemon:sun_stone_ore
 - cobblemon:deepslate_sun_stone_ore
+- cobblemon:sun_stone_ore
 - cobblemon:terracotta_sun_stone_ore
 
 </details>
@@ -436,8 +491,17 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:thunder_stone_ores</summary>
 
-- cobblemon:thunder_stone_ore
 - cobblemon:deepslate_thunder_stone_ore
+- cobblemon:thunder_stone_ore
+
+</details>
+
+<details>
+<summary><b>Tag:</b> #blocks:tumblestone_bricks</summary>
+
+- #cobblemon:black_tumblestone_bricks
+- #cobblemon:red_tumblestone_bricks
+- #cobblemon:sky_tumblestone_bricks
 
 </details>
 
@@ -466,8 +530,8 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:water_stone_ores</summary>
 
-- cobblemon:water_stone_ore
 - cobblemon:deepslate_water_stone_ore
+- cobblemon:water_stone_ore
 
 </details>
 
@@ -488,8 +552,8 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:bee_growables</summary>
 
-- #cobblemon:crops
 - #cobblemon:apricorns
+- #cobblemon:crops
 
 </details>
 
@@ -531,15 +595,15 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #blocks:guarded_by_piglins</summary>
 
-- cobblemon:gilded_chest
 - cobblemon:black_gilded_chest
 - cobblemon:blue_gilded_chest
+- cobblemon:gilded_chest
 - cobblemon:green_gilded_chest
 - cobblemon:pink_gilded_chest
-- cobblemon:white_gilded_chest
-- cobblemon:yellow_gilded_chest
 - cobblemon:relic_coin_pouch
 - cobblemon:relic_coin_sack
+- cobblemon:white_gilded_chest
+- cobblemon:yellow_gilded_chest
 
 </details>
 
@@ -561,8 +625,8 @@ This file contains tags related to blocks in cobblemon.
 <summary><b>Tag:</b> #blocks:logs</summary>
 
 - cobblemon:apricorn_log
-- cobblemon:stripped_apricorn_log
 - cobblemon:apricorn_wood
+- cobblemon:stripped_apricorn_log
 - cobblemon:stripped_apricorn_wood
 
 </details>
@@ -571,8 +635,8 @@ This file contains tags related to blocks in cobblemon.
 <summary><b>Tag:</b> #blocks:logs_that_burn</summary>
 
 - cobblemon:apricorn_log
-- cobblemon:stripped_apricorn_log
 - cobblemon:apricorn_wood
+- cobblemon:stripped_apricorn_log
 - cobblemon:stripped_apricorn_wood
 
 </details>
@@ -605,6 +669,7 @@ This file contains tags related to blocks in cobblemon.
 <summary><b>Tag:</b> #blocks:needs_stone_tool</summary>
 
 - cobblemon:dawn_stone_ore
+- cobblemon:dripstone_moon_stone_ore
 - cobblemon:dusk_stone_ore
 - cobblemon:fire_stone_ore
 - cobblemon:ice_stone_ore
@@ -614,7 +679,6 @@ This file contains tags related to blocks in cobblemon.
 - cobblemon:sun_stone_ore
 - cobblemon:thunder_stone_ore
 - cobblemon:water_stone_ore
-- cobblemon:dripstone_moon_stone_ore
 
 </details>
 
@@ -646,6 +710,18 @@ This file contains tags related to blocks in cobblemon.
 </details>
 
 <details>
+<summary><b>Tag:</b> #blocks:slabs</summary>
+
+- cobblemon:black_tumblestone_brick_slab
+- cobblemon:polished_black_tumblestone_slab
+- cobblemon:polished_sky_tumblestone_slab
+- cobblemon:polished_tumblestone_slab
+- cobblemon:sky_tumblestone_brick_slab
+- cobblemon:tumblestone_brick_slab
+
+</details>
+
+<details>
 <summary><b>Tag:</b> #blocks:small_flowers</summary>
 
 - #cobblemon:small_flowers
@@ -653,9 +729,33 @@ This file contains tags related to blocks in cobblemon.
 </details>
 
 <details>
+<summary><b>Tag:</b> #blocks:stairs</summary>
+
+- cobblemon:black_tumblestone_brick_stairs
+- cobblemon:polished_black_tumblestone_stairs
+- cobblemon:polished_sky_tumblestone_stairs
+- cobblemon:polished_tumblestone_stairs
+- cobblemon:sky_tumblestone_brick_stairs
+- cobblemon:tumblestone_brick_stairs
+
+</details>
+
+<details>
 <summary><b>Tag:</b> #blocks:standing_signs</summary>
 
 - #cobblemon:standing_signs
+
+</details>
+
+<details>
+<summary><b>Tag:</b> #blocks:walls</summary>
+
+- cobblemon:black_tumblestone_brick_wall
+- cobblemon:polished_black_tumblestone_wall
+- cobblemon:polished_sky_tumblestone_wall
+- cobblemon:polished_tumblestone_wall
+- cobblemon:sky_tumblestone_brick_wall
+- cobblemon:tumblestone_brick_wall
 
 </details>
 
@@ -726,15 +826,15 @@ This file contains tags related to blocks in cobblemon.
 <summary><b>Tag:</b> #mineable:axe</summary>
 
 - #cobblemon:apricorns
-- cobblemon:pasture
-- cobblemon:gilded_chest
-- cobblemon:blue_gilded_chest
-- cobblemon:yellow_gilded_chest
-- cobblemon:pink_gilded_chest
 - cobblemon:black_gilded_chest
-- cobblemon:white_gilded_chest
-- cobblemon:green_gilded_chest
+- cobblemon:blue_gilded_chest
+- cobblemon:gilded_chest
 - cobblemon:gimmighoul_chest
+- cobblemon:green_gilded_chest
+- cobblemon:pasture
+- cobblemon:pink_gilded_chest
+- cobblemon:white_gilded_chest
+- cobblemon:yellow_gilded_chest
 
 </details>
 
@@ -748,16 +848,19 @@ This file contains tags related to blocks in cobblemon.
 <details>
 <summary><b>Tag:</b> #mineable:pickaxe</summary>
 
+- cobblemon:black_tumblestone_block
+- cobblemon:black_tumblestone_brick_slab
+- cobblemon:black_tumblestone_brick_stairs
+- cobblemon:black_tumblestone_brick_wall
+- cobblemon:black_tumblestone_bricks
+- cobblemon:black_tumblestone_cluster
+- cobblemon:chiseled_black_tumblestone_bricks
+- cobblemon:chiseled_polished_black_tumblestone
+- cobblemon:chiseled_polished_sky_tumblestone
+- cobblemon:chiseled_polished_tumblestone
+- cobblemon:chiseled_sky_tumblestone_bricks
+- cobblemon:chiseled_tumblestone_bricks
 - cobblemon:dawn_stone_ore
-- cobblemon:dusk_stone_ore
-- cobblemon:fire_stone_ore
-- cobblemon:ice_stone_ore
-- cobblemon:leaf_stone_ore
-- cobblemon:moon_stone_ore
-- cobblemon:shiny_stone_ore
-- cobblemon:sun_stone_ore
-- cobblemon:thunder_stone_ore
-- cobblemon:water_stone_ore
 - cobblemon:deepslate_dawn_stone_ore
 - cobblemon:deepslate_dusk_stone_ore
 - cobblemon:deepslate_fire_stone_ore
@@ -769,27 +872,54 @@ This file contains tags related to blocks in cobblemon.
 - cobblemon:deepslate_thunder_stone_ore
 - cobblemon:deepslate_water_stone_ore
 - cobblemon:dripstone_moon_stone_ore
-- cobblemon:nether_fire_stone_ore
-- cobblemon:terracotta_sun_stone_ore
-- cobblemon:healing_machine
-- cobblemon:pc
-- cobblemon:restoration_tank
-- cobblemon:monitor
+- cobblemon:dusk_stone_ore
+- cobblemon:fire_stone_ore
 - cobblemon:fossil_analyzer
-- cobblemon:tumblestone_block
-- cobblemon:black_tumblestone_block
-- cobblemon:sky_tumblestone_block
-- cobblemon:small_budding_tumblestone
-- cobblemon:medium_budding_tumblestone
-- cobblemon:large_budding_tumblestone
-- cobblemon:tumblestone_cluster
-- cobblemon:small_budding_black_tumblestone
-- cobblemon:medium_budding_black_tumblestone
+- cobblemon:healing_machine
+- cobblemon:ice_stone_ore
 - cobblemon:large_budding_black_tumblestone
-- cobblemon:black_tumblestone_cluster
-- cobblemon:small_budding_sky_tumblestone
-- cobblemon:medium_budding_sky_tumblestone
 - cobblemon:large_budding_sky_tumblestone
+- cobblemon:large_budding_tumblestone
+- cobblemon:leaf_stone_ore
+- cobblemon:medium_budding_black_tumblestone
+- cobblemon:medium_budding_sky_tumblestone
+- cobblemon:medium_budding_tumblestone
+- cobblemon:monitor
+- cobblemon:moon_stone_ore
+- cobblemon:nether_fire_stone_ore
+- cobblemon:pc
+- cobblemon:polished_black_tumblestone
+- cobblemon:polished_black_tumblestone_slab
+- cobblemon:polished_black_tumblestone_stairs
+- cobblemon:polished_black_tumblestone_wall
+- cobblemon:polished_sky_tumblestone
+- cobblemon:polished_sky_tumblestone_slab
+- cobblemon:polished_sky_tumblestone_stairs
+- cobblemon:polished_sky_tumblestone_wall
+- cobblemon:polished_tumblestone
+- cobblemon:polished_tumblestone_slab
+- cobblemon:polished_tumblestone_stairs
+- cobblemon:polished_tumblestone_wall
+- cobblemon:restoration_tank
+- cobblemon:shiny_stone_ore
+- cobblemon:sky_tumblestone_block
+- cobblemon:sky_tumblestone_brick_slab
+- cobblemon:sky_tumblestone_brick_stairs
+- cobblemon:sky_tumblestone_brick_wall
+- cobblemon:sky_tumblestone_bricks
 - cobblemon:sky_tumblestone_cluster
+- cobblemon:small_budding_black_tumblestone
+- cobblemon:small_budding_sky_tumblestone
+- cobblemon:small_budding_tumblestone
+- cobblemon:sun_stone_ore
+- cobblemon:terracotta_sun_stone_ore
+- cobblemon:thunder_stone_ore
+- cobblemon:tumblestone_block
+- cobblemon:tumblestone_brick_slab
+- cobblemon:tumblestone_brick_stairs
+- cobblemon:tumblestone_brick_wall
+- cobblemon:tumblestone_bricks
+- cobblemon:tumblestone_cluster
+- cobblemon:water_stone_ore
 
 </details>

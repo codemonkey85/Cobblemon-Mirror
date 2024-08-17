@@ -59,7 +59,7 @@ dependencies {
     modCompileOnly(libs.bundles.fabric.integrations.compileOnly) {
         isTransitive = false
     }
-    modRuntimeOnly(libs.jei.fabric)
+//    modRuntimeOnly(libs.jei.fabric)
 //    modImplementation(libs.flywheelFabric)
 //    include(libs.flywheelFabric)
 

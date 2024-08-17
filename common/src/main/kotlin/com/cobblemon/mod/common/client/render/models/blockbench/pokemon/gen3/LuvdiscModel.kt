@@ -8,41 +8,40 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class LuvdiscModel (root: ModelPart) : PokemonPoseableModel() {
+class LuvdiscModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("luvdisc")
 
 
     override var portraitScale = 6.0F
-    override var portraitTranslation = Vec3d(0.15, -6.5, 0.0)
+    override var portraitTranslation = Vec3(0.15, -6.5, 0.0)
 
     override var profileScale = 2.0F
-    override var profileTranslation = Vec3d(0.0, -1.3, 0.0)
+    override var profileTranslation = Vec3(0.0, -1.3, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var float: PokemonPose
-    lateinit var swim: PokemonPose
+    lateinit var standing: Pose
+    lateinit var sleep: Pose
+    lateinit var walk: Pose
+    lateinit var float: Pose
+    lateinit var swim: Pose
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("luvdisc", "blink")}
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("luvdisc", "sleep"))
+            animations = arrayOf(bedrock("luvdisc", "sleep"))
         )
         standing = registerPose(
             poseName = "standing",
             poseType = PoseType.STAND,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("luvdisc", "ground_idle")
             )
         )
@@ -51,7 +50,7 @@ class LuvdiscModel (root: ModelPart) : PokemonPoseableModel() {
             poseName = "walk",
             poseType = PoseType.WALK,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("luvdisc", "ground_walk")
             )
         )
@@ -60,7 +59,7 @@ class LuvdiscModel (root: ModelPart) : PokemonPoseableModel() {
             poseName = "float",
             poseTypes = PoseType.UI_POSES + PoseType.FLOAT,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("luvdisc", "water_idle")
             )
         )
@@ -69,14 +68,11 @@ class LuvdiscModel (root: ModelPart) : PokemonPoseableModel() {
             poseName = "swim",
             poseType = PoseType.SWIM,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("luvdisc", "water_swim")
             )
         )
     }
-        override fun getFaintAnimation(
-            pokemonEntity: PokemonEntity,
-            state: PoseableEntityState<PokemonEntity>
-        ) = if (state.isPosedIn(standing, walk, sleep)) bedrockStateful("luvdisc", "ground_faint") else null
+        override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walk, sleep)) bedrockStateful("luvdisc", "ground_faint") else null
 
 }

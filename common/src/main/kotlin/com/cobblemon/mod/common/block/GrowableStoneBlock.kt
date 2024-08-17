@@ -8,17 +8,21 @@
 
 package com.cobblemon.mod.common.block
 
-import net.minecraft.block.*
-import net.minecraft.item.ItemPlacementContext
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.state.StateManager
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
-import net.minecraft.util.math.random.Random
-import net.minecraft.util.shape.VoxelShape
-import net.minecraft.world.BlockView
-import net.minecraft.world.WorldAccess
-import net.minecraft.world.WorldView
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.util.RandomSource
+import net.minecraft.world.item.context.BlockPlaceContext
+import net.minecraft.world.level.BlockGetter
+import net.minecraft.world.level.LevelAccessor
+import net.minecraft.world.level.LevelReader
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.DirectionalBlock
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.StateDefinition
+import net.minecraft.world.phys.shapes.CollisionContext
+import net.minecraft.world.phys.shapes.VoxelShape
 
 /**
  * Used for blocks that grow similarly to Amethyst.
@@ -31,14 +35,14 @@ import net.minecraft.world.WorldView
  * @author whatsy
  */
 abstract class GrowableStoneBlock(
-    settings: Settings,
+    settings: Properties,
     val stage: Int,
     val height: Int,
-    xzOffset: Int,
+    val xzOffset: Int,
     val nextStage: Block?
-) : FacingBlock(settings) {
+) : DirectionalBlock(settings) {
 
-    private val upShape: VoxelShape = Block.createCuboidShape(
+    private val upShape: VoxelShape = Block.box(
         xzOffset.toDouble(),
         0.0,
         xzOffset.toDouble(),
@@ -46,7 +50,7 @@ abstract class GrowableStoneBlock(
         height.toDouble(),
         (16 - xzOffset).toDouble())
 
-    private val downShape: VoxelShape = createCuboidShape(
+    private val downShape: VoxelShape = box(
         xzOffset.toDouble(),
         (16 - height).toDouble(),
         xzOffset.toDouble(),
@@ -54,7 +58,7 @@ abstract class GrowableStoneBlock(
         16.0,
         (16 - xzOffset).toDouble())
 
-    private val northShape: VoxelShape = createCuboidShape(
+    private val northShape: VoxelShape = box(
         xzOffset.toDouble(),
         xzOffset.toDouble(),
         (16 - height).toDouble(),
@@ -62,7 +66,7 @@ abstract class GrowableStoneBlock(
         (16 - xzOffset).toDouble(),
         16.0)
 
-    private val southShape: VoxelShape = createCuboidShape(
+    private val southShape: VoxelShape = box(
         xzOffset.toDouble(),
         xzOffset.toDouble(),
         0.0,
@@ -70,7 +74,7 @@ abstract class GrowableStoneBlock(
         (16 - xzOffset).toDouble(),
         height.toDouble())
 
-    private val eastShape: VoxelShape = createCuboidShape(
+    private val eastShape: VoxelShape = box(
         0.0,
         xzOffset.toDouble(),
         xzOffset.toDouble(),
@@ -78,7 +82,7 @@ abstract class GrowableStoneBlock(
         (16 - xzOffset).toDouble(),
         (16 - xzOffset).toDouble())
 
-    private val westShape: VoxelShape = createCuboidShape(
+    private val westShape: VoxelShape = box(
         (16 - height).toDouble(),
         xzOffset.toDouble(),
         xzOffset.toDouble(),
@@ -87,52 +91,60 @@ abstract class GrowableStoneBlock(
         (16 - xzOffset).toDouble())
 
     init {
-        this.defaultState = this.stateManager.defaultState
-            .with(FACING, Direction.DOWN)
+        registerDefaultState(stateDefinition.any()
+            .setValue(FACING, Direction.DOWN))
     }
 
-    abstract fun canGrow(pos: BlockPos, world: BlockView): Boolean
+    abstract fun canGrow(pos: BlockPos, world: BlockGetter): Boolean
 
-    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+    override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(FACING)
     }
 
-    override fun hasRandomTicks(state: BlockState?) = stage < MAX_STAGE
-    override fun randomTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: Random) {
+    override fun isRandomlyTicking(state: BlockState): Boolean = stage < MAX_STAGE
+
+    override fun randomTick(state: BlockState, world: ServerLevel, pos: BlockPos, random: RandomSource) {
         if (world.random.nextInt(5) == 0 && canGrow(pos, world)) {
             val block = nextStage
 
             if (block != null) {
-                val newState = block.defaultState.with(FACING, state.get(FACING)) as BlockState
-                world.setBlockState(pos, newState)
+                val newState = block.defaultBlockState().setValue(FACING, state.getValue(FACING)) as BlockState
+                world.setBlockAndUpdate(pos, newState)
             }
         }
     }
 
-    override fun getPlacementState(ctx: ItemPlacementContext): BlockState? {
-        var blockState = defaultState
-        val worldView = ctx.world
-        val blockPos = ctx.blockPos
-        blockState = blockState.with(FACING, ctx.side) as BlockState
-        if (blockState.canPlaceAt(worldView, blockPos)) {
+    override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState? {
+        var blockState = defaultBlockState()
+        val worldView = ctx.level
+        val blockPos = ctx.clickedPos
+        blockState = blockState.setValue(FACING, ctx.clickedFace) as BlockState
+        if (blockState.canSurvive(worldView, blockPos)) {
             return blockState
         }
         return null
     }
 
-    override fun canPlaceAt(state: BlockState, world: WorldView, pos: BlockPos): Boolean {
-        val direction = state.get(FACING) as Direction
-        val blockState = world.getBlockState(pos.offset(direction.opposite))
-        return blockState.isSideSolidFullSquare(world, pos, direction)
+    override fun canSurvive(state: BlockState, world: LevelReader, pos: BlockPos): Boolean {
+        val direction = state.getValue(FACING) as Direction
+        val blockState = world.getBlockState(pos.relative(direction.opposite))
+        return blockState.isFaceSturdy(world, pos, direction) // todo (techdaan): ensure this is the right mapping
     }
 
-    override fun getStateForNeighborUpdate(state: BlockState, direction: Direction, neighborState: BlockState, world: WorldAccess, pos: BlockPos, neighborPos: BlockPos): BlockState? {
-        return if (direction == state.get(FACING).opposite && !state.canPlaceAt(world, pos)) Blocks.AIR.defaultState
-        else super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos)
+    override fun updateShape(
+        state: BlockState,
+        direction: Direction,
+        neighborState: BlockState,
+        world: LevelAccessor,
+        pos: BlockPos,
+        neighborPos: BlockPos
+    ): BlockState {
+        return if (direction == state.getValue(FACING).opposite && !state.canSurvive(world, pos)) Blocks.AIR.defaultBlockState()
+        else super.updateShape(state, direction, neighborState, world, pos, neighborPos)
     }
 
-    override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape {
-        val direction = state.get(FACING) as Direction
+    override fun getShape(state: BlockState, world: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
+        val direction = state.getValue(FACING) as Direction
         return when (direction) {
             Direction.NORTH -> northShape
             Direction.SOUTH -> southShape

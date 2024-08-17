@@ -10,34 +10,36 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen8
 
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class DracovishModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class DracovishModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("dracovish")
     override val head = getPart("head_ai")
 
-    override var portraitTranslation = Vec3d(-0.25, 1.90, 0.0)
+    override var portraitTranslation = Vec3(-0.25, 1.90, 0.0)
     override var portraitScale = 0.55F
 
     override var profileScale = 0.3F
-    override var profileTranslation = Vec3d(0.0, 1.35, 0.0)
+    override var profileTranslation = Vec3(0.0, 1.35, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battleidle: PokemonPose
-    lateinit var waterbattleidle: PokemonPose
-    lateinit var float: PokemonPose
-    lateinit var swim: PokemonPose
-    lateinit var watersleep: PokemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var battleidle: CobblemonPose
+    lateinit var waterbattleidle: CobblemonPose
+    lateinit var float: CobblemonPose
+    lateinit var swim: CobblemonPose
+    lateinit var watersleep: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, pose ->
+    override val cryAnimation = CryProvider {
         when {
-            pose.isPosedIn(float, swim, waterbattleidle ) -> bedrockStateful("dracovish", "water_cry")
+            it.isPosedIn(float, swim, waterbattleidle ) -> bedrockStateful("dracovish", "water_cry")
             else -> bedrockStateful("dracovish", "cry")
         }
     }
@@ -48,10 +50,10 @@ class DracovishModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dracovish", "sleep")
             )
         )
@@ -59,10 +61,10 @@ class DracovishModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         watersleep = registerPose(
             poseName = "watersleep",
             poseType = PoseType.SLEEP,
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dracovish", "watersleep")
             )
         )
@@ -73,7 +75,7 @@ class DracovishModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             condition = { !it.isBattling },
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("dracovish", "ground_idle")
             )
@@ -84,7 +86,7 @@ class DracovishModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.MOVING_POSES - PoseType.SWIM,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("dracovish", "ground_walk")
             )
@@ -95,7 +97,7 @@ class DracovishModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseType = PoseType.FLOAT,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("dracovish", "water_idle")
             )
@@ -106,7 +108,7 @@ class DracovishModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseType = PoseType.SWIM,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("dracovish", "water_swim")
             )
@@ -118,7 +120,7 @@ class DracovishModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             condition = { it.isBattling },
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("dracovish", "battle_idle")
             )
@@ -127,10 +129,10 @@ class DracovishModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         waterbattleidle = registerPose(
             poseName = "waterbattleidle",
             poseTypes = PoseType.STATIONARY_POSES,
-            condition = { it.isBattling && it.isTouchingWater},
+            condition = { it.isBattling && it.isInWater},
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("dracovish", "water_battle_idle")
             )
@@ -139,6 +141,6 @@ class DracovishModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("dracovish", "faint") else null
 }

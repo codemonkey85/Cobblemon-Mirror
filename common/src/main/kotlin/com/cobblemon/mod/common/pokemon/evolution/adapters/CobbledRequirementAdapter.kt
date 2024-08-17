@@ -43,6 +43,8 @@ object CobblemonRequirementAdapter : RequirementAdapter {
         this.registerType(TimeRangeRequirement.ADAPTER_VARIANT, TimeRangeRequirement::class)
         this.registerType(LevelRequirement.ADAPTER_VARIANT, LevelRequirement::class)
         this.registerType(WeatherRequirement.ADAPTER_VARIANT, WeatherRequirement::class)
+        this.registerType(StatCompareRequirement.ADAPTER_VARIANT, StatCompareRequirement::class)
+        this.registerType(StatEqualRequirement.ADAPTER_VARIANT, StatEqualRequirement::class)
         this.registerType(AttackDefenceRatioRequirement.ADAPTER_VARIANT, AttackDefenceRatioRequirement::class)
         this.registerType(BattleCriticalHitsRequirement.ADAPTER_VARIANT, BattleCriticalHitsRequirement::class)
         this.registerType(DamageTakenRequirement.ADAPTER_VARIANT, DamageTakenRequirement::class)

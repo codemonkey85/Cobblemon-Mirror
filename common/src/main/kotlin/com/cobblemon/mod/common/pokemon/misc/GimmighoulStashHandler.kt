@@ -13,11 +13,11 @@ import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.events.pokemon.HeldItemEvent
 import com.cobblemon.mod.common.api.pokemon.feature.IntSpeciesFeature
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.Item
-import net.minecraft.item.Items
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Hand
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.Items
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
 
 /**
  * Handles logic relating to Gimmighoul's Coin Stash and Scrap Stash bars.
@@ -33,13 +33,14 @@ object GimmighoulStashHandler {
     val SCRAP_VALUE = 1
     val INGOT_VALUE = SCRAP_VALUE * 4
     val BLOCK_VALUE = INGOT_VALUE * 9
-    fun interactMob(player: PlayerEntity, hand: Hand, pokemon:Pokemon) : Boolean {
-        val itemStack = player.getStackInHand(hand)
+
+    fun mobInteract(player: Player, hand: InteractionHand, pokemon:Pokemon) : Boolean {
+        val itemStack = player.getItemInHand(hand)
         var success = false
-        if(player is ServerPlayerEntity && pokemon.getOwnerPlayer() == player) {
+        if(player is ServerPlayer && pokemon.getOwnerPlayer() == player) {
             success = handleItem(pokemon, itemStack.item)
             if(success) {
-                itemStack.decrement(1)
+                itemStack.shrink(1)
             }
         }
         return success
@@ -52,6 +53,7 @@ object GimmighoulStashHandler {
             pokemon.removeHeldItem()
         }
     }
+
     fun handleItem(pokemon: Pokemon, item: Item) : Boolean {
         val goldHoard = pokemon.getFeature<IntSpeciesFeature>("gimmighoul_coins")
         val netheriteHoard = pokemon.getFeature<IntSpeciesFeature>("gimmighoul_netherite")

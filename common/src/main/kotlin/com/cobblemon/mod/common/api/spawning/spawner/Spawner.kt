@@ -16,8 +16,7 @@ import com.cobblemon.mod.common.api.spawning.detail.SpawnAction
 import com.cobblemon.mod.common.api.spawning.detail.SpawnPool
 import com.cobblemon.mod.common.api.spawning.influence.SpawningInfluence
 import com.cobblemon.mod.common.api.spawning.selection.SpawningSelector
-import java.util.Random
-import net.minecraft.entity.Entity
+import java.util.*
 
 /**
  * Interface representing something that performs the action of spawning. Various functions

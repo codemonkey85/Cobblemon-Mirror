@@ -10,11 +10,11 @@ package com.cobblemon.mod.common.client.net.spawn
 
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.net.messages.client.spawn.SpawnExtraDataEntityPacket
-import net.minecraft.client.MinecraftClient
-import net.minecraft.entity.Entity
+import net.minecraft.client.Minecraft
+import net.minecraft.world.entity.Entity
 
 class SpawnExtraDataEntityHandler<T : SpawnExtraDataEntityPacket<T, E>, E : Entity> : ClientNetworkPacketHandler<T> {
-    override fun handle(packet: T, client: MinecraftClient) {
+    override fun handle(packet: T, client: Minecraft) {
         packet.spawnAndApply(client)
     }
 

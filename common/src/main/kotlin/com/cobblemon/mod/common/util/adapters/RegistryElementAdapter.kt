@@ -9,8 +9,8 @@
 package com.cobblemon.mod.common.util.adapters
 
 import com.google.gson.*
-import net.minecraft.registry.Registry
-import net.minecraft.util.Identifier
+import net.minecraft.core.Registry
+import net.minecraft.resources.ResourceLocation
 import java.lang.reflect.Type
 
 /**
@@ -19,17 +19,17 @@ import java.lang.reflect.Type
  * @param T The type of the registry element.
  * @property registryProvider A supplier for the registry that gets used. This is used to ensure the registry is only used once it's safe.
  */
-class RegistryElementAdapter<T>(val registryProvider: () -> Registry<T>) : JsonDeserializer<T>, JsonSerializer<T> {
+class RegistryElementAdapter<T : Any>(val registryProvider: () -> Registry<T>) : JsonDeserializer<T>, JsonSerializer<T> {
 
     override fun deserialize(jElement: JsonElement, type: Type, context: JsonDeserializationContext): T {
-        val identifier = context.deserialize<Identifier>(jElement, Identifier::class.java)
+        val identifier = context.deserialize<ResourceLocation>(jElement, ResourceLocation::class.java)
         val registry = this.registryProvider()
-        return registry.get(identifier) ?: throw IllegalArgumentException("Cannot resolve element '$identifier' from ${registry.key.value}")
+        return registry.get(identifier) ?: throw IllegalArgumentException("Cannot resolve element '$identifier' from ${registry.key().location()}")
     }
 
     override fun serialize(element: T, type: Type, context: JsonSerializationContext): JsonElement {
         val registry = this.registryProvider()
-        val identifier = registry.getId(element) ?: throw IllegalArgumentException("Cannot resolve the identifier from the registry ${registry.key.value} for $element")
+        val identifier = registry.getKey(element) ?: throw IllegalArgumentException("Cannot resolve the identifier from the registry ${registry.key().location()} for $element")
         return JsonPrimitive(identifier.toString())
     }
 

@@ -1,0 +1,55 @@
+{
+  "timeline": [
+    {
+      "type": "add_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "animation",
+      "animation": ["sandattack", "ground", "status"],
+      "delay": 1
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:sandattack_actor",
+      "locator": "root"
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:sandattack_residual",
+      "locator": "root",
+      "delay": 0.1
+    },
+    {
+      "type": "pause",
+      "pause": 0.3
+    },
+    {
+      "type": "entity_particles",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "effect": "cobblemon:sandattack_impact",
+      "locator": "target"
+    },
+    {
+      "type": "entity_particles",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "effect": "cobblemon:sandattack_impactresidual",
+      "locator": "target",
+      "delay": 0.02
+    },
+    {
+      "type": "animation",
+      "animation": ["recoil"],
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "delay": 0.98
+    },
+    {
+      "type": "remove_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "pause",
+      "pause": 1.25
+    }
+  ]
+}

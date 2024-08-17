@@ -16,7 +16,7 @@ import com.cobblemon.mod.common.util.isInt
 import com.cobblemon.mod.common.util.readSizedInt
 import com.cobblemon.mod.common.util.writeSizedInt
 import com.google.gson.JsonElement
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 open class Learnset : ClientDataSynchronizer<Learnset> {
     class Interpreter(
@@ -96,23 +96,23 @@ open class Learnset : ClientDataSynchronizer<Learnset> {
     // We only sync level up moves atm
     override fun shouldSynchronize(other: Learnset) = other.levelUpMoves != this.levelUpMoves
 
-    override fun decode(buffer: PacketByteBuf) {
+    override fun decode(buffer: RegistryFriendlyByteBuf) {
         this.levelUpMoves.clear()
         repeat(times = buffer.readSizedInt(IntSize.U_BYTE)) {
             val level = buffer.readSizedInt(IntSize.U_SHORT)
             val moves = mutableListOf<MoveTemplate>()
-            repeat(times = buffer.readSizedInt(IntSize.U_BYTE)) {
+            repeat(times = buffer.readSizedInt(IntSize.U_SHORT)) {
                 Moves.getByNumericalId(buffer.readInt())?.let(moves::add)
             }
             levelUpMoves[level] = moves
         }
     }
 
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeSizedInt(IntSize.U_BYTE, levelUpMoves.size)
         for ((level, moves) in levelUpMoves) {
             buffer.writeSizedInt(IntSize.U_SHORT, level)
-            buffer.writeSizedInt(IntSize.U_BYTE, moves.size)
+            buffer.writeSizedInt(IntSize.U_SHORT, moves.size)
             for (move in moves) {
                 buffer.writeInt(move.num)
             }

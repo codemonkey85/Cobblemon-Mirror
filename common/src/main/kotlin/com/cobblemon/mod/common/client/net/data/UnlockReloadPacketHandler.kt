@@ -11,10 +11,10 @@ package com.cobblemon.mod.common.client.net.data
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.net.messages.client.data.UnlockReloadPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 internal object UnlockReloadPacketHandler : ClientNetworkPacketHandler<UnlockReloadPacket> {
-    override fun handle(packet: UnlockReloadPacket, client: MinecraftClient) {
+    override fun handle(packet: UnlockReloadPacket, client: Minecraft) {
         CobblemonDataProvider.canReload = true
     }
 }

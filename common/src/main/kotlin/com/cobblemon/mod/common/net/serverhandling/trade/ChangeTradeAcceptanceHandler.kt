@@ -14,10 +14,10 @@ import com.cobblemon.mod.common.net.messages.client.trade.TradeCancelledPacket
 import com.cobblemon.mod.common.net.messages.server.trade.ChangeTradeAcceptancePacket
 import com.cobblemon.mod.common.trade.TradeManager
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object ChangeTradeAcceptanceHandler : ServerNetworkPacketHandler<ChangeTradeAcceptancePacket> {
-    override fun handle(packet: ChangeTradeAcceptancePacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: ChangeTradeAcceptancePacket, server: MinecraftServer, player: ServerPlayer) {
         val trade = TradeManager.getActiveTrade(player.uuid) ?: return player.sendPacket(TradeCancelledPacket())
         val tradeParticipant = trade.getTradeParticipant(player.uuid)
         if (trade.getOpposingOffer(tradeParticipant).pokemon?.uuid == packet.pokemonOfferId) {

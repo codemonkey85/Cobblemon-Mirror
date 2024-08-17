@@ -19,6 +19,7 @@ internal class DummyEvolution : Evolution {
 
     override val id = "dummy"
     override val result: PokemonProperties = PokemonProperties()
+    override val shedder: PokemonProperties? = null
     override var optional = false
     override var consumeHeldItem = false
     override val requirements: MutableSet<EvolutionRequirement> = mutableSetOf()

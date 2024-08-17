@@ -8,18 +8,20 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
+import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
+import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class KabutopsModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame {
+class KabutopsModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("kabutops")
     override val head = getPart("head")
 
@@ -27,19 +29,19 @@ class KabutopsModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
     override val rightLeg = getPart("right_upper_leg")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.35, 0.2, 0.0)
+    override var portraitTranslation = Vec3(-0.35, 0.2, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.6, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.6, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
-//    lateinit var float: PokemonPose
-//    lateinit var swim: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var battleidle: CobblemonPose
+//    lateinit var float: CobblemonPose
+//    lateinit var swim: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("kabutops", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("kabutops", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("kabutops", "blink") }
@@ -48,7 +50,7 @@ class KabutopsModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
             poseName = "sleep",
             poseType = PoseType.SLEEP,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("kabutops", "sleep")
             )
@@ -56,10 +58,10 @@ class KabutopsModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
 
         standing = registerPose(
             poseName = "standing",
-            poseTypes = UI_POSES + PoseType.STAND,
+            poseTypes = UI_POSES + STATIONARY_POSES,
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("kabutops", "ground_idle")
             )
@@ -67,9 +69,9 @@ class KabutopsModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
 
         walk = registerPose(
             poseName = "walk",
-            poseType = PoseType.WALK,
+            poseTypes = MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("kabutops", "ground_walk")
             )
@@ -80,7 +82,7 @@ class KabutopsModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
             poseTypes = PoseType.STATIONARY_POSES,
             condition = { it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("kabutops", "battle_idle")
             )
@@ -107,6 +109,6 @@ class KabutopsModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("kabutops", "faint") else null
 }

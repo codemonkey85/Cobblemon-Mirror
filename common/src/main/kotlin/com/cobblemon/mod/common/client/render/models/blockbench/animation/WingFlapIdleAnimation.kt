@@ -8,31 +8,27 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.animation
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityModel
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.addRotation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.ModelFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Bone
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.WaveFunction
-import net.minecraft.entity.Entity
-import net.minecraft.item.BoneMealItem
 
-class WingFlapIdleAnimation<T : Entity>(
-    frame: ModelFrame,
+class WingFlapIdleAnimation(
     val leftWing: Bone?,
     val rightWing: Bone?,
     val rotation: WaveFunction,
-    val timeVariable: (state: PoseableEntityState<T>?, limbSwing: Float, ageInTicks: Float) -> Float? = { state, _, _ -> state?.animationSeconds ?: 0F },
+    val timeVariable: (state: PosableState, limbSwing: Float, ageInTicks: Float) -> Float? = { state, _, _ -> state.animationSeconds },
     val axis: Int
-) : StatelessAnimation<T, ModelFrame>(frame) {
+) : PoseAnimation() {
     constructor(
         frame: BiWingedFrame,
         flapFunction: WaveFunction,
-        timeVariable: (state: PoseableEntityState<T>?, limbSwing: Float, ageInTicks: Float) -> Float?,
+        timeVariable: (state: PosableState, limbSwing: Float, ageInTicks: Float) -> Float?,
         axis: Int
     ): this(
-        frame = frame,
         leftWing = frame.leftWing,
         rightWing = frame.rightWing,
         rotation = flapFunction,
@@ -40,9 +36,7 @@ class WingFlapIdleAnimation<T : Entity>(
         axis = axis
     )
 
-    override val targetFrame = ModelFrame::class.java
-
-    override fun setAngles(entity: T?, model: PoseableEntityModel<T>, state: PoseableEntityState<T>?, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
+    override fun setupAnim(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
         val time = timeVariable(state, limbSwing, ageInTicks) ?: 0F
         val angle = rotation(time)
         leftWing?.addRotation(axis, angle)

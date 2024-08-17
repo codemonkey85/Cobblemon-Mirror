@@ -1,0 +1,97 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:serious_mint"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.obtain_all_mints"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.obtain_all_mints.description"
+    },
+    "frame": "goal"
+  },
+  "parent": "cobblemon:obtain_mint",
+  "criteria": {
+    "obtain_red_mint_leaf": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:red_mint_leaf"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_blue_mint_leaf": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:blue_mint_leaf"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_cyan_mint_leaf": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:cyan_mint_leaf"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_pink_mint_leaf": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:pink_mint_leaf"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_green_mint_leaf": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:green_mint_leaf"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_white_mint_leaf": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:white_mint_leaf"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+	[ "obtain_red_mint_leaf" ],
+	[ "obtain_blue_mint_leaf" ],
+	[ "obtain_cyan_mint_leaf" ],
+	[ "obtain_pink_mint_leaf" ],
+	[ "obtain_green_mint_leaf" ],
+	[ "obtain_white_mint_leaf" ]
+  ]
+}

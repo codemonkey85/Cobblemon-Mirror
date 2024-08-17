@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.pokemon.evolution.requirements
 
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
 import com.cobblemon.mod.common.pokemon.Pokemon
+
 class AttackDefenceRatioRequirement : EvolutionRequirement {
     companion object {
         const val ADAPTER_VARIANT = "attack_defence_ratio"

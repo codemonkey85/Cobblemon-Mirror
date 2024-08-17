@@ -9,18 +9,18 @@
 package com.cobblemon.mod.common.mixin.entity;
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(TameableEntity.class)
+@Mixin(TamableAnimal.class)
 public class TameableEntityMixin {
 
-    @Redirect(method = "onDeath", at = @At(value = "FIELD", target = "Lnet/minecraft/world/World;isClient:Z"))
-    public boolean cobblemon$checkIfPokemonBeforeSendingMessage(World world) {
-        return world.isClient || (this.getClass().isAssignableFrom(PokemonEntity.class));
+    @Redirect(method = "die", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/Level;isClientSide:Z"))
+    public boolean cobblemon$checkIfPokemonBeforeSendingMessage(Level world) {
+        return world.isClientSide || (this.getClass().isAssignableFrom(PokemonEntity.class));
     }
 
 }

@@ -1,0 +1,14 @@
+{
+    "parent": "item/handheld_rod",
+    "textures": {
+        "layer0": "cobblemon:item/fishing/ultra_rod"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "cast": 1
+            },
+            "model": "cobblemon:item/ultra_rod_cast"
+        }
+    ]
+}

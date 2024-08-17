@@ -1,0 +1,28 @@
+{
+  "timeline": [
+    {
+      "type": "add_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:sleep_bubbles",
+      "locator": "middle",
+      "delay": 0.05
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:sleep_zzz",
+      "locator": "middle",
+      "delay": 0.05
+    },
+    {
+      "type": "pause",
+      "pause": 1.0
+    },
+    {
+      "type": "remove_holds",
+      "holds": ["effects"]
+    }
+  ]
+}

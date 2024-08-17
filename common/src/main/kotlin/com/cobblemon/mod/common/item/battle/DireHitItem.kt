@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.item.CobblemonItem
 
-class DireHitItem : CobblemonItem(Settings()), SimpleBagItemConvertible {
+class DireHitItem : CobblemonItem(Properties()), SimpleBagItemLike {
     override val bagItem = object : BagItem {
         override val itemName = "item.cobblemon.dire_hit"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) = target.health > 0

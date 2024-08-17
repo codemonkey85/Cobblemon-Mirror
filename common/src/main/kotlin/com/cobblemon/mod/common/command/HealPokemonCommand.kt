@@ -10,45 +10,40 @@ package com.cobblemon.mod.common.command
 
 import com.cobblemon.mod.common.api.permission.CobblemonPermissions
 import com.cobblemon.mod.common.api.text.red
-import com.cobblemon.mod.common.util.alias
-import com.cobblemon.mod.common.util.commandLang
-import com.cobblemon.mod.common.util.isInBattle
-import com.cobblemon.mod.common.util.party
-import com.cobblemon.mod.common.util.permission
-import com.cobblemon.mod.common.util.player
+import com.cobblemon.mod.common.util.*
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
-import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.CommandManager.literal
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
+import net.minecraft.commands.Commands.literal
+import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.server.level.ServerPlayer
 
 object HealPokemonCommand {
 
     private val IN_BATTLE_EXCEPTION = SimpleCommandExceptionType(commandLang("pokeheal.in_battle").red())
 
-    fun register(dispatcher : CommandDispatcher<ServerCommandSource>) {
+    fun register(dispatcher : CommandDispatcher<CommandSourceStack>) {
         val command = dispatcher.register(literal("healpokemon")
             .permission(CobblemonPermissions.HEAL_POKEMON_SELF)
-            .executes { execute(it.source, it.source.playerOrThrow) }
+            .executes { execute(it.source, it.source.playerOrException) }
             .then(
-                CommandManager.argument("player", EntityArgumentType.player())
+                Commands.argument("player", EntityArgument.player())
                     .permission(CobblemonPermissions.HEAL_POKEMON_OTHER)
                     .executes { execute(it.source, it.player("player")) }
             ))
         dispatcher.register(command.alias("pokeheal"))
     }
 
-    private fun execute(source: ServerCommandSource, target: ServerPlayerEntity) : Int {
+    private fun execute(source: CommandSourceStack, target: ServerPlayer) : Int {
         if (target.isInBattle()) {
             throw IN_BATTLE_EXCEPTION.create()
         }
-        if (!target.world.isClient) {
+        if (!target.level().isClientSide) {
             val party = target.party()
             party.heal()
-            source.sendFeedback({ commandLang("healpokemon.heal", target.name) }, true)
+            source.sendSuccess({ commandLang("healpokemon.heal", target.name) }, true)
         }
         return Command.SINGLE_SUCCESS
     }

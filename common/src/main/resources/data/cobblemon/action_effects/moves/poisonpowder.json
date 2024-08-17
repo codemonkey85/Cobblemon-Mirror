@@ -1,0 +1,43 @@
+{
+  "timeline": [
+    {
+      "type": "add_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "animation",
+      "animation": ["poisonpowder", "status"],
+      "delay": 1.15
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:poisonpowder",
+      "locator": "target"
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:poisonpowder_cloud",
+      "locator": "target",
+      "delay": 0.1
+    },
+    {
+      "type": "pause",
+      "pause": 0.55
+    },
+    {
+      "type": "entity_particles",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "effect": "cobblemon:poisonpowder_land",
+      "locator": "root",
+      "delay": 1
+    },
+    {
+      "type": "remove_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "pause",
+      "pause": 1.95
+    }
+  ]
+}

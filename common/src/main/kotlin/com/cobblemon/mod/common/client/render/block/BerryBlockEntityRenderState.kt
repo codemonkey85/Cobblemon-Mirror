@@ -9,13 +9,14 @@
 package com.cobblemon.mod.common.client.render.block
 
 import com.cobblemon.mod.common.block.entity.BerryBlockEntity
-import net.minecraft.client.gl.VertexBuffer
+import com.mojang.blaze3d.vertex.VertexBuffer
 
 class BerryBlockEntityRenderState : BerryBlockEntity.RenderState {
     val lastRenderFrame = -1
     override var needsRebuild = true
     val vbo: VertexBuffer = VertexBuffer(VertexBuffer.Usage.STATIC)
     var vboLightLevel: Int = 0
+    var drawVbo: Boolean = false
 
     override fun close() {
         vbo.close()

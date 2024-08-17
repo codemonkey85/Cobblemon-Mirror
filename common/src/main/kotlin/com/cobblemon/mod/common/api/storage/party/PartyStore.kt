@@ -26,8 +26,8 @@ import com.cobblemon.mod.common.util.DataKeys
 import com.cobblemon.mod.common.util.server
 import com.google.gson.JsonObject
 import java.util.UUID
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * A [PokemonStore] for a party of Pokémon. This is a simple structure that by default will hold 6 nullable slots of Pokémon.
@@ -87,7 +87,7 @@ open class PartyStore(override val uuid: UUID) : PokemonStore<PartyPosition>() {
         return position.slot in (0 until slots.size)
     }
 
-    override fun getObservingPlayers() = server()?.playerManager?.playerList?.filter { it.uuid in observerUUIDs } ?: emptyList()
+    override fun getObservingPlayers() = server()?.playerList?.players?.filter { it.uuid in observerUUIDs } ?: emptyList()
 
     /** The total amount of slots in the party. */
     fun size() = slots.size
@@ -95,7 +95,7 @@ open class PartyStore(override val uuid: UUID) : PokemonStore<PartyPosition>() {
     /** The amount of party slots that are occupied by a [Pokemon]. */
     fun occupied() = slots.filterNotNull().count()
 
-    override fun sendTo(player: ServerPlayerEntity) {
+    override fun sendTo(player: ServerPlayer) {
         player.sendPacket(InitializePartyPacket(false, uuid, slots.size))
         slots.forEachIndexed { index, pokemon ->
             if (pokemon != null) {
@@ -152,18 +152,18 @@ open class PartyStore(override val uuid: UUID) : PokemonStore<PartyPosition>() {
     /** Maps the slots of the party using the giving mapper function, but preserving the nulls in the party at the right spots. */
     fun <T : Any> mapNullPreserving(mapper: (Pokemon) -> T): List<T?> = toGappyList().map { it?.let(mapper) }
 
-    override fun saveToNBT(nbt: NbtCompound): NbtCompound {
+    override fun saveToNBT(nbt: CompoundTag): CompoundTag {
         nbt.putInt(DataKeys.STORE_SLOT_COUNT, slots.size)
         for (slot in slots.indices) {
             val pokemon = get(slot)
             if (pokemon != null) {
-                nbt.put(DataKeys.STORE_SLOT + slot, pokemon.saveToNBT(NbtCompound()))
+                nbt.put(DataKeys.STORE_SLOT + slot, pokemon.saveToNBT())
             }
         }
         return nbt
     }
 
-    override fun loadFromNBT(nbt: NbtCompound): PartyStore {
+    override fun loadFromNBT(nbt: CompoundTag): PartyStore {
         val slotCount = nbt.getInt(DataKeys.STORE_SLOT_COUNT)
         while (slotCount > slots.size) { slots.removeLast() }
         while (slotCount < slots.size) { slots.add(null) }
@@ -171,7 +171,7 @@ open class PartyStore(override val uuid: UUID) : PokemonStore<PartyPosition>() {
             val pokemonNBT = nbt.getCompound(DataKeys.STORE_SLOT + slot)
             try {
                 if (!pokemonNBT.isEmpty) {
-                    slots[slot] = Pokemon().loadFromNBT(pokemonNBT)
+                    slots[slot] = Pokemon.loadFromNBT(pokemonNBT)
                 }
             } catch (_: InvalidSpeciesException) {
                 handleInvalidSpeciesNBT(pokemonNBT)
@@ -188,7 +188,7 @@ open class PartyStore(override val uuid: UUID) : PokemonStore<PartyPosition>() {
         for (slot in slots.indices) {
             val pokemon = get(slot)
             if (pokemon != null) {
-                json.add(DataKeys.STORE_SLOT + slot, pokemon.saveToJSON(JsonObject()))
+                json.add(DataKeys.STORE_SLOT + slot, pokemon.saveToJSON())
             }
         }
         return json
@@ -203,7 +203,7 @@ open class PartyStore(override val uuid: UUID) : PokemonStore<PartyPosition>() {
             if (json.has(key)) {
                 val pokemonJSON = json.get(key).asJsonObject
                 try {
-                    slots[slot] = Pokemon().loadFromJSON(pokemonJSON)
+                    slots[slot] = Pokemon.loadFromJSON(pokemonJSON)
                 } catch (_: InvalidSpeciesException) {
                     handleInvalidSpeciesJSON(pokemonJSON)
                 }
@@ -228,12 +228,12 @@ open class PartyStore(override val uuid: UUID) : PokemonStore<PartyPosition>() {
         }
     }
 
-    override fun loadPositionFromNBT(nbt: NbtCompound): StoreCoordinates<PartyPosition> {
+    override fun loadPositionFromNBT(nbt: CompoundTag): StoreCoordinates<PartyPosition> {
         val slot = nbt.getByte(DataKeys.STORE_SLOT).toInt()
         return StoreCoordinates(this, PartyPosition(slot))
     }
 
-    override fun savePositionToNBT(position: PartyPosition, nbt: NbtCompound) {
+    override fun savePositionToNBT(position: PartyPosition, nbt: CompoundTag) {
         nbt.putByte(DataKeys.STORE_SLOT, position.slot.toByte())
     }
 

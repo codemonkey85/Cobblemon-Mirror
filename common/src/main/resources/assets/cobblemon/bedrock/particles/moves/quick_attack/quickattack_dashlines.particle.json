@@ -1,0 +1,53 @@
+{
+	"format_version": "1.10.0",
+	"particle_effect": {
+		"description": {
+			"identifier": "cobblemon:quickattack_dashlines",
+			"basic_render_parameters": {
+				"material": "particles_blend",
+				"texture": "textures/particles/quickattack_dashlines"
+			}
+		},
+		"components": {
+			"minecraft:emitter_rate_steady": {
+				"spawn_rate": 50,
+				"max_particles": 100
+			},
+			"minecraft:emitter_lifetime_once": {
+				"active_time": 0.2
+			},
+			"minecraft:emitter_shape_sphere": {
+				"offset": [0, 0, -1],
+				"radius": "math.clamp(query.entity_radius,1,50)",
+				"direction": [0, 0, 1]
+			},
+			"minecraft:particle_lifetime_expression": {
+				"max_lifetime": 0.2
+			},
+			"minecraft:particle_initial_speed": 8,
+			"minecraft:particle_motion_dynamic": {
+				"linear_acceleration": [0, 0, 1]
+			},
+			"minecraft:particle_appearance_billboard": {
+				"size": [0.4, 0.4],
+				"facing_camera_mode": "lookat_direction",
+				"uv": {
+					"texture_width": 64,
+					"texture_height": 16,
+					"uv": ["math.floor(variable.particle_random_2 * 4) * 16", 0],
+					"uv_size": [16, 16]
+				}
+			},
+			"minecraft:particle_appearance_tinting": {
+				"color": {
+					"interpolant": "v.particle_age / v.particle_lifetime",
+					"gradient": {
+						"0.17": "#FFB4FEFF",
+						"0.5": "#ffffffff",
+						"0.86": "#FFB7FEFF"
+					}
+				}
+			}
+		}
+	}
+}

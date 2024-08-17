@@ -75,10 +75,10 @@
     "sounds": [ "cobblemon:pokemon/evolution_notification"]
   },
   "evolution.evolve": {
-    "sounds": ["cobblemon:evolve"]
+    "sounds": []
   },
-  "pokemon.evolving": {
-    "sounds": [ "cobblemon:pokemon/evolving"]
+  "evolution.evolving": {
+    "sounds": ["cobblemon:evolution/evolve_full"]
   },
   "gui.click": {
     "sounds": [ "cobblemon:click" ]
@@ -159,36 +159,89 @@
   "gimmighoul.reveal": {
     "sounds": [ "cobblemon:gimmighoul_reveal" ]
   },
-  "coin_pouch.break": {
+  "relic_coin_sack.break": {
     "sounds": [
-      "cobblemon:block/coin_pouch/coin_pouch_block_break_1",
-      "cobblemon:block/coin_pouch/coin_pouch_block_break_2",
-      "cobblemon:block/coin_pouch/coin_pouch_block_break_3",
-      "cobblemon:block/coin_pouch/coin_pouch_block_break_4"
+      "cobblemon:block/relic_coin_sack/relic_coin_sack_break_1",
+      "cobblemon:block/relic_coin_sack/relic_coin_sack_break_2",
+      "cobblemon:block/relic_coin_sack/relic_coin_sack_break_3",
+      "cobblemon:block/relic_coin_sack/relic_coin_sack_break_4"
     ]
   },
-  "coin_pouch.hit": {
+  "relic_coin_sack.hit": {
     "sounds": [
-      { "name": "cobblemon:block/coin_pouch/coin_pouch_block_hit_1", "volume": 0.6 },
-      { "name": "cobblemon:block/coin_pouch/coin_pouch_block_hit_2", "volume": 0.6 },
-      { "name": "cobblemon:block/coin_pouch/coin_pouch_block_hit_3", "volume": 0.6 },
-      { "name": "cobblemon:block/coin_pouch/coin_pouch_block_hit_4", "volume": 0.6 }
+      { "name": "cobblemon:block/relic_coin_sack/relic_coin_sack_hit_1", "volume": 0.5 },
+      { "name": "cobblemon:block/relic_coin_sack/relic_coin_sack_hit_2", "volume": 0.5 },
+      { "name": "cobblemon:block/relic_coin_sack/relic_coin_sack_hit_3", "volume": 0.5 },
+      { "name": "cobblemon:block/relic_coin_sack/relic_coin_sack_hit_4", "volume": 0.5 }
     ]
   },
-  "coin_pouch.place": {
+  "relic_coin_sack.place": {
     "sounds": [
-      "cobblemon:block/coin_pouch/coin_pouch_block_place_1",
-      "cobblemon:block/coin_pouch/coin_pouch_block_place_2",
-      "cobblemon:block/coin_pouch/coin_pouch_block_place_3",
-      "cobblemon:block/coin_pouch/coin_pouch_block_place_4"
+      "cobblemon:block/relic_coin_sack/relic_coin_sack_place_1",
+      "cobblemon:block/relic_coin_sack/relic_coin_sack_place_2",
+      "cobblemon:block/relic_coin_sack/relic_coin_sack_place_3",
+      "cobblemon:block/relic_coin_sack/relic_coin_sack_place_4"
     ]
   },
-  "coin_pouch.step": {
+  "relic_coin_sack.step": {
     "sounds": [
-      "cobblemon:block/coin_pouch/coin_pouch_block_step_1",
-      "cobblemon:block/coin_pouch/coin_pouch_block_step_2",
-      "cobblemon:block/coin_pouch/coin_pouch_block_step_3",
-      "cobblemon:block/coin_pouch/coin_pouch_block_step_4"
+      "cobblemon:block/relic_coin_sack/relic_coin_sack_step_1",
+      "cobblemon:block/relic_coin_sack/relic_coin_sack_step_2",
+      "cobblemon:block/relic_coin_sack/relic_coin_sack_step_3",
+      "cobblemon:block/relic_coin_sack/relic_coin_sack_step_4"
+    ]
+  },
+  "fishing.notification": {
+    "sounds": [
+      "cobblemon:fishing/fishing_notification_1",
+      "cobblemon:fishing/fishing_notification_2",
+      "cobblemon:fishing/fishing_notification_3",
+      "cobblemon:fishing/fishing_notification_4"
+    ]
+  },
+  "fishing.splash_small": {
+    "sounds": [
+      "cobblemon:fishing/fishing_splash_small_1",
+      "cobblemon:fishing/fishing_splash_small_2",
+      "cobblemon:fishing/fishing_splash_small_3"
+    ]
+  },
+  "fishing.splash_big": {
+    "sounds": [
+      "cobblemon:fishing/fishing_splash_big_1",
+      "cobblemon:fishing/fishing_splash_big_2",
+      "cobblemon:fishing/fishing_splash_big_3"
+    ]
+  },
+  "fishing.rod_cast": {
+    "sounds": [
+      "cobblemon:fishing/fishing_rod_cast_1",
+      "cobblemon:fishing/fishing_rod_cast_2",
+      "cobblemon:fishing/fishing_rod_cast_3"
+    ]
+  },
+  "fishing.rod_reel_in": {
+    "sounds": [
+      "cobblemon:fishing/fishing_rod_reel_in_1",
+      "cobblemon:fishing/fishing_rod_reel_in_2",
+      "cobblemon:fishing/fishing_rod_reel_in_3"
+    ]
+  },
+  "fishing.bobber_land": {
+    "sounds": [
+      { "name": "cobblemon:fishing/fishing_bobber_land_1", "volume": 0.5 },
+      { "name": "cobblemon:fishing/fishing_bobber_land_2", "volume": 0.5 },
+      { "name": "cobblemon:fishing/fishing_bobber_land_3", "volume": 0.5 }
+    ]
+  },
+  "fishing.bait_attach": {
+    "sounds": [
+      "cobblemon:fishing/fishing_rod_attach_bait"
+    ]
+  },
+  "fishing.bait_detach": {
+    "sounds": [
+      "cobblemon:fishing/fishing_rod_remove_bait"
     ]
   },
   "tumblestone.break": {
@@ -197,6 +250,22 @@
       "cobblemon:block/tumblestone/tumblestone_break_2",
       "cobblemon:block/tumblestone/tumblestone_break_3",
       "cobblemon:block/tumblestone/tumblestone_break_4"
+    ]
+  },
+  "relic_coin_pouch.break": {
+    "sounds": [
+      "cobblemon:block/relic_coin_pouch/relic_coin_pouch_break_1",
+      "cobblemon:block/relic_coin_pouch/relic_coin_pouch_break_2",
+      "cobblemon:block/relic_coin_pouch/relic_coin_pouch_break_3",
+      "cobblemon:block/relic_coin_pouch/relic_coin_pouch_break_4"
+    ]
+  },
+  "relic_coin_pouch.place": {
+    "sounds": [
+      "cobblemon:block/relic_coin_pouch/relic_coin_pouch_place_1",
+      "cobblemon:block/relic_coin_pouch/relic_coin_pouch_place_2",
+      "cobblemon:block/relic_coin_pouch/relic_coin_pouch_place_3",
+      "cobblemon:block/relic_coin_pouch/relic_coin_pouch_place_4"
     ]
   },
   "tumblestone.block_break": {
@@ -391,11 +460,35 @@
       "cobblemon:block/gilded_chest/gilded_chest_step_4"
     ]
   },
-  "flamethrower.cast": {
-    "sounds": [ "cobblemon:attacks/flamethrower/flamethrower_cast" ]
+  "move.flamethrower.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/flamethrower/flamethrower_cast", "volume": 0.8 } ]
   },
-  "flamethrower.impact": {
-    "sounds": [ "cobblemon:attacks/flamethrower/flamethrower_impact" ]
+  "move.flamethrower.impact": {
+    "sounds": [ { "name": "cobblemon:attacks/flamethrower/flamethrower_impact", "volume": 0.8 } ]
+  },
+  "move.sandattack.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/sandattack/sand_attack_actor", "volume": 0.8 } ]
+  },
+  "move.sandattack.target": {
+    "sounds": [ { "name": "cobblemon:attacks/sandattack/sand_attack_target", "volume": 0.8 } ]
+  },
+  "move.confusion.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/confusion/confusion_actor", "volume": 0.9 } ]
+  },
+  "move.confusion.target": {
+      "sounds": [ { "name": "cobblemon:attacks/confusion/confusion_target", "volume": 0.8 } ]
+  },
+  "move.swordsdance.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/swordsdance/swords_dance_actor", "volume": 0.8 } ]
+  },
+  "move.thunderwave.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/thunderwave/thunder_wave_actor", "volume": 0.8 } ]
+  },
+  "move.thunderwave.target": {
+      "sounds": [ { "name": "cobblemon:attacks/thunderwave/thunder_wave_target", "volume": 0.8 } ]
+  },
+  "move.protect.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/protect/protect_actor", "volume": 0.8 } ]
   },
   "effective": {
     "sounds": [ "cobblemon:effective" ]
@@ -621,6 +714,38 @@
       { "name": "cobblemon:attacks/impact_generic/impact_generic_fairy_7", "volume": 0.8 },
       { "name": "cobblemon:attacks/impact_generic/impact_generic_fairy_8", "volume": 0.8 }
     ]
+  },
+  "status.paralysis.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/status/status_paralysis_actor", "volume": 0.8 } ]
+  },
+  "status.poison.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/status/status_poison_actor", "volume": 0.8 } ]
+  },
+  "status.badlypoison.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/status/status_toxpoison_actor", "volume": 0.8 } ]
+  },
+  "powder.poison.actor": {
+    "sounds": [ { "name": "cobblemon:attacks/powder_attacks/poison_powder_actor", "volume": 1.0 } ]
+  },
+  "powder.sleep.actor": {
+      "sounds": [ { "name": "cobblemon:attacks/powder_attacks/sleep_powder_actor", "volume": 1.0 } ]
+  },
+  "powder.stun.actor": {
+      "sounds": [ { "name": "cobblemon:attacks/powder_attacks/stun_spore_actor", "volume": 1.0 } ]
+  },
+  "powder.generic.actor": {
+      "sounds": [ { "name": "cobblemon:attacks/powder_attacks/generic_powder_actor", "volume": 1.0 } ]
+  },
+  "powder.generic.target": {
+      "sounds": [ { "name": "cobblemon:attacks/powder_attacks/generic_powder_target", "volume": 1.0 } ]
+  },
+  "powder.spore.mushroom": {
+      "sounds": [
+        { "name": "cobblemon:attacks/powder_attacks/spore_mushroom_1", "volume": 0.3 },
+        { "name": "cobblemon:attacks/powder_attacks/spore_mushroom_2", "volume": 0.1 },
+        { "name": "cobblemon:attacks/powder_attacks/spore_mushroom_3", "volume": 0.1 },
+        { "name": "cobblemon:attacks/powder_attacks/spore_mushroom_4", "volume": 0.1 }
+      ]
   },
   "pokemon.bulbasaur.ambient": {
     "sounds": [ "cobblemon:pokemon/bulbasaur/bulbasaur_ambient" ]

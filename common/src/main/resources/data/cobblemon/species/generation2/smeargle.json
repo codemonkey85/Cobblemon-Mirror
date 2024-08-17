@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Smeargle",
   "nationalPokedexNumber": 235,
   "primaryType": "normal",
@@ -14,6 +15,14 @@
     "special_attack": 20,
     "special_defence": 45,
     "speed": 75
+  },
+  "behaviour": {
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
   },
   "catchRate": 45,
   "maleRatio": 0.5,
@@ -44,10 +53,10 @@
     "cobblemon.species.smeargle.desc"
   ],
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.6,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.8,
+    "height": 1.8,
     "fixed": false
   },
   "baseFriendship": 70,
