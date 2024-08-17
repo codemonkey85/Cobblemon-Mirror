@@ -76,13 +76,13 @@ class PokedexUsageContext {
 
     fun tryOpenInfoGui(user: LocalPlayer, ticksInUse: Int) {
         if (ticksInUse < TIME_TO_OPEN_SCANNER) {
-            openPokedexGUI(user)
+            openPokedexGUI(user, type)
             infoGuiOpen = true
         }
     }
 
-    fun openPokedexGUI(user: LocalPlayer, speciesId: ResourceLocation? = null) {
-        PokedexGUI.open(CobblemonClient.clientPokedexData, PokedexTypes.PINK, speciesId)
+    fun openPokedexGUI(user: LocalPlayer, types: PokedexTypes = PokedexTypes.RED, speciesId: ResourceLocation? = null) {
+        PokedexGUI.open(CobblemonClient.clientPokedexData, types, speciesId)
         user.playSound(CobblemonSounds.POKEDEX_OPEN)
     }
 
@@ -103,7 +103,7 @@ class PokedexUsageContext {
                 //We could just have the server send a packet back but I don't think its necessary in this case, this works fine
                 afterOnClient(10, 0F) {
                     resetState()
-                    openPokedexGUI(user, targetPokemon.pokemon.species.resourceIdentifier)
+                    openPokedexGUI(user, type, targetPokemon.pokemon.species.resourceIdentifier)
                 }
             }
         }

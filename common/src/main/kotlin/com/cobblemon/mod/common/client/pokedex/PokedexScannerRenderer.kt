@@ -118,9 +118,7 @@ class PokedexScannerRenderer {
             val y = (screenHeight - (textureHeight * scale)) / 2
 
             val opacity = if (effectiveTicks <= 2) 1F else (10F - (effectiveTicks.toFloat() - 2F)) / 10F
-            //FIXME: Use proper type
-            val type = "red"
-            blitk(matrixStack = matrices, texture = cobblemonResource("textures/gui/pokedex/pokedex_base_${type}.png"), x = x / scale, y = y / scale, width = textureWidth, height = textureHeight, scale = scale, alpha = opacity)
+            blitk(matrixStack = matrices, texture = CobblemonClient.pokedexUsageContext.type.getTexturePath(), x = x / scale, y = y / scale, width = textureWidth, height = textureHeight, scale = scale, alpha = opacity)
             blitk(matrixStack = matrices, texture = SCAN_SCREEN, x = x / scale, y = y / scale, width = textureWidth, height = textureHeight, scale = scale, alpha = opacity)
         }
 
