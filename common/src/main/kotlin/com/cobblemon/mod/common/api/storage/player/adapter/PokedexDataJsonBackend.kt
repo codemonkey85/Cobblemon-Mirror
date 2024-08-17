@@ -16,7 +16,7 @@ import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import java.util.UUID
 
 /**
@@ -29,7 +29,7 @@ class PokedexDataJsonBackend: JsonBackedPlayerDataStoreBackend<PokedexRecord>("p
     override val gson = GsonBuilder()
         .setPrettyPrinting()
         .disableHtmlEscaping()
-        .registerTypeAdapter(Identifier::class.java, IdentifierAdapter)
+        .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .registerTypeAdapter(GlobalTrackedData::class.java, GlobalTrackedDataAdapter)
         .registerTypeAdapter(PokedexRecord::class.java, PokedexInstanceCreator)
         .create()

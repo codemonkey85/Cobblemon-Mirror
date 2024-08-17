@@ -14,9 +14,8 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.mojang.serialization.JsonOps
-import net.minecraft.component.ComponentMap
+import net.minecraft.core.component.DataComponentMap
 import java.lang.reflect.Type
-import net.minecraft.nbt.NbtHelper
 
 /**
  * A JSON deserializer for [PossibleHeldItem].
@@ -33,7 +32,7 @@ object PossibleHeldItemAdapter : JsonDeserializer<PossibleHeldItem> {
             )
         } else {
             json as JsonObject
-            val componentMap = JsonOps.INSTANCE.withDecoder(ComponentMap.CODEC).apply(json.get("nbt")).getOrThrow {
+            val componentMap = JsonOps.INSTANCE.withDecoder(DataComponentMap.CODEC).apply(json.get("nbt")).getOrThrow {
                 return@getOrThrow IllegalStateException("Cant serialize components for held item")
             }.first
             val item = json.get("item").asString

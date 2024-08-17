@@ -14,19 +14,19 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class DracovishModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("dracovish")
     override val head = getPart("head_ai")
 
-    override var portraitTranslation = Vec3d(-0.25, 1.90, 0.0)
+    override var portraitTranslation = Vec3(-0.25, 1.90, 0.0)
     override var portraitScale = 0.55F
 
     override var profileScale = 0.3F
-    override var profileTranslation = Vec3d(0.0, 1.35, 0.0)
+    override var profileTranslation = Vec3(0.0, 1.35, 0.0)
 
     lateinit var sleep: CobblemonPose
     lateinit var standing: CobblemonPose
@@ -50,7 +50,7 @@ class DracovishModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             transformTicks = 10,
             quirks = arrayOf(blink),
             animations = arrayOf(
@@ -61,7 +61,7 @@ class DracovishModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
         watersleep = registerPose(
             poseName = "watersleep",
             poseType = PoseType.SLEEP,
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             transformTicks = 10,
             quirks = arrayOf(blink),
             animations = arrayOf(
@@ -129,7 +129,7 @@ class DracovishModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
         waterbattleidle = registerPose(
             poseName = "waterbattleidle",
             poseTypes = PoseType.STATIONARY_POSES,
-            condition = { it.isBattling && it.isTouchingWater},
+            condition = { it.isBattling && it.isInWater},
             transformTicks = 10,
             quirks = arrayOf(blink),
             animations = arrayOf(

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.pokedex
 
+import com.cobblemon.mod.common.api.events.pokedex.scanning.PokemonScannedEvent
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent
 import com.cobblemon.mod.common.api.events.pokemon.TradeCompletedEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEvent
@@ -16,7 +17,7 @@ import com.cobblemon.mod.common.api.pokedex.trackeddata.SpeciesTrackedData
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import java.util.Optional
 import java.util.UUID
 import kotlin.jvm.optionals.getOrDefault
@@ -49,6 +50,14 @@ class SpeciesPokedexEntry(
         formEntries[formStr]?.knowledge = PokedexEntryProgress.CAUGHT
     }
 
+    fun pokemonScanned(event: PokemonScannedEvent) {
+        val formStr = event.pokemon.form.formOnlyShowdownId()
+        if (!formEntries.containsKey(formStr)) {
+            formEntries[formStr] = FormPokedexRecords()
+        }
+        formEntries[formStr]?.knowledge = PokedexEntryProgress.ENCOUNTERED
+    }
+
     fun pokemonEvolved(event: EvolutionCompleteEvent) {
         val formStr = event.pokemon.form.formOnlyShowdownId()
         if (!formEntries.containsKey(formStr)) {
@@ -66,7 +75,7 @@ class SpeciesPokedexEntry(
         formEntries[formStr]?.knowledge = PokedexEntryProgress.CAUGHT
     }
 
-    fun pokemonSeen(speciesId: Identifier, formStr: String) {
+    fun pokemonSeen(speciesId: ResourceLocation, formStr: String) {
         if (!formEntries.containsKey(formStr)) {
             formEntries[formStr] = FormPokedexRecords()
         }

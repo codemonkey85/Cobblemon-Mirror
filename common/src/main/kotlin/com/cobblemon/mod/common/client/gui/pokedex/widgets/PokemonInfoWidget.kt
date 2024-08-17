@@ -39,13 +39,13 @@ import com.cobblemon.mod.common.pokemon.aspects.SHINY_ASPECT
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.sound.SoundEvent
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.sounds.SoundEvent
 import org.joml.Quaternionf
 import org.joml.Vector3f
 import java.io.FileNotFoundException
@@ -88,8 +88,8 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
 
     var dexPokemonData : DexPokemonData? = null
     var speciesPokedexEntry : SpeciesPokedexEntry? = null
-    var speciesName: MutableText = Text.translatable("")
-    var speciesNumber: MutableText = "0000".text()
+    var speciesName: MutableComponent = Component.translatable("")
+    var speciesNumber: MutableComponent = "0000".text()
     var formsList: MutableList<String> = mutableListOf("normal")
     var selectedFormIndex: Int = 0
     var type: Array<ElementalType?> = arrayOf(null, null)
@@ -178,13 +178,13 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
         clickAction = { switchPose(true) }
     ).apply { addWidget(this) }
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (dexPokemonData == null || renderablePokemon == null) return
 
         val hasKnowledge = speciesPokedexEntry != null
         val species = dexPokemonData!!.species
 
-        val matrices = context.matrices
+        val matrices = context.pose()
 
         blitk(
             matrixStack = matrices,
@@ -278,7 +278,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
                 pY + portraitStartY + POKEMON_PORTRAIT_HEIGHT
             )
 
-            matrices.push()
+            matrices.pushPose()
             matrices.translate(
                 pX.toDouble() + (POKEMON_PORTRAIT_WIDTH.toDouble() + 2)/2,
                 pY.toDouble() + portraitStartY - 12,
@@ -296,7 +296,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
                 state = state
             )
 
-            matrices.pop()
+            matrices.popPose()
             context.disableScissor()
         } else {
             // Render question mark
@@ -314,7 +314,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
                 drawScaledTextJustifiedRight(
                     context = context,
                     font = CobblemonResources.DEFAULT_LARGE,
-                    text = Text.translatable("cobblemon.ui.pokedex.info.unimplemented").bold(),
+                    text = Component.translatable("cobblemon.ui.pokedex.info.unimplemented").bold(),
                     x = pX + 136,
                     y = pY + 15,
                     shadow = true
@@ -345,7 +345,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
             }
 
             // Ensure elements are not hidden behind Pokémon render
-            matrices.push()
+            matrices.pushPose()
             matrices.translate(0.0, 0.0, 100.0)
 
             if (gender != Gender.GENDERLESS) genderButton.render(context, mouseX, mouseY, delta)
@@ -386,13 +386,13 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
                 drawScaledTextJustifiedRight(
                     context = context,
                     font = CobblemonResources.DEFAULT_LARGE,
-                    text = Text.translatable("cobblemon.ui.pokedex.info.form.${formsList[selectedFormIndex]}").bold(),
+                    text = Component.translatable("cobblemon.ui.pokedex.info.form.${formsList[selectedFormIndex]}").bold(),
                     x = pX + 136,
                     y = pY + 15,
                     shadow = true
                 )
             }
-            matrices.pop()
+            matrices.popPose()
         } else {
             blitk(
                 matrixStack = matrices,
@@ -430,7 +430,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
 
             this.speciesName =
                 if (speciesPokedexEntry != null) species.translatedName
-                else Text.translatable("cobblemon.ui.pokedex.unknown")
+                else Component.translatable("cobblemon.ui.pokedex.unknown")
 
             if (dexPokemonData.forms.size > 0) {
                 formsList = dexPokemonData.forms
@@ -505,7 +505,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
         }
     }
 
-    fun getPlatformResource(): Identifier? {
+    fun getPlatformResource(): ResourceLocation? {
         val primaryType = type[0]
         if (primaryType != null) {
             return try {
@@ -535,6 +535,6 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
     }
 
     fun playSound(soundEvent: SoundEvent) {
-        MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(soundEvent, 1.0F))
+        Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))
     }
 }

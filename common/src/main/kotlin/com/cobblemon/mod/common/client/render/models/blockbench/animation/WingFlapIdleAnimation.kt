@@ -36,10 +36,10 @@ class WingFlapIdleAnimation(
         axis = axis
     )
 
-    override fun setAngles(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
+    override fun setupAnim(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
         val time = timeVariable(state, limbSwing, ageInTicks) ?: 0F
         val angle = rotation(time)
         leftWing?.addRotation(axis, angle)
-        rightWing?.addRotation(axis, -angle)
+        rightWing?.addRotation(axis, angle)
     }
 }

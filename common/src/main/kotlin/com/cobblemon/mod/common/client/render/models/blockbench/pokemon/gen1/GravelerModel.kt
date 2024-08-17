@@ -16,8 +16,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPo
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class GravelerModel(root: ModelPart) : PokemonPosableModel(root), BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("graveler")
@@ -26,10 +26,10 @@ class GravelerModel(root: ModelPart) : PokemonPosableModel(root), BipedFrame {
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 1.4F
-    override var portraitTranslation = Vec3d(-0.1, -0.28, 0.0)
+    override var portraitTranslation = Vec3(-0.1, -0.28, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.37, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.37, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

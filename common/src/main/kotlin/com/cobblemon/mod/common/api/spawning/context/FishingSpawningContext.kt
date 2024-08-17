@@ -10,12 +10,11 @@ package com.cobblemon.mod.common.api.spawning.context
 
 import com.cobblemon.mod.common.api.spawning.fishing.FishingSpawnCause
 import com.cobblemon.mod.common.api.spawning.influence.SpawningInfluence
-import com.cobblemon.mod.common.util.getBlockStates
 import com.cobblemon.mod.common.util.toVec3d
-import net.minecraft.block.Block
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Box
+import net.minecraft.world.level.block.Block
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.core.BlockPos
+import net.minecraft.world.phys.AABB
 
 /**
  * A spawning context that was generated for a fishing action.
@@ -25,20 +24,20 @@ import net.minecraft.util.math.Box
  */
 class FishingSpawningContext(
     cause: FishingSpawnCause,
-    world: ServerWorld,
+    world: ServerLevel,
     pos: BlockPos,
     influences: MutableList<SpawningInfluence>
 ) : TriggerSpawningContext(
     cause = cause,
     world = world,
     position = pos,
-    light = world.getLightLevel(pos),
-    skyLight = world.getLightLevel(pos.up()),
-    canSeeSky = world.isSkyVisibleAllowingSea(pos),
+    light = world.getMaxLocalRawBrightness(pos),
+    skyLight = world.getMaxLocalRawBrightness(pos.above()),
+    canSeeSky = world.canSeeSkyFromBelowWater(pos),
     influences = influences
 ) {
-    val nearbyBlocks = world.getBlockStates(Box.of(pos.toVec3d(), 10.0, 10.0, 10.0))
-    val nearbyBlockTypes: List<Block> by lazy { nearbyBlocks.mapNotNull { it.block }.distinct() }
+    val nearbyBlocks = world.getBlockStates(AABB.ofSize(pos.toVec3d(), 10.0, 10.0, 10.0))
+    val nearbyBlockTypes: List<Block> by lazy { nearbyBlocks.map { it.block }.distinct().toList() }
     val rodStack = cause.rodStack
     val rodItem = cause.rodItem
     val rodBait = cause.bait

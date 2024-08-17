@@ -11,12 +11,12 @@ package com.cobblemon.mod.common.client.net.battle
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.net.messages.client.battle.BattleSetTeamPokemonPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object BattleSetTeamPokemonHandler : ClientNetworkPacketHandler<BattleSetTeamPokemonPacket> {
-    override fun handle(packet: BattleSetTeamPokemonPacket, client: MinecraftClient) {
+    override fun handle(packet: BattleSetTeamPokemonPacket, client: Minecraft) {
         CobblemonClient.battle!!.side1.actors
-            .find { it.uuid == MinecraftClient.getInstance().player?.uuid }
-            ?.pokemon = packet.team.map { it.create() }.toMutableList()
+            .find { it.uuid == Minecraft.getInstance().player?.uuid }
+            ?.pokemon = packet.team.toMutableList()
     }
 }

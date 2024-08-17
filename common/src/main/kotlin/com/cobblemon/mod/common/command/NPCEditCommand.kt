@@ -10,8 +10,6 @@ package com.cobblemon.mod.common.command
 
 import com.cobblemon.mod.common.api.permission.CobblemonPermissions
 import com.cobblemon.mod.common.api.text.red
-import com.cobblemon.mod.common.api.text.suggest
-import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.util.commandLang
 import com.cobblemon.mod.common.util.requiresWithPermission
@@ -19,25 +17,22 @@ import com.cobblemon.mod.common.util.traceFirstEntityCollision
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.entity.LivingEntity
-import net.minecraft.nbt.visitor.NbtOrderedStringFormatter
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Hand
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
+import net.minecraft.server.level.ServerPlayer
 
 object NPCEditCommand {
-    fun register(dispatcher : CommandDispatcher<ServerCommandSource>) {
+    fun register(dispatcher : CommandDispatcher<CommandSourceStack>) {
         dispatcher.register(
-            CommandManager.literal("npcedit")
+            Commands.literal("npcedit")
             .requiresWithPermission(CobblemonPermissions.NPC_EDIT) { it.player != null }
-            .executes { execute(it, it.source.playerOrThrow) })
+            .executes { execute(it, it.source.playerOrException) })
     }
 
-    private fun execute(context: CommandContext<ServerCommandSource>, player: ServerPlayerEntity) : Int {
+    private fun execute(context: CommandContext<CommandSourceStack>, player: ServerPlayer) : Int {
         val targetEntity = player.traceFirstEntityCollision(entityClass = NPCEntity::class.java)
         if (targetEntity == null) {
-            player.sendMessage(commandLang("npcedit.non_npc").red())
+            player.sendSystemMessage(commandLang("npcedit.non_npc").red())
             return 0
         }
 

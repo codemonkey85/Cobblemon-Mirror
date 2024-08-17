@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.client.render.models.blockbench.animation
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
-import net.minecraft.entity.Entity
+import net.minecraft.world.entity.Entity
 
 /**
  * An animation that requires some kind of state specific to an instance of [PosableState].

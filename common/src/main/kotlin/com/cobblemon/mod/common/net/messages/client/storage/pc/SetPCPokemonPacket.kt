@@ -11,13 +11,12 @@ package com.cobblemon.mod.common.net.messages.client.storage.pc
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.api.net.UnsplittablePacket
 import com.cobblemon.mod.common.api.storage.pc.PCPosition
-import com.cobblemon.mod.common.net.messages.PokemonDTO
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readPCPosition
 import com.cobblemon.mod.common.util.writePCPosition
 import java.util.UUID
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Sets a specific Pokémon in a specific slot of the client-side representation of a PC.
@@ -27,21 +26,19 @@ import net.minecraft.network.RegistryByteBuf
  * @author Hiroku
  * @since June 18th, 2022
  */
-class SetPCPokemonPacket internal constructor(val storeID: UUID, val storePosition: PCPosition, val pokemonDTO: PokemonDTO) : NetworkPacket<SetPCPokemonPacket>, UnsplittablePacket {
+class SetPCPokemonPacket internal constructor(val storeID: UUID, val storePosition: PCPosition, val pokemon: Pokemon) : NetworkPacket<SetPCPokemonPacket>, UnsplittablePacket {
 
     override val id = ID
 
-    constructor(storeID: UUID, storePosition: PCPosition, pokemon: Pokemon) : this(storeID, storePosition, PokemonDTO(pokemon, true))
-
-    override fun encode(buffer: RegistryByteBuf) {
-        buffer.writeUuid(this.storeID)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(this.storeID)
         buffer.writePCPosition(this.storePosition)
-        this.pokemonDTO.encode(buffer)
+        Pokemon.S2C_CODEC.encode(buffer, this.pokemon)
     }
 
     companion object {
         val ID = cobblemonResource("set_pc_pokemon")
-        fun decode(buffer: RegistryByteBuf) = SetPCPokemonPacket(buffer.readUuid(), buffer.readPCPosition(), PokemonDTO().apply { decode(buffer) })
+        fun decode(buffer: RegistryFriendlyByteBuf) = SetPCPokemonPacket(buffer.readUUID(), buffer.readPCPosition(), Pokemon.S2C_CODEC.decode(buffer))
     }
 
 }

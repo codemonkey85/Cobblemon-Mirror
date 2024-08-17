@@ -17,8 +17,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPo
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class GimmighoulChestModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("gimmighoul_chest")
@@ -30,10 +30,10 @@ class GimmighoulChestModel (root: ModelPart) : PokemonPosableModel(root), Headed
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 2.54F
-    override var portraitTranslation = Vec3d(-0.01, -1.6, 0.0)
+    override var portraitTranslation = Vec3(-0.01, -1.6, 0.0)
 
     override var profileScale = 0.65F
-    override var profileTranslation = Vec3d(0.0, 0.76, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.76, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose
@@ -50,7 +50,7 @@ class GimmighoulChestModel (root: ModelPart) : PokemonPosableModel(root), Headed
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             quirks = arrayOf(blink,quirk),
-            condition = { (it.getEntity() as? PokemonEntity)?.ownerUuid != null && !it.isBattling },
+            condition = { (it.getEntity() as? PokemonEntity)?.ownerUUID != null && !it.isBattling },
             animations = arrayOf(
                 singleBoneLook(),
                 bedrock("gimmighoul_chest", "ground_idle")
@@ -61,7 +61,7 @@ class GimmighoulChestModel (root: ModelPart) : PokemonPosableModel(root), Headed
             poseName = "closed",
             poseTypes = PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink),
-            condition = { (it.getEntity() as? PokemonEntity)?.ownerUuid == null && !it.isBattling },
+            condition = { (it.getEntity() as? PokemonEntity)?.ownerUUID == null && !it.isBattling },
             animations = arrayOf(
                 singleBoneLook(),
                 bedrock("gimmighoul_chest", "mimic")

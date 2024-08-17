@@ -19,8 +19,8 @@ import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class NidoqueenModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("nidoqueen")
@@ -31,10 +31,10 @@ class NidoqueenModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     override val rightArm = getPart("right_shoulder")
 
     override var portraitScale = 1.5F
-    override var portraitTranslation = Vec3d(-0.2, 0.6, 0.0)
+    override var portraitTranslation = Vec3(-0.2, 0.6, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.5, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.5, 0.0)
 
     lateinit var sleep: Pose
     lateinit var standing: Pose

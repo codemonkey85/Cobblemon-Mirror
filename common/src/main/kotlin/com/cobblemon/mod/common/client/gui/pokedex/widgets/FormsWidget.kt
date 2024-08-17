@@ -15,8 +15,8 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
 import kotlin.math.max
 
 class FormsWidget (val pX: Int, val pY: Int, val setFormData : (String) -> (Unit)): ScrollingWidget<FormsWidget.FormSlot>(
@@ -40,7 +40,7 @@ class FormsWidget (val pX: Int, val pY: Int, val setFormData : (String) -> (Unit
         }
     }
 
-    override fun getScrollbarX(): Int {
+    override fun getScrollbarPosition(): Int {
         return left + width - scrollBarWidth
     }
 
@@ -53,7 +53,7 @@ class FormsWidget (val pX: Int, val pY: Int, val setFormData : (String) -> (Unit
         }
 
         override fun render(
-            context: DrawContext,
+            context: GuiGraphics,
             index: Int,
             y: Int,
             x: Int,
@@ -67,7 +67,7 @@ class FormsWidget (val pX: Int, val pY: Int, val setFormData : (String) -> (Unit
 
             val textScale = 1F
             blitk(
-                matrixStack = context.matrices,
+                matrixStack = context.pose(),
                 texture = scrollSlotResource,
                 x = x,
                 y = y,
@@ -85,8 +85,8 @@ class FormsWidget (val pX: Int, val pY: Int, val setFormData : (String) -> (Unit
             )
         }
 
-        override fun getNarration(): Text {
-            return Text.of(form)
+        override fun getNarration(): Component {
+            return Component.literal(form)
         }
 
         override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {

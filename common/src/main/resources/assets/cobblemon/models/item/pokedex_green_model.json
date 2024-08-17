@@ -1,33 +1,35 @@
 {
 	"texture_size": [32, 32],
 	"textures": {
-		"layer0": "cobblemon:item/pokedexes/models/pokedex_green"
+		"all": "cobblemon:item/pokedexes/models/pokedex_green"
 	},
 	"elements": [
 		{
-			"from": [0.60896, 3.06147, 3],
-			"to": [8.60896, 4.06147, 13],
-			"rotation": {"angle": -22.5, "axis": "z", "origin": [0.60896, 3.06147, 0]},
+			"name": "page_left",
+			"from": [-0.01, -0.01, 2.99],
+			"to": [8.01, 1.01, 13.01],
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [8, 0.75, 8]},
 			"faces": {
-				"north": {"uv": [0.5, 0, 4.5, 0.5], "texture": "layer0"},
-				"east": {"uv": [4.5, 0.5, 5, 5.5], "rotation": 90, "texture": "layer0"},
-				"south": {"uv": [0.5, 5.5, 4.5, 6], "texture": "layer0"},
-				"west": {"uv": [0, 0.5, 0.5, 5.5], "rotation": 270, "texture": "layer0"},
-				"up": {"uv": [0.5, 0.5, 4.5, 5.5], "texture": "layer0"},
-				"down": {"uv": [0.5, 6, 4.5, 11], "texture": "layer0"}
+				"north": {"uv": [0.5, 0, 4.5, 0.5], "texture": "#all"},
+				"east": {"uv": [4.5, 0.5, 5, 5.5], "rotation": 90, "texture": "#all"},
+				"south": {"uv": [0.5, 5.5, 4.5, 6], "texture": "#all"},
+				"west": {"uv": [0, 0.5, 0.5, 5.5], "rotation": 270, "texture": "#all"},
+				"up": {"uv": [0.5, 0.5, 4.5, 5.5], "texture": "#all"},
+				"down": {"uv": [0.5, 11, 4.5, 6], "texture": "#all"}
 			}
 		},
 		{
-			"from": [8.60896, -3.06147, 3],
-			"to": [16.60896, -2.06147, 13],
-			"rotation": {"angle": 22.5, "axis": "z", "origin": [0.60896, -3.06147, 0]},
+			"name": "page_right",
+			"from": [8, 0, 3],
+			"to": [16, 1, 13],
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [8, 0.75, 8]},
 			"faces": {
-				"north": {"uv": [5.5, 0, 9.5, 0.5], "texture": "layer0"},
-				"east": {"uv": [9.5, 0.5, 10, 5.5], "rotation": 90, "texture": "layer0"},
-				"south": {"uv": [5.5, 5.5, 9.5, 6], "texture": "layer0"},
-				"west": {"uv": [5, 0.5, 5.5, 5.5], "rotation": 270, "texture": "layer0"},
-				"up": {"uv": [5.5, 0.5, 9.5, 5.5], "texture": "layer0"},
-				"down": {"uv": [5.5, 6, 9.5, 11], "texture": "layer0"}
+				"north": {"uv": [5.5, 0, 9.5, 0.5], "texture": "#all"},
+				"east": {"uv": [9.5, 0.5, 10, 5.5], "rotation": 90, "texture": "#all"},
+				"south": {"uv": [5.5, 5.5, 9.5, 6], "texture": "#all"},
+				"west": {"uv": [5, 0.5, 5.5, 5.5], "rotation": 270, "texture": "#all"},
+				"up": {"uv": [5.5, 0.5, 9.5, 5.5], "texture": "#all"},
+				"down": {"uv": [5.5, 11, 9.5, 6], "texture": "#all"}
 			}
 		}
 	],
@@ -70,5 +72,26 @@
 			"rotation": [-90, -180, 0],
 			"translation": [0, 0, -7]
 		}
-	}
+	},
+	"groups": [
+		{
+			"name": "pokedex",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "page_left",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"children": [0]
+				},
+				{
+					"name": "page_right",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"children": [1]
+				}
+			]
+		}
+	]
 }

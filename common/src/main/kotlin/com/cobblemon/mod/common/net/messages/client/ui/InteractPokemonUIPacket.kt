@@ -11,9 +11,9 @@ package com.cobblemon.mod.common.net.messages.client.ui
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.client.net.gui.InteractPokemonUIPacketHandler
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readUuid
-import com.cobblemon.mod.common.util.writeUuid
-import net.minecraft.network.RegistryByteBuf
+import com.cobblemon.mod.common.util.readUUID
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
 /**
@@ -28,13 +28,13 @@ class InteractPokemonUIPacket(val pokemonID: UUID, val canMountShoulder: Boolean
 
     override val id = ID
 
-    override fun encode(buffer: RegistryByteBuf) {
-        buffer.writeUuid(pokemonID)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(pokemonID)
         buffer.writeBoolean(canMountShoulder)
     }
 
     companion object {
         val ID = cobblemonResource("interact_pokemon_ui")
-        fun decode(buffer: RegistryByteBuf) = InteractPokemonUIPacket(buffer.readUuid(), buffer.readBoolean())
+        fun decode(buffer: RegistryFriendlyByteBuf) = InteractPokemonUIPacket(buffer.readUUID(), buffer.readBoolean())
     }
 }

@@ -23,8 +23,8 @@ import com.cobblemon.mod.common.entity.PoseType.Companion.FLYING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.SHOULDER_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class ChatotModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame{
     override val rootPart = root.registerChildWithAllChildren("chatot")
@@ -36,10 +36,10 @@ class ChatotModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
     private val tail = getPart("tail")
 
     override var portraitScale = 3.5F
-    override var portraitTranslation = Vec3d(-0.1, -2.1, 0.0)
+    override var portraitTranslation = Vec3(-0.1, -2.1, 0.0)
 
     override var profileScale = 1.2F
-    override var profileTranslation = Vec3d(0.0, -0.01, 0.0)
+    override var profileTranslation = Vec3(0.0, -0.01, 0.0)
 
     lateinit var sleep: Pose
     lateinit var stand: Pose
@@ -53,7 +53,7 @@ class ChatotModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
 //        no sleep anim yet
 //        sleep = registerPose(
 //                poseType = PoseType.SLEEP,
-//                idleAnimations = arrayOf(bedrock("chatot", "sleep"))
+//                animations = arrayOf(bedrock("chatot", "sleep"))
 //        )
 
         val blink = quirk { bedrockStateful("chatot", "blink") }

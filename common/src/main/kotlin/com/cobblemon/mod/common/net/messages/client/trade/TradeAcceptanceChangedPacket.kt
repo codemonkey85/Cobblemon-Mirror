@@ -10,9 +10,9 @@ package com.cobblemon.mod.common.net.messages.client.trade
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readUuid
-import com.cobblemon.mod.common.util.writeUuid
-import net.minecraft.network.RegistryByteBuf
+import com.cobblemon.mod.common.util.readUUID
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
 /**
@@ -29,12 +29,12 @@ import java.util.UUID
 class TradeAcceptanceChangedPacket(val pokemonId: UUID, val accepted: Boolean) : NetworkPacket<TradeAcceptanceChangedPacket> {
     companion object {
         val ID = cobblemonResource("trade_acceptance_changed")
-        fun decode(buffer: RegistryByteBuf) = TradeAcceptanceChangedPacket(buffer.readUuid(), buffer.readBoolean())
+        fun decode(buffer: RegistryFriendlyByteBuf) = TradeAcceptanceChangedPacket(buffer.readUUID(), buffer.readBoolean())
     }
 
     override val id = ID
-    override fun encode(buffer: RegistryByteBuf) {
-        buffer.writeUuid(pokemonId)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(pokemonId)
         buffer.writeBoolean(accepted)
     }
 }

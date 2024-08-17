@@ -24,8 +24,8 @@ import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
@@ -47,13 +47,13 @@ class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
     var pokemonHeight: Float = 0F
     var weight: Float = 0F
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        val matrices = context.matrices
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        val matrices = context.pose()
 
 //        drawScaledText(
 //            context = context,
 //            font = CobblemonResources.DEFAULT_LARGE,
-//            text = Text.translatable("cobblemon.ui.pokedex.height", (pokemonHeight / 10).toString()).bold(),
+//            text = Component.translatable("cobblemon.ui.pokedex.height", (pokemonHeight / 10).toString()).bold(),
 //            x = pX + 9,
 //            y = pY - 10,
 //            shadow = true
@@ -62,7 +62,7 @@ class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         drawScaledTextJustifiedRight(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
-            text = Text.translatable("cobblemon.ui.pokedex.weight", (weight / 10).toString()).bold(),
+            text = Component.translatable("cobblemon.ui.pokedex.weight", (weight / 10).toString()).bold(),
             x = pX + HALF_OVERLAY_WIDTH - 9,
             y = pY - 10,
             shadow = true
@@ -77,7 +77,7 @@ class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
 
         val modelScale = 7.5F
 
-        matrices.push()
+        matrices.pushPose()
         matrices.translate(
             pX.toDouble() + 50,
             pY.toDouble() + (POKEMON_DESCRIPTION_HEIGHT / 2) + 18.5 - baseScale * modelScale * 1.5,
@@ -96,15 +96,15 @@ class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
             g = 0F,
             b = 0F
         )
-        matrices.pop()
+        matrices.popPose()
         context.disableScissor()
 
         // Ensure elements are not hidden behind Pokémon render
-        matrices.push()
+        matrices.pushPose()
         matrices.translate(0.0, 0.0, 100.0)
 
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = gridPlayer,
             x = pX + 85,
             y = pY + 23.5,
@@ -122,7 +122,7 @@ class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         )
 
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = scrollBorder,
             x = (pX + 1) / SCALE,
             y = pY / SCALE,
@@ -134,7 +134,7 @@ class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         )
 
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = scrollBorder,
             x = (pX + 1) / SCALE,
             y = (pY + 40) / SCALE,
@@ -145,6 +145,6 @@ class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
             scale = SCALE
         )
 
-        matrices.pop()
+        matrices.popPose()
     }
 }

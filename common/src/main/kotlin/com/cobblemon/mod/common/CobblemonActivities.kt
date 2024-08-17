@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common
 
-import net.minecraft.entity.ai.brain.Activity
+import net.minecraft.world.entity.schedule.Activity
 
 object CobblemonActivities {
     val activities = mutableListOf<Activity>()

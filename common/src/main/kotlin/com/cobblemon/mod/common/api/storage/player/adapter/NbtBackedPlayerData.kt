@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.mojang.serialization.Codec
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtIo
 import net.minecraft.nbt.NbtOps
 import java.io.DataOutputStream
@@ -28,7 +29,7 @@ abstract class NbtBackedPlayerData<T : InstancedPlayerData>(
         file.parentFile.mkdirs()
         val os = DataOutputStream(FileOutputStream(filePath(playerData.uuid)))
         val encodeResult = NbtOps.INSTANCE.withEncoder(codec).apply(playerData)
-        NbtIo.write(encodeResult.result().get(), os)
+        NbtIo.write(encodeResult.result().get() as CompoundTag, os)
         os.flush()
         os.close()
     }

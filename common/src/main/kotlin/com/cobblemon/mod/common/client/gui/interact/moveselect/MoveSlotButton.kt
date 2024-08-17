@@ -21,12 +21,12 @@ import com.cobblemon.mod.common.client.gui.TypeIcon
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.math.toRGB
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.gui.widget.ButtonWidget.NarrationSupplier
-import net.minecraft.client.sound.SoundManager
-import net.minecraft.text.Text
-import net.minecraft.util.math.MathHelper
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Button
+import net.minecraft.client.gui.components.Button.CreateNarration
+import net.minecraft.client.sounds.SoundManager
+import net.minecraft.network.chat.Component
+import net.minecraft.util.Mth
 
 class MoveSlotButton(
     x: Int, y: Int,
@@ -34,8 +34,8 @@ class MoveSlotButton(
     val pp: Int,
     val ppMax: Int,
     val enabled: Boolean = true,
-    onPress: PressAction
-) : ButtonWidget(x, y, WIDTH, HEIGHT, Text.literal("Move"), onPress, NarrationSupplier { "".text() }) {
+    onPress: OnPress
+) : Button(x, y, WIDTH, HEIGHT, Component.literal("Move"), onPress, CreateNarration { "".text() }) {
 
     companion object {
         private val moveResource = cobblemonResource("textures/gui/summary/summary_move.png")
@@ -45,15 +45,15 @@ class MoveSlotButton(
         const val HEIGHT = 22
     }
 
-    override fun renderWidget(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
-        hovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height && enabled
+    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+        isHovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height && enabled
 
         val moveTemplate = Moves.getByNameOrDummy(move.name)
         val rgb = moveTemplate.elementalType.hue.toRGB()
 
         val alpha = if (enabled) 1.0 else 0.5
 
-        val matrices = context.matrices
+        val matrices = context.pose()
         blitk(
             matrixStack = matrices,
             texture = moveResource,
@@ -80,9 +80,9 @@ class MoveSlotButton(
         )
 
         if (pp != -1 && ppMax != -1) {
-            var movePPText = Text.literal("$pp/$ppMax").bold()
+            var movePPText = Component.literal("$pp/$ppMax").bold()
 
-            if (pp <= MathHelper.floor(ppMax / 2F)) {
+            if (pp <= Mth.floor(ppMax / 2F)) {
                 movePPText = if (pp == 0) movePPText.red() else movePPText.gold()
             }
 

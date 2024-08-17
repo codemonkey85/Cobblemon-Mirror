@@ -14,8 +14,8 @@ import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.api.storage.player.client.ClientGeneralPlayerData
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.resources.ResourceLocation
 
 /**
  * An [InstancedPlayerData] for misc stuff, mostly starters
@@ -26,13 +26,13 @@ data class GeneralPlayerData(
     var starterLocked: Boolean,
     var starterSelected: Boolean,
     var starterUUID: UUID?,
-    var keyItems: MutableSet<Identifier>,
-    var battleTheme: Identifier?,
+    var keyItems: MutableSet<ResourceLocation>,
+    var battleTheme: ResourceLocation?,
     val extraData: MutableMap<String, PlayerDataExtension>,
 ) : InstancedPlayerData {
     var advancementData: PlayerAdvancementData = PlayerAdvancementData()
 
-    fun sendToPlayer(player: ServerPlayerEntity) {
+    fun sendToPlayer(player: ServerPlayer) {
         player.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.GENERAL, this.toClientData()))
     }
 

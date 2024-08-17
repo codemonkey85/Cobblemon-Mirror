@@ -35,7 +35,6 @@ repositories {
     mavenCentral()
     //JEI
     maven("https://maven.blamejared.com/")
-    maven("https://maven.tterrag.com/")
 }
 
 license {
@@ -53,11 +52,7 @@ loom {
 
 dependencies {
     minecraft("net.minecraft:minecraft:${rootProject.property("mc_version")}")
-    mappings(loom.layered() {
-        mappings("net.fabricmc:yarn:${rootProject.property("yarn_version")}:v2")
-        mappings("dev.architectury:yarn-mappings-patch-neoforge:${rootProject.property("yarn_arch_patch_version")}")
-    })
-
+    mappings(loom.officialMojangMappings())
 }
 
 tasks {

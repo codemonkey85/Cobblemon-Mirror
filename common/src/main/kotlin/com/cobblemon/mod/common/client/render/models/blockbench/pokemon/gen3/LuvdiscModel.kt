@@ -12,18 +12,18 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class LuvdiscModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("luvdisc")
 
 
     override var portraitScale = 6.0F
-    override var portraitTranslation = Vec3d(0.15, -6.5, 0.0)
+    override var portraitTranslation = Vec3(0.15, -6.5, 0.0)
 
     override var profileScale = 2.0F
-    override var profileTranslation = Vec3d(0.0, -1.3, 0.0)
+    override var profileTranslation = Vec3(0.0, -1.3, 0.0)
 
     lateinit var standing: Pose
     lateinit var sleep: Pose

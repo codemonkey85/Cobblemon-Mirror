@@ -12,16 +12,17 @@ import com.cobblemon.mod.common.api.apricorn.Apricorn
 import com.cobblemon.mod.common.block.grower.ApricornTreeGrower
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.block.SaplingBlock
-class ApricornSaplingBlock(properties : Settings, val apricorn: Apricorn) : SaplingBlock(ApricornTreeGrower(apricorn), properties) {
+import net.minecraft.world.level.block.SaplingBlock
 
-    override fun getCodec(): MapCodec<out SaplingBlock> {
+class ApricornSaplingBlock(properties : Properties, val apricorn: Apricorn) : SaplingBlock(ApricornTreeGrower(apricorn), properties) {
+
+    override fun codec(): MapCodec<out SaplingBlock> {
         return CODEC
     }
 
     companion object {
         val CODEC: MapCodec<ApricornSaplingBlock> = RecordCodecBuilder.mapCodec { it.group(
-            createSettingsCodec(),
+            propertiesCodec(),
             Apricorn.CODEC.fieldOf("apricorn").forGetter(ApricornSaplingBlock::apricorn)
         ).apply(it, ::ApricornSaplingBlock) }
     }

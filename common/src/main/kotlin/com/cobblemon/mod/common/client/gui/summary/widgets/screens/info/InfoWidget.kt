@@ -20,17 +20,17 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 
 
 class InfoWidget(
     pX: Int,
     pY: Int,
     private val pokemon: Pokemon
-) : SoundlessWidget(pX, pY, WIDTH, HEIGHT, Text.literal("InfoWidget")) {
+) : SoundlessWidget(pX, pY, WIDTH, HEIGHT, Component.literal("InfoWidget")) {
     companion object {
         private const val WIDTH = 134
         private const val HEIGHT = 148
@@ -38,8 +38,8 @@ class InfoWidget(
         private const val ROW_HEIGHT = 15
     }
 
-    override fun renderWidget(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
-        val matrices = context.matrices
+    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+        val matrices = context.pose()
         // Base texture
         blitk(
             matrixStack = matrices,
@@ -90,7 +90,7 @@ class InfoWidget(
         typeWidget.render(context, pMouseX, pMouseY, pPartialTicks)
 
         // Original Trainer
-        val otName: MutableText = Text.literal(pokemon.originalTrainerName ?: "")
+        val otName: MutableComponent = Component.literal(pokemon.originalTrainerName ?: "")
         val otWidget = InfoOneLineWidget(
             pX = x,
             pY = y + 3 * ROW_HEIGHT,
@@ -127,7 +127,7 @@ class InfoWidget(
 
         val smallTextScale = 0.5F
 
-        matrices.push()
+        matrices.pushPose()
         matrices.scale(smallTextScale, smallTextScale, 1F)
         MultiLineLabelK.create(
             component = pokemon.ability.description.asTranslated(),
@@ -141,7 +141,7 @@ class InfoWidget(
             colour = ColourLibrary.WHITE,
             shadow = true
         )
-        matrices.pop()
+        matrices.popPose()
 
         drawScaledText(
             context = context,
@@ -161,7 +161,7 @@ class InfoWidget(
             shadow = true
         )
 
-        val mcFont = MinecraftClient.getInstance().textRenderer
+        val mcFont = Minecraft.getInstance().font
         val experience = pokemon.experience.toString().text()
         val experienceForThisLevel =
             pokemon.experience - if (pokemon.level == 1) 0 else pokemon.experienceGroup.getExperience(pokemon.level)
@@ -171,7 +171,7 @@ class InfoWidget(
         drawScaledText(
             context = context,
             text = experience,
-            x = (x + 127) - (mcFont.getWidth(experience) * smallTextScale),
+            x = (x + 127) - (mcFont.width(experience) * smallTextScale),
             y = y + 125,
             scale = smallTextScale,
             shadow = true
@@ -180,7 +180,7 @@ class InfoWidget(
         drawScaledText(
             context = context,
             text = experienceToNext.toString().text(),
-            x = (x + 127) - (mcFont.getWidth(experienceToNext.toString().text()) * smallTextScale),
+            x = (x + 127) - (mcFont.width(experienceToNext.toString().text()) * smallTextScale),
             y = y + 137,
             scale = smallTextScale,
             shadow = true

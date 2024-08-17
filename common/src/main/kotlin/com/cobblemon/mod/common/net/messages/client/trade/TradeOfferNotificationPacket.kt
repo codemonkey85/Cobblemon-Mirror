@@ -11,12 +11,12 @@ package com.cobblemon.mod.common.net.messages.client.trade
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readText
-import com.cobblemon.mod.common.util.readUuid
+import com.cobblemon.mod.common.util.readUUID
 import com.cobblemon.mod.common.util.writeText
-import com.cobblemon.mod.common.util.writeUuid
-import net.minecraft.network.RegistryByteBuf
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
 
 /**
  * Packet sent to the client to notify a player that someone requested to trade with them.
@@ -24,16 +24,16 @@ import net.minecraft.text.MutableText
  * @author Hiroku
  * @since March 6th, 2023
  */
-class TradeOfferNotificationPacket(val tradeOfferId: UUID, val traderId: UUID, val traderName: MutableText): NetworkPacket<TradeOfferNotificationPacket> {
+class TradeOfferNotificationPacket(val tradeOfferId: UUID, val traderId: UUID, val traderName: MutableComponent): NetworkPacket<TradeOfferNotificationPacket> {
     override val id = ID
-    override fun encode(buffer: RegistryByteBuf) {
-        buffer.writeUuid(tradeOfferId)
-        buffer.writeUuid(traderId)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(tradeOfferId)
+        buffer.writeUUID(traderId)
         buffer.writeText(traderName)
     }
 
     companion object {
         val ID = cobblemonResource("trade_offer_notification")
-        fun decode(buffer: RegistryByteBuf) = TradeOfferNotificationPacket(buffer.readUuid(), buffer.readUuid(), buffer.readText().copy())
+        fun decode(buffer: RegistryFriendlyByteBuf) = TradeOfferNotificationPacket(buffer.readUUID(), buffer.readUUID(), buffer.readText().copy())
     }
 }

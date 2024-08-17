@@ -24,9 +24,9 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.net.messages.server.battle.RemoveSpectatorPacket
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.Screen
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.screens.Screen
 
 class BattleGUI : Screen(battleLang("gui.title")) {
     companion object {
@@ -43,23 +43,23 @@ class BattleGUI : Screen(battleLang("gui.title")) {
 
     private lateinit var messagePane: BattleMessagePane
     var opacity = 0F
-    val actor = CobblemonClient.battle?.side1?.actors?.find { it.uuid == MinecraftClient.getInstance().player?.uuid }
-    val specBackButton = BattleBackButton(12f, MinecraftClient.getInstance().window.scaledHeight - 32f)
+    val actor = CobblemonClient.battle?.side1?.actors?.find { it.uuid == Minecraft.getInstance().player?.uuid }
+    val specBackButton = BattleBackButton(12f, Minecraft.getInstance().window.guiScaledHeight - 32f)
 
     var queuedActions = mutableListOf<() -> Unit>()
 
     override fun init() {
         super.init()
         messagePane = BattleMessagePane(CobblemonClient.battle!!.messages)
-        addDrawableChild(messagePane)
+        addRenderableWidget(messagePane)
     }
 
     fun changeActionSelection(newSelection: BattleActionSelection?) {
         val current = children().find { it is BattleActionSelection }
         queuedActions.add {
-            current?.let(this::remove)
+            current?.let(this::removeWidget)
             if (newSelection != null) {
-                addDrawableChild(newSelection)
+                addRenderableWidget(newSelection)
             }
         }
     }
@@ -81,7 +81,7 @@ class BattleGUI : Screen(battleLang("gui.title")) {
         }
     }
 
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         super.render(context, mouseX, mouseY, delta)
 
         opacity = CobblemonClient.battleOverlay.opacityRatio.toFloat()
@@ -92,10 +92,10 @@ class BattleGUI : Screen(battleLang("gui.title")) {
 
         val battle = CobblemonClient.battle
         if (battle == null) {
-            close()
+            onClose()
             return
         } else if (CobblemonClient.battleOverlay.opacityRatio <= 0.1 && CobblemonClient.battle?.minimised == true) {
-            close()
+            onClose()
             return
         }
 
@@ -113,25 +113,25 @@ class BattleGUI : Screen(battleLang("gui.title")) {
         }
 
         if (battle.spectating) {
-            specBackButton.render(context.matrices, mouseX, mouseY, delta)
+            specBackButton.render(context.pose(), mouseX, mouseY, delta)
         }
 
         val currentSelection = getCurrentActionSelection()
         if (currentSelection == null || currentSelection is BattleGeneralActionSelection ) {
             drawScaledText(
                 context = context,
-                text = battleLang("ui.hide_label", PartySendBinding.boundKey().localizedText),
-                x = MinecraftClient.getInstance().window.scaledWidth / 2,
-                y = (MinecraftClient.getInstance().window.scaledHeight / 5),
+                text = battleLang("ui.hide_label", PartySendBinding.boundKey().displayName),
+                x = Minecraft.getInstance().window.guiScaledWidth / 2,
+                y = (Minecraft.getInstance().window.guiScaledHeight / 5),
                 opacity = 0.75F * opacity,
                 centered = true
             )
         } else if (currentSelection is ForfeitConfirmationSelection) {
             drawScaledText(
                 context = context,
-                text = battleLang("ui.forfeit_confirmation", PartySendBinding.boundKey().localizedText),
-                x = MinecraftClient.getInstance().window.scaledWidth / 2,
-                y = (MinecraftClient.getInstance().window.scaledHeight / 5),
+                text = battleLang("ui.forfeit_confirmation", PartySendBinding.boundKey().displayName),
+                x = Minecraft.getInstance().window.guiScaledWidth / 2,
+                y = (Minecraft.getInstance().window.guiScaledHeight / 5),
                 opacity = 0.75F * opacity,
                 centered = true
             )
@@ -142,7 +142,7 @@ class BattleGUI : Screen(battleLang("gui.title")) {
         queuedActions.clear()
     }
 
-    override fun renderBackground(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderBackground(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
 
     }
 
@@ -154,9 +154,10 @@ class BattleGUI : Screen(battleLang("gui.title")) {
         }
     }
 
-    override fun shouldPause() = false
-    override fun close() {
-        super.close()
+    override fun isPauseScreen() = false
+
+    override fun onClose() {
+        super.onClose()
         CobblemonClient.battle?.minimised = true
         PartySendBinding.canApplyChange = false
         PartySendBinding.wasDown = true
@@ -168,7 +169,7 @@ class BattleGUI : Screen(battleLang("gui.title")) {
     }
 
     override fun charTyped(chr: Char, modifiers: Int): Boolean {
-        if (chr.toString().equals(PartySendBinding.boundKey().localizedText.string, ignoreCase = true) && CobblemonClient.battleOverlay.opacity == BattleOverlay.MAX_OPACITY && PartySendBinding.canAction()) {
+        if (chr.toString().equals(PartySendBinding.boundKey().displayName.string, ignoreCase = true) && CobblemonClient.battleOverlay.opacity == BattleOverlay.MAX_OPACITY && PartySendBinding.canAction()) {
             val battle = CobblemonClient.battle ?: return false
             battle.minimised = !battle.minimised
             PartySendBinding.actioned()

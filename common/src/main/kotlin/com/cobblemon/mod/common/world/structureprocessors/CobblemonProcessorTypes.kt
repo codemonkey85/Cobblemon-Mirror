@@ -9,15 +9,14 @@
 package com.cobblemon.mod.common.world.structureprocessors
 
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
-import net.minecraft.registry.Registries
-import net.minecraft.registry.Registry
-import net.minecraft.structure.processor.StructureProcessor
-import net.minecraft.structure.processor.StructureProcessorType
+import net.minecraft.core.Registry
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType
 
 object CobblemonProcessorTypes {
-    val registry = Registries.STRUCTURE_PROCESSOR
+    val registry = BuiltInRegistries.STRUCTURE_PROCESSOR
     val lists = CobblemonStructureProcessorLists
 
     @JvmField

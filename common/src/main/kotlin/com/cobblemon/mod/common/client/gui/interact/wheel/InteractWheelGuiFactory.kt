@@ -21,8 +21,8 @@ import com.cobblemon.mod.common.net.messages.server.trade.OfferTradePacket
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.Multimap
-import net.minecraft.client.MinecraftClient
-import net.minecraft.text.Text
+import net.minecraft.client.Minecraft
+import net.minecraft.network.chat.Component
 import java.util.*
 import org.joml.Vector3f
 
@@ -51,7 +51,7 @@ fun createPokemonInteractGui(pokemonID: UUID, canMountShoulder: Boolean): Intera
         options.put(Orientation.TOP_LEFT, mountShoulder)
     }
     CobblemonEvents.POKEMON_INTERACTION_GUI_CREATION.post(PokemonInteractionGUICreationEvent(pokemonID, canMountShoulder, options))
-    return InteractWheelGUI(options, Text.translatable("cobblemon.ui.interact.pokemon"))
+    return InteractWheelGUI(options, Component.translatable("cobblemon.ui.interact.pokemon"))
 }
 
 fun createPlayerInteractGui(optionsPacket: PlayerInteractOptionsPacket): InteractWheelGUI {
@@ -103,9 +103,9 @@ fun createPlayerInteractGui(optionsPacket: PlayerInteractOptionsPacket): Interac
             options.put(Orientation.TOP_RIGHT, spectate)
         }
     }
-    return InteractWheelGUI(options, Text.translatable("cobblemon.ui.interact.player"))
+    return InteractWheelGUI(options, Component.translatable("cobblemon.ui.interact.player"))
 }
 
 private fun closeGUI() {
-    MinecraftClient.getInstance().setScreen(null)
+    Minecraft.getInstance().setScreen(null)
 }

@@ -15,10 +15,10 @@ import com.cobblemon.mod.common.client.battle.animations.MoveTileOffscreenAnimat
 import com.cobblemon.mod.common.client.battle.animations.SwapAndMoveTileOnscreenAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.net.messages.client.battle.BattleSwitchPokemonPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object BattleSwitchPokemonHandler : ClientNetworkPacketHandler<BattleSwitchPokemonPacket> {
-    override fun handle(packet: BattleSwitchPokemonPacket, client: MinecraftClient) {
+    override fun handle(packet: BattleSwitchPokemonPacket, client: Minecraft) {
         val battle = CobblemonClient.battle ?: return
         val (actor, activeBattlePokemon) = battle.getPokemonFromPNX(packet.pnx)
 
@@ -49,7 +49,7 @@ object BattleSwitchPokemonHandler : ClientNetworkPacketHandler<BattleSwitchPokem
         )
 
         // Only update currently selected Pokémon if it's our Pokémon being switched in
-        if (actor == battle.getParticipatingActor(client.session.uuidOrNull)) {
+        if (actor == battle.getParticipatingActor(client.user.profileId)) {
             CobblemonClient.storage.switchToPokemon(packet.newPokemon.uuid)
         }
     }

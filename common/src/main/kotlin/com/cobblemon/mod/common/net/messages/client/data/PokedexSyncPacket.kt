@@ -12,14 +12,14 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.pokedex.PokedexJSONRegistry
 import com.cobblemon.mod.common.pokedex.DexData
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 // We do not need to know every single attribute as a client, as such, we only sync the aspects that matter
 class PokedexSyncPacket(dexes: Collection<DexData>) : DataRegistrySyncPacket<DexData, PokedexSyncPacket>(dexes) {
 
     override val id = ID
 
-    override fun encodeEntry(buffer: RegistryByteBuf, entry: DexData) {
+    override fun encodeEntry(buffer: RegistryFriendlyByteBuf, entry: DexData) {
         try {
             entry.encode(buffer)
         } catch (e: Exception) {
@@ -27,7 +27,7 @@ class PokedexSyncPacket(dexes: Collection<DexData>) : DataRegistrySyncPacket<Dex
         }
     }
 
-    override fun decodeEntry(buffer: RegistryByteBuf): DexData? {
+    override fun decodeEntry(buffer: RegistryFriendlyByteBuf): DexData? {
         val dexData = DexData(cobblemonResource("dex"))
         return try {
             dexData.decode(buffer)
@@ -44,6 +44,6 @@ class PokedexSyncPacket(dexes: Collection<DexData>) : DataRegistrySyncPacket<Dex
 
     companion object {
         val ID = cobblemonResource("pokedex_sync")
-        fun decode(buffer: RegistryByteBuf): PokedexSyncPacket = PokedexSyncPacket(emptyList()).apply { decodeBuffer(buffer) }
+        fun decode(buffer: RegistryFriendlyByteBuf): PokedexSyncPacket = PokedexSyncPacket(emptyList()).apply { decodeBuffer(buffer) }
     }
 }

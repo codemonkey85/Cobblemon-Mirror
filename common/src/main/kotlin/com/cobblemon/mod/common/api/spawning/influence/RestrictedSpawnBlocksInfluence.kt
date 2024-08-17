@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.api.spawning.influence
 
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
-import net.minecraft.registry.tag.BlockTags
+import net.minecraft.tags.BlockTags
 
 /**
  * Implements a [SpawningInfluence] that prevents Pokémon spawning on certain blocks.
@@ -46,6 +46,6 @@ open class RestrictedSpawnBlocksInfluence
 
         // Examine the block immediately above the spawn block to check for a rail
         // Potentially need a refactor if we ever want to check the spawn block itself.
-        return ctx.world.getBlockState(pokemonSpawnPos.withY(pokemonSpawnPos.y + 1)).isIn(restrictedBlocks).not()
+        return ctx.world.getBlockState(pokemonSpawnPos.atY(pokemonSpawnPos.y + 1)).`is`(restrictedBlocks).not()
     }
 }

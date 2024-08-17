@@ -18,7 +18,7 @@ import com.cobblemon.mod.common.api.spawning.detail.SpawnPool
 import com.cobblemon.mod.common.api.spawning.influence.SpawningInfluence
 import com.cobblemon.mod.common.api.spawning.selection.FlatContextWeightedSelector
 import com.cobblemon.mod.common.api.spawning.selection.SpawningSelector
-import net.minecraft.entity.Entity
+import net.minecraft.world.entity.Entity
 
 /**
  * A spawner that regularly attempts spawning entities. It has timing utilities,

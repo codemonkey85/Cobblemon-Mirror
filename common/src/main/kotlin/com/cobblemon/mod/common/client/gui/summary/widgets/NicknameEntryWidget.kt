@@ -14,18 +14,18 @@ import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.net.messages.server.pokemon.update.SetNicknamePacket
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.client.gui.widget.TextFieldWidget
-import net.minecraft.client.resource.language.I18n
-import net.minecraft.client.util.InputUtil
-import net.minecraft.text.Text
+import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.EditBox
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.resources.language.I18n
+import net.minecraft.network.chat.Component
 
 class NicknameEntryWidget(
-    var pokemon: Pokemon, x: Int, y: Int, width: Int, height: Int, val isParty: Boolean, text: Text
-): TextFieldWidget(
-    MinecraftClient.getInstance().textRenderer,
+    var pokemon: Pokemon, x: Int, y: Int, width: Int, height: Int, val isParty: Boolean, text: Component
+): EditBox(
+    Minecraft.getInstance().font,
     x, y, width, height, text
 ) {
     companion object {
@@ -45,16 +45,16 @@ class NicknameEntryWidget(
         }
 
         this.pokemon = pokemon
-        this.pokemonName = I18n.translate(pokemon.species.translatedName.string)
+        this.pokemonName = I18n.get(pokemon.species.translatedName.string)
 
-        this.setChangedListener {
+        this.setResponder {
             if (it.isNotBlank()) {
                 this.updateNickname(it)
             } else {
                 this.updateNickname(pokemonName)
             }
         }
-        text = pokemon.getDisplayName().string
+        value = pokemon.getDisplayName().string
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
@@ -68,9 +68,9 @@ class NicknameEntryWidget(
 
     override fun setFocused(focused: Boolean) {
         super.setFocused(focused)
-        text = text.trim().ifBlank { pokemonName }
+        value = value.trim().ifBlank { pokemonName }
         if (!focused) {
-            this.updateNickname(text)
+            this.updateNickname(value)
         }
     }
 
@@ -87,13 +87,13 @@ class NicknameEntryWidget(
         }
     }
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        if (cursor != text.length) setCursorToEnd(Screen.hasShiftDown())
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        if (cursorPosition != value.length) moveCursorToEnd(Screen.hasShiftDown())
 
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
-            text = Text.translatable(if (isFocused) "$text|" else text).bold(),
+            text = Component.translatable(if (isFocused) "$value|" else value).bold(),
             x = x,
             y = y,
             shadow = true
@@ -101,8 +101,8 @@ class NicknameEntryWidget(
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        if (keyCode == InputUtil.GLFW_KEY_ESCAPE) {
-            this.updateNickname(text.trim().ifBlank { this.pokemonName })
+        if (keyCode == InputConstants.KEY_ESCAPE) {
+            this.updateNickname(value.trim().ifBlank { this.pokemonName })
         }
         return super.keyPressed(keyCode, scanCode, modifiers)
     }

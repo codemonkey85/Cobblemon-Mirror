@@ -59,7 +59,7 @@ class SingleBoneLookAnimation(
 
 
     override var labels = setOf("look")
-    override fun setAngles(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
+    override fun setupAnim(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
         val head = bone ?: return
         val pitch = pitchMultiplier * headPitch.coerceIn(minPitch, maxPitch)
         val yaw = yawMultiplier * headYaw.coerceIn(minYaw, maxYaw)

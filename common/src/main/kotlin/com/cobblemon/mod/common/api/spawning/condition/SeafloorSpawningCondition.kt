@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.api.spawning.condition
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.spawning.context.SeafloorSpawningContext
 import com.cobblemon.mod.common.util.Merger
-import net.minecraft.block.Block
+import net.minecraft.world.level.block.Block
 
 /**
  * Base type for a spawning condition that applies to some kind of [SeafloorSpawningContext]. This
@@ -41,6 +41,11 @@ abstract class SeafloorTypeSpawningCondition<T : SeafloorSpawningContext> : Area
         if (other is SeafloorTypeSpawningCondition) {
             neededBaseBlocks = merger.merge(neededBaseBlocks, other.neededBaseBlocks)?.toMutableList()
         }
+    }
+
+    override fun isValid(): Boolean {
+        val containsNullValues = neededBaseBlocks != null && neededBaseBlocks!!.any {it == null}
+        return super.isValid() && !containsNullValues
     }
 }
 

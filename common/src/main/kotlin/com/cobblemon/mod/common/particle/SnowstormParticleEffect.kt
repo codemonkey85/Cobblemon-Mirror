@@ -8,14 +8,10 @@
 
 package com.cobblemon.mod.common.particle
 
-import com.cobblemon.mod.common.api.snowstorm.BedrockParticleEffect
-import com.mojang.brigadier.StringReader
-import com.mojang.brigadier.exceptions.CommandSyntaxException
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.particle.ParticleEffect
-import net.minecraft.particle.ParticleType
+import com.cobblemon.mod.common.api.snowstorm.BedrockParticleOptions
+import net.minecraft.core.particles.ParticleOptions
 
-class SnowstormParticleEffect(val effect: BedrockParticleEffect) : ParticleEffect {
+class SnowstormParticleOptions(val effect: BedrockParticleOptions) : ParticleOptions {
     override fun getType() = CobblemonParticles.SNOWSTORM_PARTICLE_TYPE
     companion object {
 

@@ -11,7 +11,7 @@ package com.cobblemon.mod.neoforge.client
 import com.cobblemon.mod.common.platform.events.ClientPlayerEvent
 import com.cobblemon.mod.common.platform.events.ClientTickEvent
 import com.cobblemon.mod.common.platform.events.PlatformEvents
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.api.distmarker.OnlyIn
 import net.neoforged.bus.api.SubscribeEvent
@@ -29,12 +29,12 @@ object NeoForgeClientPlatformEventHandler {
 
     @SubscribeEvent
     fun preClientTick(e: net.neoforged.neoforge.client.event.ClientTickEvent.Pre) {
-        PlatformEvents.CLIENT_TICK_PRE.post(ClientTickEvent.Pre(MinecraftClient.getInstance()))
+        PlatformEvents.CLIENT_TICK_PRE.post(ClientTickEvent.Pre(Minecraft.getInstance()))
     }
 
     @SubscribeEvent
     fun postClientTick(e: net.neoforged.neoforge.client.event.ClientTickEvent.Post) {
-        PlatformEvents.CLIENT_TICK_POST.post(ClientTickEvent.Post(MinecraftClient.getInstance()))
+        PlatformEvents.CLIENT_TICK_POST.post(ClientTickEvent.Post(Minecraft.getInstance()))
     }
 
     @SubscribeEvent

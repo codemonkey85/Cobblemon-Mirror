@@ -11,17 +11,17 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class LunatoneModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("lunatone")
 
     override var portraitScale = 1.05F
-    override var portraitTranslation = Vec3d(0.23, 0.53, 0.0)
+    override var portraitTranslation = Vec3(0.23, 0.53, 0.0)
 
     override var profileScale = 0.73F
-    override var profileTranslation = Vec3d(0.05, 0.68, 0.0)
+    override var profileTranslation = Vec3(0.05, 0.68, 0.0)
 
     lateinit var sleep: CobblemonPose
     lateinit var standing: CobblemonPose

@@ -8,24 +8,23 @@
 
 package com.cobblemon.mod.common.entity.npc.ai
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
-import net.minecraft.util.Unit
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
 
 object MeleeAttackTask {
-    fun create(range: Float, cooldownTicks: Long): SingleTickTask<LivingEntity> = TaskTriggerer.task {
+    fun create(range: Float, cooldownTicks: Long): OneShot<LivingEntity> = BehaviorBuilder.create {
         it.group(
-            it.queryMemoryValue(MemoryModuleType.ATTACK_TARGET),
-            it.queryMemoryOptional(MemoryModuleType.ATTACK_COOLING_DOWN)
+            it.present(MemoryModuleType.ATTACK_TARGET),
+            it.registered(MemoryModuleType.ATTACK_COOLING_DOWN)
         ).apply(it) { attackTarget, cooldown ->
-            TaskRunnable { world, entity, _ ->
-                val attackTarget = it.getValue(attackTarget)
+            Trigger { world, entity, _ ->
+                val attackTarget = it.get(attackTarget)
                 if (entity.distanceTo(attackTarget) <= range) {
-                    entity.tryAttack(attackTarget)
-                    cooldown.remember(true, cooldownTicks)
+                    entity.doHurtTarget(attackTarget)
+                    cooldown.setWithExpiry(true, cooldownTicks)
                     true
                 } else {
                     false

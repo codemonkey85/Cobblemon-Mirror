@@ -20,13 +20,14 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
+import java.util.*
 
 object PokedexJSONRegistry : JsonDataRegistry<DexData> {
     override val id = cobblemonResource("pokedexes")
-    override val type = ResourceType.SERVER_DATA
+    override val type = PackType.SERVER_DATA
 
     override val gson: Gson = GsonBuilder()
         .disableHtmlEscaping()
@@ -39,7 +40,7 @@ object PokedexJSONRegistry : JsonDataRegistry<DexData> {
 
     override val observable = SimpleObservable<PokedexJSONRegistry>()
 
-    val dexByIdentifier = mutableMapOf<Identifier, DexData>()
+    val dexByIdentifier = mutableMapOf<ResourceLocation, DexData>()
     val dexes: MutableCollection<DexData>
         get() = this.dexByIdentifier.values.toMutableList()
 
@@ -56,7 +57,7 @@ object PokedexJSONRegistry : JsonDataRegistry<DexData> {
             }
 
             //Step 1: Get all dexes without a parent, so we can iterate over them
-            val dexesWithoutParents : MutableList<Identifier> = mutableListOf()
+            val dexesWithoutParents : MutableList<ResourceLocation> = mutableListOf()
             dexesWithoutParents.addAll(dexByIdentifier.keys)
 
             for(identifier in dexByIdentifier.keys) {
@@ -104,7 +105,7 @@ object PokedexJSONRegistry : JsonDataRegistry<DexData> {
         }
 
     // todo define this in JSONs
-    private var orderedDexes: List<Identifier> = listOf(
+    private var orderedDexes: List<ResourceLocation> = listOf(
         cobblemonResource("national"),
         cobblemonResource("national_kanto"),
         cobblemonResource("national_johto"),
@@ -125,7 +126,7 @@ object PokedexJSONRegistry : JsonDataRegistry<DexData> {
      * @param currentDex The [Identifier] to search [orderedDexes] for
      * @return The next value
      */
-    fun getNextDex(currentDex: Identifier): Identifier {
+    fun getNextDex(currentDex: ResourceLocation): ResourceLocation {
         return if (orderedDexes.indexOf(currentDex) == orderedDexes.size - 1) {
             orderedDexes.first()
         } else {
@@ -139,7 +140,7 @@ object PokedexJSONRegistry : JsonDataRegistry<DexData> {
      * @param currentDex The [Identifier] to search [orderedDexes] for
      * @return The next value
      */
-    fun getPreviousDex(currentDex: Identifier): Identifier {
+    fun getPreviousDex(currentDex: ResourceLocation): ResourceLocation {
         return if (orderedDexes.indexOf(currentDex) == 0) {
             orderedDexes.last()
         } else {
@@ -163,7 +164,7 @@ object PokedexJSONRegistry : JsonDataRegistry<DexData> {
      * @param identifier The unique [DexData.identifier] of the [DexData].
      * @return The [DexData] if existing.
      */
-    fun getByIdentifier(identifier: Identifier) = this.dexByIdentifier[identifier]
+    fun getByIdentifier(identifier: ResourceLocation) = this.dexByIdentifier[identifier]
 
     /**
      * Counts the currently loaded dexes.
@@ -223,7 +224,7 @@ object PokedexJSONRegistry : JsonDataRegistry<DexData> {
         return dexNumber.toString()
     }
 
-    override fun reload(data: Map<Identifier, DexData>) {
+    override fun reload(data: Map<ResourceLocation, DexData>) {
         this.dexes.clear()
         _entries = null
         _skipAutoNumberingIndexes = null
@@ -241,7 +242,7 @@ object PokedexJSONRegistry : JsonDataRegistry<DexData> {
         dexes.addAll(dexByIdentifier.values)
     }
 
-    override fun sync(player: ServerPlayerEntity) {
+    override fun sync(player: ServerPlayer) {
         PokedexSyncPacket(dexes.toList()).sendToPlayer(player)
     }
 }

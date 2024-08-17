@@ -21,8 +21,8 @@ import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
 import com.cobblemon.mod.common.util.lang
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
 
 class StatsWidget(val pX: Int, val pY: Int) : SoundlessWidget(
     pX,
@@ -54,15 +54,15 @@ class StatsWidget(val pX: Int, val pY: Int) : SoundlessWidget(
 
     var baseStats: Map<Stat, Int>? = null
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (baseStats == null) return
 
-        val matrices = context.matrices
+        val matrices = context.pose()
 
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
-            text = Text.translatable("cobblemon.ui.pokedex.info.stats").bold(),
+            text = Component.translatable("cobblemon.ui.pokedex.info.stats").bold(),
             x = pX + 9,
             y = pY - 10,
             shadow = true

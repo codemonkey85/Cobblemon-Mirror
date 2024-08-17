@@ -12,10 +12,9 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.permission.CobblemonPermissions
 import com.cobblemon.mod.common.api.permission.Permission
 import com.cobblemon.mod.common.api.permission.PermissionValidator
-import net.minecraft.command.CommandSource
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.server.permission.PermissionAPI
 import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent
@@ -24,7 +23,7 @@ import net.neoforged.neoforge.server.permission.nodes.PermissionTypes
 
 object ForgePermissionValidator : PermissionValidator {
 
-    private val nodes = hashMapOf<Identifier, PermissionNode<Boolean>>()
+    private val nodes = hashMapOf<ResourceLocation, PermissionNode<Boolean>>()
 
     init {
         NeoForge.EVENT_BUS.addListener<PermissionGatherEvent.Nodes> { event ->
@@ -38,20 +37,20 @@ object ForgePermissionValidator : PermissionValidator {
         Cobblemon.LOGGER.info("Booting ForgePermissionApiPermissionValidator, player permissions will be checked using MinecraftForge' PermissionAPI, non player command sources will use Minecraft' permission level system, see https://docs.minecraftforge.net/en/latest/ and https://minecraft.fandom.com/wiki/Permission_level")
     }
 
-    override fun hasPermission(player: ServerPlayerEntity, permission: Permission): Boolean {
-        val node = this.findNode(permission) ?: return player.hasPermissionLevel(permission.level.numericalValue)
+    override fun hasPermission(player: ServerPlayer, permission: Permission): Boolean {
+        val node = this.findNode(permission) ?: return player.hasPermissions(permission.level.numericalValue)
         return PermissionAPI.getPermission(player, node)
     }
 
-    override fun hasPermission(source: CommandSource, permission: Permission): Boolean {
-        val player = this.extractPlayerFromSource(source) ?: return source.hasPermissionLevel(permission.level.numericalValue)
-        val node = this.findNode(permission) ?: return source.hasPermissionLevel(permission.level.numericalValue)
+    override fun hasPermission(source: CommandSourceStack, permission: Permission): Boolean {
+        val player = this.extractPlayerFromSource(source) ?: return source.hasPermission(permission.level.numericalValue)
+        val node = this.findNode(permission) ?: return source.hasPermission(permission.level.numericalValue)
         return PermissionAPI.getPermission(player, node)
     }
 
     private fun createNodes() = CobblemonPermissions.all().map { permission ->
         // 3rd arg is default value if no implementation is present essentially
-        val node = PermissionNode(permission.identifier, PermissionTypes.BOOLEAN, { player, _, _ -> player?.hasPermissionLevel(permission.level.numericalValue) == true })
+        val node = PermissionNode(permission.identifier, PermissionTypes.BOOLEAN, { player, _, _ -> player?.hasPermissions(permission.level.numericalValue) == true })
         this.nodes[permission.identifier] = node
         Cobblemon.LOGGER.debug("Registered Forge permission node ${node.nodeName}")
         node
@@ -59,6 +58,6 @@ object ForgePermissionValidator : PermissionValidator {
 
     private fun findNode(permission: Permission) = this.nodes[permission.identifier]
 
-    private fun extractPlayerFromSource(source: CommandSource) = if (source is ServerCommandSource) source.player else null
+    private fun extractPlayerFromSource(source: CommandSourceStack) = source.player
 
 }

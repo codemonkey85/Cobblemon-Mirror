@@ -106,7 +106,7 @@ class MoveInstruction(
                     return@addFunction DoubleValue(missedTargets.isNotEmpty())
                 } else {
                     val entityUUID = params.getString(0)
-                    return@addFunction DoubleValue(missedTargets.any { it.entity?.uuidAsString == entityUUID })
+                    return@addFunction DoubleValue(missedTargets.any { it.entity?.stringUUID == entityUUID })
                 }
             }
 
@@ -116,7 +116,7 @@ class MoveInstruction(
                     return@addFunction DoubleValue(hurtTargets.isNotEmpty())
                 } else {
                     val entityUUID = params.getString(0)
-                    return@addFunction DoubleValue(hurtTargets.any { it.entity?.uuidAsString == entityUUID })
+                    return@addFunction DoubleValue(hurtTargets.any { it.entity?.stringUUID == entityUUID })
                 }
             }
 

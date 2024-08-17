@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.client.render.models.blockbench.blockentity
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Bone
 import com.google.gson.annotations.SerializedName
-import net.minecraft.client.model.ModelPart
+import net.minecraft.client.model.geom.ModelPart
 
 class BlockEntityModel(root: Bone) : PosableModel(root) {
     @Transient

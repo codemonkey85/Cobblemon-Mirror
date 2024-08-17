@@ -11,10 +11,10 @@ package com.cobblemon.mod.common.net.messages.client.callback
 import com.cobblemon.mod.common.api.callback.PartySelectPokemonDTO
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import java.util.UUID
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.text.MutableText
-import net.minecraft.text.TextCodecs
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.ComponentSerialization
+import net.minecraft.network.chat.MutableComponent
+import java.util.*
 
 /**
  * Packet send to the client to force them to open a party selection GUI.
@@ -24,16 +24,16 @@ import net.minecraft.text.TextCodecs
  */
 class OpenPartyCallbackPacket(
     val uuid: UUID,
-    val title: MutableText,
+    val title: MutableComponent,
 //    val usePortraits: Boolean,
 //    val animate: Boolean,
     val pokemon: List<PartySelectPokemonDTO>
 ) : NetworkPacket<OpenPartyCallbackPacket> {
     companion object {
         val ID = cobblemonResource("open_party_callback")
-        fun decode(buffer: RegistryByteBuf) = OpenPartyCallbackPacket(
-            uuid = buffer.readUuid(),
-            title = TextCodecs.PACKET_CODEC.decode(buffer).copy(),
+        fun decode(buffer: RegistryFriendlyByteBuf) = OpenPartyCallbackPacket(
+            uuid = buffer.readUUID(),
+            title = ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buffer).copy(),
 //            usePortraits = buffer.readBoolean(),
 //            animate = buffer.readBoolean(),
             pokemon = buffer.readList { _ -> PartySelectPokemonDTO(buffer) }
@@ -41,9 +41,9 @@ class OpenPartyCallbackPacket(
     }
 
     override val id = ID
-    override fun encode(buffer: RegistryByteBuf) {
-        buffer.writeUuid(uuid)
-        TextCodecs.PACKET_CODEC.encode(buffer, title)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(uuid)
+        ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.encode(buffer, title)
 //        buffer.writeBoolean(usePortraits)
 //        buffer.writeBoolean(animate)
         buffer.writeCollection(pokemon) { _, v -> v.writeToBuffer(buffer) }

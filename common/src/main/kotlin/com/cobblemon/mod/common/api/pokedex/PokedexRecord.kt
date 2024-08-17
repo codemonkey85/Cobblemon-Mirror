@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.api.pokedex
 
 import com.cobblemon.mod.common.api.events.battles.BattleStartedPostEvent
+import com.cobblemon.mod.common.api.events.pokedex.scanning.PokemonScannedEvent
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent
 import com.cobblemon.mod.common.api.events.pokemon.TradeCompletedEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEvent
@@ -27,7 +28,7 @@ import com.cobblemon.mod.common.util.getPlayer
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import java.util.Optional
 import java.util.UUID
 import kotlin.jvm.optionals.getOrDefault
@@ -40,7 +41,7 @@ import kotlin.jvm.optionals.getOrDefault
  */
 class PokedexRecord(
     override val uuid: UUID,
-    val speciesEntries: MutableMap<Identifier, SpeciesPokedexEntry> = mutableMapOf(),
+    val speciesEntries: MutableMap<ResourceLocation, SpeciesPokedexEntry> = mutableMapOf(),
     val globalTrackedData: MutableSet<GlobalTrackedData> = mutableSetOf()
 ) : InstancedPlayerData {
 
@@ -61,6 +62,22 @@ class PokedexRecord(
         val speciesId = event.pokemon.species.resourceIdentifier
         val speciesEntry = getSpeciesEntry(speciesId)
         speciesEntry.pokemonCaught(event)
+    }
+
+    fun pokemonScanned(event: PokemonScannedEvent) {
+        var haveUpdated = false
+        if (!gennedFactories.contains(EventTriggerType.SCANNED)) {
+            genFactories(EventTriggerType.SCANNED)
+        }
+        globalTrackedData.forEach {
+            val changed = it.onScan(event)
+            if (changed) {
+                haveUpdated = true
+            }
+        }
+        val speciesId = event.pokemon.species.resourceIdentifier
+        val speciesEntry = getSpeciesEntry(speciesId)
+        speciesEntry.pokemonScanned(event)
     }
 
     fun pokemonEvolved(event: EvolutionCompleteEvent) {
@@ -132,7 +149,7 @@ class PokedexRecord(
     }
 
     //This can be triggered by multiple things, like a pokemon switching in inside of a player battle
-    fun onPokemonSeen(speciesId: Identifier, formStr: String) {
+    fun onPokemonSeen(speciesId: ResourceLocation, formStr: String) {
         val speciesEntry = getSpeciesEntry(speciesId)
         speciesEntry.pokemonSeen(speciesId, formStr)
     }
@@ -214,7 +231,7 @@ class PokedexRecord(
         gennedFactories.add(type)
     }
 
-    private fun getSpeciesEntry(speciesId: Identifier): SpeciesPokedexEntry {
+    private fun getSpeciesEntry(speciesId: ResourceLocation): SpeciesPokedexEntry {
         if (!speciesEntries.containsKey(speciesId)) {
             val newSpeciesEntry = SpeciesPokedexEntry()
             speciesEntries[speciesId] = newSpeciesEntry
@@ -230,7 +247,7 @@ class PokedexRecord(
         val CODEC: Codec<PokedexRecord> = RecordCodecBuilder.create { instance ->
             instance.group(
                 PrimitiveCodec.STRING.fieldOf("uuid").forGetter { it.uuid.toString() },
-                Codec.unboundedMap(Identifier.CODEC, SpeciesPokedexEntry.CODEC).fieldOf("speciesEntries").forGetter { it.speciesEntries },
+                Codec.unboundedMap(ResourceLocation.CODEC, SpeciesPokedexEntry.CODEC).fieldOf("speciesEntries").forGetter { it.speciesEntries },
                 Codec.list(GlobalTrackedData.CODEC).optionalFieldOf("globalTrackedData").forGetter {
                     if (it.globalTrackedData.isEmpty()) {
                         return@forGetter Optional.empty<MutableList<GlobalTrackedData>>()

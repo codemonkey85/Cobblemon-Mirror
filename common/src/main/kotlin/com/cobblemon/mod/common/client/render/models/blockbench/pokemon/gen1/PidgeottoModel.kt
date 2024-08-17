@@ -22,8 +22,8 @@ import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class PidgeottoModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("pidgeotto")
@@ -41,9 +41,9 @@ class PidgeottoModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     private val wingClosedLeft = getPart("wing_closed_left")
 
     override var portraitScale = 2.8F
-    override var portraitTranslation = Vec3d(-0.4, -0.9, 0.0)
+    override var portraitTranslation = Vec3(-0.4, -0.9, 0.0)
     override var profileScale = 1.1F
-    override var profileTranslation = Vec3d(0.0, 0.1, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.1, 0.0)
 
     lateinit var sleep: Pose
     lateinit var stand: Pose

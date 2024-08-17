@@ -10,8 +10,10 @@ package com.cobblemon.mod.common.api.npc.configuration
 
 import com.cobblemon.mod.common.api.npc.NPCPartyProvider
 import com.cobblemon.mod.common.util.DataKeys
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.PacketByteBuf
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class NPCBattleConfiguration {
     var canChallenge = false
@@ -19,7 +21,7 @@ class NPCBattleConfiguration {
     var simultaneousBattles = false
     var healAfterwards = true
 
-    fun encode(buffer: PacketByteBuf) {
+    fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(canChallenge)
         buffer.writeBoolean(simultaneousBattles)
         buffer.writeBoolean(healAfterwards)
@@ -29,7 +31,7 @@ class NPCBattleConfiguration {
         }
     }
 
-    fun decode(buffer: PacketByteBuf) {
+    fun decode(buffer: RegistryFriendlyByteBuf) {
         canChallenge = buffer.readBoolean()
         simultaneousBattles = buffer.readBoolean()
         healAfterwards = buffer.readBoolean()
@@ -38,24 +40,26 @@ class NPCBattleConfiguration {
             val providerBuilder = NPCPartyProvider.types[type]
                 ?: throw IllegalArgumentException("Failed to load NPC party provider of type: $type")
 
-            providerBuilder(type)
+            val decodedParty = providerBuilder(type)
+            decodedParty.decode(buffer)
+            decodedParty
         }
     }
 
-    fun saveToNBT(nbt: NbtCompound) {
+    fun saveToNBT(nbt: CompoundTag) {
         nbt.putBoolean(DataKeys.NPC_CAN_CHALLENGE, canChallenge)
         nbt.putBoolean(DataKeys.NPC_SIMULTANEOUS_BATTLES, simultaneousBattles)
         nbt.putBoolean(DataKeys.NPC_HEAL_AFTERWARDS, healAfterwards)
         val party = party
         if (party != null) {
-            val partyNBT = NbtCompound()
+            val partyNBT = CompoundTag()
             partyNBT.putString(DataKeys.NPC_PARTY_TYPE, party.type)
             party.saveToNBT(partyNBT)
             nbt.put(DataKeys.NPC_PARTY, partyNBT)
         }
     }
 
-    fun loadFromNBT(nbt: NbtCompound) {
+    fun loadFromNBT(nbt: CompoundTag) {
         canChallenge = nbt.getBoolean(DataKeys.NPC_CAN_CHALLENGE)
         simultaneousBattles = nbt.getBoolean(DataKeys.NPC_SIMULTANEOUS_BATTLES)
         healAfterwards = nbt.getBoolean(DataKeys.NPC_HEAL_AFTERWARDS)

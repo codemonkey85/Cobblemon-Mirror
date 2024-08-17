@@ -10,6 +10,7 @@ package com.cobblemon.mod.neoforge
 
 import com.cobblemon.mod.common.*
 import com.cobblemon.mod.common.advancement.CobblemonCriteria
+import com.cobblemon.mod.common.advancement.predicate.CobblemonEntitySubPredicates
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.net.serializers.IdentifierDataSerializer
 import com.cobblemon.mod.common.api.net.serializers.PoseTypeDataSerializer
@@ -36,36 +37,35 @@ import com.cobblemon.mod.neoforge.net.CobblemonNeoForgeNetworkManager
 import com.cobblemon.mod.neoforge.permission.ForgePermissionValidator
 import com.cobblemon.mod.neoforge.worldgen.CobblemonBiomeModifiers
 import com.mojang.brigadier.arguments.ArgumentType
+import net.minecraft.commands.synchronization.ArgumentTypeInfo
+import net.minecraft.commands.synchronization.ArgumentTypeInfos
 import java.io.File
 import java.util.UUID
 import java.util.concurrent.ExecutionException
 import kotlin.reflect.KClass
-import net.minecraft.block.ComposterBlock
-import net.minecraft.command.argument.ArgumentTypes
-import net.minecraft.command.argument.serialize.ArgumentSerializer
-import net.minecraft.item.ItemConvertible
-import net.minecraft.item.ItemGroup
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.registry.tag.TagKey
-import net.minecraft.resource.DirectoryResourcePack
-import net.minecraft.resource.ResourceManager
-import net.minecraft.resource.ResourcePack
-import net.minecraft.resource.ResourcePackInfo
-import net.minecraft.resource.ResourcePackPosition
-import net.minecraft.resource.ResourcePackProfile
-import net.minecraft.resource.ResourcePackProfile.PackFactory
-import net.minecraft.resource.ResourcePackSource
-import net.minecraft.resource.ResourceReloader
-import net.minecraft.resource.ResourceType
+import net.minecraft.core.registries.Registries
+import net.minecraft.world.level.ItemLike
+import net.minecraft.resources.ResourceKey
+import net.minecraft.tags.TagKey
+import net.minecraft.server.packs.PackType
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
-import net.minecraft.world.GameRules
-import net.minecraft.world.biome.Biome
-import net.minecraft.world.gen.GenerationStep
-import net.minecraft.world.gen.feature.PlacedFeature
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.packs.PackLocationInfo
+import net.minecraft.server.packs.PackResources
+import net.minecraft.server.packs.PackSelectionConfig
+import net.minecraft.server.packs.PathPackResources
+import net.minecraft.server.packs.repository.Pack
+import net.minecraft.server.packs.repository.PackSource
+import net.minecraft.server.packs.resources.PreparableReloadListener
+import net.minecraft.server.packs.resources.ResourceManager
+import net.minecraft.world.item.CreativeModeTab
+import net.minecraft.world.level.GameRules
+import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.block.ComposterBlock
+import net.minecraft.world.level.levelgen.GenerationStep
+import net.minecraft.world.level.levelgen.placement.PlacedFeature
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.fml.InterModComms
 import net.neoforged.fml.ModList
@@ -100,10 +100,10 @@ class CobblemonNeoForge : CobblemonImplementation {
     override val modAPI = ModAPI.NEOFORGE
     private val hasBeenSynced = hashSetOf<UUID>()
 
-    private val commandArgumentTypes = DeferredRegister.create(RegistryKeys.COMMAND_ARGUMENT_TYPE, Cobblemon.MODID)
-    private val reloadableResources = arrayListOf<ResourceReloader>()
+    private val commandArgumentTypes = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, Cobblemon.MODID)
+    private val reloadableResources = arrayListOf<PreparableReloadListener>()
     private val queuedWork = arrayListOf<() -> Unit>()
-    private val queuedBuiltinResourcePacks = arrayListOf<Triple<Identifier, Text, ResourcePackActivationBehaviour>>()
+    private val queuedBuiltinResourcePacks = arrayListOf<Triple<ResourceLocation, Component, ResourcePackActivationBehaviour>>()
 
     override val networkManager = CobblemonNeoForgeNetworkManager
 
@@ -144,7 +144,7 @@ class CobblemonNeoForge : CobblemonImplementation {
     }
 
     fun wakeUp(event: PlayerWakeUpEvent) {
-        val playerEntity = event.entity as? ServerPlayerEntity ?: return
+        val playerEntity = event.entity as? ServerPlayer ?: return
         playerEntity.didSleep()
     }
 
@@ -163,33 +163,33 @@ class CobblemonNeoForge : CobblemonImplementation {
 
     fun on(event: RegisterEvent) {
 
-        event.register(RegistryKeys.BLOCK_PREDICATE_TYPE) {
+        event.register(Registries.BLOCK_PREDICATE_TYPE) {
             CobblemonBlockPredicates.touch()
         }
-        event.register(RegistryKeys.PLACEMENT_MODIFIER_TYPE) {
+        event.register(Registries.PLACEMENT_MODIFIER_TYPE) {
             CobblemonPlacementModifierTypes.touch()
         }
-        event.register(RegistryKeys.DECORATED_POT_PATTERN) {
+        event.register(Registries.DECORATED_POT_PATTERN) {
             CobblemonSherds.registerSherds()
         }
 
-        event.register(RegistryKeys.STRUCTURE_PROCESSOR) {
+        event.register(Registries.STRUCTURE_PROCESSOR) {
             CobblemonProcessorTypes.touch()
         }
 
-        event.register(RegistryKeys.ACTIVITY) { registry ->
+        event.register(Registries.ACTIVITY) { registry ->
             CobblemonActivities.activities.forEach {
-                registry.register(cobblemonResource(it.id), it)
+                registry.register(cobblemonResource(it.name), it)
             }
         }
 
-        event.register(RegistryKeys.SENSOR_TYPE) { registry ->
+        event.register(Registries.SENSOR_TYPE) { registry ->
             CobblemonSensors.sensors.forEach { (key, sensorType) ->
                 registry.register(cobblemonResource(key), sensorType)
             }
         }
 
-        event.register(RegistryKeys.MEMORY_MODULE_TYPE) { registry ->
+        event.register(Registries.MEMORY_MODULE_TYPE) { registry ->
             CobblemonMemories.memories.forEach { (key, memoryModuleType) ->
                 registry.register(cobblemonResource(key), memoryModuleType)
             }
@@ -220,7 +220,7 @@ class CobblemonNeoForge : CobblemonImplementation {
 
     override fun registerSoundEvents() {
         MOD_BUS.addListener<RegisterEvent> { event ->
-            event.register(CobblemonSounds.registryKey) { helper ->
+            event.register(CobblemonSounds.resourceKey) { helper ->
                 CobblemonSounds.register { identifier, sounds -> helper.register(identifier, sounds) }
             }
         }
@@ -228,7 +228,7 @@ class CobblemonNeoForge : CobblemonImplementation {
 
     override fun registerDataComponents() {
         MOD_BUS.addListener<RegisterEvent> { event ->
-            event.register(CobblemonItemComponents.registryKey) { helper ->
+            event.register(CobblemonItemComponents.resourceKey) { helper ->
                 CobblemonItemComponents.register { identifier, ComponentType ->  helper.register(identifier, ComponentType)}
             }
         }
@@ -248,7 +248,7 @@ class CobblemonNeoForge : CobblemonImplementation {
 
     override fun registerBlocks() {
         MOD_BUS.addListener<RegisterEvent> { event ->
-            event.register(CobblemonBlocks.registryKey) { helper ->
+            event.register(CobblemonBlocks.resourceKey) { helper ->
                 CobblemonBlocks.register { identifier, block -> helper.register(identifier, block) }
             }
         }
@@ -256,7 +256,7 @@ class CobblemonNeoForge : CobblemonImplementation {
 
     override fun registerParticles() {
         MOD_BUS.addListener<RegisterEvent> { event ->
-            event.register(CobblemonParticles.registryKey) { helper ->
+            event.register(CobblemonParticles.resourceKey) { helper ->
                 CobblemonParticles.register { identifier, particleType -> helper.register(identifier, particleType) }
             }
         }
@@ -266,24 +266,24 @@ class CobblemonNeoForge : CobblemonImplementation {
         if (e.toolAction == ToolActions.AXE_STRIP) {
             val start = e.state.block
             val result = CobblemonBlocks.strippedBlocks()[start] ?: return
-            e.setFinalState(result.getStateWithProperties(e.state))
+            e.setFinalState(result.withPropertiesOf(e.state))
         }
     }
 
     override fun registerItems() {
         with(MOD_BUS) {
             addListener<RegisterEvent> { event ->
-                event.register(CobblemonItems.registryKey) { helper ->
+                event.register(CobblemonItems.resourceKey) { helper ->
                     CobblemonItems.register { identifier, item -> helper.register(identifier, item) }
                 }
             }
             addListener<RegisterEvent> { event ->
-                event.register(RegistryKeys.ITEM_GROUP) { helper ->
+                event.register(Registries.CREATIVE_MODE_TAB) { helper ->
                     CobblemonItemGroups.register { holder ->
-                        val itemGroup = ItemGroup.builder()
-                            .displayName(holder.displayName)
+                        val itemGroup = CreativeModeTab.builder()
+                            .title(holder.displayName)
                             .icon(holder.displayIconProvider)
-                            .entries(holder.entryCollector)
+                            .displayItems(holder.entryCollector)
                             .build()
                         helper.register(holder.key, itemGroup)
                         itemGroup
@@ -295,7 +295,7 @@ class CobblemonNeoForge : CobblemonImplementation {
 
     override fun registerEntityTypes() {
         MOD_BUS.addListener<RegisterEvent> { event ->
-            event.register(CobblemonEntities.registryKey) { helper ->
+            event.register(CobblemonEntities.resourceKey) { helper ->
                 CobblemonEntities.register { identifier, type -> helper.register(identifier, type) }
             }
         }
@@ -314,7 +314,7 @@ class CobblemonNeoForge : CobblemonImplementation {
 
     override fun registerBlockEntityTypes() {
         MOD_BUS.addListener<RegisterEvent> { event ->
-            event.register(CobblemonBlockEntities.registryKey) { helper ->
+            event.register(CobblemonBlockEntities.resourceKey) { helper ->
                 CobblemonBlockEntities.register { identifier, type -> helper.register(identifier, type) }
             }
         }
@@ -322,22 +322,22 @@ class CobblemonNeoForge : CobblemonImplementation {
 
     override fun registerWorldGenFeatures() {
         MOD_BUS.addListener<RegisterEvent> { event ->
-            event.register(CobblemonFeatures.registryKey) { helper ->
+            event.register(CobblemonFeatures.resourceKey) { helper ->
                 CobblemonFeatures.register { identifier, feature -> helper.register(identifier, feature) }
             }
         }
     }
 
-    override fun addFeatureToWorldGen(feature: RegistryKey<PlacedFeature>, step: GenerationStep.Feature, validTag: TagKey<Biome>?) {
+    override fun addFeatureToWorldGen(feature: ResourceKey<PlacedFeature>, step: GenerationStep.Decoration, validTag: TagKey<Biome>?) {
         CobblemonBiomeModifiers.add(feature, step, validTag)
     }
 
-    override fun <A : ArgumentType<*>, T : ArgumentSerializer.ArgumentTypeProperties<A>> registerCommandArgument(identifier: Identifier, argumentClass: KClass<A>, serializer: ArgumentSerializer<A, T>) {
+    override fun <A : ArgumentType<*>, T : ArgumentTypeInfo.Template<A>> registerCommandArgument(identifier: ResourceLocation, argumentClass: KClass<A>, serializer: ArgumentTypeInfo<A, T>) {
 
         //This is technically a supplier not a function (it is unused), but we need to explicitly say whether its a supplier or a function
         //Idk how to explicitly say its a supplier, so lets just make it a function by specifying a param
         this.commandArgumentTypes.register(identifier.path) { it ->
-            ArgumentTypes.registerByClass(argumentClass.java, serializer)
+            ArgumentTypeInfos.registerByClass(argumentClass.java, serializer)
         }
     }
 
@@ -345,21 +345,27 @@ class CobblemonNeoForge : CobblemonImplementation {
         CobblemonCommands.register(e.dispatcher, e.buildContext, e.commandSelection)
     }
 
-    override fun <T : GameRules.Rule<T>> registerGameRule(name: String, category: GameRules.Category, type: GameRules.Type<T>): GameRules.Key<T> = GameRules.register(name, category, type)
+    override fun <T : GameRules.Value<T>> registerGameRule(name: String, category: GameRules.Category, type: GameRules.Type<T>): GameRules.Key<T> = GameRules.register(name, category, type)
 
 
     override fun registerCriteria() {
         MOD_BUS.addListener<RegisterEvent> { event ->
-            CobblemonCriteria.register { id, obj ->
-                event.register(CobblemonCriteria.registryKey) { helper ->
-                    CobblemonCriteria.register { identifier, criteria -> helper.register(identifier, criteria) }
-                }
+            event.register(CobblemonCriteria.resourceKey) { helper ->
+                CobblemonCriteria.register { identifier, criteria -> helper.register(identifier, criteria) }
             }
         }
     }
 
-    override fun registerResourceReloader(identifier: Identifier, reloader: ResourceReloader, type: ResourceType, dependencies: Collection<Identifier>) {
-        if (type == ResourceType.SERVER_DATA) {
+    override fun registerEntitySubPredicates() {
+        MOD_BUS.addListener<RegisterEvent> { event ->
+            event.register(CobblemonEntitySubPredicates.resourceKey) { helper ->
+                CobblemonEntitySubPredicates.register { identifier, criteria -> helper.register(identifier, criteria) }
+            }
+        }
+    }
+
+    override fun registerResourceReloader(identifier: ResourceLocation, reloader: PreparableReloadListener, type: PackType, dependencies: Collection<ResourceLocation>) {
+        if (type == PackType.SERVER_DATA) {
             this.reloadableResources += reloader
         }
         else {
@@ -373,17 +379,17 @@ class CobblemonNeoForge : CobblemonImplementation {
 
     override fun server(): MinecraftServer? = ServerLifecycleHooks.getCurrentServer()
 
-    override fun <T> reloadJsonRegistry(registry: JsonDataRegistry<T>, manager: ResourceManager): HashMap<Identifier, T> {
-        val data = hashMapOf<Identifier, T>()
+    override fun <T> reloadJsonRegistry(registry: JsonDataRegistry<T>, manager: ResourceManager): HashMap<ResourceLocation, T> {
+        val data = hashMapOf<ResourceLocation, T>()
 
-        manager.findResources(registry.resourcePath) { path -> path.endsWith(JsonDataRegistry.JSON_EXTENSION) }.forEach { (identifier, resource) ->
+        manager.listResources(registry.resourcePath) { path -> path.endsWith(JsonDataRegistry.JSON_EXTENSION) }.forEach { (identifier, resource) ->
             if (identifier.namespace == "pixelmon") {
                 return@forEach
             }
 
-            resource.inputStream.use { stream ->
+            resource.open().use { stream ->
                 stream.bufferedReader().use { reader ->
-                    val resolvedIdentifier = Identifier.of(identifier.namespace, File(identifier.path).nameWithoutExtension)
+                    val resolvedIdentifier = ResourceLocation.fromNamespaceAndPath(identifier.namespace, File(identifier.path).nameWithoutExtension)
                     try {
                         data[resolvedIdentifier] = registry.gson.fromJson(reader, registry.typeToken.type)
                     } catch (exception: Exception) {
@@ -395,26 +401,26 @@ class CobblemonNeoForge : CobblemonImplementation {
         return data
     }
 
-    override fun registerCompostable(item: ItemConvertible, chance: Float) {
+    override fun registerCompostable(item: ItemLike, chance: Float) {
         this.queuedWork += {
-            ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(item, chance)
+            ComposterBlock.COMPOSTABLES.put(item, chance)
         }
     }
 
-    override fun registerBuiltinResourcePack(id: Identifier, title: Text, activationBehaviour: ResourcePackActivationBehaviour) {
+    override fun registerBuiltinResourcePack(id: ResourceLocation, title: Component, activationBehaviour: ResourcePackActivationBehaviour) {
         this.queuedBuiltinResourcePacks += Triple(id, title, activationBehaviour)
     }
 
     //TODO: I dont really know wtf is happening here, someone needs to check
     //This event gets fired before init, so we need to put resource packs in EARLY
     fun onAddPackFindersEvent(event: AddPackFindersEvent) {
-        if (event.packType != ResourceType.CLIENT_RESOURCES) {
+        if (event.packType != PackType.CLIENT_RESOURCES) {
             return
         }
 
         if (this.isModInstalled("adorn")) {
             //AdornCompatibility.register()
-            registerBuiltinResourcePack(cobblemonResource("adorncompatibility"), Text.literal("Adorn Compatibility"), ResourcePackActivationBehaviour.ALWAYS_ENABLED)
+            registerBuiltinResourcePack(cobblemonResource("adorncompatibility"), Component.literal("Adorn Compatibility"), ResourcePackActivationBehaviour.ALWAYS_ENABLED)
         }
 
         val modFile = ModList.get().getModFileById(Cobblemon.MODID).file
@@ -424,31 +430,27 @@ class CobblemonNeoForge : CobblemonImplementation {
             //val factory = PackFactory { name -> PathPackResources(name, true, path) }
 
             //TODO(Deltric)
-            val factory = object : PackFactory {
-                override fun open(info: ResourcePackInfo): ResourcePack {
+            val factory = object : Pack.ResourcesSupplier {
+                override fun openPrimary(info: PackLocationInfo): PackResources {
                     // Implement the logic here
-                    return DirectoryResourcePack(info, path)
+                    return PathPackResources(info, path)
                 }
 
-                override fun openWithOverlays(
-                    info: ResourcePackInfo?,
-                    metadata: ResourcePackProfile.Metadata?
-                ): ResourcePack {
-                    return DirectoryResourcePack(info, path)
-
+                override fun openFull(info: PackLocationInfo, metadata: Pack.Metadata): PackResources {
+                    return PathPackResources(info, path)
                 }
             }
 
-            val profile = ResourcePackProfile.create(
-                ResourcePackInfo(
+            val profile = Pack.readMetaAndCreate(
+                PackLocationInfo(
                     id.toString(),
                     title,
-                    ResourcePackSource.BUILTIN,
+                    PackSource.BUILT_IN,
                     null
                 ),
                 factory,
-                ResourceType.CLIENT_RESOURCES,
-                ResourcePackPosition(true, ResourcePackProfile.InsertionPosition.TOP, true)
+                PackType.CLIENT_RESOURCES,
+                PackSelectionConfig(true, Pack.Position.TOP, true)
             )
             event.addRepositorySource { consumer -> consumer.accept(profile) }
         }

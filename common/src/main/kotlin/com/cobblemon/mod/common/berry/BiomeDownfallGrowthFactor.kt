@@ -10,11 +10,10 @@ package com.cobblemon.mod.common.berry
 
 import com.cobblemon.mod.common.api.berry.GrowthFactor
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.block.BlockState
-import net.minecraft.predicate.NumberRange
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.WorldView
-import net.minecraft.world.biome.Biome
+import net.minecraft.advancements.critereon.MinMaxBounds
+import net.minecraft.core.BlockPos
+import net.minecraft.world.level.LevelReader
+import net.minecraft.world.level.block.state.BlockState
 
 /**
  * A [GrowthFactor] that is active based on the downfall property of a [Biome].
@@ -26,7 +25,7 @@ import net.minecraft.world.biome.Biome
  * @since December 2nd, 2022
  */
 class BiomeDownfallGrowthFactor(
-    val range: NumberRange.DoubleRange,
+    val range: MinMaxBounds.Doubles,
     val bonusYield: IntRange
 ) : GrowthFactor {
 
@@ -36,9 +35,9 @@ class BiomeDownfallGrowthFactor(
         }
     }
 
-    override fun isValid(world: WorldView, state: BlockState, pos: BlockPos): Boolean {
+    override fun isValid(world: LevelReader, state: BlockState, pos: BlockPos): Boolean {
         val biome = world.getBiome(pos).value()
-        return this.range.test(biome.weather.downfall.toDouble())
+        return this.range.matches(biome.climateSettings.downfall.toDouble())
     }
 
     override fun yield() = this.bonusYield.random()

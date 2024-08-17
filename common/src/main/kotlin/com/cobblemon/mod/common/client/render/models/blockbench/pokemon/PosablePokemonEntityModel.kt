@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.PosableEntityMod
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.entity.Entity
+import net.minecraft.world.entity.Entity
 
 class PosablePokemonEntityModel : PosableEntityModel<PokemonEntity>() {
     override fun setupEntityTypeContext(entity: Entity?) {

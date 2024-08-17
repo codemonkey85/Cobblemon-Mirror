@@ -13,14 +13,14 @@ import com.cobblemon.mod.common.battles.ForcePassActionResponse
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.battle.BattleGUI
 import com.cobblemon.mod.common.net.messages.client.battle.BattleApplyPassResponsePacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object BattleApplyPassResponseHandler : ClientNetworkPacketHandler<BattleApplyPassResponsePacket> {
-    override fun handle(packet: BattleApplyPassResponsePacket, client: MinecraftClient) {
+    override fun handle(packet: BattleApplyPassResponsePacket, client: Minecraft) {
         val battle = CobblemonClient.battle ?: return
         val req = battle.pendingActionRequests.firstOrNull { it.response == null } ?: return
         val res = ForcePassActionResponse()
-        val gui = MinecraftClient.getInstance().currentScreen
+        val gui = Minecraft.getInstance().screen
         if (gui is BattleGUI) {
             gui.selectAction(req, res)
         } else {

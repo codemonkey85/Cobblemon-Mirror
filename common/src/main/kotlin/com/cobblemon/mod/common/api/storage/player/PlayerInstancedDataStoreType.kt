@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.api.pokedex.ClientPokedex.Companion.afterDecodeA
 import com.cobblemon.mod.common.api.storage.player.client.ClientGeneralPlayerData
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Basically, each type here has a server representation, and a client representation
@@ -21,7 +21,7 @@ import net.minecraft.network.PacketByteBuf
  * Some types can also have incremental updates, where a separate run action runs when the incremental flag is present in the packet
  */
 enum class PlayerInstancedDataStoreType(
-    val decoder: (PacketByteBuf) -> (SetClientPlayerDataPacket),
+    val decoder: (RegistryFriendlyByteBuf) -> (SetClientPlayerDataPacket),
     val afterDecodeAction: (ClientInstancedPlayerData) -> (Unit),
     val incrementalAfterDecodeAction: (ClientInstancedPlayerData) -> Unit = {}
 ) {

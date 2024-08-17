@@ -14,7 +14,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.Bone
 import com.cobblemon.mod.common.client.render.models.blockbench.quirk.ModelQuirk
 import com.cobblemon.mod.common.entity.PoseType
 import com.google.gson.annotations.SerializedName
-import net.minecraft.client.model.ModelPart
+import net.minecraft.client.model.geom.ModelPart
 
 /**
  * A model for rendering in the restoration tank. This model is not intended to be used for living entities.

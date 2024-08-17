@@ -13,9 +13,9 @@ import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.keybind.CobblemonKeyBinding
 import com.cobblemon.mod.common.client.keybind.KeybindCategories
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.util.InputUtil
-import net.minecraft.text.Text
+import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.client.Minecraft
+import net.minecraft.network.chat.Component
 
 object DebugKeybindings {
     val keybindings = listOf(
@@ -29,8 +29,8 @@ object DebugKeybindings {
     )
     class ScaleUpKeybinding: CobblemonKeyBinding(
         "key.cobblemon.scaleportraitup",
-        InputUtil.Type.KEYSYM,
-        InputUtil.GLFW_KEY_EQUAL,
+        InputConstants.Type.KEYSYM,
+        InputConstants.KEY_EQUALS,
         KeybindCategories.COBBLEMON_DEBUG_CATEGORY
     ) {
         override fun onPress() {
@@ -44,8 +44,8 @@ object DebugKeybindings {
     }
     class ScaleDownKeybinding: CobblemonKeyBinding(
         "key.cobblemon.scaleportraitdown",
-        InputUtil.Type.KEYSYM,
-        InputUtil.GLFW_KEY_MINUS,
+        InputConstants.Type.KEYSYM,
+        InputConstants.KEY_MINUS,
         KeybindCategories.COBBLEMON_DEBUG_CATEGORY
     ) {
         override fun onPress() {
@@ -60,8 +60,8 @@ object DebugKeybindings {
 
     class TranslateUpKeybinding: CobblemonKeyBinding(
         "key.cobblemon.translateportraitup",
-        InputUtil.Type.KEYSYM,
-        InputUtil.GLFW_KEY_I,
+        InputConstants.Type.KEYSYM,
+        InputConstants.KEY_I,
         KeybindCategories.COBBLEMON_DEBUG_CATEGORY
     ) {
         override fun onPress() {
@@ -75,8 +75,8 @@ object DebugKeybindings {
     }
     class TranslateDownKeybinding: CobblemonKeyBinding(
         "key.cobblemon.translateportraitdown",
-        InputUtil.Type.KEYSYM,
-        InputUtil.GLFW_KEY_K,
+        InputConstants.Type.KEYSYM,
+        InputConstants.KEY_K,
         KeybindCategories.COBBLEMON_DEBUG_CATEGORY
     ) {
         override fun onPress() {
@@ -91,8 +91,8 @@ object DebugKeybindings {
 
     class TranslateLeftKeybinding: CobblemonKeyBinding(
         "key.cobblemon.translateportraitleft",
-        InputUtil.Type.KEYSYM,
-        InputUtil.GLFW_KEY_J,
+        InputConstants.Type.KEYSYM,
+        InputConstants.KEY_J,
         KeybindCategories.COBBLEMON_DEBUG_CATEGORY
     ) {
         override fun onPress() {
@@ -107,8 +107,8 @@ object DebugKeybindings {
 
     class TranslateRightKeybinding: CobblemonKeyBinding(
         "key.cobblemon.translateportraitright",
-        InputUtil.Type.KEYSYM,
-        InputUtil.GLFW_KEY_L,
+        InputConstants.Type.KEYSYM,
+        InputConstants.KEY_J,
         KeybindCategories.COBBLEMON_DEBUG_CATEGORY
     ) {
         override fun onPress() {
@@ -122,16 +122,16 @@ object DebugKeybindings {
 
     class PrintModelSettingsKeybinding : CobblemonKeyBinding(
         "key.cobblemon.printmodelsettings",
-        InputUtil.Type.KEYSYM,
-        InputUtil.GLFW_KEY_PERIOD,
+        InputConstants.Type.KEYSYM,
+        InputConstants.KEY_PERIOD,
         KeybindCategories.COBBLEMON_DEBUG_CATEGORY
     ) {
         override fun onPress() {
             val currentlySelectedPokemon = CobblemonClient.storage.myParty.get(CobblemonClient.storage.selectedSlot)
             if (currentlySelectedPokemon != null) {
                 val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, currentlySelectedPokemon.aspects)
-                MinecraftClient.getInstance().player?.sendMessage(Text.of("Portrait Translation: ${model.portraitTranslation}"))
-                MinecraftClient.getInstance().player?.sendMessage(Text.of("Portrait Scale: ${model.portraitScale}"))
+                Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Portrait Translation: ${model.portraitTranslation}"))
+                Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Portrait Scale: ${model.portraitScale}"))
                 Cobblemon.LOGGER.info("override var portraitTranslation = Vec3d(${model.portraitTranslation.x}, ${model.portraitTranslation.y}, ${model.portraitTranslation.z})")
                 Cobblemon.LOGGER.info("override var portraitScale = ${model.portraitScale}F")
             }

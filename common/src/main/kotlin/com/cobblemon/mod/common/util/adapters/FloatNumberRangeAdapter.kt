@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.util.adapters
 
 import com.google.gson.*
 import com.mojang.serialization.JsonOps
-import net.minecraft.predicate.NumberRange
+import net.minecraft.advancements.critereon.MinMaxBounds
 import java.lang.reflect.Type
 
 /**
@@ -19,11 +19,11 @@ import java.lang.reflect.Type
  * @author Licious
  * @since November 28th, 2022
  */
-object FloatNumberRangeAdapter : JsonDeserializer<NumberRange.DoubleRange>, JsonSerializer<NumberRange.DoubleRange> {
-    override fun deserialize(element: JsonElement, type: Type, context: JsonDeserializationContext): NumberRange.DoubleRange {
-        return NumberRange.DoubleRange.CODEC.decode(JsonOps.INSTANCE, element).result().get().first
+object FloatNumberRangeAdapter : JsonDeserializer<MinMaxBounds.Doubles>, JsonSerializer<MinMaxBounds.Doubles> {
+    override fun deserialize(element: JsonElement, type: Type, context: JsonDeserializationContext): MinMaxBounds.Doubles {
+        return MinMaxBounds.Doubles.CODEC.decode(JsonOps.INSTANCE, element).result().get().first
     }
-    override fun serialize(range: NumberRange.DoubleRange, type: Type, context: JsonSerializationContext): JsonElement {
-        return NumberRange.DoubleRange.CODEC.encode(range, JsonOps.INSTANCE, JsonOps.INSTANCE.empty()).result().get()
+    override fun serialize(range: MinMaxBounds.Doubles, type: Type, context: JsonSerializationContext): JsonElement {
+        return MinMaxBounds.Doubles.CODEC.encode(range, JsonOps.INSTANCE, JsonOps.INSTANCE.empty()).result().get()
     }
 }

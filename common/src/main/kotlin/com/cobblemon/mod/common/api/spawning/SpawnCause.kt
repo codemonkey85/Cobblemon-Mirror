@@ -11,19 +11,19 @@ package com.cobblemon.mod.common.api.spawning
 import com.cobblemon.mod.common.api.spawning.influence.SpawningInfluence
 import com.cobblemon.mod.common.api.spawning.spawner.Spawner
 import com.cobblemon.mod.common.util.server
-import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityType
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntityType
 
 open class SpawnCause(
     val spawner: Spawner,
     val bucket: SpawnBucket,
     entity: Entity? = null
 ): SpawningInfluence {
-    val entityWorldId = entity?.world?.registryKey
+    val entityWorldId = entity?.level()?.dimension()
     val entityId = entity?.id
     val entityUUID = entity?.uuid
     val entityType = entity?.type
 
     val entity: Entity?
-        get() = if (entityType == EntityType.PLAYER) server()?.playerManager?.getPlayer(entityUUID) else server()?.getWorld(entityWorldId)?.getEntityById(entityId!!)
+        get() = if (entityType == EntityType.PLAYER) server()?.playerList?.getPlayer(entityUUID) else server()?.getLevel(entityWorldId)?.getEntity(entityId!!)
 }

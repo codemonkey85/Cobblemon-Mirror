@@ -13,8 +13,8 @@ import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
 
 class DescriptionWidget(descX: Int, descY: Int): InfoTextScrollWidget(pX = descX, pY = descY) {
     companion object {
@@ -23,11 +23,11 @@ class DescriptionWidget(descX: Int, descY: Int): InfoTextScrollWidget(pX = descX
 
     var showPlaceholder: Boolean = false
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
-            text = Text.translatable("cobblemon.ui.pokedex.info.description").bold(),
+            text = Component.translatable("cobblemon.ui.pokedex.info.description").bold(),
             x = pX + 9,
             y = pY - 10,
             shadow = true
@@ -35,7 +35,7 @@ class DescriptionWidget(descX: Int, descY: Int): InfoTextScrollWidget(pX = descX
 
         if (showPlaceholder) {
             blitk(
-                matrixStack = context.matrices,
+                matrixStack = context.pose(),
                 texture = unknownIcon,
                 x = pX + 65.5,
                 y = pY + 16,

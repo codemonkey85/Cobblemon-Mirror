@@ -15,9 +15,9 @@ import com.cobblemon.mod.common.battles.runner.ShowdownService
 import com.cobblemon.mod.common.net.messages.client.data.AbilityRegistrySyncPacket
 import com.cobblemon.mod.common.pokemon.abilities.HiddenAbilityType
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.resource.ResourceManager
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
+import net.minecraft.server.packs.resources.ResourceManager
 
 /**
  * Registry for all known Abilities
@@ -25,7 +25,7 @@ import net.minecraft.server.network.ServerPlayerEntity
 object Abilities : DataRegistry {
 
     override val id = cobblemonResource("abilities")
-    override val type = ResourceType.SERVER_DATA
+    override val type = PackType.SERVER_DATA
     override val observable = SimpleObservable<Abilities>()
 
     val DUMMY = AbilityTemplate(name = "dummy")
@@ -47,7 +47,7 @@ object Abilities : DataRegistry {
         this.observable.emit(this)
     }
 
-    override fun sync(player: ServerPlayerEntity) {
+    override fun sync(player: ServerPlayer) {
         AbilityRegistrySyncPacket(all()).sendToPlayer(player)
     }
 

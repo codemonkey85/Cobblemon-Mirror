@@ -15,8 +15,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class PhanpyModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("phanpy")
@@ -28,10 +28,10 @@ class PhanpyModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Qu
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 1.8F
-    override var portraitTranslation = Vec3d(-0.4, -0.8, 0.0)
+    override var portraitTranslation = Vec3(-0.4, -0.8, 0.0)
 
     override var profileScale = 0.85F
-    override var profileTranslation = Vec3d(0.0, 0.4, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.4, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

@@ -18,8 +18,8 @@ import com.cobblemon.mod.common.net.messages.client.trade.TradeUpdatedPacket
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.party
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.network.chat.Component
 
 /**
  * Interface representing a participant in an [ActiveTrade].
@@ -29,7 +29,7 @@ import net.minecraft.text.Text
  */
 interface TradeParticipant {
     val uuid: UUID
-    val name: Text
+    val name: Component
     val party: PartyStore
 
     /**
@@ -62,7 +62,7 @@ interface TradeParticipant {
  * @author Hiroku
  * @since May 12th, 2023
  */
-class PlayerTradeParticipant(val player: ServerPlayerEntity): TradeParticipant {
+class PlayerTradeParticipant(val player: ServerPlayer): TradeParticipant {
     override val name = player.name
     override val uuid = player.uuid
     override val party = player.party()

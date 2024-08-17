@@ -13,10 +13,10 @@ import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUI
 import com.cobblemon.mod.common.net.messages.client.ui.PokedexUIPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object PokedexUIPacketHandler: ClientNetworkPacketHandler<PokedexUIPacket> {
-    override fun handle(packet: PokedexUIPacket, client: MinecraftClient) {
+    override fun handle(packet: PokedexUIPacket, client: Minecraft) {
         try {
             PokedexGUI.open(CobblemonClient.clientPokedexData, packet.type, packet.initSpecies)
         } catch (e: Exception) {

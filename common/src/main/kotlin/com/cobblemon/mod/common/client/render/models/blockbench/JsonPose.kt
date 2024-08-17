@@ -28,7 +28,7 @@ import com.cobblemon.mod.common.util.singularToPluralList
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.phys.Vec3
 
 /**
  * A contained mechanism for extracting the relevant properties from a JSON object and later compose it
@@ -64,8 +64,20 @@ class JsonPose(model: PosableModel, json: JsonObject) {
         it as JsonObject
         val partName = it.get("part").asString
         val part = model.getPart(partName).createTransformation()
-        val rotation = it.get("rotation")?.asJsonArray?.let { Vec3d(it[0].asDouble, it[1].asDouble, it[2].asDouble) } ?: Vec3d.ZERO
-        val position = it.get("position")?.asJsonArray?.let { Vec3d(it[0].asDouble, it[1].asDouble, it[2].asDouble) } ?: Vec3d.ZERO
+        val rotation = it.get("rotation")?.asJsonArray?.let {
+            Vec3(
+                it[0].asDouble,
+                it[1].asDouble,
+                it[2].asDouble
+            )
+        } ?: Vec3.ZERO
+        val position = it.get("position")?.asJsonArray?.let {
+            Vec3(
+                it[0].asDouble,
+                it[1].asDouble,
+                it[2].asDouble
+            )
+        } ?: Vec3.ZERO
         val isVisible = it.get("isVisible")?.asString?.asExpressionLike()
         return@map part.withPosition(position.x, position.y, position.z).withRotationDegrees(rotation.x, rotation.y, rotation.z).also { if (isVisible != null) it.withVisibility(isVisible) }
     }?.toTypedArray() ?: arrayOf()

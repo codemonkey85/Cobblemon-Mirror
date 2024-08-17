@@ -12,25 +12,24 @@ import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.predicate.entity.EntityPredicate
-import net.minecraft.predicate.entity.LootContextPredicate
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.dynamic.Codecs
+import net.minecraft.advancements.critereon.ContextAwarePredicate
+import net.minecraft.advancements.critereon.EntityPredicate
+import net.minecraft.server.level.ServerPlayer
 import java.util.Optional
 
 class PokemonCriterion(
-    playerCtx: Optional<LootContextPredicate>,
+    playerCtx: Optional<ContextAwarePredicate>,
     val properties: PokemonProperties
 ): SimpleCriterionCondition<Pokemon>(playerCtx) {
 
     companion object {
         val CODEC: Codec<PokemonCriterion> = RecordCodecBuilder.create { it.group(
-            EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(PokemonCriterion::playerCtx),
+            EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(PokemonCriterion::playerCtx),
             PokemonProperties.CODEC.optionalFieldOf("properties", PokemonProperties()).forGetter(PokemonCriterion::properties)
         ).apply(it, ::PokemonCriterion) }
     }
 
-    override fun matches(player: ServerPlayerEntity, context: Pokemon): Boolean {
+    override fun matches(player: ServerPlayer, context: Pokemon): Boolean {
         return properties.matches(context)
     }
 }

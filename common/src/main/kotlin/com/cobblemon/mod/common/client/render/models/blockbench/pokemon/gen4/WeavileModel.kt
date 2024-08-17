@@ -17,8 +17,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFram
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class WeavileModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("weavile")
@@ -30,10 +30,10 @@ class WeavileModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, B
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 2.3F
-    override var portraitTranslation = Vec3d(-0.25, 0.0, 0.0)
+    override var portraitTranslation = Vec3(-0.25, 0.0, 0.0)
 
     override var profileScale = 1.0F
-    override var profileTranslation = Vec3d(0.0, 0.3, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.3, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

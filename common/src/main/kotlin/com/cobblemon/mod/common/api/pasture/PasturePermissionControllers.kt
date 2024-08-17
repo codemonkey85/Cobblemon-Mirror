@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.api.pasture
 
 import com.cobblemon.mod.common.api.PrioritizedList
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Contains a list of [PasturePermissionController]s to control what kind of access a player
@@ -28,7 +28,7 @@ import net.minecraft.server.network.ServerPlayerEntity
 object PasturePermissionControllers {
     val controllers = PrioritizedList<PasturePermissionController>()
 
-    fun permit(player: ServerPlayerEntity, pastureBlockEntity: PokemonPastureBlockEntity): PasturePermissions {
+    fun permit(player: ServerPlayer, pastureBlockEntity: PokemonPastureBlockEntity): PasturePermissions {
         return controllers.firstNotNullOfOrNull { it.permit(player, pastureBlockEntity) }
             ?: PasturePermissions(
                 canUnpastureOthers = true,

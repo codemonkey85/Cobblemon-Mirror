@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.api.pokedex.adapter
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryCategory
 import com.cobblemon.mod.common.pokedex.DexPokemonData
 import com.google.gson.*
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import java.lang.reflect.Type
 
 object DexPokemonDataAdapter: JsonDeserializer<DexPokemonData> {
@@ -24,7 +24,7 @@ object DexPokemonDataAdapter: JsonDeserializer<DexPokemonData> {
         }
 
         return DexPokemonData(
-            identifier = Identifier.of(json.get("identifier").asString),
+            identifier = ResourceLocation.tryParse(json.get("identifier").asString)!!,
             forms = json.getAsJsonArray("forms")?.map { it.asString }?.toMutableList() ?: mutableListOf(),
             category = category,
             tags = json.getAsJsonArray("tags")?.map { it.asString }?.toMutableList() ?: mutableListOf(),

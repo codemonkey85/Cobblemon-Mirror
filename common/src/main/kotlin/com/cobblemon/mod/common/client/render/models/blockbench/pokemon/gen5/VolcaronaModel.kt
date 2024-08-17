@@ -17,8 +17,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPo
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class VolcaronaModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("volcarona")
@@ -30,10 +30,10 @@ class VolcaronaModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
     val leftfluff = getPart("wing_base_left")
 
     override var portraitScale = 1.83F
-    override var portraitTranslation = Vec3d(-0.62, 1.89, 0.0)
+    override var portraitTranslation = Vec3(-0.62, 1.89, 0.0)
 
     override var profileScale = 0.46F
-    override var profileTranslation = Vec3d(0.0, 1.06, 0.0)
+    override var profileTranslation = Vec3(0.0, 1.06, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

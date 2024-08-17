@@ -16,17 +16,17 @@ import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class VenonatModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("venonat")
 
     override var portraitScale = 1.66F
-    override var portraitTranslation = Vec3d(-0.08, -0.66, 0.0)
+    override var portraitTranslation = Vec3(-0.08, -0.66, 0.0)
 
     override var profileScale = 0.86F
-    override var profileTranslation = Vec3d(0.0, 0.43, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.43, 0.0)
 
     lateinit var sleep: CobblemonPose
     lateinit var standing: CobblemonPose

@@ -11,12 +11,10 @@ package com.cobblemon.mod.common.client.gui.battle.subscreen
 import com.cobblemon.mod.common.battles.ForfeitActionResponse
 import com.cobblemon.mod.common.client.battle.SingleActionRequest
 import com.cobblemon.mod.common.client.gui.battle.BattleGUI
-import com.cobblemon.mod.common.client.gui.battle.BattleOverlay
 import com.cobblemon.mod.common.client.gui.battle.widgets.BattleOptionTile
 import com.cobblemon.mod.common.util.battleLang
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
 
 class ForfeitConfirmationSelection(
     battleGUI: BattleGUI,
@@ -32,34 +30,34 @@ class ForfeitConfirmationSelection(
 ) {
 
     val forfeitButton: BattleOptionTile
-    val backButton = BattleBackButton(x - 3F, MinecraftClient.getInstance().window.scaledHeight - 22F )
+    val backButton = BattleBackButton(x - 3F, Minecraft.getInstance().window.guiScaledHeight - 22F )
 
     init {
-        val x = (MinecraftClient.getInstance().window.scaledWidth / 2) - (BattleOptionTile.OPTION_WIDTH / 2)
-        val y = (MinecraftClient.getInstance().window.scaledHeight / 2) - (BattleOptionTile.OPTION_HEIGHT / 2)
+        val x = (Minecraft.getInstance().window.guiScaledWidth / 2) - (BattleOptionTile.OPTION_WIDTH / 2)
+        val y = (Minecraft.getInstance().window.guiScaledHeight / 2) - (BattleOptionTile.OPTION_HEIGHT / 2)
 
         forfeitButton = BattleOptionTile(battleGUI, x, y, BattleGUI.runResource, battleLang("ui.forfeit")) {
             battleGUI.selectAction(request, ForfeitActionResponse())
-            playDownSound(MinecraftClient.getInstance().soundManager)
+            playDownSound(Minecraft.getInstance().soundManager)
         }
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
         if (backButton.isHovered(mouseX, mouseY)) {
             battleGUI.changeActionSelection(null)
-            playDownSound(MinecraftClient.getInstance().soundManager)
+            playDownSound(Minecraft.getInstance().soundManager)
             return true
         }
 
         return forfeitButton.mouseClicked(mouseX, mouseY, button)
     }
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (opacity <= 0.05F) {
             return
         }
         forfeitButton.render(context, mouseX, mouseY, delta)
-        backButton.render(context.matrices, mouseX, mouseY, delta)
+        backButton.render(context.pose(), mouseX, mouseY, delta)
     }
 
 }

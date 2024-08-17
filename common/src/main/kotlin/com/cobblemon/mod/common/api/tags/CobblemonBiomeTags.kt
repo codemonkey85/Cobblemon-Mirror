@@ -9,9 +9,8 @@
 package com.cobblemon.mod.common.api.tags
 
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.registry.Registry
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.registry.tag.TagKey
+import net.minecraft.core.registries.Registries
+import net.minecraft.tags.TagKey
 
 /**
  * A collection of the Cobblemon [TagKey]s related to the [Registry.BIOME_KEY].
@@ -88,5 +87,5 @@ object CobblemonBiomeTags {
     @JvmField
     val HAS_WATER_STONE_ORE_RARE = create("has_ore/ore_water_stone_rare")
 
-    private fun create(path: String) = TagKey.of(RegistryKeys.BIOME, cobblemonResource(path))
+    private fun create(path: String) = TagKey.create(Registries.BIOME, cobblemonResource(path))
 }

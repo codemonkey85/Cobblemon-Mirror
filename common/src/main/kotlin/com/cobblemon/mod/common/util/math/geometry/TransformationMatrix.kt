@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.util.math.geometry
 
 import com.cobblemon.mod.common.util.collections.ImmutableArray
 import com.cobblemon.mod.common.util.collections.immutableArrayOf
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.phys.Vec3
 import org.joml.Vector3f
 
 /**
@@ -28,7 +28,7 @@ data class TransformationMatrix internal constructor(val values: ImmutableArray<
     operator fun times(right: TransformationMatrix): TransformationMatrix = combine(this, right)
     operator fun times(point: GeometricPoint): GeometricPoint = transform(this, point)
     operator fun times(normal: GeometricNormal): GeometricNormal = transform(this, normal)
-    operator fun times(point: Vec3d): Vec3d = transform(this, GeometricPoint(point)).toVec3d()
+    operator fun times(point: Vec3): Vec3 = transform(this, GeometricPoint(point)).toVec3d()
 
     override fun toString(): String {
         return """

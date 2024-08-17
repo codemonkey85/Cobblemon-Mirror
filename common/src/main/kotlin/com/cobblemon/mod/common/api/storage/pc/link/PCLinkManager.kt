@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.api.storage.pc.link
 
 import com.cobblemon.mod.common.api.storage.pc.PCStore
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Manages the [PCLink]s for the server. This is a memory of IDs that map to a PC which also
@@ -28,9 +28,9 @@ object PCLinkManager {
         links[pcLink.playerID] = pcLink
     }
 
-    fun addLink(playerID: UUID, pcStore: PCStore, condition: (ServerPlayerEntity) -> Boolean = { true }) {
+    fun addLink(playerID: UUID, pcStore: PCStore, condition: (ServerPlayer) -> Boolean = { true }) {
         links[playerID] = object : PCLink(playerID = playerID, pc = pcStore) {
-            override fun isPermitted(player: ServerPlayerEntity) = condition(player)
+            override fun isPermitted(player: ServerPlayer) = condition(player)
         }
     }
 
@@ -38,5 +38,5 @@ object PCLinkManager {
         links.remove(playerID)
     }
 
-    fun getPC(player: ServerPlayerEntity) = getLink(player.uuid)?.takeIf { it.isPermitted(player) }?.pc
+    fun getPC(player: ServerPlayer) = getLink(player.uuid)?.takeIf { it.isPermitted(player) }?.pc
 }

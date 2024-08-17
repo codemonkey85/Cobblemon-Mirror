@@ -18,8 +18,8 @@ import com.cobblemon.mod.common.util.isBattling
 import com.cobblemon.mod.common.util.isStandingOnRedSand
 import com.cobblemon.mod.common.util.isStandingOnSand
 import com.cobblemon.mod.common.util.isStandingOnSandOrRedSand
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class HippowdonModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("hippowdon")
@@ -29,10 +29,10 @@ class HippowdonModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
     private val redsand = getPart("redsand")
 
     override var portraitScale = 0.6F
-    override var portraitTranslation = Vec3d(-0.63, 0.73, 0.0)
+    override var portraitTranslation = Vec3(-0.63, 0.73, 0.0)
 
     override var profileScale = 0.4F
-    override var profileTranslation = Vec3d(-0.1, 1.0, 0.0)
+    override var profileTranslation = Vec3(-0.1, 1.0, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

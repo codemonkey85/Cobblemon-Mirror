@@ -17,30 +17,30 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import net.minecraft.item.ItemStack
-import net.minecraft.registry.Registries
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
+import net.minecraft.world.item.ItemStack
 
 object FishingBaits : JsonDataRegistry<FishingBait>{
     override val id = cobblemonResource("fishing_baits")
-    override val type = ResourceType.SERVER_DATA
+    override val type = PackType.SERVER_DATA
     override val observable = SimpleObservable<FishingBaits>()
     override val typeToken: TypeToken<FishingBait> = TypeToken.get(FishingBait::class.java)
     override val resourcePath = "fishing_baits"
     override val gson: Gson = GsonBuilder()
-        .registerTypeAdapter(Identifier::class.java, IdentifierAdapter)
+        .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .setPrettyPrinting()
         .create()
 
-    private val itemMap = mutableMapOf<Identifier, FishingBait>()
+    private val itemMap = mutableMapOf<ResourceLocation, FishingBait>()
 
-    override fun sync(player: ServerPlayerEntity) {
+    override fun sync(player: ServerPlayer) {
         FishingBaitRegistrySyncPacket(this.itemMap.values.toList()).sendToPlayer(player)
     }
 
-    override fun reload(data: Map<Identifier, FishingBait>) {
+    override fun reload(data: Map<ResourceLocation, FishingBait>) {
         itemMap.clear()
         data.forEach { id, bait ->
             itemMap[bait.item] = bait
@@ -52,14 +52,14 @@ object FishingBaits : JsonDataRegistry<FishingBait>{
     }
 
     fun getFromBaitItemStack(stack: ItemStack): FishingBait? {
-        return getFromIdentifier(Registries.ITEM.getId(stack.item))
+        return getFromIdentifier(BuiltInRegistries.ITEM.getKey(stack.item))
     }
 
-    fun getFromIdentifier(identifier: Identifier): FishingBait? {
+    fun getFromIdentifier(identifier: ResourceLocation): FishingBait? {
         return itemMap[identifier]
     }
 
-    fun isFishingBait(stack: ItemStack) = itemMap.containsKey(Registries.ITEM.getId(stack.item))
+    fun isFishingBait(stack: ItemStack) = itemMap.containsKey(BuiltInRegistries.ITEM.getKey(stack.item))
 
 //
 //

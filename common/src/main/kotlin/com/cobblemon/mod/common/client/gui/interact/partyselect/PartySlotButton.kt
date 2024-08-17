@@ -23,12 +23,12 @@ import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.gui.widget.ButtonWidget.NarrationSupplier
-import net.minecraft.client.sound.SoundManager
-import net.minecraft.item.ItemStack
-import net.minecraft.text.Text
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Button
+import net.minecraft.client.gui.components.Button.CreateNarration
+import net.minecraft.client.sounds.SoundManager
+import net.minecraft.network.chat.Component
+import net.minecraft.world.item.ItemStack
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
@@ -41,8 +41,8 @@ class PartySlotButton(
     val heldItem: ItemStack,
     val enabled: Boolean = true,
     val parent: PartySelectGUI,
-    onPress: PressAction
-) : ButtonWidget(x, y, WIDTH, HEIGHT, Text.literal("Pokemon"), onPress, NarrationSupplier { "".text() }) {
+    onPress: OnPress
+) : Button(x, y, WIDTH, HEIGHT, Component.literal("Pokemon"), onPress, CreateNarration { "".text() }) {
 
     companion object {
         private val slotResource = cobblemonResource("textures/gui/interact/party_select_slot.png")
@@ -57,10 +57,10 @@ class PartySlotButton(
 
     private val renderablePokemon = pokemon.asRenderablePokemon().also { it.aspects = aspects }
 
-    override fun renderWidget(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
-        hovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height && enabled
+    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+        isHovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height && enabled
         val alpha = if (enabled) 1.0 else 0.5
-        val matrices = context.matrices
+        val matrices = context.pose()
 
         blitk(
             matrixStack = matrices,
@@ -69,13 +69,13 @@ class PartySlotButton(
             y = y,
             width = width,
             height = height,
-            vOffset = if (hovered) height else 0,
+            vOffset = if (isHovered) height else 0,
             textureHeight = height * 2,
             alpha = alpha
         )
 
-        context.matrices.push()
-        context.matrices.translate(x.toDouble() + 13, y.toDouble() - 2, 0.0)
+        context.pose().pushPose()
+        context.pose().translate(x.toDouble() + 13, y.toDouble() - 2, 0.0)
 
 //        if (!hovered) {
 //            state.reset()
@@ -83,13 +83,13 @@ class PartySlotButton(
 
         drawProfilePokemon(
             renderablePokemon = renderablePokemon,
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),
             state = state,
             scale = 10F,
-            partialTicks = if (!hovered) 0F else pPartialTicks
+            partialTicks = if (!isHovered) 0F else pPartialTicks
         )
-        context.matrices.pop()
+        context.pose().popPose()
 
         val ballIcon = cobblemonResource("textures/gui/ball/" + pokemon.pokeball!!.asIdentifierDefaultingNamespace().path + ".png")
         val ballHeight = 22

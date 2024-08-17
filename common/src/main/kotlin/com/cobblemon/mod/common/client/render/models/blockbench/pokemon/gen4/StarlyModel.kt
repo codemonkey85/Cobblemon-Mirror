@@ -19,8 +19,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.par
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class StarlyModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("starly")
@@ -32,10 +32,10 @@ class StarlyModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
     private val tail = getPart("tail")
 
     override var portraitScale = 2.8F
-    override var portraitTranslation = Vec3d(-0.4, -1.65, 0.0)
+    override var portraitTranslation = Vec3(-0.4, -1.65, 0.0)
 
     override var profileScale = 1.2F
-    override var profileTranslation = Vec3d(0.0, -0.01, 0.0)
+    override var profileTranslation = Vec3(0.0, -0.01, 0.0)
 
 //    lateinit var sleep: Pose
     lateinit var stand: Pose
@@ -46,7 +46,7 @@ class StarlyModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("starly", "sleep"))
+//            animations = arrayOf(bedrock("starly", "sleep"))
 //        )
         val blink = quirk { bedrockStateful("starly", "blink") }
         stand = registerPose(

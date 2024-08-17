@@ -13,9 +13,8 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.google.gson.JsonObject
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * A species feature value that is a string value.
@@ -27,12 +26,12 @@ class StringSpeciesFeature(
     override val name: String,
     var value: String
 ) : SynchronizedSpeciesFeature, CustomPokemonProperty {
-    override fun saveToNBT(pokemonNBT: NbtCompound): NbtCompound {
+    override fun saveToNBT(pokemonNBT: CompoundTag): CompoundTag {
         pokemonNBT.putString(name, value)
         return pokemonNBT
     }
 
-    override fun loadFromNBT(pokemonNBT: NbtCompound): SpeciesFeature {
+    override fun loadFromNBT(pokemonNBT: CompoundTag): SpeciesFeature {
         value = pokemonNBT.getString(name)?.takeIf { it.isNotBlank() }?.lowercase() ?: return this
         return this
     }
@@ -47,11 +46,11 @@ class StringSpeciesFeature(
         return this
     }
 
-    override fun saveToBuffer(buffer: PacketByteBuf, toClient: Boolean) {
+    override fun saveToBuffer(buffer: RegistryFriendlyByteBuf, toClient: Boolean) {
         buffer.writeString(value)
     }
 
-    override fun loadFromBuffer(buffer: PacketByteBuf) {
+    override fun loadFromBuffer(buffer: RegistryFriendlyByteBuf) {
         value = buffer.readString()
     }
 

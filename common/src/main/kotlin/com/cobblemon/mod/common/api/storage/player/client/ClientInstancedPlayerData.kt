@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.api.storage.player.client
 
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * The information a client needs to know about an [InstancedPlayerData]
@@ -20,5 +20,5 @@ import net.minecraft.network.PacketByteBuf
  * @author Apion
  */
 abstract class ClientInstancedPlayerData(val isIncrement: Boolean) {
-    abstract fun encode(buf: PacketByteBuf)
+    abstract fun encode(buf: RegistryFriendlyByteBuf)
 }

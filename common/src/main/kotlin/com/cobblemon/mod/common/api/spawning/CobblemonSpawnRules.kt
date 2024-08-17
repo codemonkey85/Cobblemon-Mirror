@@ -19,25 +19,15 @@ import com.cobblemon.mod.common.api.spawning.rules.component.FilterRuleComponent
 import com.cobblemon.mod.common.api.spawning.rules.component.LocationRuleCalculator
 import com.cobblemon.mod.common.api.spawning.rules.component.SpawnRuleComponent
 import com.cobblemon.mod.common.api.spawning.rules.component.WeightTweakRuleComponent
-import com.cobblemon.mod.common.api.spawning.rules.selector.ConditionalSpawningContextSelector
-import com.cobblemon.mod.common.api.spawning.rules.selector.ExpressionSpawnDetailSelector
-import com.cobblemon.mod.common.api.spawning.rules.selector.ExpressionSpawningContextSelector
-import com.cobblemon.mod.common.api.spawning.rules.selector.SpawnDetailSelector
-import com.cobblemon.mod.common.api.spawning.rules.selector.SpawningContextSelector
-import com.cobblemon.mod.common.util.adapters.ExpressionAdapter
-import com.cobblemon.mod.common.util.adapters.ExpressionLikeAdapter
-import com.cobblemon.mod.common.util.adapters.SpawnDetailSelectorAdapter
-import com.cobblemon.mod.common.util.adapters.SpawnRuleComponentAdapter
-import com.cobblemon.mod.common.util.adapters.SpawningConditionAdapter
-import com.cobblemon.mod.common.util.adapters.SpawningContextSelectorAdapter
-import com.cobblemon.mod.common.util.adapters.TextAdapter
+import com.cobblemon.mod.common.api.spawning.rules.selector.*
+import com.cobblemon.mod.common.util.adapters.*
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
 
 /**
  * All of the [SpawnRule]s that will be applied as global [SpawningInfluence]s.
@@ -53,7 +43,7 @@ object CobblemonSpawnRules : JsonDataRegistry<SpawnRule> {
         .registerTypeAdapter(SpawningCondition::class.java, SpawningConditionAdapter)
         .registerTypeAdapter(Expression::class.java, ExpressionAdapter)
         .registerTypeAdapter(ExpressionLike::class.java, ExpressionLikeAdapter)
-        .registerTypeAdapter(Text::class.java, TextAdapter)
+        .registerTypeAdapter(Component::class.java, TextAdapter)
         .create()
 
     override val typeToken = TypeToken.get(SpawnRule::class.java)
@@ -70,18 +60,18 @@ object CobblemonSpawnRules : JsonDataRegistry<SpawnRule> {
         SpawningContextSelector.register<ConditionalSpawningContextSelector>("conditional")
     }
 
-    val rules = mutableMapOf<Identifier, SpawnRule>()
+    val rules = mutableMapOf<ResourceLocation, SpawnRule>()
 
-    override fun reload(data: Map<Identifier, SpawnRule>) {
+    override fun reload(data: Map<ResourceLocation, SpawnRule>) {
         rules.clear()
         rules.putAll(data)
         data.forEach { (id, value) -> value.id = id }
         observable.emit(this)
     }
 
-    override val id: Identifier = cobblemonResource("spawn_rules")
-    override val type: ResourceType = ResourceType.SERVER_DATA
+    override val id: ResourceLocation = cobblemonResource("spawn_rules")
+    override val type: PackType = PackType.SERVER_DATA
     override val observable = SimpleObservable<CobblemonSpawnRules>()
 
-    override fun sync(player: ServerPlayerEntity) {}
+    override fun sync(player: ServerPlayer) {}
 }

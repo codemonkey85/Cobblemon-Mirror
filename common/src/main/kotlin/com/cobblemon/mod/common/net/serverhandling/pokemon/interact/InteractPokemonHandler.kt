@@ -13,19 +13,19 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.net.messages.server.pokemon.interact.InteractPokemonPacket
 import com.cobblemon.mod.common.util.party
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object InteractPokemonHandler : ServerNetworkPacketHandler<InteractPokemonPacket> {
-    override fun handle(packet: InteractPokemonPacket, server: MinecraftServer, player: ServerPlayerEntity) {
-        val pokemonEntity = player.serverWorld.getEntity(packet.pokemonID)
+    override fun handle(packet: InteractPokemonPacket, server: MinecraftServer, player: ServerPlayer) {
+        val pokemonEntity = player.serverLevel().getEntity(packet.pokemonID)
         if (pokemonEntity is PokemonEntity) {
             if (packet.mountShoulder) {
-                if (!pokemonEntity.isReadyToSitOnPlayer || player.party().none { it == pokemonEntity.pokemon }) {
+                if (!pokemonEntity.canSitOnShoulder() || player.party().none { it == pokemonEntity.pokemon }) {
                     return
                 }
                 pokemonEntity.tryMountingShoulder(player)
             } else {
-                pokemonEntity.offerHeldItem(player, player.mainHandStack)
+                pokemonEntity.offerHeldItem(player, player.mainHandItem)
             }
         }
     }

@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.battles.dispatch.InterpreterInstruction
 import com.cobblemon.mod.common.util.battleLang
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 
 /**
  * Format: |-singleturn|POKEMON|MOVE
@@ -27,7 +27,7 @@ class SingleTurnInstruction(val message: BattleMessage): InterpreterInstruction 
         battle.dispatchWaiting(1.5F) {
             val pokemon = message.battlePokemon(0, battle) ?: return@dispatchWaiting
             val pokemonName = pokemon.getName()
-            val sourceName = message.battlePokemonFromOptional(battle)?.getName() ?: Text.literal("UNKOWN")
+            val sourceName = message.battlePokemonFromOptional(battle)?.getName() ?: Component.literal("UNKOWN")
             val effectID = message.effectAt(1)?.id ?: return@dispatchWaiting
             val lang = battleLang("singleturn.$effectID", pokemonName, sourceName)
             battle.broadcastChatMessage(lang)

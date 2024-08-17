@@ -26,8 +26,8 @@ import com.cobblemon.mod.common.api.molang.SingleExpression
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.phys.Vec3
 
 val genericRuntime = MoLangRuntime().setup()
 
@@ -54,11 +54,12 @@ fun MoLangRuntime.resolveObject(expression: ExpressionLike, context: Map<String,
 fun MoLangRuntime.resolveBoolean(expression: ExpressionLike, context: Map<String, MoValue> = emptyMap()): Boolean = resolve(expression, context).asDouble() != 0.0
 
 
-fun MoLangRuntime.resolveVec3d(triple: Triple<Expression, Expression, Expression>, context: Map<String, MoValue> = emptyMap()) = Vec3d(
-    resolveDouble(triple.first, context),
-    resolveDouble(triple.second, context),
-    resolveDouble(triple.third, context)
-)
+fun MoLangRuntime.resolveVec3d(triple: Triple<Expression, Expression, Expression>, context: Map<String, MoValue> = emptyMap()) =
+    Vec3(
+        resolveDouble(triple.first, context),
+        resolveDouble(triple.second, context),
+        resolveDouble(triple.third, context)
+    )
 
 fun MoLangRuntime.resolveBoolean(expression: Expression, pokemon: Pokemon, context: Map<String, MoValue> = emptyMap()): Boolean {
     environment.writePokemon(pokemon)
@@ -181,7 +182,7 @@ fun MoLangRuntime.withQueryValue(name: String, value: MoValue): MoLangRuntime {
     return this
 }
 
-fun MoLangRuntime.withPlayerValue(name: String = "player", value: PlayerEntity) = withQueryValue(name, value.asMoLangValue())
+fun MoLangRuntime.withPlayerValue(name: String = "player", value: Player) = withQueryValue(name, value.asMoLangValue())
 
 //fun MoLangRuntime.withPokemonValue(name: String = "pokemon", value: Pokemon) = withQueryValue(name, value.asMoLangValue())
 fun MoLangRuntime.withNPCValue(name: String = "npc", value: NPCEntity) = withQueryValue(name, value.struct)

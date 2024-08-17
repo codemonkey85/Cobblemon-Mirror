@@ -10,8 +10,7 @@ package com.cobblemon.mod.common.net.messages.server.dialogue
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Sent by the client to the server when the player wants to escape the current dialogue.
@@ -22,9 +21,9 @@ import net.minecraft.network.PacketByteBuf
 class EscapeDialoguePacket : NetworkPacket<EscapeDialoguePacket> {
     companion object {
         val ID = cobblemonResource("escape_dialogue")
-        fun decode(buffer: RegistryByteBuf) = EscapeDialoguePacket()
+        fun decode(buffer: RegistryFriendlyByteBuf) = EscapeDialoguePacket()
     }
 
     override val id = ID
-    override fun encode(buffer: RegistryByteBuf) {}
+    override fun encode(buffer: RegistryFriendlyByteBuf) {}
 }

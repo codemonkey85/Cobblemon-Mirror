@@ -15,11 +15,11 @@ import com.cobblemon.mod.common.client.gui.dialogue.DialogueScreen
 import com.cobblemon.mod.common.net.messages.client.dialogue.dto.DialogueInputDTO
 import com.cobblemon.mod.common.net.messages.server.dialogue.InputToDialoguePacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.client.gui.widget.TextFieldWidget
-import net.minecraft.client.util.InputUtil
+import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.EditBox
+import net.minecraft.client.gui.screens.Screen
 import org.lwjgl.glfw.GLFW
 
 class DialogueTextInputWidget(
@@ -29,8 +29,8 @@ class DialogueTextInputWidget(
     width: Int,
     height: Int,
     maxLength: Int = 100
-) : TextFieldWidget(
-    MinecraftClient.getInstance().textRenderer,
+) : EditBox(
+    Minecraft.getInstance().font,
     x,
     y,
     width,
@@ -55,16 +55,16 @@ class DialogueTextInputWidget(
         }
     }
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (dialogueScreen.dialogueDTO.dialogueInput.inputType != DialogueInputDTO.InputType.TEXT || dialogueScreen.waitingForServerUpdate) {
             return
         }
-        if (cursor != text.length) {
-            setCursorToEnd(Screen.hasShiftDown())
+        if (cursorPosition != value.length) {
+            moveCursorToEnd(Screen.hasShiftDown())
         }
 
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             x = x,
             y = y,
             width = width,
@@ -74,7 +74,7 @@ class DialogueTextInputWidget(
 
         drawCenteredText(
             context = context,
-            text = (if (isFocused) "$text|" else text).text(),
+            text = (if (isFocused) "$value|" else value).text(),
             x = x + width / 2F,
             y = y + height / 2 - 4,
             shadow = true,
@@ -83,8 +83,8 @@ class DialogueTextInputWidget(
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        if (keyCode == InputUtil.GLFW_KEY_ESCAPE || keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
-            this.dialogueScreen.sendToServer(InputToDialoguePacket(dialogueScreen.dialogueDTO.dialogueInput.inputId, text.trim()))
+        if (keyCode == InputConstants.KEY_ESCAPE || keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
+            this.dialogueScreen.sendToServer(InputToDialoguePacket(dialogueScreen.dialogueDTO.dialogueInput.inputId, value.trim()))
         }
         return super.keyPressed(keyCode, scanCode, modifiers)
     }

@@ -1,20 +1,21 @@
-package com.cobblemon.mod.common.server.net.pokedex
+package com.cobblemon.mod.common.client.net.pokedex
 
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.net.messages.server.pokedex.MapUpdatePacket
-import net.minecraft.block.MapColor
-import net.minecraft.component.DataComponentTypes
-import net.minecraft.component.type.MapIdComponent
-import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
-import net.minecraft.item.map.MapState
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.nbt.NbtList
+import net.minecraft.core.component.DataComponents
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.NbtOps
+import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.text.Text
-import net.minecraft.util.math.ColorHelper
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import net.minecraft.world.level.dimension.DimensionType
+import net.minecraft.world.level.material.MapColor
+import net.minecraft.world.level.saveddata.maps.MapId
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData
 import java.awt.Color
 import java.awt.Image
 import java.awt.image.BufferedImage
@@ -23,20 +24,20 @@ import javax.imageio.ImageIO
 
 object MapUpdatePacketHandler : ServerNetworkPacketHandler<MapUpdatePacket> {
 
-    override fun handle(packet: MapUpdatePacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: MapUpdatePacket, server: MinecraftServer, player: ServerPlayer) {
         player.server.execute {
-            (player.world as? ServerWorld)?.let { serverWorld ->
-                updatePlayerMap(player, packet.imageBytes, serverWorld)
+            (player.level() as? ServerLevel)?.let { serverLevel ->
+                updatePlayerMap(player, packet.imageBytes, serverLevel)
             }
         }
     }
 
-    private fun updatePlayerMap(player: ServerPlayerEntity, imageBytes: ByteArray, world: ServerWorld) {
+    private fun updatePlayerMap(player: ServerPlayer, imageBytes: ByteArray, world: ServerLevel) {
         val pictureEdgeTrim = 8
     //    println("Received image bytes: ${imageBytes.size}")
         val image = ImageIO.read(imageBytes.inputStream())
         if (image == null) {
-            player.sendMessage(Text.literal("Failed to read image from bytes"), false)
+            player.displayClientMessage(Component.literal("Failed to read image from bytes"), false)
             return
         }
     //    println("Image dimensions: ${image.width}x${image.height}")
@@ -56,26 +57,28 @@ object MapUpdatePacketHandler : ServerNetworkPacketHandler<MapUpdatePacket> {
 
         // Convert the resized image to a pixel array and trim the edges
         val pixels = trimPixelArray(convertPixelArray(resizedImage), pictureEdgeTrim)
-        val mapColors = expandMapColors(MapColor.COLORS.filterNotNull().toTypedArray())
+        val mapColors = expandMapColors(MapColor.MATERIAL_COLORS.filterNotNull().toTypedArray())
 
         val inventory = player.inventory
-        for (i in 0 until inventory.size()) {
-            val stack = inventory.getStack(i)
+        for (i in 0 until inventory.containerSize) {
+            val stack = inventory.getItem(i)
             if (stack.item == Items.MAP) {
                 val mapStack = ItemStack(Items.FILLED_MAP)
-                val mapId = world.increaseAndGetMapId().id
+                val mapId = world.freeMapId.id
+                val serializationContext = world.registryAccess().createSerializationContext(NbtOps.INSTANCE)
+                val dimensionNbt = serializationContext.withEncoder(DimensionType.CODEC).apply(world.dimensionTypeRegistration()).result().get()
 
-                val nbt = NbtCompound().apply {
-                    putString("dimension", world.registryKey.value.toString())
+                val nbt = CompoundTag().apply {
+                    put("dimension", dimensionNbt)
                     putInt("xCenter", 0)
                     putInt("zCenter", 0)
                     putBoolean("locked", true)
                     putBoolean("unlimitedTracking", false)
                     putBoolean("trackingPosition", false)
                     putByte("scale", 3.toByte())
-                    put("banners", NbtList())
+                    put("banners", ListTag())
                 }
-                val mapState = MapState.fromNbt(nbt, world.registryManager)
+                val mapState = MapItemSavedData.load(nbt, world.registryAccess())
 
                 for (x in 0 until 128 - 2 * pictureEdgeTrim) {
                     for (y in 0 until 128 - 2 * pictureEdgeTrim) {
@@ -86,17 +89,17 @@ object MapUpdatePacketHandler : ServerNetworkPacketHandler<MapUpdatePacket> {
                     }
                 }
 
-                world.putMapState(MapIdComponent(mapId), mapState)
-                val mapIdComponent = MapIdComponent(mapId)
-                mapStack.set(DataComponentTypes.MAP_ID, mapIdComponent)
+                world.setMapData(MapId(mapId), mapState)
+                val mapIdComponent = MapId(mapId)
+                mapStack.set(DataComponents.MAP_ID, mapIdComponent)
 
-                inventory.setStack(i, mapStack)
-                player.sendMessage(Text.literal("SnapPicture: Map updated with screenshot"), true)
+                inventory.setItem(i, mapStack)
+                player.displayClientMessage(Component.literal("SnapPicture: Map updated with screenshot"), true)
     //            println("Map updated successfully with mapId: $mapId")
                 return
             }
         }
-        player.sendMessage(Text.literal("No empty map found in inventory"), true)
+        player.displayClientMessage(Component.literal("No empty map found in inventory"), true)
         println("No empty map found in inventory")
     }
 
@@ -137,7 +140,7 @@ object MapUpdatePacketHandler : ServerNetworkPacketHandler<MapUpdatePacket> {
     private fun expandMapColors(mapColors: Array<MapColor>): List<Color> {
         val expandedColors = mutableListOf<Color>()
         for (color in mapColors) {
-            val baseColor = Color(color.color)
+            val baseColor = Color(color.calculateRGBColor(MapColor.Brightness.NORMAL))
             for (coeff in shadeCoeffs) {
                 expandedColors.add(Color((baseColor.red * coeff).toInt(), (baseColor.green * coeff).toInt(), (baseColor.blue * coeff).toInt()))
             }

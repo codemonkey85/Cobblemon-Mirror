@@ -19,5 +19,6 @@ enum class EventTriggerType {
     EVOLVE,
     TRADE,
     BATTLE_START,
-    SEEN
+    SEEN,
+    SCANNED
 }

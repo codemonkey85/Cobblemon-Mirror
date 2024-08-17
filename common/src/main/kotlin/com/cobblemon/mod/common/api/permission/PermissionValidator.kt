@@ -9,8 +9,9 @@
 package com.cobblemon.mod.common.api.permission
 
 import com.cobblemon.mod.common.Cobblemon
-import net.minecraft.command.CommandSource
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.commands.CommandSource
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Responsible for evaluating permissions for a given player or command source.
@@ -28,13 +29,13 @@ interface PermissionValidator {
     fun initialize()
 
     /**
-     * Validates a permission for [ServerPlayerEntity].
+     * Validates a permission for [ServerPlayer].
      *
-     * @param player The target [ServerPlayerEntity].
+     * @param player The target [ServerPlayer].
      * @param permission The [Permission] being queried.
      * @return If the [player] has the [permission].
      */
-    fun hasPermission(player: ServerPlayerEntity, permission: Permission): Boolean
+    fun hasPermission(player: ServerPlayer, permission: Permission): Boolean
 
     /**
      * Validates a permission for [CommandSource].
@@ -43,6 +44,6 @@ interface PermissionValidator {
      * @param permission The [Permission] being queried.
      * @return If the [source] has the [permission].
      */
-    fun hasPermission(source: CommandSource, permission: Permission): Boolean
+    fun hasPermission(source: CommandSourceStack, permission: Permission): Boolean
 
 }

@@ -18,16 +18,16 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.google.common.collect.HashBasedTable
 import com.google.common.collect.Table
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.util.InputUtil
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Button
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 
-class PokeNav : Screen(Text.translatable("cobblemon.ui.pokenav.title")) {
+class PokeNav : Screen(Component.translatable("cobblemon.ui.pokenav.title")) {
 
     companion object {
         // Limiting
@@ -69,9 +69,9 @@ class PokeNav : Screen(Text.translatable("cobblemon.ui.pokenav.title")) {
         this.insertButton(exit, this::onPressExit, lang("ui.exit"))
 
         this.buttons.values().forEach { button ->
-            addDrawableChild(button)
+            addRenderableWidget(button)
             if (!button.canClick())
-                addDrawableChild(this.fillerButtonOf(button.posX, button.posY))
+                addRenderableWidget(this.fillerButtonOf(button.posX, button.posY))
         }
 
         super.init()
@@ -83,17 +83,17 @@ class PokeNav : Screen(Text.translatable("cobblemon.ui.pokenav.title")) {
      */
     override fun keyPressed(pKeyCode: Int, pScanCode: Int, pModifiers: Int): Boolean {
         val movement: Pair<Int, Int> = when (pKeyCode) {
-            InputUtil.GLFW_KEY_RIGHT, InputUtil.GLFW_KEY_D -> 1 to 0
-            InputUtil.GLFW_KEY_LEFT, InputUtil.GLFW_KEY_A -> -1 to 0
-            InputUtil.GLFW_KEY_UP, InputUtil.GLFW_KEY_W -> 0 to -1
-            InputUtil.GLFW_KEY_DOWN, InputUtil.GLFW_KEY_S -> 0 to 1
-            InputUtil.GLFW_KEY_SPACE -> {
+            InputConstants.KEY_RIGHT, InputConstants.KEY_D -> 1 to 0
+            InputConstants.KEY_LEFT, InputConstants.KEY_A -> -1 to 0
+            InputConstants.KEY_UP, InputConstants.KEY_W -> 0 to -1
+            InputConstants.KEY_DOWN, InputConstants.KEY_S -> 0 to 1
+            InputConstants.KEY_SPACE -> {
                 val button = this.buttons.get(currentSelectionPos.first, currentSelectionPos.second)
-                button?.playDownSound(MinecraftClient.getInstance().soundManager)
+                button?.playDownSound(Minecraft.getInstance().soundManager)
                 button?.onPress()
                 0 to 0
             }
-            PokeNavigatorBinding.boundKey().code, InputUtil.GLFW_KEY_LEFT_SHIFT, InputUtil.GLFW_KEY_RIGHT_SHIFT -> {
+            PokeNavigatorBinding.boundKey().value, InputConstants.KEY_LSHIFT, InputConstants.KEY_RSHIFT -> {
                 this.aboutToClose = true
                 0 to 0
             }
@@ -104,8 +104,8 @@ class PokeNav : Screen(Text.translatable("cobblemon.ui.pokenav.title")) {
     }
 
     override fun keyReleased(pKeyCode: Int, pScanCode: Int, pModifiers: Int): Boolean {
-        if ((pKeyCode == PokeNavigatorBinding.boundKey().code || pKeyCode == InputUtil.GLFW_KEY_LEFT_SHIFT || pKeyCode == InputUtil.GLFW_KEY_RIGHT_SHIFT) && aboutToClose) {
-            MinecraftClient.getInstance().setScreen(null) // So we only close if the Key was released
+        if ((pKeyCode == PokeNavigatorBinding.boundKey().value || pKeyCode == InputConstants.KEY_LSHIFT || pKeyCode == InputConstants.KEY_RSHIFT) && aboutToClose) {
+            Minecraft.getInstance().setScreen(null) // So we only close if the Key was released
         }
         return super.keyReleased(pKeyCode, pScanCode, pModifiers)
     }
@@ -117,12 +117,12 @@ class PokeNav : Screen(Text.translatable("cobblemon.ui.pokenav.title")) {
     /**
      * Rendering the background texture
      */
-    override fun render(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun render(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         renderBackground(context, pMouseX, pMouseY, pPartialTicks)
 
         // Rendering UI Background
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = background,
             x = (width - backgroundWidth) / 2, y = (height - backgroundHeight) / 2,
             width = backgroundWidth, height = backgroundHeight
@@ -146,7 +146,7 @@ class PokeNav : Screen(Text.translatable("cobblemon.ui.pokenav.title")) {
             }
         }
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = select,
             x = getWidthForPos(currentSelectionPos.first) + 2.55, y = getHeightFor(currentSelectionPos.second) + 2.45,
             width = 59, height = 34.5,
@@ -157,12 +157,12 @@ class PokeNav : Screen(Text.translatable("cobblemon.ui.pokenav.title")) {
         )
     }
 
-    override fun applyMouseMoveNarratorDelay() {
+    override fun afterMouseMove() {
         this.focusWithKey = false
-        super.applyMouseMoveNarratorDelay()
+        super.afterMouseMove()
     }
 
-    override fun shouldPause() = true
+    override fun isPauseScreen() = true
 
     /**
      * Moves the selection with the given params.
@@ -280,15 +280,15 @@ class PokeNav : Screen(Text.translatable("cobblemon.ui.pokenav.title")) {
      *
      * @throws [IllegalStateException] if the UI cannot fit more buttons.
      *
-     * @param identifier The [Identifier] of this button.
+     * @param identifier The [ResourceLocation] of this button.
      * @param onPress The action ran when the button is clicked, will not execute if [canClick] is false.
-     * @param text The display [Text] of the button.
+     * @param text The display [Component] of the button.
      * @param canClick Used to check if the button can be clicked. Will affect asset rendering to visually symbolize if false.
      */
     private fun insertButton(
-        identifier: Identifier,
-        onPress: ButtonWidget.PressAction,
-        text: MutableText,
+        identifier: ResourceLocation,
+        onPress: Button.OnPress,
+        text: MutableComponent,
         canClick: () -> Boolean = { true }
     ) {
         val insertion = this.findNextInsertion()
@@ -327,17 +327,17 @@ class PokeNav : Screen(Text.translatable("cobblemon.ui.pokenav.title")) {
      * What should happen on Button press - START
      */
 
-    private fun onPressPokemon(button: ButtonWidget) {
+    private fun onPressPokemon(button: Button) {
         try {
             Summary.open(CobblemonClient.storage.myParty.slots, true, CobblemonClient.storage.selectedSlot)
         } catch (e: Exception) {
-            MinecraftClient.getInstance().setScreen(null)
+            Minecraft.getInstance().setScreen(null)
             Cobblemon.LOGGER.debug("Failed to open the summary from the PokeNav screen", e)
         }
     }
 
-    private fun onPressExit(button: ButtonWidget) {
-        MinecraftClient.getInstance().setScreen(null)
+    private fun onPressExit(button: Button) {
+        Minecraft.getInstance().setScreen(null)
     }
 
 }

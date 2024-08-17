@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.api.events.Cancelable
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.storage.PokemonStore
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * The base of the events around the release of Pokémon from pc or party.
@@ -24,9 +24,9 @@ import net.minecraft.server.network.ServerPlayerEntity
 interface ReleasePokemonEvent {
 
     /**
-     * The [ServerPlayerEntity] that is releasing the Pokémon.
+     * The [ServerPlayer] that is releasing the Pokémon.
      */
-    val player: ServerPlayerEntity
+    val player: ServerPlayer
 
     /**
      * The [Pokemon] being released.
@@ -45,17 +45,17 @@ interface ReleasePokemonEvent {
      * For the event that is fired after all the calculations took place see [ReleasePokemonEvent.Post].
      */
     class Pre(
-            override val player: ServerPlayerEntity,
-            override val pokemon: Pokemon,
-            override val storage: PokemonStore<*>
+        override val player: ServerPlayer,
+        override val pokemon: Pokemon,
+        override val storage: PokemonStore<*>
     ) : ReleasePokemonEvent, Cancelable()
 
     /**
      * Fired after a player released a Pokémon from their pc or party.
      */
     class Post(
-            override val player: ServerPlayerEntity,
-            override val pokemon: Pokemon,
-            override val storage: PokemonStore<*>
+        override val player: ServerPlayer,
+        override val pokemon: Pokemon,
+        override val storage: PokemonStore<*>
     ) : ReleasePokemonEvent
 }

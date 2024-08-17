@@ -14,12 +14,17 @@ import com.cobblemon.mod.common.api.pokedex.PokedexEntryCategory
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.util.Identifier
+import com.cobblemon.mod.common.util.readEnumConstant
+import com.cobblemon.mod.common.util.readIdentifier
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeEnumConstant
+import com.cobblemon.mod.common.util.writeIdentifier
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.resources.ResourceLocation
 
 class DexPokemonData(
-    var identifier : Identifier = cobblemonResource("dex.pokemon"),
+    var identifier : ResourceLocation = cobblemonResource("dex.pokemon"),
     var forms : MutableList<String> = mutableListOf(),
     var category: PokedexEntryCategory = PokedexEntryCategory.STANDARD,
     var tags: MutableList<String> = mutableListOf(),
@@ -56,7 +61,7 @@ class DexPokemonData(
         )
     }
 
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeIdentifier(identifier)
         buffer.writeInt(forms.size)
         forms.forEach {
@@ -72,7 +77,7 @@ class DexPokemonData(
         buffer.writeBoolean(skipAutoNumbering)
     }
 
-    override fun decode(buffer: RegistryByteBuf) {
+    override fun decode(buffer: RegistryFriendlyByteBuf) {
         identifier = buffer.readIdentifier()
         val formsOrderListSize = buffer.readInt()
         for(i in 0 until formsOrderListSize){

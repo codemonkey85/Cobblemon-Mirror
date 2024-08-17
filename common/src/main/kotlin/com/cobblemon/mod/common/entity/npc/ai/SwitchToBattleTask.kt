@@ -9,12 +9,11 @@
 package com.cobblemon.mod.common.entity.npc.ai
 
 import com.cobblemon.mod.common.CobblemonMemories
-import com.cobblemon.mod.common.entity.npc.NPCEntity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
 
 /**
  * When NPC battling memory is added, this task swaps the NPC's activity over to npc_battling
@@ -23,14 +22,14 @@ import net.minecraft.entity.ai.brain.task.TaskTriggerer
  * @since February 24th, 2024
  */
 object SwitchToBattleTask {
-    fun create(): SingleTickTask<LivingEntity> {
-        return TaskTriggerer.task {
+    fun create(): OneShot<LivingEntity> {
+        return BehaviorBuilder.create {
             it.group(
-                it.queryMemoryOptional(MemoryModuleType.WALK_TARGET),
-                it.queryMemoryValue(CobblemonMemories.NPC_BATTLING)
+                it.registered(MemoryModuleType.WALK_TARGET),
+                it.present(CobblemonMemories.NPC_BATTLING)
             ).apply(it) { walkTarget, _ ->
-                TaskRunnable { _, entity, _ ->
-                    walkTarget.forget()
+                Trigger { _, entity, _ ->
+                    walkTarget.erase()
 //                    entity.brain.doExclusively(NPCEntity.BATTLING)
                     true
                 }

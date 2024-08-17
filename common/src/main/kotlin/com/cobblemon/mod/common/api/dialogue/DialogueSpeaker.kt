@@ -9,7 +9,7 @@
 package com.cobblemon.mod.common.api.dialogue
 
 import com.cobblemon.mod.common.api.text.text
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
 
 /**
  * A kind of speaker in a dialogue. They include a name and a face, each optional.
@@ -21,5 +21,5 @@ class DialogueSpeaker(
     val name: DialogueText? = null,
     val face: DialogueFaceProvider? = null
 ) {
-    fun of(name: MutableText = "".text(), face: DialogueFaceProvider? = null) = DialogueSpeaker(WrappedDialogueText(name), face)
+    fun of(name: MutableComponent = "".text(), face: DialogueFaceProvider? = null) = DialogueSpeaker(WrappedDialogueText(name), face)
 }

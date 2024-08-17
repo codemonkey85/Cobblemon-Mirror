@@ -11,14 +11,14 @@ package com.cobblemon.mod.common
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.ListCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
+import net.minecraft.core.UUIDUtil
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
 import java.util.Optional
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.util.Uuids
 
 object CobblemonMemories {
     val memories = mutableMapOf<String, MemoryModuleType<*>>()
 
-    val BATTLING_POKEMON = register("battling_pokemon", ListCodec(Uuids.INT_STREAM_CODEC, 0, 31))
+    val BATTLING_POKEMON = register("battling_pokemon", ListCodec(UUIDUtil.CODEC, 0, 31))
     val NPC_BATTLING = register("npc_battling", PrimitiveCodec.BOOL)
 
     fun <U> register(id: String, codec: Codec<U>): MemoryModuleType<U> {

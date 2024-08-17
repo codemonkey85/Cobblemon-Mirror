@@ -13,7 +13,7 @@ import com.bedrockk.molang.runtime.value.DoubleValue
 import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
-import net.minecraft.entity.Entity
+import net.minecraft.world.entity.Entity
 
 /**
  * An action effect keyframe that plays for all entities for which the condition is true.
@@ -27,7 +27,7 @@ interface EntityConditionalActionEffectKeyframe {
         // TODO this should use the entity's own query struct
         context.runtime.environment.query.addFunction("entity") {
             QueryStruct(hashMapOf())
-                .addFunction("uuid") { StringValue(entity.uuidAsString) }
+                .addFunction("uuid") { StringValue(entity.stringUUID) }
                 .addFunction("is_user") { DoubleValue(isUser) }
         }
         return entityCondition.resolveBoolean(context.runtime)

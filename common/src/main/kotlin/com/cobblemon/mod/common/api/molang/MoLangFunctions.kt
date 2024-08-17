@@ -34,27 +34,29 @@ import com.cobblemon.mod.common.util.isInt
 import com.cobblemon.mod.common.util.itemRegistry
 import com.cobblemon.mod.common.util.worldRegistry
 import com.mojang.datafixers.util.Either
-import net.minecraft.block.Block
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.damage.DamageTypes
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.nbt.NbtDouble
-import net.minecraft.nbt.NbtElement
-import net.minecraft.nbt.NbtList
-import net.minecraft.nbt.NbtString
-import net.minecraft.registry.Registry
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.registry.entry.RegistryEntry
-import net.minecraft.registry.tag.TagKey
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.Identifier
-import net.minecraft.world.World
-import net.minecraft.world.biome.Biome
-import net.minecraft.world.dimension.DimensionType
+import net.minecraft.client.gui.components.tabs.Tab
+import net.minecraft.core.Holder
+import net.minecraft.core.Registry
+import net.minecraft.core.registries.Registries
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.DoubleTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.StringTag
+import net.minecraft.nbt.Tag
+import net.minecraft.resources.ResourceKey
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.commands.TagCommand
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.tags.TagKey
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.dimension.DimensionType
 
 /**
  * Holds a bunch of useful MoLang trickery that can be used or extended in API
@@ -105,30 +107,30 @@ object MoLangFunctions {
     val worldFunctions = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
     val dimensionTypeFunctions = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
     val blockFunctions = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
-    val playerFunctions = mutableListOf<(PlayerEntity) -> HashMap<String, java.util.function.Function<MoParams, Any>>>(
+    val playerFunctions = mutableListOf<(Player) -> HashMap<String, java.util.function.Function<MoParams, Any>>>(
         { player ->
             val map = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
             map.put("username") { _ -> StringValue(player.gameProfile.name) }
             map.put("uuid") { _ -> StringValue(player.gameProfile.id.toString()) }
-            map.put("data") { _ -> return@put if (player is ServerPlayerEntity) Cobblemon.molangData.load(player.uuid) else DoubleValue(0) }
-            map.put("save_data") { _ -> if (player is ServerPlayerEntity) Cobblemon.molangData.save(player.uuid) else DoubleValue(0) }
-            map.put("main_held_item") { _ -> player.world.itemRegistry.getEntry(player.mainHandStack.item).asMoLangValue(RegistryKeys.ITEM) }
-            map.put("off_held_item") { _ -> player.world.itemRegistry.getEntry(player.offHandStack.item).asMoLangValue(RegistryKeys.ITEM) }
+            map.put("data") { _ -> return@put if (player is ServerPlayer) Cobblemon.molangData.load(player.uuid) else DoubleValue(0) }
+            map.put("save_data") { _ -> if (player is ServerPlayer) Cobblemon.molangData.save(player.uuid) else DoubleValue(0) }
+            map.put("main_held_item") { _ -> player.level().itemRegistry.wrapAsHolder(player.mainHandItem.item).asMoLangValue(Registries.ITEM) }
+            map.put("off_held_item") { _ -> player.level().itemRegistry.wrapAsHolder(player.offhandItem.item).asMoLangValue(Registries.ITEM) }
             map.put("face") { _ -> ObjectValue(PlayerDialogueFaceProvider(player.uuid)) }
-            map.put("swing_hand") { _ -> player.swingHand(player.activeHand) }
-            map.put("food_level") { _ -> DoubleValue(player.hungerManager.foodLevel) }
-            map.put("saturation_level") { _ -> DoubleValue(player.hungerManager.saturationLevel) }
+            map.put("swing_hand") { _ -> player.swing(player.usedItemHand) }
+            map.put("food_level") { _ -> DoubleValue(player.foodData.foodLevel) }
+            map.put("saturation_level") { _ -> DoubleValue(player.foodData.saturationLevel) }
             map.put("tell") { params ->
                 val message = params.getString(0).text()
                 val overlay = params.getBooleanOrNull(1) ?: false
-                player.sendMessage(message, overlay)
+                player.displayClientMessage(message, overlay)
             }
             map.put("teleport") { params ->
                 val x = params.getDouble(0)
                 val y = params.getDouble(1)
                 val z = params.getDouble(2)
-                val playParticleEffects = params.getBooleanOrNull(3) ?: false
-                player.teleport(x, y, z, playParticleEffects)
+                val playParticleOptionss = params.getBooleanOrNull(3) ?: false
+                player.randomTeleport(x, y, z, playParticleOptionss)
             }
             map.put("heal") { params ->
                 val amount = params.getDoubleOrNull(0) ?: player.maxHealth
@@ -147,35 +149,35 @@ object MoLangFunctions {
             val map = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
             map.put("damage") { params ->
                 val amount = params.getDouble(0)
-                val source = DamageSource(entity.world.registryManager.get(RegistryKeys.DAMAGE_TYPE).getEntry(DamageTypes.GENERIC).get())
-                entity.damage(source, amount.toFloat())
+                val source = DamageSource(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolder(DamageTypes.GENERIC).get())
+                entity.hurt(source, amount.toFloat())
             }
-            map.put("is_sneaking") { _ -> DoubleValue(entity.isSneaking) }
+            map.put("is_sneaking") { _ -> DoubleValue(entity.isShiftKeyDown) }
             map.put("is_sprinting") { _ -> DoubleValue(entity.isSprinting) }
             map.put("is_flying") { _ -> DoubleValue(entity.isFallFlying) }
-            map.put("is_in_water") { _ -> DoubleValue(entity.isSubmergedInWater) }
-            map.put("is_touching_water_or_rain") { _ -> DoubleValue(entity.isWet) }
-            map.put("is_touching_water") { _ -> DoubleValue(entity.isTouchingWater) }
+            map.put("is_in_water") { _ -> DoubleValue(entity.isUnderWater) }
+            map.put("is_touching_water_or_rain") { _ -> DoubleValue(entity.isInWaterRainOrBubble) }
+            map.put("is_touching_water") { _ -> DoubleValue(entity.isInWater) }
             map.put("is_in_lava") { _ -> DoubleValue(entity.isInLava) }
             map.put("is_on_fire") { _ -> DoubleValue(entity.isOnFire) }
             map.put("is_invisible") { _ -> DoubleValue(entity.isInvisible) }
             map.put("is_sleeping") { _ -> DoubleValue(entity.isSleeping) }
-            map.put("is_riding") { _ -> DoubleValue(entity.hasVehicle()) }
+            map.put("is_riding") { _ -> DoubleValue(entity.isPassenger()) }
             map.put("health") { _ -> DoubleValue(entity.health) }
             map.put("max_health") { _ -> DoubleValue(entity.maxHealth) }
             map.put("name") { _ -> StringValue(entity.effectiveName().string) }
-            map.put("yaw") { _ -> DoubleValue(entity.yaw.toDouble()) }
-            map.put("pitch") { _ -> DoubleValue(entity.pitch.toDouble()) }
+            map.put("yaw") { _ -> DoubleValue(entity.yRot.toDouble()) }
+            map.put("pitch") { _ -> DoubleValue(entity.xRot.toDouble()) }
             map.put("x") { _ -> DoubleValue(entity.x) }
             map.put("y") { _ -> DoubleValue(entity.y) }
             map.put("z") { _ -> DoubleValue(entity.z) }
-            map.put("velocity_x") { _ -> DoubleValue(entity.velocity.x) }
-            map.put("velocity_y") { _ -> DoubleValue(entity.velocity.y) }
-            map.put("velocity_z") { _ -> DoubleValue(entity.velocity.z) }
-            map.put("horizontal_velocity") { _ -> DoubleValue(entity.velocity.horizontalLength()) }
-            map.put("is_on_ground") { _ -> DoubleValue(entity.isOnGround) }
-            map.put("world") { _ -> entity.world.worldRegistry.getEntry(entity.world).asWorldMoLangValue() }
-            map.put("biome") { _ -> entity.world.getBiome(entity.blockPos).asBiomeMoLangValue() }
+            map.put("velocity_x") { _ -> DoubleValue(entity.deltaMovement.x) }
+            map.put("velocity_y") { _ -> DoubleValue(entity.deltaMovement.y) }
+            map.put("velocity_z") { _ -> DoubleValue(entity.deltaMovement.z) }
+            map.put("horizontal_velocity") { _ -> DoubleValue(entity.deltaMovement.horizontalDistance()) }
+            map.put("is_on_ground") { _ -> DoubleValue(entity.onGround()) }
+            map.put("world") { _ -> entity.level().worldRegistry.wrapAsHolder(entity.level()).asWorldMoLangValue() }
+            map.put("biome") { _ -> entity.level().getBiome(entity.blockPosition()).asBiomeMoLangValue() }
             map
         }
     )
@@ -187,11 +189,11 @@ object MoLangFunctions {
             map.put("face") { ObjectValue(ReferenceDialogueFaceProvider(npc.id)) }
             map.put("in_battle") { DoubleValue(npc.isInBattle()) }
             map.put("run_script_on_client") { params ->
-                val world = npc.world
-                if (world is ServerWorld) {
+                val world = npc.level()
+                if (world is ServerLevel) {
                     val script = params.getString(0)
                     val packet = RunPosableMoLangPacket(npc.id, setOf("q.run_script('$script')"))
-                    packet.sendToPlayers(world.players.toList())
+                    packet.sendToPlayers(world.players().toList())
                 }
                 Unit
             }
@@ -222,11 +224,11 @@ object MoLangFunctions {
         }
     )
 
-    fun RegistryEntry<Biome>.asBiomeMoLangValue() = asMoLangValue(RegistryKeys.BIOME).addFunctions(biomeFunctions)
-    fun RegistryEntry<World>.asWorldMoLangValue() = asMoLangValue(RegistryKeys.WORLD).addFunctions(worldFunctions)
-    fun RegistryEntry<Block>.asBlockMoLangValue() = asMoLangValue(RegistryKeys.BLOCK).addFunctions(blockFunctions)
-    fun RegistryEntry<DimensionType>.asDimensionTypeMoLangValue() = asMoLangValue(RegistryKeys.DIMENSION_TYPE).addFunctions(dimensionTypeFunctions)
-    fun PlayerEntity.asMoLangValue(): ObjectValue<PlayerEntity> {
+    fun Holder<Biome>.asBiomeMoLangValue() = asMoLangValue(Registries.BIOME).addFunctions(biomeFunctions)
+    fun Holder<Level>.asWorldMoLangValue() = asMoLangValue(Registries.DIMENSION).addFunctions(worldFunctions)
+    fun Holder<Block>.asBlockMoLangValue() = asMoLangValue(Registries.BLOCK).addFunctions(blockFunctions)
+    fun Holder<DimensionType>.asDimensionTypeMoLangValue() = asMoLangValue(Registries.DIMENSION_TYPE).addFunctions(dimensionTypeFunctions)
+    fun Player.asMoLangValue(): ObjectValue<Player> {
         val value = ObjectValue(
             obj = this,
             stringify = { it.effectiveName().string }
@@ -255,18 +257,18 @@ object MoLangFunctions {
         return value
     }
 
-    fun <T> RegistryEntry<T>.asMoLangValue(key: RegistryKey<Registry<T>>): ObjectValue<RegistryEntry<T>> {
+    fun <T> Holder<T>.asMoLangValue(key: ResourceKey<Registry<T>>): ObjectValue<Holder<T>> {
         val value = ObjectValue(
             obj = this,
-            stringify = { it.key.get().value.toString() }
+            stringify = { it.unwrapKey().get().location().toString() }
         )
         value.functions.put("is_in") {
-            val tag = TagKey.of(key, Identifier.of(it.getString(0).replace("#", "")))
-            return@put DoubleValue(if (value.obj.isIn(tag)) 1.0 else 0.0)
+            val tag = TagKey.create(key, ResourceLocation.parse(it.getString(0).replace("#", "")))
+            return@put DoubleValue(if (value.obj.`is`(tag)) 1.0 else 0.0)
         }
         value.functions.put("is_of") {
-            val identifier = Identifier.of(it.getString(0))
-            return@put DoubleValue(if (value.obj.matchesId(identifier)) 1.0 else 0.0)
+            val identifier = ResourceLocation.parse(it.getString(0))
+            return@put DoubleValue(if (value.obj.`is`(identifier)) 1.0 else 0.0)
         }
         return value
     }
@@ -286,18 +288,18 @@ object MoLangFunctions {
         return this
     }
 
-    fun writeMoValueToNBT(value: MoValue): NbtElement? {
+    fun writeMoValueToNBT(value: MoValue): Tag? {
         return when (value) {
-            is DoubleValue -> NbtDouble.of(value.value)
-            is StringValue -> NbtString.of(value.value)
+            is DoubleValue -> DoubleTag.valueOf(value.value)
+            is StringValue -> StringTag.valueOf(value.value)
             is ArrayStruct -> {
                 val list = value.map.values
-                val nbtList = NbtList()
+                val nbtList = ListTag()
                 list.mapNotNull(::writeMoValueToNBT).forEach(nbtList::add)
                 nbtList
             }
             is VariableStruct -> {
-                val nbt = NbtCompound()
+                val nbt = CompoundTag()
                 value.map.forEach { (key, value) ->
                     val element = writeMoValueToNBT(value) ?: return@forEach
                     nbt.put(key, element)
@@ -308,11 +310,11 @@ object MoLangFunctions {
         }
     }
 
-    fun readMoValueFromNBT(nbt: NbtElement): MoValue {
+    fun readMoValueFromNBT(nbt: Tag): MoValue {
         return when (nbt) {
-            is NbtDouble -> DoubleValue(nbt.doubleValue())
-            is NbtString -> StringValue(nbt.asString())
-            is NbtList -> {
+            is DoubleTag -> DoubleValue(nbt.asDouble)
+            is StringTag -> StringValue(nbt.asString)
+            is ListTag -> {
                 val array = ArrayStruct(hashMapOf())
                 var index = 0
                 nbt.forEach { element ->
@@ -322,9 +324,9 @@ object MoLangFunctions {
                 }
                 array
             }
-            is NbtCompound -> {
+            is CompoundTag -> {
                 val variable = VariableStruct(hashMapOf())
-                nbt.keys.toList().forEach { key ->
+                nbt.allKeys.toList().forEach { key ->
                     val value = readMoValueFromNBT(nbt[key]!!)
                     variable.map[key] = value
                 }
@@ -335,4 +337,4 @@ object MoLangFunctions {
     }
 }
 
-fun Either<Identifier, ExpressionLike>.runScript(runtime: MoLangRuntime) = map({ CobblemonScripts.run(it, runtime) }, { it.resolve(runtime) })
+fun Either<ResourceLocation, ExpressionLike>.runScript(runtime: MoLangRuntime) = map({ CobblemonScripts.run(it, runtime) }, { it.resolve(runtime) })

@@ -8,8 +8,11 @@
 
 package com.cobblemon.mod.common.mixin.invoker;
 
-import net.minecraft.block.*;
-import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.material.MapColor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
@@ -17,22 +20,22 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Blocks.class)
 public interface BlocksInvoker {
 
-    @Invoker("createLogBlock")
+    @Invoker("log")
     static Block createLogBlock(MapColor topMapColor, MapColor sideMapColor) {
         throw new UnsupportedOperationException();
     }
 
-    @Invoker("createLeavesBlock")
-    static Block createLeavesBlock(BlockSoundGroup soundGroup) {
+    @Invoker("leaves")
+    static Block createLeavesBlock(SoundType soundGroup) {
         throw new UnsupportedOperationException();
     }
 
-    @Invoker("createWoodenButtonBlock")
+    @Invoker("woodenButton")
     static Block createWoodenButtonBlock(BlockSetType blockSetType) {
         throw new UnsupportedOperationException();
     }
 
-    @Invoker("createFlowerPotBlock")
+    @Invoker("flowerPot")
     static Block createFlowerPotBlock(Block flower) {
         throw new UnsupportedOperationException();
     }

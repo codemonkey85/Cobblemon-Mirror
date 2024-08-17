@@ -17,8 +17,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedF
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class LarvestaModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("larvesta")
@@ -32,10 +32,10 @@ class LarvestaModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 1.71F
-    override var portraitTranslation = Vec3d(-0.39, -0.73, 0.0)
+    override var portraitTranslation = Vec3(-0.39, -0.73, 0.0)
 
     override var profileScale = 0.67F
-    override var profileTranslation = Vec3d(-0.01, 0.72, 0.0)
+    override var profileTranslation = Vec3(-0.01, 0.72, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

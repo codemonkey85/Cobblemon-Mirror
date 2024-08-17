@@ -15,9 +15,9 @@ import com.cobblemon.mod.common.api.reactive.SimpleObservable
 import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.util.writeSizedInt
 import com.google.gson.JsonObject
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.util.Identifier
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Holds a mapping from a Stat to value that should be reducible to a short for NBT and net.
@@ -60,7 +60,7 @@ abstract class PokemonStats : Iterable<Map.Entry<Stat, Int>> {
 
     protected open fun canSet(stat: Stat, value: Int) = value in acceptableRange
 
-    fun saveToNBT(nbt: NbtCompound): NbtCompound {
+    fun saveToNBT(nbt: CompoundTag): CompoundTag {
         this.stats.forEach { (stat, value) ->
             // don't waste space if default
             if (value != this.defaultValue) {
@@ -70,7 +70,7 @@ abstract class PokemonStats : Iterable<Map.Entry<Stat, Int>> {
         return nbt
     }
 
-    fun loadFromNBT(nbt: NbtCompound): PokemonStats {
+    fun loadFromNBT(nbt: CompoundTag): PokemonStats {
         stats.clear()
         Stats.PERMANENT.forEach { stat ->
             val identifier = this.cleanStatIdentifier(stat.identifier)
@@ -100,7 +100,7 @@ abstract class PokemonStats : Iterable<Map.Entry<Stat, Int>> {
         return this
     }
 
-    fun saveToBuffer(buffer: RegistryByteBuf) {
+    fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeSizedInt(IntSize.U_BYTE, stats.size)
         for ((stat, value) in stats) {
             Cobblemon.statProvider.encode(buffer, stat)
@@ -108,7 +108,7 @@ abstract class PokemonStats : Iterable<Map.Entry<Stat, Int>> {
         }
     }
 
-    fun loadFromBuffer(buffer: RegistryByteBuf) {
+    fun loadFromBuffer(buffer: RegistryFriendlyByteBuf) {
         stats.clear()
         repeat(times = buffer.readUnsignedByte().toInt()) {
             val stat = Cobblemon.statProvider.decode(buffer)
@@ -120,6 +120,6 @@ abstract class PokemonStats : Iterable<Map.Entry<Stat, Int>> {
     fun getOrDefault(stat: Stat) = this[stat] ?: this.defaultValue
 
     // util to prevent unnecessary long identifiers, usually vanilla defaults to Minecraft but in our context defaulting to cobblemon makes more sense
-    private fun cleanStatIdentifier(identifier: Identifier): String = identifier.toString().substringAfter("${Cobblemon.MODID}:")
+    private fun cleanStatIdentifier(identifier: ResourceLocation): String = identifier.toString().substringAfter("${Cobblemon.MODID}:")
 
 }

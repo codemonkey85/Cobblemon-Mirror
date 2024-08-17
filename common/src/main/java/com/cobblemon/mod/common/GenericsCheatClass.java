@@ -9,16 +9,15 @@
 package com.cobblemon.mod.common;
 
 import com.cobblemon.mod.common.entity.npc.NPCEntity;
-import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.sensor.Sensor;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
-
 import java.util.Collection;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.sensing.Sensor;
+import net.minecraft.world.entity.ai.sensing.SensorType;
 
 public class GenericsCheatClass {
     // For some reason, doing this in the NPCEntity class in Kotlin gives confusing generic errors I could not resolve.
-    public static Brain.Profile<NPCEntity> createNPCBrain(Collection<MemoryModuleType<?>> memories, Collection<SensorType<? extends Sensor<? super NPCEntity>>> sensors) {
-        return Brain.createProfile(memories, sensors);
+    public static Brain.Provider<NPCEntity> createNPCBrain(Collection<MemoryModuleType<?>> memories, Collection<SensorType<? extends Sensor<? super NPCEntity>>> sensors) {
+        return Brain.provider(memories, sensors);
     }
 }

@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.events
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.events.battles.BattleStartedPostEvent
+import com.cobblemon.mod.common.api.events.pokedex.scanning.PokemonScannedEvent
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent
 import com.cobblemon.mod.common.api.events.pokemon.TradeCompletedEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEvent
@@ -29,6 +30,13 @@ object PokedexHandler {
         pokedexData.pokemonCaught(event)
         event.player.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, pokedexData.toClientData(), false))
     }
+
+    fun onScan(event: PokemonScannedEvent) {
+        val pokedexData = Cobblemon.playerDataManager.getPokedexData(event.player)
+        pokedexData.pokemonScanned(event)
+        event.player.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, pokedexData.toClientData(), false))
+    }
+
     fun onEvolve(event: EvolutionCompleteEvent){
         val ownedBy = event.pokemon.getOwnerPlayer()
         if(ownedBy == null){

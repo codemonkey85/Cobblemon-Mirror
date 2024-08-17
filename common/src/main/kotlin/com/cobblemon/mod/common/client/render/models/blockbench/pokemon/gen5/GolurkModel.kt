@@ -15,18 +15,18 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvi
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class GolurkModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("golurk")
     override val head = getPart("head")
 
     override var portraitScale = 3.0F
-    override var portraitTranslation = Vec3d(-0.3, 5.4, 0.0)
+    override var portraitTranslation = Vec3(-0.3, 5.4, 0.0)
 
     override var profileScale = 0.4F
-    override var profileTranslation = Vec3d(0.0, 1.15, 0.0)
+    override var profileTranslation = Vec3(0.0, 1.15, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

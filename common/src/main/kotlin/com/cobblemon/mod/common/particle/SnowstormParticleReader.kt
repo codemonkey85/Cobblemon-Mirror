@@ -10,21 +10,19 @@ package com.cobblemon.mod.common.particle
 
 import com.bedrockk.molang.Expression
 import com.bedrockk.molang.ast.NumberExpression
-import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.snowstorm.*
 import com.cobblemon.mod.common.util.asExpression
 import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.cobblemon.mod.common.util.normalizeToArray
-import com.cobblemon.mod.common.util.singularToPluralList
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import org.joml.Vector4f
 
 object SnowstormParticleReader {
-    fun loadEffect(json: JsonObject): BedrockParticleEffect {
+    fun loadEffect(json: JsonObject): BedrockParticleOptions {
         val effectJson = json.get("particle_effect").asJsonObject
         val descJson = effectJson.get("description").asJsonObject
         val basicRenderParametersJson = descJson.get("basic_render_parameters").asJsonObject
@@ -58,7 +56,7 @@ object SnowstormParticleReader {
         val spaceJson = componentsJson.get("minecraft:emitter_local_space")?.asJsonObject
         val particleLifetimeEventsJson = componentsJson.get("minecraft:particle_lifetime_events")?.asJsonObject
 
-        val id = Identifier.of(descJson.get("identifier").asString)
+        val id = ResourceLocation.parse(descJson.get("identifier").asString)
         val maxAge = particleLifetimeJson?.get("max_lifetime")?.asString?.asExpression() ?: 0.0.asExpression()
         val killExpression = particleLifetimeJson?.get("expiration_expression")?.asString?.asExpression() ?: 0.0.asExpression()
         val material = ParticleMaterial.valueOf(basicRenderParametersJson.get("material").asString.substringAfter("_").uppercase())
@@ -122,8 +120,8 @@ object SnowstormParticleReader {
                 val effect = it.get("effect").asString.asIdentifierDefaultingNamespace()
                 val type = it.get("type").asString
                 val preEffectExpression = it.get("pre_effect_expression")?.asString?.asExpressionLike()
-                val typeEnum = EventParticleEffect.EventParticleType.valueOf(type.uppercase())
-                EventParticleEffect(effect, typeEnum, preEffectExpression)
+                val typeEnum = EventParticleOptions.EventParticleType.valueOf(type.uppercase())
+                EventParticleOptions(effect, typeEnum, preEffectExpression)
             }
             val soundEffect = eventObj.get("sound_effect")?.asJsonObject?.let {
                 val eventName = it.get("event_name").asString.asIdentifierDefaultingNamespace()
@@ -393,7 +391,7 @@ object SnowstormParticleReader {
             key.toDouble() to value.normalizeToArray().map { it.asString }.toMutableList()
         }?.toMap()?.toMutableMap() ?: mutableMapOf())
 
-        return BedrockParticleEffect(
+        return BedrockParticleOptions(
             id = id,
             events = events,
             emitter = BedrockParticleEmitter(

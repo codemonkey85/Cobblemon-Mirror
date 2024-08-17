@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.pokedex.DexData
 import com.cobblemon.mod.common.pokedex.DexPokemonData
 import com.google.gson.*
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import java.lang.reflect.Type
 
 object DexDataAdapter: JsonDeserializer<DexData> {
@@ -32,13 +32,13 @@ object DexDataAdapter: JsonDeserializer<DexData> {
         }
 
         val containedDexesArray = json.getAsJsonArray("contained_dexes")
-        val containedDexes : MutableList<Identifier> = mutableListOf()
+        val containedDexes : MutableList<ResourceLocation> = mutableListOf()
         if(containedDexesArray != null) {
-            containedDexes.addAll(containedDexesArray.map { Identifier.of(it.asString) })
+            containedDexes.addAll(containedDexesArray.map { ResourceLocation.tryParse(it.asString)!! })
         }
 
         return DexData(
-            identifier = Identifier.of(json.get("identifier").asString),
+            identifier = ResourceLocation.tryParse(json.get("identifier").asString)!!,
             enabled = json.getAsJsonPrimitive("enabled")?.asBoolean ?: true,
             containedDexes = containedDexes,
             pokemonList = pokemonList,

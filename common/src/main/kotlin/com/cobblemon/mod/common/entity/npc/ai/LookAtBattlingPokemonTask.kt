@@ -9,27 +9,27 @@
 package com.cobblemon.mod.common.entity.npc.ai
 
 import com.cobblemon.mod.common.CobblemonMemories
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.brain.EntityLookTarget
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.behavior.EntityTracker
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
 
 object LookAtBattlingPokemonTask {
-    fun create(minDurationTicks: Int = 60, maxDurationTicks: Int = 100): SingleTickTask<LivingEntity> {
-        return TaskTriggerer.task {
+    fun create(minDurationTicks: Int = 60, maxDurationTicks: Int = 100): OneShot<LivingEntity> {
+        return BehaviorBuilder.create {
             it.group(
-                it.queryMemoryAbsent(MemoryModuleType.LOOK_TARGET),
-                it.queryMemoryValue(CobblemonMemories.BATTLING_POKEMON)
+                it.absent(MemoryModuleType.LOOK_TARGET),
+                it.present(CobblemonMemories.BATTLING_POKEMON)
             ).apply(it) { lookTarget, visibleMobs ->
-                TaskRunnable { world, _, _ ->
-                    val lookEntity = it.getValue(visibleMobs).randomOrNull()?.let(world::getEntity)
+                Trigger { world, _, _ ->
+                    val lookEntity = it.get(visibleMobs).randomOrNull()?.let(world::getEntity)
                     if (lookEntity == null) {
-                        return@TaskRunnable false
+                        return@Trigger false
                     } else {
-                        lookTarget.remember(EntityLookTarget(lookEntity, true), (minDurationTicks..maxDurationTicks).random().toLong())
-                        return@TaskRunnable true
+                        lookTarget.setWithExpiry(EntityTracker(lookEntity, true), (minDurationTicks..maxDurationTicks).random().toLong())
+                        return@Trigger true
                     }
                 }
             }

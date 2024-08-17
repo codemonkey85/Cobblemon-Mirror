@@ -17,18 +17,18 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTr
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.isBattling
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class ArchenModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("archen")
     override val head = getPart("head")
 
-    override var portraitTranslation = Vec3d(-0.32, -0.07, 0.0)
+    override var portraitTranslation = Vec3(-0.32, -0.07, 0.0)
     override var portraitScale = 1.81F
 
-    override var profileTranslation = Vec3d(-0.02, 0.87, 0.0)
+    override var profileTranslation = Vec3(-0.02, 0.87, 0.0)
     override var profileScale = 0.58F
 
     lateinit var standing: CobblemonPose
@@ -63,7 +63,7 @@ class ArchenModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES - PoseType.HOVER,
             quirks = arrayOf(blink, idleQuirk, quirk),
-            condition = { (it.getEntity() as? PokemonEntity)?.isFalling() != true && !it.isTouchingWater && !it.isBattling },
+            condition = { (it.getEntity() as? PokemonEntity)?.isFalling() != true && !it.isInWater && !it.isBattling },
             transformTicks = 10,
             animations = arrayOf(
                 singleBoneLook(),
@@ -74,7 +74,7 @@ class ArchenModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         walking = registerPose(
             poseName = "walking",
             poseTypes = PoseType.MOVING_POSES - PoseType.SWIM,
-            condition = { (it.getEntity() as? PokemonEntity)?.isFalling() != true && !it.isTouchingWater },
+            condition = { (it.getEntity() as? PokemonEntity)?.isFalling() != true && !it.isInWater },
             quirks = arrayOf(blink),
             transformTicks = 10,
             animations = arrayOf(
@@ -87,7 +87,7 @@ class ArchenModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             poseName = "swim",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             transformTicks = 10,
             animations = arrayOf(
                 singleBoneLook(),
@@ -99,7 +99,7 @@ class ArchenModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             poseName = "float",
             poseTypes = PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink, idleQuirk),
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             transformTicks = 10,
             animations = arrayOf(
                 singleBoneLook(),

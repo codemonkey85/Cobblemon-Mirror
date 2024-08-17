@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.net.messages.client.pasture
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Packet fired when a Pokémon is added to a pasture block and a player has the menu open. This is so GUI updates are
@@ -22,12 +22,12 @@ import net.minecraft.network.RegistryByteBuf
 class PokemonPasturedPacket(val pasturePokemonDTO: OpenPasturePacket.PasturePokemonDataDTO) : NetworkPacket<PokemonPasturedPacket> {
     companion object {
         val ID = cobblemonResource("pasture_pokemon_added")
-        fun decode(buffer: RegistryByteBuf) = PokemonPasturedPacket(OpenPasturePacket.PasturePokemonDataDTO.decode(buffer))
+        fun decode(buffer: RegistryFriendlyByteBuf) = PokemonPasturedPacket(OpenPasturePacket.PasturePokemonDataDTO.decode(buffer))
     }
 
     override val id = ID
 
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         pasturePokemonDTO.encode(buffer)
     }
 }

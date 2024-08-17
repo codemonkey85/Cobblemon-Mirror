@@ -9,40 +9,41 @@
 package com.cobblemon.mod.common.entity.pokemon.ai.goals
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import java.util.EnumSet
-import net.minecraft.entity.ai.goal.Goal
-import net.minecraft.registry.tag.FluidTags
+import net.minecraft.tags.FluidTags
+import net.minecraft.world.entity.ai.goal.Goal
+import java.util.*
 
 class PokemonFloatToSurfaceGoal(val pokemonEntity: PokemonEntity) : Goal() {
     companion object {
-        private val controls = EnumSet.of(Control.JUMP)
+        private val FLAGS = EnumSet.of(Flag.JUMP)
     }
 
-    override fun getControls(): EnumSet<Control> = Companion.controls
+    override fun getFlags(): EnumSet<Flag> = FLAGS
 
-    override fun canStart(): Boolean {
+    override fun canUse(): Boolean {
         val canSwimInWater = pokemonEntity.behaviour.moving.swim.canSwimInWater
         val canSwimInLava = pokemonEntity.behaviour.moving.swim.canSwimInLava
         val canBreatheUnderlava = pokemonEntity.behaviour.moving.swim.canBreatheUnderlava
         val canBreatheUnderwater = pokemonEntity.behaviour.moving.swim.canBreatheUnderwater
 
-        if (!this.pokemonEntity.navigation.isIdle) {
+        if (!this.pokemonEntity.navigation.isDone) {
             return false
         }
 
         if (this.pokemonEntity.isInLava && !canBreatheUnderlava) {
             return true
-        } else if (canSwimInWater && !canBreatheUnderwater && this.pokemonEntity.isTouchingWater && this.pokemonEntity.getFluidHeight(FluidTags.WATER) > this.pokemonEntity.swimHeight) {
+        } else if (canSwimInWater && !canBreatheUnderwater && this.pokemonEntity.isInWater && this.pokemonEntity.getFluidHeight(FluidTags.WATER) > this.pokemonEntity.fluidJumpThreshold) {
             return true
         }
 
         return false
     }
 
-    override fun shouldRunEveryTick() = true
+    override fun requiresUpdateEveryTick() = true
+
     override fun tick() {
         if (this.pokemonEntity.random.nextFloat() < 0.8f) {
-            this.pokemonEntity.jumpControl.setActive()
+            this.pokemonEntity.jumpControl.jump()
         }
     }
 }

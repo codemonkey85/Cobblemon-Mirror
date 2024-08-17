@@ -8,9 +8,9 @@
 
 package com.cobblemon.mod.common.api.storage.player
 
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.player.Player
 import java.util.UUID
 
 /**
@@ -22,7 +22,7 @@ import java.util.UUID
 interface PlayerInstancedDataFactory<T : InstancedPlayerData> {
     fun setup(server: MinecraftServer)
 
-    fun getForPlayer(player: PlayerEntity): T {
+    fun getForPlayer(player: Player): T {
         return getForPlayer(player.uuid)
     }
 
@@ -30,13 +30,13 @@ interface PlayerInstancedDataFactory<T : InstancedPlayerData> {
 
     fun saveAll()
 
-    fun saveSingle(player: PlayerEntity) {
+    fun saveSingle(player: Player) {
         saveSingle(player.uuid)
     }
 
     fun saveSingle(playerId: UUID)
 
-    fun onPlayerDisconnect(player: ServerPlayerEntity)
+    fun onPlayerDisconnect(player: ServerPlayer)
 
-    fun sendToPlayer(player: ServerPlayerEntity)
+    fun sendToPlayer(player: ServerPlayer)
 }

@@ -8,8 +8,6 @@
 
 package com.cobblemon.mod.common.api.pokemon.feature
 
-import com.cobblemon.mod.common.api.net.Decodable
-import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.api.serialization.BufferSerializer
 
 /**

@@ -11,11 +11,11 @@ package com.cobblemon.mod.common.net.messages.client.pokemon.update
 import com.cobblemon.mod.common.api.moves.BenchedMoves
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class BenchedMovesUpdatePacket(pokemon: () -> Pokemon, value: BenchedMoves): SingleUpdatePacket<BenchedMoves, BenchedMovesUpdatePacket>(pokemon, value) {
     override val id = ID
-    override fun encodeValue(buffer: RegistryByteBuf) {
+    override fun encodeValue(buffer: RegistryFriendlyByteBuf) {
         this.value.saveToBuffer(buffer)
     }
 
@@ -28,7 +28,7 @@ class BenchedMovesUpdatePacket(pokemon: () -> Pokemon, value: BenchedMoves): Sin
 
     companion object {
         val ID = cobblemonResource("benched_moves_update")
-        fun decode(buffer: RegistryByteBuf): BenchedMovesUpdatePacket {
+        fun decode(buffer: RegistryFriendlyByteBuf): BenchedMovesUpdatePacket {
             val pokemon = decodePokemon(buffer)
             val benchedMoves = BenchedMoves().apply { loadFromBuffer(buffer) }
             return BenchedMovesUpdatePacket(pokemon, benchedMoves)

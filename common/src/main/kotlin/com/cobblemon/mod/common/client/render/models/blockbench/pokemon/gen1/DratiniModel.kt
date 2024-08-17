@@ -15,20 +15,20 @@ import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import com.cobblemon.mod.common.util.isSubmergedInWater
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isUnderWater
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class DratiniModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("dratini")
     override val head = getPart("head")
 
     override var portraitScale = 1.66F
-    override var portraitTranslation = Vec3d(-0.48, 0.35, 0.0)
+    override var portraitTranslation = Vec3(-0.48, 0.35, 0.0)
 
     override var profileScale = 0.58F
-    override var profileTranslation = Vec3d(0.14, 0.83, 0.0)
+    override var profileTranslation = Vec3(0.14, 0.83, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walking: CobblemonPose
@@ -44,7 +44,7 @@ class DratiniModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             animations = arrayOf(
                 bedrock("dratini", "sleep")
             )
@@ -53,7 +53,7 @@ class DratiniModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         water_sleep = registerPose(
             poseName = "water_sleep",
             poseType = PoseType.SLEEP,
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             animations = arrayOf(
                 bedrock("dratini", "water_sleep")
             )
@@ -101,7 +101,7 @@ class DratiniModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         surface_swim = registerPose(
             poseName = "surface_swim",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.MOVING_POSES,
-            condition = { !it.isSubmergedInWater && it.isTouchingWater},
+            condition = { !it.isUnderWater && it.isInWater},
             transformTicks = 10,
             animations = arrayOf(
                 bedrock("dratini", "surfacewater_swim")

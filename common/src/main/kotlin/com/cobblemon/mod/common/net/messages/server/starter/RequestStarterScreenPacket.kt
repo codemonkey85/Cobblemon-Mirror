@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.net.messages.server.starter
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Packet sent by the client when they are requesting to choose a starter. The response
@@ -21,10 +21,10 @@ import net.minecraft.network.RegistryByteBuf
  */
 class RequestStarterScreenPacket : NetworkPacket<RequestStarterScreenPacket> {
     override val id = ID
-    override fun encode(buffer: RegistryByteBuf) {}
+    override fun encode(buffer: RegistryFriendlyByteBuf) {}
 
     companion object {
         val ID = cobblemonResource("request_starter_screen")
-        fun decode(buffer: RegistryByteBuf): RequestStarterScreenPacket = RequestStarterScreenPacket()
+        fun decode(buffer: RegistryFriendlyByteBuf): RequestStarterScreenPacket = RequestStarterScreenPacket()
     }
 }

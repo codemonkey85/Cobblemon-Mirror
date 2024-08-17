@@ -16,7 +16,7 @@ import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import java.util.UUID
 
 /**
@@ -36,14 +36,14 @@ class PlayerDataJsonBackend: JsonBackedPlayerDataStoreBackend<GeneralPlayerData>
         starterUUID =  null,
         keyItems = mutableSetOf(),
         extraData = mutableMapOf(),
-        battleTheme = CobblemonSounds.PVP_BATTLE.id
+        battleTheme = CobblemonSounds.PVP_BATTLE.location
     )}
 
     override val gson = GsonBuilder()
         .setPrettyPrinting()
         .disableHtmlEscaping()
         .registerTypeAdapter(PlayerDataExtension::class.java, PlayerDataExtensionAdapter)
-        .registerTypeAdapter(Identifier::class.java, IdentifierAdapter)
+        .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .create()
 
     override val classToken = TypeToken.get(GeneralPlayerData::class.java)

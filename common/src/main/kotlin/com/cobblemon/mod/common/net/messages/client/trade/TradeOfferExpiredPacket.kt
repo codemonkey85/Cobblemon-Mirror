@@ -10,9 +10,9 @@ package com.cobblemon.mod.common.net.messages.client.trade
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readUuid
-import com.cobblemon.mod.common.util.writeUuid
-import net.minecraft.network.RegistryByteBuf
+import com.cobblemon.mod.common.util.readUUID
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
 /**
@@ -24,11 +24,11 @@ import java.util.UUID
 class TradeOfferExpiredPacket(val tradeOfferId: UUID) : NetworkPacket<TradeOfferExpiredPacket> {
     companion object {
         val ID = cobblemonResource("trade_offer_expired")
-        fun decode(buffer: RegistryByteBuf) = TradeOfferExpiredPacket(buffer.readUuid())
+        fun decode(buffer: RegistryFriendlyByteBuf) = TradeOfferExpiredPacket(buffer.readUUID())
     }
 
     override val id = ID
-    override fun encode(buffer: RegistryByteBuf) {
-        buffer.writeUuid(tradeOfferId)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(tradeOfferId)
     }
 }
