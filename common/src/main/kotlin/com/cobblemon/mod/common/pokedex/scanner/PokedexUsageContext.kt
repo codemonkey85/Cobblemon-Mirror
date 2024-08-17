@@ -16,6 +16,7 @@ import com.ibm.icu.impl.duration.impl.DataRecord.EGender.F
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.resources.ResourceLocation
@@ -66,7 +67,7 @@ class PokedexUsageContext {
         }
     }
 
-    fun tryOpenScanGui(user: LocalPlayer, ticksInUse: Int, inUse: Boolean) {
+    fun tryOpenScanGui(user: AbstractClientPlayer, ticksInUse: Int, inUse: Boolean) {
         if (inUse && ticksInUse == TIME_TO_OPEN_SCANNER) {
 
             scanningGuiOpen = true
