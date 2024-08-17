@@ -69,6 +69,9 @@ class PokedexRecord(
         if (!gennedFactories.contains(EventTriggerType.SCANNED)) {
             genFactories(EventTriggerType.SCANNED)
         }
+        if (event.pokemon.getOwnerPlayer() == event.player && !gennedFactories.contains(EventTriggerType.CAUGHT)) {
+            genFactories(EventTriggerType.SCANNED)
+        }
         globalTrackedData.forEach {
             val changed = it.onScan(event)
             if (changed) {

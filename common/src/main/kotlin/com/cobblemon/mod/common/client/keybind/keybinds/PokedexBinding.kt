@@ -16,9 +16,8 @@ import com.cobblemon.mod.common.client.keybind.CobblemonKeyBinding
 import com.cobblemon.mod.common.client.keybind.KeybindCategories
 import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.mojang.blaze3d.platform.InputConstants
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.util.InputUtil
-import net.minecraft.sound.SoundCategory
+import net.minecraft.client.Minecraft
+import net.minecraft.sounds.SoundSource
 
 object PokedexBinding : CobblemonKeyBinding(
     "key.cobblemon.pokedex",
@@ -29,7 +28,7 @@ object PokedexBinding : CobblemonKeyBinding(
     override fun onPress() {
         try {
             PokedexGUI.open(CobblemonClient.clientPokedexData, PokedexTypes.RED)
-            MinecraftClient.getInstance().player?.playSoundToPlayer(CobblemonSounds.POKEDEX_SHOW, SoundCategory.PLAYERS, 1F, 1F)
+            Minecraft.getInstance().player?.playNotifySound(CobblemonSounds.POKEDEX_OPEN, SoundSource.PLAYERS, 1F, 1F)
         } catch (e: Exception) {
             Cobblemon.LOGGER.debug("Failed to open the Pokedex from the Pokedex keybind", e)
         }

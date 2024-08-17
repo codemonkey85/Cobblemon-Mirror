@@ -136,7 +136,9 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Poked
         searchWidget = SearchWidget(x + 26, y + 28, HALF_OVERLAY_WIDTH, HEADER_BAR_HEIGHT, update =::updateFilters)
         addRenderableWidget(searchWidget)
 
-        if (::regionSelectWidgetUp.isInitialized) remove(regionSelectWidgetUp)
+        if (::regionSelectWidgetUp.isInitialized) {
+            removeWidget(regionSelectWidgetUp)
+        }
         regionSelectWidgetUp = ScaledButton(
             buttonX = (x + 95).toFloat(),
             buttonY = (y + 14.5).toFloat(),
@@ -148,9 +150,11 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Poked
                 selectedRegion = PokedexJSONRegistry.getByIdentifier(PokedexJSONRegistry.getNextDex(selectedRegion.identifier))!!
                 updateFilters()
             })
-        addDrawableChild(regionSelectWidgetUp)
+        addRenderableWidget(regionSelectWidgetUp)
 
-        if (::regionSelectWidgetDown.isInitialized) remove(regionSelectWidgetDown)
+        if (::regionSelectWidgetDown.isInitialized) {
+            removeWidget(regionSelectWidgetDown)
+        }
         regionSelectWidgetDown = ScaledButton(
             buttonX = (x + 95).toFloat(),
             buttonY = (y + 19.5).toFloat(),
@@ -162,7 +166,8 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Poked
                 selectedRegion = PokedexJSONRegistry.getByIdentifier(PokedexJSONRegistry.getPreviousDex(selectedRegion.identifier))!!
                 updateFilters()
             })
-        addDrawableChild(regionSelectWidgetDown)
+
+        addRenderableWidget(regionSelectWidgetDown)
 
         updateFilters(true)
     }

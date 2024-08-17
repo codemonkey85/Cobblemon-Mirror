@@ -101,6 +101,8 @@ class PokedexUsageContext {
                 FinishScanningPacket(targetId).sendToServer()
                 //Need to wait for server to process
                 //We could just have the server send a packet back but I don't think its necessary in this case, this works fine
+                // Wrong, this is unreliable with lag and I have experienced it opening the GUI and showing me a question mark pokemon
+                // TODO make it work using a server response packet
                 afterOnClient(10, 0F) {
                     resetState()
                     openPokedexGUI(user, targetPokemon.pokemon.species.resourceIdentifier)

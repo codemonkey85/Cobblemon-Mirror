@@ -7,4 +7,7 @@ import net.minecraft.server.level.ServerPlayer
 data class PokemonScannedEvent(val player: ServerPlayer, val scannedEntity: PokemonEntity) {
     val pokemon: Pokemon
         get() = scannedEntity.pokemon
+
+    val isOwned: Boolean
+        get() = pokemon.getOwnerPlayer() == player
 }

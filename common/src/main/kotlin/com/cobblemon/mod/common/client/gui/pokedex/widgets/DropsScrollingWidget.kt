@@ -17,12 +17,17 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
 import com.cobblemon.mod.common.client.render.renderScaledGuiItemIcon
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.registry.Registries
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
-import net.minecraft.util.math.ColorHelper
-import net.minecraft.util.math.MathHelper
+import com.cobblemon.mod.common.util.itemRegistry
+import com.cobblemon.mod.common.util.lang
+import java.text.DecimalFormat
+import net.minecraft.ChatFormatting
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.util.FastColor
+import net.minecraft.util.Mth
+import net.minecraft.world.item.ItemStack
 
 class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrollingWidget.DropWidgetEntry>(
     width = PokedexGUIConstants.HALF_OVERLAY_WIDTH - 2,
@@ -33,6 +38,10 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
 ) {
 
     var dropTable: DropTable = DropTable()
+
+    companion object {
+        val df = DecimalFormat("#.##")
+    }
 
     init {
         setEntries()
@@ -47,32 +56,32 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
         }
     }
 
-    override fun getScrollbarX(): Int {
+    override fun getScrollbarPosition(): Int {
         return left + width - scrollBarWidth - 7
     }
 
-    override fun renderScrollbar(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        val xLeft = this.scrollbarX
+    override fun renderScrollbar(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        val xLeft = this.scrollbarPosition
         val xRight = xLeft + 3
 
         val barHeight = this.bottom - this.y
 
         var yBottom = ((barHeight * barHeight).toFloat() / this.maxPosition.toFloat()).toInt()
-        yBottom = MathHelper.clamp(yBottom, 32, barHeight - 8)
+        yBottom = Mth.clamp(yBottom, 32, barHeight - 8)
         var yTop = scrollAmount.toInt() * (barHeight - yBottom) / this.maxScroll + this.y
         if (yTop < this.y) {
             yTop = this.y
         }
 
-        context.fill(xLeft + 1, this.y + 1, xRight - 1, this.bottom - 1, ColorHelper.Argb.getArgb(255, 126, 231, 229)) // background
-        context.fill(xLeft, yTop + 1, xRight, yTop + yBottom - 1, ColorHelper.Argb.getArgb(255, 58, 150, 182)) // base
+        context.fill(xLeft + 1, this.y + 1, xRight - 1, this.bottom - 1, FastColor.ARGB32.color(255, 126, 231, 229)) // background
+        context.fill(xLeft, yTop + 1, xRight, yTop + yBottom - 1, FastColor.ARGB32.color(255, 58, 150, 182)) // base
     }
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
-            text = Text.translatable("cobblemon.ui.pokedex.info.drops").bold(),
+            text = lang("ui.pokedex.info.drops").bold(),
             x = pX,
             y = pY - 10,
             shadow = true
@@ -81,7 +90,7 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
         if (dropTable.entries.size == 0) {
             drawScaledText(
                 context = context,
-                text = Text.translatable("cobblemon.ui.pokedex.info.drops_empty"),
+                text = lang("ui.pokedex.info.drops_empty"),
                 x = pX + (width / 2) - 7,
                 y = pY + (height / 2) - 3,
                 shadow = false,
@@ -94,8 +103,8 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
         }
     }
 
-    override fun renderEntry(
-        context: DrawContext,
+    override fun renderItem(
+        context: GuiGraphics,
         mouseX: Int,
         mouseY: Int,
         delta: Float,
@@ -108,7 +117,7 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
         val entry =  this.getEntry(index)
         entry.render(
             context, index, y + 2, x, entryWidth, entryHeight, mouseX, mouseY,
-            hoveredEntry == entry, delta
+            hovered == entry, delta
         )
     }
 
@@ -118,7 +127,7 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
 
     class DropWidgetEntry(val entry: ItemDropEntry): Slot<DropWidgetEntry>() {
         override fun render(
-            context: DrawContext,
+            context: GuiGraphics,
             index: Int,
             y: Int,
             x: Int,
@@ -129,39 +138,39 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
             hovered: Boolean,
             tickDelta: Float
         ) {
-            context.matrices.push()
-            context.matrices.translate(0f, 0f, 100f)
-            val itemStack = Registries.ITEM.get(entry.item).defaultStack
+            context.pose().pushPose()
+            context.pose().translate(0f, 0f, 100f)
+            val itemStack = Minecraft.getInstance().player?.level()?.itemRegistry?.get(entry.item)?.defaultInstance ?: ItemStack.EMPTY
             renderScaledGuiItemIcon(
                 itemStack = itemStack,
                 x = x.toDouble(),
                 y = y.toDouble(),
-                matrixStack = context.matrices,
+                matrixStack = context.pose(),
                 scale = PokedexGUIConstants.SCALE.toDouble()
             )
-            context.matrices.push()
+            context.pose().pushPose()
 
-            val min = entry.quantityRange?.min()
-            val max = entry.quantityRange?.max()
+            val min = entry.quantityRange?.min() ?: entry.quantity
+            val max = entry.quantityRange?.max() ?: entry.quantity
 
-            var itemName: String = Text.translatable(itemStack.translationKey).string
-            itemName = if (itemName.length > 24) {
-                itemName.substring(0, 24 - 3) + "..."
-            } else {
-                itemName
-            }
+//            var itemName: String = Component.translatable(itemStack.hoverName).string
+//            itemName = if (itemName.length > 24) {
+//                itemName.substring(0, 24 - 3) + "..."
+//            } else {
+//                itemName
+//            }
 
-            val displayText: MutableText = if (entry.quantityRange != null) {
-                Text.translatable(
-                    "cobblemon.ui.pokedex.info.drops_display",
-                    Text.literal(itemName).bold(),
-                    Text.translatable("cobblemon.ui.pokedex.info.drops_range", min, max)
+            val displayText: MutableComponent = if (entry.quantityRange != null) {
+                lang(
+                    "ui.pokedex.info.drops_display",
+                    itemStack.hoverName.copy().withStyle(ChatFormatting.BOLD),
+                    lang("ui.pokedex.info.drops_range", min, max)
                 )
             } else {
-                Text.translatable(
-                    "cobblemon.ui.pokedex.info.drops_display",
-                    Text.literal(itemName).bold(),
-                    Text.translatable("cobblemon.ui.pokedex.info.drops_amount", entry.quantity)
+                lang(
+                    "ui.pokedex.info.drops_display",
+                    itemStack.hoverName.copy().withStyle(ChatFormatting.BOLD),
+                    lang("ui.pokedex.info.drops_amount", entry.quantity)
                 )
             }
 
@@ -176,19 +185,19 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
 
             drawScaledTextJustifiedRight(
                 context = context,
-                text = Text.translatable("cobblemon.ui.pokedex.info.drops_percentage", entry.percentage.toInt().toString()),
+                text = lang("ui.pokedex.info.drops_percentage", df.format(entry.percentage)),
                 x = x + 120,
                 y = y + 2,
                 colour = 0x606B6E,
                 scale = PokedexGUIConstants.SCALE
             )
 
-            context.matrices.pop()
-            context.matrices.pop()
+            context.pose().popPose()
+            context.pose().popPose()
         }
 
-        override fun getNarration(): Text {
-            return Text.translatable(entry.item.toTranslationKey())
+        override fun getNarration(): Component {
+            return Component.translatable(entry.item.toLanguageKey())
         }
 
     }
