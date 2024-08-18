@@ -15,7 +15,6 @@ import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.command.argument.FormArgumentType
 import com.cobblemon.mod.common.command.argument.SpeciesArgumentType
-import com.cobblemon.mod.common.config.pokedex.PokedexConfig.form
 import com.cobblemon.mod.common.events.PokedexHandler
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.pokemon.FormData
@@ -88,7 +87,7 @@ object PokedexCommand {
         val form = context.getArgument("form", FormData::class.java)
         players.forEach {
             val dex = Cobblemon.playerDataManager.getPokedexData(it)
-            dex.removedByCommand(species, form)
+            dex.removedWithCommand(species, form)
             it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"
@@ -101,7 +100,8 @@ object PokedexCommand {
         val players = context.getArgument("player", EntitySelector::class.java).findPlayers(context.source)
         players.forEach {
             val dex = Cobblemon.playerDataManager.getPokedexData(it)
-            dex.grantedWithCommand(null, null)
+            //FIXME
+            //dex.grantedWithCommand(null, null)
             it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"
@@ -115,7 +115,8 @@ object PokedexCommand {
         val players = context.getArgument("player", EntitySelector::class.java).findPlayers(context.source)
         players.forEach {
             val dex = Cobblemon.playerDataManager.getPokedexData(it)
-            dex.removedByCommand(null, null)
+            //FIXME
+            //dex.removedByCommand(null, null)
             it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"

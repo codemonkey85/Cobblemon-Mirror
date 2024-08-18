@@ -9,12 +9,13 @@
 package com.cobblemon.mod.common.client.gui.pokedex.widgets
 
 import com.cobblemon.mod.common.CobblemonSounds
+import com.cobblemon.mod.common.api.dex.DexManager
 import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.api.pokedex.ClientPokedex
+import com.cobblemon.mod.common.api.dex.entry.DexEntries
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
-import com.cobblemon.mod.common.api.pokedex.PokedexJSONRegistry
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.text.text
+import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.ScrollingWidget
 import com.cobblemon.mod.common.client.gui.drawProfilePokemon
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants
@@ -46,7 +47,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Dex
     slotHeight = SCROLL_SLOT_SIZE + 2
 ) {
 
-    fun createEntries(filteredPokedex: Collection<DexPokemonData>, clientPokedex: ClientPokedex) {
+    fun createEntries(filteredPokedex: Collection<DexPokemonData>) {
 
         filteredPokedex.forEachIndexed { index, _ ->
             if ((index + 5) % 5 == 0) {
@@ -55,7 +56,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Dex
                 for (i in 0..4) {
                     if (index + i < filteredPokedex.size) {
                         val species = filteredPokedex.elementAt(index + i)
-                        val discoveryLevel = clientPokedex.speciesEntries[species.identifier]?.highestDiscoveryLevel() ?: PokedexEntryProgress.NONE
+                        val discoveryLevel = CobblemonClient.clientPokedexData.getKnowledgeForSpecies(species.speciesId)
                         dexDataList.add(species)
                         discoveryLevelList.add(discoveryLevel)
                     }
@@ -150,8 +151,8 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Dex
         ) {
             dexDataList.forEachIndexed { index, dexData ->
                 val state = FloatingState()
-                val species = PokemonSpecies.getByIdentifier(dexData.identifier)
-                var pokemonNumber = PokedexJSONRegistry.getPokemonVisualDexNumber(dexData)
+                val species = PokemonSpecies.getByIdentifier(dexData.speciesId)
+                var pokemonNumber = "1"
 
                 if (pokemonNumber.toIntOrNull() != null) {
                     while (pokemonNumber.length < 4) pokemonNumber = "0$pokemonNumber"

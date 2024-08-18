@@ -9,13 +9,15 @@
 package com.cobblemon.mod.common.client.gui.pokedex
 
 import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.api.pokedex.*
-import com.cobblemon.mod.common.api.pokedex.filters.InvisibleFilter
-import com.cobblemon.mod.common.api.pokedex.filters.SearchFilter
-import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
+import com.cobblemon.mod.common.api.dex.*
 import com.cobblemon.mod.common.CobblemonSounds
+import com.cobblemon.mod.common.api.dex.entry.FormDexData
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
+import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
+import com.cobblemon.mod.common.api.storage.player.client.ClientDexManager
 import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.api.text.text
+import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.BASE_HEIGHT
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.BASE_WIDTH
@@ -50,32 +52,10 @@ import net.minecraft.sounds.SoundEvent
  * @author JPAK
  * @since February 24, 2024
  */
-class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: PokedexTypes, val initSpecies: ResourceLocation?): Screen(Component.translatable("cobblemon.ui.pokedex.title")) {
-
-    companion object {
-        private val screenBackground = cobblemonResource("textures/gui/pokedex/pokedex_screen.png")
-
-        private val globeIcon = cobblemonResource("textures/gui/pokedex/globe_icon.png")
-        private val caughtSeenIcon = cobblemonResource("textures/gui/pokedex/caught_seen_icon.png")
-
-        private val tabSelectArrow = cobblemonResource("textures/gui/pokedex/select_arrow.png")
-        private val tabIcons = arrayOf(
-            cobblemonResource("textures/gui/pokedex/tab_info.png"),
-            cobblemonResource("textures/gui/pokedex/tab_abilities.png"),
-            cobblemonResource("textures/gui/pokedex/tab_size.png"),
-            cobblemonResource("textures/gui/pokedex/tab_stats.png")
-        )
-
-        /**
-         * Attempts to open this screen for a client.
-         */
-        fun open(pokedex: ClientPokedex, type: PokedexTypes, species: ResourceLocation? = null) {
-            val mc = Minecraft.getInstance()
-            val screen = PokedexGUI(pokedex, type, species)
-            mc.setScreen(screen)
-        }
-    }
-
+class PokedexGUI private constructor(
+    val type: PokedexTypes,
+    val initSpecies: ResourceLocation?
+): Screen(Component.translatable("cobblemon.ui.pokedex.title")) {
     var initialDragPosX = 0.0
     var canDragRender = false
 
@@ -105,13 +85,13 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Poked
         val x = (width - BASE_WIDTH) / 2
         val y = (height - BASE_HEIGHT) / 2
 
-        val unfilteredPokedex = PokedexJSONRegistry.getSortedDexData(mutableListOf())
+        val pokedex = CobblemonClient.clientPokedexData
 
-        val ownedAmount = pokedex.getKnowledgeCount(PokedexEntryProgress.CAUGHT, unfilteredPokedex)
+        val ownedAmount = pokedex.getValueForKey(AbstractDexManager.NUM_CAUGHT_KEY)?.toInt() ?: 0
         ownedCount = ownedAmount.toString()
         while (ownedCount.length < 4) ownedCount = "0$ownedCount"
 
-        seenCount = (ownedAmount + pokedex.getKnowledgeCount(PokedexEntryProgress.ENCOUNTERED, unfilteredPokedex)).toString()
+        seenCount = pokedex.getValueForKey(AbstractDexManager.NUM_SEEN_KEY) ?: "0"
         while (seenCount.length < 4) seenCount = "0$seenCount"
 
         //Info Widget
@@ -242,9 +222,10 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Poked
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+        val speciesKnowledge = selectedPokemon?.speciesId?.let { CobblemonClient.clientPokedexData.getKnowledgeForSpecies(it) }
         if (::pokemonInfoWidget.isInitialized
             && pokemonInfoWidget.isWithinPortraitSpace(mouseX, mouseY)
-            && pokedex.speciesEntries[selectedPokemon!!.identifier]?.highestDiscoveryLevel() != PokedexEntryProgress.NONE
+            && speciesKnowledge != PokedexEntryProgress.NONE
         ) {
             canDragRender = true
             isDragging = true
@@ -285,7 +266,7 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Poked
         //Scroll Screen
         if (::scrollScreen.isInitialized) removeWidget(scrollScreen)
         scrollScreen = EntriesScrollingWidget(x + 26, y + 39) { setSelectedPokemon(it) }
-        scrollScreen.createEntries(filteredPokedex, pokedex)
+        scrollScreen.createEntries(filteredPokedex)
         addRenderableWidget(scrollScreen)
 
         if (filteredPokedex.isNotEmpty()) {
@@ -298,9 +279,15 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Poked
     }
 
     fun filterPokedex(): Collection<DexPokemonData> {
-        return PokedexJSONRegistry.getSortedDexData(getFilters())
+        val dexEntries = Dexes.entries[cobblemonResource("johto")]?.entries
+        val result = mutableListOf<DexPokemonData>()
+        dexEntries?.forEachIndexed { i, pokemon ->
+            result.add(DexPokemonData(pokemon.entryId, pokemon.extraData.map { it as FormDexData }.toMutableList(), i.toString()))
+        }
+        return result
     }
 
+    /*
     fun getFilters(): Collection<EntryFilter> {
         val filters: MutableList<EntryFilter> = mutableListOf()
 
@@ -309,18 +296,18 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Poked
 
         return filters
     }
+     */
 
     fun setSelectedPokemon(dexPokemonData: DexPokemonData) {
         selectedPokemon = dexPokemonData
-        selectedForm = selectedPokemon!!.species!!.standardForm
-        val speciesEntry = pokedex.speciesEntries[selectedPokemon!!.identifier]
+        selectedForm = PokemonSpecies.getByIdentifier(selectedPokemon!!.speciesId)?.standardForm
 
-        pokemonInfoWidget.setPokemon(selectedPokemon!!, speciesEntry)
+        pokemonInfoWidget.setPokemon(selectedPokemon!!)
         displaytabInfoElement(tabInfoIndex)
     }
 
     fun setSelectedPokemon(species: ResourceLocation) {
-        val selectedPokemon = filteredPokedex.find { it.species?.resourceIdentifier == species } ?: return
+        val selectedPokemon = filteredPokedex.find { it.speciesId == species } ?: return
         setSelectedPokemon(selectedPokemon)
     }
 
@@ -378,21 +365,19 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Poked
         if (element is Renderable && element is NarratableEntry) {
             addRenderableWidget(element)
         }
-    if (update) updatetabInfoElement()
+    if (update) updateTabInfoElement()
     }
 
-    fun updatetabInfoElement() {
-        val speciesEntry = pokedex.speciesEntries[selectedPokemon!!.identifier]
+    fun updateTabInfoElement() {
+        val species = selectedPokemon?.speciesId?.let { PokemonSpecies.getByIdentifier(it) }
+        val knowledgeLevel = selectedPokemon?.speciesId?.let { CobblemonClient.clientPokedexData.getKnowledgeForSpecies(it) }
         val textToShowInDescription = mutableListOf<String>()
 
-        if (selectedPokemon!!.species != null
-            && speciesEntry != null
-            && speciesEntry.highestDiscoveryLevel() == PokedexEntryProgress.CAUGHT
-        ) {
-            val form = selectedForm ?: selectedPokemon!!.species!!.standardForm
+        if (species != null && knowledgeLevel == PokedexEntryProgress.CAUGHT) {
+            val form = selectedForm ?: species.standardForm
             when (tabInfoIndex) {
                 TAB_DESCRIPTION -> {
-                    textToShowInDescription.addAll(selectedPokemon!!.species!!.pokedex)
+                    textToShowInDescription.addAll(species.pokedex)
                     (tabInfoElement as DescriptionWidget).showPlaceholder = false
                 }
                 TAB_ABILITIES -> {
@@ -439,11 +424,39 @@ class PokedexGUI private constructor(val pokedex: ClientPokedex, val type: Poked
         displaytabInfoElement(tabInfoIndex)
     }
 
-    fun canSelectTab(tabIndex: Int): Boolean = (tabIndex != tabInfoIndex) && (pokedex.speciesEntries[selectedPokemon!!.identifier]?.highestDiscoveryLevel() == PokedexEntryProgress.CAUGHT)
+    fun canSelectTab(tabIndex: Int): Boolean = (tabIndex != tabInfoIndex) && (selectedPokemon?.speciesId?.let {
+        CobblemonClient.clientPokedexData.getKnowledgeForSpecies(
+            it
+        )
+    } == PokedexEntryProgress.CAUGHT)
 
     override fun isPauseScreen(): Boolean = false
 
     fun playSound(soundEvent: SoundEvent) {
         Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))
+    }
+
+    companion object {
+        private val screenBackground = cobblemonResource("textures/gui/pokedex/pokedex_screen.png")
+
+        private val globeIcon = cobblemonResource("textures/gui/pokedex/globe_icon.png")
+        private val caughtSeenIcon = cobblemonResource("textures/gui/pokedex/caught_seen_icon.png")
+
+        private val tabSelectArrow = cobblemonResource("textures/gui/pokedex/select_arrow.png")
+        private val tabIcons = arrayOf(
+            cobblemonResource("textures/gui/pokedex/tab_info.png"),
+            cobblemonResource("textures/gui/pokedex/tab_abilities.png"),
+            cobblemonResource("textures/gui/pokedex/tab_size.png"),
+            cobblemonResource("textures/gui/pokedex/tab_stats.png")
+        )
+
+        /**
+         * Attempts to open this screen for a client.
+         */
+        fun open(pokedex: ClientDexManager, type: PokedexTypes, species: ResourceLocation? = null) {
+            val mc = Minecraft.getInstance()
+            val screen = PokedexGUI(type, species)
+            mc.setScreen(screen)
+        }
     }
 }

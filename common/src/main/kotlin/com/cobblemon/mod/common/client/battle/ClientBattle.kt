@@ -33,10 +33,8 @@ class ClientBattle(
                 val wildMonProps = value.activePokemon[0].battlePokemon?.properties
                 wildMonProps?.let {props ->
                     val wildSpecies = PokemonSpecies.getByName(props.species!!)!!
-                    val wildForm = wildSpecies.forms.firstOrNull { it.formOnlyShowdownId() == props.form } ?: wildSpecies.standardForm
-                    val formStr = wildForm.formOnlyShowdownId()
-                    val dexEntry = CobblemonClient.clientPokedexData.speciesEntries[wildSpecies.resourceIdentifier]
-                    knowledge = dexEntry?.formEntries?.get(formStr)?.knowledge ?: PokedexEntryProgress.NONE
+                    //FIXME: Better knowledge checking based on aspects/form and such
+                    knowledge = CobblemonClient.clientPokedexData.getKnowledgeForSpecies(wildSpecies.resourceIdentifier)
                 } ?: PokedexEntryProgress.NONE
             }
             else {

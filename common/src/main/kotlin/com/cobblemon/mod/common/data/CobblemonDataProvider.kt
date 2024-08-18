@@ -25,7 +25,7 @@ import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.moves.animations.ActionEffects
 import com.cobblemon.mod.common.api.npc.NPCClasses
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
-import com.cobblemon.mod.common.api.pokedex.PokedexJSONRegistry
+import com.cobblemon.mod.common.api.dex.entry.DexEntries
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.feature.GlobalSpeciesFeatures
 import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatureAssignments
@@ -79,7 +79,7 @@ object CobblemonDataProvider : DataProvider {
         this.register(NaturalMaterials)
         this.register(Fossils)
         this.register(NPCClasses)
-        this.register(PokedexJSONRegistry)
+        this.register(DexEntries)
 
         CobblemonSpawnPools.load()
         this.register(PokeRods)

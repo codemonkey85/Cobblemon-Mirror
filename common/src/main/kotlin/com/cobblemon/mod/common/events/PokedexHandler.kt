@@ -17,7 +17,6 @@ import com.cobblemon.mod.common.api.events.pokemon.TradeCompletedEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEvent
 import com.cobblemon.mod.common.api.events.starter.StarterChosenEvent
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
-import com.cobblemon.mod.common.api.storage.player.adapter.PokedexDataJsonBackend
 import com.cobblemon.mod.common.battles.actor.PokemonBattleActor
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
@@ -37,7 +36,7 @@ object PokedexHandler {
         event.player.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, pokedexData.toClientData(), false))
     }
 
-    fun onEvolve(event: EvolutionCompleteEvent){
+    fun onEvolve(event: EvolutionCompleteEvent) {
         val ownedBy = event.pokemon.getOwnerPlayer()
         if(ownedBy == null){
             Cobblemon.LOGGER.warn("Evolved ${event.pokemon.species} that is not owned by any player. Stat was not tracked.")
