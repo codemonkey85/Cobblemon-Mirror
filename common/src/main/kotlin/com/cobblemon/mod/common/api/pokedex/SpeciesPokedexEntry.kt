@@ -55,7 +55,7 @@ class SpeciesPokedexEntry(
         if (!formEntries.containsKey(formStr)) {
             formEntries[formStr] = FormPokedexRecords()
         }
-        formEntries[formStr]?.knowledge = PokedexEntryProgress.ENCOUNTERED
+        formEntries[formStr]?.knowledge = if (event.isOwned) PokedexEntryProgress.CAUGHT else PokedexEntryProgress.ENCOUNTERED
     }
 
     fun pokemonEvolved(event: EvolutionCompleteEvent) {

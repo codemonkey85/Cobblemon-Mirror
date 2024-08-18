@@ -19,6 +19,7 @@ import net.minecraft.resources.ResourceLocation
 class DexData (
     var identifier : ResourceLocation,
     var enabled : Boolean = true,
+    var order: Int = 0,
     var containedDexes : MutableList<ResourceLocation> = mutableListOf(),
     var pokemonList : MutableList<DexPokemonData> = mutableListOf(),
     var overrideCategories : Boolean = false

@@ -60,7 +60,7 @@ object PokedexJSONRegistry : JsonDataRegistry<DexData> {
             val dexesWithoutParents : MutableList<ResourceLocation> = mutableListOf()
             dexesWithoutParents.addAll(dexByIdentifier.keys)
 
-            for(identifier in dexByIdentifier.keys) {
+            for (identifier in dexByIdentifier.keys) {
                 if(dexByIdentifier[identifier] == null) continue
                 for (childDex in dexByIdentifier[identifier]!!.containedDexes) {
                     dexesWithoutParents.remove(childDex)
@@ -68,7 +68,7 @@ object PokedexJSONRegistry : JsonDataRegistry<DexData> {
             }
 
             //Step 2: Each parent dex adds all of their pokemon and recursively adds the child dexes as well
-            for(dexIdentifier in dexesWithoutParents) {
+            for (dexIdentifier in dexesWithoutParents) {
                 dexByIdentifier[dexIdentifier]?.parseEntries(_entries as MutableSet<DexPokemonData>, categoryEntries)
             }
 
@@ -94,7 +94,7 @@ object PokedexJSONRegistry : JsonDataRegistry<DexData> {
             _skipAutoNumberingIndexes = mutableSetOf()
 
             var index = 0
-            for(entry in entries){
+            for (entry in entries){
                 if(entry.skipAutoNumbering){
                     _skipAutoNumberingIndexes!!.add(index)
                 }
@@ -104,10 +104,39 @@ object PokedexJSONRegistry : JsonDataRegistry<DexData> {
             return _skipAutoNumberingIndexes!!
         }
 
+    /**
+     * Gets the [ResourceLocation] of the next [DexData] in [dexes] based on the [DexData.order] property.
+     *
+     * @param currentDex The [ResourceLocation] to search [dexes] for
+     * @return The next value
+     */
+    fun getNextDex(currentDex: ResourceLocation): ResourceLocation {
+        val orderedDexes = dexes.sortedBy { it.order }.map { it.identifier }
 
+        return if (orderedDexes.indexOf(currentDex) == orderedDexes.size - 1) {
+            orderedDexes.first()
+        } else {
+            orderedDexes[orderedDexes.indexOf(currentDex) + 1]
+        }
+    }
 
     /**
-     * Finds a dex by the pathname of their [Identifier].
+     * Gets the [ResourceLocation] of the previous [DexData] in [orderedDexes]
+     *
+     * @param currentDex The [ResourceLocation] to search [orderedDexes] for
+     * @return The next value
+     */
+    fun getPreviousDex(currentDex: ResourceLocation): ResourceLocation {
+        val orderedDexes = dexes.sortedBy { it.order }.map { it.identifier }
+        return if (orderedDexes.indexOf(currentDex) == 0) {
+            orderedDexes.last()
+        } else {
+            orderedDexes[orderedDexes.indexOf(currentDex) - 1]
+        }
+    }
+
+    /**
+     * Finds a dex by the pathname of their [ResourceLocation].
      * This method exists for the convenience of finding Cobble default dexes.
      * This uses [getByIdentifier] using the [Cobblemon.MODID] as the namespace and the [name] as the path.
      *
@@ -117,7 +146,7 @@ object PokedexJSONRegistry : JsonDataRegistry<DexData> {
     fun getByName(name: String) = this.getByIdentifier(cobblemonResource(name))
 
     /**
-     * Finds a [DexData] by its unique [Identifier].
+     * Finds a [DexData] by its unique [ResourceLocation].
      *
      * @param identifier The unique [DexData.identifier] of the [DexData].
      * @return The [DexData] if existing.
