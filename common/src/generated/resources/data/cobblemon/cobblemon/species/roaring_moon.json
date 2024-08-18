@@ -2,18 +2,18 @@
   "abilities": [
     {
       "type": "cobblemon:common",
-      "ability": "cobblemon:orichalcumpulse"
+      "ability": "cobblemon:protosynthesis"
     }
   ],
-  "baseExperienceYield": 335,
+  "baseExperienceYield": 295,
   "baseFriendship": 0,
   "baseStats": {
-    "cobblemon:attack": 135,
-    "cobblemon:defence": 115,
-    "cobblemon:hp": 100,
-    "cobblemon:special_attack": 85,
-    "cobblemon:special_defence": 100,
-    "cobblemon:speed": 135
+    "cobblemon:attack": 139,
+    "cobblemon:defence": 71,
+    "cobblemon:hp": 105,
+    "cobblemon:special_attack": 55,
+    "cobblemon:special_defence": 101,
+    "cobblemon:speed": 119
   },
   "behaviour": {
     "idle": {
@@ -32,7 +32,7 @@
       }
     }
   },
-  "catchRate": 3,
+  "catchRate": 10,
   "dynamaxBlocked": false,
   "eggCycles": 50,
   "eggGroups": [
@@ -42,7 +42,7 @@
     "cobblemon:attack": 3
   },
   "experienceGroup": "cobblemon:slow",
-  "height": 2.5,
+  "height": 2.0,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
@@ -53,6 +53,26 @@
     {
       "type": "cobblemon:level",
       "level": 1,
+      "move": "cobblemon:bite"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:focusenergy"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:dragonbreath"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:scaleshot"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
       "move": "cobblemon:sunnyday"
     },
     {
@@ -62,201 +82,90 @@
     },
     {
       "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:jawlock"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:leer"
+    },
+    {
+      "type": "cobblemon:level",
       "level": 7,
-      "move": "cobblemon:rocksmash"
+      "move": "cobblemon:incinerate"
     },
     {
       "type": "cobblemon:level",
       "level": 14,
-      "move": "cobblemon:ancientpower"
+      "move": "cobblemon:headbutt"
     },
     {
       "type": "cobblemon:level",
       "level": 21,
-      "move": "cobblemon:drainpunch"
+      "move": "cobblemon:scaryface"
     },
     {
       "type": "cobblemon:level",
       "level": 28,
-      "move": "cobblemon:brickbreak"
-    },
-    {
-      "type": "cobblemon:level",
-      "level": 35,
-      "move": "cobblemon:agility"
-    },
-    {
-      "type": "cobblemon:level",
-      "level": 42,
       "move": "cobblemon:dragonclaw"
     },
     {
       "type": "cobblemon:level",
-      "level": 49,
+      "level": 35,
+      "move": "cobblemon:zenheadbutt"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 42,
       "move": "cobblemon:flamethrower"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 49,
+      "move": "cobblemon:nightslash"
     },
     {
       "type": "cobblemon:level",
       "level": 56,
-      "move": "cobblemon:collisioncourse"
+      "move": "cobblemon:dragondance"
     },
     {
       "type": "cobblemon:level",
       "level": 63,
-      "move": "cobblemon:screech"
+      "move": "cobblemon:dragonrush"
     },
     {
       "type": "cobblemon:level",
       "level": 70,
-      "move": "cobblemon:counter"
+      "move": "cobblemon:fly"
     },
     {
       "type": "cobblemon:level",
       "level": 77,
-      "move": "cobblemon:outrage"
+      "move": "cobblemon:throatchop"
     },
     {
       "type": "cobblemon:level",
       "level": 84,
-      "move": "cobblemon:closecombat"
+      "move": "cobblemon:roost"
     },
     {
       "type": "cobblemon:level",
       "level": 91,
-      "move": "cobblemon:flareblitz"
-    },
-    {
-      "type": "cobblemon:level",
-      "level": 98,
-      "move": "cobblemon:gigaimpact"
+      "move": "cobblemon:doubleedge"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:bulldoze"
+      "move": "cobblemon:stoneedge"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:mudslap"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:scaryface"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:focusblast"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:collisioncourse"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:dualwingbeat"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:takedown"
+      "move": "cobblemon:airslash"
     },
     {
       "type": "cobblemon:tutor",
       "move": "cobblemon:flamethrower"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:helpinghand"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:ironhead"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:fireblast"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:acrobatics"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:stompingtantrum"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:temperflare"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:lowsweep"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:mudshot"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:taunt"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:scaleshot"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:brickbreak"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:wildcharge"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:collisioncourse"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:zenheadbutt"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:uproar"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:icefang"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:crunch"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:dragonpulse"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:gigaimpact"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:solarbeam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:swordsdance"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:flamecharge"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:roar"
     },
     {
       "type": "cobblemon:tm",
@@ -264,119 +173,15 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
+      "move": "cobblemon:throatchop"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:bodyslam"
+      "move": "cobblemon:xscissor"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:bulkup"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:dragontail"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:snarl"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:dracometeor"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:firefang"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:heatcrash"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:dragonclaw"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:outrage"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:overheat"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:bulkup"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:terablast"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:terablast"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:dig"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:drainpunch"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:gigaimpact"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:breakingswipe"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:flamethrower"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:closecombat"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:uturn"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:focuspunch"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:reversal"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:flamethrower"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:thunderfang"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:meteorbeam"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:endure"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:heavyslam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:flareblitz"
+      "move": "cobblemon:darkpulse"
     },
     {
       "type": "cobblemon:tm",
@@ -384,15 +189,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:shadowclaw"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:dragoncheer"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
+      "move": "cobblemon:earthquake"
     },
     {
       "type": "cobblemon:tm",
@@ -400,23 +197,19 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:heatwave"
+      "move": "cobblemon:dig"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
+      "move": "cobblemon:hypervoice"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:hyperbeam"
+      "move": "cobblemon:thunderfang"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:lowkick"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sunnyday"
+      "move": "cobblemon:dragonpulse"
     },
     {
       "type": "cobblemon:tm",
@@ -424,17 +217,213 @@
     },
     {
       "type": "cobblemon:tm",
+      "move": "cobblemon:scaleshot"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:zenheadbutt"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hyperbeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:flamethrower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:taunt"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:heatwave"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:gigaimpact"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:nightslash"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:metalclaw"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:scaryface"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:snarl"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lashout"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dracometeor"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tm",
       "move": "cobblemon:firespin"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:agility"
+      "move": "cobblemon:knockoff"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:dragonclaw"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:ironhead"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sunnyday"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hurricane"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:fly"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:uturn"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:tailwind"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dragondance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:roar"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:outrage"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:terablast"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:dragonrush"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:breakingswipe"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:brickbreak"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rockslide"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:stompingtantrum"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:takedown"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dragonclaw"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:dragondance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:fireblast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:shadowclaw"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:firefang"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dragontail"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bodyslam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:aerialace"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dragoncheer"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:crunch"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:acrobatics"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:nightslash"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:fly"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:zenheadbutt"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hydropump"
     }
   ],
-  "nationalPokedexNumber": 1007,
-  "primaryType": "cobblemon:fighting",
-  "secondaryType": "cobblemon:dragon",
+  "nationalPokedexNumber": 1005,
+  "primaryType": "cobblemon:dragon",
+  "secondaryType": "cobblemon:dark",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 303.0
+  "weight": 380.0
 }
