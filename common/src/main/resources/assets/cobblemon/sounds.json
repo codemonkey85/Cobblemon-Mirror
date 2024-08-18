@@ -24,10 +24,10 @@
     "sounds": [ "cobblemon:pc/pc_off" ]
   },
   "pc.grab": {
-    "sounds": [ "cobblemon:pc/pc_grab" ]
+    "sounds": [ { "name":  "cobblemon:pc/pc_grab", "volume":  0.7 }  ]
   },
   "pc.drop": {
-    "sounds": [ "cobblemon:pc/pc_drop" ]
+    "sounds": [ { "name": "cobblemon:pc/pc_drop", "volume":  0.7 } ]
   },
   "pc.release": {
     "sounds": [ "cobblemon:pc/pc_release" ]
@@ -78,7 +78,7 @@
     "sounds": ["cobblemon:evolution/evolution_full"]
   },
   "evolution.ui": {
-    "sounds": ["cobblemon:evolution/evolution_ui"]
+    "sounds": [ { "name": "cobblemon:evolution/evolution_ui", "volume": 0.5 } ]
   },
   "gui.click": {
     "sounds": [ "cobblemon:click" ]
