@@ -3,25 +3,21 @@ package com.cobblemon.mod.common.api.dex.entry
 import com.bedrockk.molang.MoLang
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.molang.ListExpression
-import com.cobblemon.mod.common.api.net.Decodable
-import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
-import com.mojang.serialization.codecs.PrimitiveCodec
-import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.network.RegistryFriendlyByteBuf
 
 class FormDexData(
     val aspects: String,
-    val condition: List<ExpressionLike>
+    val conditions: List<ExpressionLike>
 ) : ExtraDexData() {
     override val type = ID
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(aspects)
-        buffer.writeInt(condition.size)
-        condition.forEach {
+        buffer.writeInt(conditions.size)
+        conditions.forEach {
             buffer.writeString(it.toString())
         }
     }

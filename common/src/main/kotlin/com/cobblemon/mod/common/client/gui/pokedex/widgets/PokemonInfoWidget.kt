@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.api.dex.entry.DexEntry
 import com.cobblemon.mod.common.api.dex.entry.FormDexData
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
+import com.cobblemon.mod.common.api.pokemon.PokemonSpecies.species
 import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.api.types.ElementalType
@@ -52,7 +53,7 @@ import org.joml.Quaternionf
 import org.joml.Vector3f
 import java.io.FileNotFoundException
 
-class PokemonInfoWidget(val pX: Int, val pY: Int, val updateVisual: (String) -> (Unit)) : SoundlessWidget(
+class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormDexData) -> (Unit)) : SoundlessWidget(
     pX,
     pY,
     POKEMON_PORTRAIT_WIDTH,
@@ -64,8 +65,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateVisual: (String) -> 
     var speciesName: MutableComponent = Component.translatable("")
     var speciesNumber: MutableComponent = "0000".text()
 
-    //These are just aspect strings
-    var visibleForms = mutableListOf<String>()
+    var visibleForms = mutableListOf<FormDexData>()
     var selectedFormIndex: Int = 0
 
     var type: Array<ElementalType?> = arrayOf(null, null)
@@ -394,7 +394,9 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateVisual: (String) -> 
 
         if (species != null) {
             //FIXME: Check condition here
-            this.visibleForms = forms.map { it.aspects }.toMutableList()
+            this.visibleForms = dexEntry.extraData
+                .map { it as FormDexData }
+                .toMutableList()
             var pokemonNumber = species.nationalPokedexNumber.toString()
             while (pokemonNumber.length < 4) pokemonNumber = "0$pokemonNumber"
             this.speciesNumber = pokemonNumber.text()
@@ -426,9 +428,8 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateVisual: (String) -> 
         }
     }
 
-    private fun setType(species: Species, aspectString: String) {
-        val formData = species.getForm(setOf(aspectString))
-        type = arrayOf(formData.primaryType, formData.secondaryType)
+    private fun updateType(species: Species, form: FormData) {
+        type = arrayOf(form.primaryType, form.secondaryType)
     }
 
     private fun playCry() {
@@ -463,23 +464,22 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateVisual: (String) -> 
 
         val species = currentEntry?.entryId?.let { PokemonSpecies.getByIdentifier(it) }
         if (species != null) {
-            val aspects = mutableSetOf<String>()
+            val aspectSet = visibleForms[selectedFormIndex].aspects.split(" ").toMutableSet()
+            val form = species.getForm(aspectSet)
 
-            val aspectStr = visibleForms[selectedFormIndex]
-            setType(species, aspectStr)
-            aspects.add(aspectStr)
+            updateType(species, form)
 
-            if (shiny) aspects.add(SHINY_ASPECT.aspect)
+            if (shiny) aspectSet.add(SHINY_ASPECT.aspect)
 
             if (gender == Gender.FEMALE) {
-                aspects.add("female")
+                aspectSet.add("female")
             } else if (gender == Gender.MALE) {
-                aspects.add("male")
+                aspectSet.add("male")
             }
 
-            renderablePokemon = RenderablePokemon(species, aspects)
+            renderablePokemon = RenderablePokemon(species, aspectSet)
 
-            updateVisual.invoke(aspectStr)
+            updateForm.invoke(visibleForms[selectedFormIndex])
         }
     }
 
