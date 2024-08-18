@@ -9,7 +9,6 @@
 package com.cobblemon.mod.common.pokedex.scanner
 
 import com.cobblemon.mod.common.CobblemonSounds
-import com.cobblemon.mod.common.api.scheduling.afterOnClient
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUI
 import com.cobblemon.mod.common.client.pokedex.PokedexScannerRenderer
@@ -21,6 +20,7 @@ import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.FinishScanni
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.StartScanningPacket
 import kotlin.math.min
 import net.minecraft.client.DeltaTracker
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.client.player.LocalPlayer
