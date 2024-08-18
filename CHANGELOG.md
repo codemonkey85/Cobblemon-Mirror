@@ -8,21 +8,41 @@
 - Fixed Pokemon spawning in non-full blocks like slabs.
 - Fixed Gilded Chests not dropping the chest itself when broken, only the contents.
 - Fixed Pokémon losing their Hidden Ability through evolution if the middle stage did not have a Hidden Ability.
+- Hidden Power no longer plays the water type action effect. (It now plays the normal type action effect.)
 - Fixed Chimchar and Monferno T posing whenever they sleep.
 - Fixed the Magby line not having any placeholder walk animations.
 - Fixed Duskull and Dusclops using skylight levels for their nether spawn data. There is no sun in the Nether!
+- Fixed Hisuian Zoroark using base Zoroark stats. 
+- Fixed Bellossom clipping into the player head when shoulder mounted.
+- Fixed Shroomish's look range to prevent it from looking higher than it should. 
 - Fixed Crumbling Arch not blending in with the world.
 - Fixed Energy Root applying being usable on a fainted Pokemon.
 - Fixed Pokémon entity not spawning when starting a battle while recalling said Pokémon
 - Fixed species comparison not using namespace for both sides in PokemonProperties.isSubsetOf.
 - Fixed PokemonProperties#asString prefixing nicknames with a '$'
+- Fixed reviving items throwing an exception when used in battle
+- Fixed messages for Focus Sash, Confusion, Mummy, Ice Face, Own Tempo, and Revive
+- Fixed PC not saving when Pokemon was changed outside.
+- Fixed shearble Pokemon not dropping correct wool colors.
+- Fixed pasture spawning Pokemon inside solid blocks when closest spawning position is blocked off.
+- Fixed Tumbling Down advancement not being granted by tumblestone variants.
+- Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server
+- Fixed empty JsonPlayerData files resulting in players being unable to join server/world
+- Fixed crumbling_arch_ruins from generating a giant cube of air and removed the chest
 
 ### Additions
 - Added extra visuals to early berry growth stages
+- Hidden Power now displays its effective typing.
+- Moves impacted by the abilities Pixelate, Refrigerate, Aerilate, Galvanize, and Normalize now display as their altered typing.
 - Added Polished Tumblestone and Tumblestone Brick block sets from Tumblestone, Black Tumblestone, and Sky Tumblestone.
 - Added Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
 - Moves can now be benched without specifying a replacement move, allowing for empty move slots.
 - Moves learned via Sketch now persist after battle.
+- Added ston_henge_ruins, luna_henge_ruins, and sol_henge_ruins structures.
+- Added Eject Pack, Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
+- Added a `battleInvulnerability` gamerule to make players invulnerable to any damage during a battle
+- Added a `mobTargetInBattle` gamerule to exclude players from being targeted by mobs during a battle
+- Added battle log messages for switching out Pokémon
 
 ### Added cries to the following Pokémon
 - Timburr, Gurdurr, Conkeldurr
@@ -32,14 +52,36 @@
 - Altered the item model for Medicinal Leeks and Roasted Leeks to be held like sticks and other rod items. 
 - Adjusted some berry balance values like yield and growth times
 - Changes to mulch buffs/durations
-- Dreepy is now shoulder mountable
+- Weedle, Caterpie, Spearow, Smoochum, Mew, Murkrow, Larvitar, Taillow, Plusle, Minun, Beldum, Starly, Buneary, Combee, Pachirisu, Pidove, Petilil, Hisui Bias Petilil, Zorua, Hisuian Zorua, Elgyem, Fletchling, Skrelp, Klefki, Fomantis, Morelull, Dreepy, Shroodle, Tatsugiri, Glimmet, and Roaming Gimmighoul are now shoulder mountable
+- Chikorita's ability to look around removed due to the awkwardness of it.
 - Link Cable recipe has been redesigned
 - Updated potion sprites
+- Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users. 
+
+### Pokémon Added
+#### Gen 2
+- Ledyba
+- Ledian
+- Sunkern
+- Sunflora
+- Wobbuffet
+- Girafarig
+
+#### Gen 3
+- Wynaut
+
+#### Gen 9
+- Farigiraf
+
+### Changes
+- Kakuna, Beedrill, Snorlax, Munchlax, and Lurantis received model updates
 
 ### Developer
+- PokemonBattle now starts on turn 0.
 
 ### Data Pack & Resource Pack Creators
 - Added support for "shedders" similar to Shedinja's evolution logic.
+- Fixed the placeholder WingFlapIdle animation so the wings are not rotating opposite to each other.
 
 ## [1.5.2 (May 27th, 2024)](#1-5-2)
 ### Fixes
@@ -145,6 +187,7 @@
   ]
 }
 ```
+- Added support for custom stashes, similar to Gimmighoul's coin and scrap stashes.
 
 ### Localization
 - Updated translations for:

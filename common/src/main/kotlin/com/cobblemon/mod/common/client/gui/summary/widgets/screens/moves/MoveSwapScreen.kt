@@ -21,6 +21,7 @@ import com.cobblemon.mod.common.client.gui.summary.Summary
 import com.cobblemon.mod.common.client.gui.summary.widgets.common.SummaryScrollList
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.net.messages.server.BenchMovePacket
+import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.toRGB
@@ -52,9 +53,9 @@ class MoveSwapScreen(
         return super.addEntry(entry)
     }
 
-    class MoveSlot(val pane: MoveSwapScreen, val move: MoveTemplate?, val ppRaisedStages: Int) : Entry<MoveSlot>() {
+    class MoveSlot(val pane: MoveSwapScreen, val move: MoveTemplate?, val ppRaisedStages: Int, pokemon: Pokemon) : Entry<MoveSlot>() {
         override fun getNarration() = move?.displayName ?: lang("ui.moves.forget")
-
+        val elementalType = move?.getEffectiveElementalType(pokemon)
         override fun render(
             context: DrawContext,
             index: Int,
@@ -70,7 +71,7 @@ class MoveSwapScreen(
             val matrices = context.matrices
             val tweakedRowTop = rowTop - (SLOT_SPACING / 2) + 1
             if (move != null) {
-                val rgb = move.elementalType.hue.toRGB()
+                val rgb = elementalType.hue.toRGB()
 
                 blitk(
                         matrixStack = matrices,
@@ -97,9 +98,9 @@ class MoveSwapScreen(
 
                 // Type Icon
                 TypeIcon(
-                        x = rowLeft - 9,
-                        y = tweakedRowTop,
-                        type = move.elementalType
+                    x = rowLeft - 9,
+                    y = tweakedRowTop,
+                    type = elementalType
                 ).render(context)
 
                 // Move Category

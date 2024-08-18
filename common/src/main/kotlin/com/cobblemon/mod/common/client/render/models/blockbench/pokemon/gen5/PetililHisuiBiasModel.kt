@@ -35,6 +35,10 @@ class PetililHisuiBiasModel (root: ModelPart) : PokemonPoseableModel(), HeadedFr
     lateinit var walk: PokemonPose
     lateinit var sleep: PokemonPose
     lateinit var battleIdle: PokemonPose
+    lateinit var shoulderLeft: PokemonPose
+    lateinit var shoulderRight: PokemonPose
+
+    val shoulderOffset = 3
 
     override val cryAnimation = CryProvider { _, _ -> bedrockStateful("petilil", "cry") }
 
@@ -96,6 +100,36 @@ class PetililHisuiBiasModel (root: ModelPart) : PokemonPoseableModel(), HeadedFr
                         bedrock("petilil", "battle_idle")
                 ),
                 transformedParts = arrayOf(
+                        leaf_back.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, 6.5),
+                        leaf_left.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, -19.5),
+                        leaf_right.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, -19.5)
+                )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                quirks = arrayOf(blink),
+                idleAnimations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("petilil", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset),
+                        leaf_back.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, 6.5),
+                        leaf_left.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, -19.5),
+                        leaf_right.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, -19.5)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                quirks = arrayOf(blink),
+                idleAnimations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("petilil", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset),
                         leaf_back.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, 6.5),
                         leaf_left.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, -19.5),
                         leaf_right.createTransformation().addRotationDegrees(ModelPartTransformation.X_AXIS, -19.5)

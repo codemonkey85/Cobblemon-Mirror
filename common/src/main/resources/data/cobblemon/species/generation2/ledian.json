@@ -25,6 +25,22 @@
   "eggGroups": [
     "bug"
   ],
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.265
+      },
+      "fly": {
+        "canFly": true
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
+  },
   "moves": [
     "1:supersonic",
     "1:swift",
@@ -145,10 +161,10 @@
   ],
   "preEvolution": "ledyba",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.875,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.9,
+    "height": 1.4,
     "fixed": false
   },
   "baseFriendship": 70,

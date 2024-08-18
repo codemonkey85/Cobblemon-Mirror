@@ -35,29 +35,6 @@ class TurnInstruction(val message: BattleMessage) : InterpreterInstruction {
         // TODO maybe tell the client that the turn number has changed
         val turnNumber = message.argumentAt(0)?.toInt() ?: return
 
-        if (!battle.started) {
-            battle.started = true
-            battle.actors.filterIsInstance<PlayerBattleActor>().forEach { actor ->
-                val initializePacket = BattleInitializePacket(battle, actor.getSide())
-                actor.sendUpdate(initializePacket)
-                actor.sendUpdate(BattleMusicPacket(actor.battleTheme))
-            }
-            battle.actors.forEach { actor ->
-                actor.sendUpdate(BattleSetTeamPokemonPacket(actor.pokemonList.map { it.effectedPokemon }))
-                val req = actor.request ?: return@forEach
-                actor.sendUpdate(BattleQueueRequestPacket(req))
-            }
-
-            battle.dispatch {
-                DispatchResult { !battle.side1.stillSendingOut() && !battle.side2.stillSendingOut() }
-            }
-
-            battle.dispatchGo {
-                battle.side1.playCries()
-                afterOnServer(seconds = 1.0F) { battle.side2.playCries() }
-            }
-        }
-
         battle.dispatch {
             battle.sendToActors(BattleMakeChoicePacket())
             battle.broadcastChatMessage(battleLang("turn", turnNumber).aqua())

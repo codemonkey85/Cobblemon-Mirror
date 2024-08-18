@@ -1,0 +1,52 @@
+{
+    "portraitScale": 1.87,
+    "portraitTranslation": [-0.17, 0.49, 0],
+    "profileScale": 0.79,
+    "profileTranslation": [-0.01, 0.57, 0],
+    "animations": {},
+    "poses": {
+      "standing": {
+        "poseName": "standing",
+        "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE", "FLOAT", "HOVER"],
+        "animations": [
+            "q.look('head', 0.6, 0.3)",
+            "q.bedrock('wobbuffet', 'ground_idle')"
+        ],
+        "quirks": [
+            "q.bedrock_quirk('wobbuffet', 'blink')"
+        ],
+        "transformedParts": [
+          {
+            "part": "stache",
+            "isVisible": false
+          },
+          {
+            "part": "lil_stache",
+            "isVisible": false
+          }
+        ]
+      },
+      "walking": {
+        "poseName": "walking",
+        "poseTypes": ["WALK", "SWIM", "FLY"],
+        "animations": [
+            "q.look('head', 0.6, 0.3)",
+            "q.bedrock('wobbuffet', 'ground_idle')",
+            "q.quadruped_walk"
+        ],
+        "quirks": [
+            "q.bedrock_quirk('wobbuffet', 'blink')"
+        ],
+        "transformedParts": [
+          {
+            "part": "stache",
+            "isVisible": false
+          },
+          {
+            "part": "lil_stache",
+            "isVisible": false
+          }
+        ]
+      }
+    }
+  }

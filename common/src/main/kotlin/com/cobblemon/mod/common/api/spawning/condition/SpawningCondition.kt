@@ -12,7 +12,6 @@ import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.spawning.MoonPhaseRange
 import com.cobblemon.mod.common.api.spawning.TimeRange
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
-import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.util.Merger
 import com.cobblemon.mod.common.util.math.orMax
 import com.cobblemon.mod.common.util.math.orMin
@@ -130,5 +129,15 @@ abstract class SpawningCondition<T : SpawningContext> {
         maxSkyLight = merger.mergeSingle(maxSkyLight, other.maxSkyLight)
         timeRange = merger.mergeSingle(timeRange, other.timeRange)
         structures = merger.merge(structures, other.structures)?.toMutableList()
+    }
+
+    open fun isValid(): Boolean {
+        if(biomes != null && biomes!!.any {it == null})
+            return false
+        if(dimensions != null && dimensions!!.any {it == null})
+            return false
+        if(structures != null && structures!!.any {it == null})
+            return false
+        return true
     }
 }
