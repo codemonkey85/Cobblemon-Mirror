@@ -90,10 +90,12 @@ class DexManager(
     fun gainedCaughtStatus(species: Species, form: FormData) {
         val curKnowledge = getKnowledgeForSpecies(species.resourceIdentifier)
         if (curKnowledge == PokedexEntryProgress.ENCOUNTERED) {
-            entries[NUM_SEEN_KEY] = (entries[NUM_SEEN_KEY]?.toInt()?.minus(1)).toString()
+            val numSeenValue = entries[NUM_SEEN_KEY] ?: "0"
+            entries[NUM_SEEN_KEY] = (numSeenValue.toInt().minus(1)).toString()
         }
         if (curKnowledge != PokedexEntryProgress.CAUGHT) {
-            entries[NUM_CAUGHT_KEY] = (entries[NUM_SEEN_KEY]?.toInt()?.plus(1)).toString()
+            val numCaughtValue = entries[NUM_CAUGHT_KEY] ?: "0"
+            entries[NUM_CAUGHT_KEY] = (numCaughtValue.toInt().plus(1)).toString()
         }
         entries[getKnowledgeKeyForSpecies(species.resourceIdentifier)] = PokedexEntryProgress.CAUGHT.serializedName
     }
@@ -104,7 +106,8 @@ class DexManager(
                 PrimitiveCodec.STRING.fieldOf("uuid").forGetter { it.uuid.toString() },
                 Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("entries").forGetter { it.entries }
             ).apply(instance) { uuid, map ->
-                DexManager(UUID.fromString(uuid), map)
+                //Codec stuff seems to deserialize to an immutable map, so we have to convert it to mutable explicitly
+                DexManager(UUID.fromString(uuid), map.toMutableMap())
             }
         }
     }

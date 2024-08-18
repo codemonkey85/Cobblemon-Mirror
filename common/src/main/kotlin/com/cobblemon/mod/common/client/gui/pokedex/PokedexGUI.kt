@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui.pokedex
 
+import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.dex.*
 import com.cobblemon.mod.common.CobblemonSounds
@@ -60,6 +61,8 @@ class PokedexGUI private constructor(
 ): Screen(Component.translatable("cobblemon.ui.pokedex.title")) {
     var initialDragPosX = 0.0
     var canDragRender = false
+
+    val runtime = MoLangRuntime()
 
     private var filteredPokedex: Collection<DexDef> = mutableListOf()
     private var seenCount = "0000"

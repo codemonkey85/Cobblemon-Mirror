@@ -25,7 +25,7 @@ abstract class AbstractDexManager() {
         const val NUM_SEEN_KEY = "cobblemon.pokedex.entries.seen"
 
         fun getKeyForSpeciesBase(speciesId: ResourceLocation): String {
-            return "cobblemon.pokedex.${speciesId}"
+            return "cobblemon.pokedex.${speciesId.path}"
         }
 
         fun getKnowledgeKeyForSpecies(speciesId: ResourceLocation): String {
@@ -33,7 +33,7 @@ abstract class AbstractDexManager() {
         }
 
         fun getCaptureMethodKeyForSpecies(speciesId: ResourceLocation): String {
-            return "${getKeyForSpeciesBase(speciesId)}.capture"
+            return "${getKeyForSpeciesBase(speciesId)}.capturemethod"
         }
     }
 }
