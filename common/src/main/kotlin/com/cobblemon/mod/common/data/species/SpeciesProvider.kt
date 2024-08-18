@@ -1,3 +1,11 @@
+/*
+ * Copyright (C) 2023 Cobblemon Contributors
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.cobblemon.mod.common.data.species
 
 import com.cobblemon.mod.common.Cobblemon
@@ -253,31 +261,6 @@ class SpeciesProvider(
         "enamorus/therian" to 20,
     )
 
-    // IDs defined here are skipped from species conversion, these are reserved to things we simply don't want in the mod or should be aspects
-    private val skippedIds = hashSetOf(
-        "pikachu/original",
-        "pikachu/hoenn",
-        "pikachu/sinnoh",
-        "pikachu/unova",
-        "pikachu/kalos",
-        "pikachu/alola",
-        "pikachu/partner",
-        "pikachu/world",
-        "eevee/partner",
-        "gumshoos/totem",
-        "raticate/alola-totem",
-        "wishiwashi/totem",
-        "araquanid/totem",
-        "salazzle/totem",
-        "marowak/alola-totem",
-        "lurantis/totem",
-        "vikavolt/totem",
-        "mimikyu/totem",
-        "mimikyu/busted-totem",
-        "kommo-o/totem",
-        "ribombee/totem",
-    )
-
     private val usedIds = hashSetOf<String>()
 
     override fun buildEntries(lookupProvider: Provider, consumer: Consumer<SpeciesDataExport>) {
@@ -287,8 +270,8 @@ class SpeciesProvider(
                 jObject["name"].asString to jObject
             }
         baseSpecies.forEach { (_, jObject) ->
-            val id = this.idForSpecies(jObject)
-            if (this.skippedIds.contains(id.path)) {
+            val id = idForSpecies(jObject)
+            if (SKIPPED.contains(id.path)) {
                 return@forEach
             }
             try {
@@ -398,28 +381,6 @@ class SpeciesProvider(
     }
 
     override fun pathProvider(): PackOutput.PathProvider = this.createPathForCobblemonRegistryData(CobblemonRegistries.SPECIES_KEY)
-
-    private fun idForSpecies(jObject: JsonObject): ResourceLocation {
-        val baseSpecies = jObject["baseSpecies"].asString.lowercase()
-            .replace("\u2019", "")
-            .replace("\u0301", "")
-            .replace(". ", "_")
-            .replace(".", "")
-            .replace(" ", "_")
-            .replace(":", "")
-        val form = jObject["forme"].asString
-        if (form.isNotEmpty()) {
-            return cobblemonResource(
-                baseSpecies
-                + "/" +
-                form.lowercase()
-                    .replace(" ", "_")
-                    .replace("10%", "ten")
-                    .replace("'", "")
-            )
-        }
-        return cobblemonResource(baseSpecies)
-    }
 
     private fun resolvePokeApiPokemonUrl(id: ResourceLocation, pokeApiJson: JsonObject): URL {
         val jsonArray = pokeApiJson.getAsJsonArray("varieties")
@@ -581,7 +542,7 @@ class SpeciesProvider(
             return Optional.empty()
         }
         val preEvolutionJObject = baseSpecies[preEvoName] ?: throw IllegalArgumentException("Cannot resolve species for name $preEvoName")
-        return Optional.of(ResourceKey.create(CobblemonRegistries.SPECIES_KEY, this.idForSpecies(preEvolutionJObject)))
+        return Optional.of(ResourceKey.create(CobblemonRegistries.SPECIES_KEY, idForSpecies(preEvolutionJObject)))
     }
 
     class SpeciesDataExport(
@@ -593,6 +554,56 @@ class SpeciesProvider(
         override fun codec(): Codec<Species> = Species.DIRECT_CODEC
 
         override fun value(): Species = this.value
+    }
+
+    companion object {
+
+        val SKIPPED = hashSetOf(
+            "pikachu/original",
+            "pikachu/hoenn",
+            "pikachu/sinnoh",
+            "pikachu/unova",
+            "pikachu/kalos",
+            "pikachu/alola",
+            "pikachu/partner",
+            "pikachu/world",
+            "eevee/partner",
+            "gumshoos/totem",
+            "raticate/alola-totem",
+            "wishiwashi/totem",
+            "araquanid/totem",
+            "salazzle/totem",
+            "marowak/alola-totem",
+            "lurantis/totem",
+            "vikavolt/totem",
+            "mimikyu/totem",
+            "mimikyu/busted-totem",
+            "kommo-o/totem",
+            "ribombee/totem",
+        )
+
+        fun idForSpecies(jObject: JsonObject): ResourceLocation {
+            val baseSpecies = jObject["baseSpecies"].asString.lowercase()
+                .replace("\u2019", "")
+                .replace("\u0301", "")
+                .replace(". ", "_")
+                .replace(".", "")
+                .replace(" ", "_")
+                .replace(":", "")
+            val form = jObject["forme"].asString
+            if (form.isNotEmpty()) {
+                return cobblemonResource(
+                    baseSpecies
+                            + "/" +
+                            form.lowercase()
+                                .replace(" ", "_")
+                                .replace("10%", "ten")
+                                .replace("'", "")
+                )
+            }
+            return cobblemonResource(baseSpecies)
+        }
+
     }
 
 }

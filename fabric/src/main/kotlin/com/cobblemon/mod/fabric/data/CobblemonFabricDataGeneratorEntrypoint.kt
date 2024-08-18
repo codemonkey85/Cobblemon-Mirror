@@ -15,6 +15,7 @@ import com.cobblemon.mod.common.data.elemental.ElementalTypeAssetProvider
 import com.cobblemon.mod.common.data.elemental.ElementalTypeProvider
 import com.cobblemon.mod.common.data.elemental.ElementalTypeTagProvider
 import com.cobblemon.mod.common.data.species.SpeciesProvider
+import com.cobblemon.mod.common.data.species.SpeciesTagProvider
 import com.cobblemon.mod.common.registry.CobblemonRegistries
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
@@ -37,6 +38,7 @@ class CobblemonFabricDataGeneratorEntrypoint : DataGeneratorEntrypoint {
         pack.addProvider(::ElementalTypeTagProvider)
         pack.addProvider(::ElementalTypeAssetProvider)
         pack.addProvider(::SpeciesProvider)
+        pack.addProvider(::SpeciesTagProvider)
     }
 
     private fun buildDummyElementalTypes(consumer: (ResourceKey<ElementalType>, ElementalType) -> Unit) {

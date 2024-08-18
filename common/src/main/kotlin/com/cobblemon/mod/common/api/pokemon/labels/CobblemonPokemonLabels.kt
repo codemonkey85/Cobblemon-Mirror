@@ -118,6 +118,7 @@ object CobblemonPokemonLabels {
      */
     const val GMAX = "gmax"
 
+    @Deprecated("This is no longer used nor has an equivalent", level = DeprecationLevel.ERROR)
     /**
      * Represents a totem form.
      * For more information see the [Bulbapedia](https://bulbapedia.bulbagarden.net/wiki/Totem_Pok%C3%A9mon) page.

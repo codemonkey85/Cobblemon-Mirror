@@ -62,12 +62,7 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:rollout"
-    },
-    {
-      "type": "cobblemon:level",
-      "level": 1,
-      "move": "cobblemon:nobleroar"
+      "move": "cobblemon:soak"
     },
     {
       "type": "cobblemon:level",
@@ -77,7 +72,7 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:soak"
+      "move": "cobblemon:rollout"
     },
     {
       "type": "cobblemon:level",
@@ -87,12 +82,17 @@
     {
       "type": "cobblemon:level",
       "level": 1,
+      "move": "cobblemon:growl"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
       "move": "cobblemon:splash"
     },
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:growl"
+      "move": "cobblemon:nobleroar"
     },
     {
       "type": "cobblemon:level",
@@ -156,7 +156,15 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:brine"
+      "move": "cobblemon:return"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:attract"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:icebeam"
     },
     {
       "type": "cobblemon:tm",
@@ -168,111 +176,23 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
+      "move": "cobblemon:icywind"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:rocktomb"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:dive"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:gigaimpact"
+      "move": "cobblemon:rocksmash"
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:sleeptalk"
+      "move": "cobblemon:bounce"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:surf"
+      "move": "cobblemon:return"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:secretpower"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hail"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:liquidation"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hiddenpower"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:attract"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:waterpulse"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:earthquake"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:waterfall"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hypervoice"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:ironhead"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:amnesia"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:roar"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:hypervoice"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:snore"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bulldoze"
+      "move": "cobblemon:doubleteam"
     },
     {
       "type": "cobblemon:tm",
@@ -280,11 +200,151 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:round"
+      "move": "cobblemon:amnesia"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
+      "move": "cobblemon:blizzard"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hyperbeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:avalanche"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:gigaimpact"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hail"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:icywind"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:captivate"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:earthquake"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bulldoze"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:gigaimpact"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:blizzard"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:rollout"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:selfdestruct"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:liquidation"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:icebeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rocktomb"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:block"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:brine"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:icywind"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:hydropump"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:surf"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:doubleedge"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:zenheadbutt"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dive"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bulldoze"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:frustration"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:surf"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:icebeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:strength"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
     },
     {
       "type": "cobblemon:tm",
@@ -296,263 +356,31 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:doubleteam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bulldoze"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hyperbeam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:frustration"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:roar"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:bodyslam"
-    },
-    {
-      "type": "cobblemon:tm",
       "move": "cobblemon:blizzard"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:hiddenpower"
-    },
-    {
-      "type": "cobblemon:tm",
       "move": "cobblemon:bounce"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:icebeam"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:icywind"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:earthquake"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:icywind"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:earthquake"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:whirlpool"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:block"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hyperbeam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:surf"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hiddenpower"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:waterfall"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:heavyslam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:roar"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:gigaimpact"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:icywind"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:icebeam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:confide"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:hydropump"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:raindance"
-    },
-    {
-      "type": "cobblemon:tm",
       "move": "cobblemon:doubleteam"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:snore"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:snore"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:doubleteam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:zenheadbutt"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:snore"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:icebeam"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:mimic"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:attract"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:swagger"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hail"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hail"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:swagger"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:dive"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:steelroller"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:earthquake"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:bounce"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hail"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:block"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:ironhead"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:roar"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:scald"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:rest"
     },
     {
       "type": "cobblemon:tm",
       "move": "cobblemon:strength"
     },
     {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:endure"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:icywind"
+      "type": "cobblemon:tm",
+      "move": "cobblemon:return"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:rocktomb"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:waterspout"
+      "move": "cobblemon:hyperbeam"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:rocktomb"
+      "move": "cobblemon:scald"
     },
     {
       "type": "cobblemon:tm",
@@ -564,159 +392,11 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:round"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:toxic"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:scald"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:frustration"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bulldoze"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:raindance"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:gigaimpact"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:ironhead"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:brine"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:icebeam"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:ironhead"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:toxic"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rocksmash"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:round"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:dive"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hyperbeam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rocksmash"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:waterpulse"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:snore"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:surf"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:avalanche"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:gigaimpact"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:waterpulse"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:waterpulse"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:blizzard"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:captivate"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:attract"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
-    },
-    {
-      "type": "cobblemon:tm",
       "move": "cobblemon:rocktomb"
     },
     {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rocksmash"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:doubleteam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:waterfall"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:dive"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:whirlpool"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:confide"
-    },
-    {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:sleeptalk"
+      "move": "cobblemon:bodyslam"
     },
     {
       "type": "cobblemon:tutor",
@@ -724,79 +404,11 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
+      "move": "cobblemon:earthquake"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:icebeam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:avalanche"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:secretpower"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:strength"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:icywind"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:blizzard"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:return"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:return"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:rollout"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:zenheadbutt"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:frustration"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:raindance"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:icywind"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:defensecurl"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:scald"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:echoedvoice"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:scald"
+      "move": "cobblemon:weatherball"
     },
     {
       "type": "cobblemon:tutor",
@@ -804,23 +416,63 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:toxic"
+      "move": "cobblemon:facade"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:weatherball"
+      "move": "cobblemon:gigaimpact"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:waterpulse"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:blizzard"
+      "move": "cobblemon:hyperbeam"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:return"
+      "move": "cobblemon:raindance"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:swagger"
+      "move": "cobblemon:hiddenpower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:earthquake"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:rollout"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bulldoze"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:icywind"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hiddenpower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rocktomb"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:attract"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:raindance"
     },
     {
       "type": "cobblemon:tutor",
@@ -828,79 +480,55 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:secretpower"
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:waterpulse"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:sleeptalk"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:dive"
+      "move": "cobblemon:whirlpool"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:round"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:gigaimpact"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:round"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
     },
     {
       "type": "cobblemon:tutor",
       "move": "cobblemon:hypervoice"
     },
     {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:rollout"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:headbutt"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bodyslam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:icebeam"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:block"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:waterpulse"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:mist"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bulldoze"
-    },
-    {
       "type": "cobblemon:tm",
       "move": "cobblemon:surf"
     },
     {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:bounce"
-    },
-    {
       "type": "cobblemon:tm",
-      "move": "cobblemon:frustration"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
+      "move": "cobblemon:protect"
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:bounce"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:bounce"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:selfdestruct"
+      "move": "cobblemon:amnesia"
     },
     {
       "type": "cobblemon:tm",
@@ -908,47 +536,39 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:snore"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:blizzard"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:earthquake"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:raindance"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:ironhead"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:strength"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:zenheadbutt"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hail"
-    },
-    {
-      "type": "cobblemon:tm",
       "move": "cobblemon:echoedvoice"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
+      "move": "cobblemon:heavyslam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:waterfall"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:waterfall"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dive"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:roar"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:doubleteam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:scald"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:waterfall"
     },
     {
       "type": "cobblemon:tm",
@@ -956,51 +576,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:attract"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hyperbeam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hiddenpower"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:attract"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rocktomb"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:attract"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:return"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:return"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hydropump"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:liquidation"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:selfdestruct"
+      "move": "cobblemon:surf"
     },
     {
       "type": "cobblemon:tm",
@@ -1008,7 +584,35 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
+      "move": "cobblemon:scald"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:strength"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:return"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:steelroller"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:frustration"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hiddenpower"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:ironhead"
     },
     {
       "type": "cobblemon:tm",
@@ -1020,27 +624,51 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:naturalgift"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:surf"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:amnesia"
-    },
-    {
-      "type": "cobblemon:tm",
       "move": "cobblemon:hail"
     },
     {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:earthquake"
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:headbutt"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:doubleteam"
+      "move": "cobblemon:naturalgift"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:roar"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:ironhead"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:secretpower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:toxic"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:blizzard"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:mist"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:endure"
     },
     {
       "type": "cobblemon:tm",
@@ -1048,11 +676,87 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
+      "move": "cobblemon:toxic"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:raindance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rocktomb"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hail"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rocksmash"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:brine"
     },
     {
       "type": "cobblemon:tm",
       "move": "cobblemon:waterfall"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:waterfall"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:echoedvoice"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:toxic"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:earthquake"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
     },
     {
       "type": "cobblemon:tm",
@@ -1064,23 +768,59 @@
     },
     {
       "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:return"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:icebeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
       "move": "cobblemon:hiddenpower"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:waterfall"
+      "move": "cobblemon:hydropump"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:strength"
+      "move": "cobblemon:hyperbeam"
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:hypervoice"
+      "move": "cobblemon:waterspout"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:gigaimpact"
+      "move": "cobblemon:waterpulse"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:icywind"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:whirlpool"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:attract"
     },
     {
       "type": "cobblemon:tm",
@@ -1088,23 +828,283 @@
     },
     {
       "type": "cobblemon:tm",
+      "move": "cobblemon:scald"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:icywind"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:gigaimpact"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:frustration"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:roar"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:waterpulse"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:avalanche"
+    },
+    {
+      "type": "cobblemon:tm",
       "move": "cobblemon:blizzard"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:dive"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:doubleteam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:earthquake"
     },
     {
       "type": "cobblemon:tm",
       "move": "cobblemon:swagger"
     },
     {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:swagger"
+    },
+    {
       "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
+      "move": "cobblemon:hypervoice"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:raindance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:attract"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:round"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:strength"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:swagger"
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:doubleedge"
+      "move": "cobblemon:defensecurl"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:secretpower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:icebeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
     },
     {
       "type": "cobblemon:tm",
       "move": "cobblemon:surf"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:confide"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hail"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:attract"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:earthquake"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:ironhead"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:liquidation"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:hypervoice"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:block"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:zenheadbutt"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:confide"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:surf"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:roar"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dive"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hail"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rocktomb"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bodyslam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:blizzard"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:secretpower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:swagger"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:block"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:frustration"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:mimic"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rocksmash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:hypervoice"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:zenheadbutt"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:attract"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:icebeam"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hiddenpower"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:ironhead"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bulldoze"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dive"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:doubleteam"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:waterpulse"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:selfdestruct"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:ironhead"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hail"
     }
   ],
   "nationalPokedexNumber": 321,
