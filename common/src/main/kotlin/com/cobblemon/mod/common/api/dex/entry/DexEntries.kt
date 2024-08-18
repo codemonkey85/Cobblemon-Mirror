@@ -11,7 +11,10 @@ package com.cobblemon.mod.common.api.dex.entry
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
+import com.cobblemon.mod.common.net.messages.client.data.DexEntrySyncPacket
 import com.cobblemon.mod.common.util.adapters.ExpressionLikeAdapter
+import com.cobblemon.mod.common.util.adapters.ExtraDexDataAdapter
+import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -28,19 +31,23 @@ object DexEntries : JsonDataRegistry<DexEntry> {
         .disableHtmlEscaping()
         .setPrettyPrinting()
         .registerTypeAdapter(ExpressionLike::class.java, ExpressionLikeAdapter)
+        .registerTypeAdapter(ExtraDexData::class.java, ExtraDexDataAdapter)
+        .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .create()
 
     override val typeToken: TypeToken<DexEntry> = TypeToken.get(DexEntry::class.java)
     override val resourcePath = "dex_entries"
 
-    lateinit var entries: Map<ResourceLocation, DexEntry>
+    val entries = mutableMapOf<ResourceLocation, DexEntry>()
 
     override fun reload(data: Map<ResourceLocation, DexEntry>) {
-        entries = data
+        data.forEach { _, entry ->
+            entries[entry.entryId] = entry
+        }
     }
 
     override val observable = SimpleObservable<DexEntries>()
     override fun sync(player: ServerPlayer) {
-
+        DexEntrySyncPacket(entries.values)
     }
 }

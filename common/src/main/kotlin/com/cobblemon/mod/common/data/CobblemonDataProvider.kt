@@ -15,6 +15,7 @@ import com.cobblemon.mod.common.api.abilities.Abilities
 import com.cobblemon.mod.common.api.berry.Berries
 import com.cobblemon.mod.common.api.data.DataProvider
 import com.cobblemon.mod.common.api.data.DataRegistry
+import com.cobblemon.mod.common.api.dex.Dexes
 import com.cobblemon.mod.common.api.dialogue.Dialogues
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.fishing.FishingBaits
@@ -80,6 +81,7 @@ object CobblemonDataProvider : DataProvider {
         this.register(Fossils)
         this.register(NPCClasses)
         this.register(DexEntries)
+        this.register(Dexes)
 
         CobblemonSpawnPools.load()
         this.register(PokeRods)

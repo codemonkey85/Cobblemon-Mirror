@@ -35,6 +35,7 @@ object FinishScanningHandler : ServerNetworkPacketHandler<FinishScanningPacket> 
             if (targetEntity.uuid == inProgressUUID && ticksScan >= PokedexUsageContext.TICKS_TO_SCAN) {
                 val pokemonEntity = targetEntity as? PokemonEntity ?: return
                 val speciesId = pokemonEntity.pokemon.species.resourceIdentifier
+                /*
                 val curKnowledge = Cobblemon.playerDataManager
                     .getPokedexData(player)
                     .speciesEntries[speciesId]
@@ -44,7 +45,9 @@ object FinishScanningHandler : ServerNetworkPacketHandler<FinishScanningPacket> 
                     .getPokedexData(player)
                     .speciesEntries[speciesId]
                     ?.highestDiscoveryLevel() ?: PokedexEntryProgress.ENCOUNTERED
-                ServerConfirmedScanPacket(curKnowledge, newKnowledge, speciesId).sendToPlayer(player)
+
+                 */
+                //ServerConfirmedScanPacket(curKnowledge, newKnowledge, speciesId).sendToPlayer(player)
             }
         }
     }

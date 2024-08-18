@@ -9,9 +9,8 @@
 package com.cobblemon.mod.common.client.gui.pokedex.widgets
 
 import com.cobblemon.mod.common.CobblemonSounds
-import com.cobblemon.mod.common.api.dex.DexManager
 import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.api.dex.entry.DexEntries
+import com.cobblemon.mod.common.api.dex.entry.DexEntry
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.text.text
@@ -26,7 +25,6 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.SCROLL_SL
 import com.cobblemon.mod.common.client.gui.pokedex.widgets.EntriesScrollingWidget.PokemonScrollSlotRow
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
-import com.cobblemon.mod.common.pokedex.DexPokemonData
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
@@ -39,7 +37,7 @@ import net.minecraft.util.Mth
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
-class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (DexPokemonData) -> (Unit)): ScrollingWidget<PokemonScrollSlotRow>(
+class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (DexEntry) -> (Unit)): ScrollingWidget<PokemonScrollSlotRow>(
     width = PokedexGUIConstants.HALF_OVERLAY_WIDTH,
     height = SCROLL_BASE_HEIGHT,
     left = pX,
@@ -47,21 +45,21 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Dex
     slotHeight = SCROLL_SLOT_SIZE + 2
 ) {
 
-    fun createEntries(filteredPokedex: Collection<DexPokemonData>) {
+    fun createEntries(filteredPokedex: Collection<DexEntry>) {
 
         filteredPokedex.forEachIndexed { index, _ ->
             if ((index + 5) % 5 == 0) {
-                val dexDataList = mutableListOf<DexPokemonData>()
+                val dexDataList = mutableListOf<DexEntry>()
                 val discoveryLevelList = mutableListOf<PokedexEntryProgress>()
                 for (i in 0..4) {
                     if (index + i < filteredPokedex.size) {
                         val species = filteredPokedex.elementAt(index + i)
-                        val discoveryLevel = CobblemonClient.clientPokedexData.getKnowledgeForSpecies(species.speciesId)
+                        val discoveryLevel = CobblemonClient.clientPokedexData.getKnowledgeForSpecies(species.entryId)
                         dexDataList.add(species)
                         discoveryLevelList.add(discoveryLevel)
                     }
                 }
-                val newEntry = PokemonScrollSlotRow(dexDataList, discoveryLevelList, index == 0) { selectPokemon(it) }
+                val newEntry = PokemonScrollSlotRow(dexDataList, discoveryLevelList, index == 0) { selectEntry(it) }
                 addEntry(newEntry)
             }
         }
@@ -92,7 +90,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Dex
         context.fill(xLeft,yTop + 3, xRight, yTop + yBottom - 3, FastColor.ARGB32.color(255, 252, 252, 252)) // base
     }
 
-    fun selectPokemon(dexPokemonData: DexPokemonData) {
+    fun selectEntry(dexPokemonData: DexEntry) {
         setPokedexEntry.invoke(dexPokemonData)
     }
 
@@ -121,10 +119,10 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Dex
     }
 
     class PokemonScrollSlotRow(
-        val dexDataList:  MutableList<DexPokemonData>,
+        val dexDataList:  MutableList<DexEntry>,
         val discoveryLevelList: MutableList<PokedexEntryProgress>,
         val isFirstRow: Boolean = false,
-        val setPokedexEntry : (DexPokemonData) -> (Unit)
+        val setPokedexEntry : (DexEntry) -> (Unit)
     ): Slot<PokemonScrollSlotRow>() {
         companion object {
             private val slotResource = cobblemonResource("textures/gui/pokedex/pokedex_slot.png")
@@ -151,7 +149,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Dex
         ) {
             dexDataList.forEachIndexed { index, dexData ->
                 val state = FloatingState()
-                val species = PokemonSpecies.getByIdentifier(dexData.speciesId)
+                val species = PokemonSpecies.getByIdentifier(dexData.entryId)
                 var pokemonNumber = "1"
 
                 if (pokemonNumber.toIntOrNull() != null) {

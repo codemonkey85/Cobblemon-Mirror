@@ -5,15 +5,14 @@ import com.cobblemon.mod.common.api.events.pokedex.scanning.PokemonScannedEvent
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent
 import com.cobblemon.mod.common.api.events.pokemon.TradeCompletedEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEvent
+import com.cobblemon.mod.common.api.events.starter.StarterChosenEvent
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
-import com.cobblemon.mod.common.api.pokemon.PokemonSpecies.species
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.api.storage.player.client.ClientDexManager
 import com.cobblemon.mod.common.battles.actor.PlayerBattleActor
 import com.cobblemon.mod.common.battles.actor.PokemonBattleActor
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Species
-import com.cobblemon.mod.common.util.getPlayer
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -48,6 +47,11 @@ class DexManager(
         val recievedPokemon = if (event.tradeParticipant1.uuid == uuid) event.tradeParticipant2Pokemon else event.tradeParticipant1Pokemon
         gainedCaughtStatus(recievedPokemon.species, recievedPokemon.form)
         entries[getCaptureMethodKeyForSpecies(recievedPokemon.species.resourceIdentifier)] = "traded"
+    }
+
+    fun onStarterChosen(event: StarterChosenEvent) {
+        gainedCaughtStatus(event.pokemon.species, event.pokemon.form)
+        entries[getCaptureMethodKeyForSpecies(event.pokemon.species.resourceIdentifier)] = "starter"
     }
 
     fun pokemonScanned(event: PokemonScannedEvent) {

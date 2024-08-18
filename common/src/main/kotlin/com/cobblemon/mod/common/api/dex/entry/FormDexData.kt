@@ -8,31 +8,36 @@ import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
+import com.mojang.serialization.codecs.PrimitiveCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.network.RegistryFriendlyByteBuf
 
-class FormDexData() : ExtraDexData(), Decodable, Encodable {
+class FormDexData(
+    val aspects: String,
+    val condition: List<ExpressionLike>
+) : ExtraDexData() {
     override val type = ID
-    var aspectString = ""
-    val condition = mutableListOf<ExpressionLike>()
-
-    companion object {
-        val ID = cobblemonResource("form_dex_data")
-    }
-
-    override fun decode(buffer: RegistryFriendlyByteBuf) {
-        aspectString = buffer.readString()
-        val numToRead = buffer.readInt()
-        for (i in 0 until numToRead) {
-            val expressions = MoLang.createParser(buffer.readString()).parse()
-            condition.add(ListExpression(expressions))
-        }
-    }
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeString(aspectString)
+        buffer.writeString(aspects)
         buffer.writeInt(condition.size)
         condition.forEach {
             buffer.writeString(it.toString())
+        }
+    }
+
+    companion object {
+        val ID = cobblemonResource("form_dex_data")
+
+        fun decode(buffer: RegistryFriendlyByteBuf): FormDexData {
+            val aspectString = buffer.readString()
+            val numToRead = buffer.readInt()
+            val conditions = mutableListOf<ExpressionLike>()
+            for (i in 0 until numToRead) {
+                val expressions = MoLang.createParser(buffer.readString()).parse()
+                conditions.add(ListExpression(expressions))
+            }
+            return FormDexData(aspectString, conditions)
         }
     }
 }

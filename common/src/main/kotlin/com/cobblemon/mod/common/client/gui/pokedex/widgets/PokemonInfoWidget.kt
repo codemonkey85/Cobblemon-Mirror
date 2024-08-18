@@ -33,7 +33,6 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.pokedex.DexPokemonData
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
@@ -53,15 +52,14 @@ import org.joml.Quaternionf
 import org.joml.Vector3f
 import java.io.FileNotFoundException
 
-class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> (Unit)) : SoundlessWidget(
+class PokemonInfoWidget(val pX: Int, val pY: Int, val updateVisual: (String) -> (Unit)) : SoundlessWidget(
     pX,
     pY,
     POKEMON_PORTRAIT_WIDTH,
     POKEMON_PORTRAIT_HEIGHT,
     lang("ui.pokedex.pokemon_info"),
 ) {
-    //
-    var dexPokemonData : DexPokemonData? = null
+    var currentEntry : DexEntry? = null
 
     var speciesName: MutableComponent = Component.translatable("")
     var speciesNumber: MutableComponent = "0000".text()
@@ -157,10 +155,12 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
     ).apply { addWidget(this) }
 
     override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        if (dexPokemonData == null || renderablePokemon == null) return
+        if (currentEntry == null || renderablePokemon == null) return
 
-        val hasKnowledge = CobblemonClient.clientPokedexData.getKnowledgeForSpecies(dexPokemonData!!.speciesId) != PokedexEntryProgress.NONE
-        val species = PokemonSpecies.getByIdentifier(dexPokemonData!!.speciesId)
+        val hasKnowledge = currentEntry?.entryId?.let {
+            CobblemonClient.clientPokedexData.getKnowledgeForSpecies(it)
+        } != PokedexEntryProgress.NONE
+        val species = currentEntry?.entryId?.let { PokemonSpecies.getByIdentifier(it) }
 
         val matrices = context.pose()
 
@@ -356,15 +356,17 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
             animationLeftButton.render(context,mouseX, mouseY, delta)
             animationRightButton.render(context,mouseX, mouseY, delta)
 
+            val showableForms = currentEntry!!.extraData
+                .map { it as FormDexData }
             // Forms
-            if(dexPokemonData!!.forms.size > 1 && dexPokemonData!!.forms.size > selectedFormIndex) {
+            if(showableForms.size > 1 && showableForms.size > selectedFormIndex) {
                 formLeftButton.render(context,mouseX, mouseY, delta)
                 formRightButton.render(context,mouseX, mouseY, delta)
 
                 drawScaledTextJustifiedRight(
                     context = context,
                     font = CobblemonResources.DEFAULT_LARGE,
-                    text = Component.translatable("cobblemon.ui.pokedex.info.form.${dexPokemonData!!.forms[selectedFormIndex]}").bold(),
+                    text = Component.translatable("cobblemon.ui.pokedex.info.form.${showableForms[selectedFormIndex]}").bold(),
                     x = pX + 136,
                     y = pY + 15,
                     shadow = true
@@ -383,14 +385,16 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
         }
     }
 
-    fun setPokemon(dexPokemonData : DexPokemonData) {
-        this.dexPokemonData = dexPokemonData
+    fun setDexEntry(dexEntry : DexEntry) {
+        this.currentEntry = dexEntry
 
-        val species = PokemonSpecies.getByIdentifier(dexPokemonData.speciesId)
+        val species = PokemonSpecies.getByIdentifier(dexEntry.entryId)
+        val forms = dexEntry.extraData
+            .map { it as FormDexData }
 
         if (species != null) {
             //FIXME: Check condition here
-            this.visibleForms = dexPokemonData.forms.map { it.aspectString }.toMutableList()
+            this.visibleForms = forms.map { it.aspects }.toMutableList()
             var pokemonNumber = species.nationalPokedexNumber.toString()
             while (pokemonNumber.length < 4) pokemonNumber = "0$pokemonNumber"
             this.speciesNumber = pokemonNumber.text()
@@ -409,7 +413,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
 
             this.speciesName = species.translatedName
 
-            if (dexPokemonData.forms.size > 0) {
+            if (forms.isNotEmpty()) {
                 formLeftButton.active = true
                 formRightButton.active = true
             } else {
@@ -457,7 +461,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
         genderButton.resource = if (gender == Gender.FEMALE) buttonGenderFemale else buttonGenderMale
         shinyButton.resource = if (shiny) buttonShiny else buttonNone
 
-        val species = dexPokemonData?.speciesId?.let { PokemonSpecies.getByIdentifier(it) }
+        val species = currentEntry?.entryId?.let { PokemonSpecies.getByIdentifier(it) }
         if (species != null) {
             val aspects = mutableSetOf<String>()
 
@@ -475,8 +479,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
 
             renderablePokemon = RenderablePokemon(species, aspects)
 
-            val formData = species.getForm(setOf(aspectStr))
-            updateForm.invoke(formData)
+            updateVisual.invoke(aspectStr)
         }
     }
 
@@ -506,7 +509,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormData) -> 
         && mouseY.toInt() in pY + 25..(pY + 25 + PORTRAIT_POKE_BALL_HEIGHT)
 
     private fun isSelectedPokemonOwned(): Boolean {
-        return dexPokemonData?.let { CobblemonClient.clientPokedexData.getKnowledgeForSpecies(it.speciesId) } == PokedexEntryProgress.CAUGHT
+        return currentEntry?.let { CobblemonClient.clientPokedexData.getKnowledgeForSpecies(it.entryId) } == PokedexEntryProgress.CAUGHT
     }
 
     fun playSound(soundEvent: SoundEvent) {
