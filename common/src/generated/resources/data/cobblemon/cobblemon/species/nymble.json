@@ -9,8 +9,8 @@
       "ability": "cobblemon:swarm"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 42,
+  "baseFriendship": 20,
   "baseStats": {
     "cobblemon:attack": 46,
     "cobblemon:defence": 40,
@@ -36,28 +36,185 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 190,
+  "dynamaxBlocked": false,
+  "eggCycles": 20,
   "eggGroups": [
     "BUG"
   ],
-  "evYield": {},
-  "experienceGroup": "cobblemon:slow",
-  "height": 2.0,
+  "evYield": {
+    "cobblemon:attack": 1
+  },
+  "experienceGroup": "cobblemon:medium_fast",
+  "height": 0.2,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
-  "maleRatio": -1.0,
-  "moves": [],
+  "maleRatio": 0.5,
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:tackle"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:leer"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 4,
+      "move": "cobblemon:strugglebug"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 6,
+      "move": "cobblemon:astonish"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 9,
+      "move": "cobblemon:assurance"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 11,
+      "move": "cobblemon:doublekick"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 14,
+      "move": "cobblemon:screech"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 18,
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 22,
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 26,
+      "move": "cobblemon:feint"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 30,
+      "move": "cobblemon:agility"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 38,
+      "move": "cobblemon:suckerpunch"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 41,
+      "move": "cobblemon:firstimpression"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:skittersmack"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:terablast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thief"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:counter"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:trailblaze"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bugbuzz"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:takedown"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:pounce"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:raindance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:strugglebug"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:skittersmack"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sunnyday"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:xscissor"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:agility"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:leechlife"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:uturn"
+    }
+  ],
   "nationalPokedexNumber": 919,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:bug",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 10.0
+  "weight": 1.0
 }

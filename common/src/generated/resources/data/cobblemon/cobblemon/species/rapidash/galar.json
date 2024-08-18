@@ -13,8 +13,8 @@
       "ability": "cobblemon:pastelveil"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 175,
+  "baseFriendship": 50,
   "baseStats": {
     "cobblemon:attack": 100,
     "cobblemon:defence": 70,
@@ -40,33 +40,286 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 60,
+  "dynamaxBlocked": false,
+  "eggCycles": 20,
   "eggGroups": [
     "FIELD"
   ],
-  "evYield": {},
-  "experienceGroup": "cobblemon:slow",
-  "height": 17.0,
+  "evYield": {
+    "cobblemon:speed": 2
+  },
+  "experienceGroup": "cobblemon:medium_fast",
+  "height": 1.7,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
-  "maleRatio": -1.0,
-  "moves": [],
+  "maleRatio": 0.5,
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 0,
+      "move": "cobblemon:psychocut"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:quickattack"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:tailwhip"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:tackle"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:megahorn"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:confusion"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:growl"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 15,
+      "move": "cobblemon:fairywind"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 20,
+      "move": "cobblemon:agility"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 25,
+      "move": "cobblemon:psybeam"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 30,
+      "move": "cobblemon:stomp"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 35,
+      "move": "cobblemon:healpulse"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 43,
+      "move": "cobblemon:takedown"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 49,
+      "move": "cobblemon:dazzlinggleam"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 56,
+      "move": "cobblemon:psychic"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 63,
+      "move": "cobblemon:healingwish"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:trickroom"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:highhorsepower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychic"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hyperbeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:mistyterrain"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:calmmind"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:swift"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:wildcharge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:gigaimpact"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bodyslam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dazzlinggleam"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:expandingforce"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:agility"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:mysticalfire"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:attract"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:megahorn"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:round"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lowkick"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:swordsdance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:throatchop"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:storedpower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:magicroom"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:irontail"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychocut"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychicterrain"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:allyswitch"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:playrough"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:charm"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:futuresight"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:drillrun"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:wonderroom"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:smartstrike"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:zenheadbutt"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:imprison"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:batonpass"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:payday"
+    }
+  ],
   "nationalPokedexNumber": 78,
   "preEvolution": "cobblemon:ponyta/galar",
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
-  "secondaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:psychic",
+  "secondaryType": "cobblemon:fairy",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 800.0
+  "weight": 80.0
 }

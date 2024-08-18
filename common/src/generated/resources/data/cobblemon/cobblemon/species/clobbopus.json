@@ -9,8 +9,8 @@
       "ability": "cobblemon:limber"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 62,
+  "baseFriendship": 50,
   "baseStats": {
     "cobblemon:attack": 68,
     "cobblemon:defence": 60,
@@ -36,29 +36,228 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 180,
+  "dynamaxBlocked": false,
+  "eggCycles": 25,
   "eggGroups": [
     "WATER_1",
     "HUMAN_LIKE"
   ],
-  "evYield": {},
-  "experienceGroup": "cobblemon:slow",
-  "height": 6.0,
+  "evYield": {
+    "cobblemon:attack": 1
+  },
+  "experienceGroup": "cobblemon:medium_slow",
+  "height": 0.6,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
-  "maleRatio": -1.0,
-  "moves": [],
+  "maleRatio": 0.5,
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:rocksmash"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:leer"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 5,
+      "move": "cobblemon:feint"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 10,
+      "move": "cobblemon:bind"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 15,
+      "move": "cobblemon:detect"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 20,
+      "move": "cobblemon:brickbreak"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 25,
+      "move": "cobblemon:bulkup"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 30,
+      "move": "cobblemon:submission"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 35,
+      "move": "cobblemon:taunt"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 40,
+      "move": "cobblemon:reversal"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 45,
+      "move": "cobblemon:superpower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:focusblast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:superpower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:icepunch"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:poweruppunch"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:closecombat"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:suckerpunch"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:revenge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bodyslam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:muddywater"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:retaliate"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:mudshot"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bulkup"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:circlethrow"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:painsplit"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:soak"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:payback"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:brickbreak"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:megapunch"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:liquidation"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:taunt"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:round"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:waterfall"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:seismictoss"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:brine"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:workup"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dive"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:attract"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:reversal"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:coaching"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    }
+  ],
   "nationalPokedexNumber": 852,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:fighting",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 40.0
+  "weight": 4.0
 }

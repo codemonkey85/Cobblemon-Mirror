@@ -13,8 +13,8 @@
       "ability": "cobblemon:sheerforce"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 175,
+  "baseFriendship": 50,
   "baseStats": {
     "cobblemon:attack": 135,
     "cobblemon:defence": 95,
@@ -40,33 +40,292 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 115,
+  "dynamaxBlocked": false,
+  "eggCycles": 20,
   "eggGroups": [
     "BUG"
   ],
-  "evYield": {},
-  "experienceGroup": "cobblemon:slow",
-  "height": 18.0,
+  "evYield": {
+    "cobblemon:attack": 2
+  },
+  "experienceGroup": "cobblemon:medium_fast",
+  "height": 1.8,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
-  "maleRatio": -1.0,
-  "moves": [],
+  "maleRatio": 0.5,
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 0,
+      "move": "cobblemon:stoneaxe"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:quickattack"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:leer"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 4,
+      "move": "cobblemon:furycutter"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 8,
+      "move": "cobblemon:falseswipe"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 12,
+      "move": "cobblemon:smackdown"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 16,
+      "move": "cobblemon:doubleteam"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 20,
+      "move": "cobblemon:doublehit"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 24,
+      "move": "cobblemon:slash"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 28,
+      "move": "cobblemon:focusenergy"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 32,
+      "move": "cobblemon:agility"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 36,
+      "move": "cobblemon:rockslide"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 40,
+      "move": "cobblemon:xscissor"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 44,
+      "move": "cobblemon:swordsdance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:aircutter"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:agility"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:airslash"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rockblast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:helpinghand"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:uturn"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:brickbreak"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:skittersmack"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:stoneedge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:terablast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:gigaimpact"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:aerialace"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bugbuzz"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:takedown"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:swift"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:stealthrock"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hyperbeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sandstorm"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sunnyday"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:pounce"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rocktomb"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thief"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:scaryface"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:swordsdance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dualwingbeat"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:reversal"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:trailblaze"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:strugglebug"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lightscreen"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lunge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rockslide"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:vacuumwave"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:batonpass"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:acrobatics"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:closecombat"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:falseswipe"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:xscissor"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:tailwind"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:smackdown"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:doubleedge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:raindance"
+    }
+  ],
   "nationalPokedexNumber": 900,
   "preEvolution": "cobblemon:scyther",
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
-  "secondaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:bug",
+  "secondaryType": "cobblemon:rock",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 890.0
+  "weight": 89.0
 }

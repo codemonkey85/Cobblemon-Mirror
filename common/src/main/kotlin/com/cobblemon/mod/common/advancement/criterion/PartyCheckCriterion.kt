@@ -40,8 +40,8 @@ class PartyCheckCriterion(
         val partyCount = context.count()
         if (matches.containsAll(party) && party.size == partyCount && matches.size == partyCount) return true
         context.iterator().forEach {
-            if (party.contains(it.species.resourceIdentifier)) {
-                matches.add(it.species.resourceIdentifier)
+            if (party.contains(it.species.resourceLocation())) {
+                matches.add(it.species.resourceLocation())
             }
         }
         return matches.containsAll(party) && matches.size == partyCount

@@ -76,7 +76,7 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
                     pokemon.getDisplayName(),
                     playerName
                 ),
-                species = pokemon.species.resourceIdentifier,
+                species = pokemon.species.resourceLocation(),
                 aspects = pokemon.aspects,
                 heldItem = pokemon.heldItem(),
                 level = pokemon.level,

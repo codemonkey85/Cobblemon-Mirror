@@ -5,8 +5,8 @@
       "ability": "cobblemon:unaware"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 40,
+  "baseFriendship": 0,
   "baseStats": {
     "cobblemon:attack": 29,
     "cobblemon:defence": 31,
@@ -32,28 +32,50 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 45,
+  "dynamaxBlocked": false,
+  "eggCycles": 120,
   "eggGroups": [
     "UNDISCOVERED"
   ],
-  "evYield": {},
+  "evYield": {
+    "cobblemon:hp": 1
+  },
   "experienceGroup": "cobblemon:slow",
-  "height": 2.0,
+  "height": 0.2,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
   "maleRatio": -1.0,
-  "moves": [],
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:teleport"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:teleport"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
+    }
+  ],
   "nationalPokedexNumber": 789,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:psychic",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 1.0
+  "weight": 0.1
 }

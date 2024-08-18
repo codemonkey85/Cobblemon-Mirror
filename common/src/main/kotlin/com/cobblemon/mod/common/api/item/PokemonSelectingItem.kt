@@ -65,7 +65,7 @@ interface PokemonSelectingItem {
                         val typedInteractionResult = applyToPokemon(player, stack, pokemon)
                         if (typedInteractionResult != null)
                         {
-                            CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(pokemon.species.resourceIdentifier, BuiltInRegistries.ITEM.getKey(stack.item)))
+                            CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(pokemon.species.resourceLocation(), BuiltInRegistries.ITEM.getKey(stack.item)))
                             typedInteractionResult
                         }
                         else {
@@ -98,7 +98,7 @@ interface PokemonSelectingItem {
             if (!player.isCreative) {
                 stack.shrink(1)
             }
-            CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(battlePokemon.entity!!.pokemon.species.resourceIdentifier, BuiltInRegistries.ITEM.getKey(stack.item)))
+            CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(battlePokemon.entity!!.pokemon.species.resourceLocation(), BuiltInRegistries.ITEM.getKey(stack.item)))
         }
     }
 
@@ -128,7 +128,7 @@ interface PokemonSelectingItem {
             handler = { pk ->
                 if (stack.isHeld(player)) {
                     applyToPokemon(player, stack, pk)
-                    CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(pk.species.resourceIdentifier, BuiltInRegistries.ITEM.getKey(stack.item)))
+                    CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(pk.species.resourceLocation(), BuiltInRegistries.ITEM.getKey(stack.item)))
                 }
             }
         )

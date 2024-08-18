@@ -5,8 +5,8 @@
       "ability": "cobblemon:levitate"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 55,
+  "baseFriendship": 70,
   "baseStats": {
     "cobblemon:attack": 55,
     "cobblemon:defence": 40,
@@ -32,28 +32,96 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 190,
+  "dynamaxBlocked": false,
+  "eggCycles": 20,
   "eggGroups": [
     "AMORPHOUS"
   ],
-  "evYield": {},
+  "evYield": {
+    "cobblemon:speed": 1
+  },
   "experienceGroup": "cobblemon:slow",
-  "height": 2.0,
+  "height": 0.2,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
-  "maleRatio": -1.0,
-  "moves": [],
+  "maleRatio": 0.5,
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:spark"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:thunderwave"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:chargebeam"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:tackle"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thunderwave"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:chargebeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:terablast"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:magnetrise"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:charge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:chargebeam"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:magnetrise"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:knockoff"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thunderwave"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thunderwave"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:magnetrise"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:chargebeam"
+    }
+  ],
   "nationalPokedexNumber": 602,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:electric",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 3.0
+  "weight": 0.3
 }

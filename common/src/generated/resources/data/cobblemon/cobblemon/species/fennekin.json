@@ -9,8 +9,8 @@
       "ability": "cobblemon:blaze"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 61,
+  "baseFriendship": 70,
   "baseStats": {
     "cobblemon:attack": 45,
     "cobblemon:defence": 40,
@@ -36,28 +36,684 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 45,
+  "dynamaxBlocked": false,
+  "eggCycles": 20,
   "eggGroups": [
     "FIELD"
   ],
-  "evYield": {},
-  "experienceGroup": "cobblemon:slow",
-  "height": 4.0,
+  "evYield": {
+    "cobblemon:special_attack": 1
+  },
+  "experienceGroup": "cobblemon:medium_slow",
+  "height": 0.4,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
-  "maleRatio": -1.0,
-  "moves": [],
+  "maleRatio": 0.875,
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:tailwhip"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:scratch"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 5,
+      "move": "cobblemon:ember"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 11,
+      "move": "cobblemon:howl"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 14,
+      "move": "cobblemon:flamecharge"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 17,
+      "move": "cobblemon:psybeam"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 20,
+      "move": "cobblemon:firespin"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 25,
+      "move": "cobblemon:luckychant"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 25,
+      "move": "cobblemon:lightscreen"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 31,
+      "move": "cobblemon:psyshock"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 35,
+      "move": "cobblemon:flamethrower"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 38,
+      "move": "cobblemon:willowisp"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 41,
+      "move": "cobblemon:psychic"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 43,
+      "move": "cobblemon:sunnyday"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 46,
+      "move": "cobblemon:magicroom"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 48,
+      "move": "cobblemon:fireblast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psyshock"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:terablast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:toxic"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:magiccoat"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:storedpower"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:scratch"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:magiccoat"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:wish"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:fireblast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:cut"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lightscreen"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:fireblast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:confide"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:swagger"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:heatwave"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:raindance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sunnyday"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:poweruppunch"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:solarbeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:flareblitz"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psyshock"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:grassknot"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:round"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:foulplay"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:toxic"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:swagger"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:flamecharge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:firespin"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:takedown"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:fireblast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sunnyday"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:magiccoat"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychic"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:return"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:foulplay"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:round"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:hypnosis"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lightscreen"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:flamecharge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:calmmind"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lightscreen"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:willowisp"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:heatwave"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychup"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:grassknot"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:mudshot"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:firepledge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:frustration"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:echoedvoice"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thief"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:trick"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:charm"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:solarbeam"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:hiddenpower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:solarbeam"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:flamethrower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:helpinghand"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:wish"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dreameater"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:safeguard"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:mudslap"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychup"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:flamethrower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:skillswap"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:flamethrower"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:irontail"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:firepledge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:overheat"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dreameater"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hiddenpower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thief"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:hypnosis"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:irontail"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:magicroom"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:foulplay"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:covet"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:secretpower"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:covet"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:frustration"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:heatwave"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:workup"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:attract"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychicterrain"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:raindance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:doubleteam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:return"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:willowisp"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:grassknot"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:firepledge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hiddenpower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:swift"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:flamecharge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:imprison"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:magicroom"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:heatwave"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:doubleteam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:echoedvoice"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sunnyday"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:heatwave"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:overheat"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:trickroom"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:attract"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:confide"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:overheat"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychic"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thief"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:magicroom"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:embargo"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:safeguard"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:copycat"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:encore"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:hypnosis"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:wish"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:agility"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychic"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psyshock"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:incinerate"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:psychicterrain"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:raindance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:embargo"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psybeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:burningjealousy"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:magiccoat"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:heatwave"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:flamethrower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:willowisp"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    }
+  ],
   "nationalPokedexNumber": 653,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:fire",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 94.0
+  "weight": 9.4
 }

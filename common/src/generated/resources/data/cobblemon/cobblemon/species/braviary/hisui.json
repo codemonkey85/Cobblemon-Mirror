@@ -13,8 +13,8 @@
       "ability": "cobblemon:sheerforce"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 179,
+  "baseFriendship": 50,
   "baseStats": {
     "cobblemon:attack": 83,
     "cobblemon:defence": 70,
@@ -40,33 +40,339 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 60,
+  "dynamaxBlocked": false,
+  "eggCycles": 20,
   "eggGroups": [
     "FLYING"
   ],
-  "evYield": {},
+  "evYield": {
+    "cobblemon:attack": 2
+  },
   "experienceGroup": "cobblemon:slow",
-  "height": 17.0,
+  "height": 1.7,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
-  "maleRatio": -1.0,
-  "moves": [],
+  "maleRatio": 1.0,
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 0,
+      "move": "cobblemon:esperwing"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:wingattack"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:superpower"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:skyattack"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:honeclaws"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:leer"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:peck"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 18,
+      "move": "cobblemon:tailwind"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 24,
+      "move": "cobblemon:scaryface"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 30,
+      "move": "cobblemon:aerialace"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 36,
+      "move": "cobblemon:slash"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 42,
+      "move": "cobblemon:whirlwind"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 48,
+      "move": "cobblemon:crushclaw"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 57,
+      "move": "cobblemon:airslash"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 64,
+      "move": "cobblemon:defog"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 72,
+      "move": "cobblemon:thrash"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 80,
+      "move": "cobblemon:hurricane"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:airslash"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:terablast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:expandingforce"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:tailwind"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychic"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:nightshade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bravebird"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:helpinghand"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sunnyday"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:fly"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:snarl"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bodyslam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:aerialace"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:gigaimpact"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:shadowball"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:agility"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:doubleedge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:acrobatics"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:featherdance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:icywind"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dazzlinggleam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hypervoice"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:storedpower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:futuresight"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bulkup"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychicterrain"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:uturn"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rocktomb"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:closecombat"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychicnoise"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:reversal"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hyperbeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:calmmind"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychup"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:zenheadbutt"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dualwingbeat"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:heatwave"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:swift"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:raindance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:takedown"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:confuseray"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psyshock"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:scaryface"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:vacuumwave"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hurricane"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:aircutter"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psybeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:shadowclaw"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rockslide"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:metalclaw"
+    }
+  ],
   "nationalPokedexNumber": 628,
   "preEvolution": "cobblemon:rufflet",
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
-  "secondaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:psychic",
+  "secondaryType": "cobblemon:flying",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 434.0
+  "weight": 43.4
 }

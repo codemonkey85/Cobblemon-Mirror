@@ -5,8 +5,8 @@
       "ability": "cobblemon:levitate"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 182,
+  "baseFriendship": 50,
   "baseStats": {
     "cobblemon:attack": 65,
     "cobblemon:defence": 107,
@@ -32,32 +32,51 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 45,
+  "dynamaxBlocked": false,
+  "eggCycles": 20,
   "eggGroups": [
     "AMORPHOUS"
   ],
-  "evYield": {},
-  "experienceGroup": "cobblemon:slow",
-  "height": 3.0,
+  "evYield": {
+    "cobblemon:special_attack": 1,
+    "cobblemon:speed": 1
+  },
+  "experienceGroup": "cobblemon:medium_fast",
+  "height": 0.3,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
   "maleRatio": -1.0,
-  "moves": [],
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:blizzard"
+    },
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:blizzard"
+    },
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:blizzard"
+    },
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:blizzard"
+    },
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:blizzard"
+    }
+  ],
   "nationalPokedexNumber": 479,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
-  "secondaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:electric",
+  "secondaryType": "cobblemon:ice",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 3.0
+  "weight": 0.3
 }

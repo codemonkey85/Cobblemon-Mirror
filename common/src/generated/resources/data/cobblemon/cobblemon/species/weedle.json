@@ -9,8 +9,8 @@
       "ability": "cobblemon:shielddust"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 39,
+  "baseFriendship": 70,
   "baseStats": {
     "cobblemon:attack": 35,
     "cobblemon:defence": 30,
@@ -36,32 +36,92 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 255,
+  "dynamaxBlocked": false,
+  "eggCycles": 15,
   "eggGroups": [
     "BUG"
   ],
-  "evYield": {},
-  "experienceGroup": "cobblemon:slow",
-  "height": 3.0,
+  "evYield": {
+    "cobblemon:speed": 1
+  },
+  "experienceGroup": "cobblemon:medium_fast",
+  "height": 0.3,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
-  "maleRatio": -1.0,
-  "moves": [],
+  "maleRatio": 0.5,
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:stringshot"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:poisonsting"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 9,
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:electroweb"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:electroweb"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:electroweb"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:poisonsting"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:poisonsting"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:stringshot"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:stringshot"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:stringshot"
+    }
+  ],
   "nationalPokedexNumber": 13,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
-  "secondaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:bug",
+  "secondaryType": "cobblemon:poison",
   "shoulderEffects": [],
-  "shoulderMountable": false,
-  "weight": 32.0
+  "shoulderMountable": true,
+  "weight": 3.2
 }

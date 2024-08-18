@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.pokemon
 
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.net.IntSize
+import com.cobblemon.mod.common.registry.CobblemonRegistries
 import com.cobblemon.mod.common.util.*
 import net.minecraft.network.RegistryFriendlyByteBuf
 
@@ -22,7 +23,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 data class RenderablePokemon(var species: Species, var aspects: Set<String>) {
 
     fun saveToBuffer(buffer: RegistryFriendlyByteBuf): RegistryFriendlyByteBuf {
-        buffer.writeIdentifier(species.resourceIdentifier)
+        buffer.writeResourceKey(species.resourceKey())
         buffer.writeSizedInt(IntSize.U_BYTE, aspects.size)
         aspects.forEach(buffer::writeString)
         return buffer
@@ -30,7 +31,9 @@ data class RenderablePokemon(var species: Species, var aspects: Set<String>) {
 
     companion object {
         fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): RenderablePokemon {
-            val species = PokemonSpecies.get(buffer.readIdentifier())!!
+            val species = buffer.registryAccess()
+                .registryOrThrow(CobblemonRegistries.SPECIES_KEY)
+                .getOrThrow(buffer.readResourceKey(CobblemonRegistries.SPECIES_KEY))
             val aspects = mutableSetOf<String>()
             repeat(times = buffer.readSizedInt(IntSize.U_BYTE)) {
                 aspects.add(buffer.readString())

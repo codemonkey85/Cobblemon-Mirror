@@ -155,7 +155,7 @@ class PartyOverlay : Gui(Minecraft.getInstance()) {
                 )
 
                 drawPosablePortrait(
-                    identifier = pokemon.species.resourceIdentifier,
+                    identifier = pokemon.species.resourceLocation(),
                     aspects = pokemon.aspects,
                     matrixStack = matrices,
                     partialTicks = 0F, // partialDeltaTicks, //Before you get any funny ideas about party animated pokemon, make sure they each get their own state instead of sharing.

@@ -64,15 +64,15 @@ object AdvancementHandler {
                 Cobblemon.playerData.saveSingle(playerData)
                 CobblemonCriteria.EVOLVE_POKEMON.trigger(
                     player, EvolvePokemonContext(
-                        event.pokemon.preEvolution!!.resourceIdentifier,
-                        event.pokemon.species.resourceIdentifier,
+                        event.pokemon.preEvolution!!.resourceLocation(),
+                        event.pokemon.species.resourceLocation(),
                         advancementData.totalEvolvedCount
                     )
                 )
                 CobblemonCriteria.COLLECT_ASPECT.trigger(player, advancementData.aspectsCollected)
             }
             else {
-                Cobblemon.LOGGER.warn("Evolution triggered by ${player.effectiveName().string} has missing evolution data for ${event.pokemon.species.resourceIdentifier}. Incomplete evolution data: ${event.evolution.id}, please report to the datapack creator!")
+                Cobblemon.LOGGER.warn("Evolution triggered by ${player.effectiveName().string} has missing evolution data for ${event.pokemon.species.resourceLocation()}. Incomplete evolution data: ${event.evolution.id}, please report to the datapack creator!")
             }
         }
     }

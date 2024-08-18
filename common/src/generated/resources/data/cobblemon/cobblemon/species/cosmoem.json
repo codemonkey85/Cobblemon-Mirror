@@ -5,8 +5,8 @@
       "ability": "cobblemon:sturdy"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 140,
+  "baseFriendship": 0,
   "baseStats": {
     "cobblemon:attack": 29,
     "cobblemon:defence": 131,
@@ -32,29 +32,44 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 45,
+  "dynamaxBlocked": false,
+  "eggCycles": 120,
   "eggGroups": [
     "UNDISCOVERED"
   ],
-  "evYield": {},
+  "evYield": {
+    "cobblemon:defence": 1,
+    "cobblemon:special_defence": 1
+  },
   "experienceGroup": "cobblemon:slow",
-  "height": 1.0,
+  "height": 0.1,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
   "maleRatio": -1.0,
-  "moves": [],
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 0,
+      "move": "cobblemon:cosmicpower"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:teleport"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:cosmicpower"
+    }
+  ],
   "nationalPokedexNumber": 790,
   "preEvolution": "cobblemon:cosmog",
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:psychic",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 9999.0
+  "weight": 999.9
 }

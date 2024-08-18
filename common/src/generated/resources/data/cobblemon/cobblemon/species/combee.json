@@ -9,8 +9,8 @@
       "ability": "cobblemon:honeygather"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 49,
+  "baseFriendship": 50,
   "baseStats": {
     "cobblemon:attack": 30,
     "cobblemon:defence": 42,
@@ -36,32 +36,194 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 120,
+  "dynamaxBlocked": false,
+  "eggCycles": 15,
   "eggGroups": [
     "BUG"
   ],
-  "evYield": {},
-  "experienceGroup": "cobblemon:slow",
-  "height": 3.0,
+  "evYield": {
+    "cobblemon:speed": 1
+  },
+  "experienceGroup": "cobblemon:medium_slow",
+  "height": 0.3,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
-  "maleRatio": -1.0,
-  "moves": [],
+  "maleRatio": 0.875,
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:strugglebug"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:sweetscent"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:gust"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 29,
+      "move": "cobblemon:bugbuzz"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bugbuzz"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:tailwind"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:stringshot"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:terablast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endeavor"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:skittersmack"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:tailwind"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:dualwingbeat"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:mudslap"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:aircutter"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:endeavor"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lunge"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:swift"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:tailwind"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:tailwind"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:aircutter"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bugbuzz"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:ominouswind"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:endeavor"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:gust"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:endeavor"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:endeavor"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:strugglebug"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:tailwind"
+    }
+  ],
   "nationalPokedexNumber": 415,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
-  "secondaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:bug",
+  "secondaryType": "cobblemon:flying",
   "shoulderEffects": [],
-  "shoulderMountable": false,
-  "weight": 55.0
+  "shoulderMountable": true,
+  "weight": 5.5
 }

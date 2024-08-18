@@ -102,8 +102,8 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
                 shoulderData = (if (pLeftShoulder) cache.lastKnownLeft else cache.lastKnownRight) ?: return
             }
 
-            val model = PokemonModelRepository.getPoser(shoulderData.species.resourceIdentifier, shoulderData.aspects)
-            context.put(RenderContext.SPECIES, shoulderData.species.resourceIdentifier)
+            val model = PokemonModelRepository.getPoser(shoulderData.species.resourceLocation(), shoulderData.aspects)
+            context.put(RenderContext.SPECIES, shoulderData.species.resourceLocation())
             context.put(RenderContext.ASPECTS, shoulderData.aspects)
             val scale = shoulderData.species.baseScale * shoulderData.scaleModifier
             val width = shoulderData.species.hitbox.width
@@ -138,7 +138,7 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
             state.updatePartialTicks(partialTicks)
             context.put(RenderContext.POSABLE_STATE, state)
             state.currentModel = model
-            val vertexConsumer = buffer.getBuffer(RenderType.entityCutout(PokemonModelRepository.getTexture(shoulderData.species.resourceIdentifier, shoulderData.aspects, state.animationSeconds)))
+            val vertexConsumer = buffer.getBuffer(RenderType.entityCutout(PokemonModelRepository.getTexture(shoulderData.species.resourceLocation(), shoulderData.aspects, state.animationSeconds)))
             val i = LivingEntityRenderer.getOverlayCoords(livingEntity, 0.0f)
 
             model.applyAnimations(
@@ -151,7 +151,7 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
                 ageInTicks = livingEntity.tickCount.toFloat()
             )
             model.render(context, matrixStack, vertexConsumer, packedLight, i, -0x1)
-            model.withLayerContext(buffer, state, PokemonModelRepository.getLayers(shoulderData.species.resourceIdentifier, shoulderData.aspects)) {
+            model.withLayerContext(buffer, state, PokemonModelRepository.getLayers(shoulderData.species.resourceLocation(), shoulderData.aspects)) {
                 model.render(context, matrixStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
             }
             model.setDefault()

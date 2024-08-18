@@ -41,11 +41,11 @@ class TradePokemonCriterion(
         val heldItem1 = context.traded.heldItem().item.builtInRegistryHolder().key().location()
         val heldItem2 = context.received.heldItem().item.builtInRegistryHolder().key().location()
 
-        if (traded != "any" && context.traded.species.resourceIdentifier != traded.asIdentifierDefaultingNamespace()) {
+        if (traded != "any" && context.traded.species.resourceLocation() != traded.asIdentifierDefaultingNamespace()) {
             return false
         }
 
-        if (received != "any" && context.received.species.resourceIdentifier != received.asIdentifierDefaultingNamespace()) {
+        if (received != "any" && context.received.species.resourceLocation() != received.asIdentifierDefaultingNamespace()) {
             return false
         }
 

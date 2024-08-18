@@ -24,6 +24,7 @@ import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.item.interactive.PokerodItem
 import com.cobblemon.mod.common.pokemon.Gender
+import com.cobblemon.mod.common.pokemon.abilities.HiddenAbility
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
@@ -140,27 +141,10 @@ class FishingSpawnCause(
     }
 
     private fun alterHAAttempt(pokemonEntity: PokemonEntity) {
-        val species = pokemonEntity.pokemon.species.let { PokemonSpecies.get(it.name) } ?: return
-        val ability = species.abilities.mapping[Priority.LOW]?.first()?.template ?: return
-        pokemonEntity.pokemon.ability = ability.create()
-
-        // Old code from Licious that might be helpful if the above proves to not work
-
-        /*
-        // This will iterate from highest to lowest priority
-        pokemon.form.abilities.mapping.values.forEach { abilities ->
-            abilities.filterIsInstance<HiddenAbility>()
-                    .randomOrNull ()
-                    ?.let { ability ->
-                        // No need to force, this is legal
-                        pokemon.ability = ability.template.create(false)
-                        return true
-                    }
-        }
-        // There was never a hidden ability :( possible but not by default
-        return
-
-         */
+        pokemonEntity.pokemon.species.abilities.filterIsInstance<HiddenAbility>()
+            .randomOrNull()?.let { ability ->
+                pokemonEntity.pokemon.ability = ability.template.create()
+            }
     }
 
     private fun alterFriendshipAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {

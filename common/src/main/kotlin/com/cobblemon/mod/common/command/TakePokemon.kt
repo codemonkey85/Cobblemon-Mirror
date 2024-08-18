@@ -19,6 +19,7 @@ import com.mojang.brigadier.context.CommandContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 
 object TakePokemon {
@@ -60,12 +61,12 @@ object TakePokemon {
                     val player = context.source.player ?: return Command.SINGLE_SUCCESS
                     val toParty = player.party()
                     toParty.add(pokemon)
-                    context.source.sendSuccess({ "You took ${pokemon.species.name}".text() }, true)
+                    context.source.sendSuccess({ Component.literal("You took ").append(pokemon.species.translatedName) }, true)
                     return Command.SINGLE_SUCCESS
                 }
             }
 
-            context.source.sendSuccess({ "${pokemon.species.name} was removed.".text() }, true)
+            context.source.sendSuccess({ pokemon.species.translatedName.append(" was removed.") }, true)
             return Command.SINGLE_SUCCESS
         } catch (e: Exception) {
             e.printStackTrace()

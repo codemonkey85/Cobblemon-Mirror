@@ -99,7 +99,7 @@ class PokemonServerDelegate : PokemonSideDelegate {
     fun getBattle() = entity.battleId?.let(BattleRegistry::getBattle)
 
     fun updateTrackedValues() {
-        val trackedSpecies = mock?.species ?: entity.pokemon.species.resourceIdentifier.toString()
+        val trackedSpecies = mock?.species ?: entity.pokemon.species.resourceLocation().toString()
         val trackedNickname =  mock?.nickname ?: entity.pokemon.nickname ?: Component.empty()
         val trackedAspects = mock?.aspects ?: entity.pokemon.aspects
 
@@ -247,9 +247,8 @@ class PokemonServerDelegate : PokemonSideDelegate {
         if (entity.deathTime == 60) {
             if (entity.owner == null) {
                 entity.level().broadcastEntityEvent(entity, 60.toByte()) // Sends smoke effect
-                if(entity.level().gameRules.getBoolean(CobblemonGameRules.DO_POKEMON_LOOT)) {
-                    (entity.drops ?: entity.pokemon.species.drops).drop(entity, entity.level() as ServerLevel, entity.position(), entity.killer)
-                }
+                // TODO: Trigger loot table here, find way to suppress vanilla point of drop.
+                // //(entity.drops ?: entity.pokemon.species.drops).drop(entity, entity.level() as ServerLevel, entity.position(), entity.killer)
             }
 
             entity.remove(Entity.RemovalReason.KILLED)

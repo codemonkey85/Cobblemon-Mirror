@@ -93,7 +93,7 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<CompoundTag> {
             ?: throw IllegalStateException("Failed to read a species with pokedex identifier ${nbt.getInt("ndex")}")
         val variant = nbt.getString("Variant")
         if (variant.isNotEmpty()) {
-            val id = ResourceLocation.fromNamespaceAndPath(species.resourceIdentifier.namespace, "${species.resourceIdentifier.path}/${variant.lowercase()}")
+            val id = ResourceLocation.fromNamespaceAndPath(species.resourceLocation().namespace, "${species.resourceLocation().path}/${variant.lowercase()}")
             species = PokemonSpecies.get(id) ?: throw IllegalStateException("Unable to resolve the target species with variant $variant tried to generate ID $id")
         }
         result.species = species

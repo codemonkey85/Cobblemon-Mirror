@@ -9,8 +9,8 @@
       "ability": "cobblemon:shadowtag"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 142,
+  "baseFriendship": 50,
   "baseStats": {
     "cobblemon:attack": 33,
     "cobblemon:defence": 58,
@@ -36,29 +36,165 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 45,
+  "dynamaxBlocked": false,
+  "eggCycles": 20,
   "eggGroups": [
     "AMORPHOUS"
   ],
-  "evYield": {},
-  "experienceGroup": "cobblemon:slow",
-  "height": 13.0,
+  "evYield": {
+    "cobblemon:hp": 2
+  },
+  "experienceGroup": "cobblemon:medium_fast",
+  "height": 1.3,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
-  "maleRatio": -1.0,
-  "moves": [],
+  "maleRatio": 0.5,
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 0,
+      "move": "cobblemon:counter"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 0,
+      "move": "cobblemon:destinybond"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 0,
+      "move": "cobblemon:mirrorcoat"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 0,
+      "move": "cobblemon:safeguard"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:amnesia"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:charm"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:encore"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:safeguard"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:safeguard"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:counter"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:encore"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:counter"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:counter"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:destinybond"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:safeguard"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:destinybond"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:charm"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:encore"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:mirrorcoat"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:safeguard"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:counter"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:destinybond"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:counter"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:mirrorcoat"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:charm"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:safeguard"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:safeguard"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:mirrorcoat"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:mirrorcoat"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:amnesia"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:mirrorcoat"
+    }
+  ],
   "nationalPokedexNumber": 202,
   "preEvolution": "cobblemon:wynaut",
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:psychic",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 285.0
+  "weight": 28.5
 }

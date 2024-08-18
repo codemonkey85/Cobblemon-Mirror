@@ -25,7 +25,7 @@ fun interface PokemonPropertyExtractor {
         val ALL = mutableListOf<PokemonPropertyExtractor>()
 
         @JvmField
-        val SPECIES = add { pokemon, properties -> properties.species = pokemon.species.resourceIdentifier.toString() }
+        val SPECIES = add { pokemon, properties -> properties.species = pokemon.species.resourceLocation().simplify() }
         @JvmField
         val SHINY = add { pokemon, properties -> properties.shiny = pokemon.shiny }
         @JvmField

@@ -67,7 +67,7 @@ object PokemonSpecies : CobblemonRegistry<Species>() {
             if (species.implemented) {
                 implemented += species
             }
-            this.speciesByDex.put(species.resourceIdentifier.namespace, species.nationalPokedexNumber, species)
+            this.speciesByDex.put(species.resourceLocation().namespace, species.nationalPokedexNumber, species)
         }
     }
 
@@ -133,13 +133,6 @@ object PokemonSpecies : CobblemonRegistry<Species>() {
         val requiredItem = form?.requiredItem
         val requiredItems = form?.requiredItems
          */
-    }
-
-    private fun createShowdownName(species: Species): String {
-        if (species.resourceIdentifier.namespace == Cobblemon.MODID) {
-            return species.name
-        }
-        return "${species.resourceIdentifier.namespace}:${species.name}"
     }
 
 }

@@ -51,7 +51,7 @@ class AddEvolutionPacket(pokemon: () -> Pokemon, value: EvolutionDisplay) : Sing
 
         internal fun EvolutionDisplay.encode(buffer: RegistryFriendlyByteBuf) {
             buffer.writeString(this.id)
-            buffer.writeIdentifier(this.species.resourceIdentifier)
+            buffer.writeIdentifier(this.species.resourceLocation())
             buffer.writeCollection(this.aspects) { pb, value -> pb.writeString(value) }
         }
 

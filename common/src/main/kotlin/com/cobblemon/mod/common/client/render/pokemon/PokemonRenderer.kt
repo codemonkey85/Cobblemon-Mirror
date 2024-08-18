@@ -82,7 +82,7 @@ context: EntityRendererProvider.Context
     }
 
     override fun getTextureLocation(entity: PokemonEntity): ResourceLocation {
-        return PokemonModelRepository.getTexture(entity.pokemon.species.resourceIdentifier, entity.aspects, (entity.delegate as PokemonClientDelegate).animationSeconds)
+        return PokemonModelRepository.getTexture(entity.pokemon.species.resourceLocation(), entity.aspects, (entity.delegate as PokemonClientDelegate).animationSeconds)
     }
 
     override fun render(
@@ -94,7 +94,7 @@ context: EntityRendererProvider.Context
         packedLight: Int
     ) {
         shadowRadius = min((entity.boundingBox.maxX - entity.boundingBox.minX), (entity.boundingBox.maxZ) - (entity.boundingBox.minZ)).toFloat() / 1.5F * (entity.delegate as PokemonClientDelegate).entityScaleModifier
-        model.posableModel = PokemonModelRepository.getPoser(entity.pokemon.species.resourceIdentifier, entity.aspects)
+        model.posableModel = PokemonModelRepository.getPoser(entity.pokemon.species.resourceLocation(), entity.aspects)
         model.posableModel.context = model.context
         model.setupEntityTypeContext(entity)
         val clientDelegate = entity.delegate as PokemonClientDelegate
@@ -114,7 +114,7 @@ context: EntityRendererProvider.Context
             )
         }
 
-        modelNow.setLayerContext(buffer, clientDelegate, PokemonModelRepository.getLayers(entity.pokemon.species.resourceIdentifier, entity.aspects))
+        modelNow.setLayerContext(buffer, clientDelegate, PokemonModelRepository.getLayers(entity.pokemon.species.resourceLocation(), entity.aspects))
 
 
         // TODO: Need a way to get a shader from a render layer, and need a way to get the renderlayer for the pokemon's main model

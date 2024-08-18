@@ -1,0 +1,72 @@
+{
+  "abilities": [
+    {
+      "type": "cobblemon:common",
+      "ability": "cobblemon:prismarmor"
+    }
+  ],
+  "baseExperienceYield": 340,
+  "baseFriendship": 0,
+  "baseStats": {
+    "cobblemon:attack": 157,
+    "cobblemon:defence": 127,
+    "cobblemon:hp": 97,
+    "cobblemon:special_attack": 113,
+    "cobblemon:special_defence": 109,
+    "cobblemon:speed": 77
+  },
+  "behaviour": {
+    "idle": {
+      "pointsAtSpawn": false
+    },
+    "moving": {
+      "fly": {
+        "flySpeedHorizontal": "0.3"
+      },
+      "swim": {
+        "swimSpeed": "0.3"
+      },
+      "walk": {
+        "canWalk": false,
+        "walkSpeed": "0.35"
+      }
+    }
+  },
+  "catchRate": 255,
+  "dynamaxBlocked": false,
+  "eggCycles": 120,
+  "eggGroups": [
+    "UNDISCOVERED"
+  ],
+  "evYield": {
+    "cobblemon:attack": 3
+  },
+  "experienceGroup": "cobblemon:slow",
+  "height": 3.8,
+  "hitbox": {
+    "fixed": true,
+    "height": 1.0,
+    "width": 1.0
+  },
+  "maleRatio": -1.0,
+  "moves": [
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:sunsteelstrike"
+    },
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:sunsteelstrike"
+    },
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:sunsteelstrike"
+    }
+  ],
+  "nationalPokedexNumber": 800,
+  "primaryType": "cobblemon:psychic",
+  "secondaryType": "cobblemon:steel",
+  "shoulderEffects": [],
+  "shoulderMountable": false,
+  "weight": 460.0
+}

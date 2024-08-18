@@ -5,8 +5,8 @@
       "ability": "cobblemon:intrepidsword"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 360,
+  "baseFriendship": 0,
   "baseStats": {
     "cobblemon:attack": 150,
     "cobblemon:defence": 115,
@@ -32,32 +32,37 @@
       }
     }
   },
-  "catchRate": 1,
+  "catchRate": 10,
   "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "eggCycles": 120,
   "eggGroups": [
     "UNDISCOVERED"
   ],
-  "evYield": {},
+  "evYield": {
+    "cobblemon:speed": 3
+  },
   "experienceGroup": "cobblemon:slow",
-  "height": 28.0,
+  "height": 2.8,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
   "maleRatio": -1.0,
-  "moves": [],
+  "moves": [
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:behemothblade"
+    },
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:behemothblade"
+    }
+  ],
   "nationalPokedexNumber": 888,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
-  "secondaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:fairy",
+  "secondaryType": "cobblemon:steel",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 3550.0
+  "weight": 355.0
 }

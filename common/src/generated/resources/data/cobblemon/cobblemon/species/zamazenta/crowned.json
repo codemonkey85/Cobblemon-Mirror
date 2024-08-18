@@ -5,8 +5,8 @@
       "ability": "cobblemon:dauntlessshield"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 360,
+  "baseFriendship": 0,
   "baseStats": {
     "cobblemon:attack": 120,
     "cobblemon:defence": 140,
@@ -32,32 +32,37 @@
       }
     }
   },
-  "catchRate": 1,
+  "catchRate": 10,
   "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "eggCycles": 120,
   "eggGroups": [
     "UNDISCOVERED"
   ],
-  "evYield": {},
+  "evYield": {
+    "cobblemon:speed": 3
+  },
   "experienceGroup": "cobblemon:slow",
-  "height": 29.0,
+  "height": 2.9,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
   "maleRatio": -1.0,
-  "moves": [],
+  "moves": [
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:behemothbash"
+    },
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:behemothbash"
+    }
+  ],
   "nationalPokedexNumber": 889,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
-  "secondaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:fighting",
+  "secondaryType": "cobblemon:steel",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 7850.0
+  "weight": 785.0
 }

@@ -13,8 +13,8 @@
       "ability": "cobblemon:compoundeyes"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 36,
+  "baseFriendship": 50,
   "baseStats": {
     "cobblemon:attack": 20,
     "cobblemon:defence": 20,
@@ -40,28 +40,49 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 255,
+  "dynamaxBlocked": false,
+  "eggCycles": 15,
   "eggGroups": [
     "BUG"
   ],
-  "evYield": {},
-  "experienceGroup": "cobblemon:slow",
-  "height": 4.0,
+  "evYield": {
+    "cobblemon:special_defence": 1
+  },
+  "experienceGroup": "cobblemon:medium_fast",
+  "height": 0.4,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
-  "maleRatio": -1.0,
-  "moves": [],
+  "maleRatio": 0.5,
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:strugglebug"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:infestation"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:supersonic"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:recover"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:stickyweb"
+    }
+  ],
   "nationalPokedexNumber": 824,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:bug",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 80.0
+  "weight": 8.0
 }

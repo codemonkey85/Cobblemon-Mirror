@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
+import com.cobblemon.mod.common.util.simplify
 import com.mojang.brigadier.StringReader
 import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.context.CommandContext
@@ -46,7 +47,7 @@ class PokemonArgumentType : ArgumentType<Species> {
         builder: SuggestionsBuilder
     ): CompletableFuture<Suggestions> {
         // Just a neat shortcut for our own Pokémon since that will be the most common setup no need to overcomplicate
-        return SharedSuggestionProvider.suggest(PokemonSpecies.map { if (it.resourceIdentifier.namespace == Cobblemon.MODID) it.resourceIdentifier.path else it.resourceIdentifier.toString() }, builder)
+        return SharedSuggestionProvider.suggest(PokemonSpecies.map { it.resourceLocation().simplify() }, builder)
     }
 
     override fun getExamples() = EXAMPLES

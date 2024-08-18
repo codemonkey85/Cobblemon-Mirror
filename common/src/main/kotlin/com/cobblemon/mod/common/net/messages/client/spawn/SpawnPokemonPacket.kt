@@ -93,7 +93,7 @@ class SpawnPokemonPacket(
         entity.beamMode = this.beamMode.toInt()
         entity.battleId = this.battleId
         entity.entityData.set(PokemonEntity.LABEL_LEVEL, labelLevel)
-        entity.entityData.set(PokemonEntity.SPECIES, entity.pokemon.species.resourceIdentifier.toString())
+        entity.entityData.set(PokemonEntity.SPECIES, entity.pokemon.species.resourceLocation().toString())
         entity.entityData.set(PokemonEntity.ASPECTS, aspects)
         entity.entityData.set(PokemonEntity.POSE_TYPE, poseType)
         entity.entityData.set(PokemonEntity.UNBATTLEABLE, unbattlable)

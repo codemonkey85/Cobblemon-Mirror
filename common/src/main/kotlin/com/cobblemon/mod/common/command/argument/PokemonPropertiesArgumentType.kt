@@ -14,6 +14,7 @@ import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
 import com.cobblemon.mod.common.pokemon.properties.BuiltinPropertiesCompletionProvider
 import com.cobblemon.mod.common.pokemon.properties.DynamicPropertiesCompletionProvider
+import com.cobblemon.mod.common.util.simplify
 import com.mojang.brigadier.StringReader
 import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.context.CommandContext
@@ -71,7 +72,7 @@ class PokemonPropertiesArgumentType: ArgumentType<PokemonProperties> {
 
     private fun suggestSpeciesAndPropertyKeys(builder: SuggestionsBuilder) = SharedSuggestionProvider.suggest(this.collectSpeciesIdentifiers() + DynamicPropertiesCompletionProvider.keys(), builder)
 
-    private fun collectSpeciesIdentifiers() = PokemonSpecies.map { if (it.resourceIdentifier.namespace == Cobblemon.MODID) it.resourceIdentifier.path else it.resourceIdentifier.toString() }
+    private fun collectSpeciesIdentifiers() = PokemonSpecies.map { it.resourceLocation().simplify() }
 
     override fun getExamples() = EXAMPLES
 }

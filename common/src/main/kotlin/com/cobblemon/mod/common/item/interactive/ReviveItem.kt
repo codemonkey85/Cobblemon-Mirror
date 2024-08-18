@@ -74,7 +74,7 @@ class ReviveItem(val max: Boolean): CobblemonItem(Properties()) {
                             if (!player.isCreative) {
                                 stack.shrink(1)
                             }
-                            CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(bp.entity?.pokemon?.species!!.resourceIdentifier, BuiltInRegistries.ITEM.getKey(stack.item)))
+                            CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(bp.entity?.pokemon?.species!!.resourceLocation(), BuiltInRegistries.ITEM.getKey(stack.item)))
                         }
                     }
                 }
@@ -90,7 +90,7 @@ class ReviveItem(val max: Boolean): CobblemonItem(Properties()) {
                         if (!player.isCreative) {
                             stack.shrink(1)
                         }
-                        CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(pk.species.resourceIdentifier, BuiltInRegistries.ITEM.getKey(stack.item)))
+                        CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(pk.species.resourceLocation(), BuiltInRegistries.ITEM.getKey(stack.item)))
                     }
                 }
             }

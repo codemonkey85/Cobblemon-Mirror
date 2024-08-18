@@ -93,11 +93,11 @@ class PlayerAdvancementData {
     }
 
     fun updateTotalDefeatedCount(pokemon: Pokemon) {
-        val count = totalDefeatedCounts[pokemon.species.resourceIdentifier] ?: 0
+        val count = totalDefeatedCounts[pokemon.species.resourceLocation()] ?: 0
         if (count == 0) {
-            totalDefeatedCounts[pokemon.species.resourceIdentifier] = 1
+            totalDefeatedCounts[pokemon.species.resourceLocation()] = 1
         } else {
-            totalDefeatedCounts.replace(pokemon.species.resourceIdentifier, count + 1)
+            totalDefeatedCounts.replace(pokemon.species.resourceLocation(), count + 1)
         }
     }
 
@@ -108,11 +108,11 @@ class PlayerAdvancementData {
             .filterIsInstance<AspectCriterion>()
 
         val trackedAspects = aspectConditions
-            .filter { it.pokemon == pokemon.species.resourceIdentifier }
+            .filter { it.pokemon == pokemon.species.resourceLocation() }
             .flatMap { it.aspects }
 
         if (trackedAspects.isNotEmpty()) {
-            val collectedAspects = aspectsCollected.getOrPut(pokemon.species.resourceIdentifier) { mutableSetOf() }
+            val collectedAspects = aspectsCollected.getOrPut(pokemon.species.resourceLocation()) { mutableSetOf() }
             pokemon.aspects.filter(trackedAspects::contains).forEach(collectedAspects::add)
         }
     }

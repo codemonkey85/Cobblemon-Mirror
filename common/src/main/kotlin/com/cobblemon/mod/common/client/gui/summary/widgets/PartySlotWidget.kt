@@ -153,7 +153,7 @@ class PartySlotWidget(
             matrices.translate(x + (PORTRAIT_DIAMETER / 2.0), y - 3.0, 0.0)
             matrices.scale(2.5F, 2.5F, 1F)
             drawProfilePokemon(
-                species = slotPokemon.species.resourceIdentifier,
+                species = slotPokemon.species.resourceLocation(),
                 aspects = slotPokemon.aspects.toSet(),
                 matrixStack = matrices,
                 rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),

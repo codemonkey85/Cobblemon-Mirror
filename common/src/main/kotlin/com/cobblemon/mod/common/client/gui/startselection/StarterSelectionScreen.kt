@@ -257,7 +257,7 @@ class StarterSelectionScreen(private val categories: List<RenderableStarterCateg
 
         // TODO use all pokedex lines across multiple clickable pages in this screen
         MultiLineLabelK.create(
-            component = currentPokemon.species.pokedex.first().asTranslated(),
+            component = currentPokemon.species.pokedexEntry,
             width = 127,
             maxLines = 4
         ).renderLeftAligned(

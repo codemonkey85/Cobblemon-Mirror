@@ -9,8 +9,8 @@
       "ability": "cobblemon:limber"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 101,
+  "baseFriendship": 50,
   "baseStats": {
     "cobblemon:attack": 48,
     "cobblemon:defence": 48,
@@ -36,28 +36,45 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 35,
+  "dynamaxBlocked": false,
+  "eggCycles": 20,
   "eggGroups": [
     "DITTO"
   ],
-  "evYield": {},
-  "experienceGroup": "cobblemon:slow",
-  "height": 3.0,
+  "evYield": {
+    "cobblemon:hp": 1
+  },
+  "experienceGroup": "cobblemon:medium_fast",
+  "height": 0.3,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
   "maleRatio": -1.0,
-  "moves": [],
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:transform"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:transform"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:transform"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:transform"
+    }
+  ],
   "nationalPokedexNumber": 132,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:normal",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 40.0
+  "weight": 4.0
 }

@@ -61,11 +61,11 @@ object CatchRateModifiers {
             && playerPokemon.mapNotNull { it.battlePokemon?.originalPokemon }
                 .any {
                     it.gender != Gender.GENDERLESS &&
-                            it.species.name.equals(pokemon.species.name, true) &&
+                            it.species.resourceLocation() == pokemon.species.resourceLocation() &&
                             it.gender != pokemon.gender
                 }
         ) {
-            if (playerPokemon.any { it.battlePokemon?.originalPokemon?.species?.resourceIdentifier == pokemon.species.resourceIdentifier }) 8F else 2.5F
+            if (playerPokemon.any { it.battlePokemon?.originalPokemon?.species?.resourceLocation() == pokemon.species.resourceLocation() }) 8F else 2.5F
         }
         else {
             1F

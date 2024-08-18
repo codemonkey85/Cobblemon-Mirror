@@ -9,8 +9,8 @@
       "ability": "cobblemon:swiftswim"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 40,
+  "baseFriendship": 50,
   "baseStats": {
     "cobblemon:attack": 10,
     "cobblemon:defence": 55,
@@ -36,29 +36,152 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 255,
+  "dynamaxBlocked": false,
+  "eggCycles": 5,
   "eggGroups": [
     "WATER_2",
     "DRAGON"
   ],
-  "evYield": {},
+  "evYield": {
+    "cobblemon:speed": 1
+  },
   "experienceGroup": "cobblemon:slow",
-  "height": 9.0,
+  "height": 0.9,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
-  "maleRatio": -1.0,
-  "moves": [],
+  "maleRatio": 0.5,
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 15,
+      "move": "cobblemon:tackle"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 25,
+      "move": "cobblemon:flail"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:happyhour"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:celebrate"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:tackle"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:flail"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:tackle"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:flail"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:hydropump"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hydropump"
+    }
+  ],
   "nationalPokedexNumber": 129,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:water",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 100.0
+  "weight": 10.0
 }

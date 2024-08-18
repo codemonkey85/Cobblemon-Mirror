@@ -621,7 +621,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
             this.focused = null
         }
         if (Cobblemon.config.enableDebugKeys) {
-            val model = PokemonModelRepository.getPoser(selectedPokemon.species.resourceIdentifier, selectedPokemon.aspects)
+            val model = PokemonModelRepository.getPoser(selectedPokemon.species.resourceLocation(), selectedPokemon.aspects)
             if (keyCode == InputConstants.KEY_UP) {
                 model.profileTranslation = model.profileTranslation.add(0.0, -0.01, 0.0)
             }
@@ -650,7 +650,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
 
     override fun onClose() {
         if (Cobblemon.config.enableDebugKeys) {
-            val model = PokemonModelRepository.getPoser(selectedPokemon.species.resourceIdentifier, selectedPokemon.aspects)
+            val model = PokemonModelRepository.getPoser(selectedPokemon.species.resourceLocation(), selectedPokemon.aspects)
             Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Profile Translation: ${model.profileTranslation}"))
             Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Profile Scale: ${model.profileScale}"))
             Cobblemon.LOGGER.info("override var profileTranslation = Vec3d(${model.profileTranslation.x}, ${model.profileTranslation.y}, ${model.profileTranslation.z})")

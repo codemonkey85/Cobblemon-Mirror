@@ -131,7 +131,7 @@ interface Evolution : EvolutionLike {
         shedPokemon.caughtBall = ((pokeballStack?.item ?: CobblemonItems.POKE_BALL) as PokeBallItem).pokeBall
         pokemon.storeCoordinates.get()?.store?.add(shedPokemon)
         pokemon.preEvolution?.let { preEvolution ->
-            CobblemonCriteria.EVOLVE_POKEMON.trigger(owner, EvolvePokemonContext(preEvolution.resourceLocation(), shedPokemon.species.resourceIdentifier, playerData.get(owner).advancementData.totalEvolvedCount))
+            CobblemonCriteria.EVOLVE_POKEMON.trigger(owner, EvolvePokemonContext(preEvolution.resourceLocation(), shedPokemon.species.resourceLocation(), playerData.get(owner).advancementData.totalEvolvedCount))
         }
         // Consume one of the balls
         pokeballStack?.shrink(1)

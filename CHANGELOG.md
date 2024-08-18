@@ -22,7 +22,7 @@
 - Added ``CobblemonRegistries`` for all the new proper registry implementations, these will be done in waves and introduced gradually.
 - Added ``CobblemonElementalTypeTags``, contains all our default tags for the ``cobblemon:elemental_type`` registry.
 - The following built-in registries have been added: ``cobblemon:ability``, ``cobblemon:move``.
-- The following dynamic registries have been added and you can use datagenerators on them: ``cobblemon:elemental_type``.
+- The following dynamic registries have been added and you can use datagenerators on them: ``cobblemon:elemental_type``. ``cobblemon:species``.
 - Added ``HiddenPowerCalculator``, this can be used or swapped by ``Cobblemon.hiddenPowerCalculator``, the default implementation is ``OfficialHiddenPowerCalculator``.
 
 ### Data Pack & Resource Pack Creators
@@ -32,6 +32,7 @@
 - You can now add tags for Pokemon abilities. The registry key is ``cobblemon:move``. Example datapack path: ``my_pack/tags/cobblemon/move/my_tag.json``.
 - Any usage of elemental types in data files such as species need to be updated to use the Cobblemon namespace instead, for example ``fire`` became ``cobblemon:fire``.
 - Any usage of abilities in data files such as species need to be updated to use the Cobblemon namespace instead, for example ``blaze`` became ``cobblemon:blaze``.
+- Species ``weight`` and ``height`` now use kilograms and meters as the unit respectively.
 
 ## [1.5.3](#1-5-3)
 ### Fixes

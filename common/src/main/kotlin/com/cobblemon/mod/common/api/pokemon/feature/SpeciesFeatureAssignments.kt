@@ -60,5 +60,5 @@ object SpeciesFeatureAssignments : JsonDataRegistry<SpeciesFeatureAssignment> {
         this.assignments.putAll(data)
     }
 
-    fun getFeatures(species: Species) = assignments[species.resourceIdentifier] ?: emptySet()
+    fun getFeatures(species: Species) = assignments[species.resourceLocation()] ?: emptySet()
 }

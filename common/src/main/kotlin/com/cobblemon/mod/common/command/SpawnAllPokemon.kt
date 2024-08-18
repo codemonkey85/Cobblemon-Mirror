@@ -44,7 +44,7 @@ object SpawnAllPokemon {
 
         for (species in PokemonSpecies.implemented) {
             if (species.nationalPokedexNumber in range) {
-                LOGGER.debug(species.name)
+                LOGGER.debug(species.resourceLocation().toString())
                 species.create().sendOut(player.level() as ServerLevel, player.position(), null)
             }
         }

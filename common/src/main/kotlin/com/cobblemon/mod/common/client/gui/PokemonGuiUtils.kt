@@ -33,7 +33,7 @@ fun drawProfilePokemon(
     partialTicks: Float,
     scale: Float = 20F
 ) = drawProfilePokemon(
-    species = renderablePokemon.species.resourceIdentifier,
+    species = renderablePokemon.species.resourceLocation(),
     aspects = renderablePokemon.aspects,
     matrixStack = matrixStack,
     rotation = rotation,

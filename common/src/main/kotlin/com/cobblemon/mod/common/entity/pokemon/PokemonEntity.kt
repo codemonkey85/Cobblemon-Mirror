@@ -10,7 +10,6 @@ package com.cobblemon.mod.common.entity.pokemon
 
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
-import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.*
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.abilities.Abilities
@@ -85,6 +84,7 @@ import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import com.mojang.serialization.Codec
 import net.minecraft.nbt.NbtOps
+import net.minecraft.resources.ResourceKey
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import net.minecraft.resources.ResourceLocation
@@ -116,6 +116,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.pathfinder.PathType
+import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 
@@ -565,7 +566,7 @@ open class PokemonEntity(
         )
 
         // init SynchedEntityData
-        entityData.set(SPECIES, effects.mockEffect?.mock?.species ?: pokemon.species.resourceIdentifier.toString())
+        entityData.set(SPECIES, effects.mockEffect?.mock?.species ?: pokemon.species.resourceLocation().toString())
         entityData.set(NICKNAME, pokemon.nickname ?: Component.empty())
         entityData.set(LABEL_LEVEL, pokemon.level)
         entityData.set(POSE_TYPE, PoseType.valueOf(nbt.getString(DataKeys.POKEMON_POSE_TYPE)))
@@ -902,7 +903,7 @@ open class PokemonEntity(
     override fun playAmbientSound() {
         if (!this.isSilent || this.busyLocks.filterIsInstance<EmptyPokeBallEntity>().isEmpty()) {
             val sound = ResourceLocation.fromNamespaceAndPath(
-                this.pokemon.species.resourceIdentifier.namespace,
+                this.pokemon.species.resourceLocation().namespace,
                 "pokemon.${this.pokemon.showdownId()}.ambient"
             )
             // ToDo distance to travel is currently hardcoded to default we can maybe find a way to work around this down the line
@@ -1070,7 +1071,7 @@ open class PokemonEntity(
             else -> return true
         }
         nbt.putUUID(DataKeys.SHOULDER_UUID, this.pokemon.uuid)
-        nbt.putString(DataKeys.SHOULDER_SPECIES, this.pokemon.species.resourceIdentifier.toString())
+        nbt.putString(DataKeys.SHOULDER_SPECIES, this.pokemon.species.resourceLocation().toString())
         nbt.put(DataKeys.SHOULDER_ASPECTS, this.pokemon.aspects.map(StringTag::valueOf).toNbtList())
         nbt.putFloat(DataKeys.SHOULDER_SCALE_MODIFIER, this.pokemon.scaleModifier)
         return true
@@ -1353,6 +1354,15 @@ open class PokemonEntity(
 
     /** Retrieves the battle theme associated with this Pokemon's Species/Form, or the default PVW theme if not found. */
     fun getBattleTheme() = BuiltInRegistries.SOUND_EVENT.get(this.pokemon.species.battleTheme) ?: CobblemonSounds.PVW_BATTLE
+
+    override fun getDefaultLootTable(): ResourceKey<LootTable> {
+        return ResourceKey.create(
+            Registries.LOOT_TABLE,
+            this.pokemon.species.resourceLocation().withPrefix("entities/")
+        )
+    }
+
+    override fun shouldDropLoot(): Boolean = this.level().gameRules.getBoolean(CobblemonGameRules.DO_POKEMON_LOOT)
 
     /**
      * A utility method to instance a [Pokemon] aware if the [world] is client sided or not.

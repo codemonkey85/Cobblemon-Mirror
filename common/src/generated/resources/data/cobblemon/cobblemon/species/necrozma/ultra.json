@@ -5,8 +5,8 @@
       "ability": "cobblemon:neuroforce"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 339,
+  "baseFriendship": 0,
   "baseStats": {
     "cobblemon:attack": 167,
     "cobblemon:defence": 97,
@@ -32,32 +32,55 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 255,
+  "dynamaxBlocked": false,
+  "eggCycles": 120,
   "eggGroups": [
     "UNDISCOVERED"
   ],
-  "evYield": {},
+  "evYield": {
+    "cobblemon:attack": 1,
+    "cobblemon:special_attack": 1,
+    "cobblemon:speed": 1
+  },
   "experienceGroup": "cobblemon:slow",
-  "height": 75.0,
+  "height": 7.5,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
   "maleRatio": -1.0,
-  "moves": [],
+  "moves": [
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:moongeistbeam"
+    },
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:moongeistbeam"
+    },
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:sunsteelstrike"
+    },
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:sunsteelstrike"
+    },
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:sunsteelstrike"
+    },
+    {
+      "type": "cobblemon:form_change",
+      "move": "cobblemon:moongeistbeam"
+    }
+  ],
   "nationalPokedexNumber": 800,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
-  "secondaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:psychic",
+  "secondaryType": "cobblemon:dragon",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 2300.0
+  "weight": 230.0
 }

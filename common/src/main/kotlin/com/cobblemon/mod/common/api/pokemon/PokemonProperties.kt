@@ -192,7 +192,7 @@ open class PokemonProperties {
                 } else {
                     try {
                         val species = PokemonSpecies.get(value.asIdentifierDefaultingNamespace()) ?: return null
-                        return if (species.resourceIdentifier.namespace == Cobblemon.MODID) species.resourceIdentifier.path else species.resourceIdentifier.toString()
+                        species.resourceLocation().simplify()
                     } catch (e: ResourceLocationException) {
                         return null
                     }
@@ -207,7 +207,7 @@ open class PokemonProperties {
                         try {
                             val identifier = cleanSpeciesName(pair.first).asIdentifierDefaultingNamespace()
                             val found = PokemonSpecies.get(identifier) ?: return@find false
-                            if (found.resourceIdentifier.namespace == Cobblemon.MODID) found.resourceIdentifier.path else found.resourceIdentifier.toString()
+                            found.resourceLocation().simplify()
                         } catch (e: ResourceLocationException) {
                             return@find false
                         }

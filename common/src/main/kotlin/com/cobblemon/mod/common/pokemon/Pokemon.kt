@@ -133,7 +133,7 @@ open class Pokemon : ShowdownIdentifiable {
     var uuid = UUID.randomUUID()
     var species = PokemonSpecies.random()
         set(value) {
-            if (PokemonSpecies.get(value.resourceIdentifier) == null) {
+            if (PokemonSpecies.get(value.resourceLocation()) == null) {
                 throw IllegalArgumentException("Cannot set a species that isn't registered")
             }
             val quotient = clamp(currentHealth / hp.toFloat(), 0F, 1F)

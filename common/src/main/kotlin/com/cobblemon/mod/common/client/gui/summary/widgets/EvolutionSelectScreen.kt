@@ -135,7 +135,7 @@ class EvolutionSelectScreen(
             matrices.translate(x + (PORTRAIT_DIAMETER / 2) + 65.0, y - 5.0, 0.0)
             matrices.scale(2.5F, 2.5F, 1F)
             drawProfilePokemon(
-                species = this.evolution.species.resourceIdentifier,
+                species = this.evolution.species.resourceLocation(),
                 aspects = this.evolution.aspects,
                 matrixStack = matrices,
                 rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),

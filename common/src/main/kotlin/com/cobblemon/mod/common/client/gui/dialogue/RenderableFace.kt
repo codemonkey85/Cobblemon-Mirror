@@ -80,7 +80,7 @@ class ReferenceRenderableFace(val entity: PosableEntity): RenderableFace {
         if (state is PokemonClientDelegate) {
             state.currentAspects = state.currentEntity.pokemon.aspects
             drawPosablePortrait(
-                identifier = state.currentEntity.pokemon.species.resourceIdentifier,
+                identifier = state.currentEntity.pokemon.species.resourceLocation(),
                 aspects = state.currentEntity.pokemon.aspects,
                 repository = PokemonModelRepository,
                 contextScale = state.currentEntity.pokemon.species.baseScale,
@@ -124,7 +124,7 @@ class ArtificialRenderableFace(
                 PokemonSpecies.first()
             }
             drawPosablePortrait(
-                identifier = species.resourceIdentifier,
+                identifier = species.resourceLocation(),
                 aspects = aspects,
                 matrixStack = drawContext.pose(),
                 contextScale = species.baseScale,

@@ -59,8 +59,8 @@ class Species(
     evYield: Map<Stat, Int>,
     experienceGroup: ExperienceGroup,
     hitbox: EntityDimensions,
-    primaryType: ElementalType,
-    secondaryType: Optional<ElementalType>,
+    internal val primaryTypeHolder: Holder<ElementalType>,
+    internal val secondaryTypeHolder: Optional<Holder<ElementalType>>,
     abilityPool: AbilityPool,
     shoulderMountable: Boolean,
     shoulderEffects: Set<ShoulderEffect>,
@@ -80,9 +80,10 @@ class Species(
     lightingData: Optional<LightingData>,
 ) : RegistryElement<Species>, ShowdownIdentifiable {
 
-    var name: String = "Bulbasaur"
     val translatedName: MutableComponent
-        get() = Component.translatable("${this.resourceIdentifier.namespace}.species.${this.resourceIdentifier.path.replace("/", ".")}.name")
+        get() = Component.translatable("${this.resourceLocation().namespace}.species.${this.resourceLocation().path.replace("/", ".")}.name")
+    val pokedexEntry: MutableComponent
+        get() = Component.translatable("${this.resourceLocation().namespace}.species.${this.resourceLocation().path.replace("/", ".")}.desc")
     var nationalPokedexNumber: Int = nationalPokedexNumber
         private set
 
@@ -104,10 +105,8 @@ class Species(
     var experienceGroup = experienceGroup
         private set
     var hitbox = hitbox
-    var primaryType: ElementalType = primaryType
-        internal set
-    var secondaryType: ElementalType? = secondaryType.getOrNull()
-        internal set
+    val primaryType: ElementalType get() = primaryTypeHolder.value()
+    val secondaryType: ElementalType? get() = secondaryTypeHolder.map { it.value() }.getOrNull()
     var abilities = abilityPool
         private set
     var shoulderMountable = shoulderMountable
@@ -121,12 +120,6 @@ class Species(
     internal var flyingEyeHeight: Float? = flyingEyeHeight.getOrNull()
     var behaviour = behaviour
         private set
-    // TODO: Confirm if it will be dropped
-    var pokedex = mutableListOf<String>()
-        private set
-    // TODO: Migrate to loot tables.
-    var drops = DropTable()
-        private set
     var eggCycles = eggCycles
         private set
     var eggGroups = eggGroups
@@ -137,13 +130,13 @@ class Species(
         private set
 
     /**
-     * The height in decimeters
+     * The height in meters
      */
     var height = height
         private set
 
     /**
-     * The weight in hectograms
+     * The weight in kilograms
      */
     var weight = weight
         private set
@@ -162,9 +155,6 @@ class Species(
         private set
 
     val preEvolution: Species? get() = this.preEvolutionKey.map { PokemonSpecies.get(it) }.orElse(null)
-
-    @Transient
-    lateinit var resourceIdentifier: ResourceLocation
 
     val types: Iterable<ElementalType>
         get() = secondaryType?.let { listOf(primaryType, it) } ?: listOf(primaryType)
@@ -191,7 +181,7 @@ class Species(
         }
     }
 
-    fun create(level: Int = 10) = PokemonProperties.parse("species=\"${this.name}\" level=${level}").create()
+    fun create(level: Int = 10) = PokemonProperties.parse("species=\"${this.resourceLocation()}\" level=${level}").create()
 
     fun eyeHeight(entity: PokemonEntity): Float {
         val multiplier = this.resolveEyeHeight(entity) ?: VANILLA_DEFAULT_EYE_HEIGHT
@@ -204,7 +194,7 @@ class Species(
         else -> this.standingEyeHeight
     }
 
-    fun canGmax() = this.resourceIdentifier.path.endsWith("gmax")
+    fun canGmax() = this.resourceLocation().path.endsWith("gmax")
 
     override fun showdownId(): String {
         return ShowdownIdentifiable.EXCLUSIVE_REGEX.replace(this.resourceLocation().simplify(), "")
@@ -254,8 +244,8 @@ class Species(
             p1.evYield,
             p1.experienceGroup,
             p1.hitbox,
-            p1.primaryType.value(),
-            p1.secondaryType.map { it.value() },
+            p1.primaryType,
+            p1.secondaryType,
             p1.abilityPool,
             p1.shoulderMountable,
             p1.shoulderEffects,
@@ -286,8 +276,8 @@ class Species(
             emptyMap(),
             p1.experienceGroup,
             p1.hitbox,
-            p1.primaryType.value(),
-            p1.secondaryType.map { it.value() },
+            p1.primaryType,
+            p1.secondaryType,
             AbilityPool(),
             false,
             emptySet(),

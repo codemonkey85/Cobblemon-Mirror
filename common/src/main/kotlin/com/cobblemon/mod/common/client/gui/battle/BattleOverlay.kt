@@ -242,7 +242,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         } else {
             matrixStack.pushPose()
             drawPosablePortrait(
-                identifier = species.resourceIdentifier,
+                identifier = species.resourceLocation(),
                 aspects = aspects,
                 matrixStack = matrixStack,
                 scale = 18F * (ballState?.scale ?: 1F),

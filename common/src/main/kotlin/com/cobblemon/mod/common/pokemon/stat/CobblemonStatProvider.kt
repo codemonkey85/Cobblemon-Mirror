@@ -85,7 +85,7 @@ object CobblemonStatProvider : StatProvider {
         val ev = pokemon.evs.getOrDefault(stat)
         val level = pokemon.level
         return if (stat == Stats.HP) {
-            if (pokemon.species.resourceIdentifier == Pokemon.SHEDINJA) {
+            if (pokemon.species.resourceLocation() == Pokemon.SHEDINJA) {
                 1
             } else {
                 // Why does showdown have the + 100 inside the numerator instead of + level at the end? It's the same mathematically but odd choice.

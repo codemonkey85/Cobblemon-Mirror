@@ -37,16 +37,16 @@ class PokemonItemRenderer : CobblemonBuiltinItemRenderer {
         val (species, aspects) = pokemonItem.getSpeciesAndAspects(stack) ?: return
         val state = FloatingState()
         matrices.pushPose()
-        val model = PokemonModelRepository.getPoser(species.resourceIdentifier, aspects)
+        val model = PokemonModelRepository.getPoser(species.resourceLocation(), aspects)
         model.context = context
         context.put(RenderContext.RENDER_STATE, RenderContext.RenderState.PROFILE)
-        context.put(RenderContext.SPECIES, species.resourceIdentifier)
+        context.put(RenderContext.SPECIES, species.resourceLocation())
         context.put(RenderContext.ASPECTS, aspects)
         context.put(RenderContext.POSABLE_STATE, state)
         state.currentModel = model
         state.currentAspects = aspects
 
-        val renderLayer = RenderType.entityCutout(PokemonModelRepository.getTexture(species.resourceIdentifier, aspects, 0F))
+        val renderLayer = RenderType.entityCutout(PokemonModelRepository.getTexture(species.resourceLocation(), aspects, 0F))
 
         val transformations = positions[mode]!!
 
@@ -72,7 +72,7 @@ class PokemonItemRenderer : CobblemonBuiltinItemRenderer {
 
         // x = red, y = green, z = blue, w = alpha
         val tint = pokemonItem.tint(stack)
-        model.withLayerContext(vertexConsumers, state, PokemonModelRepository.getLayers(species.resourceIdentifier, aspects)) {
+        model.withLayerContext(vertexConsumers, state, PokemonModelRepository.getLayers(species.resourceLocation(), aspects)) {
             val tintRed = (tint.x * 255).toInt()
             val tintGreen = (tint.y * 255).toInt()
             val tintBlue = (tint.z * 255).toInt()

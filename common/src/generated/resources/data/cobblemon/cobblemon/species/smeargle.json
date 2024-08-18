@@ -13,8 +13,8 @@
       "ability": "cobblemon:technician"
     }
   ],
-  "baseExperienceYield": 1,
-  "baseFriendship": 1,
+  "baseExperienceYield": 88,
+  "baseFriendship": 70,
   "baseStats": {
     "cobblemon:attack": 20,
     "cobblemon:defence": 35,
@@ -40,28 +40,85 @@
       }
     }
   },
-  "catchRate": 1,
-  "dynamaxBlocked": true,
-  "eggCycles": 1,
+  "catchRate": 45,
+  "dynamaxBlocked": false,
+  "eggCycles": 20,
   "eggGroups": [
     "FIELD"
   ],
-  "evYield": {},
-  "experienceGroup": "cobblemon:slow",
-  "height": 12.0,
+  "evYield": {
+    "cobblemon:speed": 1
+  },
+  "experienceGroup": "cobblemon:fast",
+  "height": 1.2,
   "hitbox": {
     "fixed": true,
     "height": 1.0,
     "width": 1.0
   },
-  "maleRatio": -1.0,
-  "moves": [],
+  "maleRatio": 0.5,
+  "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:sketch"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:odorsleuth"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:falseswipe"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:spore"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:captivate"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:sketch"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:sketch"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:flamethrower"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:seismictoss"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:sketch"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:furyswipes"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:sketch"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:meanlook"
+    }
+  ],
   "nationalPokedexNumber": 235,
-  "primaryType": {
-    "damageTaken": [],
-    "displayName": ""
-  },
+  "primaryType": "cobblemon:normal",
   "shoulderEffects": [],
   "shoulderMountable": false,
-  "weight": 580.0
+  "weight": 58.0
 }
