@@ -62,6 +62,7 @@ class PCBlock(properties: Settings): BlockWithEntity(properties), Waterloggable 
         val PART = EnumProperty.of("part", PCPart::class.java)
         val ON = BooleanProperty.of("on")
         val WATERLOGGED = BooleanProperty.of("waterlogged")
+        val NATURAL: BooleanProperty = BooleanProperty.of("natural")
 
         private val NORTH_AABB_TOP = VoxelShapes.union(
             VoxelShapes.cuboid(0.1875, 0.0, 0.0, 0.8125, 0.875, 0.125),
@@ -139,6 +140,7 @@ class PCBlock(properties: Settings): BlockWithEntity(properties), Waterloggable 
             .with(PART, PCPart.BOTTOM)
             .with(ON, false)
             .with(WATERLOGGED, false)
+            .with(NATURAL, false)
     }
 
     override fun createBlockEntity(blockPos: BlockPos, blockState: BlockState) = if (blockState.get(PART) == PCPart.BOTTOM) PCBlockEntity(blockPos, blockState) else null
@@ -226,7 +228,7 @@ class PCBlock(properties: Settings): BlockWithEntity(properties), Waterloggable 
     override fun canPathfindThrough(blockState: BlockState, blockGetter: BlockView, blockPos: BlockPos, pathComputationType: NavigationType) = false
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
-        builder.add(HorizontalFacingBlock.FACING)
+        builder.add(HorizontalFacingBlock.FACING, NATURAL)
         builder.add(PART)
         builder.add(ON)
         builder.add(WATERLOGGED)
