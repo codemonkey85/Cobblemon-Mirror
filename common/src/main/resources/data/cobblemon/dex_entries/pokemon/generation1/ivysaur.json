@@ -6,7 +6,7 @@
     {
       "type": "cobblemon:form_dex_data",
       "aspects": "",
-      "conditions": []"q.get_dex_key('cobblemon.pokedex.ivysaur.knowledge') == 'CAUGHT'"
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.ivysaur.knowledge') == 'CAUGHT'"]
     }
   ]
 }

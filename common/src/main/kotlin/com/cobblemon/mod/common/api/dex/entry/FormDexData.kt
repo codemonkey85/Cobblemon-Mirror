@@ -9,12 +9,14 @@ import com.cobblemon.mod.common.util.writeString
 import net.minecraft.network.RegistryFriendlyByteBuf
 
 class FormDexData(
-    val aspects: String,
-    val conditions: List<ExpressionLike>
+    val langKey: String = "cobblemon.ui.pokedex.info.form.normal",
+    val aspects: String = "",
+    val conditions: List<ExpressionLike> = emptyList(),
 ) : ExtraDexData() {
     override val type = ID
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeString(langKey)
         buffer.writeString(aspects)
         buffer.writeInt(conditions.size)
         conditions.forEach {
@@ -26,6 +28,7 @@ class FormDexData(
         val ID = cobblemonResource("form_dex_data")
 
         fun decode(buffer: RegistryFriendlyByteBuf): FormDexData {
+            val langKey = buffer.readString()
             val aspectString = buffer.readString()
             val numToRead = buffer.readInt()
             val conditions = mutableListOf<ExpressionLike>()
@@ -33,7 +36,7 @@ class FormDexData(
                 val expressions = MoLang.createParser(buffer.readString()).parse()
                 conditions.add(ListExpression(expressions))
             }
-            return FormDexData(aspectString, conditions)
+            return FormDexData(langKey, aspectString, conditions)
         }
     }
 }

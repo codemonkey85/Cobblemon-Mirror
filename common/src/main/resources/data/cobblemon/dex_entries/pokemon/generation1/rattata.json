@@ -1,0 +1,18 @@
+{
+  "id": "cobblemon:rattata",
+  "registryId": "cobblemon:species",
+  "entryId": "cobblemon:rattata",
+  "extraData": [
+    {
+      "type": "cobblemon:form_dex_data",
+      "aspects": "",
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.rattata.knowledge') == 'CAUGHT'"]
+    },
+    {
+      "langKey": "cobblemon.ui.pokedex.info.form.alolan",
+      "type": "cobblemon:form_dex_data",
+      "aspects": "alolan",
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.entries.caught') == '5'"]
+    }
+  ]
+}

@@ -363,10 +363,11 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormDexData) 
                 formLeftButton.render(context,mouseX, mouseY, delta)
                 formRightButton.render(context,mouseX, mouseY, delta)
 
+                val textKey = showableForms[selectedFormIndex].langKey
                 drawScaledTextJustifiedRight(
                     context = context,
                     font = CobblemonResources.DEFAULT_LARGE,
-                    text = Component.translatable("cobblemon.ui.pokedex.info.form.${showableForms[selectedFormIndex]}").bold(),
+                    text = Component.translatable(textKey).bold(),
                     x = pX + 136,
                     y = pY + 15,
                     shadow = true
