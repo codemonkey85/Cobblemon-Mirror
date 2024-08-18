@@ -394,7 +394,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
                                 })
                         if (pokemon.moveSet.getMoves().size > 1 && move != null) {
                             // Adds the "Forget" slot
-                            moveSlotList += MoveSwapScreen.MoveSlot(switchPane, null, 0)
+                            moveSlotList += MoveSwapScreen.MoveSlot(switchPane, null, 0, pokemon)
                         }
                         moveSlotList.forEach { switchPane.addEntry(it) }
                     }

@@ -67,13 +67,12 @@ class MoveSlotWidget(
     }.apply {
         addWidget(this)
     }
-    val elementalType:ElementalType = Moves.getByNameOrDummy(move.name).getEffectiveElementalType(pokemon)
     override fun renderButton(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+        val elementalType:ElementalType = Moves.getByNameOrDummy(move?.name ?: "").getEffectiveElementalType(pokemon)
         val matrices = context.matrices
         hovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height
         if (move != null) {
-            val moveTemplate = Moves.getByNameOrDummy(move.name)
-            val rgb = moveTemplate.elementalType.hue.toRGB()
+            val rgb = elementalType.hue.toRGB()
 
             if (movesWidget.selectedMove == move) {
                 blitk(

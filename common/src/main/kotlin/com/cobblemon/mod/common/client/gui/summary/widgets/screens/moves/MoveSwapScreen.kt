@@ -14,6 +14,8 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.moves.Move
 import com.cobblemon.mod.common.api.moves.MoveTemplate
 import com.cobblemon.mod.common.api.text.text
+import com.cobblemon.mod.common.api.types.ElementalType
+import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.MoveCategoryIcon
 import com.cobblemon.mod.common.client.gui.TypeIcon
@@ -55,7 +57,7 @@ class MoveSwapScreen(
 
     class MoveSlot(val pane: MoveSwapScreen, val move: MoveTemplate?, val ppRaisedStages: Int, pokemon: Pokemon) : Entry<MoveSlot>() {
         override fun getNarration() = move?.displayName ?: lang("ui.moves.forget")
-        val elementalType = move?.getEffectiveElementalType(pokemon)
+        val elementalType = move?.getEffectiveElementalType(pokemon) ?: ElementalTypes.NORMAL
         override fun render(
             context: DrawContext,
             index: Int,
