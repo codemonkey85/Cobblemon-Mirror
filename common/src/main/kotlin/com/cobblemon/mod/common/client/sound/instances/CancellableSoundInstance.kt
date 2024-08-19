@@ -6,8 +6,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.cobblemon.mod.common.client.sound
+package com.cobblemon.mod.common.client.sound.instances
 
+import com.cobblemon.mod.common.client.sound.BlockEntitySoundTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.resources.sounds.SoundInstance
@@ -17,7 +18,7 @@ import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.phys.Vec3
 
-class CancellableSoundInstance(sound: SoundEvent, pos: BlockPos = BlockPos.ZERO, repeat: Boolean = false, volume: Float = 1.0F, pitch: Float = 1.0F,  ) :
+class CancellableSoundInstance(sound: SoundEvent, pos: BlockPos = BlockPos.ZERO, repeat: Boolean = false, volume: Float = 1.0F, pitch: Float = 1.0F) :
     SimpleSoundInstance(sound, SoundSource.BLOCKS, volume, pitch, SoundInstance.createUnseededRandom(), pos),
     TickableSoundInstance {
 
@@ -25,7 +26,7 @@ class CancellableSoundInstance(sound: SoundEvent, pos: BlockPos = BlockPos.ZERO,
     private var done: Boolean = false
     private var unheardTicks = 0
     private var initVolume = 1.0
-    public var pos : BlockPos
+    var pos : BlockPos
 
     init {
         this.relative = false
@@ -43,7 +44,7 @@ class CancellableSoundInstance(sound: SoundEvent, pos: BlockPos = BlockPos.ZERO,
     override fun tick() {
         if(soundManager.isActive(this) && !this.looping) {
             this.done = true
-            CancellableSoundController.stopSound(this)
+            BlockEntitySoundTracker.stop(this.pos, this)
         } else {
             // Using the player's position as a proxy for a SoundListener.
             val listenerPos = Minecraft.getInstance().player?.position()?.distanceToSqr(
@@ -57,14 +58,14 @@ class CancellableSoundInstance(sound: SoundEvent, pos: BlockPos = BlockPos.ZERO,
                 if(listenerPos > ATTENUATION_DISTANCE_MAX_SQUARED * 2) {
                     // listener is very far away, kill it
                     this.done = true
-                    CancellableSoundController.stopSound(this)
+                    BlockEntitySoundTracker.stop(this.pos, this)
                 } else if( listenerPos > ATTENUATION_DISTANCE_MAX_SQUARED) {
                     ++unheardTicks
                     // Purpose of this is if a client is pushing in and out of the attenuation range, they won't notice the sound abruptly stopping
                     if(unheardTicks > UNHEARD_TICKS_MAX) {
                         this.done = true
                         this.looping = false
-                        CancellableSoundController.stopSound(this)
+                        BlockEntitySoundTracker.stop(this.pos, this)
                     }
                 }
             } else {

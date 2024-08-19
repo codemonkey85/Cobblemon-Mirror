@@ -8,15 +8,19 @@
 
 package com.cobblemon.mod.neoforge.client
 
+import com.cobblemon.mod.common.platform.events.ClientEntityEvent
 import com.cobblemon.mod.common.platform.events.ClientPlayerEvent
 import com.cobblemon.mod.common.platform.events.ClientTickEvent
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import net.minecraft.client.Minecraft
+import net.minecraft.client.multiplayer.ClientLevel
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.api.distmarker.OnlyIn
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent
 import net.neoforged.neoforge.common.NeoForge
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent
 
 
@@ -52,4 +56,15 @@ object NeoForgeClientPlatformEventHandler {
         PlatformEvents.CLIENT_ITEM_TOOLTIP.post(com.cobblemon.mod.common.platform.events.ItemTooltipEvent(e.itemStack, e.context, e.flags, e.toolTip))
     }
 
+    @SubscribeEvent
+    fun onEntityJoin(e: EntityJoinLevelEvent) {
+        val level = e.level
+        if (level is ClientLevel) PlatformEvents.CLIENT_ENTITY_LOAD.post(ClientEntityEvent.Load(e.entity, level))
+    }
+
+    @SubscribeEvent
+    fun onEntityLeave(e: EntityLeaveLevelEvent) {
+        val level = e.level
+        if (level is ClientLevel) PlatformEvents.CLIENT_ENTITY_UNLOAD.post(ClientEntityEvent.Unload(e.entity, level))
+    }
 }

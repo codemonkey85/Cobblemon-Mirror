@@ -10,18 +10,12 @@ package com.cobblemon.mod.common.duck;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 
-public interface SoundSystemDuck {
+public interface SoundEngineDuck {
 
     void pauseSounds(@Nullable ResourceLocation id, @Nullable SoundSource category);
 
     void resumeSounds(@Nullable ResourceLocation id, @Nullable SoundSource category);
-
-    void stopSounds(@Nullable ResourceLocation id, @Nullable SoundSource category);
-
-    Collection<SoundInstance> getSounds(@Nullable SoundSource category);
 }

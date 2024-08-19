@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.mixin;
 
-import com.cobblemon.mod.common.client.sound.battle.BattleMusicController;
+import com.cobblemon.mod.common.client.sound.BattleMusicController;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.MusicManager;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MusicManager.class)
-public class MusicTrackerMixin {
+public class MusicManagerMixin {
 
     @Shadow @Final
     private Minecraft minecraft;

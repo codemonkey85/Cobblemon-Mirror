@@ -24,8 +24,8 @@ import com.cobblemon.mod.common.block.RestorationTankBlock
 import com.cobblemon.mod.common.block.entity.FossilMultiblockEntity
 import com.cobblemon.mod.common.block.entity.RestorationTankBlockEntity
 import com.cobblemon.mod.common.client.render.models.blockbench.fossil.FossilState
-import com.cobblemon.mod.common.client.sound.CancellableSoundController
-import com.cobblemon.mod.common.client.sound.CancellableSoundInstance
+import com.cobblemon.mod.common.client.sound.BlockEntitySoundTracker
+import com.cobblemon.mod.common.client.sound.instances.CancellableSoundInstance
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.item.PokeBallItem
 import com.cobblemon.mod.common.pokemon.Pokemon
@@ -75,7 +75,6 @@ class FossilMultiblockStructure (
 
     override val controllerBlockPos = analyzerPos
 
-
     // TODO: API method for this
     var organicMaterialInside = 0
         private set
@@ -90,6 +89,7 @@ class FossilMultiblockStructure (
     private var machineStartTime: Long = 0
     private var protectionTime: Int = -1
     private var fossilOwnerUUID: UUID? = null
+    private val runningSound = CobblemonSounds.FOSSIL_MACHINE_ACTIVE_LOOP
     val fossilState = FossilState(animAge, animPartialTicks)
     var fossilInventory: MutableList<ItemStack> = mutableListOf<ItemStack>()
     var tankConnectorDirection: Direction? = null
@@ -374,7 +374,7 @@ class FossilMultiblockStructure (
 
     override fun setRemoved(world: Level) {
         if(world.isClientSide) {
-            CancellableSoundController.stopSound(this.tankBasePos, CobblemonSounds.FOSSIL_MACHINE_ACTIVE_LOOP.location)
+            BlockEntitySoundTracker.stop(this.tankBasePos, runningSound.location)
         }
     }
 
@@ -393,11 +393,8 @@ class FossilMultiblockStructure (
             return
         }
 
-        if (world.isClientSide && this.isRunning() && (world.gameTime - this.machineStartTime) % 160L == 0L) {
-            if(world.isClientSide) {
-                CancellableSoundController.playSound(CancellableSoundInstance(CobblemonSounds.FOSSIL_MACHINE_ACTIVE_LOOP,
-                        tankBasePos, true, 1.0f, 1.0f, ))
-            }
+        if (world.isClientSide && this.isRunning() && (world.gameTime - this.machineStartTime) % 20L == 0L && !BlockEntitySoundTracker.isActive(tankBasePos, runningSound.location)) {
+            BlockEntitySoundTracker.play(tankBasePos, CancellableSoundInstance(runningSound, tankBasePos, true, 1.0f, 1.0f))
         }
 
         if (this.timeRemaining == -1 && this.organicMaterialInside >= MATERIAL_TO_START && this.resultingFossil != null) {
@@ -458,8 +455,7 @@ class FossilMultiblockStructure (
 
         world.playSound(null, tankBasePos, CobblemonSounds.FOSSIL_MACHINE_ACTIVATE, SoundSource.BLOCKS)
         if(world.isClientSide) {
-            CancellableSoundController.playSound(CancellableSoundInstance(CobblemonSounds.FOSSIL_MACHINE_ACTIVE_LOOP,
-                    tankBasePos, true, 1.0f, 1.0f, ))
+            BlockEntitySoundTracker.play(tankBasePos, CancellableSoundInstance(runningSound, tankBasePos, true, 1.0f, 1.0f))
         }
 
         this.updateOnStatus(world)
@@ -476,7 +472,7 @@ class FossilMultiblockStructure (
         fossilInventory.clear()
 
         if(world.isClientSide) {
-            CancellableSoundController.stopSound(tankBasePos, CobblemonSounds.FOSSIL_MACHINE_ACTIVE_LOOP.location)
+            BlockEntitySoundTracker.stop(tankBasePos, CobblemonSounds.FOSSIL_MACHINE_ACTIVE_LOOP.location)
         }
 
         this.updateOnStatus(world)
