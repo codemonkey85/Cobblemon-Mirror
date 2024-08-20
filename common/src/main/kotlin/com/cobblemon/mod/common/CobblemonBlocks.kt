@@ -422,6 +422,92 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, RegistryKey<Registry<
     ))
 
     @JvmField
+    val FIRE_STONE_BLOCK = this.create( "fire_stone_block", Block(AbstractBlock.Settings.create()
+        .mapColor(MapColor.BRIGHT_RED)
+        .strength(1.0F)
+        .sounds(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+        .requiresTool()
+        .instrument(Instrument.BASEDRUM)
+        .luminance{13}
+    ))
+    @JvmField
+    val WATER_STONE_BLOCK = this.create( "water_stone_block", Block(AbstractBlock.Settings.create()
+        .mapColor(MapColor.WATER_BLUE)
+        .strength(1.0F)
+        .sounds(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+        .requiresTool()
+        .instrument(Instrument.BASEDRUM)
+    ))
+    @JvmField
+    val THUNDER_STONE_BLOCK = this.create( "thunder_stone_block", Block(AbstractBlock.Settings.create()
+        .mapColor(MapColor.LICHEN_GREEN)
+        .strength(1.0F)
+        .sounds(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+        .requiresTool()
+        .instrument(Instrument.BASEDRUM)
+        .luminance{8}
+    ))
+    @JvmField
+    val LEAF_STONE_BLOCK = this.create( "leaf_stone_block", Block(AbstractBlock.Settings.create()
+        .mapColor(MapColor.DARK_GREEN)
+        .strength(1.0F)
+        .sounds(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+        .requiresTool()
+        .instrument(Instrument.BASEDRUM)
+    ))
+    @JvmField
+    val ICE_STONE_BLOCK = this.create( "ice_stone_block", Block(AbstractBlock.Settings.create()
+        .mapColor(MapColor.LIGHT_BLUE)
+        .strength(1.0F)
+        .sounds(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+        .requiresTool()
+        .instrument(Instrument.BASEDRUM)
+    ))
+    @JvmField
+    val SUN_STONE_BLOCK = this.create( "sun_stone_block", Block(AbstractBlock.Settings.create()
+        .mapColor(MapColor.TERRACOTTA_ORANGE)
+        .strength(1.0F)
+        .sounds(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+        .requiresTool()
+        .instrument(Instrument.BASEDRUM)
+        .luminance{5}
+    ))
+    @JvmField
+    val MOON_STONE_BLOCK = this.create( "moon_stone_block", Block(AbstractBlock.Settings.create()
+        .mapColor(MapColor.DEEPSLATE_GRAY)
+        .strength(1.0F)
+        .sounds(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+        .requiresTool()
+        .instrument(Instrument.BASEDRUM)
+    ))
+    @JvmField
+    val SHINY_STONE_BLOCK = this.create( "shiny_stone_block", Block(AbstractBlock.Settings.create()
+        .mapColor(MapColor.WHITE)
+        .strength(1.0F)
+        .sounds(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+        .requiresTool()
+        .instrument(Instrument.BASEDRUM)
+        .luminance{15}
+    ))
+    @JvmField
+    val DAWN_STONE_BLOCK = this.create( "dawn_stone_block", Block(AbstractBlock.Settings.create()
+        .mapColor(MapColor.DIAMOND_BLUE)
+        .strength(1.0F)
+        .sounds(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+        .requiresTool()
+        .instrument(Instrument.BASEDRUM)
+        .luminance{15}
+    ))
+    @JvmField
+    val DUSK_STONE_BLOCK = this.create( "dusk_stone_block", Block(AbstractBlock.Settings.create()
+        .mapColor(MapColor.DARK_DULL_PINK)
+        .strength(1.0F)
+        .sounds(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+        .requiresTool()
+        .instrument(Instrument.BASEDRUM)
+    ))
+
+    @JvmField
     val BLACK_APRICORN = apricornBlock("black_apricorn", Apricorn.BLACK)
     @JvmField
     val BLUE_APRICORN = apricornBlock("blue_apricorn", Apricorn.BLUE)

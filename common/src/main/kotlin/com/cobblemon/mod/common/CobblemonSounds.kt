@@ -265,6 +265,15 @@ object CobblemonSounds : PlatformRegistry<Registry<SoundEvent>, RegistryKey<Regi
         TUMBLESTONE_STEP
     )
 
+    /*@JvmField
+    val EVOLUTION_STONE_BLOCK_SOUNDS = BlockSoundGroup(1f, 1f,
+        EVOLUTION_STONE_BLOCK_BREAK,
+        EVOLUTION_STONE_BLOCK_STEP,
+        EVOLUTION_STONE_BLOCK_PLACE,
+        EVOLUTION_STONE_BLOCK_HIT,
+        EVOLUTION_STONE_BLOCK_STEP
+    )*/
+
     @JvmField
     val BERRY_BUSH_SOUNDS = BlockSoundGroup(1f, 1f,
         BERRY_BUSH_BREAK,

@@ -35,6 +35,7 @@
 - Hidden Power now displays its effective typing.
 - Moves impacted by the abilities Pixelate, Refrigerate, Aerilate, Galvanize, and Normalize now display as their altered typing.
 - Added Polished Tumblestone and Tumblestone Brick block sets from Tumblestone, Black Tumblestone, and Sky Tumblestone.
+- Added Fire, Water, Thunder, Leaf, Ice, Sun, Moon, Shiny, Dawn, and Dusk Stone Storage Blocks.
 - Added Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
 - Added ston_henge_ruins, luna_henge_ruins, and sol_henge_ruins structures.
 - Added Eject Pack, Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
@@ -54,7 +55,8 @@
 - Chikorita's ability to look around removed due to the awkwardness of it.
 - Link Cable recipe has been redesigned
 - Updated potion sprites
-- Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users. 
+- Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users.
+- Updated Ice Stone sprite
 
 ### Pokémon Added
 #### Gen 2

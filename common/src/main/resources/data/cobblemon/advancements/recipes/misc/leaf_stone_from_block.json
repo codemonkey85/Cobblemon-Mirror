@@ -1,0 +1,34 @@
+{
+  "parent": "cobblemon:recipes/root",
+  "rewards": {
+    "recipes": [
+      "cobblemon:leaf_stone_from_block"
+    ]
+  },
+  "criteria": {
+    "has_leaf_stone_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:leaf_stone_block"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "cobblemon:leaf_stone_from_block"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_leaf_stone_block",
+      "has_the_recipe"
+    ]
+  ]
+}

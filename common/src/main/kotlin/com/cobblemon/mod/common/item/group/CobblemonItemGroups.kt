@@ -307,6 +307,17 @@ object CobblemonItemGroups {
         entries.add(CobblemonItems.DEEPSLATE_THUNDER_STONE_ORE)
         entries.add(CobblemonItems.WATER_STONE_ORE)
         entries.add(CobblemonItems.DEEPSLATE_WATER_STONE_ORE)
+
+        entries.add(CobblemonItems.DAWN_STONE_BLOCK)
+        entries.add(CobblemonItems.DUSK_STONE_BLOCK)
+        entries.add(CobblemonItems.FIRE_STONE_BLOCK)
+        entries.add(CobblemonItems.ICE_STONE_BLOCK)
+        entries.add(CobblemonItems.LEAF_STONE_BLOCK)
+        entries.add(CobblemonItems.MOON_STONE_BLOCK)
+        entries.add(CobblemonItems.SHINY_STONE_BLOCK)
+        entries.add(CobblemonItems.SUN_STONE_BLOCK)
+        entries.add(CobblemonItems.THUNDER_STONE_BLOCK)
+        entries.add(CobblemonItems.WATER_STONE_BLOCK)
     }
 
     private fun consumableEntries(displayContext: DisplayContext, entries: Entries) {
