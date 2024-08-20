@@ -394,6 +394,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
         owner?.let { EntitySoundTracker.stop(it.id, this.castingSound.location) }
     }
 
+    // client instantiation
     override fun recreateFromPacket(clientboundAddEntityPacket: ClientboundAddEntityPacket) {
         super.recreateFromPacket(clientboundAddEntityPacket)
         val owner = this.owner
@@ -402,6 +403,12 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
             val toPlay = EntityBoundSoundInstance(this.castingSound, SoundSource.PLAYERS, 1.0F, 1.0f / (rand.nextFloat() * 0.4f + 0.8f), owner, rand.nextLong())
             EntitySoundTracker.play(owner.id, toPlay)
         }
+    }
+
+    // client destruction
+    override fun onClientRemoval() {
+        stopCastingAudio()
+        super.onClientRemoval()
     }
 
     private fun removeIfInvalid(player: Player): Boolean {
