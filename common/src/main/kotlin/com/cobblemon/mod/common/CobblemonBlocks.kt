@@ -511,7 +511,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, RegistryKey<Registry<
     ))
     @JvmField
     val ICE_STONE_BLOCK = this.create( "ice_stone_block", Block(AbstractBlock.Settings.create()
-        .mapColor(MapColor.LIGHT_BLUE)
+        .mapColor(MapColor.PALE_PURPLE)
         .strength(1.0F)
         .sounds(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
         .requiresTool()
