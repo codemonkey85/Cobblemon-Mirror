@@ -11,7 +11,14 @@ package com.cobblemon.mod.common.events
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.advancement.CobblemonCriteria
 import com.cobblemon.mod.common.advancement.criterion.*
+import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.battles.model.actor.ActorType
+import com.cobblemon.mod.common.api.events.CobblemonEvents.BATTLE_STARTED_POST
+import com.cobblemon.mod.common.api.events.CobblemonEvents.BATTLE_VICTORY
+import com.cobblemon.mod.common.api.events.CobblemonEvents.EVOLUTION_COMPLETE
+import com.cobblemon.mod.common.api.events.CobblemonEvents.LEVEL_UP_EVENT
+import com.cobblemon.mod.common.api.events.CobblemonEvents.POKEMON_CAPTURED
+import com.cobblemon.mod.common.api.events.CobblemonEvents.TRADE_COMPLETED
 import com.cobblemon.mod.common.api.events.battles.BattleVictoryEvent
 import com.cobblemon.mod.common.api.events.pokemon.LevelUpEvent
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent
@@ -21,11 +28,20 @@ import com.cobblemon.mod.common.block.TumblestoneBlock
 import com.cobblemon.mod.common.item.TumblestoneItem
 import com.cobblemon.mod.common.platform.events.ServerPlayerEvent
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.cobblemon.mod.common.util.effectiveName
 import com.cobblemon.mod.common.util.getPlayer
 import java.util.*
 
-object AdvancementHandler {
+object AdvancementHandler : EventHandler {
+    override fun registerListeners() {
+        PlatformEvents.RIGHT_CLICK_BLOCK.subscribe(Priority.NORMAL, ::onTumbleStonePlaced)
+        POKEMON_CAPTURED.subscribe(Priority.NORMAL, ::onCapture)
+        BATTLE_VICTORY.subscribe(Priority.NORMAL, ::onWinBattle)
+        EVOLUTION_COMPLETE.subscribe(Priority.LOWEST, ::onEvolve)
+        LEVEL_UP_EVENT.subscribe(Priority.NORMAL, ::onLevelUp)
+        TRADE_COMPLETED.subscribe(Priority.NORMAL, ::onTradeCompleted)
+    }
 
     fun onCapture(event : PokemonCapturedEvent) {
         val playerData = Cobblemon.playerDataManager.getGenericData(event.player)

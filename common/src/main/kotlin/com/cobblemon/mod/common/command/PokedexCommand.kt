@@ -15,7 +15,6 @@ import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.command.argument.FormArgumentType
 import com.cobblemon.mod.common.command.argument.SpeciesArgumentType
-import com.cobblemon.mod.common.events.PokedexHandler
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Species
@@ -71,7 +70,7 @@ object PokedexCommand {
         val form = context.getArgument("form", FormData::class.java)
         players.forEach {
             val dex = Cobblemon.playerDataManager.getPokedexData(it)
-            dex.grantedWithCommand(species, form)
+            //dex.grantedWithCommand(species, form)
             it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"
@@ -87,7 +86,7 @@ object PokedexCommand {
         val form = context.getArgument("form", FormData::class.java)
         players.forEach {
             val dex = Cobblemon.playerDataManager.getPokedexData(it)
-            dex.removedWithCommand(species, form)
+            //dex.removedWithCommand(species, form)
             it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"

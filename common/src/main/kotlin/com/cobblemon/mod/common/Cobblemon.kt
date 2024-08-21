@@ -90,7 +90,6 @@ import com.cobblemon.mod.common.config.constraint.IntConstraint
 import com.cobblemon.mod.common.config.starter.StarterConfig
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.events.AdvancementHandler
-import com.cobblemon.mod.common.events.PokedexHandler
 import com.cobblemon.mod.common.events.ServerTickHandler
 import com.cobblemon.mod.common.net.messages.client.settings.ServerSettingsPacket
 import com.cobblemon.mod.common.permission.LaxPermissionValidator
@@ -240,9 +239,6 @@ object Cobblemon {
             }
         }
 
-        // Register the grow_tumblestone advancement
-        PlatformEvents.RIGHT_CLICK_BLOCK.subscribe { AdvancementHandler.onTumbleStonePlaced(it) }
-
         PlatformEvents.CHANGE_DIMENSION.subscribe {
             it.player.party().forEach { pokemon -> pokemon.entity?.recallWithAnimation() }
         }
@@ -258,6 +254,8 @@ object Cobblemon {
         }
 
         HeldItemProvider.register(CobblemonHeldItemManager, Priority.LOWEST)
+
+
     }
 
     fun initialize() {
@@ -372,32 +370,6 @@ object Cobblemon {
             battleRegistry.onServerStarted()
         }
         PlatformEvents.SERVER_TICK_POST.subscribe { ServerTickHandler.onTick(it.server) }
-        POKEMON_CAPTURED.subscribe {
-            PokedexHandler.onCapture(it)
-            AdvancementHandler.onCapture(it)
-        }
-
-        STARTER_CHOSEN.subscribe {
-            PokedexHandler.onStarterSelect(it)
-        }
-        POKEMON_SCANNED.subscribe {
-            PokedexHandler.onScan(it)
-        }
-
-//        EGG_HATCH.subscribe { AdvancementHandler.onHatch(it) }
-        BATTLE_VICTORY.subscribe { AdvancementHandler.onWinBattle(it) }
-        EVOLUTION_COMPLETE.subscribe(Priority.LOWEST) { event ->
-            AdvancementHandler.onEvolve(event)
-            PokedexHandler.onEvolve(event)
-        }
-        LEVEL_UP_EVENT.subscribe { AdvancementHandler.onLevelUp(it) }
-        TRADE_COMPLETED.subscribe {
-            AdvancementHandler.onTradeCompleted(it)
-            PokedexHandler.onTrade(it)
-        }
-        BATTLE_STARTED_POST.subscribe {
-            PokedexHandler.onBattleStart(it)
-        }
 
         BagItems.observable.subscribe {
             LOGGER.info("Starting dummy Showdown battle to force it to pre-load data.")
@@ -409,8 +381,11 @@ object Cobblemon {
             ).ifSuccessful { it.mute = true }
         }
 
-        //To whomever is merging, this is moved out of Cobblemon and into the CobblemonImplementations
-        //CobblemonSherds.registerSherds()
+        registerEventHandlers()
+    }
+
+    fun registerEventHandlers() {
+        AdvancementHandler.registerListeners()
     }
 
     fun getLevel(dimension: ResourceKey<Level>): Level? {
