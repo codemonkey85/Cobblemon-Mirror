@@ -8,15 +8,19 @@
 
 package com.cobblemon.mod.common.client.gui.pokedex.widgets
 
+import com.bedrockk.molang.runtime.MoLangRuntime
+import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.dex.entry.DexEntry
 import com.cobblemon.mod.common.api.dex.entry.FormDexData
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies.species
 import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.api.types.ElementalType
+import com.cobblemon.mod.common.client.ClientMoLangFunctions.setupClient
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.gui.TypeIcon
@@ -33,6 +37,7 @@ import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
+import com.cobblemon.mod.common.client.render.models.blockbench.PoseAdapter.Companion.runtime
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Gender
@@ -64,6 +69,12 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormDexData) 
 
     var speciesName: MutableComponent = Component.translatable("")
     var speciesNumber: MutableComponent = "0000".text()
+
+    val runtime = MoLangRuntime().setupClient().setup().also {
+        it.environment.query.addFunction("get_dex_key") { params ->
+            StringValue(CobblemonClient.clientPokedexData.getValueForKey(params.getString(0)))
+        }
+    }
 
     var visibleForms = mutableListOf<FormDexData>()
     var selectedFormIndex: Int = 0
@@ -157,9 +168,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormDexData) 
     override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (currentEntry == null || renderablePokemon == null) return
 
-        val hasKnowledge = currentEntry?.entryId?.let {
-            CobblemonClient.clientPokedexData.getKnowledgeForSpecies(it)
-        } != PokedexEntryProgress.NONE
+        val hasKnowledge = visibleForms[selectedFormIndex].conditions.all { it.resolveBoolean(runtime) }
         val species = currentEntry?.entryId?.let { PokemonSpecies.getByIdentifier(it) }
 
         val matrices = context.pose()
