@@ -944,6 +944,12 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, RegistryKey<Registry<It
     @JvmField
     val CHISELED_POLISHED_TUMBLESTONE = blockItem("chiseled_polished_tumblestone", CobblemonBlocks.CHISELED_POLISHED_TUMBLESTONE)
     @JvmField
+    val SMOOTH_TUMBLESTONE = blockItem("smooth_tumblestone", CobblemonBlocks.SMOOTH_TUMBLESTONE)
+    @JvmField
+    val SMOOTH_TUMBLESTONE_STAIRS = blockItem("smooth_tumblestone_stairs", CobblemonBlocks.SMOOTH_TUMBLESTONE_STAIRS)
+    @JvmField
+    val SMOOTH_TUMBLESTONE_SLAB = blockItem("smooth_tumblestone_slab", CobblemonBlocks.SMOOTH_TUMBLESTONE_SLAB)
+    @JvmField
     val TUMBLESTONE_BRICKS = blockItem("tumblestone_bricks", CobblemonBlocks.TUMBLESTONE_BRICKS)
     @JvmField
     val TUMBLESTONE_BRICK_STAIRS = blockItem("tumblestone_brick_stairs", CobblemonBlocks.TUMBLESTONE_BRICK_STAIRS)
@@ -964,6 +970,12 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, RegistryKey<Registry<It
     @JvmField
     val CHISELED_POLISHED_SKY_TUMBLESTONE = blockItem("chiseled_polished_sky_tumblestone", CobblemonBlocks.CHISELED_POLISHED_SKY_TUMBLESTONE)
     @JvmField
+    val SMOOTH_SKY_TUMBLESTONE = blockItem("smooth_sky_tumblestone", CobblemonBlocks.SMOOTH_SKY_TUMBLESTONE)
+    @JvmField
+    val SMOOTH_SKY_TUMBLESTONE_STAIRS = blockItem("smooth_sky_tumblestone_stairs", CobblemonBlocks.SMOOTH_SKY_TUMBLESTONE_STAIRS)
+    @JvmField
+    val SMOOTH_SKY_TUMBLESTONE_SLAB = blockItem("smooth_sky_tumblestone_slab", CobblemonBlocks.SMOOTH_SKY_TUMBLESTONE_SLAB)
+    @JvmField
     val SKY_TUMBLESTONE_BRICKS = blockItem("sky_tumblestone_bricks", CobblemonBlocks.SKY_TUMBLESTONE_BRICKS)
     @JvmField
     val SKY_TUMBLESTONE_BRICK_STAIRS = blockItem("sky_tumblestone_brick_stairs", CobblemonBlocks.SKY_TUMBLESTONE_BRICK_STAIRS)
@@ -983,6 +995,12 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, RegistryKey<Registry<It
     val POLISHED_BLACK_TUMBLESTONE_WALL = blockItem("polished_black_tumblestone_wall", CobblemonBlocks.POLISHED_BLACK_TUMBLESTONE_WALL)
     @JvmField
     val CHISELED_POLISHED_BLACK_TUMBLESTONE = blockItem("chiseled_polished_black_tumblestone", CobblemonBlocks.CHISELED_POLISHED_BLACK_TUMBLESTONE)
+    @JvmField
+    val SMOOTH_BLACK_TUMBLESTONE = blockItem("smooth_black_tumblestone", CobblemonBlocks.SMOOTH_BLACK_TUMBLESTONE)
+    @JvmField
+    val SMOOTH_BLACK_TUMBLESTONE_STAIRS = blockItem("smooth_black_tumblestone_stairs", CobblemonBlocks.SMOOTH_BLACK_TUMBLESTONE_STAIRS)
+    @JvmField
+    val SMOOTH_BLACK_TUMBLESTONE_SLAB = blockItem("smooth_black_tumblestone_slab", CobblemonBlocks.SMOOTH_BLACK_TUMBLESTONE_SLAB)
     @JvmField
     val BLACK_TUMBLESTONE_BRICKS = blockItem("black_tumblestone_bricks", CobblemonBlocks.BLACK_TUMBLESTONE_BRICKS)
     @JvmField
