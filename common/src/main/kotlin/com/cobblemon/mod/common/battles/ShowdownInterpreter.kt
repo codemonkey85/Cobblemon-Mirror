@@ -117,6 +117,9 @@ object ShowdownInterpreter {
         sideInstructionParser["error"]                   = { _, targetActor, _, message -> ErrorInstruction(targetActor, message) }
         sideInstructionParser["request"]                 = { _, targetActor, _, message -> RequestInstruction(targetActor, message) }
 
+        splitInstructionParser["-candynamax"]            = { _, targetActor, instructionSet, publicMessage, privateMessage, _ ->
+                                                                CanDynamaxInstruction(instructionSet, targetActor, publicMessage, privateMessage)
+                                                           }
         splitInstructionParser["-damage"]                = { _, targetActor, instructionSet, publicMessage, privateMessage, _ ->
                                                                 DamageInstruction(instructionSet, targetActor, publicMessage, privateMessage)
                                                            }
