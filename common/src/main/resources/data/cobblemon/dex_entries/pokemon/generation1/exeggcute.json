@@ -8,6 +8,11 @@
       "type": "cobblemon:basic_pokedex_variation",
       "aspects": "",
       "conditions": ["q.get_dex_key('cobblemon.pokedex.exeggcute.knowledge.normal') == 'CAUGHT'"]
+    },
+    {
+      "type": "cobblemon:basic_pokedex_variation",
+      "aspects": "region_bias=hisui",
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.exeggcute.knowledge.normal') == 'CAUGHT'"]
     }
   ]
 }

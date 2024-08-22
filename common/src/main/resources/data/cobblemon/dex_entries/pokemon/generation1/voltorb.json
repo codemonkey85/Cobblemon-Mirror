@@ -8,6 +8,12 @@
       "type": "cobblemon:basic_pokedex_variation",
       "aspects": "",
       "conditions": ["q.get_dex_key('cobblemon.pokedex.voltorb.knowledge.normal') == 'CAUGHT'"]
+    },
+    {
+      "type": "cobblemon:basic_pokedex_variation",
+      "langKey": "cobblemon.ui.pokedex.info.form.hisuian",
+      "aspects": "hisuian",
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.voltorb.knowledge.hisui') == 'CAUGHT'"]
     }
   ]
 }
