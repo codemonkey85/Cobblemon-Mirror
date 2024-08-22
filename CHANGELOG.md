@@ -5,6 +5,7 @@
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating
 - Big Roots and Energy Roots now share the same sounds as intented.
 - Fixed Cubone's cry not having a sound.
+- Fixed sounds made by blocks playing at a lower pitch than intended.
 - Fixed the Seafloor spawning context not being a usable context.
 - Fixed Pokemon spawning in non-full blocks like slabs.
 - Fixed Gilded Chests not dropping the chest itself when broken, only the contents.
@@ -80,6 +81,7 @@
 
 ### Developer
 - PokemonBattle now starts on turn 0.
+- All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.
 
 ### Data Pack & Resource Pack Creators
 - Added support for "shedders" similar to Shedinja's evolution logic.

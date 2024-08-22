@@ -72,10 +72,10 @@
     "sounds": [ "cobblemon:use_item" ]
   },
   "evolution.notification": {
-    "sounds": [ "cobblemon:evolution/evolution_notification"]
+    "sounds": [ { "name": "cobblemon:evolution/evolution_notification", "volume": 0.7 } ]
   },
   "evolution.full": {
-    "sounds": ["cobblemon:evolution/evolution_full"]
+    "sounds": [ "cobblemon:evolution/evolution_full" ]
   },
   "evolution.ui": {
     "sounds": [ { "name": "cobblemon:evolution/evolution_ui", "volume": 0.5 } ]
