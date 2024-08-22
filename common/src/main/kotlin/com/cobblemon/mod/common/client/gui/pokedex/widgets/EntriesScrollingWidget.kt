@@ -8,12 +8,17 @@
 
 package com.cobblemon.mod.common.client.gui.pokedex.widgets
 
+import com.bedrockk.molang.runtime.MoLangRuntime
+import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
+import com.cobblemon.mod.common.api.pokedex.entry.BasicPokedexVariation
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.text.text
+import com.cobblemon.mod.common.client.ClientMoLangFunctions.setupClient
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.ScrollingWidget
 import com.cobblemon.mod.common.client.gui.drawProfilePokemon
@@ -46,26 +51,21 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
 ) {
 
     fun createEntries(filteredPokedex: Collection<PokedexEntry>) {
-
-        filteredPokedex.forEachIndexed { index, _ ->
-            if ((index + 5) % 5 == 0) {
-                val dexDataList = mutableListOf<PokedexEntry>()
-                val discoveryLevelList = mutableListOf<PokedexEntryProgress>()
-                for (i in 0..4) {
-                    if (index + i < filteredPokedex.size) {
-                        val species = filteredPokedex.elementAt(index + i)
-                        val discoveryLevel = CobblemonClient.clientPokedexData.getKnowledgeForSpecies(species.entryId)
-                        dexDataList.add(species)
-                        discoveryLevelList.add(discoveryLevel)
-                    }
-                }
-                val newEntry = PokemonScrollSlotRow(dexDataList, discoveryLevelList, index == 0) { selectEntry(it) }
-                addEntry(newEntry)
-            }
+        filteredPokedex.chunked(5).forEachIndexed { index, listChunk ->
+            val discoveryList = listChunk.map {
+                CobblemonClient.clientPokedexData.getKnowledgeForSpecies(it.entryId)
+            }.toMutableList()
+            val newEntry = PokemonScrollSlotRow(
+                listChunk.toMutableList(),
+                discoveryList,
+                index == 0,
+                setPokedexEntry
+            )
+            addEntry(newEntry)
         }
     }
 
-    override fun addEntry(entry: EntriesScrollingWidget.PokemonScrollSlotRow): Int {
+    override fun addEntry(entry: PokemonScrollSlotRow): Int {
         return super.addEntry(entry)
     }
 
@@ -88,10 +88,6 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
 
         context.fill(xLeft, this.y + 3, xRight, this.bottom - 3, FastColor.ARGB32.color(255, 58, 150, 182)) // background
         context.fill(xLeft,yTop + 3, xRight, yTop + yBottom - 3, FastColor.ARGB32.color(255, 252, 252, 252)) // base
-    }
-
-    fun selectEntry(dexPokemonData: PokedexEntry) {
-        setPokedexEntry.invoke(dexPokemonData)
     }
 
     override fun renderItem(
@@ -131,6 +127,11 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
             private val unknownIcon = cobblemonResource("textures/gui/pokedex/pokedex_slot_unknown.png")
             private val unimplementedIcon = cobblemonResource("textures/gui/pokedex/pokedex_slot_unimplemented.png")
         }
+        val runtime = MoLangRuntime().setupClient().setup().also {
+            it.environment.query.addFunction("get_dex_key") { params ->
+                StringValue(CobblemonClient.clientPokedexData.getValueForKey(params.getString(0)))
+            }
+        }
 
         var x: Int = 0
         var y: Int = 0
@@ -150,14 +151,14 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
             dexDataList.forEachIndexed { index, dexData ->
                 val state = FloatingState()
                 val species = PokemonSpecies.getByIdentifier(dexData.entryId)
-                var pokemonNumber = "1"
-
-                if (pokemonNumber.toIntOrNull() != null) {
-                    while (pokemonNumber.length < 4) pokemonNumber = "0$pokemonNumber"
-                }
+                //FIXME: This may not work properly when accounting for custom pokemon with the same dex number
+                var pokemonNumber = species?.nationalPokedexNumber?.toString() ?: "0"
+                while (pokemonNumber.length < 4) pokemonNumber = "0$pokemonNumber"
 
                 val speciesNumber = pokemonNumber.text()
                 val discoveryLevel = discoveryLevelList[index]
+                val drawConditions = dexData.displayConditions ?: (dexData.variations[dexData.displayEntry] as BasicPokedexVariation).conditions
+                val shouldDrawMon = drawConditions.all { it.resolveBoolean(runtime) }
 
                 if (species == null) return@forEachIndexed
 
@@ -188,18 +189,19 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
                     )
                 }
 
-                if (discoveryLevel != PokedexEntryProgress.NONE) {
+                if (shouldDrawMon) {
                     context.enableScissor(
                         startPosX + 1,
                         startPosY + 1,
                         startPosX + SCROLL_SLOT_SIZE - 1,
                         startPosY + SCROLL_SLOT_SIZE - 2
                     )
+                    val aspectsToDraw = dexData.variations[dexData.displayEntry] as BasicPokedexVariation
                     matrices.pushPose()
                     matrices.translate(startPosX + (SCROLL_SLOT_SIZE / 2.0), startPosY + 1.0, 0.0)
                     matrices.scale(2.5F, 2.5F, 1F)
                     drawProfilePokemon(
-                        renderablePokemon = RenderablePokemon(species, setOf<String>()),
+                        renderablePokemon = RenderablePokemon(species, aspectsToDraw.aspects.split(" ").toSet()),
                         matrixStack = matrices,
                         rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),
                         state = state,
