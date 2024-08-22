@@ -1,10 +1,13 @@
 package com.cobblemon.mod.common.events
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.pokemon.PokemonGainedEvent
 import com.cobblemon.mod.common.api.events.pokemon.PokemonSeenEvent
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
 
 object PokedexHandler : EventHandler {
@@ -18,11 +21,19 @@ object PokedexHandler : EventHandler {
         val player = event.playerId.getPlayer() ?: return
         val playerPokedex = Cobblemon.playerDataManager.getPokedexData(player)
         playerPokedex.gainedCaughtStatus(event.pokemon)
+        player.sendPacket(SetClientPlayerDataPacket(
+            PlayerInstancedDataStoreType.POKEDEX,
+            playerPokedex.toClientData()
+        ))
     }
 
     fun onPokemonSeen(event: PokemonSeenEvent) {
         val player = event.playerId.getPlayer() ?: return
         val playerPokedex = Cobblemon.playerDataManager.getPokedexData(player)
         playerPokedex.gainedCaughtStatus(event.pokemon)
+        player.sendPacket(SetClientPlayerDataPacket(
+            PlayerInstancedDataStoreType.POKEDEX,
+            playerPokedex.toClientData()
+        ))
     }
 }

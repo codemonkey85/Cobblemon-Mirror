@@ -8,10 +8,10 @@
 
 package com.cobblemon.mod.common.api.storage.player.adapter
 
-import com.cobblemon.mod.common.api.dex.DexManager
+import com.cobblemon.mod.common.api.pokedex.PokedexManager
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 
-class DexDataNbtBackend : NbtBackedPlayerData<DexManager>("pokedex", PlayerInstancedDataStoreType.POKEDEX) {
-    override val codec = DexManager.CODEC
+class DexDataNbtBackend : NbtBackedPlayerData<PokedexManager>("pokedex", PlayerInstancedDataStoreType.POKEDEX) {
+    override val codec = PokedexManager.CODEC
     override val defaultData = DexDataJsonBackend.defaultDataFunc
 }

@@ -1,18 +1,18 @@
 {
   "id": "cobblemon:rattata",
-  "registryId": "cobblemon:species",
   "entryId": "cobblemon:rattata",
-  "extraData": [
+  "displayEntry": 0,
+  "variations": [
     {
-      "type": "cobblemon:form_dex_data",
+      "type": "cobblemon:basic_pokedex_variation",
       "aspects": "",
-      "conditions": ["q.get_dex_key('cobblemon.pokedex.rattata.knowledge') == 'CAUGHT'"]
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.rattata.normal.knowledge') == 'CAUGHT'"]
     },
     {
+      "type": "cobblemon:basic_pokedex_variation",
       "langKey": "cobblemon.ui.pokedex.info.form.alolan",
-      "type": "cobblemon:form_dex_data",
       "aspects": "alolan",
-      "conditions": ["q.get_dex_key('cobblemon.pokedex.entries.caught') == '5'"]
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.rattata.alola.knowledge') == 'CAUGHT'"]
     }
   ]
 }

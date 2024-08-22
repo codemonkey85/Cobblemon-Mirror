@@ -1,4 +1,4 @@
-package com.cobblemon.mod.common.api.dex.entry
+package com.cobblemon.mod.common.api.pokedex.entry
 
 import com.bedrockk.molang.MoLang
 import com.cobblemon.mod.common.api.molang.ExpressionLike
@@ -8,11 +8,11 @@ import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import net.minecraft.network.RegistryFriendlyByteBuf
 
-class FormDexData(
+class BasicPokedexVariation(
     val langKey: String = "cobblemon.ui.pokedex.info.form.normal",
     val aspects: String = "",
     val conditions: List<ExpressionLike> = emptyList(),
-) : ExtraDexData() {
+) : PokedexVariation() {
     override val type = ID
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
@@ -25,9 +25,9 @@ class FormDexData(
     }
 
     companion object {
-        val ID = cobblemonResource("form_dex_data")
+        val ID = cobblemonResource("basic_pokedex_variation")
 
-        fun decode(buffer: RegistryFriendlyByteBuf): FormDexData {
+        fun decode(buffer: RegistryFriendlyByteBuf): BasicPokedexVariation {
             val langKey = buffer.readString()
             val aspectString = buffer.readString()
             val numToRead = buffer.readInt()
@@ -36,7 +36,7 @@ class FormDexData(
                 val expressions = MoLang.createParser(buffer.readString()).parse()
                 conditions.add(ListExpression(expressions))
             }
-            return FormDexData(langKey, aspectString, conditions)
+            return BasicPokedexVariation(langKey, aspectString, conditions)
         }
     }
 }

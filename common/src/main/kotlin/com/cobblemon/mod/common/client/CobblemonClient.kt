@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.*
 import com.cobblemon.mod.common.Cobblemon.LOGGER
 import com.cobblemon.mod.common.api.berry.Berries
 import com.cobblemon.mod.common.api.scheduling.ClientTaskTracker
-import com.cobblemon.mod.common.api.storage.player.client.ClientDexManager
+import com.cobblemon.mod.common.api.storage.player.client.ClientPokedexManager
 import com.cobblemon.mod.common.api.storage.player.client.ClientGeneralPlayerData
 import com.cobblemon.mod.common.client.battle.ClientBattle
 import com.cobblemon.mod.common.client.gui.PartyOverlay
@@ -63,7 +63,7 @@ object CobblemonClient {
     var trade: ClientTrade? = null
     var battle: ClientBattle? = null
     var clientPlayerData = ClientGeneralPlayerData()
-    var clientPokedexData = ClientDexManager(mutableMapOf())
+    var clientPokedexData = ClientPokedexManager(mutableMapOf())
     /** If true then we won't bother them anymore about choosing a starter even if it's a thing they can do. */
     var checkedStarterScreen = false
     var requests = ClientPlayerActionRequests()
@@ -84,7 +84,7 @@ object CobblemonClient {
     fun onLogin() {
         clientPlayerData = ClientGeneralPlayerData()
         requests = ClientPlayerActionRequests()
-        clientPokedexData = ClientDexManager(mutableMapOf())
+        clientPokedexData = ClientPokedexManager(mutableMapOf())
         storage.onLogin()
         CobblemonDataProvider.canReload = false
     }

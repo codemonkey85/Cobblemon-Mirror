@@ -8,8 +8,7 @@
 
 package com.cobblemon.mod.common.api.storage.player
 
-import com.cobblemon.mod.common.api.dex.DexManager
-import com.cobblemon.mod.common.api.storage.player.client.ClientDexManager
+import com.cobblemon.mod.common.api.storage.player.client.ClientPokedexManager
 import com.cobblemon.mod.common.api.storage.player.client.ClientGeneralPlayerData
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
@@ -26,5 +25,5 @@ enum class PlayerInstancedDataStoreType(
     val incrementalAfterDecodeAction: (ClientInstancedPlayerData) -> Unit = {}
 ) {
     GENERAL(ClientGeneralPlayerData::decode, ClientGeneralPlayerData::runAction),
-    POKEDEX(ClientDexManager::decode, ClientDexManager::runAction)
+    POKEDEX(ClientPokedexManager::decode, ClientPokedexManager::runAction)
 }

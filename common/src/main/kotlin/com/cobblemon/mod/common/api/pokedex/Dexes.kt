@@ -1,4 +1,4 @@
-package com.cobblemon.mod.common.api.dex
+package com.cobblemon.mod.common.api.pokedex
 
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.PackType
 
-object Dexes : JsonDataRegistry<DexDef> {
+object Dexes : JsonDataRegistry<PokedexDef> {
     override val id = cobblemonResource("dexes")
     override val type = PackType.SERVER_DATA
 
@@ -22,12 +22,12 @@ object Dexes : JsonDataRegistry<DexDef> {
         .setPrettyPrinting()
         .create()
 
-    override val typeToken: TypeToken<DexDef> = TypeToken.get(DexDef::class.java)
+    override val typeToken: TypeToken<PokedexDef> = TypeToken.get(PokedexDef::class.java)
     override val resourcePath = "dexes"
 
-    val entries = mutableMapOf<ResourceLocation, DexDef>()
+    val entries = mutableMapOf<ResourceLocation, PokedexDef>()
 
-    override fun reload(data: Map<ResourceLocation, DexDef>) {
+    override fun reload(data: Map<ResourceLocation, PokedexDef>) {
         data.forEach { id, def ->
             entries[id] = def
         }

@@ -1,12 +1,12 @@
 {
   "id": "cobblemon:caterpie",
-  "registryId": "cobblemon:species",
   "entryId": "cobblemon:caterpie",
-  "extraData": [
+  "displayEntry": 0,
+  "variations": [
     {
-      "type": "cobblemon:form_dex_data",
+      "type": "cobblemon:basic_pokedex_variation",
       "aspects": "",
-      "conditions": ["q.get_dex_key('cobblemon.pokedex.caterpie.knowledge') == 'CAUGHT'"]
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.caterpie.normal.knowledge') == 'CAUGHT'"]
     }
   ]
 }

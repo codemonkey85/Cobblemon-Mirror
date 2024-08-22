@@ -1,12 +1,12 @@
 {
   "id": "cobblemon:blastoise",
-  "registryId": "cobblemon:species",
   "entryId": "cobblemon:blastoise",
-  "extraData": [
+  "displayEntry": 0,
+  "variations": [
     {
-      "type": "cobblemon:form_dex_data",
+      "type": "cobblemon:basic_pokedex_variation",
       "aspects": "",
-      "conditions": ["q.get_dex_key('cobblemon.pokedex.blastoise.knowledge') == 'CAUGHT'"]
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.blastoise.normal.knowledge') == 'CAUGHT'"]
     }
   ]
 }

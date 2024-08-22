@@ -6,14 +6,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.cobblemon.mod.common.api.dex.entry
+package com.cobblemon.mod.common.api.pokedex.entry
 
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
 import com.cobblemon.mod.common.net.messages.client.data.DexEntrySyncPacket
 import com.cobblemon.mod.common.util.adapters.ExpressionLikeAdapter
-import com.cobblemon.mod.common.util.adapters.ExtraDexDataAdapter
+import com.cobblemon.mod.common.util.adapters.PokedexVariationAdapter
 import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.Gson
@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.PackType
 
-object DexEntries : JsonDataRegistry<DexEntry> {
+object DexEntries : JsonDataRegistry<PokedexEntry> {
     override val id = cobblemonResource("dex_entries")
     override val type = PackType.SERVER_DATA
 
@@ -31,16 +31,16 @@ object DexEntries : JsonDataRegistry<DexEntry> {
         .disableHtmlEscaping()
         .setPrettyPrinting()
         .registerTypeAdapter(ExpressionLike::class.java, ExpressionLikeAdapter)
-        .registerTypeAdapter(ExtraDexData::class.java, ExtraDexDataAdapter)
+        .registerTypeAdapter(PokedexVariation::class.java, PokedexVariationAdapter)
         .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .create()
 
-    override val typeToken: TypeToken<DexEntry> = TypeToken.get(DexEntry::class.java)
+    override val typeToken: TypeToken<PokedexEntry> = TypeToken.get(PokedexEntry::class.java)
     override val resourcePath = "dex_entries"
 
-    val entries = mutableMapOf<ResourceLocation, DexEntry>()
+    val entries = mutableMapOf<ResourceLocation, PokedexEntry>()
 
-    override fun reload(data: Map<ResourceLocation, DexEntry>) {
+    override fun reload(data: Map<ResourceLocation, PokedexEntry>) {
         data.forEach { _, entry ->
             entries[entry.entryId] = entry
         }

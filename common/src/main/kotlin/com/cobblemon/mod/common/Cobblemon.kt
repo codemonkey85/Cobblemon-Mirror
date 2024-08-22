@@ -90,6 +90,7 @@ import com.cobblemon.mod.common.config.constraint.IntConstraint
 import com.cobblemon.mod.common.config.starter.StarterConfig
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.events.AdvancementHandler
+import com.cobblemon.mod.common.events.PokedexHandler
 import com.cobblemon.mod.common.events.ServerTickHandler
 import com.cobblemon.mod.common.net.messages.client.settings.ServerSettingsPacket
 import com.cobblemon.mod.common.permission.LaxPermissionValidator
@@ -386,6 +387,7 @@ object Cobblemon {
 
     fun registerEventHandlers() {
         AdvancementHandler.registerListeners()
+        PokedexHandler.registerListeners()
     }
 
     fun getLevel(dimension: ResourceKey<Level>): Level? {

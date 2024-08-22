@@ -1,7 +1,6 @@
 package com.cobblemon.mod.common.api.storage.player.client
 
-import com.cobblemon.mod.common.api.dex.AbstractDexManager
-import com.cobblemon.mod.common.api.dex.DexManager
+import com.cobblemon.mod.common.api.pokedex.AbstractPokedexManager
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
@@ -9,10 +8,10 @@ import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import net.minecraft.network.RegistryFriendlyByteBuf
 
-class ClientDexManager(
+class ClientPokedexManager(
     override val entries: MutableMap<String, String>,
     override val isIncrement: Boolean = false
-) : AbstractDexManager(), ClientInstancedPlayerData {
+) : AbstractPokedexManager(), ClientInstancedPlayerData {
     override fun encode(buf: RegistryFriendlyByteBuf) {
         buf.writeInt(entries.size)
         for (entry in entries) {
@@ -30,11 +29,11 @@ class ClientDexManager(
                 val value = buf.readString()
                 map[key] = value
             }
-            return SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, ClientDexManager(map, false))
+            return SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, ClientPokedexManager(map, false))
         }
 
         fun runAction(data: ClientInstancedPlayerData) {
-            if (data !is ClientDexManager) return
+            if (data !is ClientPokedexManager) return
             CobblemonClient.clientPokedexData = data
         }
     }

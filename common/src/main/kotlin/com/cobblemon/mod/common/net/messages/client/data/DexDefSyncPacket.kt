@@ -9,18 +9,18 @@
 package com.cobblemon.mod.common.net.messages.client.data
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.api.dex.DexDef
-import com.cobblemon.mod.common.api.dex.Dexes
+import com.cobblemon.mod.common.api.pokedex.PokedexDef
+import com.cobblemon.mod.common.api.pokedex.Dexes
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.network.RegistryFriendlyByteBuf
 
 class DexDefSyncPacket(
-    dexes: Collection<DexDef>
-) : DataRegistrySyncPacket<DexDef, DexDefSyncPacket>(dexes) {
+    dexes: Collection<PokedexDef>
+) : DataRegistrySyncPacket<PokedexDef, DexDefSyncPacket>(dexes) {
 
     override val id = ID
 
-    override fun encodeEntry(buffer: RegistryFriendlyByteBuf, entry: DexDef) {
+    override fun encodeEntry(buffer: RegistryFriendlyByteBuf, entry: PokedexDef) {
         try {
             entry.encode(buffer)
         } catch (e: Exception) {
@@ -28,8 +28,8 @@ class DexDefSyncPacket(
         }
     }
 
-    override fun decodeEntry(buffer: RegistryFriendlyByteBuf): DexDef? {
-        val dexData = DexDef()
+    override fun decodeEntry(buffer: RegistryFriendlyByteBuf): PokedexDef? {
+        val dexData = PokedexDef()
         return try {
             dexData.decode(buffer)
             dexData
@@ -39,7 +39,7 @@ class DexDefSyncPacket(
         }
     }
 
-    override fun synchronizeDecoded(entries: Collection<DexDef>) {
+    override fun synchronizeDecoded(entries: Collection<PokedexDef>) {
         Dexes.reload(entries.associateBy { it.id })
     }
 

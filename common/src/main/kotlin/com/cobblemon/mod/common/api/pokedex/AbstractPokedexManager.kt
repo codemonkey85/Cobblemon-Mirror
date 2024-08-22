@@ -1,13 +1,8 @@
-package com.cobblemon.mod.common.api.dex
+package com.cobblemon.mod.common.api.pokedex
 
-import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
-import com.mojang.serialization.Codec
-import com.mojang.serialization.codecs.PrimitiveCodec
-import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.resources.ResourceLocation
-import java.util.UUID
 
-abstract class AbstractDexManager() {
+abstract class AbstractPokedexManager() {
     abstract val entries: Map<String, String>
 
     fun getValueForKey(key: String): String? {
@@ -30,6 +25,10 @@ abstract class AbstractDexManager() {
 
         fun getKnowledgeKeyForSpecies(speciesId: ResourceLocation): String {
             return "${getKeyForSpeciesBase(speciesId)}.knowledge"
+        }
+
+        fun getKnowledgeKeyForForm(speciesId: ResourceLocation, formName: String): String {
+            return "${getKeyForSpeciesBase(speciesId)}.${formName.lowercase()}.knowledge"
         }
 
         fun getCaptureMethodKeyForSpecies(speciesId: ResourceLocation): String {

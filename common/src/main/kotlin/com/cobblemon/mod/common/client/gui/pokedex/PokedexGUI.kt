@@ -11,16 +11,16 @@ package com.cobblemon.mod.common.client.gui.pokedex
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.api.dex.*
 import com.cobblemon.mod.common.CobblemonSounds
-import com.cobblemon.mod.common.api.dex.entry.DexEntries
-import com.cobblemon.mod.common.api.dex.entry.DexEntry
-import com.cobblemon.mod.common.api.dex.entry.FormDexData
+import com.cobblemon.mod.common.api.pokedex.entry.DexEntries
+import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
+import com.cobblemon.mod.common.api.pokedex.entry.BasicPokedexVariation
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
-import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
+import com.cobblemon.mod.common.api.pokedex.AbstractPokedexManager
+import com.cobblemon.mod.common.api.pokedex.Dexes
+import com.cobblemon.mod.common.api.pokedex.PokedexDef
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
-import com.cobblemon.mod.common.api.pokemon.PokemonSpecies.species
-import com.cobblemon.mod.common.api.storage.player.client.ClientDexManager
+import com.cobblemon.mod.common.api.storage.player.client.ClientPokedexManager
 import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.client.ClientMoLangFunctions.setupClient
@@ -39,7 +39,6 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.TAB_STATS
 import com.cobblemon.mod.common.client.gui.pokedex.widgets.*
 import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -65,7 +64,7 @@ class PokedexGUI private constructor(
     var initialDragPosX = 0.0
     var canDragRender = false
 
-    private var filteredPokedex: Collection<DexDef> = mutableListOf()
+    private var filteredPokedex: Collection<PokedexDef> = mutableListOf()
     private var seenCount = "0000"
     private var ownedCount = "0000"
 
@@ -75,8 +74,8 @@ class PokedexGUI private constructor(
         }
     }
 
-    private var selectedEntry: DexEntry? = null
-    private var selectedForm: FormDexData? = null
+    private var selectedEntry: PokedexEntry? = null
+    private var selectedForm: BasicPokedexVariation? = null
 
     private lateinit var scrollScreen: EntriesScrollingWidget
     private lateinit var pokemonInfoWidget: PokemonInfoWidget
@@ -99,11 +98,11 @@ class PokedexGUI private constructor(
 
         val pokedex = CobblemonClient.clientPokedexData
 
-        val ownedAmount = pokedex.getValueForKey(AbstractDexManager.NUM_CAUGHT_KEY)?.toInt() ?: 0
+        val ownedAmount = pokedex.getValueForKey(AbstractPokedexManager.NUM_CAUGHT_KEY)?.toInt() ?: 0
         ownedCount = ownedAmount.toString()
         while (ownedCount.length < 4) ownedCount = "0$ownedCount"
 
-        seenCount = pokedex.getValueForKey(AbstractDexManager.NUM_SEEN_KEY) ?: "0"
+        seenCount = pokedex.getValueForKey(AbstractPokedexManager.NUM_SEEN_KEY) ?: "0"
         while (seenCount.length < 4) seenCount = "0$seenCount"
 
         //Info Widget
@@ -313,9 +312,9 @@ class PokedexGUI private constructor(
     }
      */
 
-    fun setSelectedEntry(newSelectedEntry: DexEntry) {
+    fun setSelectedEntry(newSelectedEntry: PokedexEntry) {
         selectedEntry = newSelectedEntry
-        selectedForm = (newSelectedEntry.extraData.get(0) as FormDexData)
+        selectedForm = (newSelectedEntry.variations.get(0) as BasicPokedexVariation)
 
         pokemonInfoWidget.setDexEntry(selectedEntry!!)
         displaytabInfoElement(tabInfoIndex)
@@ -430,7 +429,7 @@ class PokedexGUI private constructor(
         }
     }
 
-    fun updateSelectedForm(newForm: FormDexData) {
+    fun updateSelectedForm(newForm: BasicPokedexVariation) {
         selectedForm = newForm
         displaytabInfoElement(tabInfoIndex)
     }
@@ -462,7 +461,7 @@ class PokedexGUI private constructor(
         /**
          * Attempts to open this screen for a client.
          */
-        fun open(pokedex: ClientDexManager, type: PokedexTypes, species: ResourceLocation? = null) {
+        fun open(pokedex: ClientPokedexManager, type: PokedexTypes, species: ResourceLocation? = null) {
             val mc = Minecraft.getInstance()
             val screen = PokedexGUI(type, species)
             mc.setScreen(screen)

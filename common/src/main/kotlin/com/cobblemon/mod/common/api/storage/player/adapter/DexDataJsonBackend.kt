@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.api.storage.player.adapter
 
-import com.cobblemon.mod.common.api.dex.DexManager
+import com.cobblemon.mod.common.api.pokedex.PokedexManager
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.google.gson.GsonBuilder
@@ -22,18 +22,18 @@ import java.util.UUID
  * @author Apion
  * @since February 22, 2024
  */
-class DexDataJsonBackend: JsonBackedPlayerDataStoreBackend<DexManager>("pokedex", PlayerInstancedDataStoreType.POKEDEX) {
+class DexDataJsonBackend: JsonBackedPlayerDataStoreBackend<PokedexManager>("pokedex", PlayerInstancedDataStoreType.POKEDEX) {
     override val gson = GsonBuilder()
         .setPrettyPrinting()
         .disableHtmlEscaping()
         .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .create()
-    override val classToken = TypeToken.get(DexManager::class.java)
+    override val classToken = TypeToken.get(PokedexManager::class.java)
     override val defaultData = defaultDataFunc
 
     companion object {
         val defaultDataFunc = { uuid: UUID ->
-            DexManager(uuid, mutableMapOf())
+            PokedexManager(uuid, mutableMapOf())
         }
     }
 

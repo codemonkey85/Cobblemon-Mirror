@@ -11,12 +11,11 @@ package com.cobblemon.mod.common.client.gui.pokedex.widgets
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.api.dex.entry.DexEntry
-import com.cobblemon.mod.common.api.dex.entry.FormDexData
+import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
+import com.cobblemon.mod.common.api.pokedex.entry.BasicPokedexVariation
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
-import com.cobblemon.mod.common.api.pokemon.PokemonSpecies.species
 import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.api.types.ElementalType
@@ -37,7 +36,6 @@ import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseAdapter.Companion.runtime
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Gender
@@ -58,14 +56,14 @@ import org.joml.Quaternionf
 import org.joml.Vector3f
 import java.io.FileNotFoundException
 
-class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormDexData) -> (Unit)) : SoundlessWidget(
+class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (BasicPokedexVariation) -> (Unit)) : SoundlessWidget(
     pX,
     pY,
     POKEMON_PORTRAIT_WIDTH,
     POKEMON_PORTRAIT_HEIGHT,
     lang("ui.pokedex.pokemon_info"),
 ) {
-    var currentEntry : DexEntry? = null
+    var currentEntry : PokedexEntry? = null
 
     var speciesName: MutableComponent = Component.translatable("")
     var speciesNumber: MutableComponent = "0000".text()
@@ -76,7 +74,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormDexData) 
         }
     }
 
-    var visibleForms = mutableListOf<FormDexData>()
+    var visibleForms = mutableListOf<BasicPokedexVariation>()
     var selectedFormIndex: Int = 0
 
     var type: Array<ElementalType?> = arrayOf(null, null)
@@ -365,8 +363,8 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormDexData) 
             animationLeftButton.render(context,mouseX, mouseY, delta)
             animationRightButton.render(context,mouseX, mouseY, delta)
 
-            val showableForms = currentEntry!!.extraData
-                .map { it as FormDexData }
+            val showableForms = currentEntry!!.variations
+                .map { it as BasicPokedexVariation }
             // Forms
             if(showableForms.size > 1 && showableForms.size > selectedFormIndex) {
                 formLeftButton.render(context,mouseX, mouseY, delta)
@@ -395,17 +393,17 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (FormDexData) 
         }
     }
 
-    fun setDexEntry(dexEntry : DexEntry) {
-        this.currentEntry = dexEntry
+    fun setDexEntry(pokedexEntry : PokedexEntry) {
+        this.currentEntry = pokedexEntry
 
-        val species = PokemonSpecies.getByIdentifier(dexEntry.entryId)
-        val forms = dexEntry.extraData
-            .map { it as FormDexData }
+        val species = PokemonSpecies.getByIdentifier(pokedexEntry.entryId)
+        val forms = pokedexEntry.variations
+            .map { it as BasicPokedexVariation }
 
         if (species != null) {
             //FIXME: Check condition here
-            this.visibleForms = dexEntry.extraData
-                .map { it as FormDexData }
+            this.visibleForms = pokedexEntry.variations
+                .map { it as BasicPokedexVariation }
                 .toMutableList()
             var pokemonNumber = species.nationalPokedexNumber.toString()
             while (pokemonNumber.length < 4) pokemonNumber = "0$pokemonNumber"
