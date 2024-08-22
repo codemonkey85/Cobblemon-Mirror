@@ -28,7 +28,7 @@ abstract class AbstractPokedexManager() {
         }
 
         fun getKnowledgeKeyForForm(speciesId: ResourceLocation, formName: String): String {
-            return "${getKeyForSpeciesBase(speciesId)}.${formName.lowercase()}.knowledge"
+            return "${getKnowledgeKeyForSpecies(speciesId)}.${formName.lowercase()}"
         }
 
         fun getCaptureMethodKeyForSpecies(speciesId: ResourceLocation): String {
