@@ -1,0 +1,19 @@
+
+{
+  "id": "cobblemon:vulpix",
+  "entryId": "cobblemon:vulpix",
+  "displayEntry": 0,
+  "variations": [
+    {
+      "type": "cobblemon:basic_pokedex_variation",
+      "aspects": "",
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.vulpix.knowledge.normal') == 'CAUGHT'"]
+    },
+    {
+      "type": "cobblemon:basic_pokedex_variation",
+      "langKey": "cobblemon.ui.pokedex.info.form.alolan",
+      "aspects": "alolan",
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.vulpix.knowledge.alola') == 'CAUGHT'"]
+    }
+  ]
+}

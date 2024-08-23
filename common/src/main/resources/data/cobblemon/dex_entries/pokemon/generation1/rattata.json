@@ -1,3 +1,4 @@
+
 {
   "id": "cobblemon:rattata",
   "entryId": "cobblemon:rattata",
@@ -6,13 +7,13 @@
     {
       "type": "cobblemon:basic_pokedex_variation",
       "aspects": "",
-      "conditions": ["q.get_dex_key('cobblemon.pokedex.rattata.normal.knowledge') == 'CAUGHT'"]
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.rattata.knowledge.normal') == 'CAUGHT'"]
     },
     {
       "type": "cobblemon:basic_pokedex_variation",
       "langKey": "cobblemon.ui.pokedex.info.form.alolan",
       "aspects": "alolan",
-      "conditions": ["q.get_dex_key('cobblemon.pokedex.rattata.alola.knowledge') == 'CAUGHT'"]
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.rattata.knowledge.alola') == 'CAUGHT'"]
     }
   ]
 }

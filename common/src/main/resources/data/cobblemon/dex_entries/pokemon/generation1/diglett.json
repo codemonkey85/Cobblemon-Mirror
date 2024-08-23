@@ -1,0 +1,19 @@
+
+{
+  "id": "cobblemon:diglett",
+  "entryId": "cobblemon:diglett",
+  "displayEntry": 0,
+  "variations": [
+    {
+      "type": "cobblemon:basic_pokedex_variation",
+      "aspects": "",
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.diglett.knowledge.normal') == 'CAUGHT'"]
+    },
+    {
+      "type": "cobblemon:basic_pokedex_variation",
+      "langKey": "cobblemon.ui.pokedex.info.form.alolan",
+      "aspects": "alolan",
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.diglett.knowledge.alola') == 'CAUGHT'"]
+    }
+  ]
+}

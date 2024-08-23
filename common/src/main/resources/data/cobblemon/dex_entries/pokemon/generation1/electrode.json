@@ -1,0 +1,19 @@
+
+{
+  "id": "cobblemon:electrode",
+  "entryId": "cobblemon:electrode",
+  "displayEntry": 0,
+  "variations": [
+    {
+      "type": "cobblemon:basic_pokedex_variation",
+      "aspects": "",
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.electrode.knowledge.normal') == 'CAUGHT'"]
+    },
+    {
+      "type": "cobblemon:basic_pokedex_variation",
+      "langKey": "cobblemon.ui.pokedex.info.form.hisuian",
+      "aspects": "hisuian",
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.electrode.knowledge.hisui') == 'CAUGHT'"]
+    }
+  ]
+}

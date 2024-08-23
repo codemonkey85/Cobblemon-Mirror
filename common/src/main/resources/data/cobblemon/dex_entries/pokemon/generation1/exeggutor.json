@@ -1,0 +1,19 @@
+
+{
+  "id": "cobblemon:exeggutor",
+  "entryId": "cobblemon:exeggutor",
+  "displayEntry": 0,
+  "variations": [
+    {
+      "type": "cobblemon:basic_pokedex_variation",
+      "aspects": "",
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.exeggutor.knowledge.normal') == 'CAUGHT'"]
+    },
+    {
+      "type": "cobblemon:basic_pokedex_variation",
+      "langKey": "cobblemon.ui.pokedex.info.form.alolan",
+      "aspects": "alolan",
+      "conditions": ["q.get_dex_key('cobblemon.pokedex.exeggutor.knowledge.alola') == 'CAUGHT'"]
+    }
+  ]
+}
