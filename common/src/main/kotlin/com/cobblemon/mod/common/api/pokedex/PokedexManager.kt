@@ -1,3 +1,11 @@
+/*
+ * Copyright (C) 2023 Cobblemon Contributors
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.cobblemon.mod.common.api.pokedex
 
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
@@ -9,42 +17,30 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import java.util.UUID
+import net.minecraft.resources.ResourceLocation
 
 class PokedexManager(
     override val uuid: UUID,
-    override val entries: MutableMap<String, String>
+    override val speciesRecords: MutableMap<ResourceLocation, SpeciesDexRecord>
 ) : AbstractPokedexManager(), InstancedPlayerData {
 
-    fun gainedSeenStatus(species: Species, form: FormData) {
-        val curKnowledge = getKnowledgeForSpecies(species.resourceIdentifier)
-        if (curKnowledge == PokedexEntryProgress.NONE) {
-            entries[NUM_SEEN_KEY] = (entries[NUM_SEEN_KEY]?.toInt()?.plus(1)).toString()
-        }
-    }
-
-    fun gainedCaughtStatus(pokemon: Pokemon) {
-        val curKnowledge = getKnowledgeForSpecies(pokemon.species.resourceIdentifier)
-        if (curKnowledge == PokedexEntryProgress.ENCOUNTERED) {
-            val numSeenValue = entries[NUM_SEEN_KEY] ?: "0"
-            entries[NUM_SEEN_KEY] = (numSeenValue.toInt().minus(1)).toString()
-        }
-        if (curKnowledge != PokedexEntryProgress.CAUGHT) {
-            val numCaughtValue = entries[NUM_CAUGHT_KEY] ?: "0"
-            entries[NUM_CAUGHT_KEY] = (numCaughtValue.toInt().plus(1)).toString()
-        }
-
+    fun encounter(pokemon: Pokemon) {
         val speciesId = pokemon.species.resourceIdentifier
         val formName = pokemon.form.formOnlyShowdownId()
+        getOrCreateSpeciesRecord(speciesId).getOrCreateFormRecord(formName).encountered(pokemon)
+    }
 
-        entries[getKnowledgeKeyForSpecies(speciesId)] = PokedexEntryProgress.CAUGHT.serializedName
-        entries[getKnowledgeKeyForForm(speciesId, formName)] = PokedexEntryProgress.CAUGHT.serializedName
+    fun catch(pokemon: Pokemon) {
+        val speciesId = pokemon.species.resourceIdentifier
+        val formName = pokemon.form.formOnlyShowdownId()
+        getOrCreateSpeciesRecord(speciesId).getOrCreateFormRecord(formName).caught(pokemon)
     }
 
     companion object {
         val CODEC = RecordCodecBuilder.create<PokedexManager> { instance ->
             instance.group(
                 PrimitiveCodec.STRING.fieldOf("uuid").forGetter { it.uuid.toString() },
-                Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("entries").forGetter { it.entries }
+                Codec.unboundedMap(ResourceLocation.CODEC, SpeciesDexRecord.CODEC).fieldOf("speciesRecords").forGetter { it.speciesRecords }
             ).apply(instance) { uuid, map ->
                 //Codec stuff seems to deserialize to an immutable map, so we have to convert it to mutable explicitly
                 PokedexManager(UUID.fromString(uuid), map.toMutableMap())
@@ -52,5 +48,5 @@ class PokedexManager(
         }
     }
 
-    override fun toClientData() = ClientPokedexManager(entries, false)
+    override fun toClientData() = ClientPokedexManager(speciesRecords, false)
 }
