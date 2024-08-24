@@ -7,13 +7,7 @@
     {
       "type": "cobblemon:basic_pokedex_variation",
       "aspects": "",
-      "conditions": ["q.get_dex_key('cobblemon.pokedex.dugtrio.knowledge.normal') == 'CAUGHT'"]
-    },
-    {
-      "type": "cobblemon:basic_pokedex_variation",
-      "langKey": "cobblemon.ui.pokedex.info.form.alolan",
-      "aspects": "alolan",
-      "conditions": ["q.get_dex_key('cobblemon.pokedex.dugtrio.knowledge.alola') == 'CAUGHT'"]
+      "conditions": ["temp.species_record = q.get_pokedex.get_species_record('cobblemon:dugtrio'); return temp.species_record.has_knowledge('normal')"]
     }
   ]
 }

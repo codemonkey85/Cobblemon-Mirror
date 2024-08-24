@@ -128,7 +128,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
             private val unimplementedIcon = cobblemonResource("textures/gui/pokedex/pokedex_slot_unimplemented.png")
         }
         val runtime = MoLangRuntime().setupClient().setup().also {
-            it.environment.query.addFunction("get_pokedex") { CobblemonClient.clientPokedexData }
+            it.environment.query.addFunction("get_pokedex") { CobblemonClient.clientPokedexData.struct }
         }
 
         var x: Int = 0

@@ -7,7 +7,7 @@
     {
       "type": "cobblemon:basic_pokedex_variation",
       "aspects": "",
-      "conditions": ["q.get_dex_key('cobblemon.pokedex.poliwrath.knowledge.normal') == 'CAUGHT'"]
+      "conditions": ["temp.species_record = q.get_pokedex.get_species_record('cobblemon:poliwrath'); return temp.species_record.has_knowledge('normal')"]
     }
   ]
 }
