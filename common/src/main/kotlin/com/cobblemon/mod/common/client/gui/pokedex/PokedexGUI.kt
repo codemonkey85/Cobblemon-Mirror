@@ -17,8 +17,10 @@ import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
 import com.cobblemon.mod.common.api.pokedex.entry.BasicPokedexVariation
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.pokedex.AbstractPokedexManager
+import com.cobblemon.mod.common.api.pokedex.CaughtCount
 import com.cobblemon.mod.common.api.pokedex.Dexes
 import com.cobblemon.mod.common.api.pokedex.PokedexDef
+import com.cobblemon.mod.common.api.pokedex.SeenCount
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.storage.player.client.ClientPokedexManager
 import com.cobblemon.mod.common.api.text.bold
@@ -96,11 +98,12 @@ class PokedexGUI private constructor(
 
         val pokedex = CobblemonClient.clientPokedexData
 
-        val ownedAmount = pokedex.getValueForKey(AbstractPokedexManager.NUM_CAUGHT_KEY)?.toInt() ?: 0
+        val ownedAmount = pokedex.getDexCalculatedValue(cobblemonResource("kanto"),  CaughtCount)
         ownedCount = ownedAmount.toString()
         while (ownedCount.length < 4) ownedCount = "0$ownedCount"
 
-        seenCount = pokedex.getValueForKey(AbstractPokedexManager.NUM_SEEN_KEY) ?: "0"
+        //FIXME: This is the caught count, not the s
+        seenCount = pokedex.getDexCalculatedValue(cobblemonResource("kanto"),  SeenCount).toString()
         while (seenCount.length < 4) seenCount = "0$seenCount"
 
         //Info Widget
@@ -271,7 +274,7 @@ class PokedexGUI private constructor(
         val x = (width - BASE_WIDTH) / 2
         val y = (height - BASE_HEIGHT) / 2
 
-        filteredPokedex = listOf(Dexes.entries[cobblemonResource("kanto")]!!)
+        filteredPokedex = listOf(Dexes.dexEntryMap[cobblemonResource("kanto")]!!)
 
         //Scroll Screen
         if (::scrollScreen.isInitialized) removeWidget(scrollScreen)

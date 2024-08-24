@@ -25,7 +25,7 @@ class ClientPokedexManager(
     override fun encode(buf: RegistryFriendlyByteBuf) {
         buf.writeMap(
             speciesRecords,
-            { key, _ -> buf.writeString(key.toString()) },
+            { _, key -> buf.writeString(key.toString()) },
             { _, value -> value.encode(buf) }
         )
     }
@@ -36,7 +36,7 @@ class ClientPokedexManager(
                 { buf.readString().asIdentifierDefaultingNamespace() },
                 { SpeciesDexRecord().also { it.decode(buf) } }
             )
-            return SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, ClientPokedexManager(map, false))
+            return SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, ClientPokedexManager(map))
         }
 
         fun runAction(data: ClientInstancedPlayerData) {

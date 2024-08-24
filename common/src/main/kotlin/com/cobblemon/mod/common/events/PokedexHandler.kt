@@ -38,7 +38,7 @@ object PokedexHandler : EventHandler {
     fun onPokemonSeen(event: PokemonSeenEvent) {
         val player = event.playerId.getPlayer() ?: return
         val playerPokedex = Cobblemon.playerDataManager.getPokedexData(player)
-        playerPokedex.gainedCaughtStatus(event.pokemon)
+        playerPokedex.encounter(event.pokemon)
         player.sendPacket(SetClientPlayerDataPacket(
             PlayerInstancedDataStoreType.POKEDEX,
             playerPokedex.toClientData()

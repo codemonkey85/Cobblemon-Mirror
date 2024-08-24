@@ -12,9 +12,9 @@ import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.util.readCollection
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
+import com.google.common.collect.Sets
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.ListCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
@@ -120,7 +120,7 @@ class SpeciesDexRecord {
 
     fun decode(buffer: RegistryFriendlyByteBuf) {
         aspects.clear()
-        aspects.addAll(buffer.readCollection { buffer.readString() })
+        aspects.addAll(buffer.readCollection(Sets::newHashSetWithExpectedSize) { buffer.readString() })
         formRecords.clear()
         val numForms = buffer.readInt()
         for (i in 0 until numForms) {

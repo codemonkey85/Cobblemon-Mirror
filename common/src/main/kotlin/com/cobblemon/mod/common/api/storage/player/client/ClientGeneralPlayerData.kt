@@ -35,7 +35,6 @@ data class ClientGeneralPlayerData(
     var starterUUID: UUID? = null,
     val battleTheme: ResourceLocation? = null
 ) : ClientInstancedPlayerData {
-    override val isIncrement = false
 
     override fun encode(buf: RegistryFriendlyByteBuf) {
         buf.writeBoolean(promptStarter)

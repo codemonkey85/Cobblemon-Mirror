@@ -13,10 +13,11 @@ import com.bedrockk.molang.runtime.struct.VariableStruct
 import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.util.readCollection
 import com.cobblemon.mod.common.util.readEnumConstant
 import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeEnumConstant
 import com.cobblemon.mod.common.util.writeString
+import com.google.common.collect.Sets
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.ListCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -110,16 +111,16 @@ class FormDexRecord {
     }
 
     fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeCollection(genders) { _, it -> buffer.writeEnum(it) }
+        buffer.writeCollection(genders) { _, it -> buffer.writeEnumConstant(it) }
         buffer.writeCollection(seenShinyStates) { _, it -> buffer.writeString(it) }
-        buffer.writeEnum(knowledge)
+        buffer.writeEnumConstant(knowledge)
     }
 
     fun decode(buffer: RegistryFriendlyByteBuf) {
         genders.clear()
         seenShinyStates.clear()
-        genders.addAll(buffer.readCollection { buffer.readEnumConstant(Gender::class.java) })
-        seenShinyStates.addAll(buffer.readCollection { buffer.readString() })
+        genders.addAll(buffer.readCollection(Sets::newHashSetWithExpectedSize) { buffer.readEnumConstant(Gender::class.java) })
+        seenShinyStates.addAll(buffer.readCollection(Sets::newHashSetWithExpectedSize) { buffer.readString() })
         knowledge = buffer.readEnumConstant(PokedexEntryProgress::class.java)
     }
 }

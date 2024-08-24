@@ -68,5 +68,5 @@ class PokedexManager(
         }
     }
 
-    override fun toClientData() = ClientPokedexManager(speciesRecords, false)
+    override fun toClientData() = ClientPokedexManager(speciesRecords)
 }
