@@ -69,9 +69,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (BasicPokedexV
     var speciesNumber: MutableComponent = "0000".text()
 
     val runtime = MoLangRuntime().setupClient().setup().also {
-        it.environment.query.addFunction("get_dex_key") { params ->
-            StringValue(CobblemonClient.clientPokedexData.getValueForKey(params.getString(0)))
-        }
+        it.environment.query.addFunction("get_pokedex") { CobblemonClient.clientPokedexData.struct }
     }
 
     var visibleForms = mutableListOf<BasicPokedexVariation>()

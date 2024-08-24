@@ -21,7 +21,6 @@ import net.minecraft.resources.ResourceLocation
 
 class ClientPokedexManager(
     override val speciesRecords: MutableMap<ResourceLocation, SpeciesDexRecord>,
-    override val isIncrement: Boolean = false
 ) : AbstractPokedexManager(), ClientInstancedPlayerData {
     override fun encode(buf: RegistryFriendlyByteBuf) {
         buf.writeMap(
@@ -43,6 +42,11 @@ class ClientPokedexManager(
         fun runAction(data: ClientInstancedPlayerData) {
             if (data !is ClientPokedexManager) return
             CobblemonClient.clientPokedexData = data
+        }
+
+        fun runIncremental(data: ClientInstancedPlayerData) {
+            if (data !is ClientPokedexManager) return
+            CobblemonClient.clientPokedexData.speciesRecords.putAll(data.speciesRecords)
         }
     }
 }

@@ -33,7 +33,7 @@ import net.minecraft.resources.ResourceLocation
  */
 class SpeciesDexRecord {
     companion object {
-        val CODEC = RecordCodecBuilder.create<SpeciesDexRecord> { instance ->
+        val CODEC: Codec<SpeciesDexRecord> = RecordCodecBuilder.create { instance ->
             instance.group(
                 ListCodec(PrimitiveCodec.STRING, 0, 512).fieldOf("aspects").forGetter { it.aspects.toList() },
                 Codec.unboundedMap(Codec.STRING, FormDexRecord.CODEC).fieldOf("formRecords").forGetter { it.formRecords }
@@ -46,6 +46,8 @@ class SpeciesDexRecord {
         }
     }
 
+    @Transient
+    lateinit var id: ResourceLocation
     private val aspects: MutableSet<String> = mutableSetOf()
     private val formRecords: MutableMap<String, FormDexRecord> = mutableMapOf()
 
@@ -71,7 +73,8 @@ class SpeciesDexRecord {
     @Transient
     lateinit var pokedexManager: AbstractPokedexManager
 
-    fun initialize(pokedexManager: AbstractPokedexManager) {
+    fun initialize(pokedexManager: AbstractPokedexManager, id: ResourceLocation) {
+        this.id = id
         this.pokedexManager = pokedexManager
     }
 

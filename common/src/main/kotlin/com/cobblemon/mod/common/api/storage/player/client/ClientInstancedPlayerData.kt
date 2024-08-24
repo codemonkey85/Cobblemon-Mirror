@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.storage.player.client
 
+import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
@@ -20,6 +21,5 @@ import net.minecraft.network.RegistryFriendlyByteBuf
  * @author Apion
  */
 interface ClientInstancedPlayerData {
-    val isIncrement: Boolean
     fun encode(buf: RegistryFriendlyByteBuf)
 }

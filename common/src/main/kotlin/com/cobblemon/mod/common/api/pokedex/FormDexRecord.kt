@@ -19,9 +19,7 @@ import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.ListCodec
-import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import java.util.UUID
 import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
@@ -33,14 +31,14 @@ import net.minecraft.network.RegistryFriendlyByteBuf
  */
 class FormDexRecord {
     companion object {
-        val CODEC = RecordCodecBuilder.create<FormDexRecord> { instance ->
+        val CODEC: Codec<FormDexRecord> = RecordCodecBuilder.create { instance ->
             instance.group(
                 ListCodec(Codec.STRING, 0, 3).fieldOf("genders").forGetter { it.genders.map { it.name } },
                 ListCodec(Codec.STRING, 0, 2).fieldOf("seenShinyStates").forGetter { it.seenShinyStates.toList() },
                 Codec.STRING.fieldOf("knowledge").forGetter { it.knowledge.name }
             ).apply(instance) { genders, seenShinyStates, knowledge ->
                 FormDexRecord().also {
-                    it.genders.addAll(genders.map { Gender.valueOf(it) })
+                    it.genders.addAll(genders.map(Gender::valueOf))
                     it.seenShinyStates.addAll(seenShinyStates)
                     it.knowledge = PokedexEntryProgress.valueOf(knowledge)
                 }

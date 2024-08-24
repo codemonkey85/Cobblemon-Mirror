@@ -26,7 +26,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 class SetClientPlayerDataPacket(
     val type: PlayerInstancedDataStoreType,
     val playerData: ClientInstancedPlayerData,
-    var isIncremental:Boolean = false
+    var isIncremental: Boolean = false
 ) : NetworkPacket<SetClientPlayerDataPacket> {
 
     override val id = ID

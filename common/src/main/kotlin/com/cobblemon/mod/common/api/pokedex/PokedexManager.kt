@@ -8,11 +8,15 @@
 
 package com.cobblemon.mod.common.api.pokedex
 
+import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.api.storage.player.client.ClientPokedexManager
+import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.Species
+import com.cobblemon.mod.common.util.getPlayer
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -24,6 +28,8 @@ class PokedexManager(
     override val speciesRecords: MutableMap<ResourceLocation, SpeciesDexRecord>
 ) : AbstractPokedexManager(), InstancedPlayerData {
 
+    var dirty = false
+
     fun encounter(pokemon: Pokemon) {
         val speciesId = pokemon.species.resourceIdentifier
         val formName = pokemon.form.formOnlyShowdownId()
@@ -34,6 +40,20 @@ class PokedexManager(
         val speciesId = pokemon.species.resourceIdentifier
         val formName = pokemon.form.formOnlyShowdownId()
         getOrCreateSpeciesRecord(speciesId).getOrCreateFormRecord(formName).caught(pokemon)
+    }
+
+    override fun markDirty() {
+        dirty = true
+    }
+
+    override fun onSpeciesRecordUpdated(speciesDexRecord: SpeciesDexRecord) {
+        uuid.getPlayer()?.sendPacket(
+            SetClientPlayerDataPacket(
+                type = PlayerInstancedDataStoreType.POKEDEX,
+                playerData = ClientPokedexManager(mutableMapOf(speciesDexRecord.id to speciesDexRecord)),
+                isIncremental = true
+            )
+        )
     }
 
     companion object {

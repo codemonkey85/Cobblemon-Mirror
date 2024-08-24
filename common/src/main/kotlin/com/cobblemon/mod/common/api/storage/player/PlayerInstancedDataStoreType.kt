@@ -25,5 +25,5 @@ enum class PlayerInstancedDataStoreType(
     val incrementalAfterDecodeAction: (ClientInstancedPlayerData) -> Unit = {}
 ) {
     GENERAL(ClientGeneralPlayerData::decode, ClientGeneralPlayerData::runAction),
-    POKEDEX(ClientPokedexManager::decode, ClientPokedexManager::runAction)
+    POKEDEX(ClientPokedexManager::decode, ClientPokedexManager::runAction, ClientPokedexManager::runIncremental),
 }

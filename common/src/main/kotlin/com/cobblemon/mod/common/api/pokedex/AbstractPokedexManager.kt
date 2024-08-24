@@ -14,8 +14,9 @@ import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import net.minecraft.resources.ResourceLocation
 
 abstract class AbstractPokedexManager {
-
     open val speciesRecords: MutableMap<ResourceLocation, SpeciesDexRecord> = mutableMapOf()
+    private val dexCalculatedValues = mutableMapOf<ResourceLocation, MutableMap<PokedexValueCalculator<*>, Any>>()
+    private val globalCalculatedValues = mutableMapOf<GlobalPokedexValueCalculator<*>, Any>()
 
     @Transient
     val struct = QueryStruct(hashMapOf()).addStandardFunctions()
@@ -32,7 +33,7 @@ abstract class AbstractPokedexManager {
     fun getOrCreateSpeciesRecord(speciesId: ResourceLocation): SpeciesDexRecord {
         return speciesRecords.getOrPut(speciesId) {
             val record = SpeciesDexRecord()
-            record.initialize(this)
+            record.initialize(this, speciesId)
             onSpeciesRecordUpdated(record)
             record
         }
@@ -44,6 +45,31 @@ abstract class AbstractPokedexManager {
 
     open fun onSpeciesRecordUpdated(speciesDexRecord: SpeciesDexRecord) {
         // Save stuff and packet updates
+        dexCalculatedValues.clear()
+        globalCalculatedValues.clear()
+    }
+
+    fun <T : Any> getDexCalculatedValue(dex: ResourceLocation, calculatedPokedexValue: PokedexValueCalculator<T>): T {
+        val existingValue = dexCalculatedValues[dex]?.get(calculatedPokedexValue) as? T
+        if (existingValue != null) {
+            return existingValue
+        } else {
+            val vals = dexCalculatedValues.getOrPut(dex) { mutableMapOf() }
+            val newValue = calculatedPokedexValue.calculate(this, Dexes.entries[dex]!!)
+            vals[calculatedPokedexValue] = newValue
+            return newValue
+        }
+    }
+
+    fun <T : Any> getGlobalCalculatedValue(calculatedPokedexValue: GlobalPokedexValueCalculator<T>): T {
+        val existingValue = globalCalculatedValues[calculatedPokedexValue] as? T
+        if (existingValue != null) {
+            return existingValue
+        } else {
+            val newValue = calculatedPokedexValue.calculate(this)
+            globalCalculatedValues[calculatedPokedexValue] = newValue
+            return newValue
+        }
     }
 
     open fun markDirty() {

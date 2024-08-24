@@ -69,9 +69,7 @@ class PokedexGUI private constructor(
     private var ownedCount = "0000"
 
     val runtime = MoLangRuntime().setupClient().setup().also {
-        it.environment.query.addFunction("get_dex_key") { params ->
-            StringValue(CobblemonClient.clientPokedexData.getValueForKey(params.getString(0)))
-        }
+        it.environment.query.addFunction("get_pokedex") { CobblemonClient.clientPokedexData.struct }
     }
 
     private var selectedEntry: PokedexEntry? = null

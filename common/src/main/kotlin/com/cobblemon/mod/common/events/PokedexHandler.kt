@@ -28,7 +28,7 @@ object PokedexHandler : EventHandler {
         //We should make it so this works for offline players better
         val player = event.playerId.getPlayer() ?: return
         val playerPokedex = Cobblemon.playerDataManager.getPokedexData(player)
-        playerPokedex.gainedCaughtStatus(event.pokemon)
+        playerPokedex.catch(event.pokemon)
         player.sendPacket(SetClientPlayerDataPacket(
             PlayerInstancedDataStoreType.POKEDEX,
             playerPokedex.toClientData()
