@@ -9,23 +9,13 @@
 package com.cobblemon.mod.common.client.gui.pokedex
 
 import com.bedrockk.molang.runtime.MoLangRuntime
-import com.bedrockk.molang.runtime.value.StringValue
-import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.api.pokedex.*
-import com.cobblemon.mod.common.api.pokedex.filters.InvisibleFilter
-import com.cobblemon.mod.common.api.pokedex.filters.RegionFilter
-import com.cobblemon.mod.common.api.pokedex.filters.SearchFilter
-import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.CobblemonSounds
+import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
+import com.cobblemon.mod.common.api.pokedex.*
+import com.cobblemon.mod.common.api.pokedex.entry.BasicPokedexVariation
 import com.cobblemon.mod.common.api.pokedex.entry.DexEntries
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
-import com.cobblemon.mod.common.api.pokedex.entry.BasicPokedexVariation
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
-import com.cobblemon.mod.common.api.pokedex.AbstractPokedexManager
-import com.cobblemon.mod.common.api.pokedex.CaughtCount
-import com.cobblemon.mod.common.api.pokedex.Dexes
-import com.cobblemon.mod.common.api.pokedex.PokedexDef
-import com.cobblemon.mod.common.api.pokedex.SeenCount
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.storage.player.client.ClientPokedexManager
 import com.cobblemon.mod.common.api.text.bold
@@ -38,8 +28,8 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.BASE_WIDT
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.HALF_OVERLAY_WIDTH
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.HEADER_BAR_HEIGHT
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.SCALE
-import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.TAB_DESCRIPTION
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.TAB_ABILITIES
+import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.TAB_DESCRIPTION
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.TAB_DROPS
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.TAB_ICON_SIZE
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.TAB_SIZE
@@ -47,9 +37,6 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.TAB_STATS
 import com.cobblemon.mod.common.client.gui.pokedex.widgets.*
 import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.cobblemon.mod.common.pokedex.DexData
-import com.cobblemon.mod.common.pokedex.DexPokemonData
-import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -85,7 +72,8 @@ class PokedexGUI private constructor(
 
     private var selectedEntry: PokedexEntry? = null
     private var selectedForm: BasicPokedexVariation? = null
-    private var selectedRegion: DexData = PokedexJSONRegistry.getByName("national")!!
+    /* FIXME: This will need to be an actual dex object to restore functionality to region selection */
+    private var selectedRegion: ResourceLocation = cobblemonResource("national")
 
     private lateinit var scrollScreen: EntriesScrollingWidget
     private lateinit var pokemonInfoWidget: PokemonInfoWidget
@@ -129,7 +117,7 @@ class PokedexGUI private constructor(
         displaytabInfoElement(tabInfoIndex, false)
 
         if (::searchWidget.isInitialized) removeWidget(searchWidget)
-        searchWidget = SearchWidget(x + 26, y + 28, HALF_OVERLAY_WIDTH, HEADER_BAR_HEIGHT, update =::updateFilters)
+        searchWidget = SearchWidget(x + 26, y + 28, HALF_OVERLAY_WIDTH, HEADER_BAR_HEIGHT, update = ::updateFilters)
         addRenderableWidget(searchWidget)
 
         if (::regionSelectWidgetUp.isInitialized) {
@@ -143,7 +131,7 @@ class PokedexGUI private constructor(
             scale = SCALE,
             resource = arrowUpIcon,
             clickAction = {
-                selectedRegion = PokedexJSONRegistry.getByIdentifier(PokedexJSONRegistry.getNextDex(selectedRegion.identifier))!!
+                // selectedRegion = // next dex
                 updateFilters()
             })
         addRenderableWidget(regionSelectWidgetUp)
@@ -159,7 +147,7 @@ class PokedexGUI private constructor(
             scale = SCALE,
             resource = arrowDownIcon,
             clickAction = {
-                selectedRegion = PokedexJSONRegistry.getByIdentifier(PokedexJSONRegistry.getPreviousDex(selectedRegion.identifier))!!
+                //selectedRegion = //previous dex
                 updateFilters()
             })
 
@@ -207,7 +195,7 @@ class PokedexGUI private constructor(
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
-            text = Component.translatable("cobblemon.ui.pokedex.region.${selectedRegion.identifier.path}").bold(),
+            text = Component.translatable("cobblemon.ui.pokedex.region.${selectedRegion.path}").bold(),
             x = x + 36,
             y = y + 14,
             shadow = true
@@ -505,6 +493,10 @@ class PokedexGUI private constructor(
 
         private val globeIcon = cobblemonResource("textures/gui/pokedex/globe_icon.png")
         private val caughtSeenIcon = cobblemonResource("textures/gui/pokedex/caught_seen_icon.png")
+
+        private val arrowUpIcon = cobblemonResource("textures/gui/pokedex/arrow_up.png")
+        private val arrowDownIcon = cobblemonResource("textures/gui/pokedex/arrow_down.png")
+
 
         private val tabSelectArrow = cobblemonResource("textures/gui/pokedex/select_arrow.png")
         private val tabIcons = arrayOf(

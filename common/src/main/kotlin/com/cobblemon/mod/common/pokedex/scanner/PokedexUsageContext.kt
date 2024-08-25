@@ -142,7 +142,7 @@ class PokedexUsageContext {
 
     companion object {
         //Time it takes before UI is opened, in ticks
-        const val TIME_TO_OPEN_SCANNER = 20
+        const val TIME_TO_OPEN_SCANNER = 5
         const val NUM_ZOOM_STAGES = 10
         const val TICKS_TO_SCAN = 60
         const val ENTRY_ANIM_STAGES = 12
