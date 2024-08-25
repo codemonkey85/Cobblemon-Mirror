@@ -52,6 +52,8 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.util.Mth
+import org.lwjgl.system.MathUtil
 
 /**
  * Pokedex GUI
@@ -76,8 +78,9 @@ class PokedexGUI private constructor(
 
     private var selectedEntry: PokedexEntry? = null
     private var selectedForm: BasicPokedexVariation? = null
-    /* FIXME: This will need to be an actual dex object to restore functionality to region selection */
-    private var selectedRegion: ResourceLocation = cobblemonResource("national")
+
+    private var availableDexes = emptyList<ResourceLocation>()
+    private var selectedDexIndex = 0
 
     private lateinit var scrollScreen: EntriesScrollingWidget
     private lateinit var pokemonInfoWidget: PokemonInfoWidget
@@ -101,6 +104,8 @@ class PokedexGUI private constructor(
         val y = (height - BASE_HEIGHT) / 2
 
         val pokedex = CobblemonClient.clientPokedexData
+        availableDexes = Dexes.dexEntryMap.keys.toList()
+        selectedDexIndex = 0
 
         val ownedAmount = pokedex.getDexCalculatedValue(cobblemonResource("national"),  CaughtCount)
         ownedCount = ownedAmount.toString()
@@ -134,7 +139,7 @@ class PokedexGUI private constructor(
             scale = SCALE,
             resource = arrowUpIcon,
             clickAction = {
-                // selectedRegion = // next dex
+                selectedDexIndex = Mth.clamp(selectedDexIndex + 1, 0, availableDexes.size - 1)
                 updateFilters()
             })
         addRenderableWidget(regionSelectWidgetUp)
@@ -150,7 +155,7 @@ class PokedexGUI private constructor(
             scale = SCALE,
             resource = arrowDownIcon,
             clickAction = {
-                //selectedRegion = //previous dex
+                selectedDexIndex = Mth.clamp(selectedDexIndex - 1, 0, availableDexes.size - 1)
                 updateFilters()
             })
 
@@ -198,7 +203,7 @@ class PokedexGUI private constructor(
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
-            text = Component.translatable("cobblemon.ui.pokedex.region.${selectedRegion.path}").bold(),
+            text = Component.translatable("cobblemon.ui.pokedex.region.${availableDexes[selectedDexIndex].path}").bold(),
             x = x + 36,
             y = y + 14,
             shadow = true
@@ -312,7 +317,7 @@ class PokedexGUI private constructor(
         val x = (width - BASE_WIDTH) / 2
         val y = (height - BASE_HEIGHT) / 2
 
-        filteredPokedex = listOf(Dexes.dexEntryMap[cobblemonResource("national")]!!)
+        filteredPokedex = listOfNotNull(Dexes.dexEntryMap[availableDexes[selectedDexIndex]])
 
         //Scroll Screen
         if (::scrollScreen.isInitialized) removeWidget(scrollScreen)
