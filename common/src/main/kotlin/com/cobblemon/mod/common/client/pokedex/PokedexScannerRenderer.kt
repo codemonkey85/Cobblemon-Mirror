@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth.clamp
 import org.joml.Quaternionf
+import kotlin.math.ceil
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -133,8 +134,9 @@ class PokedexScannerRenderer {
         // Scanning overlay
         val opacity = if (effectiveTicks >= 10) 1F else effectiveTicks/10F
         // Draw scan lines
+        val interlacePos = ceil((usageContext.usageTicks % 14) * 0.5) * 0.5
         for (i in 0 until screenHeight) {
-            if (i % 4 == 0) blitk(matrixStack = matrices, texture = SCAN_OVERLAY_LINES, x = 0, y = i, width = screenWidth, height = 4, alpha = opacity)
+            if (i % 4 == 0) blitk(matrixStack = matrices, texture = SCAN_OVERLAY_LINES, x = 0, y = i - interlacePos, width = screenWidth, height = 4, alpha = opacity)
         }
 
         // Draw border

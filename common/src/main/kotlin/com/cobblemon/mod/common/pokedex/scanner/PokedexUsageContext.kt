@@ -8,31 +8,24 @@
 
 package com.cobblemon.mod.common.pokedex.scanner
 
-import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonSounds
-import com.cobblemon.mod.common.api.scheduling.afterOnClient
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUI
 import com.cobblemon.mod.common.client.pokedex.PokedexScannerRenderer
 import com.cobblemon.mod.common.client.pokedex.PokedexTypes
-import com.cobblemon.mod.common.client.sound.CancellableSoundController.playSound
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.item.PokedexItem
 import com.cobblemon.mod.common.net.messages.client.pokedex.ServerConfirmedScanPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.FinishScanningPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.StartScanningPacket
-import com.ibm.icu.impl.duration.impl.DataRecord.EGender.F
+import kotlin.math.min
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.client.player.LocalPlayer
-import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth.clamp
-import net.minecraft.world.item.ItemStack
-import kotlin.math.max
-import kotlin.math.min
 
 class PokedexUsageContext {
     //PokedexGUI
@@ -111,8 +104,7 @@ class PokedexUsageContext {
                 //This ends up sending back a [ServerConfirmedScanPacket] that gets processed by onConfirmedScan
                 FinishScanningPacket(targetId).sendToServer()
             }
-        }
-        else {
+        } else {
             pokemonInFocus = null
             scanningProgress = 0
             focusTicks = 0

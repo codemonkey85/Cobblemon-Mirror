@@ -10,10 +10,7 @@ package com.cobblemon.mod.common.pokedex.scanner
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.level.ClipContext
 import net.minecraft.world.phys.AABB
-import net.minecraft.world.phys.EntityHitResult
-import java.util.UUID
 
 //Handles the actual raycasting to figure out what pokemon we are looking at
 object PokemonScanner {
