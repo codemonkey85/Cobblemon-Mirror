@@ -14,7 +14,6 @@ import com.cobblemon.mod.common.pokedex.scanner.PlayerScanningDetails
 import com.cobblemon.mod.common.pokedex.scanner.PokemonScanner
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
-import java.time.Instant
 
 object StartScanningHandler : ServerNetworkPacketHandler<StartScanningPacket> {
     override fun handle(

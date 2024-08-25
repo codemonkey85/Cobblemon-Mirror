@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth.clamp
 import org.joml.Quaternionf
+import kotlin.math.ceil
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -96,24 +97,24 @@ class PokedexScannerRenderer {
         val yaw = client.player?.yRot ?: 0f
         val degrees = (yaw % 360 + 360) % 360  // Normalize the angle
 
-        // Compass configuration
-        val compassPoints = arrayOf("n", "i", "e", "i", "s", "i", "w", "i")
-        val degreesPerSegment = 360 / compassPoints.size
-        val centerIndex = Math.round(degrees / degreesPerSegment) % compassPoints.size
-        val visibleSegments = arrayOfNulls<String>(5)  // Showing 5 segments at a time
-        for (i in visibleSegments.indices) {
-            val index = (centerIndex + i - 2 + compassPoints.size) % compassPoints.size
-            visibleSegments[i] = compassPoints[index]
-        }
-
-        // Render Compass at the Top Center
-        val compassSpacing = 20  // Width of each compass segment texture
-        val compassStartX = (screenWidth - compassSpacing * visibleSegments.size) / 2
-        val compassY = 10  // Top of the screen
-        for (i in visibleSegments.indices) {
-            val segmentTexture = getCompassTexture(visibleSegments[i] ?: "i")  // Assuming a method to get the right texture
-            blitk(matrixStack = matrices, texture = segmentTexture, x = compassStartX + i * compassSpacing, y = compassY, width = 16, height = 16, alpha = 1.0F)
-        }
+        // Compass configuration : Note: compass seems like it's not necessary for a dex scanner, maybe later
+//        val compassPoints = arrayOf("n", "i", "e", "i", "s", "i", "w", "i")
+//        val degreesPerSegment = 360 / compassPoints.size
+//        val centerIndex = Math.round(degrees / degreesPerSegment) % compassPoints.size
+//        val visibleSegments = arrayOfNulls<String>(5)  // Showing 5 segments at a time
+//        for (i in visibleSegments.indices) {
+//            val index = (centerIndex + i - 2 + compassPoints.size) % compassPoints.size
+//            visibleSegments[i] = compassPoints[index]
+//        }
+//
+//        // Render Compass at the Top Center
+//        val compassSpacing = 20  // Width of each compass segment texture
+//        val compassStartX = (screenWidth - compassSpacing * visibleSegments.size) / 2
+//        val compassY = 10  // Top of the screen
+//        for (i in visibleSegments.indices) {
+//            val segmentTexture = getCompassTexture(visibleSegments[i] ?: "i")  // Assuming a method to get the right texture
+//            blitk(matrixStack = matrices, texture = segmentTexture, x = compassStartX + i * compassSpacing, y = compassY, width = 16, height = 16, alpha = 1.0F)
+//        }
 
         RenderSystem.enableBlend()
         // Pokédex zoom in/out animation
@@ -133,8 +134,9 @@ class PokedexScannerRenderer {
         // Scanning overlay
         val opacity = if (effectiveTicks >= 10) 1F else effectiveTicks/10F
         // Draw scan lines
+        val interlacePos = ceil((usageContext.usageTicks % 14) * 0.5) * 0.5
         for (i in 0 until screenHeight) {
-            if (i % 4 == 0) blitk(matrixStack = matrices, texture = SCAN_OVERLAY_LINES, x = 0, y = i, width = screenWidth, height = 4, alpha = opacity)
+            if (i % 4 == 0) blitk(matrixStack = matrices, texture = SCAN_OVERLAY_LINES, x = 0, y = i - interlacePos, width = screenWidth, height = 4, alpha = opacity)
         }
 
         // Draw border
