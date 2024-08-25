@@ -11,14 +11,11 @@ package com.cobblemon.mod.common.client.gui.pokedex
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.CobblemonSounds
-import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.pokedex.*
-import com.cobblemon.mod.common.api.pokedex.entry.BasicPokedexVariation
 import com.cobblemon.mod.common.api.pokedex.entry.DexEntries
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
 import com.cobblemon.mod.common.api.pokedex.entry.BasicPokedexVariation
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.pokedex.CaughtCount
 import com.cobblemon.mod.common.api.pokedex.Dexes
 import com.cobblemon.mod.common.api.pokedex.def.PokedexDef
@@ -105,11 +102,11 @@ class PokedexGUI private constructor(
 
         val pokedex = CobblemonClient.clientPokedexData
 
-        val ownedAmount = pokedex.getDexCalculatedValue(cobblemonResource("kanto"),  CaughtCount)
+        val ownedAmount = pokedex.getDexCalculatedValue(cobblemonResource("national"),  CaughtCount)
         ownedCount = ownedAmount.toString()
         while (ownedCount.length < 4) ownedCount = "0$ownedCount"
 
-        seenCount = pokedex.getDexCalculatedValue(cobblemonResource("kanto"),  SeenCount).toString()
+        seenCount = pokedex.getDexCalculatedValue(cobblemonResource("national"),  SeenCount).toString()
         while (seenCount.length < 4) seenCount = "0$seenCount"
 
         //Info Widget
@@ -315,7 +312,7 @@ class PokedexGUI private constructor(
         val x = (width - BASE_WIDTH) / 2
         val y = (height - BASE_HEIGHT) / 2
 
-        filteredPokedex = listOf(Dexes.dexEntryMap[cobblemonResource("kanto")]!!)
+        filteredPokedex = listOf(Dexes.dexEntryMap[cobblemonResource("national")]!!)
 
         //Scroll Screen
         if (::scrollScreen.isInitialized) removeWidget(scrollScreen)

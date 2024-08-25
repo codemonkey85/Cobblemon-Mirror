@@ -38,6 +38,7 @@ abstract class PokedexDef: ClientDataSynchronizer<PokedexDef> {
         fun getPacketCodecById(id: ResourceLocation): StreamCodec<ByteBuf, out PokedexDef> {
             return when (id) {
                 SimplePokedexDef.ID -> SimplePokedexDef.PACKET_CODEC
+                AggregatePokedexDef.ID -> AggregatePokedexDef.PACKET_CODEC
                 else -> throw NotImplementedError("Missing pokedex def packet codec for id: $id")
             }
         }
@@ -45,6 +46,7 @@ abstract class PokedexDef: ClientDataSynchronizer<PokedexDef> {
         fun getCodecById(id: ResourceLocation): MapCodec<out PokedexDef> {
             return when (id) {
                 SimplePokedexDef.ID -> SimplePokedexDef.CODEC
+                AggregatePokedexDef.ID -> AggregatePokedexDef.CODEC
                 else -> throw NotImplementedError("Missing pokedex def codec for id: $id")
             }
         }
