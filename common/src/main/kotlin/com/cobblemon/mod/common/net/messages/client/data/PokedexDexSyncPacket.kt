@@ -9,34 +9,23 @@
 package com.cobblemon.mod.common.net.messages.client.data
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.api.pokedex.PokedexDef
+import com.cobblemon.mod.common.api.pokedex.def.PokedexDef
 import com.cobblemon.mod.common.api.pokedex.Dexes
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.network.RegistryFriendlyByteBuf
 
-class DexDefSyncPacket(
+class PokedexDexSyncPacket(
     dexes: Collection<PokedexDef>
-) : DataRegistrySyncPacket<PokedexDef, DexDefSyncPacket>(dexes) {
+) : DataRegistrySyncPacket<PokedexDef, PokedexDexSyncPacket>(dexes) {
 
     override val id = ID
 
     override fun encodeEntry(buffer: RegistryFriendlyByteBuf, entry: PokedexDef) {
-        try {
-            entry.encode(buffer)
-        } catch (e: Exception) {
-            Cobblemon.LOGGER.error("Caught exception encoding the dex")
-        }
+        PokedexDef.PACKET_CODEC.encode(buffer, entry)
     }
 
     override fun decodeEntry(buffer: RegistryFriendlyByteBuf): PokedexDef? {
-        val dexData = PokedexDef()
-        return try {
-            dexData.decode(buffer)
-            dexData
-        } catch (e: Exception) {
-            Cobblemon.LOGGER.error("Caught exception decoding a dex.", e)
-            null
-        }
+        return PokedexDef.PACKET_CODEC.decode(buffer)
     }
 
     override fun synchronizeDecoded(entries: Collection<PokedexDef>) {
@@ -45,6 +34,6 @@ class DexDefSyncPacket(
 
     companion object {
         val ID = cobblemonResource("pokedex_sync")
-        fun decode(buffer: RegistryFriendlyByteBuf) = DexDefSyncPacket(emptyList()).apply { decodeBuffer(buffer) }
+        fun decode(buffer: RegistryFriendlyByteBuf) = PokedexDexSyncPacket(emptyList()).apply { decodeBuffer(buffer) }
     }
 }

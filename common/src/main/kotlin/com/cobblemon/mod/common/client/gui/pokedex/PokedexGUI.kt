@@ -9,17 +9,15 @@
 package com.cobblemon.mod.common.client.gui.pokedex
 
 import com.bedrockk.molang.runtime.MoLangRuntime
-import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.pokedex.entry.DexEntries
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
 import com.cobblemon.mod.common.api.pokedex.entry.BasicPokedexVariation
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
-import com.cobblemon.mod.common.api.pokedex.AbstractPokedexManager
 import com.cobblemon.mod.common.api.pokedex.CaughtCount
 import com.cobblemon.mod.common.api.pokedex.Dexes
-import com.cobblemon.mod.common.api.pokedex.PokedexDef
+import com.cobblemon.mod.common.api.pokedex.def.PokedexDef
 import com.cobblemon.mod.common.api.pokedex.SeenCount
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.storage.player.client.ClientPokedexManager
@@ -102,7 +100,6 @@ class PokedexGUI private constructor(
         ownedCount = ownedAmount.toString()
         while (ownedCount.length < 4) ownedCount = "0$ownedCount"
 
-        //FIXME: This is the caught count, not the s
         seenCount = pokedex.getDexCalculatedValue(cobblemonResource("kanto"),  SeenCount).toString()
         while (seenCount.length < 4) seenCount = "0$seenCount"
 
@@ -280,8 +277,7 @@ class PokedexGUI private constructor(
         if (::scrollScreen.isInitialized) removeWidget(scrollScreen)
         scrollScreen = EntriesScrollingWidget(x + 26, y + 39) { setSelectedEntry(it) }
         val entries = filteredPokedex
-            .flatMap { it.entries }
-            .mapNotNull { DexEntries.entries[it] }
+            .flatMap { it.getEntries() }
         scrollScreen.createEntries(entries)
         addRenderableWidget(scrollScreen)
 

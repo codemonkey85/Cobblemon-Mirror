@@ -55,7 +55,7 @@ abstract class AbstractPokedexManager {
             return existingValue
         } else {
             val vals = dexCalculatedValues.getOrPut(dex) { mutableMapOf() }
-            val newValue = calculatedPokedexValue.calculate(this, Dexes.entries[dex]!!)
+            val newValue = calculatedPokedexValue.calculate(this, Dexes.dexEntryMap[dex]!!.getEntries().associateBy { it.id })
             vals[calculatedPokedexValue] = newValue
             return newValue
         }

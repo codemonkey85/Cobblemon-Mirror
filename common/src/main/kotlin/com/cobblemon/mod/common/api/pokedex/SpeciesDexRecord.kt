@@ -68,6 +68,9 @@ class SpeciesDexRecord {
             val knowledge = params.getString(0)
             DoubleValue(formRecords.values.any { it.knowledge.name.equals(knowledge.toString(), ignoreCase = true) })
         }
+        .addFunction("is_caught") { params ->
+            DoubleValue(formRecords.values.any { it.knowledge.name.equals("CAUGHT", ignoreCase = true) })
+        }
         // more, also worth moving to something like MoLangFunctions.kt so it's easier to API in more values
 
     @Transient

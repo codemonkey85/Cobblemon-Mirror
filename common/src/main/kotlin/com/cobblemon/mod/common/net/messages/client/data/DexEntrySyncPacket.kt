@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.network.RegistryFriendlyByteBuf
 
-class DexEntrySyncPacket(dexEntries: Collection<PokedexEntry>) : DataRegistrySyncPacket<PokedexEntry, DexDefSyncPacket>(dexEntries) {
+class DexEntrySyncPacket(dexEntries: Collection<PokedexEntry>) : DataRegistrySyncPacket<PokedexEntry, PokedexDexSyncPacket>(dexEntries) {
     override fun encodeEntry(buffer: RegistryFriendlyByteBuf, entry: PokedexEntry) {
         entry.encode(buffer)
     }
