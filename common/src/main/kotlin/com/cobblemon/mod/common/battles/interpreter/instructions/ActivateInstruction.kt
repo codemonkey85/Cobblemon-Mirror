@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.battles.interpreter.instructions
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
+import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
 import com.cobblemon.mod.common.api.moves.animations.UsersProvider
 import com.cobblemon.mod.common.api.pokemon.status.Statuses
@@ -79,8 +80,15 @@ class ActivateInstruction(val instructionSet: InstructionSet, val message: Battl
             val pokemonName = pokemon.getName()
             val sourceName = message.battlePokemonFromOptional(battle)?.getName() ?: Text.literal("UNKNOWN")
 
-            if (effect.id == "sketch" && pokemon.originalPokemon.moveSet.any { it.name == "sketch" } && pokemon.sketchedMoveName == null && extraEffect is String) {
-                pokemon.sketchedMoveName = extraEffect.replace(" ", "") // Showdown gives the move name with whitespace
+            if (effect.id == "sketch" && pokemon.effectedPokemon.moveSet.any { it.name == "sketch" } && extraEffect is String) {
+                // Apply Sketch to the pokemon's current moveset if it was successfully used in battle
+                val moveTemplate = Moves.getByName(extraEffect.replace(" ", ""))
+                Moves.getByName("sketch")?.let {
+                    moveTemplate?.let { template ->
+                        pokemon.effectedPokemon.exchangeMove(oldMove = it, newMove = template)
+                    }
+                }
+
             }
 
             val lang = when (effect.id) {

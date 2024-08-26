@@ -76,13 +76,7 @@ open class BattlePokemon(
      * The [HeldItemManager] backing this [BattlePokemon].
      */
     val heldItemManager: HeldItemManager by lazy { HeldItemProvider.provide(this) }
-
-    /**
-     * If a pokemon learns a move with Sketch during battle it is stored here so it
-     * can be applied to the pokemon post battle
-     */
-    var sketchedMoveName: String? = null
-
+    
     val contextManager = ContextManager()
 
     open fun getName(): MutableText {

@@ -262,14 +262,6 @@ open class PokemonBattle(
             .forEach{it.pokemon.heal()}
         actors.forEach { actor ->
             actor.pokemonList.forEach { battlePokemon ->
-
-                // Apply Sketch to the pokemon's current moveset if it was successfully used in battle
-                val moveTemplate = battlePokemon.sketchedMoveName?.let { Moves.getByName(it) }
-                Moves.getByName("sketch")?.let {
-                    moveTemplate?.let { template ->
-                        battlePokemon.effectedPokemon.exchangeMove(oldMove = it, newMove = template)
-                    }
-                }
                 battlePokemon.entity?.let { entity -> battlePokemon.postBattleEntityOperation(entity) }
             }
         }
