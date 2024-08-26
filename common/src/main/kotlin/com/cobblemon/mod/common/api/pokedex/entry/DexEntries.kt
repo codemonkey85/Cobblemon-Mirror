@@ -13,7 +13,6 @@ import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
 import com.cobblemon.mod.common.net.messages.client.data.DexEntrySyncPacket
 import com.cobblemon.mod.common.util.adapters.ExpressionLikeAdapter
-import com.cobblemon.mod.common.util.adapters.PokedexVariationAdapter
 import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.Gson
@@ -31,7 +30,6 @@ object DexEntries : JsonDataRegistry<PokedexEntry> {
         .disableHtmlEscaping()
         .setPrettyPrinting()
         .registerTypeAdapter(ExpressionLike::class.java, ExpressionLikeAdapter)
-        .registerTypeAdapter(PokedexVariation::class.java, PokedexVariationAdapter)
         .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .create()
 
@@ -42,7 +40,15 @@ object DexEntries : JsonDataRegistry<PokedexEntry> {
 
     override fun reload(data: Map<ResourceLocation, PokedexEntry>) {
         data.forEach { _, entry ->
-            entries[entry.entryId] = entry
+            entries[entry.speciesId] = entry
+            if (entry.forms.isEmpty()) {
+                entry.forms.add(PokedexForm())
+            }
+            entry.forms.forEach {
+                if (it.unlockForms.isEmpty()) {
+                    it.unlockForms = mutableSetOf(it.displayForm)
+                }
+            }
         }
     }
 

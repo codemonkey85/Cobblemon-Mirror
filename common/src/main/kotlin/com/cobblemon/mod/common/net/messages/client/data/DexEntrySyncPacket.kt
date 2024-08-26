@@ -23,7 +23,7 @@ class DexEntrySyncPacket(dexEntries: Collection<PokedexEntry>) : DataRegistrySyn
     }
 
     override fun synchronizeDecoded(entries: Collection<PokedexEntry>) {
-        DexEntries.reload(entries.associateBy { it.entryId })
+        DexEntries.reload(entries.associateBy { it.speciesId })
     }
 
     override val id = ID

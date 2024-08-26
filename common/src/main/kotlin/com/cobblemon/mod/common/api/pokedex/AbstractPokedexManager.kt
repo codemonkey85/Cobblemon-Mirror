@@ -30,6 +30,10 @@ abstract class AbstractPokedexManager {
         markDirty()
     }
 
+    fun getSpeciesRecord(speciesId: ResourceLocation): SpeciesDexRecord? {
+        return speciesRecords[speciesId]
+    }
+
     fun getOrCreateSpeciesRecord(speciesId: ResourceLocation): SpeciesDexRecord {
         return speciesRecords.getOrPut(speciesId) {
             val record = SpeciesDexRecord()

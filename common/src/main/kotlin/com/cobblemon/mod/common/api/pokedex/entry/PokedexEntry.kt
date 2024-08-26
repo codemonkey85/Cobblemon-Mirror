@@ -8,58 +8,62 @@
 
 package com.cobblemon.mod.common.api.pokedex.entry
 
-import com.bedrockk.molang.MoLang
-import com.cobblemon.mod.common.api.molang.ExpressionLike
-import com.cobblemon.mod.common.api.molang.SingleExpression
+import com.cobblemon.mod.common.api.pokedex.AbstractPokedexManager
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.util.readIdentifier
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeIdentifier
-import com.cobblemon.mod.common.util.writeNullable
 import com.cobblemon.mod.common.util.writeString
-import net.minecraft.network.FriendlyByteBuf.readNullable
-import net.minecraft.network.FriendlyByteBuf.writeNullable
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
 
 class PokedexEntry(
     val id: ResourceLocation,
-    val entryId: ResourceLocation,
-    val displayEntry: Int,
-    val displayConditions: List<ExpressionLike>?,
-    val variations: List<PokedexVariation>
+    val speciesId: ResourceLocation,
+    val displayAspects: Set<String> = emptySet(),
+    val conditionAspects: Set<String> = emptySet(),
+    val forms: MutableList<PokedexForm> = mutableListOf(),
+    val variations: List<PokedexCosmeticVariation>
 ) {
     fun encode(buf: RegistryFriendlyByteBuf) {
         buf.writeIdentifier(id)
-        buf.writeIdentifier(entryId)
-        buf.writeInt(displayEntry)
-        buf.writeNullable(displayConditions) {buffer, conditions ->
-            buffer.writeInt(conditions.size)
-            conditions.forEach {
-                buffer.writeString(it.getString())
-            }
+        buf.writeIdentifier(speciesId)
+        buf.writeCollection(displayAspects) { _, aspect -> buf.writeString(aspect) }
+        buf.writeCollection(conditionAspects) { _, aspect -> buf.writeString(aspect) }
+        buf.writeCollection(forms) { _, form ->
+            buf.writeString(form.displayForm)
+            buf.writeCollection(form.unlockForms) { _, unlockForm -> buf.writeString(unlockForm) }
         }
-        buf.writeInt(variations.size)
-        variations.forEach {
-            it.encode(buf)
-        }
+        buf.writeCollection(variations) { _, variation -> variation.encode(buf) }
     }
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf): PokedexEntry {
             val id = buffer.readIdentifier()
             val entryId = buffer.readIdentifier()
-            val displayEntry = buffer.readInt()
-            val conditions = readNullable(buffer) {buf ->
-                val numConditions = buffer.readInt()
-                (0 until numConditions).map {
-                    SingleExpression(MoLang.createParser(buffer.readString()).parseExpression())
-                }
+            val displayAspects = buffer.readList { buffer.readString() }.toSet()
+            val conditionAspects = buffer.readList { buffer.readString() }.toSet()
+            val forms = buffer.readList {
+                val form = PokedexForm()
+                form.displayForm = buffer.readString()
+                form.unlockForms.addAll(buffer.readList { buffer.readString() })
+                form
             }
-            val variationsSize = buffer.readInt()
-            val entries = mutableListOf<PokedexVariation>()
-            for (i in 0 until variationsSize) {
-                entries.add(PokedexVariation.decodeAll(buffer))
-            }
-            return PokedexEntry(id, entryId, displayEntry, conditions, entries)
+            val variations = buffer.readList { PokedexCosmeticVariation().also { it.decode(buffer) } }
+            return PokedexEntry(id, entryId, displayAspects, conditionAspects, forms, variations)
         }
     }
+
+    fun isVisible(dexData: AbstractPokedexManager): Boolean {
+        val speciesRecord = dexData.getSpeciesRecord(speciesId) ?: return false
+        return conditionAspects.all(speciesRecord::hasAspect) && speciesRecord.hasAtLeast(PokedexEntryProgress.ENCOUNTERED)
+    }
+}
+
+class PokedexForm {
+    var displayForm: String = "Normal"
+    var unlockForms: MutableSet<String> = mutableSetOf()
+
+    fun getKnowledge(speciesId: ResourceLocation, dexData: AbstractPokedexManager) = unlockForms
+        .maxOfOrNull { dexData.getSpeciesRecord(speciesId)?.getKnowledge() ?: PokedexEntryProgress.NONE }
+        ?: PokedexEntryProgress.NONE
 }

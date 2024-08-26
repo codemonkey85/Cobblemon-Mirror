@@ -9,12 +9,11 @@
 package com.cobblemon.mod.common.client.gui.pokedex.widgets
 
 import com.bedrockk.molang.runtime.MoLangRuntime
-import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
-import com.cobblemon.mod.common.api.pokedex.entry.BasicPokedexVariation
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
+import com.cobblemon.mod.common.api.pokedex.entry.PokedexForm
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.api.text.text
@@ -56,7 +55,7 @@ import org.joml.Quaternionf
 import org.joml.Vector3f
 import java.io.FileNotFoundException
 
-class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (BasicPokedexVariation) -> (Unit)) : SoundlessWidget(
+class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) -> (Unit)) : SoundlessWidget(
     pX,
     pY,
     POKEMON_PORTRAIT_WIDTH,
@@ -72,7 +71,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (BasicPokedexV
         it.environment.query.addFunction("get_pokedex") { CobblemonClient.clientPokedexData.struct }
     }
 
-    var visibleForms = mutableListOf<BasicPokedexVariation>()
+    var visibleForms = mutableListOf<PokedexForm>()
     var selectedFormIndex: Int = 0
 
     var type: Array<ElementalType?> = arrayOf(null, null)
@@ -164,8 +163,8 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (BasicPokedexV
     override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (currentEntry == null || renderablePokemon == null) return
 
-        val hasKnowledge = visibleForms[selectedFormIndex].conditions.all { it.resolveBoolean(runtime) }
-        val species = currentEntry?.entryId?.let { PokemonSpecies.getByIdentifier(it) }
+        val hasKnowledge = visibleForms.isNotEmpty() && visibleForms[selectedFormIndex].getKnowledge(currentEntry!!.speciesId, CobblemonClient.clientPokedexData) != PokedexEntryProgress.NONE // TODO check me visibleForms[selectedFormIndex].conditions.all { it.resolveBoolean(runtime) }
+        val species = currentEntry?.speciesId?.let { PokemonSpecies.getByIdentifier(it) }
 
         val matrices = context.pose()
 
@@ -361,18 +360,17 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (BasicPokedexV
             animationLeftButton.render(context,mouseX, mouseY, delta)
             animationRightButton.render(context,mouseX, mouseY, delta)
 
-            val showableForms = currentEntry!!.variations
-                .map { it as BasicPokedexVariation }
+            val showableForms = currentEntry!!.forms
             // Forms
-            if(showableForms.size > 1 && showableForms.size > selectedFormIndex) {
+            if (showableForms.size > 1 && showableForms.size > selectedFormIndex) {
                 formLeftButton.render(context,mouseX, mouseY, delta)
                 formRightButton.render(context,mouseX, mouseY, delta)
 
-                val textKey = showableForms[selectedFormIndex].langKey
+                val form = showableForms[selectedFormIndex]
                 drawScaledTextJustifiedRight(
                     context = context,
                     font = CobblemonResources.DEFAULT_LARGE,
-                    text = Component.translatable(textKey).bold(),
+                    text = lang("ui.pokedex.info.form.${form.displayForm.lowercase()}").bold(),
                     x = pX + 136,
                     y = pY + 15,
                     shadow = true
@@ -394,15 +392,12 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (BasicPokedexV
     fun setDexEntry(pokedexEntry : PokedexEntry) {
         this.currentEntry = pokedexEntry
 
-        val species = PokemonSpecies.getByIdentifier(pokedexEntry.entryId)
-        val forms = pokedexEntry.variations
-            .map { it as BasicPokedexVariation }
+        val species = PokemonSpecies.getByIdentifier(pokedexEntry.speciesId)
+        val forms = pokedexEntry.forms
 
         if (species != null) {
             //FIXME: Check condition here
-            this.visibleForms = pokedexEntry.variations
-                .map { it as BasicPokedexVariation }
-                .toMutableList()
+            this.visibleForms = pokedexEntry.forms.filter { it.getKnowledge(species.resourceIdentifier, CobblemonClient.clientPokedexData) != PokedexEntryProgress.NONE }.toMutableList()
             var pokemonNumber = species.nationalPokedexNumber.toString()
             while (pokemonNumber.length < 4) pokemonNumber = "0$pokemonNumber"
             this.speciesNumber = pokemonNumber.text()
@@ -416,7 +411,9 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (BasicPokedexV
                 genderButton.active = false
             }
 
-            if (shiny && !isSelectedPokemonOwned()) shiny = false
+            if (shiny && !isSelectedPokemonOwned()) {
+                shiny = false
+            }
             this.shinyButton.active = isSelectedPokemonOwned()
 
             this.speciesName = species.translatedName
@@ -430,7 +427,9 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (BasicPokedexV
             }
             selectedFormIndex = 0
 
-            updateAspects()
+            if (visibleForms.isNotEmpty()) {
+                updateAspects()
+            }
         }
     }
 
@@ -468,22 +467,25 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (BasicPokedexV
         genderButton.resource = if (gender == Gender.FEMALE) buttonGenderFemale else buttonGenderMale
         shinyButton.resource = if (shiny) buttonShiny else buttonNone
 
-        val species = currentEntry?.entryId?.let { PokemonSpecies.getByIdentifier(it) }
+        val species = currentEntry?.speciesId?.let { PokemonSpecies.getByIdentifier(it) }
         if (species != null) {
-            val aspectSet = visibleForms[selectedFormIndex].aspects.split(" ").toMutableSet()
-            val form = species.getForm(aspectSet)
+            val formName = visibleForms[selectedFormIndex].displayForm
+            val form = species.forms.find { it.name.equals(formName, ignoreCase = true) } ?: species.standardForm
 
             updateType(species, form)
 
-            if (shiny) aspectSet.add(SHINY_ASPECT.aspect)
+            val aspects = mutableSetOf<String>()
+            if (shiny) aspects.add(SHINY_ASPECT.aspect)
 
             if (gender == Gender.FEMALE) {
-                aspectSet.add("female")
+                aspects.add("female")
             } else if (gender == Gender.MALE) {
-                aspectSet.add("male")
+                aspects.add("male")
             }
 
-            renderablePokemon = RenderablePokemon(species, aspectSet)
+            aspects.addAll(form.aspects)
+
+            renderablePokemon = RenderablePokemon(species, aspects)
 
             updateForm.invoke(visibleForms[selectedFormIndex])
         }
@@ -515,7 +517,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (BasicPokedexV
         && mouseY.toInt() in pY + 25..(pY + 25 + PORTRAIT_POKE_BALL_HEIGHT)
 
     private fun isSelectedPokemonOwned(): Boolean {
-        return currentEntry?.let { CobblemonClient.clientPokedexData.getKnowledgeForSpecies(it.entryId) } == PokedexEntryProgress.CAUGHT
+        return currentEntry?.let { CobblemonClient.clientPokedexData.getKnowledgeForSpecies(it.speciesId) } == PokedexEntryProgress.CAUGHT
     }
 
     fun playSound(soundEvent: SoundEvent) {

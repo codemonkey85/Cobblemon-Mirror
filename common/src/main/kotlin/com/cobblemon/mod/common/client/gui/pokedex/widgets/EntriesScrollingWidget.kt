@@ -9,13 +9,11 @@
 package com.cobblemon.mod.common.client.gui.pokedex.widgets
 
 import com.bedrockk.molang.runtime.MoLangRuntime
-import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
-import com.cobblemon.mod.common.api.pokedex.entry.BasicPokedexVariation
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.client.ClientMoLangFunctions.setupClient
@@ -53,7 +51,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
     fun createEntries(filteredPokedex: Collection<PokedexEntry>) {
         filteredPokedex.chunked(5).forEachIndexed { index, listChunk ->
             val discoveryList = listChunk.map {
-                CobblemonClient.clientPokedexData.getKnowledgeForSpecies(it.entryId)
+                CobblemonClient.clientPokedexData.getKnowledgeForSpecies(it.speciesId)
             }.toMutableList()
             val newEntry = PokemonScrollSlotRow(
                 listChunk.toMutableList(),
@@ -110,8 +108,8 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
         )
     }
 
-    override fun getEntry(index: Int): EntriesScrollingWidget.PokemonScrollSlotRow {
-        return children()[index] as EntriesScrollingWidget.PokemonScrollSlotRow
+    override fun getEntry(index: Int): PokemonScrollSlotRow {
+        return children()[index] as PokemonScrollSlotRow
     }
 
     class PokemonScrollSlotRow(
@@ -148,15 +146,17 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
         ) {
             dexDataList.forEachIndexed { index, dexData ->
                 val state = FloatingState()
-                val species = PokemonSpecies.getByIdentifier(dexData.entryId)
+                val species = PokemonSpecies.getByIdentifier(dexData.speciesId)
                 //FIXME: This may not work properly when accounting for custom pokemon with the same dex number
                 var pokemonNumber = species?.nationalPokedexNumber?.toString() ?: "0"
                 while (pokemonNumber.length < 4) pokemonNumber = "0$pokemonNumber"
 
                 val speciesNumber = pokemonNumber.text()
                 val discoveryLevel = discoveryLevelList[index]
-                val drawConditions = dexData.displayConditions ?: (dexData.variations[dexData.displayEntry] as BasicPokedexVariation).conditions
-                val shouldDrawMon = drawConditions.all { it.resolveBoolean(runtime) }
+//                val drawConditions = dexData.displayConditions ?: emptyList()// ?: (dexData.formVariations[dexData.displayEntry] as BasicPokedexFormVariation).conditions
+                val speciesRecord = CobblemonClient.clientPokedexData.speciesRecords[dexData.speciesId]
+                val firstVisibleForm = speciesRecord?.let { record -> dexData.forms.firstOrNull { it.unlockForms.any(record::hasSeenForm) } }
+                val shouldDrawMon = firstVisibleForm != null//drawConditions.all { it.resolveBoolean(runtime) }
 
                 if (species == null) return@forEachIndexed
 
@@ -194,12 +194,12 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
                         startPosX + SCROLL_SLOT_SIZE - 1,
                         startPosY + SCROLL_SLOT_SIZE - 2
                     )
-                    val aspectsToDraw = dexData.variations[dexData.displayEntry] as BasicPokedexVariation
+                    val aspectsToDraw = dexData.displayAspects + firstVisibleForm!!.displayForm
                     matrices.pushPose()
                     matrices.translate(startPosX + (SCROLL_SLOT_SIZE / 2.0), startPosY + 1.0, 0.0)
                     matrices.scale(2.5F, 2.5F, 1F)
                     drawProfilePokemon(
-                        renderablePokemon = RenderablePokemon(species, aspectsToDraw.aspects.split(" ").toSet()),
+                        renderablePokemon = RenderablePokemon(species, aspectsToDraw),
                         matrixStack = matrices,
                         rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),
                         state = state,
