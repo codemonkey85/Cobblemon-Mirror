@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.api.pokedex
 
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
+import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import net.minecraft.resources.ResourceLocation
 
@@ -41,6 +42,20 @@ abstract class AbstractPokedexManager {
             onSpeciesRecordUpdated(record)
             record
         }
+    }
+
+    fun getHighestKnowledgeFor(entry: PokedexEntry): PokedexEntryProgress {
+        val speciesRecord = getSpeciesRecord(entry.speciesId) ?: return PokedexEntryProgress.NONE
+        val hasAllAspects = entry.conditionAspects.all(speciesRecord::hasAspect)
+        if (!hasAllAspects) {
+            return PokedexEntryProgress.NONE
+        }
+        // For each distinct form in this entry, get the highest knowledge level for the unlock forms, then take the highest of those.
+        return entry.forms.maxOfOrNull { form ->
+            form.unlockForms.maxOfOrNull {
+                speciesRecord.getFormRecord(it)?.knowledge ?: PokedexEntryProgress.NONE
+            } ?: PokedexEntryProgress.NONE
+        } ?: PokedexEntryProgress.NONE
     }
 
     fun getKnowledgeForSpecies(speciesId: ResourceLocation): PokedexEntryProgress {

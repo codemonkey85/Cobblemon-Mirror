@@ -21,6 +21,7 @@ interface InstancedPlayerData {
     //Player uuid
     val uuid: UUID
 
+    fun initialize() {}
     //Converts this to the client version of this data
     fun toClientData(): ClientInstancedPlayerData
 }

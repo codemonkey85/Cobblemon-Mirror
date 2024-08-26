@@ -15,6 +15,7 @@ import com.cobblemon.mod.common.util.readIdentifier
 import com.cobblemon.mod.common.util.writeIdentifier
 import com.google.common.collect.Lists
 import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import io.netty.buffer.ByteBuf
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -27,10 +28,26 @@ class AggregatePokedexDef(
 ) : PokedexDef() {
     override val typeId = ID
     private val subDexIds = mutableListOf<ResourceLocation>()
+    var squash = true
+        private set
 
     override fun getEntries(): List<PokedexEntry> {
-        return subDexIds.mapNotNull { Dexes.dexEntryMap[it] }
-            .flatMap { it.getEntries() }
+        if (!squash) {
+            return Dexes.dexEntryMap.values.filter { it.id in subDexIds }.flatMap { it.getEntries() }
+        } else {
+            val speciesToEntry = mutableMapOf<ResourceLocation, PokedexEntry>()
+            subDexIds.forEach { dexId ->
+                Dexes.dexEntryMap[dexId]?.getEntries()?.forEach { entry ->
+                    val preExisting = speciesToEntry[entry.speciesId]
+                    if (preExisting != null) {
+                        speciesToEntry[preExisting.speciesId] = preExisting.combinedWith(entry)
+                    } else {
+                        speciesToEntry[entry.speciesId] = entry
+                    }
+                }
+            }
+            return speciesToEntry.values.toList()
+        }
     }
 
     override fun shouldSynchronize(other: PokedexDef) = true
@@ -54,10 +71,12 @@ class AggregatePokedexDef(
         val CODEC: MapCodec<AggregatePokedexDef> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 ResourceLocation.CODEC.fieldOf("id").forGetter {it.id},
-                ResourceLocation.CODEC.listOf().fieldOf("subDexIds").forGetter { it.subDexIds }
-            ).apply(instance) {id, entries ->
+                ResourceLocation.CODEC.listOf().fieldOf("subDexIds").forGetter { it.subDexIds },
+                PrimitiveCodec.BOOL.fieldOf("squash").forGetter { it.squash }
+            ).apply(instance) { id, entries, squash ->
                 val result = AggregatePokedexDef(id)
                 result.subDexIds.addAll(entries)
+                result.squash = squash
                 result
             }
         }

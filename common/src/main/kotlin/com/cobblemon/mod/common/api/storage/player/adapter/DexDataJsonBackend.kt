@@ -17,7 +17,7 @@ import net.minecraft.resources.ResourceLocation
 import java.util.UUID
 
 /**
- * A [PlayerDataStoreBackend] for [PokedexPlayerData]
+ * A [PlayerDataStoreBackend] for [PokedexManager]
  *
  * @author Apion
  * @since February 22, 2024

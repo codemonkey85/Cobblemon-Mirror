@@ -19,6 +19,7 @@ import java.util.UUID
 abstract class PlayerDataStoreBackend<T : InstancedPlayerData>(val dataType: PlayerInstancedDataStoreType) {
     abstract fun load(uuid: UUID): T
     abstract fun save(playerData: T)
+    open fun initialize(store: T) {}
 
     abstract fun setup(server: MinecraftServer)
 }

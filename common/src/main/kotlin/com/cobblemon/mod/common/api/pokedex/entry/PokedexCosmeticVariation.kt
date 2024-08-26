@@ -27,6 +27,12 @@ class PokedexCosmeticVariation {
     var icon: ResourceLocation = cobblemonResource("textures/gui/pokedex/variation/cosmetic.png")
     var aspects: Set<String> = emptySet()
 
+    fun clone() = PokedexCosmeticVariation().also {
+        it.displayName = displayName
+        it.icon = icon
+        it.aspects = aspects.toSet()
+    }
+
     fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(displayName)
         buffer.writeResourceLocation(icon)

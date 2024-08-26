@@ -46,6 +46,10 @@ class PokedexManager(
         dirty = true
     }
 
+    override fun initialize() {
+        speciesRecords.entries.forEach { (key, value) -> value.initialize(this, key) }
+    }
+
     override fun onSpeciesRecordUpdated(speciesDexRecord: SpeciesDexRecord) {
         uuid.getPlayer()?.sendPacket(
             SetClientPlayerDataPacket(
@@ -63,7 +67,7 @@ class PokedexManager(
                 Codec.unboundedMap(ResourceLocation.CODEC, SpeciesDexRecord.CODEC).fieldOf("speciesRecords").forGetter { it.speciesRecords }
             ).apply(instance) { uuid, map ->
                 //Codec stuff seems to deserialize to an immutable map, so we have to convert it to mutable explicitly
-                PokedexManager(UUID.fromString(uuid), map.toMutableMap())
+                PokedexManager(UUID.fromString(uuid), map.toMutableMap()).also { dex -> dex.speciesRecords.entries.forEach { (key, value) -> value.initialize(dex, key) } }
             }
         }
     }

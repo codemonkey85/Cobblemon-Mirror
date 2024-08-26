@@ -6,7 +6,7 @@ source_dir = '../common/src/main/resources/data/cobblemon/species'
 destination_dir = '../common/src/main/resources/data/cobblemon/dex_entries/pokemon'
 
 # List of predefined folders to check
-folders_to_check = ['generation1', 'generation2', 'generation3']
+folders_to_check = ['generation1', 'generation2', 'generation3', 'generation4', 'generation5', 'generation6', 'generation7', 'generation8', 'generation9']
 
 # Predefined JSON format function
 def create_json_content(file_name):

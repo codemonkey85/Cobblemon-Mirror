@@ -59,7 +59,7 @@ class SimplePokedexDef(
         val ID = cobblemonResource("simple_pokedex_def")
         val CODEC: MapCodec<SimplePokedexDef> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                ResourceLocation.CODEC.fieldOf("id").forGetter {it.id},
+                ResourceLocation.CODEC.fieldOf("id").forGetter { it.id },
                 ResourceLocation.CODEC.listOf().fieldOf("entries").forGetter { it.entries }
             ).apply(instance) {id, entries ->
                 val result = SimplePokedexDef(id)
@@ -67,6 +67,7 @@ class SimplePokedexDef(
                 result
             }
         }
+
         val PACKET_CODEC: StreamCodec<ByteBuf, SimplePokedexDef> = StreamCodec.composite(
             ResourceLocation.STREAM_CODEC, SimplePokedexDef::id,
             ByteBufCodecs.collection(Lists::newArrayListWithCapacity, ResourceLocation.STREAM_CODEC), SimplePokedexDef::entries

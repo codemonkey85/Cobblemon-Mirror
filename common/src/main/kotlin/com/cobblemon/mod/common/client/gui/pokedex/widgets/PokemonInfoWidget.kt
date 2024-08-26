@@ -196,14 +196,16 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
             shadow = true
         )
 
-        drawScaledText(
-            context = context,
-            font = CobblemonResources.DEFAULT_LARGE,
-            text = speciesName.bold(),
-            x = pX + 26,
-            y = pY + 1,
-            colour = 0x606B6E
-        )
+        if (hasKnowledge) {
+            drawScaledText(
+                context = context,
+                font = CobblemonResources.DEFAULT_LARGE,
+                text = speciesName.bold(),
+                x = pX + 26,
+                y = pY + 1,
+                colour = 0x606B6E
+            )
+        }
 
         // Caught icon
         if (isSelectedPokemonOwned()) {
@@ -296,7 +298,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
                 drawScaledTextJustifiedRight(
                     context = context,
                     font = CobblemonResources.DEFAULT_LARGE,
-                    text = Component.translatable("cobblemon.ui.pokedex.info.unimplemented").bold(),
+                    text = lang("ui.pokedex.info.unimplemented").bold(),
                     x = pX + 136,
                     y = pY + 15,
                     shadow = true
@@ -396,7 +398,6 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
         val forms = pokedexEntry.forms
 
         if (species != null) {
-            //FIXME: Check condition here
             this.visibleForms = pokedexEntry.forms.filter { it.getKnowledge(species.resourceIdentifier, CobblemonClient.clientPokedexData) != PokedexEntryProgress.NONE }.toMutableList()
             var pokemonNumber = species.nationalPokedexNumber.toString()
             while (pokemonNumber.length < 4) pokemonNumber = "0$pokemonNumber"
@@ -429,6 +430,8 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
 
             if (visibleForms.isNotEmpty()) {
                 updateAspects()
+            } else {
+                type = arrayOf(null, null)
             }
         }
     }
@@ -464,6 +467,10 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
     }
 
     fun updateAspects() {
+        if (visibleForms.isEmpty()) {
+            return
+        }
+
         genderButton.resource = if (gender == Gender.FEMALE) buttonGenderFemale else buttonGenderMale
         shinyButton.resource = if (shiny) buttonShiny else buttonNone
 

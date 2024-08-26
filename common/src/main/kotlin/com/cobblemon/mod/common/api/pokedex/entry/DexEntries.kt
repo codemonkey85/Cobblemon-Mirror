@@ -40,7 +40,7 @@ object DexEntries : JsonDataRegistry<PokedexEntry> {
 
     override fun reload(data: Map<ResourceLocation, PokedexEntry>) {
         data.forEach { _, entry ->
-            entries[entry.speciesId] = entry
+            entries[entry.id] = entry
             if (entry.forms.isEmpty()) {
                 entry.forms.add(PokedexForm())
             }

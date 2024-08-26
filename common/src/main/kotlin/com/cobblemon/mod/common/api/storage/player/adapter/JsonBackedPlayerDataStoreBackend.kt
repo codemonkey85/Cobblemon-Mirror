@@ -50,7 +50,7 @@ abstract class JsonBackedPlayerDataStoreBackend<T : InstancedPlayerData>(
             }
         } else {
             defaultData.invoke(uuid).also(::save)
-        }
+        }.also { it.initialize() }
     }
 
 }
