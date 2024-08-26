@@ -11,6 +11,8 @@ package com.cobblemon.mod.common.api.pokedex
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
+import com.cobblemon.mod.common.api.pokedex.entry.PokedexForm
+import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import net.minecraft.resources.ResourceLocation
 
@@ -56,6 +58,26 @@ abstract class AbstractPokedexManager {
                 speciesRecord.getFormRecord(it)?.knowledge ?: PokedexEntryProgress.NONE
             } ?: PokedexEntryProgress.NONE
         } ?: PokedexEntryProgress.NONE
+    }
+
+    fun getEncounteredForms(entry: PokedexEntry) : List<PokedexForm> {
+        val speciesRecord = getSpeciesRecord(entry.speciesId) ?: return emptyList()
+        val hasAllAspects = entry.conditionAspects.all(speciesRecord::hasAspect)
+        if (!hasAllAspects) {
+            return emptyList()
+        }
+        // For each distinct form in this entry, get the highest knowledge level for the unlock forms, then take the highest of those.
+        return entry.forms.filter { form ->
+            form.unlockForms.any { (speciesRecord.getFormRecord(it)?.knowledge ?: PokedexEntryProgress.NONE) > PokedexEntryProgress.ENCOUNTERED }
+        }
+    }
+
+    fun getSeenShinyStates(entry: PokedexEntry, form: PokedexForm): Set<String> {
+        return getSpeciesRecord(entry.speciesId)?.getFormRecord(form.displayForm)?.getSeenShinyStates() ?: return emptySet()
+    }
+
+    fun getSeenGenders(entry: PokedexEntry, form: PokedexForm): Set<Gender> {
+        return getSpeciesRecord(entry.speciesId)?.getFormRecord(form.displayForm)?.getGenders() ?: emptySet()
     }
 
     fun getKnowledgeForSpecies(speciesId: ResourceLocation): PokedexEntryProgress {

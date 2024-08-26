@@ -28,6 +28,7 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.SCROLL_SL
 import com.cobblemon.mod.common.client.gui.pokedex.widgets.EntriesScrollingWidget.PokemonScrollSlotRow
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
+import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
@@ -151,9 +152,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
 
                 val speciesNumber = pokemonNumber.text()
                 val discoveryLevel = discoveryLevelList[index]
-//                val drawConditions = dexData.displayConditions ?: emptyList()// ?: (dexData.formVariations[dexData.displayEntry] as BasicPokedexFormVariation).conditions
-                val speciesRecord = CobblemonClient.clientPokedexData.speciesRecords[dexData.speciesId]
-                val firstVisibleForm = speciesRecord?.let { record -> dexData.forms.firstOrNull { it.unlockForms.any(record::hasSeenForm) } }
+                val firstVisibleForm = CobblemonClient.clientPokedexData.getEncounteredForms(dexData).firstOrNull()
                 val shouldDrawMon = firstVisibleForm != null//drawConditions.all { it.resolveBoolean(runtime) }
 
                 if (species == null) return@forEachIndexed
@@ -186,13 +185,19 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
                 }
 
                 if (shouldDrawMon) {
+                    val firstVisibleGender = CobblemonClient.clientPokedexData.getSeenGenders(dexData, firstVisibleForm!!).firstOrNull()
+                    val firstVisibleShiny = CobblemonClient.clientPokedexData.getSeenShinyStates(dexData, firstVisibleForm).firstOrNull() == "shiny"
+                    val formAspects = species.forms.firstOrNull { it.name.equals(firstVisibleForm.displayForm, ignoreCase = true) }?.aspects ?: species.standardForm.aspects
                     context.enableScissor(
                         startPosX + 1,
                         startPosY + 1,
                         startPosX + SCROLL_SLOT_SIZE - 1,
                         startPosY + SCROLL_SLOT_SIZE - 2
                     )
-                    val aspectsToDraw = dexData.displayAspects + firstVisibleForm!!.displayForm
+                    val aspectsToDraw = (dexData.displayAspects + formAspects + (firstVisibleGender ?: Gender.GENDERLESS).name.lowercase()).toMutableSet()
+                    if (firstVisibleShiny) {
+                        aspectsToDraw.add("shiny")
+                    }
                     matrices.pushPose()
                     matrices.translate(startPosX + (SCROLL_SLOT_SIZE / 2.0), startPosY + 1.0, 0.0)
                     matrices.scale(2.5F, 2.5F, 1F)

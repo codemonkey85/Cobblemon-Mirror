@@ -47,6 +47,6 @@ abstract class NbtBackedPlayerData<T : InstancedPlayerData>(
             }.first
         } else {
             defaultData.invoke(uuid).also(::save)
-        }
+        }.also { it.initialize() }
     }
 }

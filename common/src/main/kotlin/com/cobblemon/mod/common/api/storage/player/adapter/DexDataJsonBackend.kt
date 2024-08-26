@@ -31,6 +31,10 @@ class DexDataJsonBackend: JsonBackedPlayerDataStoreBackend<PokedexManager>("poke
     override val classToken = TypeToken.get(PokedexManager::class.java)
     override val defaultData = defaultDataFunc
 
+    override fun initialize(store: PokedexManager) {
+        store.initialize()
+    }
+
     companion object {
         val defaultDataFunc = { uuid: UUID ->
             PokedexManager(uuid, mutableMapOf())

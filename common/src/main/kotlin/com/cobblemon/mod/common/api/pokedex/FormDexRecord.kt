@@ -85,6 +85,7 @@ class FormDexRecord {
 
     fun getGenders(): Set<Gender> = genders
     fun hasSeenShinyState(shiny: Boolean): Boolean = seenShinyStates.contains(if (shiny) "shiny" else "normal")
+    fun getSeenShinyStates(): Set<String> = seenShinyStates
 
     fun setKnowledgeProgress(newKnowledge: PokedexEntryProgress) {
         knowledge = newKnowledge

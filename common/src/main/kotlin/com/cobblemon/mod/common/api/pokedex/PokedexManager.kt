@@ -28,8 +28,6 @@ class PokedexManager(
     override val speciesRecords: MutableMap<ResourceLocation, SpeciesDexRecord>
 ) : AbstractPokedexManager(), InstancedPlayerData {
 
-    var dirty = false
-
     fun encounter(pokemon: Pokemon) {
         val speciesId = pokemon.species.resourceIdentifier
         val formName = pokemon.form.formOnlyShowdownId()
@@ -43,7 +41,6 @@ class PokedexManager(
     }
 
     override fun markDirty() {
-        dirty = true
     }
 
     override fun initialize() {
@@ -67,7 +64,7 @@ class PokedexManager(
                 Codec.unboundedMap(ResourceLocation.CODEC, SpeciesDexRecord.CODEC).fieldOf("speciesRecords").forGetter { it.speciesRecords }
             ).apply(instance) { uuid, map ->
                 //Codec stuff seems to deserialize to an immutable map, so we have to convert it to mutable explicitly
-                PokedexManager(UUID.fromString(uuid), map.toMutableMap()).also { dex -> dex.speciesRecords.entries.forEach { (key, value) -> value.initialize(dex, key) } }
+                PokedexManager(UUID.fromString(uuid), map.toMutableMap()).also { it.initialize() }
             }
         }
     }
