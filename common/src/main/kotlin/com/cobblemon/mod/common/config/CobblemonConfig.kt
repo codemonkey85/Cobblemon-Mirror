@@ -147,6 +147,9 @@ class CobblemonConfig {
         Statuses.BURN.configEntry()
     )
 
+    @NodeCategory(Category.PassiveStatus)
+    var healPassiveStatuses = true
+
     @NodeCategory(Category.Healing)
     var infiniteHealerCharge = false
 

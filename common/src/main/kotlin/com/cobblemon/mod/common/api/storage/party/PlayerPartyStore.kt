@@ -92,7 +92,7 @@ open class PlayerPartyStore(
             val random = Random.Default
             for (pokemon in this) {
                 // Awake from fainted
-                if (pokemon.isFainted()) {
+                if (pokemon.isFainted() && Cobblemon.config.faintAwakenHealthPercent > 0 && Cobblemon.config.defaultFaintTimer > 0) {
                     pokemon.faintedTimer -= 1
                     if (pokemon.faintedTimer <= -1) {
                         val php = ceil(pokemon.hp * Cobblemon.config.faintAwakenHealthPercent)
@@ -101,24 +101,26 @@ open class PlayerPartyStore(
                     }
                 }
                 // Passive healing while less than full health
-                else if (pokemon.currentHealth < pokemon.hp) {
+                else if (pokemon.currentHealth < pokemon.hp && Cobblemon.config.healTimer > 0 && Cobblemon.config.healPercent > 0) {
                     pokemon.healTimer--
                     if (pokemon.healTimer <= -1) {
                         pokemon.healTimer = Cobblemon.config.healTimer
                         val healAmount = 1.0.coerceAtLeast(pokemon.hp.toDouble() * Cobblemon.config.healPercent)
-                        pokemon.currentHealth = pokemon.currentHealth + round(healAmount).toInt()
+                        pokemon.currentHealth += round(healAmount).toInt()
                     }
                 }
 
                 // Statuses
-                val status = pokemon.status
-                if (status != null && !player.isSleeping) {
-                    if (status.isExpired()) {
-                        status.status.onStatusExpire(player, pokemon, random)
-                        pokemon.status = null
-                    } else {
-                        status.status.onSecondPassed(player, pokemon, random)
-                        status.tickTimer()
+                if (Cobblemon.config.healPassiveStatuses) {
+                    val status = pokemon.status
+                    if (status != null && !player.isSleeping) {
+                        if (status.isExpired()) {
+                            status.status.onStatusExpire(player, pokemon, random)
+                            pokemon.status = null
+                        } else {
+                            status.status.onSecondPassed(player, pokemon, random)
+                            status.tickTimer()
+                        }
                     }
                 }
 
