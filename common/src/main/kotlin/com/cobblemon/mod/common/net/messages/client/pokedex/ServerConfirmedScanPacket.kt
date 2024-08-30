@@ -19,20 +19,16 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
 
 class ServerConfirmedScanPacket(
-    val prevKnowledge: PokedexEntryProgress,
-    val newKnowledge: PokedexEntryProgress,
     val species: ResourceLocation
 ): NetworkPacket<ServerConfirmedScanPacket> {
     override val id = ID
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeEnumConstant(prevKnowledge)
-        buffer.writeEnumConstant(newKnowledge)
         buffer.writeIdentifier(species)
     }
 
     companion object {
-        fun decode(buffer: RegistryFriendlyByteBuf) = ServerConfirmedScanPacket(buffer.readEnumConstant(PokedexEntryProgress::class.java), buffer.readEnumConstant(PokedexEntryProgress::class.java), buffer.readIdentifier())
+        fun decode(buffer: RegistryFriendlyByteBuf) = ServerConfirmedScanPacket(buffer.readIdentifier())
 
         val ID = cobblemonResource("server_confirmed_scan")
     }

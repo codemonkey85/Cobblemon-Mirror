@@ -17,5 +17,4 @@ object ServerConfirmedScanHandler : ClientNetworkPacketHandler<ServerConfirmedSc
     override fun handle(packet: ServerConfirmedScanPacket, client: Minecraft) {
         CobblemonClient.pokedexUsageContext.onServerConfirmedScan(packet)
     }
-
 }
