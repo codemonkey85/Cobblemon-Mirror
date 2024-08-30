@@ -80,6 +80,10 @@ abstract class AbstractPokedexManager {
         return getSpeciesRecord(entry.speciesId)?.getFormRecord(form.displayForm)?.getGenders() ?: emptySet()
     }
 
+    fun getSeenAspects(entry: PokedexEntry): Set<String> {
+        return getSpeciesRecord(entry.speciesId)?.getAspects() ?: emptySet()
+    }
+
     fun getKnowledgeForSpecies(speciesId: ResourceLocation): PokedexEntryProgress {
         return speciesRecords[speciesId]?.getKnowledge() ?: PokedexEntryProgress.NONE
     }

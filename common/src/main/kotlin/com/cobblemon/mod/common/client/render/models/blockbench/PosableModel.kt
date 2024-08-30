@@ -624,10 +624,10 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
                 val renderLayer = getLayer(texture, layer.emissive, layer.translucent)
                 val consumer = provider.getBuffer(renderLayer)
                 val tint = layer.tint
-                val tintRed = (tint.x * 255).toInt()
-                val tintGreen = (tint.y * 255).toInt()
-                val tintBlue = (tint.z * 255).toInt()
-                val tintAlpha = (tint.w * 255).toInt()
+                val tintRed = (tint.x * r2 * 255).toInt()
+                val tintGreen = (tint.y * g2 * 255).toInt()
+                val tintBlue = (tint.z * b2 * 255).toInt()
+                val tintAlpha = (tint.w * a2 * 255).toInt()
                 val tintColor = tintAlpha shl 24 or (tintRed shl 16) or (tintGreen shl 8) or tintBlue
 
                 stack.pushPose()

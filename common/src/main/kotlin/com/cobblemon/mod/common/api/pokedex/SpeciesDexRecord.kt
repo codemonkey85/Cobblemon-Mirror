@@ -79,6 +79,7 @@ class SpeciesDexRecord {
     fun initialize(pokedexManager: AbstractPokedexManager, id: ResourceLocation) {
         this.id = id
         this.pokedexManager = pokedexManager
+        this.formRecords.forEach { it.value.initialize(this) }
     }
 
     fun onFormRecordUpdated(formDexRecord: FormDexRecord) {

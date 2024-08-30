@@ -50,7 +50,7 @@ class FormDexRecord {
     /** The genders that the dex is aware of. */
     private val genders: MutableSet<Gender> = mutableSetOf()
     /** Shiny states could be shiny or non-shiny - on the off chance they only saw the shiny, they shouldn't know what the normal looks like. */
-    private val seenShinyStates = mutableSetOf("normal", "shiny") // consider: radiants in the future (radiants should just be a resource pack tbh)
+    private val seenShinyStates = mutableSetOf<String>() // consider: radiants in the future (radiants should just be a resource pack tbh)
     /** The current awareness of the form that the dex has. */
     var knowledge = PokedexEntryProgress.NONE
         private set

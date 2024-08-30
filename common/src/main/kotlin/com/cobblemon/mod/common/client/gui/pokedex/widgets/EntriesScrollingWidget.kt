@@ -147,15 +147,16 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
                 val state = FloatingState()
                 val species = PokemonSpecies.getByIdentifier(dexData.speciesId)
                 //FIXME: This may not work properly when accounting for custom pokemon with the same dex number
-                var pokemonNumber = species?.nationalPokedexNumber?.toString() ?: "0"
-                while (pokemonNumber.length < 4) pokemonNumber = "0$pokemonNumber"
+                val pokemonNumber = (species?.nationalPokedexNumber?.toString() ?: "0").padStart(4, '0')
 
                 val speciesNumber = pokemonNumber.text()
                 val discoveryLevel = discoveryLevelList[index]
                 val firstVisibleForm = CobblemonClient.clientPokedexData.getEncounteredForms(dexData).firstOrNull()
-                val shouldDrawMon = firstVisibleForm != null//drawConditions.all { it.resolveBoolean(runtime) }
+                val shouldDrawMon = firstVisibleForm != null
 
-                if (species == null) return@forEachIndexed
+                if (species == null) {
+                    return@forEachIndexed
+                }
 
                 val matrices = context.pose()
 
@@ -185,16 +186,18 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
                 }
 
                 if (shouldDrawMon) {
-                    val firstVisibleGender = CobblemonClient.clientPokedexData.getSeenGenders(dexData, firstVisibleForm!!).firstOrNull()
+                    val firstVisibleGender = CobblemonClient.clientPokedexData.getSeenGenders(dexData, firstVisibleForm).firstOrNull()
                     val firstVisibleShiny = CobblemonClient.clientPokedexData.getSeenShinyStates(dexData, firstVisibleForm).firstOrNull() == "shiny"
                     val formAspects = species.forms.firstOrNull { it.name.equals(firstVisibleForm.displayForm, ignoreCase = true) }?.aspects ?: species.standardForm.aspects
+                    val seenAspects = CobblemonClient.clientPokedexData.getSeenAspects(dexData)
+                    val variationAspects = dexData.variations.mapNotNull { it.aspects.firstOrNull { it in seenAspects } }
                     context.enableScissor(
                         startPosX + 1,
                         startPosY + 1,
                         startPosX + SCROLL_SLOT_SIZE - 1,
                         startPosY + SCROLL_SLOT_SIZE - 2
                     )
-                    val aspectsToDraw = (dexData.displayAspects + formAspects + (firstVisibleGender ?: Gender.GENDERLESS).name.lowercase()).toMutableSet()
+                    val aspectsToDraw = (dexData.displayAspects + variationAspects + formAspects + (firstVisibleGender ?: Gender.GENDERLESS).name.lowercase()).toMutableSet()
                     if (firstVisibleShiny) {
                         aspectsToDraw.add("shiny")
                     }

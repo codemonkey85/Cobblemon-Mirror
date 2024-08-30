@@ -21,7 +21,7 @@ class DescriptionWidget(descX: Int, descY: Int): InfoTextScrollWidget(pX = descX
         private val unknownIcon = cobblemonResource("textures/gui/pokedex/pokedex_slot_unknown.png")
     }
 
-    var showPlaceholder: Boolean = false
+    var showPlaceholder: Boolean = true
 
     override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         drawScaledText(
