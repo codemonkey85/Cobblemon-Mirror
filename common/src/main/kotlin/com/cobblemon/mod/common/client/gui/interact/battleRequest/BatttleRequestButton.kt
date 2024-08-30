@@ -24,7 +24,7 @@ import net.minecraft.network.chat.MutableComponent
 
 class BattleRequestButton(
         pX: Int, pY: Int,
-        private val text: MutableComponent,
+        var text: MutableComponent,
         onPress: OnPress
 ): Button(pX, pY, (WIDTH * SCALE).toInt(), (HEIGHT * SCALE).toInt(), text, onPress, DEFAULT_NARRATION) {
 

@@ -36,6 +36,7 @@ class BattleConfigureGUI(
         const val SIZE = 113
         private val backgroundResource = cobblemonResource("textures/gui/interact/request/battle_request.png")
         private val battleArrowsResource = cobblemonResource("textures/gui/interact/request/battle_request_arrows.png")
+        private var requestButton: BattleRequestButton? = null
 
         val battleRequestMap = mutableMapOf(
                 Pair(
@@ -47,6 +48,7 @@ class BattleConfigureGUI(
                                 overlayTexture = cobblemonResource("textures/gui/interact/request/battle_request_overlay.png"),
                                 title = lang("challenge.request_battle_title").bold(),
                                 subTitle = lang("battle.types.singles").bold(),
+                                buttonText = lang("challenge.challenge").bold(),
                                 onRequest = { packet, battleFormat -> sendBattleRequest(battleFormat, packet) },
                                 onResponse = { packet, accept -> sendBattleResponse(packet, accept) }
                         )
@@ -60,6 +62,7 @@ class BattleConfigureGUI(
                                 overlayTexture = cobblemonResource("textures/gui/interact/request/battle_request_overlay.png"),
                                 title = lang("challenge.request_battle_title").bold(),
                                 subTitle = lang("battle.types.doubles").bold(),
+                                buttonText = lang("challenge.challenge").bold(),
                                 onRequest = { packet, battleFormat -> sendBattleRequest(battleFormat, packet) },
                                 onResponse = { packet, accept -> sendBattleResponse(packet, accept) }
                         ),
@@ -73,6 +76,7 @@ class BattleConfigureGUI(
                                 overlayTexture = cobblemonResource("textures/gui/interact/request/battle_request_overlay.png"),
                                 title = lang("challenge.request_battle_title").bold(),
                                 subTitle = lang("battle.types.triples").bold(),
+                                buttonText = lang("challenge.challenge").bold(),
                                 onRequest = { packet, battleFormat -> sendBattleRequest(battleFormat, packet) },
                                 onResponse = { packet, accept -> sendBattleResponse(packet, accept) }
                         ),
@@ -86,6 +90,7 @@ class BattleConfigureGUI(
                                 overlayTexture = cobblemonResource("textures/gui/interact/request/battle_request_multi_overlay_partner.png"),
                                 title = lang("challenge.request_team_join_title").bold(),
                                 subTitle = lang("battle.types.multi").bold(),
+                                buttonText = lang("challenge.multi.invite").bold(),
                                 color = ColourLibrary.SIDE_1_ALLY_BATTLE_COLOUR,
                                 onRequest = { packet, battleFormat -> BattleTeamRequestPacket(packet.numericTargetId).sendToServer()  },
                                 onResponse = { packet, accept -> BattleTeamResponsePacket(packet.numericTargetId, accept).sendToServer() }
@@ -97,9 +102,10 @@ class BattleConfigureGUI(
                                 option = PlayerInteractOptionsPacket.Options.TEAM_LEAVE,
                                 battleFormat = BattleFormat.GEN_9_MULTI,
                                 tileTexture = cobblemonResource("textures/gui/interact/request/battle_request_multi.png"),
-                                overlayTexture = cobblemonResource("textures/gui/interact/request/battle_request_multi_overlay_partner.png"),
+                                overlayTexture = cobblemonResource("textures/gui/interact/request/battle_request_multi_overlay_partner_leave.png"),
                                 title = lang("challenge.request_team_leave_title").bold(),
                                 subTitle = lang("battle.types.multi").bold(),
+                                buttonText = lang("challenge.multi.leave").bold(),
                                 color = ColourLibrary.SIDE_1_ALLY_BATTLE_COLOUR,
                                 onRequest = { _, _ -> BattleTeamLeavePacket().sendToServer() },
                                 onResponse = { _, _ -> Unit }
@@ -114,6 +120,7 @@ class BattleConfigureGUI(
                                 overlayTexture = cobblemonResource("textures/gui/interact/request/battle_request_multi_overlay_opponent.png"),
                                 title = lang("challenge.request_battle_title").bold(),
                                 subTitle = lang("battle.types.multi").bold(),
+                                buttonText = lang("challenge.challenge").bold(),
                                 onRequest = { packet, battleFormat -> sendBattleRequest(battleFormat, packet) },
                                 onResponse = { packet, accept -> sendBattleResponse(packet, accept) }
                         ),
@@ -127,6 +134,7 @@ class BattleConfigureGUI(
                                 overlayTexture = cobblemonResource("textures/gui/interact/request/battle_request_royal_overlay.png"),
                                 title = lang("challenge.request_battle_title").bold(),
                                 subTitle = lang("battle.types.freeforall").bold(),
+                                buttonText = lang("challenge.challenge").bold(),
                                 onRequest = { packet, battleFormat -> sendBattleRequest(battleFormat, packet) },
                                 onResponse = { packet, accept -> sendBattleResponse(packet, accept) }
                         ),
@@ -150,6 +158,7 @@ class BattleConfigureGUI(
             val overlayTexture: ResourceLocation?,
             val title: MutableComponent,
             val subTitle: MutableComponent,
+            val buttonText: MutableComponent,
             val color: Int = ColourLibrary.SIDE_1_BATTLE_COLOUR,
             val onRequest: (packet : PlayerInteractOptionsPacket, battleFormat: BattleFormat) -> Unit,
             val onResponse: (packet: PlayerInteractOptionsPacket, accept: Boolean) -> Unit,
@@ -213,18 +222,21 @@ class BattleConfigureGUI(
 
         } else {
             // Draw Challenge button
-            this.addRenderableWidget(
-                    BattleRequestButton(
-                            x + 22,
-                            y + 99,
-                            lang("challenge.challenge"),
-                    ) {
-                        //TODO: add additional battle rules, otherwise this call feels pretty silly
-                        battleRequestMap[options[currentPage]]?.onRequest?.let { it1 ->
-                            it1(packet, battleRequestMap[options[currentPage]]?.battleFormat ?: BattleFormat.GEN_9_SINGLES)  }
-                        closeGUI()
-                    }
-            )
+            requestButton = BattleRequestButton(
+                    x + 22,
+                    y + 99,
+                    lang("challenge.challenge"),
+            ) {
+                //TODO: add additional battle rules, otherwise this call feels pretty silly
+                battleRequestMap[options[currentPage]]?.onRequest?.let { it1 ->
+                    it1(packet, battleRequestMap[options[currentPage]]?.battleFormat ?: BattleFormat.GEN_9_SINGLES)  }
+                closeGUI()
+            }
+            requestButton?.let {
+                this.addRenderableWidget(
+                        it
+                )
+            }
 
             // Selection buttons
             this.addRenderableWidget(
@@ -232,7 +244,9 @@ class BattleConfigureGUI(
                             pX = x + 2,
                             pY = y + 30,
                             forward = false
-                    ) { currentPage = (currentPage - 1) % options.count() }
+                    ) { currentPage = (currentPage - 1) % options.count()
+                        updateRequestButtonText()
+                    }
             )
 
             this.addRenderableWidget(
@@ -240,8 +254,18 @@ class BattleConfigureGUI(
                             pX = x + 106,
                             pY = y + 30,
                             forward = true
-                    ) { currentPage = (currentPage + 1) % options.count() }
+                    ) { currentPage = (currentPage + 1) % options.count()
+                        updateRequestButtonText()
+                    }
             )
+        }
+    }
+
+    fun updateRequestButtonText() {
+        requestButton.let {
+            if (it != null) {
+                it.text = battleRequestMap[options[currentPage]]?.buttonText ?: lang("challenge.challenge")
+            }
         }
     }
 
@@ -290,9 +314,6 @@ class BattleConfigureGUI(
                 width = 190,
                 height = 120,
                 scale = 0.5F,
-                red = if (battleTypeData.option == PlayerInteractOptionsPacket.Options.TEAM_LEAVE) 1.3 else 1,
-                green = if (battleTypeData.option == PlayerInteractOptionsPacket.Options.TEAM_LEAVE) 0 else 1,
-                blue = if (battleTypeData.option == PlayerInteractOptionsPacket.Options.TEAM_LEAVE) 0 else 1,
             )
         }
 
@@ -346,9 +367,6 @@ class BattleConfigureGUI(
 
     override fun isPauseScreen() = false
 
-//    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-//        return super.mouseClicked(mouseX, mouseY, button)
-//    }
     private fun closeGUI() {
         Minecraft.getInstance().setScreen(null)
     }
