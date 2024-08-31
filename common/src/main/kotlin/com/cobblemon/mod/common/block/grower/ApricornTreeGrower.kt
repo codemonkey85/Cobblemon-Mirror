@@ -9,11 +9,11 @@
 package com.cobblemon.mod.common.block.grower
 
 import com.cobblemon.mod.common.api.apricorn.Apricorn
-import net.minecraft.block.SaplingGenerator
-import java.util.Optional
+import net.minecraft.world.level.block.grower.TreeGrower
+import java.util.*
 
-class ApricornTreeGrower(apricorn: Apricorn) : SaplingGenerator(
-    apricorn.asString(),
+class ApricornTreeGrower(apricorn: Apricorn) : TreeGrower(
+    apricorn.serializedName,
     Optional.empty(),
     Optional.of(apricorn.configuredFeature()),
     Optional.empty()

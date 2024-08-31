@@ -15,10 +15,10 @@ import com.cobblemon.mod.common.api.dialogue.input.DialogueTextInput
 import com.cobblemon.mod.common.api.net.Decodable
 import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.util.readEnumConstant
-import com.cobblemon.mod.common.util.readUuid
+import com.cobblemon.mod.common.util.readUUID
 import com.cobblemon.mod.common.util.writeEnumConstant
-import com.cobblemon.mod.common.util.writeUuid
-import net.minecraft.network.RegistryByteBuf
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
 /**
@@ -79,8 +79,8 @@ class DialogueInputDTO() : Encodable, Decodable {
         this.inputId = activeDialogue.activeInput.inputId
     }
 
-    override fun encode(buffer: RegistryByteBuf) {
-        buffer.writeUuid(inputId)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(inputId)
         buffer.writeEnumConstant(inputType)
         buffer.writeFloat(deadline)
         buffer.writeBoolean(showTimer)
@@ -98,8 +98,8 @@ class DialogueInputDTO() : Encodable, Decodable {
         }
     }
 
-    override fun decode(buffer: RegistryByteBuf) {
-        inputId = buffer.readUuid()
+    override fun decode(buffer: RegistryFriendlyByteBuf) {
+        inputId = buffer.readUUID()
         inputType = buffer.readEnumConstant(InputType::class.java)
         deadline = buffer.readFloat()
         showTimer = buffer.readBoolean()

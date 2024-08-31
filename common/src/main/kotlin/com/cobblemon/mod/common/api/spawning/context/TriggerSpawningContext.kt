@@ -10,8 +10,8 @@ package com.cobblemon.mod.common.api.spawning.context
 
 import com.cobblemon.mod.common.api.spawning.SpawnCause
 import com.cobblemon.mod.common.api.spawning.influence.SpawningInfluence
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.BlockPos
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.core.BlockPos
 
 /**
  * A spawning context relating to triggered spawning. Uses a single-point structure cache which is
@@ -22,7 +22,7 @@ import net.minecraft.util.math.BlockPos
  */
 open class TriggerSpawningContext(
     override val cause: SpawnCause,
-    override val world: ServerWorld,
+    override val world: ServerLevel,
     override val position: BlockPos,
     override val light: Int,
     override val skyLight: Int,

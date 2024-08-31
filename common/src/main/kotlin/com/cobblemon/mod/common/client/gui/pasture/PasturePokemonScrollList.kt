@@ -24,9 +24,9 @@ import com.cobblemon.mod.common.net.messages.server.pasture.UnpasturePokemonPack
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.ObjectSelectionList
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
@@ -34,8 +34,8 @@ class PasturePokemonScrollList(
     val listX: Int,
     val listY: Int,
     val parent: PastureWidget
-) : AlwaysSelectedEntryListWidget<PasturePokemonScrollList.PastureSlot>(
-    MinecraftClient.getInstance(),
+) : ObjectSelectionList<PasturePokemonScrollList.PastureSlot>(
+    Minecraft.getInstance(),
     WIDTH, // width
     HEIGHT, // height
     0, // top
@@ -73,16 +73,16 @@ class PasturePokemonScrollList(
         }
     }
 
-    override fun getScrollbarX() = x + width - 3
+    override fun getScrollbarPosition() = x + width - 3
 
     public override fun addEntry(entry: PastureSlot) = super.addEntry(entry)
     public override fun removeEntry(entry: PastureSlot) = super.removeEntry(entry)
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
         correctSize()
 
-        context.matrices.push()
-//        context.matrices.translate(0F, 0F, -10F)
+        context.pose().pushPose()
+//        context.pose().translate(0F, 0F, -10F)
 
         context.enableScissor(
             x,
@@ -92,14 +92,14 @@ class PasturePokemonScrollList(
         )
 
 
-        context.matrices.pop()
+        context.pose().popPose()
         super.renderWidget(context, mouseX, mouseY, partialTicks)
 
         context.disableScissor()
 
         // Scroll Overlay
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = scrollOverlayResource,
             x = listX,
             y = listY - 13,
@@ -142,23 +142,23 @@ class PasturePokemonScrollList(
     }
 
     private fun updateScrollingState(mouseX: Double, mouseY: Double) {
-        scrolling = mouseX >= this.scrollbarX.toDouble()
-                && mouseX < (this.scrollbarX + 3).toDouble()
+        scrolling = mouseX >= this.scrollbarPosition.toDouble()
+                && mouseX < (this.scrollbarPosition + 3).toDouble()
                 && mouseY >= listY
                 && mouseY < bottom
     }
 
-    override fun drawMenuListBackground(context: DrawContext?) {}
+    override fun renderListBackground(context: GuiGraphics) {}
 
     private fun correctSize() {
-        setDimensionsAndPosition(WIDTH, HEIGHT, listX, (listY - 4))
+        setRectangle(WIDTH, HEIGHT, listX, (listY - 4))
 //        setX(listX)
     }
 
     fun isHovered(mouseX: Double, mouseY: Double) = mouseX.toFloat() in (x.toFloat()..(x.toFloat() + WIDTH)) && mouseY.toFloat() in (y.toFloat()..(y.toFloat() + HEIGHT))
 
     class PastureSlot(val pokemon: OpenPasturePacket.PasturePokemonDataDTO, private val parent: PastureWidget) : Entry<PastureSlot>() {
-        val client: MinecraftClient = MinecraftClient.getInstance()
+        val client: Minecraft = Minecraft.getInstance()
         val state = FloatingState()
 
         fun isOwned() = client.player?.uuid == pokemon.playerId
@@ -179,7 +179,7 @@ class PasturePokemonScrollList(
         override fun getNarration() = pokemon.displayName
 
         override fun render(
-            context: DrawContext,
+            context: GuiGraphics,
             index: Int,
             rowTop: Int,
             rowLeft: Int,
@@ -192,7 +192,7 @@ class PasturePokemonScrollList(
         ) {
             val x = rowLeft - 4
             val y = rowTop
-            val matrixStack = context.matrices
+            val matrixStack = context.pose()
             blitk(
                 matrixStack = matrixStack,
                 texture = slotResource,
@@ -205,7 +205,7 @@ class PasturePokemonScrollList(
             )
 
             // Render Pokémon
-            matrixStack.push()
+            matrixStack.pushPose()
             matrixStack.translate(x + 11 + (StorageSlot.SIZE / 2.0), y - 5.0, 0.0)
             matrixStack.scale(2.5F, 2.5F, 1F)
             drawProfilePokemon(
@@ -217,7 +217,7 @@ class PasturePokemonScrollList(
                 partialTicks = partialTicks,
                 scale = 4.5F
             )
-            matrixStack.pop()
+            matrixStack.popPose()
 
             val heldItem = pokemon.heldItem
             if (!heldItem.isEmpty) {

@@ -12,29 +12,29 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.Bone
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation.Companion.X_AXIS
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation.Companion.Y_AXIS
-import net.minecraft.client.model.ModelPart
+import net.minecraft.client.model.geom.ModelPart
 
 fun ModelPart.createTransformation() = ModelPartTransformation(this)
 
 fun ModelPart.getPosition(axis: Int) = when (axis) {
-    X_AXIS -> pivotX
-    Y_AXIS -> pivotY
-    else -> pivotZ
+    X_AXIS -> x
+    Y_AXIS -> y
+    else -> z
 }
 fun Bone.getRotation(axis: Int) = if (this is ModelPart) {
     when (axis) {
-        X_AXIS -> pitch
-        Y_AXIS -> yaw
-        else -> roll
+        X_AXIS -> xRot
+        Y_AXIS -> yRot
+        else -> zRot
     }
 } else 0f
 
 fun Bone.setRotation(axis: Int, angleInRadians: Float): Bone {
     if (this is ModelPart) {
         when (axis) {
-            X_AXIS -> pitch = angleInRadians
-            Y_AXIS -> yaw = angleInRadians
-            else -> roll = angleInRadians
+            X_AXIS -> xRot = angleInRadians
+            Y_AXIS -> yRot= angleInRadians
+            else -> zRot = angleInRadians
         }
     }
 
@@ -42,9 +42,9 @@ fun Bone.setRotation(axis: Int, angleInRadians: Float): Bone {
 }
 fun ModelPart.setPosition(axis: Int, position: Float): ModelPart {
     when (axis) {
-        X_AXIS -> pivotX = position
-        Y_AXIS -> pivotY = position
-        else -> pivotZ = position
+        X_AXIS -> x = position
+        Y_AXIS -> y = position
+        else -> z = position
     }
     return this
 }

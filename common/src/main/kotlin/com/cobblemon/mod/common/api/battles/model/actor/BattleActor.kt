@@ -20,10 +20,10 @@ import com.cobblemon.mod.common.exception.IllegalActionChoiceException
 import com.cobblemon.mod.common.net.messages.client.battle.BattleApplyPassResponsePacket
 import com.cobblemon.mod.common.net.messages.client.battle.BattleMakeChoicePacket
 import com.cobblemon.mod.common.net.messages.client.battle.BattleMessagePacket
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
+import net.minecraft.server.level.ServerPlayer
 
 abstract class BattleActor(
     val uuid: UUID,
@@ -62,7 +62,7 @@ abstract class BattleActor(
     fun getSide() = if (this in battle.side1.actors) battle.side1 else battle.side2
     open fun getPlayerUUIDs(): Iterable<UUID> = emptyList()
 
-    open fun isForPlayer(serverPlayerEntity: ServerPlayerEntity) = serverPlayerEntity.uuid in getPlayerUUIDs()
+    open fun isForPlayer(serverPlayerEntity: ServerPlayer) = serverPlayerEntity.uuid in getPlayerUUIDs()
     open fun isForPokemon(pokemonEntity: PokemonEntity) = activePokemon.any { it.battlePokemon?.effectedPokemon?.entity == pokemonEntity }
 
     fun turn() {
@@ -129,7 +129,7 @@ abstract class BattleActor(
         battle.writeShowdownAction(">$showdownId ${showdownMessages.joinToString()}")
     }
 
-    abstract fun getName(): MutableText
+    abstract fun getName(): MutableComponent
 
     /**
      * Appends the given name to this owner as the prefix.
@@ -138,9 +138,9 @@ abstract class BattleActor(
      * @param name The name of an object being appended, typically a Pokémon nickname received from showdown.
      * @return A [MutableText] of the [name] append with owner prefix.
      */
-    abstract fun nameOwned(name: String): MutableText
+    abstract fun nameOwned(name: String): MutableComponent
 
-    open fun sendMessage(component: Text) {
+    open fun sendMessage(component: Component) {
         sendUpdate(BattleMessagePacket(component))
     }
     open fun awardExperience(battlePokemon: BattlePokemon, experience: Int) {}

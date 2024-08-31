@@ -14,23 +14,22 @@ import com.cobblemon.mod.common.api.net.Decodable
 import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.api.npc.NPCClasses
 import com.cobblemon.mod.common.api.npc.configuration.NPCBattleConfiguration
+import com.cobblemon.mod.common.api.npc.configuration.NPCInteractConfiguration
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.entity.npc.NPCEntity
-import com.cobblemon.mod.common.util.asExpressionLike
-import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readText
-import com.cobblemon.mod.common.util.writeText
+import com.cobblemon.mod.common.util.*
 import com.mojang.datafixers.util.Either
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.text.MutableText
-import net.minecraft.util.Identifier
+import io.netty.buffer.ByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
 
 class NPCConfigurationDTO : Encodable, Decodable {
-    var npcName: MutableText = "".text()
-    var npcClass: Identifier = cobblemonResource("default")
+    var npcName: MutableComponent = "".text()
+    var npcClass: ResourceLocation = cobblemonResource("default")
     var battle: NPCBattleConfiguration? = null
-    var interaction: Either<Identifier, ExpressionLike>? = null
+    var interactionInherited: Boolean = false
+    var interaction: NPCInteractConfiguration? = null
     var aspects: MutableSet<String> = mutableSetOf()
 
     constructor()
@@ -39,31 +38,32 @@ class NPCConfigurationDTO : Encodable, Decodable {
         npcName = npcEntity.name.copy()
         npcClass = npcEntity.npc.resourceIdentifier
         battle = npcEntity.battle
-        interaction = npcEntity.interaction
+        interactionInherited = npcEntity.interaction == null
+        interaction = npcEntity.interaction ?: npcEntity.npc.interaction
         aspects = npcEntity.appliedAspects
     }
 
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeText(npcName)
         buffer.writeIdentifier(npcClass)
         buffer.writeNullable(battle) { _, value -> value.encode(buffer) }
+        buffer.writeBoolean(interactionInherited)
         buffer.writeNullable(interaction) { _, value ->
-            buffer.writeBoolean(value.map({ true }, { false }))
-            buffer.writeString(value.map({ it.toString() }, { it.toString() }))
+            buffer.writeString(value.type)
+            value.encode(buffer)
         }
-        buffer.writeCollection(aspects, PacketByteBuf::writeString)
+        buffer.writeCollection(aspects, ByteBuf::writeString)
     }
 
-    override fun decode(buffer: RegistryByteBuf) {
+    override fun decode(buffer: RegistryFriendlyByteBuf) {
         npcName = buffer.readText().copy()
         npcClass = buffer.readIdentifier()
         battle = buffer.readNullable { NPCBattleConfiguration().apply { decode(buffer) } }
+        interactionInherited = buffer.readBoolean()
         interaction = buffer.readNullable {
-            if (buffer.readBoolean()) {
-                Either.left(Identifier.of(buffer.readString()))
-            } else {
-                Either.right(buffer.readString().asExpressionLike())
-            }
+            val type = buffer.readString()
+            val configType = NPCInteractConfiguration.types[type] ?: return@readNullable null
+            configType.clazz.getConstructor().newInstance().also { it.decode(buffer) }
         }
         aspects = buffer.readList { buffer.readString() }.toMutableSet()
     }
@@ -73,7 +73,11 @@ class NPCConfigurationDTO : Encodable, Decodable {
         entity.customName = npcName.copy()
         entity.npc = npcClass
         entity.battle = battle
-        entity.interaction = interaction
+        if (!interactionInherited) {
+            entity.interaction = interaction
+        } else {
+            entity.interaction = null
+        }
         entity.appliedAspects.clear()
         entity.appliedAspects.addAll(aspects)
     }

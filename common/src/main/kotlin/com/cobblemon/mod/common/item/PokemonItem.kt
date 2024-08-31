@@ -15,13 +15,13 @@ import com.cobblemon.mod.common.item.components.PokemonItemComponent
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.pokemon.Species
-import net.minecraft.item.ItemStack
-import net.minecraft.text.Text
+import net.minecraft.world.item.ItemStack
+import net.minecraft.network.chat.Component
 import org.joml.Vector4f
 
-class PokemonItem : CobblemonItem(Settings().maxCount(1).component(CobblemonItemComponents.POKEMON_ITEM, null)) {
+class PokemonItem : CobblemonItem(Properties().stacksTo(1).component(CobblemonItemComponents.POKEMON_ITEM, null)) {
 
-    override fun getName(stack: ItemStack): Text = this.species(stack)?.translatedName ?: super.getName(stack)
+    override fun getName(stack: ItemStack): Component = this.species(stack)?.translatedName ?: super.getName(stack)
 
     fun asPokemon(stack: ItemStack): Pokemon? {
         val species = this.species(stack) ?: return null

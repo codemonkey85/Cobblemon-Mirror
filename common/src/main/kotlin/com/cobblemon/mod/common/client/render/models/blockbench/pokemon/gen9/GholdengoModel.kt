@@ -16,19 +16,19 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTr
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.isBattling
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class GholdengoModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("gholdengo")
     override val head = getPart("head")
 
     override var portraitScale = 2.6F
-    override var portraitTranslation = Vec3d(-0.3, 1.4, 0.0)
+    override var portraitTranslation = Vec3(-0.3, 1.4, 0.0)
 
     override var profileScale = 0.65F
-    override var profileTranslation = Vec3d(0.0, 0.76, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.76, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose
@@ -47,7 +47,7 @@ class GholdengoModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             transformTicks = 10,
             animations = arrayOf(
                 bedrock("gholdengo", "sleep")
@@ -57,7 +57,7 @@ class GholdengoModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
         waterSurfaceSleep = registerPose(
             poseName = "water_surface_sleep",
             poseType = PoseType.SLEEP,
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             transformTicks = 10,
             animations = arrayOf(
                 bedrock("gholdengo", "surfacewater_sleep")
@@ -70,7 +70,7 @@ class GholdengoModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
         standing = registerPose(
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
-            condition = { !it.isBattling && !it.isTouchingWater },
+            condition = { !it.isBattling && !it.isInWater },
             quirks = arrayOf(blink),
             animations = arrayOf(
                 singleBoneLook(),
@@ -81,7 +81,7 @@ class GholdengoModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
         walk = registerPose(
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             quirks = arrayOf(blink),
             animations = arrayOf(
                 singleBoneLook(),
@@ -92,7 +92,7 @@ class GholdengoModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
         waterSurfaceIdle = registerPose(
             poseName = "water_surface_idle",
             poseTypes = PoseType.STATIONARY_POSES,
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             quirks = arrayOf(blink),
             animations = arrayOf(
                 singleBoneLook(),
@@ -106,7 +106,7 @@ class GholdengoModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
         waterSurfaceSwim = registerPose(
             poseName = "water_surface_swim",
             poseTypes = PoseType.MOVING_POSES,
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             quirks = arrayOf(blink),
             animations = arrayOf(
                 singleBoneLook(),

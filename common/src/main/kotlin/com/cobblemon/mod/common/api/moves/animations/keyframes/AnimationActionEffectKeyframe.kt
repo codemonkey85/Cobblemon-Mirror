@@ -17,7 +17,7 @@ import com.cobblemon.mod.common.api.scheduling.delayedFuture
 import com.cobblemon.mod.common.net.messages.client.animation.PlayPosableAnimationPacket
 import com.cobblemon.mod.common.util.asExpressionLike
 import java.util.concurrent.CompletableFuture
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
 
 class AnimationActionEffectKeyframe : ConditionalActionEffectKeyframe(), EntityConditionalActionEffectKeyframe {
     var delay = "0".asExpressionLike()
@@ -43,7 +43,7 @@ class AnimationActionEffectKeyframe : ConditionalActionEffectKeyframe(), EntityC
         }.toSet()
 
         for (entity in entities) {
-            val world = entity.world as ServerWorld
+            val world = entity.level() as ServerLevel
             val players = world.getPlayers { it.distanceTo(entity) <= visibilityRange }
             val pkt = PlayPosableAnimationPacket(entity.id, animation = animation, expressions = expressions)
             players.forEach { it.sendPacket(pkt) }

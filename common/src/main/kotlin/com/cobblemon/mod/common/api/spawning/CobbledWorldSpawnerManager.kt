@@ -15,7 +15,7 @@ import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.cobblemon.mod.common.util.server
 import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * The [SpawnerManager] that handles Cobblemon's world spawner, which is made up
@@ -34,7 +34,7 @@ object CobblemonWorldSpawnerManager : SpawnerManager() {
         PlatformEvents.SERVER_PLAYER_LOGOUT.subscribe { this.onPlayerLogout(it.player) }
     }
 
-    fun onPlayerLogin(player: ServerPlayerEntity) {
+    fun onPlayerLogin(player: ServerPlayer) {
         // Disables spawning
         if (!Cobblemon.config.enableSpawning || server()?.gameRules?.getBoolean(CobblemonGameRules.DO_POKEMON_SPAWNING) == false) {
             return;
@@ -45,7 +45,7 @@ object CobblemonWorldSpawnerManager : SpawnerManager() {
         registerSpawner(spawner)
     }
 
-    fun onPlayerLogout(player: ServerPlayerEntity) {
+    fun onPlayerLogout(player: ServerPlayer) {
         val spawner = spawnersForPlayers[player.uuid]
         if (spawner != null) {
             spawnersForPlayers.remove(player.uuid)

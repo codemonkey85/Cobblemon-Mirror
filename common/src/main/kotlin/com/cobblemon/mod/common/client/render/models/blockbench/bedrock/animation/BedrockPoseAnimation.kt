@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.PoseAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
-import net.minecraft.entity.Entity
+import net.minecraft.world.entity.Entity
 
 /**
  * Animation that analyzes a [BedrockAnimation] and applies transformations to the model based on
@@ -33,7 +33,7 @@ class BedrockPoseAnimation(val animation: BedrockAnimation) : PoseAnimation() {
         }
     }
 
-    override fun setAngles(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
+    override fun setupAnim(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
         animation.run(context, model, state, state.animationSeconds, limbSwing, limbSwingAmount, ageInTicks, intensity)
     }
 

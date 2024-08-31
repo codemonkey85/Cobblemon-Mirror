@@ -12,10 +12,10 @@ import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.battle.animations.MoveTileOffscreenAnimation
 import com.cobblemon.mod.common.net.messages.client.battle.BattleFaintPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object BattleFaintHandler : ClientNetworkPacketHandler<BattleFaintPacket> {
-    override fun handle(packet: BattleFaintPacket, client: MinecraftClient) {
+    override fun handle(packet: BattleFaintPacket, client: Minecraft) {
         CobblemonClient.battle?.getPokemonFromPNX(packet.pnx)?.second?.animations?.add(MoveTileOffscreenAnimation())
     }
 }

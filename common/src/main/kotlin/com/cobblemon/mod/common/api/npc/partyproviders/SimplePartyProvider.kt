@@ -14,14 +14,12 @@ import com.cobblemon.mod.common.api.storage.party.NPCPartyStore
 import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.net.IntSize
-import com.cobblemon.mod.common.util.DataKeys
-import com.cobblemon.mod.common.util.readSizedInt
-import com.cobblemon.mod.common.util.writeSizedInt
+import com.cobblemon.mod.common.util.*
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.server.level.ServerPlayer
 
 class SimplePartyProvider : NPCPartyProvider {
     companion object {
@@ -33,26 +31,26 @@ class SimplePartyProvider : NPCPartyProvider {
 
     val pokemon = mutableListOf<PokemonProperties>()
 
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeSizedInt(IntSize.U_BYTE, pokemon.size)
         for (pokemon in this.pokemon) {
             buffer.writeString(pokemon.originalString)
         }
     }
 
-    override fun decode(buffer: PacketByteBuf) {
+    override fun decode(buffer: RegistryFriendlyByteBuf) {
         repeat(times = buffer.readSizedInt(IntSize.U_BYTE)) {
             pokemon.add(PokemonProperties.parse(buffer.readString()))
         }
     }
 
-    override fun saveToNBT(nbt: NbtCompound) {
+    override fun saveToNBT(nbt: CompoundTag) {
         for ((index, pokemon) in this.pokemon.withIndex()) {
             nbt.putString(DataKeys.NPC_PARTY_POKEMON + index, pokemon.originalString)
         }
     }
 
-    override fun loadFromNBT(nbt: NbtCompound) {
+    override fun loadFromNBT(nbt: CompoundTag) {
         var index = 0
         while (nbt.contains(DataKeys.NPC_PARTY_POKEMON + index)) {
             this.pokemon.add(PokemonProperties.parse(nbt.getString(DataKeys.POKEMON_PROPERTIES + index)))
@@ -67,7 +65,7 @@ class SimplePartyProvider : NPCPartyProvider {
         }
     }
 
-    override fun provide(npc: NPCEntity, challengers: List<ServerPlayerEntity>): PartyStore {
+    override fun provide(npc: NPCEntity, challengers: List<ServerPlayer>): PartyStore {
         return NPCPartyStore(npc).apply {
             for (properties in pokemon) {
                 add(properties.create())

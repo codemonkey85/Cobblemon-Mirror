@@ -19,27 +19,27 @@ import com.cobblemon.mod.common.net.messages.client.data.ScriptRegistrySyncPacke
 import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.endsWith
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
+import net.minecraft.server.packs.resources.ResourceManager
 import java.io.File
 import java.util.concurrent.ExecutionException
-import net.minecraft.resource.ResourceManager
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
 
 object CobblemonScripts : DataRegistry {
     const val MOLANG_EXTENSION = ".molang"
     override val id = cobblemonResource("molang")
-    override val type = ResourceType.SERVER_DATA
+    override val type = PackType.SERVER_DATA
     override val observable = SimpleObservable<CobblemonScripts>()
 
-    val clientScripts = mutableMapOf<Identifier, ExpressionLike>()
-    val scripts = mutableMapOf<Identifier, ExpressionLike>()
+    val clientScripts = mutableMapOf<ResourceLocation, ExpressionLike>()
+    val scripts = mutableMapOf<ResourceLocation, ExpressionLike>()
 
     override fun reload(manager: ResourceManager) {
-        manager.findResources("molang") { path -> path.endsWith(MOLANG_EXTENSION) }.forEach { (identifier, resource) ->
-            resource.inputStream.use { stream ->
+        manager.listResources("molang") { path -> path.endsWith(MOLANG_EXTENSION) }.forEach { (identifier, resource) ->
+            resource.open().use { stream ->
                 stream.bufferedReader().use { reader ->
-                    val resolvedIdentifier = Identifier.of(identifier.namespace, File(identifier.path).nameWithoutExtension)
+                    val resolvedIdentifier = ResourceLocation.fromNamespaceAndPath(identifier.namespace, File(identifier.path).nameWithoutExtension)
                     try {
                         val expression = reader.readText().asExpressionLike()
                         if (identifier.path.startsWith("molang/client/")) {
@@ -59,11 +59,11 @@ object CobblemonScripts : DataRegistry {
     }
 
 
-    override fun sync(player: ServerPlayerEntity) {
+    override fun sync(player: ServerPlayer) {
         player.sendPacket(ScriptRegistrySyncPacket(clientScripts.entries))
     }
 
-    fun run(identifier: Identifier, runtime: MoLangRuntime): MoValue? {
+    fun run(identifier: ResourceLocation, runtime: MoLangRuntime): MoValue? {
         return scripts[identifier]?.resolve(runtime)
     }
 }

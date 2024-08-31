@@ -14,18 +14,18 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedF
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class DeerlingModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("deerling")
     override val head = getPart("head")
 
     override var portraitScale = 3.5F
-    override var portraitTranslation = Vec3d(-0.55, -1.1, 0.0)
+    override var portraitTranslation = Vec3(-0.55, -1.1, 0.0)
 
     override var profileScale = 1.0F
-    override var profileTranslation = Vec3d(0.0, 0.25, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.25, 0.0)
 
     override val foreLeftLeg= getPart("leg_front_left")
     override val foreRightLeg = getPart("leg_front_right")

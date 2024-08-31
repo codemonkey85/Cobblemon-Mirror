@@ -11,20 +11,20 @@ package com.cobblemon.mod.common.api.types.tera.gimmick
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.types.tera.TeraType
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 
 class StellarTeraType : TeraType {
-    override val id: Identifier = ID
+    override val id: ResourceLocation = ID
 
     override val legalAsStatic: Boolean = false
 
-    override val displayName: Text = LANG
+    override val displayName: Component = LANG
 
     override fun showdownId(): String = ID.path
 
     companion object {
         val ID = cobblemonResource("stellar")
-        private val LANG = Text.translatable("${Cobblemon.MODID}.terra_type.stellar")
+        private val LANG = Component.translatable("${Cobblemon.MODID}.terra_type.stellar")
     }
 }

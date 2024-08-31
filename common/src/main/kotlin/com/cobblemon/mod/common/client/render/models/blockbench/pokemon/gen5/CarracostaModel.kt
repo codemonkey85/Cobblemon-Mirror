@@ -14,19 +14,19 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class CarracostaModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("carracosta")
     override val head = getPart("head")
 
     override var portraitScale = 1.9F
-    override var portraitTranslation = Vec3d(-0.5, 1.0, 0.0)
+    override var portraitTranslation = Vec3(-0.5, 1.0, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.55, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.55, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose
@@ -44,7 +44,7 @@ class CarracostaModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             animations = arrayOf(
                 bedrock("carracosta", "sleep")
             )
@@ -53,7 +53,7 @@ class CarracostaModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame
         waterSleep = registerPose(
             poseName = "water_sleep",
             poseType = PoseType.SLEEP,
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             animations = arrayOf(
                 bedrock("carracosta", "water_sleep")
             )

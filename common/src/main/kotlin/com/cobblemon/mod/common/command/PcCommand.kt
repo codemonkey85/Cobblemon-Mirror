@@ -19,31 +19,31 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
-import net.minecraft.server.command.CommandManager.*
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands.literal
 
 object PcCommand {
 
     private const val NAME = "pc"
     private val IN_BATTLE_EXCEPTION = SimpleCommandExceptionType(lang("pc.inbattle").red())
 
-    fun register(dispatcher : CommandDispatcher<ServerCommandSource>) {
+    fun register(dispatcher : CommandDispatcher<CommandSourceStack>) {
         dispatcher.register(literal(NAME)
             .permission(CobblemonPermissions.PC)
             .executes(this::execute)
         )
     }
 
-    private fun execute(context: CommandContext<ServerCommandSource>): Int {
-        val player = context.source.playerOrThrow
+    private fun execute(context: CommandContext<CommandSourceStack>): Int {
+        val player = context.source.playerOrException
         val pc = player.pc()
         if (player.isInBattle()) {
             throw IN_BATTLE_EXCEPTION.create()
         }
         PCLinkManager.addLink(PermissiblePcLink(pc, player, CobblemonPermissions.PC))
         OpenPCPacket(pc.uuid).sendToPlayer(player)
-        context.source.world.playSoundServer(
-                position = context.source.player!!.pos,
+        context.source.level.playSoundServer(
+                position = context.source.player!!.position(),
                 sound = CobblemonSounds.PC_ON,
                 volume = 0.5F,
                 pitch = 1F

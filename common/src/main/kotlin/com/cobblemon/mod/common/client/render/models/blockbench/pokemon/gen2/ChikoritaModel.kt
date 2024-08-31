@@ -14,18 +14,18 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class ChikoritaModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("chikorita")
     override val head = getPart("head")
 
     override var portraitScale = 1.7F
-    override var portraitTranslation = Vec3d(-0.1, -0.32, 0.0)
+    override var portraitTranslation = Vec3(-0.1, -0.32, 0.0)
 
     override var profileScale = 0.71F
-    override var profileTranslation = Vec3d(0.0, 0.67, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.67, 0.0)
 
     lateinit var standing: Pose
     lateinit var walking: Pose
@@ -48,7 +48,6 @@ class ChikoritaModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
             animations = arrayOf(
-                singleBoneLook(),
                 bedrock("chikorita", "ground_idle")
             )
         )
@@ -59,7 +58,6 @@ class ChikoritaModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             transformTicks = 10,
             quirks = arrayOf(blink),
             animations = arrayOf(
-                singleBoneLook(),
                 bedrock("chikorita", "ground_walk")
             )
         )
@@ -71,7 +69,6 @@ class ChikoritaModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             quirks = arrayOf(blink),
             condition = { it.isBattling },
             animations = arrayOf(
-                singleBoneLook(),
                 bedrock("chikorita", "battle_idle")
             )
         )

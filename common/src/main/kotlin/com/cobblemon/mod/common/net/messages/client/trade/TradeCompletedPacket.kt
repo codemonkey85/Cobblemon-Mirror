@@ -10,10 +10,9 @@ package com.cobblemon.mod.common.net.messages.client.trade
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readUuid
-import com.cobblemon.mod.common.util.writeUuid
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.PacketByteBuf
+import com.cobblemon.mod.common.util.readUUID
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
 /**
@@ -27,13 +26,13 @@ import java.util.UUID
 class TradeCompletedPacket(val pokemonId1: UUID, val pokemonId2: UUID) : NetworkPacket<TradeCompletedPacket> {
     companion object {
         val ID = cobblemonResource("trade_completed")
-        fun decode(buffer: RegistryByteBuf) = TradeCompletedPacket(buffer.readUuid(), buffer.readUuid())
+        fun decode(buffer: RegistryFriendlyByteBuf) = TradeCompletedPacket(buffer.readUUID(), buffer.readUUID())
     }
 
     override val id = ID
 
-    override fun encode(buffer: RegistryByteBuf) {
-        buffer.writeUuid(pokemonId1)
-        buffer.writeUuid(pokemonId2)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(pokemonId1)
+        buffer.writeUUID(pokemonId2)
     }
 }

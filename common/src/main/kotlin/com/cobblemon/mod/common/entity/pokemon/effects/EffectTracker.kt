@@ -12,8 +12,8 @@ import com.cobblemon.mod.common.api.entity.pokemon.EntityEffect
 import com.cobblemon.mod.common.api.entity.pokemon.MocKEffect
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.DataKeys
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.registry.RegistryWrapper
+import net.minecraft.core.HolderLookup
+import net.minecraft.nbt.CompoundTag
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -40,13 +40,13 @@ class EffectTracker(val entity: PokemonEntity) {
         mockEffect = null
     }
 
-    fun saveToNbt(registryLookup: RegistryWrapper.WrapperLookup): NbtCompound {
-        val nbt = NbtCompound()
+    fun saveToNbt(registryLookup: HolderLookup.Provider): CompoundTag {
+        val nbt = CompoundTag()
         mockEffect?.let { effect -> nbt.put(DataKeys.ENTITY_EFFECT_MOCK, effect.saveToNbt(registryLookup)) }
         return nbt
     }
 
-    fun loadFromNBT(nbt: NbtCompound, registryLookup: RegistryWrapper.WrapperLookup) {
+    fun loadFromNBT(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
         if (nbt.contains(DataKeys.ENTITY_EFFECT_MOCK)) {
             val mockTag = nbt.getCompound(DataKeys.ENTITY_EFFECT_MOCK)
             this.mockEffect = EntityEffect.loadFromNbt(mockTag, registryLookup)?.takeIf { it is MocKEffect }?.let { it as MocKEffect }

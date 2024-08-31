@@ -171,27 +171,6 @@
               "minLevel": 17
             }
           ]
-        },
-        {
-          "id": "hisui_rowlet_dartrix",
-          "variant": "level_up",
-          "result": "dartrix region_bias=alola",
-          "consumeHeldItem": false,
-          "learnableMoves": [],
-          "requirements": [
-            {
-              "variant": "level",
-              "minLevel": 17
-            },
-            {
-              "variant": "biome",
-              "biomeCondition": "#cobblemon:evolution/rowlet_dartrix_alolan"
-            },
-            {
-              "variant": "biome",
-              "biomeAnticondition": "#cobblemon:is_freezing"
-            }
-          ]
         }
       ],
       "baseScale": 0.6,
@@ -368,23 +347,6 @@
         {
           "variant": "level",
           "minLevel": 17
-        }
-      ]
-    },
-    {
-      "id": "rowlet_hisui_dartrix",
-      "variant": "level_up",
-      "result": "dartrix region_bias=hisui",
-      "consumeHeldItem": false,
-      "learnableMoves": [],
-      "requirements": [
-        {
-          "variant": "level",
-          "minLevel": 17
-        },
-        {
-          "variant": "biome",
-          "biomeCondition": "#cobblemon:evolution/rowlet_dartrix_hisui_bias"
         }
       ]
     }

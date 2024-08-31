@@ -10,15 +10,15 @@ package com.cobblemon.mod.common.client.render.models.blockbench
 
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.entity.PosableEntity
-import net.minecraft.client.render.OverlayTexture
-import net.minecraft.client.render.RenderLayer
-import net.minecraft.client.render.VertexConsumer
-import net.minecraft.client.render.entity.LivingEntityRenderer
-import net.minecraft.client.render.entity.model.EntityModel
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.util.Identifier
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.client.renderer.RenderType
+import com.mojang.blaze3d.vertex.VertexConsumer
+import net.minecraft.client.renderer.entity.LivingEntityRenderer
+import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.model.EntityModel
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.resources.ResourceLocation
 
 /**
  * A wrapping around a [PosableModel] that presents as an [EntityModel]. This is used to continue using
@@ -29,7 +29,7 @@ import net.minecraft.util.Identifier
  * @since January 5th, 2024
  */
 abstract class PosableEntityModel<T : Entity>(
-    renderTypeFunc: (Identifier) -> RenderLayer = RenderLayer::getEntityCutout
+    renderTypeFunc: (ResourceLocation) -> RenderType = RenderType::entityCutout
 ) : EntityModel<T>(renderTypeFunc) {
     val context: RenderContext = RenderContext().also {
         it.put(RenderContext.RENDER_STATE, RenderContext.RenderState.WORLD)
@@ -37,8 +37,8 @@ abstract class PosableEntityModel<T : Entity>(
 
     lateinit var posableModel: PosableModel
 
-    override fun render(
-        stack: MatrixStack,
+    override fun renderToBuffer(
+        stack: PoseStack,
         buffer: VertexConsumer,
         packedLight: Int,
         packedOverlay: Int,
@@ -51,19 +51,19 @@ abstract class PosableEntityModel<T : Entity>(
 
     open fun getOverlayTexture(entity: Entity?): Int? {
         return if (entity is LivingEntity) {
-            OverlayTexture.packUv(
-                OverlayTexture.getU(0F),
-                OverlayTexture.getV(entity.hurtTime > 0 || entity.deathTime > 0)
+            OverlayTexture.pack(
+                OverlayTexture.u(0F),
+                OverlayTexture.v(entity.hurtTime > 0 || entity.deathTime > 0)
             )
         } else if (entity != null) {
-            OverlayTexture.DEFAULT_UV
+            OverlayTexture.NO_OVERLAY
         } else {
             null
         }
     }
 
     // Called by LivingEntityRenderer's render method before calling model.render (which is this.render in this case)
-    override fun setAngles(
+    override fun setupAnim(
         entity: T,
         limbSwing: Float,
         limbSwingAmount: Float,

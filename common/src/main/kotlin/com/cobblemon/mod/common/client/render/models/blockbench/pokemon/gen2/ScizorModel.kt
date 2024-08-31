@@ -22,8 +22,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sin
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class ScizorModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("scizor")
@@ -37,10 +37,10 @@ class ScizorModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
     override val rightLeg = getPart("right_leg_joint")
 
     override var portraitScale = 2.6F
-    override var portraitTranslation = Vec3d(-0.28, 2.9, 0.0)
+    override var portraitTranslation = Vec3(-0.28, 2.9, 0.0)
 
     override var profileScale = 0.55F
-    override var profileTranslation = Vec3d(0.0, 0.9, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.9, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

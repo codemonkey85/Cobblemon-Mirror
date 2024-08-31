@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.bridges;
 
-import net.minecraft.structure.processor.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 
 public interface StructureProcessorListBridge {
     void append(StructureProcessor processor);

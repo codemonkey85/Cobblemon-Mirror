@@ -17,8 +17,8 @@ import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.DataKeys
 import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class MareepModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("mareep")
@@ -27,10 +27,10 @@ class MareepModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     val wool = getPart("wool")
 
     override var portraitScale = 2.3F
-    override var portraitTranslation = Vec3d(-0.5, -1.2, 0.0)
+    override var portraitTranslation = Vec3(-0.5, -1.2, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.4, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.4, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

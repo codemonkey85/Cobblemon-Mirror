@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.addPosition
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.WaveFunction
-import net.minecraft.client.model.ModelPart
+import net.minecraft.client.model.geom.ModelPart
 
 /**
  * Animation simply works by moving a part along a particular function
@@ -24,7 +24,7 @@ class TranslationFunctionPoseAnimation(
     val axis: Int,
     val timeVariable: (state: PosableState, limbSwing: Float, ageInTicks: Float) -> Float?
 ) : PoseAnimation() {
-    override fun setAngles(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
+    override fun setupAnim(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
         part.addPosition(axis, function(timeVariable(state, limbSwing, ageInTicks) ?: 0F) * intensity)
     }
 }

@@ -16,8 +16,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvi
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class InteleonModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("inteleon")
@@ -30,10 +30,10 @@ class InteleonModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     val cape_unfolded = getPart("cape_unfolded")
 
     override var portraitScale = 2.8F
-    override var portraitTranslation = Vec3d(-0.25, 3.0, 0.0)
+    override var portraitTranslation = Vec3(-0.25, 3.0, 0.0)
 
     override var profileScale = 0.6F
-    override var profileTranslation = Vec3d(0.0, 0.89, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.89, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

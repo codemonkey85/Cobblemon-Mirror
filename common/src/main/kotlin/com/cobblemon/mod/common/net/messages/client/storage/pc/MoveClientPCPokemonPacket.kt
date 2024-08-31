@@ -12,9 +12,9 @@ import com.cobblemon.mod.common.api.storage.pc.PCPosition
 import com.cobblemon.mod.common.net.messages.client.storage.MoveClientPokemonPacket
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readPCPosition
-import com.cobblemon.mod.common.util.readUuid
+import com.cobblemon.mod.common.util.readUUID
 import com.cobblemon.mod.common.util.writePCPosition
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
 /**
@@ -27,9 +27,9 @@ import java.util.UUID
  */
 class MoveClientPCPokemonPacket(storeID: UUID, pokemonID: UUID, newPosition: PCPosition) : MoveClientPokemonPacket<PCPosition, MoveClientPCPokemonPacket>(storeID, pokemonID, newPosition) {
     override val id = ID
-    override fun encodePosition(buffer: RegistryByteBuf, position: PCPosition) = buffer.writePCPosition(position)
+    override fun encodePosition(buffer: RegistryFriendlyByteBuf, position: PCPosition) = buffer.writePCPosition(position)
     companion object {
         val ID = cobblemonResource("move_client_pc_pokemon")
-        fun decode(buffer: RegistryByteBuf) = MoveClientPCPokemonPacket(buffer.readUuid(), buffer.readUuid(), buffer.readPCPosition())
+        fun decode(buffer: RegistryFriendlyByteBuf) = MoveClientPCPokemonPacket(buffer.readUUID(), buffer.readUUID(), buffer.readPCPosition())
     }
 }

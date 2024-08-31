@@ -13,8 +13,8 @@ import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
@@ -25,13 +25,13 @@ class ModelWidget(
     val baseScale: Float = 2.7F,
     var rotationY: Float = 35F,
     var offsetY: Double = 0.0
-): SoundlessWidget(pX, pY, pWidth, pHeight, Text.literal("Trade - ModelWidget")) {
+): SoundlessWidget(pX, pY, pWidth, pHeight, Component.literal("Trade - ModelWidget")) {
     var state = FloatingState()
     private var rotVec = Vector3f(13F, rotationY, 0F)
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        val matrices = context.matrices
-        matrices.push()
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        val matrices = context.pose()
+        matrices.pushPose()
         matrices.translate(x + width * 0.5, y.toDouble() + offsetY, 0.0)
         matrices.scale(baseScale, baseScale, baseScale)
 
@@ -43,6 +43,6 @@ class ModelWidget(
             partialTicks = delta
         )
 
-        matrices.pop()
+        matrices.popPose()
     }
 }

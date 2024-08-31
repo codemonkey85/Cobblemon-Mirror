@@ -15,7 +15,7 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readPCPosition
 import com.cobblemon.mod.common.util.writePCPosition
 import java.util.UUID
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Packet sent when the player is releasing one of their Pokémon from their PC.
@@ -27,13 +27,13 @@ import net.minecraft.network.RegistryByteBuf
  */
 class ReleasePCPokemonPacket(val pokemonID: UUID, val position: PCPosition) : NetworkPacket<ReleasePCPokemonPacket> {
     override val id = ID
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.
-        writeUuid(pokemonID)
+        writeUUID(pokemonID)
         buffer.writePCPosition(position)
     }
     companion object {
         val ID = cobblemonResource("release_pc_pokemon")
-        fun decode(buffer: RegistryByteBuf) = ReleasePCPokemonPacket(buffer.readUuid(), buffer.readPCPosition())
+        fun decode(buffer: RegistryFriendlyByteBuf) = ReleasePCPokemonPacket(buffer.readUUID(), buffer.readPCPosition())
     }
 }

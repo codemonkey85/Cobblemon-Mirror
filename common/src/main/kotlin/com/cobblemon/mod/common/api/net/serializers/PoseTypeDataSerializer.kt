@@ -10,19 +10,17 @@ package com.cobblemon.mod.common.api.net.serializers
 
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.gui.screen.pack.ResourcePackOrganizer.Pack
-import net.minecraft.entity.data.TrackedDataHandler
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.codec.PacketCodec
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.codec.StreamCodec
+import net.minecraft.network.syncher.EntityDataSerializer
 
-object PoseTypeDataSerializer : TrackedDataHandler<PoseType> {
+object PoseTypeDataSerializer : EntityDataSerializer<PoseType> {
     val ID = cobblemonResource("pose_type")
-    fun read(buf: PacketByteBuf) = PoseType.values()[buf.readInt()]
+    fun read(buf: RegistryFriendlyByteBuf) = PoseType.values()[buf.readInt()]
     override fun copy(value: PoseType) = value
-    fun write(buf: PacketByteBuf, value: PoseType) {
+    fun write(buf: RegistryFriendlyByteBuf, value: PoseType) {
         buf.writeInt(value.ordinal)
     }
 
-    override fun codec() = PacketCodec.ofStatic(::write, ::read)
+    override fun codec() = StreamCodec.of(::write, ::read)
 }

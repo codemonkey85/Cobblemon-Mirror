@@ -12,13 +12,13 @@ import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.battles.BattleRegistry
 import com.cobblemon.mod.common.net.messages.server.battle.RemoveSpectatorPacket
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object RemoveSpectatorHandler : ServerNetworkPacketHandler<RemoveSpectatorPacket> {
     override fun handle(
         packet: RemoveSpectatorPacket,
         server: MinecraftServer,
-        player: ServerPlayerEntity
+        player: ServerPlayer
     ) {
         BattleRegistry.getBattle(packet.battleId)?.spectators?.remove(player.uuid)
     }

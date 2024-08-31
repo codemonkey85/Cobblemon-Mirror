@@ -16,9 +16,9 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
 
 /**
  * The data registry for [PokeRod]s.
@@ -27,21 +27,21 @@ import net.minecraft.util.Identifier
 object PokeRods : JsonDataRegistry<PokeRod> {
 
     override val id = cobblemonResource("pokerods")
-    override val type = ResourceType.SERVER_DATA
+    override val type = PackType.SERVER_DATA
     override val observable = SimpleObservable<PokeRods>()
 
     // ToDo once datapack pokerod is implemented add required adapters here
     override val gson: Gson = GsonBuilder()
         .disableHtmlEscaping()
-        .registerTypeAdapter(Identifier::class.java, IdentifierAdapter)
+        .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .setPrettyPrinting()
         .create()
     override val typeToken: TypeToken<PokeRod> = TypeToken.get(PokeRod::class.java)
     override val resourcePath = "pokerods"
 
-    private val rods = mutableMapOf<Identifier, PokeRod>()
+    private val rods = mutableMapOf<ResourceLocation, PokeRod>()
 
-    override fun reload(data: Map<Identifier, PokeRod>) {
+    override fun reload(data: Map<ResourceLocation, PokeRod>) {
         data.forEach {
             it.value.name = it.key
             rods[it.key] = it.value
@@ -49,7 +49,7 @@ object PokeRods : JsonDataRegistry<PokeRod> {
         this.observable.emit(this)
     }
 
-    override fun sync(player: ServerPlayerEntity) {
+    override fun sync(player: ServerPlayer) {
         PokeRodRegistrySyncPacket(rods.values).sendToPlayer(player)
     }
 
@@ -57,6 +57,6 @@ object PokeRods : JsonDataRegistry<PokeRod> {
      * Gets a Pokerod from registry name.
      * @return the pokerod object if found otherwise null.
      */
-    fun getPokeRod(name : Identifier): PokeRod? = rods[name]
+    fun getPokeRod(name : ResourceLocation): PokeRod? = rods[name]
 
 }

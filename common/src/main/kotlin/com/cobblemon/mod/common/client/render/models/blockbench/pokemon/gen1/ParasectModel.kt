@@ -16,18 +16,18 @@ import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class ParasectModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("parasect")
     override val head = getPart("head")
 
     override var portraitScale = 1.8F
-    override var portraitTranslation = Vec3d(-0.35, -0.8, 0.0)
+    override var portraitTranslation = Vec3(-0.35, -0.8, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(-0.05, 0.45, 0.0)
+    override var profileTranslation = Vec3(-0.05, 0.45, 0.0)
 
     lateinit var sleep: Pose
     lateinit var standing: Pose

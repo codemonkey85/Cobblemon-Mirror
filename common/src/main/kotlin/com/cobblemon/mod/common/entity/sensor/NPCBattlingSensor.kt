@@ -10,21 +10,22 @@ package com.cobblemon.mod.common.entity.sensor
 
 import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.entity.npc.NPCEntity
-import net.minecraft.entity.ai.brain.sensor.Sensor
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.ai.sensing.Sensor
 
 class NPCBattlingSensor : Sensor<NPCEntity>() {
     companion object {
         val OUTPUT_MEMORY_MODULES = setOf(CobblemonMemories.NPC_BATTLING)
     }
 
-    override fun getOutputMemoryModules() = OUTPUT_MEMORY_MODULES
-    override fun sense(world: ServerWorld, entity: NPCEntity) {
+    override fun requires() = OUTPUT_MEMORY_MODULES
+
+    override fun doTick(world: ServerLevel, entity: NPCEntity) {
         val isBattling = entity.isInBattle()
         if (isBattling) {
-            entity.getBrain().remember(CobblemonMemories.NPC_BATTLING, true)
-        } else if (entity.getBrain().hasMemoryModule(CobblemonMemories.NPC_BATTLING)) {
-            entity.getBrain().forget(CobblemonMemories.NPC_BATTLING)
+            entity.getBrain().setMemory(CobblemonMemories.NPC_BATTLING, true)
+        } else if (entity.getBrain().hasMemoryValue(CobblemonMemories.NPC_BATTLING)) {
+            entity.getBrain().eraseMemory(CobblemonMemories.NPC_BATTLING)
         }
     }
 }

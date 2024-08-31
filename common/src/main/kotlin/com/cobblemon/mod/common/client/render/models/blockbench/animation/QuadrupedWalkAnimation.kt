@@ -15,7 +15,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedF
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Bone
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation.Companion.X_AXIS
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
-import net.minecraft.util.math.MathHelper
+import net.minecraft.util.Mth
 
 /**
  * A quadruped animation that will have zero-rotations on all legs at
@@ -48,15 +48,15 @@ class QuadrupedWalkAnimation(
         amplitudeMultiplier = amplitudeMultiplier
     )
 
-    override fun setAngles(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
+    override fun setupAnim(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
         val hindRightLeg = legBackRight ?: return
         val hindLeftLeg = legBackLeft ?: return
         val foreRightLeg = legFrontRight ?: return
         val foreLeftLeg = legFrontLeft ?: return
 
-        hindRightLeg.addRotation(X_AXIS, MathHelper.cos(limbSwing * periodMultiplier) * limbSwingAmount * amplitudeMultiplier * intensity)
-        hindLeftLeg.addRotation(X_AXIS, MathHelper.cos(limbSwing * periodMultiplier + Math.PI.toFloat()) * limbSwingAmount * amplitudeMultiplier * intensity)
-        foreRightLeg.addRotation(X_AXIS, MathHelper.cos(limbSwing * periodMultiplier + Math.PI.toFloat()) * limbSwingAmount * amplitudeMultiplier * intensity)
-        foreLeftLeg.addRotation(X_AXIS, MathHelper.cos(limbSwing * periodMultiplier) * limbSwingAmount * amplitudeMultiplier * intensity)
+        hindRightLeg.addRotation(X_AXIS, Mth.cos(limbSwing * periodMultiplier) * limbSwingAmount * amplitudeMultiplier * intensity)
+        hindLeftLeg.addRotation(X_AXIS, Mth.cos(limbSwing * periodMultiplier + Math.PI.toFloat()) * limbSwingAmount * amplitudeMultiplier * intensity)
+        foreRightLeg.addRotation(X_AXIS, Mth.cos(limbSwing * periodMultiplier + Math.PI.toFloat()) * limbSwingAmount * amplitudeMultiplier * intensity)
+        foreLeftLeg.addRotation(X_AXIS, Mth.cos(limbSwing * periodMultiplier) * limbSwingAmount * amplitudeMultiplier * intensity)
     }
 }

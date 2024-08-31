@@ -9,27 +9,27 @@
 package com.cobblemon.mod.common.entity.npc.ai
 
 import com.cobblemon.mod.common.entity.npc.NPCEntity
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
 
 object MoveToTargetTask {
-    fun create(): SingleTickTask<NPCEntity> {
-        return TaskTriggerer.task {
+    fun create(): OneShot<NPCEntity> {
+        return BehaviorBuilder.create {
             it.group(
-                it.queryMemoryAbsent(MemoryModuleType.PATH),
-                it.queryMemoryValue(MemoryModuleType.WALK_TARGET)
+                it.absent(MemoryModuleType.PATH),
+                it.present(MemoryModuleType.WALK_TARGET)
             ).apply(it) { path, walkTarget ->
-                TaskRunnable { world, entity, time ->
-                    val targetVec = it.getValue(walkTarget).lookTarget.blockPos
-                    val walkPath = entity.navigation.findPathTo(targetVec, 0)
+                Trigger { world, entity, time ->
+                    val targetVec = it.get(walkTarget).target.currentBlockPosition()
+                    val walkPath = entity.navigation.createPath(targetVec, 0)
                     if (walkPath == null) {
-                        walkTarget.forget()
+                        walkTarget.erase()
                     } else {
-                        path.remember(walkPath)
+                        path.set(walkPath)
                     }
-                    return@TaskRunnable true
+                    return@Trigger true
                 }
             }
         }

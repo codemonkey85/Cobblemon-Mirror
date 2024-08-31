@@ -20,8 +20,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.par
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class PidoveModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("pidove")
@@ -33,10 +33,10 @@ class PidoveModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
     private val tail = getPart("tail")
 
     override var portraitScale = 2.4F
-    override var portraitTranslation = Vec3d(-0.2, -1.0, 0.0)
+    override var portraitTranslation = Vec3(-0.2, -1.0, 0.0)
 
     override var profileScale = 1.0F
-    override var profileTranslation = Vec3d(0.0, 0.3, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.3, 0.0)
 
     //    lateinit var sleep: Pose
     lateinit var stand: Pose
@@ -49,7 +49,7 @@ class PidoveModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("pidove", "sleep"))
+//            animations = arrayOf(bedrock("pidove", "sleep"))
 //        )
         val blink = quirk { bedrockStateful("pidove", "blink") }
         stand = registerPose(

@@ -15,14 +15,14 @@ import com.cobblemon.mod.common.client.render.models.blockbench.repository.NPCMo
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import kotlin.math.min
-import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.entity.EntityRendererFactory.Context
-import net.minecraft.client.render.entity.LivingEntityRenderer
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.util.Identifier
+import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.entity.EntityRendererProvider.Context
+import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.renderer.entity.LivingEntityRenderer
+import net.minecraft.resources.ResourceLocation
 
 class NPCRenderer(context: Context) : LivingEntityRenderer<NPCEntity, PosableEntityModel<NPCEntity>>(context, PosableNPCModel(), 0.5f) {
-    override fun getTexture(entity: NPCEntity): Identifier {
+    override fun getTextureLocation(entity: NPCEntity): ResourceLocation {
         return NPCModelRepository.getTexture(entity.npc.resourceIdentifier, entity.aspects, (entity.delegate as NPCClientDelegate).animationSeconds)
     }
 
@@ -30,8 +30,8 @@ class NPCRenderer(context: Context) : LivingEntityRenderer<NPCEntity, PosableEnt
         entity: NPCEntity,
         entityYaw: Float,
         partialTicks: Float,
-        poseMatrix: MatrixStack,
-        buffer: VertexConsumerProvider,
+        poseMatrix: PoseStack,
+        buffer: MultiBufferSource,
         packedLight: Int
     ) {
         val aspects = entity.aspects
@@ -40,7 +40,7 @@ class NPCRenderer(context: Context) : LivingEntityRenderer<NPCEntity, PosableEnt
         this.model.posableModel = model
         model.context = this.model.context
         this.model.setupEntityTypeContext(entity)
-        this.model.context.put(RenderContext.TEXTURE, getTexture(entity))
+        this.model.context.put(RenderContext.TEXTURE, getTextureLocation(entity))
         val clientDelegate = entity.delegate as NPCClientDelegate
         clientDelegate.updatePartialTicks(partialTicks)
 

@@ -12,9 +12,9 @@ import com.cobblemon.mod.common.api.npc.partyproviders.SimplePartyProvider
 import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.google.gson.JsonElement
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * A provider of a party for battling the NPC. Completely custom party providers will only display
@@ -31,11 +31,11 @@ interface NPCPartyProvider {
     }
 
     val type: String
-    fun provide(npc: NPCEntity, challengers: List<ServerPlayerEntity>): PartyStore
-    fun encode(buffer: PacketByteBuf)
-    fun decode(buffer: PacketByteBuf)
-    fun saveToNBT(nbt: NbtCompound)
-    fun loadFromNBT(nbt: NbtCompound)
+    fun provide(npc: NPCEntity, challengers: List<ServerPlayer>): PartyStore
+    fun encode(buffer: RegistryFriendlyByteBuf)
+    fun decode(buffer: RegistryFriendlyByteBuf)
+    fun saveToNBT(nbt: CompoundTag)
+    fun loadFromNBT(nbt: CompoundTag)
 
     fun loadFromJSON(json: JsonElement)
 }

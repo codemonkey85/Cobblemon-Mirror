@@ -11,8 +11,8 @@ package com.cobblemon.mod.common.api.spawning.condition
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.spawning.context.FishingSpawningContext
 import com.cobblemon.mod.common.util.itemRegistry
-import net.minecraft.block.Block
-import net.minecraft.item.Item
+import net.minecraft.world.item.Item
+import net.minecraft.world.level.block.Block
 
 /**
  * A spawning condition that applies to [FishingSpawningContext]s.

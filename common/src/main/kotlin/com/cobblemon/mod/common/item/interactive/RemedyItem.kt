@@ -18,15 +18,14 @@ import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.item.CobblemonItem
 import com.cobblemon.mod.common.item.battle.BagItem
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.sound.SoundCategory
-import net.minecraft.util.Hand
-import net.minecraft.util.TypedActionResult
-import net.minecraft.world.World
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.level.Level
 
-class RemedyItem(val remedyStrength: String) : CobblemonItem(Settings()), PokemonSelectingItem {
+class RemedyItem(val remedyStrength: String) : CobblemonItem(Properties()), PokemonSelectingItem {
     companion object {
         const val NORMAL = "normal"
         const val FINE = "fine"
@@ -45,33 +44,33 @@ class RemedyItem(val remedyStrength: String) : CobblemonItem(Settings()), Pokemo
 
     override fun canUseOnPokemon(pokemon: Pokemon) = !pokemon.isFullHealth() && pokemon.currentHealth > 0
     override fun applyToPokemon(
-        player: ServerPlayerEntity,
+        player: ServerPlayer,
         stack: ItemStack,
         pokemon: Pokemon
-    ): TypedActionResult<ItemStack> {
+    ): InteractionResultHolder<ItemStack> {
         return if (!pokemon.isFullHealth() && pokemon.currentHealth > 0) {
             val amount = CobblemonMechanics.remedies.getHealingAmount(remedyStrength, runtime, 20)
             pokemon.currentHealth += amount
             player.playSound(CobblemonSounds.MEDICINE_HERB_USE, 1F, 1F)
             pokemon.decrementFriendship(CobblemonMechanics.remedies.getFriendshipDrop(runtime))
             if (!player.isCreative) {
-                stack.decrement(1)
+                stack.shrink(1)
             }
-            TypedActionResult.success(stack)
+            InteractionResultHolder.success(stack)
         } else {
-            TypedActionResult.fail(stack)
+            InteractionResultHolder.fail(stack)
         }
     }
 
-    override fun applyToBattlePokemon(player: ServerPlayerEntity, stack: ItemStack, battlePokemon: BattlePokemon) {
+    override fun applyToBattlePokemon(player: ServerPlayer, stack: ItemStack, battlePokemon: BattlePokemon) {
         super.applyToBattlePokemon(player, stack, battlePokemon)
         player.playSound(CobblemonSounds.MEDICINE_HERB_USE, 1F, 1F)
     }
 
-    override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
-        if (user is ServerPlayerEntity) {
-            return use(user, user.getStackInHand(hand))
+    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
+        if (user is ServerPlayer) {
+            return use(user, user.getItemInHand(hand))
         }
-        return TypedActionResult.success(user.getStackInHand(hand))
+        return InteractionResultHolder.success(user.getItemInHand(hand))
     }
 }

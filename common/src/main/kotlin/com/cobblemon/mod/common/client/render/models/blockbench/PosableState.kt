@@ -21,7 +21,7 @@ import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.molang.ObjectValue
 import com.cobblemon.mod.common.api.scheduling.Schedulable
 import com.cobblemon.mod.common.client.ClientMoLangFunctions.setupClient
-import com.cobblemon.mod.common.client.particle.BedrockParticleEffectRepository
+import com.cobblemon.mod.common.client.particle.BedrockParticleOptionsRepository
 import com.cobblemon.mod.common.client.particle.ParticleStorm
 import com.cobblemon.mod.common.client.render.MatrixWrapper
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.ActiveAnimation
@@ -36,14 +36,14 @@ import com.cobblemon.mod.common.client.render.models.blockbench.quirk.QuirkData
 import com.cobblemon.mod.common.entity.PosableEntity
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
+import net.minecraft.client.Minecraft
+import net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.phys.Vec3
 import java.util.concurrent.ConcurrentLinkedQueue
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.client.world.ClientWorld
-import net.minecraft.entity.Entity
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvent
-import net.minecraft.util.math.Vec3d
 
 /**
  * Represents some kind of animation state for an entity or GUI element or other renderable component in the game.
@@ -137,12 +137,12 @@ abstract class PosableState : Schedulable {
             if (params.get<MoValue>(0) !is StringValue) {
                 return@addFunction Unit
             }
-            val soundEvent = SoundEvent.of(params.getString(0).asIdentifierDefaultingNamespace())
+            val soundEvent = SoundEvent.createVariableRangeEvent(params.getString(0).asIdentifierDefaultingNamespace())
             if (soundEvent != null) {
                 val volume = if (params.contains(1)) params.getDouble(1).toFloat() else 1F
                 val pitch = if (params.contains(2)) params.getDouble(2).toFloat() else 1F
-                MinecraftClient.getInstance().soundManager.play(
-                    PositionedSoundInstance(soundEvent, SoundCategory.NEUTRAL, volume, pitch, entity.world.random, entity.x, entity.y, entity.z)
+                Minecraft.getInstance().soundManager.play(
+                    SimpleSoundInstance(soundEvent, SoundSource.NEUTRAL, volume, pitch, entity.level().random, entity.x, entity.y, entity.z)
                 )
             }
         }
@@ -174,13 +174,13 @@ abstract class PosableState : Schedulable {
             val effectIds = particles.map { it.asIdentifierDefaultingNamespace() }
             for (effectId in effectIds) {
                 val locator = if (params.params.size > 1) params.getString(1) else "root"
-                val effect = BedrockParticleEffectRepository.getEffect(effectId) ?: run {
+                val effect = BedrockParticleOptionsRepository.getEffect(effectId) ?: run {
                     LOGGER.error("Unable to find a particle effect with id $effectId")
                     return@addFunction Unit
                 }
 
                 val entity = getEntity() ?: return@addFunction Unit
-                val world = entity.world as ClientWorld
+                val world = entity.level() as ClientLevel
                 val matrixWrapper = locatorStates[locator] ?: locatorStates["root"]!!
 
                 val particleRuntime = MoLangRuntime().setup().setupClient()
@@ -192,7 +192,7 @@ abstract class PosableState : Schedulable {
                         matrixWrapper = matrixWrapper,
                         world = world,
                         runtime = particleRuntime,
-                        sourceVelocity = { entity.velocity },
+                        sourceVelocity = { entity.deltaMovement },
                         sourceAlive = { !entity.isRemoved },
                         sourceVisible = { !entity.isInvisible }
                     )
@@ -221,7 +221,7 @@ abstract class PosableState : Schedulable {
         val previousAge = age
         updateAge(age + 1)
         currentModel?.let {
-            updateLocatorPosition(entity.pos)
+            updateLocatorPosition(entity.position())
             it.validatePose(entity as? PosableEntity, this)
         }
         runEffects(entity, previousAge, age)
@@ -317,7 +317,7 @@ abstract class PosableState : Schedulable {
     /**
      * Updates the base position of all the locators. Doesn't require the model.
      */
-    fun updateLocatorPosition(position: Vec3d) {
+    fun updateLocatorPosition(position: Vec3) {
         locatorStates.values.toList().forEach { it.updatePosition(position) }
     }
 

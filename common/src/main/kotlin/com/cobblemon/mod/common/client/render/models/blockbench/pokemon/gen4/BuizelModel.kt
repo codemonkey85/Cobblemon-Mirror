@@ -15,20 +15,20 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.util.isSubmergedInWater
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isUnderWater
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class BuizelModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("buizel")
     override val head = getPart("head")
 
     override var portraitScale = 2.3F
-    override var portraitTranslation = Vec3d(-0.2, 0.1, 0.0)
+    override var portraitTranslation = Vec3(-0.2, 0.1, 0.0)
 
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.0, 0.65, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.65, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walking: CobblemonPose
@@ -48,21 +48,21 @@ class BuizelModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         val blink = quirk { bedrockStateful("buizel", "blink") }
         sleep = registerPose(
             poseName = "sleep",
-            condition = { !it.isTouchingWater},
+            condition = { !it.isInWater},
             poseType = PoseType.SLEEP,
             animations = arrayOf(bedrock("buizel", "sleep"))
         )
 
         waterSleep = registerPose(
             poseName = "water_sleep",
-            condition = { it.isSubmergedInWater },
+            condition = { it.isUnderWater },
             poseType = PoseType.SLEEP,
             animations = arrayOf(bedrock("buizel", "water_sleep"))
         )
 
         surfaceWaterSleep = registerPose(
             poseName = "surface_water_sleep",
-            condition = { it.isTouchingWater && !it.isSubmergedInWater },
+            condition = { it.isInWater && !it.isUnderWater },
             poseType = PoseType.SLEEP,
             animations = arrayOf(
                 bedrock("buizel", "surfacewater_sleep")
@@ -75,7 +75,7 @@ class BuizelModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         standing = registerPose(
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES - PoseType.FLOAT,
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             transformTicks = 10,
             quirks = arrayOf(blink),
             animations = arrayOf(
@@ -87,7 +87,7 @@ class BuizelModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         walking = registerPose(
             poseName = "walking",
             poseTypes = PoseType.MOVING_POSES - PoseType.SWIM,
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             transformTicks = 10,
             quirks = arrayOf(blink),
             animations = arrayOf(
@@ -123,7 +123,7 @@ class BuizelModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
 
         surfaceWaterIdle = registerPose(
             poseName = "surface_water_idle",
-            condition = { it.isTouchingWater && !it.isSubmergedInWater },
+            condition = { it.isInWater && !it.isUnderWater },
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
@@ -138,7 +138,7 @@ class BuizelModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
 
         surfaceWaterSwim = registerPose(
             poseName = "surface_water_swim",
-            condition = { it.isTouchingWater && !it.isSubmergedInWater },
+            condition = { it.isInWater && !it.isUnderWater },
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),

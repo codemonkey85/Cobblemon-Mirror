@@ -18,20 +18,21 @@ import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.min
 import kotlin.random.Random
-import net.minecraft.client.util.ModelIdentifier
-import net.minecraft.entity.EquipmentSlot
-import net.minecraft.text.Text
-import net.minecraft.util.Hand
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.shape.VoxelShape
+import net.minecraft.client.resources.model.ModelResourceLocation
+import net.minecraft.core.BlockPos
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.phys.shapes.VoxelShape
 
-fun cobblemonResource(path: String) = Identifier.of(Cobblemon.MODID, path)
-fun cobblemonModel(path: String, variant: String) = ModelIdentifier(cobblemonResource(path), variant)
+fun cobblemonResource(path: String) = ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID, path)
+fun cobblemonModel(path: String, variant: String) =
+    ModelResourceLocation(cobblemonResource(path), variant)
 
-fun String.asTranslated() = Text.translatable(this)
-fun String.asResource() = Identifier.of(this)
-fun String.asTranslated(vararg data: Any) = Text.translatable(this, *data)
+fun String.asTranslated() = Component.translatable(this)
+fun String.asResource() = ResourceLocation.parse(this)
+fun String.asTranslated(vararg data: Any) = Component.translatable(this, *data)
 fun String.isInt() = this.toIntOrNull() != null
 fun String.isHigherVersion(other: String): Boolean {
     val thisSplits = split(".")
@@ -97,7 +98,7 @@ fun VoxelShape.blockPositionsAsListRounded(): List<BlockPos> {
 
 fun VoxelShape.blockPositionsAsList(): List<BlockPos> {
     val result = mutableListOf<BlockPos>()
-    forEachBox { minX, minY, minZ, maxX, maxY, maxZ ->
+    forAllBoxes { minX, minY, minZ, maxX, maxY, maxZ ->
         for (x in minX.toInt() until maxX.toInt()) {
             for (y in minY.toInt() until maxY.toInt()) {
                 for (z in minZ.toInt() until maxZ.toInt()) {
@@ -127,24 +128,24 @@ fun chainFutures(others: Iterator<() -> CompletableFuture<*>>, finalFuture: Comp
 
 val PosableState.isBattling: Boolean
     get() = (getEntity() as? PokemonEntity)?.isBattling == true || (getEntity() as? NPCEntity)?.isInBattle() == true
-val PosableState.isSubmergedInWater: Boolean
-    get() = getEntity()?.isSubmergedInWater == true
-val PosableState.isTouchingWater: Boolean
-    get() = getEntity()?.isTouchingWater == true
-val PosableState.isTouchingWaterOrRain: Boolean
-    get() = getEntity()?.isTouchingWaterOrRain == true
+val PosableState.isUnderWater: Boolean
+    get() = getEntity()?.isUnderWater == true
+val PosableState.isInWater: Boolean
+    get() = getEntity()?.isInWater == true
+val PosableState.isInWaterOrRain: Boolean
+    get() = getEntity()?.isInWaterOrRain == true
 
-fun Hand.toEquipmentSlot(): EquipmentSlot {
+fun InteractionHand.toEquipmentSlot(): EquipmentSlot {
     return when (this) {
-        Hand.MAIN_HAND -> EquipmentSlot.MAINHAND
-        Hand.OFF_HAND -> EquipmentSlot.OFFHAND
+        InteractionHand.MAIN_HAND -> EquipmentSlot.MAINHAND
+        InteractionHand.OFF_HAND -> EquipmentSlot.OFFHAND
     }
 }
 
-fun EquipmentSlot.toHand(): Hand {
+fun EquipmentSlot.toHand(): InteractionHand {
     return when (this) {
-        EquipmentSlot.MAINHAND -> Hand.MAIN_HAND
-        EquipmentSlot.OFFHAND -> Hand.OFF_HAND
+        EquipmentSlot.MAINHAND -> InteractionHand.MAIN_HAND
+        EquipmentSlot.OFFHAND -> InteractionHand.OFF_HAND
         else -> throw IllegalArgumentException("Invalid equipment slot: $this")
     }
 }

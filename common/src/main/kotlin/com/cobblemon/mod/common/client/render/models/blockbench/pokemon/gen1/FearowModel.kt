@@ -21,8 +21,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sin
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class FearowModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("fearow")
@@ -34,10 +34,10 @@ class FearowModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
     private val tail = getPart("tail")
 
     override var portraitScale = 1.9F
-    override var portraitTranslation = Vec3d(-1.6, 0.4, 0.0)
+    override var portraitTranslation = Vec3(-1.6, 0.4, 0.0)
 
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(-0.2, 0.7, 0.0)
+    override var profileTranslation = Vec3(-0.2, 0.7, 0.0)
 
     lateinit var stand: Pose
     lateinit var walk: Pose

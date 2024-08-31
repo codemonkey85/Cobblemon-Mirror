@@ -10,8 +10,7 @@ package com.cobblemon.mod.common.api.pokemon.feature
 
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.google.gson.JsonObject
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.nbt.CompoundTag
 
 /**
  * A provider of [SpeciesFeature]s. These must be registered via [SpeciesFeatures] either programmatically or
@@ -30,6 +29,6 @@ interface SpeciesFeatureProvider<T : SpeciesFeature> {
      * occurs whenever a species changes.
      */
     operator fun invoke(pokemon: Pokemon): T?
-    operator fun invoke(nbt: NbtCompound): T?
+    operator fun invoke(nbt: CompoundTag): T?
     operator fun invoke(json: JsonObject): T?
 }

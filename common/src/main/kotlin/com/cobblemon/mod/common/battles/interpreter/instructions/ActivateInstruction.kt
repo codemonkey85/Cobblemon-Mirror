@@ -23,7 +23,7 @@ import com.cobblemon.mod.common.battles.dispatch.UntilDispatch
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.cobblemonResource
 import java.util.concurrent.CompletableFuture
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 
 /**
  * Format: |-activate|POKEMON|EFFECT
@@ -74,10 +74,10 @@ class ActivateInstruction(val instructionSet: InstructionSet, val message: Battl
     override fun postActionEffect(battle: PokemonBattle) {
         battle.dispatch {
             val pokemon = message.battlePokemon(0, battle) ?: return@dispatch GO
-            val extraEffect = message.effectAt(2)?.typelessData ?: Text.literal("UNKNOWN")
+            val extraEffect = message.effectAt(2)?.typelessData ?: Component.literal("UNKNOWN")
             val effect = message.effectAt(1) ?: return@dispatch GO
             val pokemonName = pokemon.getName()
-            val sourceName = message.battlePokemonFromOptional(battle)?.getName() ?: Text.literal("UNKNOWN")
+            val sourceName = message.battlePokemonFromOptional(battle)?.getName() ?: Component.literal("UNKNOWN")
             val lang = when (effect.id) {
                 // Includes a 3rd argument being the magnitude level as a number
                 "magnitude" -> battleLang("activate.magnitude", message.argumentAt(2)?.toIntOrNull() ?: 1)

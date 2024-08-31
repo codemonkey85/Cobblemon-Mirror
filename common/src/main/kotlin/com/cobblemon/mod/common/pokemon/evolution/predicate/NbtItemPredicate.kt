@@ -9,16 +9,16 @@
 package com.cobblemon.mod.common.pokemon.evolution.predicate
 
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.predicate.NbtPredicate
-import net.minecraft.registry.Registries
+import net.minecraft.advancements.critereon.NbtPredicate
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 
 data class NbtItemPredicate(
     val item: RegistryLikeCondition<Item>,
     val nbt: NbtPredicate? = null
 ) {
     fun test(item: ItemStack): Boolean {
-        return this.item.fits(item.item, Registries.ITEM) && (this.nbt?.test(item) ?: true)
+        return this.item.fits(item.item, BuiltInRegistries.ITEM) && (this.nbt?.matches(item) ?: true)
     }
 }

@@ -13,19 +13,19 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvi
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class ArctovishModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("arctovish")
     override val head = getPart("head")
 
     override var portraitScale = 0.66F
-    override var portraitTranslation = Vec3d(-0.36, 1.98, 0.0)
+    override var portraitTranslation = Vec3(-0.36, 1.98, 0.0)
 
     override var profileScale = 0.35F
-    override var profileTranslation = Vec3d(0.0, 1.25, 0.0)
+    override var profileTranslation = Vec3(0.0, 1.25, 0.0)
 
     lateinit var sleep: CobblemonPose
     lateinit var water_sleep: CobblemonPose
@@ -50,7 +50,7 @@ class ArctovishModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             transformTicks = 10,
             animations = arrayOf(
                 bedrock("arctovish", "sleep")
@@ -60,7 +60,7 @@ class ArctovishModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
         water_sleep = registerPose(
                 poseName = "water_sleep",
                 poseType = PoseType.SLEEP,
-                condition = { it.isTouchingWater },
+                condition = { it.isInWater },
                 transformTicks = 10,
                 animations = arrayOf(
                         bedrock("arctovish", "water_sleep")

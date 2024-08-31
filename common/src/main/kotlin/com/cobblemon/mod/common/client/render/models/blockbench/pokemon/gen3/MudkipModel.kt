@@ -16,8 +16,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvi
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class MudkipModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("mudkip")
@@ -29,10 +29,10 @@ class MudkipModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Qua
     override val foreRightLeg = getPart("leg_front_right")
 
     override var portraitScale = 2.3F
-    override var portraitTranslation = Vec3d(-0.25, -1.2, 0.0)
+    override var portraitTranslation = Vec3(-0.25, -1.2, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.4, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.4, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

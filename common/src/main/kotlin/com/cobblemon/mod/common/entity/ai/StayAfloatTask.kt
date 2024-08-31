@@ -8,23 +8,23 @@
 
 package com.cobblemon.mod.common.entity.ai
 
-import net.minecraft.entity.ai.brain.task.MultiTickTask
-import net.minecraft.entity.mob.PathAwareEntity
-import net.minecraft.registry.tag.FluidTags
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.tags.FluidTags
+import net.minecraft.world.entity.PathfinderMob
+import net.minecraft.world.entity.ai.behavior.Behavior
 
-class StayAfloatTask(private val chance: Float = 0F) : MultiTickTask<PathAwareEntity>(emptyMap()) {
-    override fun shouldRun(world: ServerWorld, entity: PathAwareEntity): Boolean {
-        return entity.isTouchingWater && entity.getFluidHeight(FluidTags.WATER) > entity.swimHeight || entity.isInLava
+class StayAfloatTask(private val chance: Float = 0F) : Behavior<PathfinderMob>(emptyMap()) {
+    override fun checkExtraStartConditions(world: ServerLevel, entity: PathfinderMob): Boolean {
+        return entity.isInWater && entity.getFluidHeight(FluidTags.WATER) > entity.fluidJumpThreshold || entity.isInLava
     }
 
-    override fun shouldKeepRunning(world: ServerWorld, entity: PathAwareEntity, l: Long): Boolean {
-        return this.shouldRun(world, entity)
+    override fun canStillUse(world: ServerLevel, entity: PathfinderMob, l: Long): Boolean {
+        return this.checkExtraStartConditions(world, entity)
     }
 
-    override fun keepRunning(world: ServerWorld, entity: PathAwareEntity, l: Long) {
+    override fun tick(world: ServerLevel, entity: PathfinderMob, l: Long) {
         if (entity.random.nextFloat() < this.chance) {
-            entity.jumpControl.setActive()
+            entity.jumpControl.jump()
         }
     }
 }

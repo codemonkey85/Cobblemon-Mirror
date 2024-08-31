@@ -14,8 +14,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedF
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class JangmoOModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("jangmo_o")
@@ -27,10 +27,10 @@ class JangmoOModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Q
     override val hindRightLeg = getPart("leg_back_right1")
 
     override var portraitScale = 1.75F
-    override var portraitTranslation = Vec3d(-0.22, -0.1, 0.0)
+    override var portraitTranslation = Vec3(-0.22, -0.1, 0.0)
 
     override var profileScale = 0.64F
-    override var profileTranslation = Vec3d(0.0, 0.77, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.77, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

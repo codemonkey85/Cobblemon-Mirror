@@ -15,50 +15,47 @@ import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufInputStream
 import io.netty.buffer.ByteBufOutputStream
 import io.netty.handler.codec.EncoderException
-import java.io.IOException
-import java.util.BitSet
-import java.util.EnumSet
-import java.util.UUID
-import kotlin.jvm.optionals.getOrNull
-import net.minecraft.entity.EntityDimensions
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NbtElement
-import net.minecraft.nbt.NbtEnd
+import net.minecraft.nbt.EndTag
+import net.minecraft.nbt.NbtAccounter
 import net.minecraft.nbt.NbtIo
-import net.minecraft.nbt.NbtOps
-import net.minecraft.nbt.NbtSizeTracker
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.codec.PacketEncoder
-import net.minecraft.network.encoding.StringEncoding
-import net.minecraft.text.Text
-import net.minecraft.text.TextCodecs
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.MathHelper
+import net.minecraft.nbt.Tag
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.Utf8String
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.ComponentSerialization
+import net.minecraft.network.codec.StreamEncoder
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.Mth
+import net.minecraft.world.entity.EntityDimensions
+import net.minecraft.world.item.ItemStack
+import java.io.IOException
+import java.util.*
 
-fun RegistryByteBuf.readItemStack(): ItemStack {
-    return ItemStack.OPTIONAL_PACKET_CODEC.decode(this)
+fun RegistryFriendlyByteBuf.readItemStack(): ItemStack {
+    return ItemStack.OPTIONAL_STREAM_CODEC.decode(this)
 }
 
-fun RegistryByteBuf.writeItemStack(itemStack: ItemStack?) {
-    ItemStack.OPTIONAL_PACKET_CODEC.encode(this, itemStack)
+fun RegistryFriendlyByteBuf.writeItemStack(itemStack: ItemStack) { // TODO (techdaan): why was itemStack optional?
+    ItemStack.OPTIONAL_STREAM_CODEC.encode(this, itemStack)
 }
 
-fun ByteBuf.readText(): Text {
-    return TextCodecs.PACKET_CODEC.decode(this)
+fun RegistryFriendlyByteBuf.readText(): Component {
+    return ComponentSerialization.STREAM_CODEC.decode(this)
 }
 
-fun ByteBuf.writeText(text: Text?) {
-    TextCodecs.PACKET_CODEC.encode(this, text)
+fun RegistryFriendlyByteBuf.writeText(text: Component) { // TODO (techdaan): why was text optional?
+    ComponentSerialization.STREAM_CODEC.encode(this, text)
 }
 
 fun ByteBuf.readEntityDimensions(): EntityDimensions {
+    val width = readFloat()
+    val height = readFloat()
     val isFixed = this.readBoolean()
     return if (isFixed) {
-        EntityDimensions.fixed(this.readFloat(), this.readFloat())
+        EntityDimensions.fixed(width, height)
     }
     else {
-        EntityDimensions.changing(this.readFloat(), this.readFloat())
+        EntityDimensions.scalable(width, height)
     }
 }
 
@@ -77,14 +74,14 @@ fun <T> ByteBuf.writeNullable(obj: T?, writer: (ByteBuf, T) -> Unit) {
     }
 }
 
-fun <T> ByteBuf.writeNullable(obj: T?, writer: PacketEncoder<ByteBuf, T>) {
+fun <T> ByteBuf.writeNullable(obj: T?, writer: StreamEncoder<ByteBuf, T>) {
     writeNullable(obj) { buf, otherObj ->
         writer.encode(buf, otherObj)
     }
 }
 
 fun ByteBuf.writeString(string: String): ByteBuf {
-    StringEncoding.encode(this, string, 32767)
+    Utf8String.write(this, string, 32767)
     return this
 }
 
@@ -99,8 +96,8 @@ fun <T> ByteBuf.readCollection(reader: (ByteBuf) -> T): List<T> {
 
 fun <T> ByteBuf.readList(reader: (ByteBuf) -> T) = readCollection(reader)
 
-fun ByteBuf.readString():String {
-    return StringEncoding.decode(this, 32767)
+fun ByteBuf.readString(): String {
+    return Utf8String.read(this, 32767)
 }
 
 fun <T> ByteBuf.readNullable(reader: (ByteBuf) -> T): T? {
@@ -131,13 +128,13 @@ fun <K, V> ByteBuf.readMap(keyReader: (ByteBuf) -> K, valueReader: (ByteBuf) -> 
 }
 
 
-fun ByteBuf.readIdentifier(): Identifier {
+fun ByteBuf.readIdentifier(): ResourceLocation {
     val str = this.readString()
     //If this is null we should be using writeNullable anyway
-    return Identifier.tryParse(str)!!
+    return ResourceLocation.tryParse(str)!!
 }
 
-fun ByteBuf.writeIdentifier(id: Identifier) {
+fun ByteBuf.writeIdentifier(id: ResourceLocation) {
     writeString(id.toString())
 }
 
@@ -154,12 +151,12 @@ fun ByteBuf.writePCPosition(pcPosition: PCPosition) {
 
 fun ByteBuf.readPCPosition() = PCPosition(readSizedInt(IntSize.U_SHORT), readSizedInt(IntSize.U_BYTE))
 
-fun ByteBuf.writeUuid(uuid: UUID) {
+fun ByteBuf.writeUUID(uuid: UUID) {
     writeLong(uuid.mostSignificantBits)
     writeLong(uuid.leastSignificantBits)
 }
 
-fun ByteBuf.readUuid() = UUID(readLong(), readLong())
+fun ByteBuf.readUUID() = UUID(readLong(), readLong())
 
 fun ByteBuf.writeEnumConstant(value: Enum<*>) {
     this.writeInt(value.ordinal)
@@ -169,25 +166,25 @@ fun <T : Enum<T>> ByteBuf.readEnumConstant(clazz: Class<T>): T {
     return clazz.getEnumConstants()[this.readInt()]
 }
 
-fun ByteBuf.writeNbt(nbt: NbtElement) {
+fun ByteBuf.writeNbt(nbt: Tag) {
     if (nbt == null) {
-        NbtIo.writeForPacket(NbtEnd.INSTANCE, ByteBufOutputStream(this))
+        NbtIo.writeAnyTag(EndTag.INSTANCE, ByteBufOutputStream(this))
     }
 
     try {
-        NbtIo.writeForPacket(nbt, ByteBufOutputStream(this))
+        NbtIo.writeAnyTag(nbt, ByteBufOutputStream(this))
     } catch (var3: IOException) {
         val iOException = var3
         throw EncoderException(iOException)
     }
 }
 
-fun ByteBuf.readNbt(): NbtElement? {
+fun ByteBuf.readNbt(): Tag? {
     val iOException: IOException
-    val nbtElement: NbtElement
+    val nbtElement: Tag
     try {
-        nbtElement = NbtIo.read(ByteBufInputStream(this), NbtSizeTracker.of(2097152L))
-        if (nbtElement.type.toInt() == 0) {
+        nbtElement = NbtIo.read(ByteBufInputStream(this), NbtAccounter.create(2097152L))
+        if (nbtElement.type == EndTag.TYPE) { // TODO (techdaan): ensure this works
             return null
         }
     } catch (var4: IOException) {
@@ -234,12 +231,12 @@ fun ByteBuf.writeBitSet(bitSet: BitSet, size: Int) {
         throw EncoderException("BitSet is larger than expected size ($var10002>$size)")
     } else {
         val bs = bitSet.toByteArray()
-        this.writeBytes(bs.copyOf(MathHelper.ceilDiv(size, 8)))
+        this.writeBytes(bs.copyOf(Mth.positiveCeilDiv(size, 8)))
     }
 }
 
 fun ByteBuf.readBitSet(size: Int): BitSet {
-    val bs = ByteArray(MathHelper.ceilDiv(size, 8))
+    val bs = ByteArray(Mth.positiveCeilDiv(size, 8))
     this.readBytes(bs)
     return BitSet.valueOf(bs)
 }

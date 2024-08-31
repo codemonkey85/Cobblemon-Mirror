@@ -35,7 +35,6 @@ import kotlin.collections.mutableMapOf
 import kotlin.collections.set
 import kotlin.collections.toMutableList
 import kotlin.collections.toTypedArray
-import net.minecraft.text.MutableText
 
 @Suppress("KotlinPlaceholderCountMatchesArgumentCount", "UNUSED_PARAMETER")
 object ShowdownInterpreter {

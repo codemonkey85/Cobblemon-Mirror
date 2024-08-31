@@ -9,17 +9,17 @@
 package com.cobblemon.mod.common.advancement.criterion
 
 import com.mojang.serialization.Codec
-import net.minecraft.advancement.criterion.AbstractCriterion
-import net.minecraft.predicate.entity.LootContextPredicate
-import net.minecraft.server.network.ServerPlayerEntity
-import java.util.Optional
+import net.minecraft.advancements.critereon.ContextAwarePredicate
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger
+import net.minecraft.server.level.ServerPlayer
+import java.util.*
 
 class SimpleCriterionTrigger<T, C : SimpleCriterionCondition<T>>(
     val codec: Codec<C>,
-) : AbstractCriterion<C>() {
-    override fun getConditionsCodec() = codec
+) : SimpleCriterionTrigger<C>() {
+    override fun codec() = codec
 
-    fun trigger(player: ServerPlayerEntity, context: T) {
+    fun trigger(player: ServerPlayer, context: T) {
         return this.trigger(player) {
             it.matches(player, context)
         }
@@ -27,9 +27,9 @@ class SimpleCriterionTrigger<T, C : SimpleCriterionCondition<T>>(
 }
 
 abstract class SimpleCriterionCondition<T>(
-    val playerCtx: Optional<LootContextPredicate>
-) : AbstractCriterion.Conditions {
+    val playerCtx: Optional<ContextAwarePredicate>
+) : SimpleCriterionTrigger.SimpleInstance {
     override fun player() = playerCtx
 
-    abstract fun matches(player: ServerPlayerEntity, context: T): Boolean
+    abstract fun matches(player: ServerPlayer, context: T): Boolean
 }

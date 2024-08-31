@@ -15,7 +15,7 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readPCPosition
 import com.cobblemon.mod.common.util.writePCPosition
 import java.util.UUID
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Tells the server to swap two Pokémon in the PC linked to the player.
@@ -27,15 +27,15 @@ import net.minecraft.network.RegistryByteBuf
  */
 class SwapPCPokemonPacket(val pokemon1ID: UUID, val position1: PCPosition, val pokemon2ID: UUID, val position2: PCPosition) : NetworkPacket<SwapPCPokemonPacket> {
     override val id = ID
-    override fun encode(buffer: RegistryByteBuf) {
-        buffer.writeUuid(pokemon1ID)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(pokemon1ID)
         buffer.writePCPosition(position1)
-        buffer.writeUuid(pokemon2ID)
+        buffer.writeUUID(pokemon2ID)
         buffer.writePCPosition(position2)
     }
 
     companion object {
         val ID = cobblemonResource("swap_pc_pokemon")
-        fun decode(buffer: RegistryByteBuf) = SwapPCPokemonPacket(buffer.readUuid(), buffer.readPCPosition(), buffer.readUuid(), buffer.readPCPosition())
+        fun decode(buffer: RegistryFriendlyByteBuf) = SwapPCPokemonPacket(buffer.readUUID(), buffer.readPCPosition(), buffer.readUUID(), buffer.readPCPosition())
     }
 }

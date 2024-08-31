@@ -14,7 +14,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.math.geometry.toRadians
 import com.cobblemon.mod.common.util.resolveBoolean
-import net.minecraft.client.model.ModelPart
+import net.minecraft.client.model.geom.ModelPart
 
 /**
  * Represents a [ModelPart] with some changes to position and rotation. This is to take a snapshot
@@ -31,8 +31,8 @@ class ModelPartTransformation(val modelPart: ModelPart) {
         val defaultRuntime = MoLangRuntime()
 
         fun derive(modelPart: ModelPart) = ModelPartTransformation(modelPart)
-            .withPosition(modelPart.pivotX, modelPart.pivotY, modelPart.pivotZ)
-            .withRotation(modelPart.pitch, modelPart.yaw, modelPart.roll)
+            .withPosition(modelPart.x, modelPart.y, modelPart.z)
+            .withRotation(modelPart.xRot, modelPart.yRot, modelPart.zRot)
             .withScale(modelPart.xScale, modelPart.yScale, modelPart.zScale)
             .withVisibility(modelPart.visible)
     }
@@ -45,12 +45,12 @@ class ModelPartTransformation(val modelPart: ModelPart) {
 
     /** Applies the transformation to the model part. */
     fun apply(state: PosableState, intensity: Float) {
-        modelPart.pivotX += position[0] * intensity
-        modelPart.pivotY += position[1] * intensity
-        modelPart.pivotZ += position[2] * intensity
-        modelPart.pitch += rotation[0] * intensity
-        modelPart.yaw += rotation[1] * intensity
-        modelPart.roll += rotation[2] * intensity
+        modelPart.x += position[0] * intensity
+        modelPart.y += position[1] * intensity
+        modelPart.z += position[2] * intensity
+        modelPart.xRot += rotation[0] * intensity
+        modelPart.yRot += rotation[1] * intensity
+        modelPart.zRot += rotation[2] * intensity
         modelPart.xScale *= (1 - scale[0]) * intensity + 1
         modelPart.yScale *= (1 - scale[1]) * intensity + 1
         modelPart.zScale *= (1 - scale[2]) * intensity + 1
@@ -58,12 +58,12 @@ class ModelPartTransformation(val modelPart: ModelPart) {
     }
 
     fun set() {
-        modelPart.pivotX = position[0]
-        modelPart.pivotY = position[1]
-        modelPart.pivotZ = position[2]
-        modelPart.pitch = rotation[0]
-        modelPart.yaw = rotation[1]
-        modelPart.roll = rotation[2]
+        modelPart.x = position[0]
+        modelPart.y = position[1]
+        modelPart.z = position[2]
+        modelPart.xRot = rotation[0]
+        modelPart.yRot = rotation[1]
+        modelPart.zRot = rotation[2]
         modelPart.xScale = scale[0]
         modelPart.yScale = scale[1]
         modelPart.zScale = scale[2]

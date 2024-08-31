@@ -18,9 +18,9 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
+import net.minecraft.network.chat.MutableComponent
 import java.lang.reflect.Type
 import kotlin.math.max
-import net.minecraft.text.MutableText
 
 /**
  * A collection of all the [ExperienceGroup]s a Pokémon species can have.
@@ -65,7 +65,7 @@ object ExperienceGroupAdapter : JsonSerializer<ExperienceGroup>, JsonDeserialize
  */
 interface ExperienceGroup : LevelCurve {
     val name: String
-    val translatedName: MutableText
+    val translatedName: MutableComponent
         get() = lang("experience_group.${name.lowercase()}")
 
     companion object {

@@ -10,27 +10,27 @@ package com.cobblemon.mod.common.entity.npc.ai
 
 import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.entity.npc.NPCEntity
-import net.minecraft.entity.ai.FuzzyTargeting
-import net.minecraft.entity.ai.brain.BlockPosLookTarget
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.WalkTarget
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
+import net.minecraft.world.entity.ai.behavior.BlockPosTracker
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
+import net.minecraft.world.entity.ai.memory.WalkTarget
+import net.minecraft.world.entity.ai.util.LandRandomPos
 
 object ChooseWanderTargetTask {
-    fun create(horizontalRange: Int, verticalRange: Int, walkSpeed: Float, completionRange: Int): SingleTickTask<NPCEntity> {
-        return TaskTriggerer.task {
+    fun create(horizontalRange: Int, verticalRange: Int, walkSpeed: Float, completionRange: Int): OneShot<NPCEntity> {
+        return BehaviorBuilder.create {
             it.group(
-                it.queryMemoryAbsent(MemoryModuleType.WALK_TARGET),
-                it.queryMemoryOptional(MemoryModuleType.LOOK_TARGET),
-                it.queryMemoryAbsent(CobblemonMemories.NPC_BATTLING)
+                it.absent(MemoryModuleType.WALK_TARGET),
+                it.registered(MemoryModuleType.LOOK_TARGET),
+                it.absent(CobblemonMemories.NPC_BATTLING)
             ).apply(it) { walkTarget, lookTarget, _ ->
-                TaskRunnable { world, entity, time ->
-                    val targetVec = FuzzyTargeting.find(entity, horizontalRange, verticalRange) ?: return@TaskRunnable false
-                    walkTarget.remember(WalkTarget(targetVec, walkSpeed, completionRange))
-                    lookTarget.remember(BlockPosLookTarget(targetVec.add(0.0, 1.5, 0.0)))
-                    return@TaskRunnable true
+                Trigger { world, entity, time ->
+                    val targetVec = LandRandomPos.getPos(entity, horizontalRange, verticalRange) ?: return@Trigger false
+                    walkTarget.set(WalkTarget(targetVec, walkSpeed, completionRange))
+                    lookTarget.set(BlockPosTracker(targetVec.add(0.0, 1.5, 0.0)))
+                    return@Trigger true
                 }
             }
         }

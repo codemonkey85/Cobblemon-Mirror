@@ -8,25 +8,25 @@
 
 package com.cobblemon.mod.common.entity.ai
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.WalkTarget
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
+import net.minecraft.world.entity.ai.memory.WalkTarget
 
 object MoveToAttackTargetTask {
-    fun create(): SingleTickTask<LivingEntity> = TaskTriggerer.task {
+    fun create(): OneShot<LivingEntity> = BehaviorBuilder.create {
         it.group(
-            it.queryMemoryValue(MemoryModuleType.ATTACK_TARGET),
-            it.queryMemoryOptional(MemoryModuleType.WALK_TARGET)
+            it.present(MemoryModuleType.ATTACK_TARGET),
+            it.registered(MemoryModuleType.WALK_TARGET)
         ).apply(it) { attackTarget, walkTarget ->
-            TaskRunnable { world, entity, _ ->
-                val attackTarget = it.getValue(attackTarget)
-                val position = attackTarget.pos
-                val walkTarget = it.getOptionalValue(walkTarget).orElse(null)
-                if (walkTarget == null || walkTarget.lookTarget.pos.squaredDistanceTo(position) > 4.0) {
-                    entity.brain.remember(MemoryModuleType.WALK_TARGET, WalkTarget(attackTarget, 0.5F, 1))
+            Trigger { world, entity, _ ->
+                val attackTarget = it.get(attackTarget)
+                val position = attackTarget.position()
+                val walkTarget = it.tryGet(walkTarget).orElse(null)
+                if (walkTarget == null || walkTarget.target.currentPosition().distanceToSqr(position) > 4.0) {
+                    entity.brain.setMemory(MemoryModuleType.WALK_TARGET, WalkTarget(attackTarget, 0.5F, 1))
                     true
                 } else {
                     false

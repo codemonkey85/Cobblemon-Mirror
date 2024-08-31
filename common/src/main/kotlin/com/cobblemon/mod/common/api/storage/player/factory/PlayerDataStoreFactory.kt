@@ -9,7 +9,6 @@
 package com.cobblemon.mod.common.api.storage.player.factory
 
 import com.cobblemon.mod.common.api.storage.player.PlayerData
-import net.minecraft.server.network.ServerPlayerEntity
 import java.util.UUID
 
 interface PlayerDataStoreFactory {

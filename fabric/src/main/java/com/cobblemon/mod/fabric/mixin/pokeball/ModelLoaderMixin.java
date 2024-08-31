@@ -12,12 +12,7 @@ import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.pokeball.PokeBalls;
 import com.cobblemon.mod.common.pokeball.PokeBall;
 import net.minecraft.client.color.block.BlockColors;
-import net.minecraft.client.render.model.ModelLoader;
-import net.minecraft.client.render.model.UnbakedModel;
-import net.minecraft.client.render.model.json.JsonUnbakedModel;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.profiler.Profiler;
+import net.minecraft.client.resources.model.ModelBakery;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,7 +23,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@Mixin(ModelLoader.class)
+@Mixin(ModelBakery.class)
 public abstract class ModelLoaderMixin {
 
 //    @Shadow protected abstract void addModelToBake(ModelIdentifier modelId, UnbakedModel unbakedModel);

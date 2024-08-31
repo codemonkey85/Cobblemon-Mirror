@@ -9,9 +9,8 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pose;
 
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.util.math.MatrixStack;
-
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import java.util.Map;
 
 /**
@@ -48,7 +47,7 @@ public interface Bone {
      */
     void render(
             RenderContext context,
-            MatrixStack stack,
+            PoseStack stack,
             VertexConsumer buffer,
             int packedLight,
             int packedOverlay,
@@ -60,5 +59,5 @@ public interface Bone {
      *
      * @since 1.4.0
      */
-    void transform(MatrixStack matrixStack);
+    void transform(PoseStack matrixStack);
 }

@@ -208,27 +208,6 @@
               "minLevel": 14
             }
           ]
-        },
-        {
-          "id": "hisui_cyndaquil_quilava",
-          "variant": "level_up",
-          "result": "quilava region_bias=johto",
-          "consumeHeldItem": false,
-          "learnableMoves": [],
-          "requirements": [
-            {
-              "variant": "level",
-              "minLevel": 14
-            },
-            {
-              "variant": "biome",
-              "biomeCondition": "#cobblemon:is_temperate"
-            },
-            {
-              "variant": "biome",
-              "biomeAnticondition": "#cobblemon:is_spooky"
-            }
-          ]
         }
       ],
       "baseScale": 0.5,
@@ -426,23 +405,6 @@
         {
           "variant": "level",
           "minLevel": 14
-        }
-      ]
-    },
-    {
-      "id": "cyndaquil_hisui_quilava",
-      "variant": "level_up",
-      "result": "quilava region_bias=hisui",
-      "consumeHeldItem": false,
-      "learnableMoves": [],
-      "requirements": [
-        {
-          "variant": "level",
-          "minLevel": 14
-        },
-        {
-          "variant": "biome",
-          "biomeCondition": "#cobblemon:evolution/cyndaquil_quilava_hisui_bias"
         }
       ]
     }

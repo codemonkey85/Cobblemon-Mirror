@@ -11,8 +11,8 @@ package com.cobblemon.mod.common.entity.pokemon.ai.goals
 import com.cobblemon.mod.common.api.pokemon.status.Statuses
 import com.cobblemon.mod.common.entity.pokemon.PokemonBehaviourFlag
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.goal.LookAtEntityGoal
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.goal.InteractGoal
 
 /**
  * An override of the [LookAtEntityGoal] so that Pokémon behaviours can be implemented.
@@ -20,13 +20,15 @@ import net.minecraft.entity.ai.goal.LookAtEntityGoal
  * @author Hiroku
  * @since July 30th, 2022
  */
-class PokemonLookAtEntityGoal(entity: PokemonEntity, targetType: Class<out LivingEntity>, range: Float) : LookAtEntityGoal(entity, targetType, range) {
+class PokemonLookAtEntityGoal(entity: PokemonEntity, targetType: Class<out LivingEntity>, range: Float) : InteractGoal(entity, targetType, range) {
     fun canLook() = (mob as PokemonEntity).let { pokemon ->
         val behaviour = pokemon.behaviour
         behaviour.moving.canLook && pokemon.pokemon.status?.status != Statuses.SLEEP && !pokemon.isBattling && behaviour.moving.looksAtEntities
     }
-    override fun canStart() = super.canStart() && canLook()
-    override fun shouldContinue() = super.shouldContinue() && canLook()
+
+    override fun canUse() = super.canUse() && canLook()
+
+    override fun canContinueToUse() = super.canContinueToUse() && canLook()
 
     override fun start() {
         super.start()

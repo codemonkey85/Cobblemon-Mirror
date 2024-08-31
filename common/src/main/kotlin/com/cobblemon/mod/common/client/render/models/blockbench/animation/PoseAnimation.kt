@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.util.resolveBoolean
-import net.minecraft.entity.Entity
+import net.minecraft.world.entity.Entity
 
 /**
  * Represents an animation that is shared across every instance of a model. This means that
@@ -37,7 +37,7 @@ abstract class PoseAnimation {
         return this
     }
 
-    protected abstract fun setAngles(
+    protected abstract fun setupAnim(
         context: RenderContext,
         model: PosableModel,
         state: PosableState,
@@ -61,7 +61,7 @@ abstract class PoseAnimation {
         intensity: Float
     ) {
         if (!condition(state)) return
-        setAngles(context, model, state, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, intensity)
+        setupAnim(context, model, state, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, intensity)
     }
 
     open fun applyEffects(entity: Entity, state: PosableState, previousSeconds: Float, newSeconds: Float) {}

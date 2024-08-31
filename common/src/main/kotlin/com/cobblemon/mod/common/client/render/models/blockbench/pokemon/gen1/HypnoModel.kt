@@ -17,8 +17,8 @@ import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class HypnoModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("hypno")
@@ -28,10 +28,10 @@ class HypnoModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bipe
     override val rightLeg = getPart("right_upper_leg")
 
     override var portraitScale = 2.1F
-    override var portraitTranslation = Vec3d(-0.3, 0.6, 0.0)
+    override var portraitTranslation = Vec3(-0.3, 0.6, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(-0.05, 0.5, 0.0)
+    override var profileTranslation = Vec3(-0.05, 0.5, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

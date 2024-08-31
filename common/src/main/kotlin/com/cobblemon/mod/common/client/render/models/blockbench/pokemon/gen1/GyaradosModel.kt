@@ -21,9 +21,9 @@ import com.cobblemon.mod.common.entity.PoseType.Companion.FLYING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STANDING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.SWIMMING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class GyaradosModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("gyarados")
@@ -57,9 +57,9 @@ class GyaradosModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     val wseg12 = WaveSegment(seg12, 4F)
 
     override var portraitScale = 1.8F
-    override var portraitTranslation = Vec3d(-1.55, 0.35, 0.0)
+    override var portraitTranslation = Vec3(-1.55, 0.35, 0.0)
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(-0.1, 0.65, 0.0)
+    override var profileTranslation = Vec3(-0.1, 0.65, 0.0)
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("gyarados", "blink")}
@@ -68,7 +68,7 @@ class GyaradosModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             poseTypes = STANDING_POSES + UI_POSES,
             quirks = arrayOf(blink),
             transformTicks = 20,
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             animations = arrayOf(
                 singleBoneLook(),
                 bedrock("gyarados", "ground_idle"),
@@ -100,7 +100,7 @@ class GyaradosModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             poseName = "surface",
             poseTypes = setOf(PoseType.STAND, PoseType.WALK),
             quirks = arrayOf(blink),
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             transformTicks = 20,
             animations = arrayOf(
                 singleBoneLook(),

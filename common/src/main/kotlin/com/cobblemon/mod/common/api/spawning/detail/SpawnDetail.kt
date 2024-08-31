@@ -12,6 +12,7 @@ import com.bedrockk.molang.runtime.struct.ArrayStruct
 import com.bedrockk.molang.runtime.struct.VariableStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.bedrockk.molang.runtime.value.StringValue
+import com.cobblemon.mod.common.Cobblemon.LOGGER
 import com.cobblemon.mod.common.api.ModDependant
 import com.cobblemon.mod.common.api.spawning.SpawnBucket
 import com.cobblemon.mod.common.api.spawning.condition.CompositeSpawningCondition
@@ -88,7 +89,18 @@ abstract class SpawnDetail : ModDependant {
         return true
     }
 
-    open fun isValid(): Boolean = isModDependencySatisfied()
+    open fun isValid(): Boolean {
+        var containsNullValues = false
+        if (conditions.isNotEmpty() && conditions.any { !it.isValid() }) {
+            containsNullValues = true
+            LOGGER.error("Spawn Detail with id $id is invalid as it contains invalid values in its conditions (commonly caused by trailing comma in biomes or other arrays)")
+        }
+        if (anticonditions.isNotEmpty() && anticonditions.any { !it.isValid() }) {
+            containsNullValues = true
+            LOGGER.error("Spawn Detail with id $id is invalid as it contains invalid values in its anticonditions (commonly caused by trailing comma in biomes or other arrays)")
+        }
+        return super.isModDependencySatisfied() && !containsNullValues
+    }
 
     abstract fun doSpawn(ctx: SpawningContext): SpawnAction<*>
 }

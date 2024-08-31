@@ -15,8 +15,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvi
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class GrimmsnarlModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("grimmsnarl")
@@ -26,10 +26,10 @@ class GrimmsnarlModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 1.97F
-    override var portraitTranslation = Vec3d(-0.42, 2.38, 0.0)
+    override var portraitTranslation = Vec3(-0.42, 2.38, 0.0)
 
     override var profileScale = 0.52F
-    override var profileTranslation = Vec3d(0.06, 0.97, 0.0)
+    override var profileTranslation = Vec3(0.06, 0.97, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

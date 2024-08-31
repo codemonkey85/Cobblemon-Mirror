@@ -10,27 +10,26 @@ package com.cobblemon.mod.common.advancement.criterion
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.predicate.entity.EntityPredicate
-import net.minecraft.predicate.entity.LootContextPredicate
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.dynamic.Codecs
+import net.minecraft.advancements.critereon.ContextAwarePredicate
+import net.minecraft.advancements.critereon.EntityPredicate
+import net.minecraft.server.level.ServerPlayer
 import java.util.Optional
 
 open class CountableContext(var times: Int)
 
 open class CountableCriterion<T : CountableContext>(
-    playerCtx: Optional<LootContextPredicate>,
+    playerCtx: Optional<ContextAwarePredicate>,
     val count: Int
 ): SimpleCriterionCondition<T>(playerCtx) {
 
     companion object {
         val CODEC: Codec<CountableCriterion<CountableContext>> = RecordCodecBuilder.create { it.group(
-            EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(CountableCriterion<CountableContext>::playerCtx),
+            EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(CountableCriterion<CountableContext>::playerCtx),
             Codec.INT.optionalFieldOf("count", 0).forGetter(CountableCriterion<CountableContext>::count)
         ).apply(it, ::CountableCriterion) }
     }
 
-    override fun matches(player: ServerPlayerEntity, context: T) = context.times >= count
+    override fun matches(player: ServerPlayer, context: T) = context.times >= count
 
 }
 

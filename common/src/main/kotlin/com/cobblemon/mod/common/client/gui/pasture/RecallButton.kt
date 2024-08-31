@@ -14,15 +14,15 @@ import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.sound.SoundManager
-import net.minecraft.text.Text
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Button
+import net.minecraft.client.sounds.SoundManager
+import net.minecraft.network.chat.Component
 
 class RecallButton(
     x: Int, y: Int,
-    onPress: PressAction
-) : ButtonWidget(x, y, WIDTH, HEIGHT, Text.literal("Retrieve"), onPress, DEFAULT_NARRATION_SUPPLIER) {
+    onPress: OnPress
+) : Button(x, y, WIDTH, HEIGHT, Component.literal("Retrieve"), onPress, DEFAULT_NARRATION) {
 
     companion object {
         private const val WIDTH = 70
@@ -31,9 +31,9 @@ class RecallButton(
         private val buttonResource = cobblemonResource("textures/gui/pasture/pasture_button.png")
     }
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = buttonResource,
             x = x,
             y = y,

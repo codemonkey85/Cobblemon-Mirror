@@ -10,10 +10,9 @@ package com.cobblemon.mod.common.advancement.criterion
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.predicate.entity.EntityPredicate
-import net.minecraft.predicate.entity.LootContextPredicate
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.dynamic.Codecs
+import net.minecraft.advancements.critereon.ContextAwarePredicate
+import net.minecraft.advancements.critereon.EntityPredicate
+import net.minecraft.server.level.ServerPlayer
 import java.util.Optional
 
 /**
@@ -25,20 +24,20 @@ import java.util.Optional
 open class CountablePokemonTypeContext(times: Int, var type: String) : CountableContext(times)
 
 class CaughtPokemonCriterion(
-    playerCtx: Optional<LootContextPredicate>,
+    playerCtx: Optional<ContextAwarePredicate>,
     val type: String,
     count: Int
 ): CountableCriterion<CountablePokemonTypeContext>(playerCtx, count) {
 
     companion object {
         val CODEC: Codec<CaughtPokemonCriterion> = RecordCodecBuilder.create { it.group(
-            EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(CaughtPokemonCriterion::playerCtx),
+            EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(CaughtPokemonCriterion::playerCtx),
             Codec.STRING.optionalFieldOf("type", "any").forGetter(CaughtPokemonCriterion::type),
             Codec.INT.optionalFieldOf("count", 0).forGetter(CaughtPokemonCriterion::count)
         ).apply(it, ::CaughtPokemonCriterion) }
     }
 
-    override fun matches(player: ServerPlayerEntity, context: CountablePokemonTypeContext): Boolean {
+    override fun matches(player: ServerPlayer, context: CountablePokemonTypeContext): Boolean {
         return super.matches(player, context) && (context.type == type || type == "any")
     }
 }

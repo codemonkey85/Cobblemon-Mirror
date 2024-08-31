@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.api.storage.player.PlayerData
 import com.cobblemon.mod.common.util.cobblemonResource
 import java.util.UUID
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Packet to update the general player data on the client (which is just starter information).
@@ -36,23 +36,23 @@ class SetClientPlayerDataPacket(val promptStarter: Boolean, val starterLocked: B
         resetStarterPrompt
     )
 
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(promptStarter)
         buffer.writeBoolean(starterLocked)
         buffer.writeBoolean(starterSelected)
         val starterUUID = starterUUID
-        buffer.writeNullable(starterUUID) { pb, value -> pb.writeUuid(value) }
+        buffer.writeNullable(starterUUID) { pb, value -> pb.writeUUID(value) }
         val resetStarterPrompt = resetStarterPrompt
         buffer.writeNullable(resetStarterPrompt) { pb, value -> pb.writeBoolean(value) }
     }
 
     companion object {
         val ID = cobblemonResource("set_client_playerdata")
-        fun decode(buffer: RegistryByteBuf): SetClientPlayerDataPacket {
+        fun decode(buffer: RegistryFriendlyByteBuf): SetClientPlayerDataPacket {
             val promptStarter = buffer.readBoolean()
             val starterLocked = buffer.readBoolean()
             val starterSelected = buffer.readBoolean()
-            val starterUUID = buffer.readNullable { it.readUuid() }
+            val starterUUID = buffer.readNullable { it.readUUID() }
             val resetStarterPrompt = buffer.readNullable { it.readBoolean() }
             return SetClientPlayerDataPacket(promptStarter, starterLocked, starterSelected, starterUUID, resetStarterPrompt)
         }

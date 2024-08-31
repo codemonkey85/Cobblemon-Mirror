@@ -8,8 +8,19 @@
 
 package com.cobblemon.mod.common.util
 
-import net.minecraft.util.Identifier
+import com.cobblemon.mod.common.Cobblemon
+import net.minecraft.resources.ResourceLocation
 
-fun Identifier.endsWith(suffix: String): Boolean {
+fun ResourceLocation.endsWith(suffix: String): Boolean {
     return this.toString().endsWith(suffix)
 }
+
+/**
+ * Attempts to simplify an identifier as a string for user-friendly results.
+ *
+ * If the [Identifier.namespace] is [namespace] the result is [Identifier.path] else [Identifier.toString].
+ *
+ * @param namespace The namespace that if matched with [Identifier.namespace] allows the shortening.
+ * @return The resulting string.
+ */
+fun ResourceLocation.simplify(namespace: String = Cobblemon.MODID): String = if (this.namespace == namespace) this.path else this.toString()

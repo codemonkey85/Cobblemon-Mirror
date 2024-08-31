@@ -19,8 +19,8 @@ import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class ShroomishModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("shroomish")
@@ -30,10 +30,10 @@ class ShroomishModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     override val rightLeg = getPart("foot_right")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.1, -1.2, 0.0)
+    override var portraitTranslation = Vec3(-0.1, -1.2, 0.0)
 
     override var profileScale = 1.0F
-    override var profileTranslation = Vec3d(0.0, 0.3, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.3, 0.0)
 
     lateinit var standing: Pose
     lateinit var battling: Pose
@@ -50,7 +50,7 @@ class ShroomishModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
             quirks = arrayOf(blink),
             condition = { !it.isBattling },
             animations = arrayOf(
-                singleBoneLook(),
+                singleBoneLook(pitchMultiplier = 0.5F),
                 bedrock("shroomish", "ground_idle")
             )
         )
@@ -60,7 +60,7 @@ class ShroomishModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
             poseTypes = MOVING_POSES,
             quirks = arrayOf(blink),
             animations = arrayOf(
-                singleBoneLook(),
+                singleBoneLook(pitchMultiplier = 0.5F),
                 bedrock("shroomish", "ground_walk")
             )
         )
@@ -72,7 +72,7 @@ class ShroomishModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
             quirks = arrayOf(blink),
             condition = { it.isBattling },
             animations = arrayOf(
-                singleBoneLook(),
+                singleBoneLook(pitchMultiplier = 0.5F),
                 bedrock("shroomish", "battle_idle")
             )
         )

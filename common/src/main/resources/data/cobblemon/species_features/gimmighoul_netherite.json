@@ -6,9 +6,14 @@
   "max": 256,
   "visible": true,
   "display": {
-    "name": "cobblemon.ui.netherite_hoard",
+    "name": "cobblemon.ui.stash.netherite",
     "colour": [127, 73, 61],
     "underlay": "cobblemon:textures/gui/summary/summary_stats_other_bar.png",
     "overlay": "cobblemon:textures/gui/summary/summary_stats_scrap_overlay.png"
+  },
+  "itemPoints": {
+    "minecraft:netherite_scrap": 1,
+    "minecraft:netherite_ingot": 4,
+    "minecraft:netherite_block": 36
   }
 }

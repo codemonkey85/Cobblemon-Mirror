@@ -14,20 +14,20 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPo
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.isBattling
-import com.cobblemon.mod.common.util.isSubmergedInWater
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isUnderWater
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class DragoniteModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("dragonite")
     override val head = getPart("head")
 
     override var portraitScale = 1.2F
-    override var portraitTranslation = Vec3d(-0.2, 2.6, 0.0)
+    override var portraitTranslation = Vec3(-0.2, 2.6, 0.0)
 
     override var profileScale = 0.41F
-    override var profileTranslation = Vec3d(0.0, 1.1, -6.0)
+    override var profileTranslation = Vec3(0.0, 1.1, -6.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose
@@ -105,7 +105,7 @@ class DragoniteModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         wateridle = registerPose(
             poseName = "wateridle",
             poseType = PoseType.FLOAT,
-            condition = { it.isSubmergedInWater },
+            condition = { it.isUnderWater },
             quirks = arrayOf(blink),
             animations = arrayOf(
                 singleBoneLook(maxPitch = 15F),
@@ -116,7 +116,7 @@ class DragoniteModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         waterswim = registerPose(
             poseName = "waterswim",
             poseType = PoseType.SWIM,
-            condition = { it.isSubmergedInWater },
+            condition = { it.isUnderWater },
             quirks = arrayOf(blink),
             animations = arrayOf(
                 singleBoneLook(maxPitch = 15F),
@@ -127,7 +127,7 @@ class DragoniteModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         surfacewateridle = registerPose(
             poseName = "surfacewateridle",
             poseTypes = PoseType.STANDING_POSES,
-            condition = { !it.isSubmergedInWater && it.isTouchingWater },
+            condition = { !it.isUnderWater && it.isInWater },
             quirks = arrayOf(blink),
             animations = arrayOf(
                 singleBoneLook(maxPitch = 15F),
@@ -138,7 +138,7 @@ class DragoniteModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         surfacewaterswim = registerPose(
             poseName = "surfacewaterswim",
             poseTypes = PoseType.MOVING_POSES,
-            condition = { !it.isSubmergedInWater && it.isTouchingWater },
+            condition = { !it.isUnderWater && it.isInWater },
             quirks = arrayOf(blink),
             animations = arrayOf(
                 singleBoneLook(maxPitch = 15F),

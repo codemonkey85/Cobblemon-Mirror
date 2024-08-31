@@ -13,17 +13,17 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPo
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class CopperajahModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("copperajah")
 
     override var portraitScale = 0.6F
-    override var portraitTranslation = Vec3d(-0.67, 1.62, 0.0)
+    override var portraitTranslation = Vec3(-0.67, 1.62, 0.0)
 
     override var profileScale = 0.30F
-    override var profileTranslation = Vec3d(-0.02, 1.2, 0.0)
+    override var profileTranslation = Vec3(-0.02, 1.2, 0.0)
 
     lateinit var sleep: CobblemonPose
     lateinit var standing: CobblemonPose

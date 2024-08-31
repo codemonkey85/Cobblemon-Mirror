@@ -44,18 +44,18 @@ import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.getDoubleOrNull
 import com.cobblemon.mod.common.util.getStringOrNull
 import com.cobblemon.mod.common.util.plus
-import net.minecraft.client.model.ModelPart
-import net.minecraft.client.render.RenderLayer
-import net.minecraft.client.render.RenderPhase
-import net.minecraft.client.render.VertexConsumer
-import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.VertexFormat
-import net.minecraft.client.render.VertexFormats
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.entity.Entity
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.RotationAxis
-import net.minecraft.util.math.Vec3d
+import com.mojang.blaze3d.vertex.DefaultVertexFormat
+import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.blaze3d.vertex.VertexConsumer
+import com.mojang.blaze3d.vertex.VertexFormat
+import com.mojang.math.Axis
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.RenderStateShard
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.phys.Vec3
 
 /**
  * A model that can be posed and animated using [PoseAnimation]s and [ActiveAnimation]s. This
@@ -86,10 +86,10 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
     lateinit var locatorAccess: LocatorAccess
 
     open var portraitScale = 1F
-    open var portraitTranslation = Vec3d(0.0, 0.0, 0.0)
+    open var portraitTranslation = Vec3(0.0, 0.0, 0.0)
 
     open var profileScale = 1F
-    open var profileTranslation = Vec3d(0.0, 0.0, 0.0)
+    open var profileTranslation = Vec3(0.0, 0.0, 0.0)
 
     var red = 1F
     var green = 1F
@@ -125,7 +125,7 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
     var currentLayers: Iterable<ModelLayer> = listOf()
 
     @Transient
-    var bufferProvider: VertexConsumerProvider? = null
+    var bufferProvider: MultiBufferSource? = null
 
     @Transient
     var currentState: PosableState? = null
@@ -403,7 +403,7 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
     }
 
     fun withLayerContext(
-        buffer: VertexConsumerProvider,
+        buffer: MultiBufferSource,
         state: PosableState,
         layers: Iterable<ModelLayer>,
         action: () -> Unit
@@ -413,7 +413,7 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
         resetLayerContext()
     }
 
-    fun setLayerContext(buffer: VertexConsumerProvider, state: PosableState, layers: Iterable<ModelLayer>) {
+    fun setLayerContext(buffer: MultiBufferSource, state: PosableState, layers: Iterable<ModelLayer>) {
         currentLayers = layers
         bufferProvider = buffer
         currentState = state
@@ -570,7 +570,7 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
     /** Renders the model. Assumes rotations have been set. Will simply render the base model and then any extra layers. */
     fun render(
         context: RenderContext,
-        stack: MatrixStack,
+        stack: PoseStack,
         buffer: VertexConsumer,
         packedLight: Int,
         packedOverlay: Int,
@@ -610,7 +610,7 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
                 val tintAlpha = (tint.w * 255).toInt()
                 val tintColor = tintAlpha shl 24 or (tintRed shl 16) or (tintGreen shl 8) or tintBlue
 
-                stack.push()
+                stack.pushPose()
                 rootPart.render(
                     context,
                     stack,
@@ -619,33 +619,33 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
                     packedOverlay,
                     tintColor
                 )
-                stack.pop()
+                stack.popPose()
             }
         }
     }
 
-    /** Generates a [RenderLayer] by the power of god and anime. Only possible thanks to 100 access wideners. */
-    fun makeLayer(texture: Identifier, emissive: Boolean, translucent: Boolean): RenderLayer {
-        val multiPhaseParameters: RenderLayer.MultiPhaseParameters = RenderLayer.MultiPhaseParameters.builder()
-            .program(
+    /** Generates a [RenderType] by the power of god and anime. Only possible thanks to 100 access wideners. */
+    fun makeLayer(texture: ResourceLocation, emissive: Boolean, translucent: Boolean): RenderType {
+        val multiPhaseParameters: RenderType.CompositeState = RenderType.CompositeState.builder()
+            .setShaderState(
                 when {
-                    emissive && translucent -> RenderPhase.ENTITY_TRANSLUCENT_EMISSIVE_PROGRAM
-                    !emissive && translucent -> RenderPhase.ENTITY_TRANSLUCENT_PROGRAM
-                    !emissive && !translucent -> RenderPhase.ENTITY_CUTOUT_PROGRAM
-                    else -> RenderPhase.ENTITY_TRANSLUCENT_EMISSIVE_PROGRAM // This one should be changed to maybe a custom shader? Translucent stuffs with things
+                    emissive && translucent -> RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER
+                    !emissive && translucent -> RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_SHADER
+                    !emissive && !translucent -> RenderStateShard.RENDERTYPE_ENTITY_CUTOUT_SHADER
+                    else -> RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER // This one should be changed to maybe a custom shader? Translucent stuffs with things
                 }
             )
-            .texture(RenderPhase.Texture(texture, false, false))
-            .transparency(if (translucent) RenderPhase.TRANSLUCENT_TRANSPARENCY else RenderPhase.NO_TRANSPARENCY)
-            .cull(RenderPhase.ENABLE_CULLING)
-            .writeMaskState(RenderPhase.ALL_MASK)
-            .overlay(RenderPhase.ENABLE_OVERLAY_COLOR)
-            .build(false)
+            .setTextureState(RenderStateShard.TextureStateShard(texture, false, false))
+            .setTransparencyState(if (translucent) RenderStateShard.TRANSLUCENT_TRANSPARENCY else RenderStateShard.NO_TRANSPARENCY)
+            .setCullState(RenderStateShard.CULL)
+            .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+            .setOverlayState(RenderStateShard.OVERLAY)
+            .createCompositeState(false)
 
-        return RenderLayer.of(
+        return RenderType.create(
             "cobblemon_entity_layer",
-            VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
-            VertexFormat.DrawMode.QUADS,
+            DefaultVertexFormat.NEW_ENTITY,
+            VertexFormat.Mode.QUADS,
             256,
             true,
             translucent,
@@ -653,12 +653,12 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
         )
     }
 
-    /** Makes a [RenderLayer] in a jank way. Mostly works so that's cool. */
-    fun getLayer(texture: Identifier, emissive: Boolean, translucent: Boolean): RenderLayer {
+    /** Makes a [RenderType] in a jank way. Mostly works so that's cool. */
+    fun getLayer(texture: ResourceLocation, emissive: Boolean, translucent: Boolean): RenderType {
         return if (!emissive && !translucent) {
-            RenderLayer.getEntityCutout(texture)
+            RenderType.entityCutout(texture)
         } else if (!emissive) {
-            RenderLayer.getEntityTranslucent(texture)
+            RenderType.entityTranslucent(texture)
         } else {
             makeLayer(texture, emissive = emissive, translucent = translucent)
         }
@@ -852,29 +852,29 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
      */
     fun updateLocators(entity: Entity?, state: PosableState) {
         entity ?: return
-        val matrixStack = MatrixStack()
+        val matrixStack = PoseStack()
         var scale = 1F
         // We could improve this to be generalized for other entities. First we'd have to figure out wtf is going on, though.
         if (entity is PokemonEntity) {
-            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180 - entity.bodyYaw))
-            matrixStack.push()
+            matrixStack.mulPose(Axis.YP.rotationDegrees(180 - entity.yBodyRot))
+            matrixStack.pushPose()
             matrixStack.scale(-1F, -1F, 1F)
             scale = entity.pokemon.form.baseScale * entity.pokemon.scaleModifier * (entity.delegate as PokemonClientDelegate).entityScaleModifier
             matrixStack.scale(scale, scale, scale)
         } else if (entity is EmptyPokeBallEntity) {
-            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.yaw))
-            matrixStack.push()
+            matrixStack.mulPose(Axis.YP.rotationDegrees(entity.yRot))
+            matrixStack.pushPose()
             matrixStack.scale(1F, -1F, -1F)
             scale = 0.7F
             matrixStack.scale(scale, scale, scale)
         } else if (entity is GenericBedrockEntity) {
-            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.yaw))
-            matrixStack.push()
+            matrixStack.mulPose(Axis.YP.rotationDegrees(entity.yRot))
+            matrixStack.pushPose()
             // Not 100% convinced we need the -1 on Y but if we needed it for the Poke Ball then probably?
             matrixStack.scale(1F, -1F, 1F)
         } else if (entity is NPCEntity) {
-            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180 - entity.bodyYaw))
-            matrixStack.push()
+            matrixStack.mulPose(Axis.YP.rotationDegrees(180 - entity.yBodyRot))
+            matrixStack.pushPose()
             matrixStack.scale(-1F, -1F, 1F)
         }
 

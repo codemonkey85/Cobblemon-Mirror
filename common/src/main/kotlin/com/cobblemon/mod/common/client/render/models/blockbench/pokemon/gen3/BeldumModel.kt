@@ -8,22 +8,24 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
+import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class BeldumModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("beldum")
 
     override var portraitScale = 2.3F
-    override var portraitTranslation = Vec3d(-0.3, -1.2, 0.0)
+    override var portraitTranslation = Vec3(-0.3, -1.2, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.5, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.5, 0.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose
@@ -31,6 +33,10 @@ class BeldumModel (root: ModelPart) : PokemonPosableModel(root) {
     lateinit var fly: Pose
     lateinit var sleep: Pose
     lateinit var battleidle: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
+
+    val shoulderOffset = 0.5
 
     override val cryAnimation = CryProvider { bedrockStateful("beldum", "cry") }
 
@@ -86,6 +92,28 @@ class BeldumModel (root: ModelPart) : PokemonPosableModel(root) {
             animations = arrayOf(
                 bedrock("beldum", "battle_idle")
             )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                quirks = arrayOf(blink),
+                animations = arrayOf(
+                        bedrock("beldum", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                quirks = arrayOf(blink),
+                animations = arrayOf(
+                        bedrock("beldum", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset)
+                )
         )
     }
 

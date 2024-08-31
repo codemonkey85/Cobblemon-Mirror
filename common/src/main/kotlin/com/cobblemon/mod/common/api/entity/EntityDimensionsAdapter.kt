@@ -16,7 +16,7 @@ import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import java.lang.reflect.Type
-import net.minecraft.entity.EntityDimensions
+import net.minecraft.world.entity.EntityDimensions
 
 /**
  * An adapter for [EntityDimensions]. This isn't technically needed on newer versions of Gson because
@@ -30,7 +30,7 @@ object EntityDimensionsAdapter : JsonSerializer<EntityDimensions>, JsonDeseriali
     const val HEIGHT = "height"
 
     val templates = mutableMapOf(
-        "player" to { EntityDimensions.changing(0.6F, 1.8F) }
+        "player" to { EntityDimensions.scalable(0.6F, 1.8F) }
     )
 
     override fun serialize(dimensions: EntityDimensions, type: Type, ctx: JsonSerializationContext): JsonElement {
@@ -45,6 +45,6 @@ object EntityDimensionsAdapter : JsonSerializer<EntityDimensions>, JsonDeseriali
             return templates[json.asString]?.invoke() ?: throw IllegalStateException("Dimensions provided by template name $json but no such template is set.")
         }
         json as JsonObject
-        return EntityDimensions.changing(json.get(WIDTH).asFloat, json.get(HEIGHT).asFloat)
+        return EntityDimensions.scalable(json.get(WIDTH).asFloat, json.get(HEIGHT).asFloat)
     }
 }

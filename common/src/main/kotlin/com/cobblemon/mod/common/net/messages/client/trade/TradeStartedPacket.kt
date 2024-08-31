@@ -16,10 +16,10 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.*
 import java.util.UUID
-import net.minecraft.item.ItemStack
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.text.MutableText
-import net.minecraft.util.Identifier
+import net.minecraft.world.item.ItemStack
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
 
 /**
  * A packet that initializes a trade with a player. Information about the other party is included.
@@ -31,12 +31,12 @@ import net.minecraft.util.Identifier
  */
 class TradeStartedPacket(
     val traderId: UUID,
-    val traderName: MutableText,
+    val traderName: MutableComponent,
     val traderParty: List<TradeablePokemon?>
 ) : NetworkPacket<TradeStartedPacket> {
     class TradeablePokemon(
         val pokemonId: UUID,
-        val species: Identifier,
+        val species: ResourceLocation,
         val aspects: Set<String>,
         val level: Int,
         val gender: Gender,
@@ -44,8 +44,8 @@ class TradeStartedPacket(
         val tradeable: Boolean
     ) {
         companion object {
-            fun decode(buffer: RegistryByteBuf) = TradeablePokemon(
-                buffer.readUuid(),
+            fun decode(buffer: RegistryFriendlyByteBuf) = TradeablePokemon(
+                buffer.readUUID(),
                 buffer.readIdentifier(),
                 buffer.readList { it.readString() }.toSet(),
                 buffer.readSizedInt(IntSize.U_SHORT),
@@ -65,8 +65,8 @@ class TradeStartedPacket(
             pokemon.tradeable
         )
 
-        fun encode(buffer: RegistryByteBuf) {
-            buffer.writeUuid(pokemonId)
+        fun encode(buffer: RegistryFriendlyByteBuf) {
+            buffer.writeUUID(pokemonId)
             buffer.writeIdentifier(species)
             buffer.writeCollection(aspects) { _, v -> buffer.writeString(v) }
             buffer.writeSizedInt(IntSize.U_SHORT, level)
@@ -83,16 +83,16 @@ class TradeStartedPacket(
 
     companion object {
         val ID = cobblemonResource("trade_started")
-        fun decode(buffer: RegistryByteBuf) = TradeStartedPacket(
-            buffer.readUuid(),
+        fun decode(buffer: RegistryFriendlyByteBuf) = TradeStartedPacket(
+            buffer.readUUID(),
             buffer.readText().copy(),
             buffer.readList { buffer.readNullable { TradeablePokemon.decode(buffer) } }
         )
     }
 
     override val id = ID
-    override fun encode(buffer: RegistryByteBuf) {
-        buffer.writeUuid(traderId)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(traderId)
         buffer.writeText(traderName)
         buffer.writeCollection(traderParty) { _, v -> buffer.writeNullable(v) { _, v2 -> v2.encode(buffer) } }
     }

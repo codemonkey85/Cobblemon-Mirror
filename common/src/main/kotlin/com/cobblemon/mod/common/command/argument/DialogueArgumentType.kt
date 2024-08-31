@@ -18,11 +18,11 @@ import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
 import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
+import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.resources.ResourceLocation
 import java.util.concurrent.CompletableFuture
-import net.minecraft.command.CommandSource
-import net.minecraft.util.Identifier
 
-class DialogueArgumentType : ArgumentType<Identifier> {
+class DialogueArgumentType : ArgumentType<ResourceLocation> {
 
     companion object {
         val EXAMPLES: List<String> = listOf("cobblemon:example")
@@ -30,12 +30,12 @@ class DialogueArgumentType : ArgumentType<Identifier> {
 
         fun dialogue() = DialogueArgumentType()
 
-        fun <S> getDialogue(context: CommandContext<S>, name: String): Identifier {
-            return context.getArgument(name, Identifier::class.java)
+        fun <S> getDialogue(context: CommandContext<S>, name: String): ResourceLocation {
+            return context.getArgument(name, ResourceLocation::class.java)
         }
     }
 
-    override fun parse(reader: StringReader): Identifier {
+    override fun parse(reader: StringReader): ResourceLocation {
         try {
             return reader.asIdentifierDefaultingNamespace()
         } catch (e: Exception) {
@@ -47,7 +47,7 @@ class DialogueArgumentType : ArgumentType<Identifier> {
         context: CommandContext<S>,
         builder: SuggestionsBuilder
     ): CompletableFuture<Suggestions> {
-        return CommandSource.suggestMatching(Dialogues.dialogues.keys.map { if (it.namespace == Cobblemon.MODID) it.path else it.toString() }, builder)
+        return SharedSuggestionProvider.suggest(Dialogues.dialogues.keys.map { if (it.namespace == Cobblemon.MODID) it.path else it.toString() }, builder)
     }
 
     override fun getExamples() = EXAMPLES

@@ -8,27 +8,33 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen9
 
+import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class TatsugiriModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("tatsugiri")
     override val head = getPart("head")
 
     override var portraitScale = 5.0F
-    override var portraitTranslation = Vec3d(0.0, -4.5, 0.0)
+    override var portraitTranslation = Vec3(0.0, -4.5, 0.0)
 
     override var profileScale = 1.4F
-    override var profileTranslation = Vec3d(0.0, -0.3, 0.0)
+    override var profileTranslation = Vec3(0.0, -0.3, 0.0)
 
     lateinit var swimming: Pose
     lateinit var standing: Pose
     lateinit var walk: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
+
+    val shoulderOffset = 2.5
 
     override val cryAnimation = CryProvider { bedrockStateful("tatsugiri", "cry") }
 
@@ -57,6 +63,28 @@ class TatsugiriModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
             animations = arrayOf(
                 bedrock("tatsugiri", "water_idle")
             )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                animations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("tatsugiri", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                animations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("tatsugiri", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset)
+                )
         )
     }
 }

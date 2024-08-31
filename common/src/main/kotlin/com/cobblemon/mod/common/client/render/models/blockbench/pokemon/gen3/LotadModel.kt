@@ -15,9 +15,9 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.util.isTouchingWater
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class LotadModel (root: ModelPart) : PokemonPosableModel(root), QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("lotad")
@@ -28,10 +28,10 @@ class LotadModel (root: ModelPart) : PokemonPosableModel(root), QuadrupedFrame {
     override val hindRightLeg = getPart("leg_right2")
 
     override var portraitScale = 2.5F
-    override var portraitTranslation = Vec3d(-0.15, -2.0, 0.0)
+    override var portraitTranslation = Vec3(-0.15, -2.0, 0.0)
 
     override var profileScale = 1.0F
-    override var profileTranslation = Vec3d(0.0, 0.25, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.25, 0.0)
 
     lateinit var standing: Pose
     lateinit var waterstanding: Pose
@@ -50,7 +50,7 @@ class LotadModel (root: ModelPart) : PokemonPosableModel(root), QuadrupedFrame {
             poseName = "standing",
             poseTypes = PoseType.UI_POSES + PoseType.STAND,
             quirks = arrayOf(blink),
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             animations = arrayOf(
                 bedrock("lotad", "ground_idle")
             )
@@ -60,7 +60,7 @@ class LotadModel (root: ModelPart) : PokemonPosableModel(root), QuadrupedFrame {
             poseName = "waterstanding",
             poseType = PoseType.STAND,
             quirks = arrayOf(blink),
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             animations = arrayOf(
                 bedrock("lotad", "water_idle")
             ),
@@ -73,7 +73,7 @@ class LotadModel (root: ModelPart) : PokemonPosableModel(root), QuadrupedFrame {
             poseName = "walk",
             poseType = PoseType.WALK,
             quirks = arrayOf(blink),
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             animations = arrayOf(
                 bedrock("lotad", "ground_walk"),
             )
@@ -83,7 +83,7 @@ class LotadModel (root: ModelPart) : PokemonPosableModel(root), QuadrupedFrame {
             poseName = "waterwalk",
             poseType = PoseType.WALK,
             quirks = arrayOf(blink),
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             animations = arrayOf(
                 bedrock("lotad", "water_swim")
             ),

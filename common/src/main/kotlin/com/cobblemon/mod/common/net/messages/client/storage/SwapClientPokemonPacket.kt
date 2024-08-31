@@ -12,9 +12,9 @@ import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.api.storage.PokemonStore
 import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readUuid
-import com.cobblemon.mod.common.util.writeUuid
-import net.minecraft.network.RegistryByteBuf
+import com.cobblemon.mod.common.util.readUUID
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
 /**
@@ -31,15 +31,15 @@ class SwapClientPokemonPacket internal constructor(val storeIsParty: Boolean, va
 
     constructor(store: PokemonStore<*>, pokemonID1: UUID, pokemonID2: UUID): this(store is PartyStore, store.uuid, pokemonID1, pokemonID2)
 
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(storeIsParty)
-        buffer.writeUuid(storeID)
-        buffer.writeUuid(pokemonID1)
-        buffer.writeUuid(pokemonID2)
+        buffer.writeUUID(storeID)
+        buffer.writeUUID(pokemonID1)
+        buffer.writeUUID(pokemonID2)
     }
 
     companion object {
         val ID = cobblemonResource("swap_client_pokemon")
-        fun decode(buffer: RegistryByteBuf) = SwapClientPokemonPacket(buffer.readBoolean(), buffer.readUuid(), buffer.readUuid(), buffer.readUuid())
+        fun decode(buffer: RegistryFriendlyByteBuf) = SwapClientPokemonPacket(buffer.readBoolean(), buffer.readUUID(), buffer.readUUID(), buffer.readUUID())
     }
 }

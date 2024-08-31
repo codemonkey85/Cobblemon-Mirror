@@ -15,8 +15,8 @@ import com.cobblemon.mod.common.api.spawning.influence.SpawningInfluence
 import com.cobblemon.mod.common.api.spawning.selection.FlatContextWeightedSelector
 import com.cobblemon.mod.common.api.spawning.selection.SpawningSelector
 import java.util.concurrent.CompletableFuture
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.BlockPos
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.core.BlockPos
 
 /**
  * A type of spawner that occurs at a single point and provides its own means of generating a
@@ -30,7 +30,7 @@ abstract class TriggerSpawner<T : SpawnCause>(override val name: String, var spa
     private var selector: SpawningSelector = FlatContextWeightedSelector()
     override val influences = mutableListOf<SpawningInfluence>()
 
-    open fun run(cause: T, world: ServerWorld, pos: BlockPos): CompletableFuture<*>? {
+    open fun run(cause: T, world: ServerLevel, pos: BlockPos): CompletableFuture<*>? {
         val context = parseContext(cause, world, pos) ?: return null
         selector.select(this, listOf(context))?.let { (_, spawn) ->
             val action = spawn.doSpawn(context)
@@ -41,7 +41,7 @@ abstract class TriggerSpawner<T : SpawnCause>(override val name: String, var spa
     }
 
     /** Parses a context, if possible, from the given cause and position. */
-    abstract fun parseContext(cause: T, world: ServerWorld, pos: BlockPos): SpawningContext?
+    abstract fun parseContext(cause: T, world: ServerLevel, pos: BlockPos): SpawningContext?
 
     override fun canSpawn() = true
     override fun getSpawningSelector() = selector

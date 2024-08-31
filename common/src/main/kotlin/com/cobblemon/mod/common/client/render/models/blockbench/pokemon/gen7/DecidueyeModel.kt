@@ -24,8 +24,8 @@ import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class DecidueyeModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("decidueye")
@@ -41,10 +41,10 @@ class DecidueyeModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
 
     val arrow = getPart("arrow")
 
-    override var portraitTranslation = Vec3d(-0.28, 2.5300000000000047, 0.0)
+    override var portraitTranslation = Vec3(-0.28, 2.5300000000000047, 0.0)
     override var portraitScale = 1.5200002F
 
-    override var profileTranslation = Vec3d(0.0, 1.0299999999999998, 0.0)
+    override var profileTranslation = Vec3(0.0, 1.0299999999999998, 0.0)
     override var profileScale = 0.46999997F
 
     lateinit var standing: Pose

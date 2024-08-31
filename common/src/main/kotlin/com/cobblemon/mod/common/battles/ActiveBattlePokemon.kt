@@ -10,12 +10,12 @@ package com.cobblemon.mod.common.battles
 
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.Vec3d
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.phys.Vec3
 class ActiveBattlePokemon(val actor: BattleActor, var battlePokemon: BattlePokemon? = null): Targetable {
     val battle = actor.battle
     fun getSide() = actor.getSide()
-    var position: Pair<ServerWorld, Vec3d>? = null
+    var position: Pair<ServerLevel, Vec3>? = null
 
     var illusion: BattlePokemon? = null
 

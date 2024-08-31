@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.client.keybind
 
-import net.minecraft.client.util.InputUtil
+import com.mojang.blaze3d.platform.InputConstants
 
 
 /**
@@ -20,7 +20,7 @@ import net.minecraft.client.util.InputUtil
  */
 abstract class CobblemonCustomKeyBinding(
     name: String,
-    type: InputUtil.Type = InputUtil.Type.KEYSYM,
+    type: InputConstants.Type = InputConstants.Type.KEYSYM,
     key: Int,
     category: String
 ) : CobblemonKeyBinding(name, type, key, category) {

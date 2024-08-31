@@ -14,17 +14,17 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class DracozoltModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("dracozolt")
     override val head = getPart("head_ai")
 
     override var portraitScale = 0.85F
-    override var portraitTranslation = Vec3d(-0.55, 1.45, 0.0)
+    override var portraitTranslation = Vec3(-0.55, 1.45, 0.0)
 
-    override var profileTranslation = Vec3d(0.08, 1.12, 0.0)
+    override var profileTranslation = Vec3(0.08, 1.12, 0.0)
     override var profileScale = 0.45F
 
     lateinit var sleep: CobblemonPose

@@ -19,11 +19,11 @@ import com.cobblemon.mod.common.net.messages.client.storage.pc.ClosePCPacket
 import com.cobblemon.mod.common.net.messages.server.pokemon.update.SetNicknamePacket
 import com.cobblemon.mod.common.util.party
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.network.chat.Component
 
 object SetNicknameHandler : ServerNetworkPacketHandler<SetNicknamePacket> {
-    override fun handle(packet: SetNicknamePacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: SetNicknamePacket, server: MinecraftServer, player: ServerPlayer) {
         val pokemonStore: PokemonStore<*> = if (packet.isParty) {
             player.party()
         } else {
@@ -36,7 +36,7 @@ object SetNicknameHandler : ServerNetworkPacketHandler<SetNicknamePacket> {
             event = PokemonNicknamedEvent(
                 player = player,
                 pokemon = pokemon,
-                nickname = packet.nickname?.let { Text.literal(it) }
+                nickname = packet.nickname?.let { Component.literal(it) }
             ),
             ifSucceeded = {
                 pokemon.nickname = it.nickname

@@ -13,18 +13,18 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class DusknoirModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("dusknoir")
     override val head = getPart("eye")
 
     override var portraitScale = 1.65F
-    override var portraitTranslation = Vec3d(-0.9, 2.65, 0.0)
+    override var portraitTranslation = Vec3(-0.9, 2.65, 0.0)
 
     override var profileScale = 0.5F
-    override var profileTranslation = Vec3d(-0.2, 1.25, 0.0)
+    override var profileTranslation = Vec3(-0.2, 1.25, 0.0)
 
 //    lateinit var hover: CobblemonPose
 //    lateinit var fly: CobblemonPose
@@ -67,7 +67,7 @@ class DusknoirModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
 //            poseTypes = PoseType.UI_POSES + PoseType.HOVER + PoseType.FLOAT,
 //            condition = { !it.isBattling },
 //            quirks = arrayOf(blink),
-//            idleAnimations = arrayOf(
+//            animations = arrayOf(
 //                bedrock("dusknoir", "air_idle")
 //            )
 //        )
@@ -77,7 +77,7 @@ class DusknoirModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
 //            poseTypes = setOf(PoseType.FLY, PoseType.SWIM, PoseType.WALK),
 //            condition = { !it.isBattling },
 //            quirks = arrayOf(blink),
-//            idleAnimations = arrayOf(
+//            animations = arrayOf(
 //                bedrock("dusknoir", "air_fly")
 //            )
 //        )

@@ -8,27 +8,27 @@
 
 package com.cobblemon.mod.common.entity.ai
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.brain.MemoryModuleType
-import net.minecraft.entity.ai.brain.task.SingleTickTask
-import net.minecraft.entity.ai.brain.task.TaskRunnable
-import net.minecraft.entity.ai.brain.task.TaskTriggerer
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.behavior.OneShot
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
+import net.minecraft.world.entity.ai.behavior.declarative.Trigger
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
 
 object AttackAngryAtTask {
-    fun create(): SingleTickTask<LivingEntity>  = TaskTriggerer.task {
+    fun create(): OneShot<LivingEntity>  = BehaviorBuilder.create {
         it.group(
-            it.queryMemoryValue(MemoryModuleType.ANGRY_AT),
-            it.queryMemoryAbsent(MemoryModuleType.ATTACK_TARGET)
+            it.present(MemoryModuleType.ANGRY_AT),
+            it.registered(MemoryModuleType.ATTACK_TARGET)
         ).apply(it) { angryAt, attackTarget ->
-            TaskRunnable { world, entity, _ ->
-                val angryAt = it.getValue(angryAt)
+            Trigger { world, entity, _ ->
+                val angryAt = it.get(angryAt)
                 val livingEntity = world.getEntity(angryAt) as? LivingEntity
                 if (livingEntity != null) {
-                    entity.brain.remember(MemoryModuleType.ATTACK_TARGET, livingEntity)
+                    entity.brain.setMemory(MemoryModuleType.ATTACK_TARGET, livingEntity)
                 } else {
-                    entity.brain.forget(MemoryModuleType.ANGRY_AT)
+                    entity.brain.eraseMemory(MemoryModuleType.ANGRY_AT)
                 }
-                return@TaskRunnable true
+                return@Trigger true
             }
         }
     }

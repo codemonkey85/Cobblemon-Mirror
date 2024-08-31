@@ -17,8 +17,8 @@ import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.util.DataKeys
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.registry.RegistryWrapper
+import net.minecraft.core.HolderLookup
+import net.minecraft.nbt.CompoundTag
 import java.util.concurrent.CompletableFuture
 import kotlin.reflect.KClass
 
@@ -46,10 +46,10 @@ interface EntityEffect {
     fun end(entity: PokemonEntity): CompletableFuture<PokemonEntity>?
 
     /** Saves this effect to NBT. */
-    fun saveToNbt(registryLookup: RegistryWrapper.WrapperLookup): NbtCompound
+    fun saveToNbt(registryLookup: HolderLookup.Provider): CompoundTag
 
     /** Loads this effect from NBT. */
-    fun loadFromNBT(nbt: NbtCompound, registryLookup: RegistryWrapper.WrapperLookup)
+    fun loadFromNBT(nbt: CompoundTag, registryLookup: HolderLookup.Provider)
 
     companion object {
 
@@ -68,7 +68,7 @@ interface EntityEffect {
 
         fun createDefault(id: String): EntityEffect? = defaults[id]?.invoke()
 
-        fun loadFromNbt(nbt: NbtCompound, registryLookup: RegistryWrapper.WrapperLookup): EntityEffect? {
+        fun loadFromNbt(nbt: CompoundTag, registryLookup: HolderLookup.Provider): EntityEffect? {
             if (nbt.contains(DataKeys.ENTITY_EFFECT_ID)) {
                 val id = nbt.getString(DataKeys.ENTITY_EFFECT_ID)
                 return createDefault(id)?.also { it.loadFromNBT(nbt, registryLookup) }

@@ -17,18 +17,18 @@ import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.isBattling
 import com.cobblemon.mod.common.util.isDusk
-import com.cobblemon.mod.common.util.isTouchingWaterOrRain
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isInWaterOrRain
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class KrabbyModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("krabby")
 
     override var portraitScale = 2.5F
-    override var portraitTranslation = Vec3d(-0.15, -1.8, 0.0)
+    override var portraitTranslation = Vec3(-0.15, -1.8, 0.0)
 
     override var profileScale = 1.0F
-    override var profileTranslation = Vec3d(0.0, 0.2, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.2, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose
@@ -57,7 +57,7 @@ class KrabbyModel(root: ModelPart) : PokemonPosableModel(root) {
         standingBubbles = registerPose(
             poseName = "standing_bubbles",
             poseTypes = STATIONARY_POSES,
-            condition = { !it.isBattling && it.getEntity()?.isDusk() == true && !it.isTouchingWaterOrRain },
+            condition = { !it.isBattling && it.getEntity()?.isDusk() == true && !it.isInWaterOrRain },
             quirks = arrayOf(blink, snipLeft, snipRight, bubble),
             animations = arrayOf(
                 bedrock("krabby", "ground_idle")
@@ -67,7 +67,7 @@ class KrabbyModel(root: ModelPart) : PokemonPosableModel(root) {
         standingRain = registerPose(
             poseName = "standing_rain",
             poseTypes = STATIONARY_POSES,
-            condition = { !it.isBattling && it.getEntity()?.isDusk() == true && it.isTouchingWaterOrRain},
+            condition = { !it.isBattling && it.getEntity()?.isDusk() == true && it.isInWaterOrRain},
             quirks = arrayOf(blink, snipLeft, snipRight),
             animations = arrayOf(
                 bedrock("krabby", "ground_idle")

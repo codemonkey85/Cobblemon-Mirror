@@ -13,8 +13,7 @@ import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatures
 import com.cobblemon.mod.common.api.pokemon.feature.SynchronizedSpeciesFeatureProvider
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Base class for a registry sync packet that synchronizes [SynchronizedSpeciesFeatureProvider]s.
@@ -25,10 +24,12 @@ import net.minecraft.network.PacketByteBuf
 abstract class SpeciesFeatureSyncPacket<T : SpeciesFeatureSyncPacket<T>>(
     speciesFeatureProviders: Map<String, SpeciesFeatureProvider<*>>
 ) : DataRegistrySyncPacket<Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>>, T>(
-    speciesFeatureProviders.entries.filterIsInstance<Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>>>().filter { it.value.visible }
+    speciesFeatureProviders.entries
+        .filter { (_, v) -> v is SynchronizedSpeciesFeatureProvider<*> && v.visible}
+        .filterIsInstance<Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>>>()
 ) {
     override fun encodeEntry(
-        buffer: RegistryByteBuf,
+        buffer: RegistryFriendlyByteBuf,
         entry: Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>>
     ) {
 
@@ -45,7 +46,7 @@ abstract class SpeciesFeatureSyncPacket<T : SpeciesFeatureSyncPacket<T>>(
         value.saveToBuffer(buffer, toClient = true)
     }
 
-    override fun decodeEntry(buffer: RegistryByteBuf): Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>>? {
+    override fun decodeEntry(buffer: RegistryFriendlyByteBuf): Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>>? {
         if (!buffer.readBoolean()) {
             return null
         }

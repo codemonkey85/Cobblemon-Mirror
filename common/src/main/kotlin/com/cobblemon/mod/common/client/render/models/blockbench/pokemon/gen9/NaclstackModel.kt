@@ -16,8 +16,8 @@ import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class NaclstackModel(root: ModelPart) : PokemonPosableModel(root), QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("naclstack")
@@ -27,10 +27,10 @@ class NaclstackModel(root: ModelPart) : PokemonPosableModel(root), QuadrupedFram
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 4.0F
-    override var portraitTranslation = Vec3d(-0.61, -3.0, 0.0)
+    override var portraitTranslation = Vec3(-0.61, -3.0, 0.0)
 
     override var profileScale = 1.05F
-    override var profileTranslation = Vec3d(0.1, 0.1, 0.0)
+    override var profileTranslation = Vec3(0.1, 0.1, 0.0)
 
     lateinit var sleep: Pose
     lateinit var standing: Pose

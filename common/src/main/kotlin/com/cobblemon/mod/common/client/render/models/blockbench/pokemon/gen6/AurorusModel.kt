@@ -14,18 +14,18 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonP
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.isBattling
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class AurorusModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("aurorus")
     override val head = getPart("neck1")
 
     override var portraitScale = 1.29F
-    override var portraitTranslation = Vec3d(-1.11, 4.13, 0.0)
+    override var portraitTranslation = Vec3(-1.11, 4.13, 0.0)
 
     override var profileScale = 0.27F
-    override var profileTranslation = Vec3d(0.0, 1.41, -6.1)
+    override var profileTranslation = Vec3(0.0, 1.41, -6.1)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

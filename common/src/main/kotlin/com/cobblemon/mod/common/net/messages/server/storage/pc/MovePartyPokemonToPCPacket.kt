@@ -16,12 +16,12 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readNullable
 import com.cobblemon.mod.common.util.readPCPosition
 import com.cobblemon.mod.common.util.readPartyPosition
-import com.cobblemon.mod.common.util.readUuid
+import com.cobblemon.mod.common.util.readUUID
 import com.cobblemon.mod.common.util.writeNullable
 import com.cobblemon.mod.common.util.writePCPosition
 import com.cobblemon.mod.common.util.writePartyPosition
-import com.cobblemon.mod.common.util.writeUuid
-import net.minecraft.network.RegistryByteBuf
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
 /**
@@ -35,13 +35,13 @@ import java.util.UUID
  */
 class MovePartyPokemonToPCPacket(val pokemonID: UUID, val partyPosition: PartyPosition, val pcPosition: PCPosition?) : NetworkPacket<MovePartyPokemonToPCPacket> {
     override val id = ID
-    override fun encode(buffer: RegistryByteBuf) {
-        buffer.writeUuid(pokemonID)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(pokemonID)
         buffer.writePartyPosition(partyPosition)
         buffer.writeNullable(pcPosition) { pb, value -> pb.writePCPosition(value) }
     }
     companion object {
         val ID = cobblemonResource("move_party_pokemon_to_pc")
-        fun decode(buffer: RegistryByteBuf) = MovePartyPokemonToPCPacket(buffer.readUuid(), buffer.readPartyPosition(), buffer.readNullable { it.readPCPosition() })
+        fun decode(buffer: RegistryFriendlyByteBuf) = MovePartyPokemonToPCPacket(buffer.readUUID(), buffer.readPartyPosition(), buffer.readNullable { it.readPCPosition() })
     }
 }

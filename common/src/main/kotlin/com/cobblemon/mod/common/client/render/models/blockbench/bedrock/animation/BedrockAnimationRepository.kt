@@ -14,8 +14,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.JsonPose
 import com.cobblemon.mod.common.util.fromJson
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
-import net.minecraft.resource.ResourceManager
-
+import net.minecraft.server.packs.resources.ResourceManager
 
 /**
  * Handles the loading and retrieval of bedrock animations. These animations are agnostic of the type of
@@ -41,10 +40,10 @@ object BedrockAnimationRepository {
         var animationCount = 0
         animationGroups.clear()
         for (directory in directories) {
-            resourceManager.findResources(directory) { it.path.endsWith(".animation.json") }
+            resourceManager.listResources(directory) { it.path.endsWith(".animation.json") }
                 .forEach { (identifier, resource) ->
                     try {
-                        val animationGroup = gson.fromJson<BedrockAnimationGroup>(resource.inputStream.reader())
+                        val animationGroup = gson.fromJson<BedrockAnimationGroup>(resource.open().reader())
                         animationGroup.animations.entries.forEach { (name, animation) -> animation.name = name }
                         val animationGroupName = identifier.path.substringAfterLast("/").replace(".animation.json", "")
                         animationGroups[animationGroupName] = animationGroup

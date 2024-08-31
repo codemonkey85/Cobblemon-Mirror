@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:surprise_mulch"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.obtain_mutated_berry"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.obtain_mutated_berry.description"
+    },
+	"frame": "goal"
+  },
+  "parent": "cobblemon:obtain_berry",
+  "criteria": {
+    "check_inv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#cobblemon:mutated_berries"
+          }
+        ]
+      }
+    }
+  }
+}

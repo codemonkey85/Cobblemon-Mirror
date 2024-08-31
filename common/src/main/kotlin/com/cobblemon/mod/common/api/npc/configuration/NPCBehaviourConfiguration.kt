@@ -8,25 +8,25 @@
 
 package com.cobblemon.mod.common.api.npc.configuration
 
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class NPCBehaviourConfiguration {
     var canBeHurt = true
 
-    fun encode(buffer: PacketByteBuf) {
+    fun encode(buffer: RegistryFriendlyByteBuf) {
 
     }
 
-    fun decode(buffer: PacketByteBuf) {
+    fun decode(buffer: RegistryFriendlyByteBuf) {
 
     }
 
-    fun saveToNBT(nbt: NbtCompound) {
+    fun saveToNBT(nbt: CompoundTag) {
 
     }
 
-    fun loadFromNBT(nbt: NbtCompound) {
+    fun loadFromNBT(nbt: CompoundTag) {
 
     }
 }

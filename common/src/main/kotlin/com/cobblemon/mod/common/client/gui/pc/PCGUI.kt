@@ -27,19 +27,19 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.client.util.InputUtil
-import net.minecraft.sound.SoundEvent
-import net.minecraft.text.Text
+import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.network.chat.Component
+import net.minecraft.sounds.SoundEvent
 
 class PCGUI(
     val pc: ClientPC,
     val party: ClientParty,
     val configuration: PCGUIConfiguration
-) : Screen(Text.translatable("cobblemon.ui.pc.title")) {
+) : Screen(Component.translatable("cobblemon.ui.pc.title")) {
 
     companion object {
         const val BASE_WIDTH = 349
@@ -71,18 +71,19 @@ class PCGUI(
     var selectPointerOffsetY = 0
     var selectPointerOffsetIncrement = false
 
-    override fun applyBlur(delta: Float) { }
-    override fun renderDarkening(context: DrawContext?) {}
+    override fun renderBlurredBackground(delta: Float) { }
+
+    override fun renderMenuBackground(context: GuiGraphics) {}
 
     override fun init() {
         val x = (width - BASE_WIDTH) / 2
         val y = (height - BASE_HEIGHT) / 2
 
         // Add Exit Button
-        this.addDrawableChild(ExitButton(pX = x + 320, pY = y + 186) { configuration.exitFunction(this) })
+        this.addRenderableWidget(ExitButton(pX = x + 320, pY = y + 186) { configuration.exitFunction(this) })
 
         // Add Forward Button
-        this.addDrawableChild(
+        this.addRenderableWidget(
             NavigationButton(
                 pX = x + 221,
                 pY = y + 17,
@@ -91,7 +92,7 @@ class PCGUI(
         )
 
         // Add Backwards Button
-        this.addDrawableChild(
+        this.addRenderableWidget(
             NavigationButton(
                 pX = x + 119,
                 pY = y + 17,
@@ -109,12 +110,12 @@ class PCGUI(
         )
 
         this.setPreviewPokemon(null)
-        this.addDrawableChild(storageWidget)
+        this.addRenderableWidget(storageWidget)
         super.init()
     }
 
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        val matrices = context.matrices
+    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        val matrices = context.pose()
         renderBackground(context, mouseX, mouseY, delta)
 
         val x = (width - BASE_WIDTH) / 2
@@ -265,8 +266,8 @@ class PCGUI(
             val itemX = x + 3
             val itemY = y + 98
             if (!heldItem.isEmpty) {
-                context.drawItem(heldItem, itemX, itemY)
-                context.drawItemInSlot(MinecraftClient.getInstance().textRenderer, heldItem, itemX, itemY)
+                context.renderItem(heldItem, itemX, itemY)
+                context.renderItemDecorations(Minecraft.getInstance().font, heldItem, itemX, itemY)
             }
 
             drawScaledText(
@@ -366,7 +367,7 @@ class PCGUI(
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
-            text = Text.translatable("cobblemon.ui.pc.box.title", (this.storageWidget.box + 1).toString()).bold(),
+            text = Component.translatable("cobblemon.ui.pc.box.title", (this.storageWidget.box + 1).toString()).bold(),
             x = x + 172,
             y = y + 15,
             centered = true
@@ -410,8 +411,8 @@ class PCGUI(
             val itemY = y + 98
             val itemHovered =
                 mouseX.toFloat() in (itemX.toFloat()..(itemX.toFloat() + 16)) && mouseY.toFloat() in (itemY.toFloat()..(itemY.toFloat() + 16))
-            if (itemHovered) context.drawItemTooltip(
-                MinecraftClient.getInstance().textRenderer,
+            if (itemHovered) context.renderTooltip(
+                Minecraft.getInstance().font,
                 pokemon.heldItemNoCopy(),
                 mouseX,
                 mouseY
@@ -421,7 +422,7 @@ class PCGUI(
 
     fun closeNormally(unlink: Boolean = true) {
         playSound(CobblemonSounds.PC_OFF)
-        MinecraftClient.getInstance().setScreen(null)
+        Minecraft.getInstance().setScreen(null)
         if (unlink) {
             UnlinkPlayerFromPCPacket().sendToServer()
         }
@@ -450,17 +451,17 @@ class PCGUI(
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
         when (keyCode) {
-            InputUtil.GLFW_KEY_ESCAPE -> {
+            InputConstants.KEY_ESCAPE -> {
                 playSound(CobblemonSounds.PC_OFF)
                 UnlinkPlayerFromPCPacket().sendToServer()
             }
 
-            InputUtil.GLFW_KEY_RIGHT -> {
+            InputConstants.KEY_RIGHT -> {
                 playSound(CobblemonSounds.PC_CLICK)
                 this.storageWidget.box += 1
             }
 
-            InputUtil.GLFW_KEY_LEFT -> {
+            InputConstants.KEY_LEFT -> {
                 playSound(CobblemonSounds.PC_CLICK)
                 this.storageWidget.box -= 1
             }
@@ -471,7 +472,7 @@ class PCGUI(
     /**
      * Whether this Screen should pause the Game in SinglePlayer
      */
-    override fun shouldPause(): Boolean {
+    override fun isPauseScreen(): Boolean {
         return false
     }
 
@@ -485,7 +486,7 @@ class PCGUI(
     }
 
     fun playSound(soundEvent: SoundEvent) {
-        MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(soundEvent, 1.0F))
+        Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))
     }
 
     fun setPreviewPokemon(pokemon: Pokemon?) {

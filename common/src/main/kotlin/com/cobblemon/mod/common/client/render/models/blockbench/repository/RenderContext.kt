@@ -11,8 +11,8 @@ package com.cobblemon.mod.common.client.render.models.blockbench.repository
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.util.asResource
 import com.google.gson.reflect.TypeToken
-import net.minecraft.entity.Entity
-import net.minecraft.util.Identifier
+import net.minecraft.world.entity.Entity
+import net.minecraft.resources.ResourceLocation
 
 
 /**
@@ -88,7 +88,7 @@ class RenderContext {
      *
      * @since 1.4.0
      */
-    data class Key<T : Any>(val key: Identifier, val token: TypeToken<T>)
+    data class Key<T : Any>(val key: ResourceLocation, val token: TypeToken<T>)
 
     /**
      * Represents different rendering states or modes.
@@ -123,7 +123,7 @@ class RenderContext {
         /**
          * Key to access the identifier of the texture being rendered.
          */
-        val TEXTURE: Key<Identifier> = key("texture".asResource())
+        val TEXTURE: Key<ResourceLocation> = key("texture".asResource())
 
         /**
          * Key to access the base scaling factor of the current species.
@@ -133,7 +133,7 @@ class RenderContext {
         /**
          * Key to access the identifier of the current species.
          */
-        val SPECIES: Key<Identifier> = key("species".asResource())
+        val SPECIES: Key<ResourceLocation> = key("species".asResource())
 
         /**
          * Key to access the aspects of the current entity.
@@ -164,7 +164,7 @@ class RenderContext {
          *
          * @since 1.4.0
          */
-        fun <T : Any> key(id: Identifier, token: TypeToken<T>): Key<T> = Key(id, token)
+        fun <T : Any> key(id: ResourceLocation, token: TypeToken<T>): Key<T> = Key(id, token)
 
         /**
          * Creates a new Key instance with the provided identifier and class type.
@@ -175,7 +175,7 @@ class RenderContext {
          *
          * @since 1.4.0
          */
-        inline fun <reified T : Any> key(id: Identifier): Key<T> = key(id, TypeToken.get(T::class.java))
+        inline fun <reified T : Any> key(id: ResourceLocation): Key<T> = key(id, TypeToken.get(T::class.java))
     }
 }
 

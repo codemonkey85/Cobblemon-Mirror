@@ -9,76 +9,74 @@
 package com.cobblemon.mod.common.entity.boat
 
 import com.cobblemon.mod.common.CobblemonEntities
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.RideableInventory
-import net.minecraft.entity.mob.PiglinBrain
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.entity.vehicle.VehicleInventory
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.loot.LootTable
-import net.minecraft.registry.Registries
-import net.minecraft.registry.RegistryKey
-import net.minecraft.screen.GenericContainerScreenHandler
-import net.minecraft.screen.ScreenHandler
-import net.minecraft.util.Identifier
-import net.minecraft.util.collection.DefaultedList
-import net.minecraft.world.World
-import net.minecraft.world.event.GameEvent
+import net.minecraft.core.NonNullList
+import net.minecraft.resources.ResourceKey
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.HasCustomInventoryScreen
+import net.minecraft.world.entity.monster.piglin.PiglinAi
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.vehicle.ContainerEntity
+import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.ChestMenu
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.gameevent.GameEvent
+import net.minecraft.world.level.storage.loot.LootTable
 
 @Suppress("unused")
-class CobblemonChestBoatEntity(entityType: EntityType<CobblemonChestBoatEntity>, world: World) : CobblemonBoatEntity(entityType, world), RideableInventory, VehicleInventory {
+class CobblemonChestBoatEntity(entityType: EntityType<CobblemonChestBoatEntity>, world: Level) : CobblemonBoatEntity(entityType, world), HasCustomInventoryScreen, ContainerEntity {
 
-    constructor(world: World) : this(CobblemonEntities.CHEST_BOAT, world)
+    constructor(world: Level) : this(CobblemonEntities.CHEST_BOAT, world)
 
     // This exists cause super passes in vanilla boat entity type
-    constructor(world: World, x: Double, y: Double, z: Double) : this(CobblemonEntities.CHEST_BOAT, world) {
-        this.setPosition(x, y, z)
-        this.prevX = x
-        this.prevY = y
-        this.prevZ = z
+    constructor(world: Level, x: Double, y: Double, z: Double) : this(CobblemonEntities.CHEST_BOAT, world) {
+        this.setPos(x, y, z)
+        this.xo = x
+        this.yo = y
+        this.zo = z
     }
 
     private var inventory = this.emptyInventory()
-    private var lootTableId: RegistryKey<LootTable>? = null
+    private var lootTableId: ResourceKey<LootTable>? = null
     private var lootTableSeed = 0L
 
-    override fun openInventory(player: PlayerEntity) {
-        player.openHandledScreen(this)
-        if (!player.world.isClient) {
-            this.emitGameEvent(GameEvent.CONTAINER_OPEN, player)
-            PiglinBrain.onGuardedBlockInteracted(player, true)
+    override fun openCustomInventoryScreen(player: Player) {
+        player.openMenu(this)
+        if (!player.level().isClientSide) {
+            this.gameEvent(GameEvent.CONTAINER_OPEN, player)
+            PiglinAi.angerNearbyPiglins(player, true)
         }
     }
 
-    override fun clear() = this.clearInventory()
+    override fun clearContent() = this.clearItemStacks()
 
-    override fun size(): Int = INVENTORY_SLOTS
+    override fun getContainerSize(): Int = INVENTORY_SLOTS
 
-    override fun getStack(slot: Int): ItemStack = this.getInventoryStack(slot)
+    override fun getItem(slot: Int): ItemStack = this.getChestVehicleItem(slot)
 
-    override fun removeStack(slot: Int, amount: Int): ItemStack = this.removeInventoryStack(slot, amount)
+    override fun removeItem(slot: Int, amount: Int): ItemStack = this.removeChestVehicleItem(slot, amount)
 
-    override fun removeStack(slot: Int): ItemStack = this.removeInventoryStack(slot)
+    override fun removeItemNoUpdate(slot: Int): ItemStack = this.removeChestVehicleItemNoUpdate(slot)
 
-    override fun setStack(slot: Int, stack: ItemStack) = this.setInventoryStack(slot, stack)
+    override fun setItem(slot: Int, stack: ItemStack) = this.setChestVehicleItem(slot, stack)
 
-    override fun markDirty() {}
+    override fun setChanged() {}
 
-    override fun canPlayerUse(player: PlayerEntity): Boolean = this.canPlayerAccess(player)
+    override fun stillValid(player: Player): Boolean = this.isChestVehicleStillValid(player)
 
-    override fun createMenu(syncId: Int, playerInventory: PlayerInventory, player: PlayerEntity): ScreenHandler? {
+    override fun createMenu(syncId: Int, playerInventory: Inventory, player: Player): AbstractContainerMenu? {
         if (this.lootTableId != null && player.isSpectator) {
             return null
         }
-        this.generateInventoryLoot(playerInventory.player)
-        return GenericContainerScreenHandler.createGeneric9x3(syncId, playerInventory, this)
+        this.unpackChestVehicleLootTable(playerInventory.player)
+        return ChestMenu.threeRows(syncId, playerInventory, this)
     }
 
     override fun getLootTable() = lootTableId
 
-    override fun setLootTable(lootTable: RegistryKey<LootTable>?) {
+    override fun setLootTable(lootTable: ResourceKey<LootTable>?) {
         this.lootTableId = lootTable
     }
 
@@ -88,15 +86,15 @@ class CobblemonChestBoatEntity(entityType: EntityType<CobblemonChestBoatEntity>,
         this.lootTableSeed = lootTableSeed
     }
 
-    override fun getInventory(): DefaultedList<ItemStack> = this.inventory
+    override fun getItemStacks(): NonNullList<ItemStack> = this.inventory
 
-    override fun resetInventory() {
+    override fun clearItemStacks() {
         this.inventory = this.emptyInventory()
     }
 
-    override fun asItem(): Item = this.boatType.chestBoatItem
+    override fun getDropItem(): Item = this.boatType.chestBoatItem
 
-    private fun emptyInventory(): DefaultedList<ItemStack> = DefaultedList.ofSize(INVENTORY_SLOTS, ItemStack.EMPTY)
+    private fun emptyInventory(): NonNullList<ItemStack> = NonNullList.withSize(INVENTORY_SLOTS, ItemStack.EMPTY)
 
     companion object {
 

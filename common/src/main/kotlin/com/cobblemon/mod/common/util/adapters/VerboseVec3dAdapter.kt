@@ -9,24 +9,24 @@
 package com.cobblemon.mod.common.util.adapters
 
 import com.google.gson.*
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.phys.Vec3
 import java.lang.reflect.Type
 
-object VerboseVec3dAdapter : JsonDeserializer<Vec3d>, JsonSerializer<Vec3d> {
+object VerboseVec3dAdapter : JsonDeserializer<Vec3>, JsonSerializer<Vec3> {
 
     private const val X = "x"
     private const val Y = "y"
     private const val Z = "z"
 
-    override fun deserialize(jElement: JsonElement, type: Type, context: JsonDeserializationContext): Vec3d {
+    override fun deserialize(jElement: JsonElement, type: Type, context: JsonDeserializationContext): Vec3 {
         val json = jElement.asJsonObject
         val x = json.get(X).asDouble
         val y = json.get(Y).asDouble
         val z = json.get(Z).asDouble
-        return Vec3d(x, y, z)
+        return Vec3(x, y, z)
     }
 
-    override fun serialize(vec: Vec3d, type: Type, context: JsonSerializationContext) = JsonObject().apply {
+    override fun serialize(vec: Vec3, type: Type, context: JsonSerializationContext) = JsonObject().apply {
         addProperty(X, vec.x)
         addProperty(Y, vec.y)
         addProperty(Z, vec.z)

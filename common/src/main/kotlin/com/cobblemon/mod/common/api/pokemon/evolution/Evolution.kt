@@ -32,8 +32,7 @@ import com.cobblemon.mod.common.pokemon.evolution.variants.TradeEvolution
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.party
-import net.minecraft.item.ItemStack
-import net.minecraft.sound.SoundCategory
+import net.minecraft.world.item.ItemStack
 
 /**
  * Represents an evolution of a [Pokemon], this is the server side counterpart of [EvolutionDisplay].
@@ -114,9 +113,9 @@ interface Evolution : EvolutionLike {
         // If the player has at least one Pokeball in their inventory.
         var pokeballStack: ItemStack? = null
         if (!owner.isCreative) {
-            for (i in 0 until owner.inventory.size()) {
-                val stackI = owner.inventory.getStack(i)
-                if (stackI.isIn(CobblemonItemTags.POKE_BALLS)) {
+            for (i in 0 until owner.inventory.containerSize) {
+                val stackI = owner.inventory.getItem(i)
+                if (stackI.`is`(CobblemonItemTags.POKE_BALLS)) {
                     pokeballStack = stackI
                 }
             }
@@ -133,7 +132,7 @@ interface Evolution : EvolutionLike {
         pokemon.storeCoordinates.get()?.store?.add(shedPokemon)
         CobblemonCriteria.EVOLVE_POKEMON.trigger(owner, EvolvePokemonContext(pokemon.preEvolution!!.species.resourceIdentifier, shedPokemon.species.resourceIdentifier, playerData.get(owner).advancementData.totalEvolvedCount))
         // Consume one of the balls
-        pokeballStack?.decrement(1)
+        pokeballStack?.shrink(1)
 
         return true
     }
@@ -156,17 +155,17 @@ interface Evolution : EvolutionLike {
         if (pokemonEntity == null || !useEvolutionEffect) {
             evolutionMethod(pokemon)
         } else {
-            pokemonEntity.evolutionEntity = pokemon.getOwnerPlayer()?.let { GenericBedrockEntity(world = it.world) }
+            pokemonEntity.evolutionEntity = pokemon.getOwnerPlayer()?.let { GenericBedrockEntity(world = it.level()) }
             val evolutionEntity = pokemon.entity!!.evolutionEntity
             evolutionEntity?.apply {
                 category = cobblemonResource("evolution")
-                colliderHeight = pokemonEntity.height
-                colliderWidth = pokemonEntity.width
-                scale = pokemonEntity.scaleFactor
+                colliderHeight = pokemonEntity.bbHeight
+                colliderWidth = pokemonEntity.bbWidth
+                scale = pokemonEntity.ageScale
                 syncAge = true // Otherwise particle animation will be starting from zero even if you come along partway through
-                setPosition(pokemonEntity.x, pokemonEntity.y, pokemonEntity.z)
+                setPos(pokemonEntity.x, pokemonEntity.y, pokemonEntity.z)
             }
-            pokemon.getOwnerPlayer()?.world?.spawnEntity(evolutionEntity)
+            pokemon.getOwnerPlayer()?.level()?.addFreshEntity(evolutionEntity)
             afterOnServer(seconds = 9F) {
                 if (!pokemonEntity.isRemoved) {
                     evolutionMethod(pokemon)
@@ -192,7 +191,7 @@ interface Evolution : EvolutionLike {
             } else {
                 pokemon.benchedMoves.add(BenchedMove(move, 0))
             }
-            pokemon.getOwnerPlayer()?.sendMessage(lang("experience.learned_move", pokemon.getDisplayName(), move.displayName))
+            pokemon.getOwnerPlayer()?.sendSystemMessage(lang("experience.learned_move", pokemon.getDisplayName(), move.displayName))
         }
         // we want to instantly tick for example you might only evolve your Bulbasaur at level 34 so Venusaur should be immediately available
         pokemon.lockedEvolutions.filterIsInstance<PassiveEvolution>().forEach { evolution -> evolution.attemptEvolution(pokemon) }

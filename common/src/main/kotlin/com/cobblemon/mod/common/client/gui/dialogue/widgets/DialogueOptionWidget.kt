@@ -13,26 +13,26 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.gui.drawCenteredText
 import com.cobblemon.mod.common.client.gui.dialogue.DialogueScreen
 import com.cobblemon.mod.common.net.messages.server.dialogue.InputToDialoguePacket
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.MutableText
-import net.minecraft.util.Identifier
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
 
 class DialogueOptionWidget(
     val dialogueScreen: DialogueScreen,
-    val text: MutableText,
+    val text: MutableComponent,
     val value: String,
     val selectable: Boolean,
     x: Int,
     y: Int,
     width: Int,
     height: Int,
-    val texture: Identifier,
-    val overlayTexture: Identifier
+    val texture: ResourceLocation,
+    val overlayTexture: ResourceLocation
 ) : ParentWidget(x, y, width, height, text) {
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         blitk(
             texture = texture,
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             x = x,
             y = y,
             width = width,
@@ -43,7 +43,7 @@ class DialogueOptionWidget(
 
         blitk(
             texture = overlayTexture,
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             x = x,
             y = y,
             width = width,
@@ -64,7 +64,7 @@ class DialogueOptionWidget(
     }
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
-        if (!hovered) {
+        if (!isHovered) {
             return false
         }
         if (!selectable || dialogueScreen.waitingForServerUpdate) {

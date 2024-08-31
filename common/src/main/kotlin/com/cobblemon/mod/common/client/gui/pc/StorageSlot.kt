@@ -19,19 +19,19 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.sound.SoundManager
-import net.minecraft.text.Text
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Button
+import net.minecraft.client.sounds.SoundManager
+import net.minecraft.network.chat.Component
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
 open class StorageSlot(
     x: Int, y: Int,
     private val parent: StorageWidget,
-    onPress: PressAction
-) : ButtonWidget(x, y, SIZE, SIZE, Text.literal("StorageSlot"), onPress, DEFAULT_NARRATION_SUPPLIER) {
+    onPress: OnPress
+) : Button(x, y, SIZE, SIZE, Component.literal("StorageSlot"), onPress, DEFAULT_NARRATION) {
     val state = FloatingState()
 
     companion object {
@@ -48,15 +48,15 @@ open class StorageSlot(
     override fun playDownSound(soundManager: SoundManager) {
     }
 
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (shouldRender()) {
             renderSlot(context, x, y, delta)
         }
     }
 
-    fun renderSlot(context: DrawContext, posX: Int, posY: Int, partialTicks: Float) {
+    fun renderSlot(context: GuiGraphics, posX: Int, posY: Int, partialTicks: Float) {
         val pokemon = getPokemon() ?: return
-        val matrices = context.matrices
+        val matrices = context.pose()
         context.enableScissor(
             posX - 2,
             posY + 2,
@@ -65,7 +65,7 @@ open class StorageSlot(
         )
 
         // Render Pokémon
-        matrices.push()
+        matrices.pushPose()
         matrices.translate(posX + (SIZE / 2.0), posY + 1.0, 0.0)
         matrices.scale(2.5F, 2.5F, 1F)
         drawProfilePokemon(
@@ -76,12 +76,12 @@ open class StorageSlot(
             partialTicks = partialTicks,
             scale = 4.5F
         )
-        matrices.pop()
+        matrices.popPose()
 
         context.disableScissor()
 
         // Ensure elements are not hidden behind Pokémon render
-        matrices.push()
+        matrices.pushPose()
         matrices.translate(0.0, 0.0, 100.0)
         // Level
         drawScaledText(
@@ -116,10 +116,10 @@ open class StorageSlot(
                 matrixStack = matrices
             )
         }
-        matrices.pop()
+        matrices.popPose()
 
         // Ensure overlay elements are on top
-        matrices.push()
+        matrices.pushPose()
         matrices.translate(0.0, 0.0, 500.0)
 
         val config = parent.pcGui.configuration
@@ -149,7 +149,7 @@ open class StorageSlot(
             )
         }
 
-        if (isSelected) {
+        if (isHoveredOrFocused) {
             // If pasture UI and slot is not in pasture
             if (config is PasturePCGUIConfiguration
                 && pokemon.tetheringId == null
@@ -157,7 +157,7 @@ open class StorageSlot(
                 && config.permissions.canPasture
                 && config.canSelect(pokemon)
                 && config.pasturedPokemon.get().size < config.limit
-                && config.pasturedPokemon.get().count { it.playerId == MinecraftClient.getInstance().player!!.uuid } < config.permissions.maxPokemon
+                && config.pasturedPokemon.get().count { it.playerId == Minecraft.getInstance().player!!.uuid } < config.permissions.maxPokemon
             ) {
                 blitk(
                     matrixStack = matrices,
@@ -190,7 +190,7 @@ open class StorageSlot(
                 scale = PCGUI.SCALE
             )
         }
-        matrices.pop()
+        matrices.popPose()
     }
 
     open fun isStationary(): Boolean {
@@ -201,7 +201,7 @@ open class StorageSlot(
         return null
     }
 
-    override fun isSelected(): Boolean {
+    override fun isHoveredOrFocused(): Boolean {
         return getPokemon() == parent.pcGui.previewPokemon
     }
 

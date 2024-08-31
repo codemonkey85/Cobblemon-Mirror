@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.PokeBallFr
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
-import net.minecraft.client.model.ModelPart
+import net.minecraft.client.model.geom.ModelPart
 
 open class PokeBallModel(root: ModelPart) : PosableModel(root), PokeBallFrame {
     override val rootPart = root.registerChildWithAllChildren("poke_ball")

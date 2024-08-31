@@ -13,7 +13,6 @@ import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.battles.ShowdownInterpreter
 import com.cobblemon.mod.common.battles.dispatch.InterpreterInstruction
-import net.minecraft.text.Text
 
 /**
  * Format: |-item|POKEMON|ITEM|(from)EFFECT

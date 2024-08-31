@@ -15,12 +15,12 @@ import com.cobblemon.mod.common.util.permission
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.command.CommandRegistryAccess
-import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.command.argument.ItemStackArgumentType
-import net.minecraft.server.command.CommandManager.argument
-import net.minecraft.server.command.CommandManager.literal
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandBuildContext
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands.argument
+import net.minecraft.commands.Commands.literal
+import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.commands.arguments.item.ItemArgument
 
 object HeldItemCommand {
 
@@ -29,12 +29,12 @@ object HeldItemCommand {
     private const val SLOT = "slot"
     private const val ITEM = "item"
 
-    fun register(dispatcher: CommandDispatcher<ServerCommandSource>, commandRegistryAccess: CommandRegistryAccess) {
+    fun register(dispatcher: CommandDispatcher<CommandSourceStack>, commandRegistryAccess: CommandBuildContext) {
         dispatcher.register(literal(NAME)
             .permission(CobblemonPermissions.HELD_ITEM)
-            .then(argument(TARGET, EntityArgumentType.player())
+            .then(argument(TARGET, EntityArgument.player())
                 .then(argument(SLOT, PartySlotArgumentType.partySlot())
-                    .then(argument(ITEM, ItemStackArgumentType.itemStack(commandRegistryAccess))
+                    .then(argument(ITEM, ItemArgument.item(commandRegistryAccess))
                         .executes(this::execute)
                     )
                 )
@@ -42,13 +42,13 @@ object HeldItemCommand {
         )
     }
 
-    private fun execute(ctx: CommandContext<ServerCommandSource>): Int {
-        val player = EntityArgumentType.getPlayer(ctx, TARGET)
+    private fun execute(ctx: CommandContext<CommandSourceStack>): Int {
+        val player = EntityArgument.getPlayer(ctx, TARGET)
         val pokemon = PartySlotArgumentType.getPokemonOf(ctx, SLOT, player)
-        val stackArgument = ItemStackArgumentType.getItemStackArgument(ctx, ITEM)
-        val stack = stackArgument.createStack(1, false)
+        val stackArgument = ItemArgument.getItem(ctx, ITEM)
+        val stack = stackArgument.createItemStack(1, false)
         pokemon.swapHeldItem(stack)
-        ctx.source.sendFeedback({ commandLang(NAME, player.name, pokemon.species.translatedName, stack.name) }, true)
+        ctx.source.sendSuccess({ commandLang(NAME, player.name, pokemon.species.translatedName, stack.displayName) }, true)
         return Command.SINGLE_SUCCESS
     }
 

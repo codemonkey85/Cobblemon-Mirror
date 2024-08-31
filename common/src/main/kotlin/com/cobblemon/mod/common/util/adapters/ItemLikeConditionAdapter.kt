@@ -13,8 +13,8 @@ import com.cobblemon.mod.common.api.conditional.RegistryLikeIdentifierCondition
 import com.cobblemon.mod.common.api.conditional.RegistryLikeTagCondition
 import com.cobblemon.mod.common.registry.ItemIdentifierCondition
 import com.cobblemon.mod.common.registry.ItemTagCondition
-import net.minecraft.item.Item
-import net.minecraft.registry.RegistryKeys
+import net.minecraft.core.registries.Registries
+import net.minecraft.world.item.Item
 
 /**
  * A type adapter for [ItemLikeCondition]s.
@@ -24,7 +24,7 @@ import net.minecraft.registry.RegistryKeys
  */
 object ItemLikeConditionAdapter : RegistryLikeAdapter<Item> {
     override val registryLikeConditions = mutableListOf(
-        RegistryLikeTagCondition.resolver(RegistryKeys.ITEM, ::ItemTagCondition),
+        RegistryLikeTagCondition.resolver(Registries.ITEM, ::ItemTagCondition),
         RegistryLikeIdentifierCondition.resolver(::ItemIdentifierCondition)
     )
 }

@@ -10,9 +10,8 @@ package com.cobblemon.mod.common.pokemon
 
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.net.IntSize
-import com.cobblemon.mod.common.util.readSizedInt
-import com.cobblemon.mod.common.util.writeSizedInt
-import net.minecraft.network.RegistryByteBuf
+import com.cobblemon.mod.common.util.*
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * A Pokémon that can absolutely, under many circumstances, be rendered (or else!!!).
@@ -23,7 +22,7 @@ import net.minecraft.network.RegistryByteBuf
 data class RenderablePokemon(var species: Species, var aspects: Set<String>) {
     val form: FormData by lazy { species.getForm(aspects) }
 
-    fun saveToBuffer(buffer: RegistryByteBuf): RegistryByteBuf {
+    fun saveToBuffer(buffer: RegistryFriendlyByteBuf): RegistryFriendlyByteBuf {
         buffer.writeIdentifier(species.resourceIdentifier)
         buffer.writeSizedInt(IntSize.U_BYTE, aspects.size)
         aspects.forEach(buffer::writeString)
@@ -31,7 +30,7 @@ data class RenderablePokemon(var species: Species, var aspects: Set<String>) {
     }
 
     companion object {
-        fun loadFromBuffer(buffer: RegistryByteBuf): RenderablePokemon {
+        fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): RenderablePokemon {
             val species = PokemonSpecies.getByIdentifier(buffer.readIdentifier())!!
             val aspects = mutableSetOf<String>()
             repeat(times = buffer.readSizedInt(IntSize.U_BYTE)) {

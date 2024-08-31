@@ -17,18 +17,18 @@ import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.cos
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
 class HydreigonModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("hydreigon")
     override val head = getPart("neck")
 
     override var portraitScale = 1.57F
-    override var portraitTranslation = Vec3d(-1.04, 1.93, 0.0)
+    override var portraitTranslation = Vec3(-1.04, 1.93, 0.0)
 
     override var profileScale = 0.58F
-    override var profileTranslation = Vec3d(-0.06, 1.2, 0.0)
+    override var profileTranslation = Vec3(-0.06, 1.2, 0.0)
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose

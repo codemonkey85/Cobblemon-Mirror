@@ -41,12 +41,12 @@ import com.cobblemon.mod.common.pokemon.properties.PropertiesCompletionProvider
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.ifClient
 import com.cobblemon.mod.common.util.server
-import java.util.UUID
-import net.minecraft.resource.ResourceManager
-import net.minecraft.resource.ResourceType
-import net.minecraft.resource.SynchronousResourceReloader
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
+import net.minecraft.server.packs.resources.ResourceManager
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener
+import java.util.*
 
 object CobblemonDataProvider : DataProvider {
 
@@ -90,9 +90,9 @@ object CobblemonDataProvider : DataProvider {
         }
 
         ifClient {
-            Cobblemon.implementation.registerResourceReloader(cobblemonResource("client_resources"), SimpleResourceReloader(ResourceType.CLIENT_RESOURCES), ResourceType.CLIENT_RESOURCES, emptyList())
+            Cobblemon.implementation.registerResourceReloader(cobblemonResource("client_resources"), SimpleResourceReloader(PackType.CLIENT_RESOURCES), PackType.CLIENT_RESOURCES, emptyList())
         }
-        Cobblemon.implementation.registerResourceReloader(cobblemonResource("data_resources"), SimpleResourceReloader(ResourceType.SERVER_DATA), ResourceType.SERVER_DATA, emptyList())
+        Cobblemon.implementation.registerResourceReloader(cobblemonResource("data_resources"), SimpleResourceReloader(PackType.SERVER_DATA), PackType.SERVER_DATA, emptyList())
     }
 
     override fun <T : DataRegistry> register(registry: T): T {
@@ -106,10 +106,10 @@ object CobblemonDataProvider : DataProvider {
         return registry
     }
 
-    override fun fromIdentifier(registryIdentifier: Identifier): DataRegistry? = this.registries.find { it.id == registryIdentifier }
+    override fun fromIdentifier(registryIdentifier: ResourceLocation): DataRegistry? = this.registries.find { it.id == registryIdentifier }
 
-    override fun sync(player: ServerPlayerEntity) {
-        if (!player.networkHandler.connection.isLocal) {
+    override fun sync(player: ServerPlayer) {
+        if (!player.connection.connection.isMemoryConnection) {
             this.registries.forEach { registry -> registry.sync(player) }
         }
 
@@ -118,7 +118,7 @@ object CobblemonDataProvider : DataProvider {
         waitingActions.forEach { it() }
     }
 
-    override fun doAfterSync(player: ServerPlayerEntity, action: () -> Unit) {
+    override fun doAfterSync(player: ServerPlayer, action: () -> Unit) {
         if (player.uuid in synchronizedPlayerIds) {
             action()
         } else {
@@ -126,16 +126,16 @@ object CobblemonDataProvider : DataProvider {
         }
     }
 
-    private class SimpleResourceReloader(private val type: ResourceType) : SynchronousResourceReloader {
-        override fun reload(manager: ResourceManager) {
+    private class SimpleResourceReloader(private val type: PackType) : ResourceManagerReloadListener {
+        override fun onResourceManagerReload(manager: ResourceManager) {
             // Check for a server running, this is due to the create a world screen triggering datapack reloads, these are fine to happen as many times as needed as players may be in the process of adding their datapacks.
             val isInGame = server() != null
-            if (isInGame && this.type == ResourceType.SERVER_DATA && !canReload) {
+            if (isInGame && this.type == PackType.SERVER_DATA && !canReload) {
                 return
             }
             registries.filter { it.type == this.type }
                 .forEach { it.reload(manager) }
-            if (isInGame && this.type == ResourceType.SERVER_DATA) {
+            if (isInGame && this.type == PackType.SERVER_DATA) {
                 canReload = false
             }
         }

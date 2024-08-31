@@ -9,7 +9,7 @@
 package com.cobblemon.mod.common.util
 
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.arguments.EntityArgument
 
-fun CommandContext<ServerCommandSource>.player(argumentName: String = "player") = EntityArgumentType.getPlayer(this, argumentName)
+fun CommandContext<CommandSourceStack>.player(argumentName: String = "player") = EntityArgument.getPlayer(this, argumentName)

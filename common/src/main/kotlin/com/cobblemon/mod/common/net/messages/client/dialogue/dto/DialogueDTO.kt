@@ -21,7 +21,7 @@ import com.cobblemon.mod.common.api.molang.ObjectValue
 import com.cobblemon.mod.common.api.net.Decodable
 import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.util.*
-import net.minecraft.network.RegistryByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
 class DialogueDTO : Encodable, Decodable {
@@ -55,8 +55,8 @@ class DialogueDTO : Encodable, Decodable {
         }
     }
 
-    override fun encode(buffer: RegistryByteBuf) {
-        buffer.writeUuid(dialogueId)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(dialogueId)
         currentPageDTO.encode(buffer)
         dialogueInput.encode(buffer)
         buffer.writeNullable(speakers) { _, speakers ->
@@ -81,14 +81,14 @@ class DialogueDTO : Encodable, Decodable {
                 } else if (value.face is ReferenceDialogueFaceProvider) {
                     buffer.writeInt(value.face.entityId)
                 } else if (value.face is PlayerDialogueFaceProvider) {
-                    buffer.writeUuid(value.face.playerId)
+                    buffer.writeUUID(value.face.playerId)
                 }
             }
         }
     }
 
-    override fun decode(buffer: RegistryByteBuf) {
-        dialogueId = buffer.readUuid()
+    override fun decode(buffer: RegistryFriendlyByteBuf) {
+        dialogueId = buffer.readUUID()
         currentPageDTO = DialoguePageDTO()
         currentPageDTO.decode(buffer)
         dialogueInput = DialogueInputDTO()
@@ -107,7 +107,7 @@ class DialogueDTO : Encodable, Decodable {
                         val aspects = buffer.readList { buffer.readString() }.toSet()
                         key to DialogueSpeakerDTO(name, ArtificialDialogueFaceProvider(modelType, identifier, aspects))
                     }
-                    "player" -> key to DialogueSpeakerDTO(name, PlayerDialogueFaceProvider(buffer.readUuid()))
+                    "player" -> key to DialogueSpeakerDTO(name, PlayerDialogueFaceProvider(buffer.readUUID()))
                     else -> key to DialogueSpeakerDTO(name, null)
                 }
             }

@@ -15,16 +15,13 @@ import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Species
-import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readText
-import com.cobblemon.mod.common.util.writeText
+import com.cobblemon.mod.common.util.*
 import java.util.UUID
-import net.minecraft.entity.Entity
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket
-import net.minecraft.text.MutableText
-import net.minecraft.util.Identifier
+import net.minecraft.world.entity.Entity
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
+import net.minecraft.resources.ResourceLocation
 
 class SpawnPokemonPacket(
     private val ownerId: UUID?,
@@ -35,21 +32,21 @@ class SpawnPokemonPacket(
     private val battleId: UUID?,
     private val phasingTargetId: Int,
     private val beamMode: Byte,
-    private val nickname: MutableText?,
+    private val nickname: MutableComponent?,
     private val labelLevel: Int,
     private val poseType: PoseType,
     private val unbattlable: Boolean,
     private val hideLabel: Boolean,
-    private val caughtBall: Identifier,
+    private val caughtBall: ResourceLocation,
     private val spawnYaw: Float,
     private val friendship: Int,
-    vanillaSpawnPacket: EntitySpawnS2CPacket
+    vanillaSpawnPacket: ClientboundAddEntityPacket
 ) : SpawnExtraDataEntityPacket<SpawnPokemonPacket, PokemonEntity>(vanillaSpawnPacket) {
 
-    override val id: Identifier = ID
+    override val id: ResourceLocation = ID
 
-    constructor(entity: PokemonEntity, vanillaSpawnPacket: EntitySpawnS2CPacket) : this(
-        entity.ownerUuid,
+    constructor(entity: PokemonEntity, vanillaSpawnPacket: ClientboundAddEntityPacket) : this(
+        entity.ownerUUID,
         entity.pokemon.scaleModifier,
         entity.exposedSpecies,
         entity.pokemon.form,
@@ -58,23 +55,23 @@ class SpawnPokemonPacket(
         entity.phasingTargetId,
         entity.beamMode.toByte(),
         entity.pokemon.nickname,
-        if (Cobblemon.config.displayEntityLevelLabel) entity.dataTracker.get(PokemonEntity.LABEL_LEVEL) else -1,
-        entity.dataTracker.get(PokemonEntity.POSE_TYPE),
-        entity.dataTracker.get(PokemonEntity.UNBATTLEABLE),
-        entity.dataTracker.get(PokemonEntity.HIDE_LABEL),
+        if (Cobblemon.config.displayEntityLevelLabel) entity.entityData.get(PokemonEntity.LABEL_LEVEL) else -1,
+        entity.entityData.get(PokemonEntity.POSE_TYPE),
+        entity.entityData.get(PokemonEntity.UNBATTLEABLE),
+        entity.entityData.get(PokemonEntity.HIDE_LABEL),
         entity.pokemon.caughtBall.name,
-        entity.dataTracker.get(PokemonEntity.SPAWN_DIRECTION),
-        entity.dataTracker.get(PokemonEntity.FRIENDSHIP),
+        entity.entityData.get(PokemonEntity.SPAWN_DIRECTION),
+        entity.entityData.get(PokemonEntity.FRIENDSHIP),
         vanillaSpawnPacket
     )
 
-    override fun encodeEntityData(buffer: RegistryByteBuf) {
-        buffer.writeNullable(ownerId) { _, v -> buffer.writeUuid(v) }
+    override fun encodeEntityData(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeNullable(ownerId) { _, v -> buffer.writeUUID(v) }
         buffer.writeFloat(this.scaleModifier)
         buffer.writeIdentifier(this.species.resourceIdentifier)
         buffer.writeString(this.form.formOnlyShowdownId())
         buffer.writeCollection(this.aspects) { pb, value -> pb.writeString(value) }
-        buffer.writeNullable(this.battleId) { pb, value -> pb.writeUuid(value) }
+        buffer.writeNullable(this.battleId) { pb, value -> pb.writeUUID(value) }
         buffer.writeInt(this.phasingTargetId)
         buffer.writeByte(this.beamMode.toInt())
         buffer.writeNullable(this.nickname) { _, v -> buffer.writeText(v) }
@@ -88,7 +85,7 @@ class SpawnPokemonPacket(
     }
 
     override fun applyData(entity: PokemonEntity) {
-        entity.ownerUuid = ownerId
+        entity.ownerUUID = ownerId
         entity.pokemon.apply {
             scaleModifier = this@SpawnPokemonPacket.scaleModifier
             species = this@SpawnPokemonPacket.species
@@ -100,28 +97,29 @@ class SpawnPokemonPacket(
         entity.phasingTargetId = this.phasingTargetId
         entity.beamMode = this.beamMode.toInt()
         entity.battleId = this.battleId
-        entity.dataTracker.set(PokemonEntity.LABEL_LEVEL, labelLevel)
-        entity.dataTracker.set(PokemonEntity.SPECIES, entity.pokemon.species.resourceIdentifier.toString())
-        entity.dataTracker.set(PokemonEntity.ASPECTS, aspects)
-        entity.dataTracker.set(PokemonEntity.POSE_TYPE, poseType)
-        entity.dataTracker.set(PokemonEntity.UNBATTLEABLE, unbattlable)
-        entity.dataTracker.set(PokemonEntity.HIDE_LABEL, hideLabel)
-        entity.dataTracker.set(PokemonEntity.SPAWN_DIRECTION, spawnYaw)
-        entity.dataTracker.set(PokemonEntity.FRIENDSHIP, friendship)
+        entity.entityData.set(PokemonEntity.LABEL_LEVEL, labelLevel)
+        entity.entityData.set(PokemonEntity.SPECIES, entity.pokemon.species.resourceIdentifier.toString())
+        entity.entityData.set(PokemonEntity.ASPECTS, aspects)
+        entity.entityData.set(PokemonEntity.POSE_TYPE, poseType)
+        entity.entityData.set(PokemonEntity.UNBATTLEABLE, unbattlable)
+        entity.entityData.set(PokemonEntity.HIDE_LABEL, hideLabel)
+        entity.entityData.set(PokemonEntity.SPAWN_DIRECTION, spawnYaw)
+        entity.entityData.set(PokemonEntity.FRIENDSHIP, friendship)
     }
 
     override fun checkType(entity: Entity): Boolean = entity is PokemonEntity
 
     companion object {
         val ID = cobblemonResource("spawn_pokemon_entity")
-        fun decode(buffer: RegistryByteBuf): SpawnPokemonPacket {
-            val ownerId = buffer.readNullable { buffer.readUuid() }
+        fun decode(buffer: RegistryFriendlyByteBuf): SpawnPokemonPacket {
+            val ownerId = buffer.readNullable { buffer.readUUID() }
             val scaleModifier = buffer.readFloat()
-            val species = PokemonSpecies.getByIdentifier(buffer.readIdentifier())!!
+            val identifier = buffer.readIdentifier()
+            val species = requireNotNull(PokemonSpecies.getByIdentifier(identifier)) { "received unknown PokemonSpecies: $identifier" }
             val showdownId = buffer.readString()
             val form = species.forms.firstOrNull { it.formOnlyShowdownId() == showdownId } ?: species.standardForm
-            val aspects = buffer.readList(PacketByteBuf::readString).toSet()
-            val battleId = buffer.readNullable { buffer.readUuid() }
+            val aspects = buffer.readList { it.readString() }.toSet()
+            val battleId = buffer.readNullable { buffer.readUUID() }
             val phasingTargetId = buffer.readInt()
             val beamModeEmitter = buffer.readByte()
             val nickname = buffer.readNullable { buffer.readText().copy() }
