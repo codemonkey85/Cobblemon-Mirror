@@ -40,10 +40,11 @@ object Dexes : JsonDataRegistry<PokedexDef> {
     override val resourcePath = "dexes"
 
     //Maps a dex id to its PokedexDef
-    val dexEntryMap = mutableMapOf<ResourceLocation, PokedexDef>()
+    val dexEntryMap = linkedMapOf<ResourceLocation, PokedexDef>()
 
     override fun reload(data: Map<ResourceLocation, PokedexDef>) {
-        dexEntryMap.putAll(data)
+        dexEntryMap.clear()
+        data.entries.sortedBy { it.value.sortOrder }.forEach { (id, def) -> dexEntryMap[id] = def }
     }
 
     override fun sync(player: ServerPlayer) {

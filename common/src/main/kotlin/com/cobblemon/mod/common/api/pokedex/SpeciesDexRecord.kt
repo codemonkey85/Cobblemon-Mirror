@@ -86,7 +86,9 @@ class SpeciesDexRecord {
         pokedexManager.onSpeciesRecordUpdated(this)
     }
 
-    fun addInformation(pokemon: Pokemon, knowledge: PokedexEntryProgress) = aspects.addAll(pokemon.aspects)
+    fun addInformation(pokemon: Pokemon, knowledge: PokedexEntryProgress) {
+        aspects.addAll(pokemon.aspects)
+    }
 
     /** Returns true if the given Pokémon contains new information. Internal because it's only to be called from [FormDexRecord.wouldBeDifferent]. */
     internal fun wouldBeDifferent(pokemon: Pokemon) = pokemon.aspects.any { it !in aspects }

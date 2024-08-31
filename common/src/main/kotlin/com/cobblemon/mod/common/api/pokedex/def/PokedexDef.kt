@@ -28,6 +28,9 @@ abstract class PokedexDef: ClientDataSynchronizer<PokedexDef> {
     abstract val typeId: ResourceLocation
     //The ID of this dex in the Dexes registry
     abstract val id: ResourceLocation
+    // The sort order for the dex
+    var sortOrder: Int = 0
+
 
     abstract fun getEntries(): List<PokedexEntry>
 
