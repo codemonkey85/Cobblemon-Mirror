@@ -17,7 +17,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import java.lang.reflect.Type
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Adapter for deserializing [RideController] types.
@@ -26,7 +26,7 @@ import net.minecraft.util.Identifier
  * @since April 30th, 2024
  */
 object RideControllerAdapter : JsonDeserializer<RideController> {
-    val types: MutableMap<Identifier, Class<out RideController>> = mutableMapOf(
+    val types: MutableMap<ResourceLocation, Class<out RideController>> = mutableMapOf(
         GenericLandController.KEY to GenericLandController::class.java,
         GenericLiquidController.KEY to GenericLiquidController::class.java,
         SwimDashController.KEY to SwimDashController::class.java

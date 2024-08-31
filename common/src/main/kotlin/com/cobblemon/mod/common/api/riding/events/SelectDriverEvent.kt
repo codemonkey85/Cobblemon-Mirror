@@ -1,6 +1,6 @@
 package com.cobblemon.mod.common.api.riding.events
 
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
 
 data class SelectDriverEvent(val options: Set<LivingEntity>) {
 

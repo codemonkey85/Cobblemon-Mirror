@@ -9,7 +9,7 @@
 package com.cobblemon.mod.common.mixin.entity;
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,7 +22,7 @@ public abstract class EntityMixin {
 
     @Shadow @Nullable public abstract Entity getVehicle();
 
-    @Inject(method = "checkWaterState", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/Entity;touchingWater:Z", ordinal = 1), cancellable = true)
+    @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/Entity;wasTouchingWater:Z", ordinal = 1), cancellable = true)
     public void cobblemon$verifyActuallyTouchingWater(CallbackInfo ci) {
         if(this.getVehicle() instanceof PokemonEntity) {
             ci.cancel();

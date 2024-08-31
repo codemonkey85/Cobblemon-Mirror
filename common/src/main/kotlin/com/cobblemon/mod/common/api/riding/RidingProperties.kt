@@ -13,8 +13,10 @@ import com.cobblemon.mod.common.api.riding.controller.RideController
 import com.cobblemon.mod.common.util.adapters.riding.RideControllerAdapter
 import com.cobblemon.mod.common.util.asExpression
 import com.cobblemon.mod.common.util.getString
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.network.RegistryByteBuf
+import com.cobblemon.mod.common.util.readIdentifier
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class RidingProperties(
     val seats: List<Seat> = listOf(),
@@ -22,7 +24,7 @@ class RidingProperties(
     val controllers: List<RideController> = listOf()
 ) {
     companion object {
-        fun decode(buffer: RegistryByteBuf): RidingProperties {
+        fun decode(buffer: RegistryFriendlyByteBuf): RidingProperties {
             val seats: List<Seat> = buffer.readList { _ -> Seat.decode(buffer) }
             val conditions = buffer.readList { buffer.readString().asExpression() }
             val controllers: List<RideController> = buffer.readList { _ ->
@@ -39,7 +41,7 @@ class RidingProperties(
     val canRide: Boolean
         get() = seats.isNotEmpty() && controllers.isNotEmpty()
 
-    fun encode(buffer: RegistryByteBuf) {
+    fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeCollection(seats) { _, seat -> seat.encode(buffer) }
         buffer.writeCollection(conditions) { _, condition -> buffer.writeString(condition.getString()) }
         buffer.writeCollection(controllers) { _, controller -> controller.encode(buffer) }

@@ -19,19 +19,20 @@ import com.cobblemon.mod.common.util.asExpression
 import com.cobblemon.mod.common.util.blockPositionsAsListRounded
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.getString
+import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.resolveFloat
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.Vec2f
-import net.minecraft.util.math.Vec3d
-import net.minecraft.util.shape.VoxelShapes
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.phys.Vec2
+import net.minecraft.world.phys.Vec3
+import net.minecraft.world.phys.shapes.Shapes
 
 class GenericLandController : RideController {
     companion object {
-        val KEY: Identifier = cobblemonResource("land/generic")
+        val KEY: ResourceLocation = cobblemonResource("land/generic")
     }
 
 //    private var previousVelocity = Vec3d.ZERO
@@ -48,20 +49,20 @@ class GenericLandController : RideController {
     @Transient
     private var initializedEntityId = -1
 
-    override val key: Identifier = KEY
-    override val poseProvider: PoseProvider = PoseProvider(PoseType.STAND).with(PoseOption(PoseType.WALK) { it.dataTracker.get(PokemonEntity.MOVING) })
+    override val key: ResourceLocation = KEY
+    override val poseProvider: PoseProvider = PoseProvider(PoseType.STAND).with(PoseOption(PoseType.WALK) { it.entityData.get(PokemonEntity.MOVING) })
     override val condition: (PokemonEntity) -> Boolean = { entity ->
         //Are there any blocks under the mon that aren't air or fluid
         //Cant just check one block since some mons may be more than one block big
         //This should be changed so that the any predicate is only ran on blocks under the mon
-        VoxelShapes.cuboid(entity.boundingBox).blockPositionsAsListRounded().any {
+        Shapes.create(entity.boundingBox).blockPositionsAsListRounded().any {
             //Need to check other fluids
-            if (entity.isTouchingWater || entity.isSubmergedInWater) {
+            if (entity.isInWater || entity.isUnderWater) {
                 return@any false
             }
             //This might not actually work, depending on what the yPos actually is. yPos of the middle of the entity? the feet?
-            if (it.y.toDouble() == (entity.pos.y)) {
-                val blockState = entity.world.getBlockState(it.down())
+            if (it.y.toDouble() == (entity.position().y)) {
+                val blockState = entity.level().getBlockState(it.below())
                 return@any !blockState.isAir && blockState.fluidState.isEmpty
             }
             true
@@ -78,37 +79,37 @@ class GenericLandController : RideController {
         runtime.environment.query.addFunction("entity") { entity.struct }
     }
 
-    override fun speed(entity: PokemonEntity, driver: PlayerEntity): Float {
+    override fun speed(entity: PokemonEntity, driver: Player): Float {
         attachEntity(entity)
         return runtime.resolveFloat(speed)
     }
 
-    override fun rotation(driver: LivingEntity): Vec2f {
-        return Vec2f(driver.pitch * 0.5f, driver.yaw)
+    override fun rotation(driver: LivingEntity): Vec2 {
+        return Vec2(driver.xRot * 0.5f, driver.yRot)
     }
 
-    override fun velocity(driver: PlayerEntity, input: Vec3d): Vec3d {
-        val f = driver.sidewaysSpeed * 0.2f
-        var g = driver.forwardSpeed
+    override fun velocity(driver: Player, input: Vec3): Vec3 {
+        val f = driver.xxa * 0.2f
+        var g = driver.zza
         if (g <= 0.0f) {
             g *= 0.25f
         }
 
-        val velocity = Vec3d(f.toDouble(), 0.0, g.toDouble())
+        val velocity = Vec3(f.toDouble(), 0.0, g.toDouble())
 
         return velocity
     }
 
-    override fun canJump(entity: PokemonEntity, driver: PlayerEntity) = true
+    override fun canJump(entity: PokemonEntity, driver: Player) = true
 
-    override fun jumpForce(entity: PokemonEntity, driver: PlayerEntity, jumpStrength: Int): Vec3d {
+    override fun jumpForce(entity: PokemonEntity, driver: Player, jumpStrength: Int): Vec3 {
         attachEntity(entity)
         runtime.environment.query.addFunction("jump_strength") { DoubleValue(jumpStrength.toDouble()) }
         val jumpVector = jumpVector.map { runtime.resolveFloat(it) }
-        return Vec3d(jumpVector[0].toDouble(), jumpVector[1].toDouble(), jumpVector[2].toDouble())
+        return Vec3(jumpVector[0].toDouble(), jumpVector[1].toDouble(), jumpVector[2].toDouble())
     }
 
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         super.encode(buffer)
         buffer.writeString(this.speed.getString())
         buffer.writeString(this.canJump.getString())
@@ -117,7 +118,7 @@ class GenericLandController : RideController {
         buffer.writeString(this.jumpVector[2].getString())
     }
 
-    override fun decode(buffer: RegistryByteBuf) {
+    override fun decode(buffer: RegistryFriendlyByteBuf) {
         this.speed = buffer.readString().asExpression()
         this.canJump = buffer.readString().asExpression()
         this.jumpVector = listOf(

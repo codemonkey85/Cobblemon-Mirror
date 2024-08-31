@@ -9,17 +9,19 @@
 package com.cobblemon.mod.common.api.riding
 
 import com.cobblemon.mod.common.api.net.Encodable
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.world.phys.Vec3
 
 /**
  * Seat Properties are responsible for the base information that would then be used to construct a Seat on an entity.
  */
 data class Seat(
     val locator: String = "seat1",
-    val offset: Vec3d = Vec3d.ZERO
+    val offset: Vec3 = Vec3.ZERO
 ) : Encodable {
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(locator)
         buffer.writeDouble(this.offset.x)
         buffer.writeDouble(this.offset.y)
@@ -27,10 +29,10 @@ data class Seat(
     }
 
     companion object {
-        fun decode(buffer: RegistryByteBuf) : Seat {
+        fun decode(buffer: RegistryFriendlyByteBuf) : Seat {
             return Seat(
                 buffer.readString(),
-                Vec3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble())
+                Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble())
             )
         }
     }

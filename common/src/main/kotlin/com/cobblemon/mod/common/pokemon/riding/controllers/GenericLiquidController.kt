@@ -17,18 +17,17 @@ import com.cobblemon.mod.common.util.blockPositionsAsListRounded
 import com.cobblemon.mod.common.util.cobblemonResource
 import kotlin.math.max
 import kotlin.math.min
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.Vec2f
-import net.minecraft.util.math.Vec3d
-import net.minecraft.util.shape.VoxelShapes
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.phys.Vec2
+import net.minecraft.world.phys.Vec3
+import net.minecraft.world.phys.shapes.Shapes
 
 class GenericLiquidController : RideController {
     companion object {
-        val KEY: Identifier = cobblemonResource("swim/generic")
+        val KEY: ResourceLocation = cobblemonResource("swim/generic")
     }
 
     var speed = 1F
@@ -36,21 +35,21 @@ class GenericLiquidController : RideController {
     var acceleration = 1F
         private set
 
-    override val key: Identifier = KEY
+    override val key: ResourceLocation = KEY
     override val poseProvider: PoseProvider = PoseProvider(PoseType.FLOAT)
-        .with(PoseOption(PoseType.SWIM) { it.isSwimming && it.dataTracker.get(PokemonEntity.MOVING) })
+        .with(PoseOption(PoseType.SWIM) { it.isSwimming && it.entityData.get(PokemonEntity.MOVING) })
     override val condition: (PokemonEntity) -> Boolean = { entity ->
         //This could be kinda weird... what if the top of the mon is in a fluid but the bottom isnt?
-        VoxelShapes.cuboid(entity.boundingBox).blockPositionsAsListRounded().any {
-            if (entity.isTouchingWater || entity.isSubmergedInWater) {
+        Shapes.create(entity.boundingBox).blockPositionsAsListRounded().any {
+            if (entity.isInWater || entity.isUnderWater) {
                 return@any true
             }
-            val blockState = entity.world.getBlockState(it)
+            val blockState = entity.level().getBlockState(it)
             return@any !blockState.fluidState.isEmpty
         }
     }
 
-    override fun speed(entity: PokemonEntity, driver: PlayerEntity): Float {
+    override fun speed(entity: PokemonEntity, driver: Player): Float {
         return min(max(this.speed + this.acceleration(), 0.0F), 1.0F)
     }
 
@@ -58,35 +57,35 @@ class GenericLiquidController : RideController {
         return (1 / ((300 * this.speed) + (18.5F - (this.acceleration * 5.3F)))) * (0.9F * ((this.acceleration + 1) / 2))
     }
 
-    override fun rotation(driver: LivingEntity): Vec2f {
-        return Vec2f(driver.pitch * 0.5f, driver.yaw)
+    override fun rotation(driver: LivingEntity): Vec2 {
+        return Vec2(driver.xRot * 0.5f, driver.yRot)
     }
 
-    override fun velocity(driver: PlayerEntity, input: Vec3d): Vec3d {
-        val f = driver.sidewaysSpeed * 0.1f
-        var g = driver.forwardSpeed * 0.3f
+    override fun velocity(driver: Player, input: Vec3): Vec3 {
+        val f = driver.xxa * 0.1f
+        var g = driver.zza * 0.3f
         if (g <= 0.0f) {
             g *= 0.12f
         }
 
-        return Vec3d(f.toDouble(), 0.0, g.toDouble())
+        return Vec3(f.toDouble(), 0.0, g.toDouble())
     }
 
-    override fun canJump(entity: PokemonEntity, driver: PlayerEntity): Boolean {
+    override fun canJump(entity: PokemonEntity, driver: Player): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun jumpForce(entity: PokemonEntity, driver: PlayerEntity, jumpStrength: Int): Vec3d {
+    override fun jumpForce(entity: PokemonEntity, driver: Player, jumpStrength: Int): Vec3 {
         TODO("Not yet implemented")
     }
 
-    override fun encode(buffer: RegistryByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         super.encode(buffer)
         buffer.writeFloat(this.speed)
         buffer.writeFloat(this.acceleration)
     }
 
-    override fun decode(buffer: RegistryByteBuf) {
+    override fun decode(buffer: RegistryFriendlyByteBuf) {
         this.speed = buffer.readFloat()
         this.acceleration = buffer.readFloat()
     }

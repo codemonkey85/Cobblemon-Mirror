@@ -8,14 +8,14 @@
 
 package com.cobblemon.mod.common.api.riding
 
-import net.minecraft.entity.JumpingMount
+import net.minecraft.world.entity.PlayerRideableJumping
 
 /**
  * Represents an entity that supports riding.
  *
  * @since 1.5.0
  */
-interface Rideable : JumpingMount {
+interface Rideable : PlayerRideableJumping {
 
     /**
      * Denotes the manager responsible for handling any instance of riding taking place on an entity

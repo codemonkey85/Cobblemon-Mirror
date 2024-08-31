@@ -75,10 +75,15 @@ import com.cobblemon.mod.common.pokemon.evolution.variants.ItemInteractionEvolut
 import com.cobblemon.mod.common.pokemon.feature.StashHandler
 import com.cobblemon.mod.common.util.*
 import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules
+import com.mojang.serialization.Codec
+import java.util.*
+import java.util.concurrent.CompletableFuture
+import kotlin.math.PI
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtOps
 import net.minecraft.nbt.NbtUtils
 import net.minecraft.nbt.StringTag
 import net.minecraft.network.chat.Component
@@ -90,10 +95,6 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
-import com.mojang.serialization.Codec
-import net.minecraft.nbt.NbtOps
-import java.util.*
-import java.util.concurrent.CompletableFuture
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerEntity
 import net.minecraft.server.level.ServerLevel
@@ -124,6 +125,7 @@ import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.pathfinder.PathType
 import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
 
 @Suppress("unused")
@@ -818,7 +820,7 @@ open class PokemonEntity(
 
         if (hand == InteractionHand.MAIN_HAND && player is ServerPlayer && pokemon.getOwnerPlayer() == player) {
             if (player.isShiftKeyDown) {
-                InteractPokemonUIPacket(this.getUUID(), canSitOnShoulder() && pokemon in player.party(), this.canStartRiding(player)).sendToPlayer(
+                InteractPokemonUIPacket(this.getUUID(), canSitOnShoulder() && pokemon in player.party(), this.canRide(player)).sendToPlayer(
                     player
                 )
             } else {
@@ -1235,8 +1237,7 @@ open class PokemonEntity(
      *
      * @return If the backing [pokemon] has a non-null [Pokemon.nickname].
      */
-    override fun hasCustomName(): Boolean =
-        pokemon.nickname != null && pokemon.nickname?.contents != PlainTextContents.EMPTY
+    override fun hasCustomName(): Boolean = pokemon.nickname != null && pokemon.nickname?.contents != PlainTextContents.EMPTY
 
     /**
      * This method toggles the visibility of the entity name,
@@ -1361,7 +1362,7 @@ open class PokemonEntity(
     }
 
     override fun canBeLeashed() = true
-//    override fun canBeLeashedBy(player: PlayerEntity): Boolean {
+//    override fun canBeLeashedBy(player: Player): Boolean {
 //        return this.ownerUuid == null || this.ownerUuid == player.uuid
 //    }
 
@@ -1373,12 +1374,12 @@ open class PokemonEntity(
      *
      * @return The side safe [Pokemon] with the [Pokemon.isClient] set.
      */
-    private fun createSidedPokemon(): Pokemon = Pokemon().apply { isClient = this@PokemonEntity.world.isClient }
+    private fun createSidedPokemon(): Pokemon = Pokemon().apply { isClient = this@PokemonEntity.level().isClientSide }
 
-    override fun canStartRiding(entity: Entity): Boolean {
-        if (passengerList.size >= seats.size) {
+    override fun canRide(entity: Entity): Boolean {
+        if (passengers.size >= seats.size) {
             return false
-        } else if (passengerList.isEmpty() && entity != owner) {
+        } else if (passengers.isEmpty() && entity != owner) {
             return false
         } else {
             return true // Event or something here
@@ -1393,34 +1394,32 @@ open class PokemonEntity(
     }
 
     override fun canAddPassenger(passenger: Entity): Boolean {
-        return passengerList.size < seats.size
+        return passengers.size < seats.size
     }
 
-    override fun tickControlled(driver: PlayerEntity, movementInput: Vec3d) {
-        super.tickControlled(driver, movementInput)
+    override fun tickRidden(driver: Player, movementInput: Vec3) {
+        super.tickRidden(driver, movementInput)
         this.riding.tick(this, driver, movementInput)
 
         val rotation = this.getControlledRotation(driver)
-        setRotation(rotation.y, rotation.x)
-        this.headYaw = this.yaw
-        this.bodyYaw = this.yaw
-        this.prevYaw = this.yaw
+        setRot(rotation.y, rotation.x)
+        this.yHeadRot = this.yRot
+        this.yBodyRot = this.yRot
+        this.yRotO = this.yRot
 
         if (this.riding.canJump(this, driver)) {
-            if (this.isOnGround) {
+            if (this.onGround()) {
                 if (this.jumpInputStrength > 0) {
 //                this.jump(this.jumpStrength, movementInput)
 //                this.jump()
-                    val f = PI.toFloat() - this.yaw * PI.toFloat() / 180
+                    val f = PI.toFloat() - this.yRot * PI.toFloat() / 180
                     val jumpVector = riding.jumpVelocity(this, driver, this.jumpInputStrength)
-                    val velocity = jumpVector.rotateY(f)
+                    val velocity = jumpVector.yRot(f)
                     // Rotate the jump vector f degrees around the Y axis
 //                val velocity = Vec3d(-sin(f) * jumpVector.x, jumpVector.y, cos(f) * jumpVector.z)
 
-
-
-                    this.addVelocity(velocity)
-                    velocityDirty = true
+                    this.addDeltaMovement(velocity)
+                    hasImpulse = true
                     jumping = false
                 }
 
@@ -1444,30 +1443,30 @@ open class PokemonEntity(
 ////        this.velocityDirty = true
 //    }
 
-    private fun getControlledRotation(controller: LivingEntity): Vec2f {
-        return this.riding.controlledRotation(this, controller as PlayerEntity)
+    private fun getControlledRotation(controller: LivingEntity): Vec2 {
+        return this.riding.controlledRotation(this, controller as Player)
     }
 
-    override fun updatePassengerPosition(passenger: Entity, positionUpdater: PositionUpdater) {
+    override fun positionRider(passenger: Entity, positionUpdater: MoveFunction) {
         if (this.hasPassenger(passenger)) {
-            val index = passengerList.indexOf(passenger).takeIf { it >= 0 && it < seats.size } ?: return
+            val index = passengers.indexOf(passenger).takeIf { it >= 0 && it < seats.size } ?: return
             val seat = seats[index]
-            val offset = seat.offset.rotateY(-this.bodyYaw * (Math.PI.toFloat() / 180))//.rotateX(-this.pitch * (Math.PI.toFloat() / 180))
+            val offset = seat.offset.yRot(-this.yRot * (Math.PI.toFloat() / 180))//.rotateX(-this.pitch * (Math.PI.toFloat() / 180))
             positionUpdater.accept(passenger, this.x + offset.x, this.y + offset.y, this.z + offset.z)
             if (passenger is LivingEntity) {
-                passenger.bodyYaw = this.bodyYaw
+                passenger.yRot = this.yRot
             }
         }
     }
 
     override fun getControllingPassenger(): LivingEntity? {
-        val riders = this.passengerList.filterIsInstance<LivingEntity>()
+        val riders = this.passengers.filterIsInstance<LivingEntity>()
         if(riders.isEmpty()) {
             return null
         }
 
-        val event = SelectDriverEvent(Sets.newHashSet(riders))
-        val owner = riders.find { it.uuid == ownerUuid }
+        val event = SelectDriverEvent(riders.toSet())
+        val owner = riders.find { it.uuid == ownerUUID }
         if(owner != null) {
             event.suggest(owner, 0)
         }
@@ -1476,22 +1475,22 @@ open class PokemonEntity(
         return event.result()
     }
 
-    override fun updatePassengerForDismount(passenger: LivingEntity): Vec3d {
+    override fun getDismountLocationForPassenger(passenger: LivingEntity): Vec3 {
 //        val seat = this.riding.seats.firstOrNull { it.occupant() == passenger }
 //        seat?.dismount()
-        return super.updatePassengerForDismount(passenger)
+        return super.getDismountLocationForPassenger(passenger)
     }
 
-    override fun getControlledMovementInput(controller: PlayerEntity, movementInput: Vec3d): Vec3d {
+    override fun getRiddenInput(controller: Player, movementInput: Vec3): Vec3 {
         return this.riding.velocity(this, controller, movementInput)
     }
 
-    override fun getSaddledSpeed(controller: PlayerEntity): Float {
+    override fun getRiddenSpeed(controller: Player): Float {
         return this.riding.speed(this, controller)
     }
 
     private var jumpInputStrength: Int = 0 // move this
-    override fun setJumpStrength(strength: Int) {
+    override fun onPlayerJump(strength: Int) {
         // See if this controls the hot bar element
         var strength = strength
         if (strength < 0) {
@@ -1515,20 +1514,19 @@ open class PokemonEntity(
         return true
     }
 
-    override fun startJumping(height: Int) {
+    override fun handleStartJump(height: Int) {
         this.jumping = true
     }
 
     fun side() = if (delegate is PokemonServerDelegate) "SERVER" else "CLIENT"
 
-    override fun stopJumping() {
+    override fun handleStopJump() {
         // Set back to land pose type?
     }
 
-    override fun shouldDismountUnderwater(): Boolean {
+    override fun dismountsUnderwater(): Boolean {
         return true
     }
-    private fun createSidedPokemon(): Pokemon = Pokemon().apply { isClient = this@PokemonEntity.level().isClientSide }
 
     /**
      * A utility method to resolve the [Codec] of [Pokemon] aware if the [world] is client sided or not.

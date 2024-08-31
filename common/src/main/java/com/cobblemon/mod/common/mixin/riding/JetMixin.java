@@ -8,22 +8,19 @@
 
 package com.cobblemon.mod.common.mixin.riding;
 
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.JumpingMount;
+import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(ClientPlayerEntity.class)
+@Mixin(LocalPlayer.class)
 public class JetMixin {
 
-    @Shadow private int field_3938;
-    @Shadow private float mountJumpStrength;
+    @Shadow private int jumpRidingTicks;
+    @Shadow private float jumpRidingScale;
 
     private float jetStrength;
 
@@ -49,9 +46,9 @@ public class JetMixin {
 //    }
 
     @Inject(
-            method = "tickMovement",
+            method = "aiStep",
             at = @At(
-                    target = "Lnet/minecraft/client/network/ClientPlayerEntity;mountJumpStrength:F",
+                    target = "Lnet/minecraft/client/player/LocalPlayer;jumpRidingScale:F",
                     value = "FIELD",
                     ordinal = 4,
                     shift = At.Shift.AFTER
@@ -59,7 +56,7 @@ public class JetMixin {
             locals = LocalCapture.CAPTURE_FAILSOFT
     )
     public void cobblemon$applyCachedJumpStrength(CallbackInfo ci) {
-        this.mountJumpStrength = this.jetStrength;
+        this.jumpRidingScale = this.jetStrength;
     }
 
 }

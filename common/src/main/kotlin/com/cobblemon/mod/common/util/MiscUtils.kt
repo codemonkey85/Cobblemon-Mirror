@@ -83,7 +83,7 @@ fun isUuid(string: String) : Boolean {
 
 fun VoxelShape.blockPositionsAsListRounded(): List<BlockPos> {
     val result = mutableListOf<BlockPos>()
-    forEachBox { minX, minY, minZ, maxX, maxY, maxZ ->
+    forAllBoxes { minX, minY, minZ, maxX, maxY, maxZ ->
         for (x in floor(minX).toInt() until ceil(maxX).toInt()) {
             for (y in floor(minY).toInt() until ceil(maxY).toInt()) {
                 for (z in floor(minZ).toInt() until ceil(maxZ).toInt()) {
