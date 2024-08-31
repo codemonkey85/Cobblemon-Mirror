@@ -8,8 +8,6 @@
 
 package com.cobblemon.mod.common.api.pokedex.entry
 
-import com.cobblemon.mod.common.api.pokedex.AbstractPokedexManager
-import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.util.readIdentifier
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeIdentifier
@@ -84,10 +82,6 @@ class PokedexEntry(
 class PokedexForm {
     var displayForm: String = "Normal"
     var unlockForms: MutableSet<String> = mutableSetOf()
-
-    fun getKnowledge(speciesId: ResourceLocation, dexData: AbstractPokedexManager) = unlockForms
-        .maxOfOrNull { dexData.getSpeciesRecord(speciesId)?.getFormRecord(it)?.knowledge ?: PokedexEntryProgress.NONE }
-        ?: PokedexEntryProgress.NONE
 
     fun clone() = PokedexForm().also {
         it.displayForm = displayForm

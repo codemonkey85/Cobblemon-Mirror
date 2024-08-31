@@ -61,6 +61,14 @@ abstract class AbstractPokedexManager {
     }
 
     fun getEncounteredForms(entry: PokedexEntry) : List<PokedexForm> {
+        return getFormsWithKnowledge(entry, PokedexEntryProgress.ENCOUNTERED)
+    }
+
+    fun getCaughtForms(entry: PokedexEntry) : List<PokedexForm> {
+        return getFormsWithKnowledge(entry, PokedexEntryProgress.CAUGHT)
+    }
+
+    fun getFormsWithKnowledge(entry: PokedexEntry, knowledge: PokedexEntryProgress) : List<PokedexForm> {
         val speciesRecord = getSpeciesRecord(entry.speciesId) ?: return emptyList()
         val hasAllAspects = entry.conditionAspects.all(speciesRecord::hasAspect)
         if (!hasAllAspects) {
@@ -68,7 +76,7 @@ abstract class AbstractPokedexManager {
         }
         // For each distinct form in this entry, get the highest knowledge level for the unlock forms, then take the highest of those.
         return entry.forms.filter { form ->
-            form.unlockForms.any { (speciesRecord.getFormRecord(it)?.knowledge ?: PokedexEntryProgress.NONE) > PokedexEntryProgress.ENCOUNTERED }
+            form.unlockForms.any { (speciesRecord.getFormRecord(it)?.knowledge ?: PokedexEntryProgress.NONE) >= knowledge }
         }
     }
 

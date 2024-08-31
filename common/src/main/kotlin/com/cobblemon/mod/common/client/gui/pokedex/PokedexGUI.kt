@@ -363,7 +363,7 @@ class PokedexGUI private constructor(
 
     fun setSelectedEntry(newSelectedEntry: PokedexEntry) {
         selectedEntry = newSelectedEntry
-        selectedForm = newSelectedEntry.forms.firstOrNull { it.getKnowledge(newSelectedEntry.speciesId, CobblemonClient.clientPokedexData) != PokedexEntryProgress.NONE }
+        selectedForm = CobblemonClient.clientPokedexData.getEncounteredForms(newSelectedEntry).firstOrNull()
 
         pokemonInfoWidget.setDexEntry(selectedEntry!!)
         displaytabInfoElement(tabInfoIndex)
@@ -432,7 +432,7 @@ class PokedexGUI private constructor(
     fun updateTabInfoElement() {
         val species = selectedEntry?.speciesId?.let { PokemonSpecies.getByIdentifier(it) }
         val formName = selectedForm?.displayForm
-        val canDisplay = (species?.let { selectedForm?.getKnowledge(it.resourceIdentifier, CobblemonClient.clientPokedexData) } ?: PokedexEntryProgress.NONE) != PokedexEntryProgress.NONE
+        val canDisplay = selectedEntry?.let { selectedForm in CobblemonClient.clientPokedexData.getCaughtForms(it) } == true
         val textToShowInDescription = mutableListOf<String>()
 
         if (canDisplay && species != null) {
@@ -493,8 +493,8 @@ class PokedexGUI private constructor(
     fun canSelectTab(tabIndex: Int): Boolean {
         val selectedForm = this.selectedForm ?: return false
         val selectedEntry = this.selectedEntry ?: return false
-        return selectedForm.getKnowledge(selectedEntry.speciesId, CobblemonClient.clientPokedexData) != PokedexEntryProgress.NONE
-                && (tabIndex != tabInfoIndex)
+        val encounteredForm = selectedForm in CobblemonClient.clientPokedexData.getEncounteredForms(selectedEntry)
+        return encounteredForm && (tabIndex != tabInfoIndex)
     }
 
     override fun isPauseScreen(): Boolean = false

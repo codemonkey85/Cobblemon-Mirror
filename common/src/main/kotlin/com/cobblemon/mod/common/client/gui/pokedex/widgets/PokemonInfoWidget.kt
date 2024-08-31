@@ -321,7 +321,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
             scale = SCALE
         )
 
-        if (hasKnowledge) {
+        if (hasKnowledge && renderablePokemon != null) {
             context.enableScissor(
                 pX + 1,
                 pY + portraitStartY,
@@ -339,7 +339,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
             val rotationVector = Vector3f(13F, rotationY, 0F)
 
             drawProfilePokemon(
-                renderablePokemon = renderablePokemon ?: return,
+                renderablePokemon = renderablePokemon!!,
                 poseType = poseList[selectedPoseIndex],
                 matrixStack =  matrices,
                 partialTicks = delta,
@@ -465,6 +465,8 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
 
     fun setDexEntry(pokedexEntry : PokedexEntry) {
         this.currentEntry = pokedexEntry
+        this.renderablePokemon = null
+        selectedPoseIndex = 0
 
         val species = PokemonSpecies.getByIdentifier(pokedexEntry.speciesId)
         val forms = pokedexEntry.forms
