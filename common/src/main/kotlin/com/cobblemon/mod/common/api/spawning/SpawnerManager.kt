@@ -27,7 +27,7 @@ import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules.DO_POKEMON_SP
 open class SpawnerManager {
     val spawners = mutableListOf<Spawner>()
         get() {
-            if (server()?.isOnThread == false) {
+            if (server()?.isSameThread == false) {
                 Cobblemon.LOGGER.error("Illegal access to spawners list from non-server thread!")
                 Exception().printStackTrace()
             }
@@ -35,7 +35,7 @@ open class SpawnerManager {
         }
     val influences = mutableListOf<SpawningInfluence>()
         get() {
-            if (server()?.isOnThread == false) {
+            if (server()?.isSameThread == false) {
                 Cobblemon.LOGGER.error("Illegal access to influences from non-server thread!")
                 Exception().printStackTrace()
             }

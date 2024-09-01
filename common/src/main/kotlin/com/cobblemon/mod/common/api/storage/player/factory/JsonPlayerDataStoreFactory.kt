@@ -27,7 +27,7 @@ class JsonPlayerDataStoreFactory : PlayerDataStoreFactory {
     }
 
     override fun load(uuid: UUID): PlayerData {
-        if (!server()!!.isOnThread) {
+        if (server()?.isSameThread == false) {
             Cobblemon.LOGGER.error("Illegal access to player data store from non-server thread!")
             Exception().printStackTrace()
         }
