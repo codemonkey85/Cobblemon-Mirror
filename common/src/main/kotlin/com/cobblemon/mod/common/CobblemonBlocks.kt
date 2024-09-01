@@ -10,6 +10,7 @@ package com.cobblemon.mod.common
 
 import com.cobblemon.mod.common.api.apricorn.Apricorn
 import com.cobblemon.mod.common.block.*
+import com.cobblemon.mod.common.block.LecternBlock
 import com.cobblemon.mod.common.block.MintBlock.MintType
 import com.cobblemon.mod.common.block.chest.GildedChestBlock
 import com.cobblemon.mod.common.block.sign.CobblemonHangingSignBlock
@@ -639,6 +640,19 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     )
 
     @JvmField
+    val LECTERN = create(
+        "lectern",
+        LecternBlock(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.WOOD)
+                .instrument(NoteBlockInstrument.BASS)
+                .sound(SoundType.WOOD)
+                .strength(2.5F)
+                .ignitedByLava()
+        )
+    )
+
+    @JvmField
     val DISPLAY_CASE = create(
         "display_case",
         DisplayCaseBlock(
@@ -647,7 +661,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
                 .noOcclusion()
                 .pushReaction(PushReaction.BLOCK)
                 .mapColor(MapColor.STONE)
-                .strength(0.3f)
+                .strength(0.3F)
         )
     )
 

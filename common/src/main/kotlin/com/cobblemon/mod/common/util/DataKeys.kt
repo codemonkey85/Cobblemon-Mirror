@@ -89,6 +89,7 @@ object DataKeys {
     const val STORE_BACKUP = "BackupStore"
 
     // Pokedex Keys
+    const val POKEDEX_TYPE = "PokedexType"
     const val NUM_ENCOUNTED_WILD = "NumberEncounteredWild"
     const val NUM_ENCOUNTED_BATTLE = "NumberEncounteredBattle"
     const val NUM_CAUGHT = "NumberCaught"
