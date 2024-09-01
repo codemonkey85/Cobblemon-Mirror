@@ -8,37 +8,38 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class MetangModel (root: ModelPart) : PokemonPoseableModel() {
+class MetangModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("metang")
 
     override var portraitScale = 1.8F
-    override var portraitTranslation = Vec3d(-0.35, 0.0, 0.0)
+    override var portraitTranslation = Vec3(-0.35, 0.0, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.65, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.65, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var hover: PokemonPose
-    lateinit var fly: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var hover: Pose
+    lateinit var fly: Pose
+    lateinit var sleep: Pose
+    lateinit var battleidle: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("metang", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("metang", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("metang", "blink")}
 
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("metang", "sleep"))
+            animations = arrayOf(bedrock("metang", "sleep"))
         )
         standing = registerPose(
             poseName = "stand",
@@ -46,7 +47,7 @@ class MetangModel (root: ModelPart) : PokemonPoseableModel() {
             condition = { !it.isBattling },
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("metang", "ground_idle")
             )
         )
@@ -54,7 +55,7 @@ class MetangModel (root: ModelPart) : PokemonPoseableModel() {
             poseName = "hover",
             poseTypes = setOf(PoseType.HOVER, PoseType.FLOAT),
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("metang", "air_idle")
             )
         )
@@ -62,7 +63,7 @@ class MetangModel (root: ModelPart) : PokemonPoseableModel() {
             poseName = "fly",
             poseTypes = setOf(PoseType.FLY, PoseType.SWIM),
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("metang", "air_fly")
             )
         )
@@ -71,7 +72,7 @@ class MetangModel (root: ModelPart) : PokemonPoseableModel() {
             poseTypes = PoseType.MOVING_POSES - PoseType.FLY - PoseType.SWIM,
             transformTicks = 5,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("metang", "ground_walk")
             )
         )
@@ -81,7 +82,7 @@ class MetangModel (root: ModelPart) : PokemonPoseableModel() {
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("metang", "battle_idle")
             )
         )
@@ -89,6 +90,6 @@ class MetangModel (root: ModelPart) : PokemonPoseableModel() {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("metang", "faint") else null
 }

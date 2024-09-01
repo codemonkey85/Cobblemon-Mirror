@@ -13,13 +13,13 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFr
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class CorviknightModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BiWingedFrame {
+class CorviknightModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("corviknight")
     override val leftWing = getPart("wing_left")
     override val rightWing = getPart("wing_right")
@@ -33,25 +33,25 @@ class CorviknightModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, 
     val closedWingRight = getPart("wing_closed_right")
 
     override var portraitScale = 1.0F
-    override var portraitTranslation = Vec3d(-0.45, 3.0, 0.0)
+    override var portraitTranslation = Vec3(-0.45, 3.0, 0.0)
 
     override var profileScale = 0.36F
-    override var profileTranslation = Vec3d(0.0, 1.2, 0.0)
+    override var profileTranslation = Vec3(0.0, 1.2, 0.0)
 
 
-    lateinit var stand: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var hover: PokemonPose
-    lateinit var fly: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var stand: Pose
+    lateinit var walk: Pose
+    lateinit var hover: Pose
+    lateinit var fly: Pose
+    lateinit var sleep: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("corviknight", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("corviknight", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("corviknight", "blink") }
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("corviknight", "sleep"))
+            animations = arrayOf(bedrock("corviknight", "sleep"))
         )
 
         stand = registerPose(
@@ -65,7 +65,7 @@ class CorviknightModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, 
                 closedWingRight.createTransformation().withVisibility(visibility = true)
             ),
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("corviknight", "ground_idle")
             )
@@ -82,7 +82,7 @@ class CorviknightModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, 
                 closedWingRight.createTransformation().withVisibility(visibility = false)
             ),
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("corviknight", "air_idle")
             )
@@ -99,7 +99,7 @@ class CorviknightModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, 
                 closedWingRight.createTransformation().withVisibility(visibility = false)
             ),
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("corviknight", "air_fly")
             )
@@ -116,7 +116,7 @@ class CorviknightModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, 
                 closedWingRight.createTransformation().withVisibility(visibility = true)
             ),
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("corviknight", "ground_walk")
             )

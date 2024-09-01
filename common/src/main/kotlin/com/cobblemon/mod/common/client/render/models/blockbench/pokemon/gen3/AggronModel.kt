@@ -14,13 +14,13 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFr
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class AggronModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BimanualFrame, BipedFrame {
+class AggronModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BimanualFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("aggron")
     override val head = getPart("neck")
 
@@ -30,15 +30,15 @@ class AggronModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biman
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 1.21F
-    override var portraitTranslation = Vec3d(-0.78, 2.25, 0.0)
+    override var portraitTranslation = Vec3(-0.78, 2.25, 0.0)
 
     override var profileScale = 0.46F
-    override var profileTranslation = Vec3d(-0.06, 0.98, -6.0)
+    override var profileTranslation = Vec3(-0.06, 0.98, -6.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walking: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("aggron", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("aggron", "cry") }
 
     override fun registerPoses() {
 
@@ -46,7 +46,7 @@ class AggronModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biman
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("aggron", "ground_idle")
             )
@@ -56,7 +56,7 @@ class AggronModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biman
             poseName = "walking",
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("aggron", "ground_idle"),
                 BimanualSwingAnimation(this, swingPeriodMultiplier = 0.6F, amplitudeMultiplier = 0.9F),
@@ -66,6 +66,6 @@ class AggronModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biman
     }
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walking)) bedrockStateful("aggron", "faint") else null
 }

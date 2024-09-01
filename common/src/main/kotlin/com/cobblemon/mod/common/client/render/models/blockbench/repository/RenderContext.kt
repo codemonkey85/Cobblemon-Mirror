@@ -8,10 +8,11 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.repository
 
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.util.asResource
 import com.google.gson.reflect.TypeToken
-import net.minecraft.entity.Entity
-import net.minecraft.util.Identifier
+import net.minecraft.world.entity.Entity
+import net.minecraft.resources.ResourceLocation
 
 
 /**
@@ -24,6 +25,16 @@ class RenderContext {
     // A map to store data values associated with keys
     private val context: MutableMap<Key<*>, Any?> = mutableMapOf()
 
+    var entity: Entity?
+        get() = this.request(ENTITY)
+        set(value) {
+            if (value == null) {
+                this.pop(ENTITY)
+            } else {
+                this.put(ENTITY, value)
+            }
+        }
+
     /**
      * Retrieves a value from the context associated with the provided key.
      *
@@ -33,7 +44,7 @@ class RenderContext {
      * @since 1.4.0
      */
     @Suppress("UNCHECKED_CAST")
-    fun <T : Any> request(key: Key<T>): T? = this.context[key] as T?
+    fun <T : Any> request(key: Key<T>): T? = this.context[key] as? T?
 
     /**
      * Retrieves a value from the context associated with the provided key, assuming the value exists.
@@ -77,7 +88,7 @@ class RenderContext {
      *
      * @since 1.4.0
      */
-    data class Key<T : Any>(val key: Identifier, val token: TypeToken<T>)
+    data class Key<T : Any>(val key: ResourceLocation, val token: TypeToken<T>)
 
     /**
      * Represents different rendering states or modes.
@@ -97,7 +108,9 @@ class RenderContext {
         PORTRAIT(true),
 
         //Profile rendering mode (GUI-based).
-        PROFILE(true)
+        PROFILE(true),
+        RESURRECTION_MACHINE(false),
+        BLOCK(false)
     }
 
     // Predefined keys for common data types
@@ -110,7 +123,7 @@ class RenderContext {
         /**
          * Key to access the identifier of the texture being rendered.
          */
-        val TEXTURE: Key<Identifier> = key("texture".asResource())
+        val TEXTURE: Key<ResourceLocation> = key("texture".asResource())
 
         /**
          * Key to access the base scaling factor of the current species.
@@ -120,7 +133,7 @@ class RenderContext {
         /**
          * Key to access the identifier of the current species.
          */
-        val SPECIES: Key<Identifier> = key("species".asResource())
+        val SPECIES: Key<ResourceLocation> = key("species".asResource())
 
         /**
          * Key to access the aspects of the current entity.
@@ -128,9 +141,19 @@ class RenderContext {
         val ASPECTS: Key<Set<String>> = key("species".asResource())
 
         /**
+         * Key to access whether or not quirks are enabled for this context. It is implied as true when it's null
+         */
+        val DO_QUIRKS: Key<Boolean> = key("do_quirks".asResource())
+
+        /**
          * Key to access the rendering state, indicating the active rendering mode.
          */
         val RENDER_STATE: Key<RenderState> = key("state".asResource())
+
+        /**
+         * Key to access the posable state of the thing being drawn.
+         */
+        val POSABLE_STATE: Key<PosableState> = key("posable_state".asResource())
 
         /**
          * Creates a new Key instance with the provided identifier and TypeToken.
@@ -141,7 +164,7 @@ class RenderContext {
          *
          * @since 1.4.0
          */
-        fun <T : Any> key(id: Identifier, token: TypeToken<T>): Key<T> = Key(id, token)
+        fun <T : Any> key(id: ResourceLocation, token: TypeToken<T>): Key<T> = Key(id, token)
 
         /**
          * Creates a new Key instance with the provided identifier and class type.
@@ -152,7 +175,7 @@ class RenderContext {
          *
          * @since 1.4.0
          */
-        inline fun <reified T : Any> key(id: Identifier): Key<T> = key(id, TypeToken.get(T::class.java))
+        inline fun <reified T : Any> key(id: ResourceLocation): Key<T> = key(id, TypeToken.get(T::class.java))
     }
 }
 

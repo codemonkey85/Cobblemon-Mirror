@@ -9,17 +9,17 @@
 package com.cobblemon.mod.common.util.math
 
 import kotlin.math.round
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.phys.Vec3
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class SimpleMathExtensionsKtTest {
     @Test
     fun `should get reliable rotation matrix for vectors`() {
-        val vec1 = Vec3d(0.0, 1.0, 0.0)
-        val vec2 = Vec3d(1.0, 0.0, 0.0)
+        val vec1 = Vec3(0.0, 1.0, 0.0)
+        val vec2 = Vec3(1.0, 0.0, 0.0)
         val rotation = getRotationMatrix(vec1, vec2)
-        val vec3 = Vec3d(-2.0, 0.0, 0.0)
+        val vec3 = Vec3(-2.0, 0.0, 0.0)
         val result = rotation * vec3
         assertEquals(0.0, result.x)
         // Rounding bs on 2.0

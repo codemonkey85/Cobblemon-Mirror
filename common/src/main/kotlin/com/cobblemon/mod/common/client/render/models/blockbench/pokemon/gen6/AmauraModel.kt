@@ -8,32 +8,32 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen6
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class AmauraModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class AmauraModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("amaura")
     override val head = getPart("neck")
 
     override var portraitScale = 1.82F
-    override var portraitTranslation = Vec3d(-0.64, 1.24, 0.0)
+    override var portraitTranslation = Vec3(-0.64, 1.24, 0.0)
 
     override var profileScale = 0.55F
-    override var profileTranslation = Vec3d(0.0, 0.88, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.88, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battleidle: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var battleidle: CobblemonPose
+    lateinit var sleep: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("amaura", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("amaura", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("amaura", "blink") }
@@ -41,7 +41,7 @@ class AmauraModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("amaura", "sleep"))
+            animations = arrayOf(bedrock("amaura", "sleep"))
         )
 
         standing = registerPose(
@@ -50,7 +50,7 @@ class AmauraModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             transformTicks = 10,
             condition = { !it.isBattling },
             quirks = arrayOf(blink, quirk),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("amaura", "ground_idle")
             )
@@ -62,7 +62,7 @@ class AmauraModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             transformTicks = 10,
             quirks = arrayOf(blink, quirk),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                     singleBoneLook(),
                     bedrock("amaura", "battle_idle")
             )
@@ -73,7 +73,7 @@ class AmauraModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("amaura", "ground_walk")
             )
@@ -81,8 +81,5 @@ class AmauraModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
     }
 
-    override fun getFaintAnimation(
-            pokemonEntity: PokemonEntity,
-            state: PoseableEntityState<PokemonEntity>
-    ) = bedrockStateful("amaura", "faint")
+    override fun getFaintAnimation(state: PosableState) = bedrockStateful("amaura", "faint")
 }

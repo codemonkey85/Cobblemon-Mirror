@@ -9,14 +9,14 @@
 package com.cobblemon.mod.common.client.gui.toast
 
 import com.cobblemon.mod.common.net.messages.client.toast.ToastPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 import java.util.UUID
 
 object ToastTracker {
 
     private val toasts = hashMapOf<UUID, CobblemonToast>()
 
-    fun handle(packet: ToastPacket, client: MinecraftClient) {
+    fun handle(packet: ToastPacket, client: Minecraft) {
         var needsQueue = false
         var toast = this.toasts[packet.uuid]
         if (toast == null) {
@@ -26,7 +26,7 @@ object ToastTracker {
         }
         toast.updateFrom(packet)
         if (needsQueue) {
-            client.toastManager.add(toast)
+            client.toasts.addToast(toast)
         }
     }
 

@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.net.messages.client.pasture
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
 import java.util.UUID
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Packet sent to the client to inform the player of a pastured Pokémon having successfully spawned.
@@ -22,11 +22,11 @@ import net.minecraft.network.PacketByteBuf
 class PasturePokemonEntityKnownPacket(val pokemonId: UUID) : NetworkPacket<PasturePokemonEntityKnownPacket> {
     companion object {
         val ID = cobblemonResource("pasture_pokemon_state_updated")
-        fun decode(buffer: PacketByteBuf) = PasturePokemonEntityKnownPacket(buffer.readUuid())
+        fun decode(buffer: RegistryFriendlyByteBuf) = PasturePokemonEntityKnownPacket(buffer.readUUID())
     }
 
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {
-        buffer.writeUuid(pokemonId)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(pokemonId)
     }
 }

@@ -7,8 +7,12 @@
  */
 
 package com.cobblemon.mod.common.pokemon.ai
+
+import com.cobblemon.mod.common.api.molang.ExpressionLike
+import com.cobblemon.mod.common.util.asExpressionLike
+
 class WalkBehaviour {
     val canWalk = true
     val avoidsLand = false
-    var walkSpeed = 0.35F
+    var walkSpeed: ExpressionLike = "0.35".asExpressionLike()
 }

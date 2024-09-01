@@ -8,26 +8,24 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.animation
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityModel
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.addRotation
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.ModelFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Bone
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation.Companion.X_AXIS
-import net.minecraft.entity.Entity
-import net.minecraft.util.math.MathHelper
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
+import net.minecraft.util.Mth
 
 /**
  * A quadruped animation that will have zero-rotations on all legs at
- * stateless and otherwise does simple predictable walking like Minecraft
+ * zero and otherwise does simple predictable walking like Minecraft
  * quadrupeds.
  *
  * @author Hiroku
  * @since December 4th, 2021
  */
-class QuadrupedWalkAnimation<T : Entity>(
-    frame: ModelFrame,
+class QuadrupedWalkAnimation(
     val legFrontLeft: Bone?,
     val legFrontRight: Bone?,
     val legBackLeft: Bone?,
@@ -36,13 +34,12 @@ class QuadrupedWalkAnimation<T : Entity>(
     val periodMultiplier: Float = 0.6662F,
     /** The multiplier to apply to the stride of the entity. The larger this is, the further the legs move. */
     val amplitudeMultiplier: Float = 1.4F
-) : StatelessAnimation<T, ModelFrame>(frame) {
+) : PoseAnimation() {
     constructor(
         frame: QuadrupedFrame,
         periodMultiplier: Float = 0.6662F,
         amplitudeMultiplier: Float = 1.4F
     ): this(
-        frame = frame,
         legFrontLeft = frame.foreLeftLeg,
         legFrontRight = frame.foreRightLeg,
         legBackLeft = frame.hindLeftLeg,
@@ -51,16 +48,15 @@ class QuadrupedWalkAnimation<T : Entity>(
         amplitudeMultiplier = amplitudeMultiplier
     )
 
-    override val targetFrame: Class<ModelFrame> = ModelFrame::class.java
-    override fun setAngles(entity: T?, model: PoseableEntityModel<T>, state: PoseableEntityState<T>?, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
+    override fun setupAnim(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
         val hindRightLeg = legBackRight ?: return
         val hindLeftLeg = legBackLeft ?: return
         val foreRightLeg = legFrontRight ?: return
         val foreLeftLeg = legFrontLeft ?: return
 
-        hindRightLeg.addRotation(X_AXIS, MathHelper.cos(limbSwing * periodMultiplier) * limbSwingAmount * amplitudeMultiplier * intensity)
-        hindLeftLeg.addRotation(X_AXIS, MathHelper.cos(limbSwing * periodMultiplier + Math.PI.toFloat()) * limbSwingAmount * amplitudeMultiplier * intensity)
-        foreRightLeg.addRotation(X_AXIS, MathHelper.cos(limbSwing * periodMultiplier + Math.PI.toFloat()) * limbSwingAmount * amplitudeMultiplier * intensity)
-        foreLeftLeg.addRotation(X_AXIS, MathHelper.cos(limbSwing * periodMultiplier) * limbSwingAmount * amplitudeMultiplier * intensity)
+        hindRightLeg.addRotation(X_AXIS, Mth.cos(limbSwing * periodMultiplier) * limbSwingAmount * amplitudeMultiplier * intensity)
+        hindLeftLeg.addRotation(X_AXIS, Mth.cos(limbSwing * periodMultiplier + Math.PI.toFloat()) * limbSwingAmount * amplitudeMultiplier * intensity)
+        foreRightLeg.addRotation(X_AXIS, Mth.cos(limbSwing * periodMultiplier + Math.PI.toFloat()) * limbSwingAmount * amplitudeMultiplier * intensity)
+        foreLeftLeg.addRotation(X_AXIS, Mth.cos(limbSwing * periodMultiplier) * limbSwingAmount * amplitudeMultiplier * intensity)
     }
 }

@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:medicinal_brew"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.medicinal_brew"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.medicinal_brew.description"
+    }
+  },
+  "parent": "cobblemon:obtain_leek",
+  "criteria": {
+    "check_inv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:medicinal_brew"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

@@ -12,17 +12,17 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFr
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.parabolaFunction
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class NoctowlModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BiWingedFrame {
+class NoctowlModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("noctowl")
     override val leftWing = getPart("wing_left")
     override val rightWing = getPart("wing_right")
@@ -32,16 +32,16 @@ class NoctowlModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
     private val tail = getPart("tail")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.35, 1.0, 0.0)
+    override var portraitTranslation = Vec3(-0.35, 1.0, 0.0)
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.0, 0.68, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.68, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var hover: PokemonPose
-    lateinit var fly: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var hover: Pose
+    lateinit var fly: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("noctowl", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("noctowl", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("noctowl", "blink")}
@@ -50,7 +50,7 @@ class NoctowlModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
             poseTypes = PoseType.STATIONARY_POSES - PoseType.HOVER - PoseType.FLOAT + PoseType.UI_POSES,
             transformTicks = 0,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("noctowl", "ground_idle")
             )
@@ -59,7 +59,7 @@ class NoctowlModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
             poseName = "hover",
             poseTypes = setOf(PoseType.HOVER, PoseType.FLOAT),
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("noctowl", "ground_idle")
             )
@@ -68,7 +68,7 @@ class NoctowlModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
             poseName = "fly",
             poseTypes = setOf(PoseType.FLY, PoseType.SWIM),
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("noctowl", "ground_idle")
             )
@@ -78,7 +78,7 @@ class NoctowlModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
             poseTypes = PoseType.MOVING_POSES - PoseType.FLY - PoseType.SWIM,
             transformTicks = 5,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("noctowl", "ground_idle"),
                 rootPart.translation(
@@ -86,7 +86,7 @@ class NoctowlModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
                         peak = -4F,
                         period = 0.4F
                     ),
-                    timeVariable = { state, _, _ -> state?.animationSeconds },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = ModelPartTransformation.Y_AXIS
                 ),
                 head.translation(
@@ -96,7 +96,7 @@ class NoctowlModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
                         verticalShift = (-10F).toRadians()
                     ),
                     axis = ModelPartTransformation.X_AXIS,
-                    timeVariable = { state, _, _ -> state?.animationSeconds }
+                    timeVariable = { state, _, _ -> state.animationSeconds }
                 ),
                 leftLeg.rotation(
                     function = parabolaFunction(
@@ -131,7 +131,7 @@ class NoctowlModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
                         phaseShift = 0.00F,
                         verticalShift = (-20F).toRadians()
                     ),
-                    timeVariable = { state, _, _ -> state?.animationSeconds },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = ModelPartTransformation.Z_AXIS
                 ),
                 rightWing.translation(

@@ -1,0 +1,22 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:oran_berry"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.use_bait"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.use_bait.description"
+    }
+  },
+  "parent": "cobblemon:craft_rod",
+  "criteria": {
+    "has_bait": {
+      "trigger": "cobblemon:cast_poke_rod",
+      "conditions": {
+        "hasBait": true
+      }
+    }
+  }
+}

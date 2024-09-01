@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.api.events.entity.SpawnEvent
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.cobblemon.mod.common.util.toVec3d
-import net.minecraft.entity.Entity
+import net.minecraft.world.entity.Entity
 
 /**
  * A spawn action that spawns a single entity. This is the most common type of spawn action.
@@ -29,15 +29,15 @@ abstract class SingleEntitySpawnAction<T : Entity>(
 
     override fun run(): EntitySpawnResult? {
         val e = createEntity() ?: return null
-        e.setPosition(ctx.position.toVec3d().add(0.5, 1.0, 0.5))
+        e.setPos(ctx.position.toVec3d().add(0.5, 1.0, 0.5))
         var shouldSpawn = false
         CobblemonEvents.ENTITY_SPAWN.postThen(SpawnEvent(e, ctx), ifSucceeded = {
-            ctx.world.spawnEntity(e)
+            this.entity.emit(e)
+            ctx.world.addFreshEntity(e)
             shouldSpawn = true
         })
 
         return if (shouldSpawn) {
-            this.entity.emit(e)
             EntitySpawnResult(listOf(e))
         } else null
     }

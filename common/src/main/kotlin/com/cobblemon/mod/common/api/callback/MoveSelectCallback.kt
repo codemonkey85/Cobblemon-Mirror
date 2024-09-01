@@ -18,11 +18,13 @@ import com.cobblemon.mod.common.battles.InBattleMove
 import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.net.messages.client.callback.OpenMoveCallbackPacket
 import com.cobblemon.mod.common.util.readSizedInt
+import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeSizedInt
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.Component
 import java.util.UUID
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Used for opening move selection screens for players and handling their choice. Currently
@@ -36,11 +38,11 @@ object MoveSelectCallbacks {
 
     @JvmOverloads
     fun create(
-        player: ServerPlayerEntity,
-        title: Text = "".text(),
+        player: ServerPlayer,
+        title: Component = "".text(),
         possibleMoves: List<MoveSelectDTO>,
-        cancel: (ServerPlayerEntity) -> Unit = {},
-        handler: (ServerPlayerEntity, index: Int, MoveSelectDTO) -> Unit
+        cancel: (ServerPlayer) -> Unit = {},
+        handler: (ServerPlayer, index: Int, MoveSelectDTO) -> Unit
     ) {
         val callback = MoveSelectCallback(
             shownMoves = possibleMoves,
@@ -55,10 +57,10 @@ object MoveSelectCallbacks {
 
     @JvmOverloads
     fun create(
-        player: ServerPlayerEntity,
+        player: ServerPlayer,
         moves: List<Move>,
         canSelect: (Move) -> Boolean = { true },
-        cancel: (ServerPlayerEntity) -> Unit = {},
+        cancel: (ServerPlayer) -> Unit = {},
         handler: (Move) -> Unit
     ) = create(
         player = player,
@@ -69,10 +71,10 @@ object MoveSelectCallbacks {
 
     @JvmOverloads
     fun createBattleSelect(
-        player: ServerPlayerEntity,
+        player: ServerPlayer,
         moves: List<InBattleMove>,
         canSelect: (InBattleMove) -> Boolean = { true },
-        cancel: (ServerPlayerEntity) -> Unit = {},
+        cancel: (ServerPlayer) -> Unit = {},
         handler: (InBattleMove) -> Unit
     ) = create(
         player = player,
@@ -81,7 +83,7 @@ object MoveSelectCallbacks {
         handler = { _, index, _ -> handler(moves[index]) }
     )
 
-    fun handleCancelled(player: ServerPlayerEntity, uuid: UUID) {
+    fun handleCancelled(player: ServerPlayer, uuid: UUID) {
         val callback = callbacks[player.uuid] ?: return
         if (callback.uuid != uuid) {
             return
@@ -90,7 +92,7 @@ object MoveSelectCallbacks {
         callback.cancel(player)
     }
 
-    fun handleCallback(player: ServerPlayerEntity, uuid: UUID, index: Int) {
+    fun handleCallback(player: ServerPlayer, uuid: UUID, index: Int) {
         val callback = callbacks[player.uuid] ?: return
         callbacks.remove(player.uuid)
         if (callback.uuid != uuid) {
@@ -108,8 +110,8 @@ object MoveSelectCallbacks {
 class MoveSelectCallback(
     val uuid: UUID = UUID.randomUUID(),
     val shownMoves: List<MoveSelectDTO>,
-    val cancel: (ServerPlayerEntity) -> Unit = {},
-    val handler: (ServerPlayerEntity, Int, MoveSelectDTO) -> Unit
+    val cancel: (ServerPlayer) -> Unit = {},
+    val handler: (ServerPlayer, Int, MoveSelectDTO) -> Unit
 )
 
 class MoveSelectDTO(val moveTemplate: MoveTemplate, var enabled: Boolean, val pp: Int = -1, val ppMax: Int = -1) {
@@ -117,14 +119,14 @@ class MoveSelectDTO(val moveTemplate: MoveTemplate, var enabled: Boolean, val pp
     constructor(move: Move, enabled: Boolean = true): this(moveTemplate = move.template, enabled = enabled, pp = move.currentPp, ppMax = move.maxPp)
     @JvmOverloads
     constructor(move: InBattleMove, enabled: Boolean = true): this(moveTemplate = Moves.getByNameOrDummy(move.move), enabled = enabled, pp = move.pp, ppMax = move.maxpp)
-    constructor(buffer: PacketByteBuf): this(
+    constructor(buffer: RegistryFriendlyByteBuf): this(
         moveTemplate = Moves.getByNameOrDummy(buffer.readString()),
         enabled = buffer.readBoolean(),
         pp = buffer.readSizedInt(IntSize.BYTE),
         ppMax = buffer.readSizedInt(IntSize.BYTE)
     )
 
-    fun writeToBuffer(buffer: PacketByteBuf) {
+    fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(moveTemplate.name)
         buffer.writeBoolean(enabled)
         buffer.writeSizedInt(IntSize.BYTE, pp)

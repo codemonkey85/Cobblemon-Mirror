@@ -1,0 +1,217 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:full_heal"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.brew_all"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.brew_all.description"
+    },
+    "frame": "challenge"
+  },
+  "parent": "cobblemon:brew_full_restore",
+  "criteria": {
+    "obtain_potion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:potion"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_super_potion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:super_potion"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_hyper_potion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:hyper_potion"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_max_potion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:max_potion"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_full_restore": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:full_restore"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_full_heal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:full_heal"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_antidote": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:antidote"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_awakening": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:awakening"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_burn_heal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:burn_heal"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_ice_heal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:ice_heal"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_paralyze_heal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:paralyze_heal"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_ether": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:ether"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_elixir": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:elixir"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_max_ether": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:max_ether"
+            ]
+          }
+        ]
+      }
+    },
+	"obtain_max_elixir": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:max_elixir"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [ "obtain_potion" ],
+	[ "obtain_super_potion" ],
+	[ "obtain_hyper_potion" ],
+	[ "obtain_max_potion" ],
+	[ "obtain_full_restore" ],
+	[ "obtain_full_heal" ],
+	[ "obtain_antidote" ],
+	[ "obtain_awakening" ],
+	[ "obtain_burn_heal" ],
+	[ "obtain_ice_heal" ],
+	[ "obtain_paralyze_heal" ],
+	[ "obtain_ether" ],
+	[ "obtain_elixir" ],
+	[ "obtain_max_ether" ],
+	[ "obtain_max_elixir" ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
+}

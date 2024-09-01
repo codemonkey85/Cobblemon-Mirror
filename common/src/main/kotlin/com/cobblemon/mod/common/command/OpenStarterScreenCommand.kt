@@ -18,29 +18,29 @@ import com.cobblemon.mod.common.util.permission
 import com.mojang.brigadier.Command.SINGLE_SUCCESS
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.server.command.CommandManager.argument
-import net.minecraft.server.command.CommandManager.literal
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands.argument
+import net.minecraft.commands.Commands.literal
+import net.minecraft.commands.arguments.EntityArgument
 
 object OpenStarterScreenCommand {
 
-    fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
+    fun register(dispatcher: CommandDispatcher<CommandSourceStack>) {
         dispatcher.register(
             literal("openstarterscreen")
                 .permission(CobblemonPermissions.OPEN_STARTER_SCREEN)
                 .then(
-                    argument("player", EntityArgumentType.player())
-                        .executes { execute(it,) }
+                    argument("player", EntityArgument.player())
+                        .executes { execute(it) }
                 )
         )
     }
 
-    private fun execute(context: CommandContext<ServerCommandSource>) : Int {
-        val player = EntityArgumentType.getPlayer(context, "player")
+    private fun execute(context: CommandContext<CommandSourceStack>) : Int {
+        val player = EntityArgument.getPlayer(context, "player")
         val playerData = Cobblemon.playerData.get(player)
         if (playerData.starterSelected) {
-            context.source.sendFeedback({ lang("ui.starter.hasalreadychosen", player.name).red() }, true)
+            context.source.sendSuccess({ lang("ui.starter.hasalreadychosen", player.name).red() }, true)
             return 0
         }
         if (playerData.starterLocked) {

@@ -9,7 +9,7 @@
 package com.cobblemon.mod.common.entity.pokemon.ai.goals
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.entity.ai.goal.FollowOwnerGoal
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal
 
 /**
  * An override of the [FollowOwnerGoal] so that Pokémon behaviours can be implemented.
@@ -22,15 +22,15 @@ class PokemonFollowOwnerGoal(
     speed: Double,
     minDistance: Float,
     maxDistance: Float,
-    leavesAllowed: Boolean
-) : FollowOwnerGoal(entity, speed, minDistance, maxDistance, leavesAllowed) {
+) : FollowOwnerGoal(entity, speed, minDistance, maxDistance) {
     fun canMove() = entity.behaviour.moving.walk.canWalk || entity.behaviour.moving.fly.canFly// TODO probably depends on whether we're underwater or not
-    override fun canStart() = super.canStart()
+    override fun canUse() = super.canUse()
             && canMove()
             && !entity.isBusy
             && entity.tethering == null
-    override fun shouldContinue() = super.shouldContinue()
+
+    override fun canContinueToUse() = super.canContinueToUse()
             && canMove()
             && entity.tethering == null
-            && (entity.owner?.distanceTo(entity) ?: 0F) > minDistance / 2
+            && (entity.owner?.distanceTo(entity) ?: 0F) > startDistance / 2
 }

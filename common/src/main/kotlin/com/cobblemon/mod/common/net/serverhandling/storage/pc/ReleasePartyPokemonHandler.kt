@@ -8,7 +8,6 @@
 
 package com.cobblemon.mod.common.net.serverhandling.storage.pc
 
-import com.cobblemon.mod.common.CobblemonNetwork
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.storage.ReleasePokemonEvent
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
@@ -16,10 +15,10 @@ import com.cobblemon.mod.common.client.settings.ServerSettings
 import com.cobblemon.mod.common.net.messages.server.storage.party.ReleasePartyPokemonPacket
 import com.cobblemon.mod.common.util.party
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object ReleasePartyPokemonHandler : ServerNetworkPacketHandler<ReleasePartyPokemonPacket> {
-    override fun handle(packet: ReleasePartyPokemonPacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: ReleasePartyPokemonPacket, server: MinecraftServer, player: ServerPlayer) {
         val party = player.party()
         val pokemon = party[packet.position] ?: return
         if (pokemon.uuid != packet.pokemonID) {

@@ -8,29 +8,28 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class ExeggcuteModel(root: ModelPart) : PokemonPoseableModel() {
+class ExeggcuteModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("exeggcute")
 
     override var portraitScale = 2.1F
-    override var portraitTranslation = Vec3d(0.0, -1.9, 0.0)
+    override var portraitTranslation = Vec3(0.0, -1.9, 0.0)
 
     override var profileScale = 1.0F
-    override var profileTranslation = Vec3d(-0.15, 0.0, 0.0)
+    override var profileTranslation = Vec3(-0.15, 0.0, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var uiPortrait: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var sleep: Pose
+    lateinit var uiPortrait: Pose
 
     override fun registerPoses() {
         val blink1 = quirk { bedrockStateful("exeggcute", "blink") }
@@ -42,14 +41,14 @@ class ExeggcuteModel(root: ModelPart) : PokemonPoseableModel() {
         uiPortrait = registerPose(
             poseName = "portrait",
             poseType = PoseType.PORTRAIT,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("exeggcute", "portrait")
             )
         )
 
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("exeggcute", "sleep"))
+            animations = arrayOf(bedrock("exeggcute", "sleep"))
         )
 
         standing = registerPose(
@@ -57,7 +56,7 @@ class ExeggcuteModel(root: ModelPart) : PokemonPoseableModel() {
             poseTypes = STATIONARY_POSES + PoseType.PROFILE,
             transformTicks = 10,
             quirks = arrayOf(blink1, blink2, blink3, blink4, blink5, blink6),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("exeggcute", "ground_idle")
             )
         )
@@ -66,15 +65,12 @@ class ExeggcuteModel(root: ModelPart) : PokemonPoseableModel() {
             poseName = "walk",
             poseTypes = MOVING_POSES,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("exeggcute", "ground_idle"),
                 bedrock("exeggcute", "ground_walk")
             )
         )
     }
 
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = bedrockStateful("exeggcute", "faint")
+    override fun getFaintAnimation(state: PosableState) = bedrockStateful("exeggcute", "faint")
 }

@@ -23,10 +23,10 @@ import com.cobblemon.mod.common.util.DataKeys
 import com.cobblemon.mod.common.util.getPlayer
 import com.cobblemon.mod.common.util.lang
 import com.google.gson.JsonObject
-import java.util.UUID
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.MutableText
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.server.level.ServerPlayer
+import java.util.*
 
 /**
  * The store used for PCs. It is divided into some number of [PCBox]es, and can
@@ -42,7 +42,7 @@ import net.minecraft.text.MutableText
  */
 open class PCStore(
     final override val uuid: UUID,
-    val name: MutableText
+    val name: MutableComponent
 ) : PokemonStore<PCPosition>() {
     constructor(uuid: UUID): this(uuid, lang("your_pc"))
 
@@ -53,7 +53,7 @@ open class PCStore(
 
     override fun iterator() = boxes.flatMap { it.toList() }.iterator()
     override fun getObservingPlayers() = observingUUIDs.mapNotNull { it.getPlayer() }
-    fun addObserver(player: ServerPlayerEntity) {
+    fun addObserver(player: ServerPlayer) {
         observingUUIDs.add(player.uuid)
         sendTo(player)
     }
@@ -72,7 +72,7 @@ open class PCStore(
         return position.box in (0 until boxes.size) && position.slot in (0 until POKEMON_PER_BOX)
     }
 
-    override fun sendTo(player: ServerPlayerEntity) {
+    override fun sendTo(player: ServerPlayer) {
         InitializePCPacket(this).sendToPlayer(player)
         boxes.forEach { it.sendTo(player) }
     }
@@ -123,17 +123,17 @@ open class PCStore(
         }
     }
 
-    override fun saveToNBT(nbt: NbtCompound): NbtCompound {
+    override fun saveToNBT(nbt: CompoundTag): CompoundTag {
         nbt.putShort(DataKeys.STORE_BOX_COUNT, boxes.size.toShort())
         nbt.putBoolean(DataKeys.STORE_BOX_COUNT_LOCKED, lockedSize)
         boxes.forEachIndexed { index, box ->
-            nbt.put(DataKeys.STORE_BOX + index, box.saveToNBT(NbtCompound()))
+            nbt.put(DataKeys.STORE_BOX + index, box.saveToNBT(CompoundTag()))
         }
-        nbt.put(DataKeys.STORE_BACKUP, backupStore.saveToNBT(NbtCompound()))
+        nbt.put(DataKeys.STORE_BACKUP, backupStore.saveToNBT(CompoundTag()))
         return nbt
     }
 
-    override fun loadFromNBT(nbt: NbtCompound): PokemonStore<PCPosition> {
+    override fun loadFromNBT(nbt: CompoundTag): PokemonStore<PCPosition> {
         val boxCountStored = nbt.getShort(DataKeys.STORE_BOX_COUNT)
         for (boxNumber in 0 until boxCountStored) {
             boxes.add(PCBox(this).loadFromNBT(nbt.getCompound(DataKeys.STORE_BOX + boxNumber)))
@@ -219,11 +219,11 @@ open class PCStore(
         return this
     }
 
-    override fun loadPositionFromNBT(nbt: NbtCompound): StoreCoordinates<PCPosition> {
+    override fun loadPositionFromNBT(nbt: CompoundTag): StoreCoordinates<PCPosition> {
         return StoreCoordinates(this, PCPosition(nbt.getShort(DataKeys.STORE_BOX).toInt(), nbt.getByte(DataKeys.STORE_SLOT).toInt()))
     }
 
-    override fun savePositionToNBT(position: PCPosition, nbt: NbtCompound) {
+    override fun savePositionToNBT(position: PCPosition, nbt: CompoundTag) {
         nbt.putShort(DataKeys.STORE_BOX, position.box.toShort())
         nbt.putByte(DataKeys.STORE_SLOT, position.slot.toByte())
     }

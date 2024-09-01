@@ -8,15 +8,14 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.animation
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityModel
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.addPosition
 import com.cobblemon.mod.common.client.render.models.blockbench.addRotation
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.ModelFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.WaveFunction
+import net.minecraft.client.model.geom.ModelPart
 import kotlin.math.atan
-import net.minecraft.client.model.ModelPart
-import net.minecraft.entity.Entity
 
 /**
  * An animation that interpolates some segment of limbs onto a given wave function. This wave function
@@ -40,8 +39,7 @@ import net.minecraft.entity.Entity
  * @author Hiroku
  * @since December 13, 2021
  */
-class WaveAnimation<T : Entity>(
-    frame: ModelFrame,
+class WaveAnimation(
     val waveFunction: WaveFunction,
     val oscillationsScalar: Float,
     val head: ModelPart,
@@ -51,14 +49,12 @@ class WaveAnimation<T : Entity>(
     val motionAxis: Int,
     val basedOnLimbSwing: Boolean = false,
     val segments: Array<WaveSegment>
-): StatelessAnimation<T, ModelFrame>(frame) {
-    override val targetFrame = ModelFrame::class.java
-
-    override fun setAngles(entity: T?, model: PoseableEntityModel<T>, state: PoseableEntityState<T>?, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
+): PoseAnimation() {
+    override fun setupAnim(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
         val t = if (basedOnLimbSwing) {
             limbSwing
         } else {
-            entity?.let { model.getState(it).animationSeconds } ?: 0F
+            state.animationSeconds
         }
 
         var totalTimeDisplacement = (headLength + segments.map { it.length }.sum()) / oscillationsScalar

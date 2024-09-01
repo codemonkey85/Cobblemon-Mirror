@@ -20,10 +20,10 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.server.command.CommandManager.argument
-import net.minecraft.server.command.CommandManager.literal
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands.argument
+import net.minecraft.commands.Commands.literal
+import net.minecraft.commands.arguments.EntityArgument
 
 object TestPcSlotCommand {
 
@@ -34,11 +34,11 @@ object TestPcSlotCommand {
     private const val PROPERTIES = "properties"
     private const val NO_SUCCESS = 0
 
-    fun register(dispatcher : CommandDispatcher<ServerCommandSource>) {
+    fun register(dispatcher : CommandDispatcher<CommandSourceStack>) {
         dispatcher.register(
             literal(NAME)
             .permission(CobblemonPermissions.TEST_PC_SLOT)
-            .then(argument(PLAYER, EntityArgumentType.player())
+            .then(argument(PLAYER, EntityArgument.player())
             .then(argument(BOX, IntegerArgumentType.integer(1, Cobblemon.config.defaultBoxCount))
             .then(argument(SLOT, IntegerArgumentType.integer(1, POKEMON_PER_BOX))
             .then(argument(PROPERTIES, PokemonPropertiesArgumentType.properties())
@@ -46,7 +46,7 @@ object TestPcSlotCommand {
         )
     }
 
-    private fun execute(context: CommandContext<ServerCommandSource>): Int {
+    private fun execute(context: CommandContext<CommandSourceStack>): Int {
         val player = context.player(PLAYER)
         val boxNumber = IntegerArgumentType.getInteger(context, BOX)
         val slot = IntegerArgumentType.getInteger(context, SLOT)

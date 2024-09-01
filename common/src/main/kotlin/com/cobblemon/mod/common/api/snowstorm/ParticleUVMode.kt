@@ -14,16 +14,14 @@ import com.bedrockk.molang.ast.NumberExpression
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.codec.CodecMapped
 import com.cobblemon.mod.common.api.data.ArbitrarilyMappedSerializableCompanion
+import com.cobblemon.mod.common.util.*
 import com.cobblemon.mod.common.util.codec.EXPRESSION_CODEC
-import com.cobblemon.mod.common.util.getString
-import com.cobblemon.mod.common.util.resolveDouble
-import com.cobblemon.mod.common.util.resolveInt
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 abstract class ParticleUVMode : CodecMapped {
     companion object : ArbitrarilyMappedSerializableCompanion<ParticleUVMode, ParticleUVModeType>(
@@ -95,7 +93,7 @@ class AnimatedParticleUVMode(
         return CODEC.encodeStart(ops, this)
     }
 
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         startU = MoLang.createParser(buffer.readString()).parseExpression()
         startV = MoLang.createParser(buffer.readString()).parseExpression()
         textureSizeX = buffer.readInt()
@@ -110,7 +108,7 @@ class AnimatedParticleUVMode(
         loop = buffer.readBoolean()
     }
 
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(startU.getString())
         buffer.writeString(startV.getString())
         buffer.writeInt(textureSizeX)
@@ -204,7 +202,7 @@ class StaticParticleUVMode(
         return CODEC.encodeStart(ops, this)
     }
 
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         startU = MoLang.createParser(buffer.readString()).parseExpression()
         startV = MoLang.createParser(buffer.readString()).parseExpression()
         textureSizeX = buffer.readInt()
@@ -212,7 +210,7 @@ class StaticParticleUVMode(
         uSize = MoLang.createParser(buffer.readString()).parseExpression()
         vSize = MoLang.createParser(buffer.readString()).parseExpression()
     }
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(startU.getString())
         buffer.writeString(startV.getString())
         buffer.writeInt(textureSizeX)

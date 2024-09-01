@@ -8,31 +8,31 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen4
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import kotlin.random.Random
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class PorygonzModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class PorygonzModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("porygon_z")
     override val head = getPart("head")
 
     override var portraitScale = 2.4F
-    override var portraitTranslation = Vec3d(-0.1, 1.1, 0.0)
+    override var portraitTranslation = Vec3(-0.1, 1.1, 0.0)
 
     override var profileScale = 0.85F
-    override var profileTranslation = Vec3d(0.0, 0.6, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.6, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var sleep: Pose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("porygonz", "blink") }
@@ -45,7 +45,7 @@ class PorygonzModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         sleep = registerPose(
             poseType = PoseType.SLEEP,
             quirks = arrayOf(twitch1, twitch2, twitch3, twitch4, twitch5, twitch6),
-            idleAnimations = arrayOf(bedrock("porygonz", "sleep"))
+            animations = arrayOf(bedrock("porygonz", "sleep"))
         )
 
         standing = registerPose(
@@ -53,7 +53,7 @@ class PorygonzModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = STATIONARY_POSES + UI_POSES,
             quirks = arrayOf(blink, twitch1, twitch2, twitch3, twitch4, twitch5, twitch6),
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("porygonz", "ground_idle")
             )
@@ -64,16 +64,14 @@ class PorygonzModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = MOVING_POSES,
             quirks = arrayOf(blink, twitch1, twitch2, twitch3, twitch4, twitch5, twitch6),
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("porygonz", "ground_walk")
             )
         )
     }
 
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if ((pokemonEntity.world.random.nextBoolean())) bedrockStateful("porygonz", "faint")
+    override fun getFaintAnimation(state: PosableState) =
+        if ((Random.Default.nextBoolean())) bedrockStateful("porygonz", "faint")
         else bedrockStateful("porygonz", "faint2")
 }

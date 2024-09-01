@@ -12,9 +12,11 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.pokemon.status.Status
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.asTranslated
+import com.mojang.serialization.Codec
+import com.mojang.serialization.DataResult
 import kotlin.random.Random
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Represents a status that persists outside of battle.
@@ -22,7 +24,7 @@ import net.minecraft.util.Identifier
  * @author Deltric
  */
 open class PersistentStatus(
-    name: Identifier,
+    name: ResourceLocation,
     showdownName: String,
     applyMessage: String,
     removeMessage: String,
@@ -31,14 +33,14 @@ open class PersistentStatus(
     /**
      * Called when a status duration is expired.
      */
-    open fun onStatusExpire(player: ServerPlayerEntity, pokemon: Pokemon, random: Random) {
-        player.sendMessage(removeMessage.asTranslated(pokemon.getDisplayName()))
+    open fun onStatusExpire(player: ServerPlayer, pokemon: Pokemon, random: Random) {
+        player.sendSystemMessage(removeMessage.asTranslated(pokemon.getDisplayName()))
     }
 
     /**
      * Called every second on the Pokémon for the status
      */
-    open fun onSecondPassed(player: ServerPlayerEntity, pokemon: Pokemon, random: Random) {
+    open fun onSecondPassed(player: ServerPlayer, pokemon: Pokemon, random: Random) {
 
     }
 
@@ -56,5 +58,17 @@ open class PersistentStatus(
      */
     fun configEntry(): Pair<String, IntRange> {
         return name.toString() to defaultDuration
+    }
+
+    companion object {
+
+        /**
+         * A [Codec] for [PersistentStatus].
+         */
+        @JvmStatic
+        val CODEC: Codec<PersistentStatus> = Status.CODEC.comapFlatMap(
+            { status -> if (status is PersistentStatus) DataResult.success(status) else DataResult.error { "${status.name} is not a ${PersistentStatus::class.simpleName}" } },
+            { status -> status }
+        )
     }
 }

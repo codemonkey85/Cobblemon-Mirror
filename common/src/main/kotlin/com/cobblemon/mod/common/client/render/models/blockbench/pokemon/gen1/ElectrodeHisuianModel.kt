@@ -9,25 +9,25 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class ElectrodeHisuianModel (root: ModelPart) : PokemonPoseableModel() {
+class ElectrodeHisuianModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("electrode_hisuian")
 
     override var portraitScale = 1.5F
-    override var portraitTranslation = Vec3d(-0.4, -0.3, 0.0)
+    override var portraitTranslation = Vec3(-0.4, -0.3, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.5, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.5, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("electrode_hisuian", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("electrode_hisuian", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("electrode_hisuian", "blink") }
@@ -36,7 +36,7 @@ class ElectrodeHisuianModel (root: ModelPart) : PokemonPoseableModel() {
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             transformTicks = 0,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("electrode_hisuian", "ground_idle")
             )
         )
@@ -47,7 +47,7 @@ class ElectrodeHisuianModel (root: ModelPart) : PokemonPoseableModel() {
             transformTicks = 0,
             quirks = arrayOf(blink),
             onTransitionedInto = { it?.reset() },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("electrode_hisuian", "ground_walk")
             )
         )
@@ -55,6 +55,6 @@ class ElectrodeHisuianModel (root: ModelPart) : PokemonPoseableModel() {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("electrode_hisuian", "faint") else null
 }

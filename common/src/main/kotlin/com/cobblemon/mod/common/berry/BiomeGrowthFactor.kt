@@ -9,16 +9,11 @@
 package com.cobblemon.mod.common.berry
 
 import com.cobblemon.mod.common.api.berry.GrowthFactor
-import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.block.BerryBlock
-import com.cobblemon.mod.common.registry.BiomeIdentifierCondition
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.block.BlockState
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.registry.tag.TagKey
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.WorldView
-import net.minecraft.world.biome.Biome
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.core.BlockPos
+import net.minecraft.world.level.LevelReader
 
 class PreferredBiomeGrowthFactor(
     val bonusYield: IntRange
@@ -29,12 +24,12 @@ class PreferredBiomeGrowthFactor(
         }
     }
 
-    override fun isValid(world: WorldView, state: BlockState, pos: BlockPos): Boolean {
+    override fun isValid(world: LevelReader, state: BlockState, pos: BlockPos): Boolean {
         val biome = world.getBiome(pos)
         val block = state.block as BerryBlock
         val biomeTags = block.berry()?.preferredBiomeTags ?: emptyList()
 
-        return biomeTags.any { biome.isIn(it) }
+        return biomeTags.any { biome.`is`(it) }
     }
 
     override fun yield() = this.bonusYield.random()

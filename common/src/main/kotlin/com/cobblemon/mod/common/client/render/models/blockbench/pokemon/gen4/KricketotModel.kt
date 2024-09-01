@@ -8,18 +8,18 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen4
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class KricketotModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, HeadedFrame {
+class KricketotModel (root: ModelPart) : PokemonPosableModel(root), BipedFrame, HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("kricketot")
     override val head = getPart("head")
 
@@ -27,17 +27,17 @@ class KricketotModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, Hea
     override val rightLeg = getPart("foot_right")
 
     override var portraitScale = 3.3F
-    override var portraitTranslation = Vec3d(-0.1, -2.2, 0.0)
+    override var portraitTranslation = Vec3(-0.1, -2.2, 0.0)
 
     override var profileScale = 1.0F
-    override var profileTranslation = Vec3d(0.0, 0.25, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.25, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
-    lateinit var shoulderLeft: PokemonPose
-    lateinit var shoulderRight: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var sleep: Pose
+    lateinit var battleidle: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
 
     val shoulderOffsetX = 0
     val shoulderOffsetY = 0
@@ -47,7 +47,7 @@ class KricketotModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, Hea
         val blink = quirk { bedrockStateful("kricketot", "blink") }
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("kricketot", "sleep"))
+            animations = arrayOf(bedrock("kricketot", "sleep"))
         )
 
         standing = registerPose(
@@ -55,7 +55,7 @@ class KricketotModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, Hea
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("kricketot", "ground_idle")
             )
@@ -65,7 +65,7 @@ class KricketotModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, Hea
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("kricketot", "ground_walk")
             )
@@ -77,7 +77,7 @@ class KricketotModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, Hea
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("kricketot", "battle_idle")
             )
@@ -86,7 +86,7 @@ class KricketotModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, Hea
         shoulderLeft = registerPose(
             poseType = PoseType.SHOULDER_LEFT,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("kricketot", "shoulder_left")
             ),
@@ -98,7 +98,7 @@ class KricketotModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, Hea
         shoulderRight = registerPose(
             poseType = PoseType.SHOULDER_RIGHT,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("kricketot", "shoulder_right")
             ),
@@ -107,8 +107,5 @@ class KricketotModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, Hea
             )
         )
     }
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isPosedIn(standing, walk, battleidle, sleep)) bedrockStateful("kricketot", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walk, battleidle, sleep)) bedrockStateful("kricketot", "faint") else null
 }

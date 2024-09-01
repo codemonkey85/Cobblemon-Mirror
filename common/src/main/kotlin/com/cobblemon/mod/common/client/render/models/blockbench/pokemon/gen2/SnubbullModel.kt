@@ -12,13 +12,14 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFr
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class SnubbullModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class SnubbullModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("snubbull")
     override val head = getPart("head")
 
@@ -28,23 +29,23 @@ class SnubbullModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
     override val rightLeg = getPart("right_foot")
 
     override var portraitScale = 1.8F
-    override var portraitTranslation = Vec3d(-0.2, -0.3, 0.0)
+    override var portraitTranslation = Vec3(-0.2, -0.3, 0.0)
 
     override var profileScale = 0.65F
-    override var profileTranslation = Vec3d(0.0, 0.76, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.76, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walking: Pose
+    lateinit var sleep: Pose
+    lateinit var battleidle: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("snubbull", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("snubbull", "cry") }
 
     override fun registerPoses() {
 
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("snubbull", "sleep"))
+            animations = arrayOf(bedrock("snubbull", "sleep"))
         )
 
         standing = registerPose(
@@ -52,7 +53,7 @@ class SnubbullModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             transformTicks = 10,
             condition = { !it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("snubbull", "ground_idle")
             )
@@ -62,7 +63,7 @@ class SnubbullModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseName = "walking",
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("snubbull", "ground_walk")
             )
@@ -73,7 +74,7 @@ class SnubbullModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("snubbull", "battle_idle")
             )
@@ -81,6 +82,6 @@ class SnubbullModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
     }
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walking, battleidle, sleep)) bedrockStateful("snubbull", "faint") else null
 }

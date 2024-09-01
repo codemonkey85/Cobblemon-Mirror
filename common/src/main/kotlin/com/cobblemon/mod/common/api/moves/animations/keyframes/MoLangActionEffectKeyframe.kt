@@ -25,6 +25,6 @@ class MoLangActionEffectKeyframe : ActionEffectKeyframe {
     val delay: ExpressionLike = "0".asExpressionLike()
     override fun play(context: ActionEffectContext): CompletableFuture<Unit> {
         expressions.resolve(context.runtime)
-        return delayedFuture(seconds = delay.resolveFloat(context.runtime), serverThread = true)
+        return delayedFuture(seconds = delay.resolveFloat(context.runtime))
     }
 }

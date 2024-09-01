@@ -10,12 +10,12 @@ package com.cobblemon.mod.common.client.keybind.keybinds
 
 import com.cobblemon.mod.common.client.keybind.CobblemonKeyBinding
 import com.cobblemon.mod.common.client.keybind.KeybindCategories
-import net.minecraft.client.util.InputUtil
+import com.mojang.blaze3d.platform.InputConstants
 
 object HidePartyBinding : CobblemonKeyBinding(
     "key.cobblemon.hideparty",
-    InputUtil.Type.KEYSYM,
-    InputUtil.GLFW_KEY_O,
+    InputConstants.Type.KEYSYM,
+    InputConstants.KEY_O,
     KeybindCategories.COBBLEMON_CATEGORY
 ) {
     var shouldHide = false

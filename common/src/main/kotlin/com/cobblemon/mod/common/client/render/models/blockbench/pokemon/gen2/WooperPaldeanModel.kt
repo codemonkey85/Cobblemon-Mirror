@@ -8,40 +8,39 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen2
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class WooperPaldeanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class WooperPaldeanModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("wooper_paldean")
     override val head = getPart("head")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.15, -0.65, 0.0)
+    override var portraitTranslation = Vec3(-0.15, -0.65, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.4, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.4, 0.0)
 
-    lateinit var shoulderLeft: PokemonPose
-    lateinit var shoulderRight: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var float: PokemonPose
-    lateinit var swim: PokemonPose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var sleep: Pose
+    lateinit var float: Pose
+    lateinit var swim: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("wooper_paldean", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("wooper_paldean", "cry") }
 
     val shoulderOffset = 2.5
     override fun registerPoses() {
@@ -50,14 +49,14 @@ class WooperPaldeanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame 
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("wooper_paldean", "sleep"))
+            animations = arrayOf(bedrock("wooper_paldean", "sleep"))
         )
 
         standing = registerPose(
             poseName = "standing",
             poseTypes = STATIONARY_POSES + UI_POSES - PoseType.FLOAT,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("wooper_paldean", "ground_idle")
             )
@@ -67,7 +66,7 @@ class WooperPaldeanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame 
             poseName = "walk",
             poseTypes = MOVING_POSES - PoseType.SWIM,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("wooper_paldean", "ground_walk")
             )
@@ -76,7 +75,7 @@ class WooperPaldeanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame 
         float = registerPose(
             poseType = PoseType.FLOAT,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("wooper_paldean", "water_idle")
             )
@@ -85,7 +84,7 @@ class WooperPaldeanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame 
         swim = registerPose(
             poseType = PoseType.SWIM,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("wooper_paldean", "water_swim")
             )
@@ -94,7 +93,7 @@ class WooperPaldeanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame 
         shoulderLeft = registerPose(
             poseType = PoseType.SHOULDER_LEFT,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("wooper_paldean", "ground_idle")
             ),
@@ -106,7 +105,7 @@ class WooperPaldeanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame 
         shoulderRight = registerPose(
             poseType = PoseType.SHOULDER_RIGHT,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("wooper_paldean", "ground_idle")
             ),
@@ -116,8 +115,5 @@ class WooperPaldeanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame 
         )
     }
 
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isNotPosedIn(shoulderRight, shoulderLeft)) bedrockStateful("wooper_paldean", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = if (state.isNotPosedIn(shoulderRight, shoulderLeft)) bedrockStateful("wooper_paldean", "faint") else null
 }

@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readSizedInt
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class ExperienceUpdatePacket(pokemon: () -> Pokemon, value: Int) : IntUpdatePacket<ExperienceUpdatePacket>(pokemon, value) {
     override val id = ID
@@ -21,6 +21,6 @@ class ExperienceUpdatePacket(pokemon: () -> Pokemon, value: Int) : IntUpdatePack
 
     companion object {
         val ID = cobblemonResource("experience_update")
-        fun decode(buffer: PacketByteBuf) = ExperienceUpdatePacket(decodePokemon(buffer), buffer.readSizedInt(IntSize.INT))
+        fun decode(buffer: RegistryFriendlyByteBuf) = ExperienceUpdatePacket(decodePokemon(buffer), buffer.readSizedInt(IntSize.INT))
     }
 }

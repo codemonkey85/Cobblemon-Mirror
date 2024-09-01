@@ -9,37 +9,39 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class BarboachModel (root: ModelPart) : PokemonPoseableModel() {
+class BarboachModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("barboach")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.55, -1.2, 0.0)
+    override var portraitTranslation = Vec3(-0.55, -1.2, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.4, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.4, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var floating: PokemonPose
-    lateinit var swimming: PokemonPose
-    lateinit var watersleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var floating: CobblemonPose
+    lateinit var swimming: CobblemonPose
+    lateinit var watersleep: CobblemonPose
+    lateinit var battleidle: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("barboach", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("barboach", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("barboach", "blink") }
 
         watersleep = registerPose(
             poseType = PoseType.SLEEP,
-            condition = { it.isTouchingWater },
-            idleAnimations = arrayOf(bedrock("barboach", "water_sleep"))
+            condition = { it.isInWater },
+            animations = arrayOf(bedrock("barboach", "water_sleep"))
         )
 
         standing = registerPose(
@@ -47,7 +49,7 @@ class BarboachModel (root: ModelPart) : PokemonPoseableModel() {
             poseTypes = PoseType.STANDING_POSES - PoseType.FLOAT,
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("barboach", "ground_idle")
             )
         )
@@ -56,7 +58,7 @@ class BarboachModel (root: ModelPart) : PokemonPoseableModel() {
             poseName = "walking",
             poseTypes = PoseType.MOVING_POSES - PoseType.SWIM,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("barboach", "ground_idle")
             )
         )
@@ -65,7 +67,7 @@ class BarboachModel (root: ModelPart) : PokemonPoseableModel() {
             poseName = "floating",
             poseTypes = PoseType.UI_POSES + PoseType.FLOAT,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("barboach", "water_idle")
             )
         )
@@ -74,7 +76,7 @@ class BarboachModel (root: ModelPart) : PokemonPoseableModel() {
             poseName = "swimming",
             poseType = PoseType.SWIM,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("barboach", "water_swim")
             )
         )
@@ -85,7 +87,7 @@ class BarboachModel (root: ModelPart) : PokemonPoseableModel() {
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("barboach", "battle_idle")
             )
         )

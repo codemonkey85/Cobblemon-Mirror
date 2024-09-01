@@ -12,13 +12,13 @@ import com.cobblemon.mod.common.client.render.models.blockbench.animation.Quadru
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class MabosstiffModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class MabosstiffModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("mabosstiff")
     override val head = getPart("head")
 
@@ -28,15 +28,15 @@ class MabosstiffModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Q
     override val hindRightLeg = getPart("leg_back_right1")
 
     override var portraitScale = 1.2F
-    override var portraitTranslation = Vec3d(-1.0, 0.75, 0.0)
+    override var portraitTranslation = Vec3(-1.0, 0.75, 0.0)
 
     override var profileScale = 0.55F
-    override var profileTranslation = Vec3d(0.0, 0.85, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.85, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("mabosstiff", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("mabosstiff", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("mabosstiff", "blink") }
@@ -45,7 +45,7 @@ class MabosstiffModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Q
             poseName = "standing",
             poseTypes = PoseType.UI_POSES + PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("mabosstiff", "ground_idle")
             )
@@ -55,7 +55,7 @@ class MabosstiffModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Q
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 QuadrupedWalkAnimation(this, periodMultiplier = 1.1F),
                 singleBoneLook(),
                 bedrock("mabosstiff", "ground_idle")
@@ -65,6 +65,6 @@ class MabosstiffModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Q
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("mabosstiff", "faint") else null
 }

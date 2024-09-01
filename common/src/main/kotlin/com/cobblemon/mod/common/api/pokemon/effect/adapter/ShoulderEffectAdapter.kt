@@ -15,9 +15,9 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.ResourceLocation
 import java.lang.reflect.Type
-import net.minecraft.registry.Registries
-import net.minecraft.util.Identifier
 
 object ShoulderEffectAdapter: JsonDeserializer<ShoulderEffect> {
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): ShoulderEffect {
@@ -28,8 +28,8 @@ object ShoulderEffectAdapter: JsonDeserializer<ShoulderEffect> {
         }
         val effect = ShoulderEffectRegistry.get(typeId) ?: run {
             try {
-                val effectId = Identifier(typeId.replace("-", "_").replace("slow_fall", "slow_falling"))
-                val registry = Registries.STATUS_EFFECT
+                val effectId = ResourceLocation.parse(typeId.replace("-", "_").replace("slow_fall", "slow_falling"))
+                val registry = BuiltInRegistries.MOB_EFFECT
                 val effect = registry.get(effectId)
                 if (effect != null) {
                     return PotionBaseEffect(effect, 0, true, false, false)

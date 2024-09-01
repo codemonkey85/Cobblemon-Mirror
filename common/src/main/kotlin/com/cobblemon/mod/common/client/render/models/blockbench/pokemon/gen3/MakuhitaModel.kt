@@ -8,19 +8,18 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.BimanualSwingAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class MakuhitaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class MakuhitaModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("makuhita")
     override val head = getPart("head")
 
@@ -30,21 +29,21 @@ class MakuhitaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
     override val rightLeg = getPart("foot_right")
 
     override var portraitScale = 2.21F
-    override var portraitTranslation = Vec3d(-0.3, -0.49, 0.0)
+    override var portraitTranslation = Vec3(-0.3, -0.49, 0.0)
 
     override var profileScale = 0.68F
-    override var profileTranslation = Vec3d(0.0, 0.69, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.69, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-//    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("makuhita", "cry") }
+//    override val cryAnimation = CryProvider { bedrockStateful("makuhita", "cry") }
 
     override fun registerPoses() {
         standing = registerPose(
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("makuhita", "ground_idle")
             )
@@ -53,7 +52,7 @@ class MakuhitaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
         walk = registerPose(
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("makuhita", "ground_idle"),
                 BipedWalkAnimation(this, periodMultiplier = 0.6F, amplitudeMultiplier = 0.9F),
@@ -65,6 +64,6 @@ class MakuhitaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("makuhita", "faint") else null
 }

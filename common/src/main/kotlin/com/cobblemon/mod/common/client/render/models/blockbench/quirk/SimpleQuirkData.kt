@@ -8,8 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.quirk
 
-import net.minecraft.entity.Entity
-class SimpleQuirkData<T : Entity> : QuirkData<T>() {
+class SimpleQuirkData : QuirkData() {
     var nextOccurrenceSeconds = -1F
     var remainingLoops = 0
 }

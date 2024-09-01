@@ -21,7 +21,7 @@ import com.cobblemon.mod.common.pokemon.status.statuses.persistent.SleepStatus
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.random.Random
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
 
 /**
  * An implementation of the capture calculator used in the generation 1 games.

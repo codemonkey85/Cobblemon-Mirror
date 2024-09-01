@@ -9,22 +9,22 @@
 package com.cobblemon.mod.common.mixin;
 
 import com.cobblemon.mod.common.CobblemonItems;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.mob.PiglinEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.monster.piglin.Piglin;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(PiglinEntity.class)
+@Mixin(Piglin.class)
 public abstract class PiglinEntityMixin  {
-    @Inject(method = "equipToOffHand", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "holdInOffHand", at = @At(value = "HEAD"), cancellable = true)
     public void cobblemon$isValidBarteringItem(ItemStack stack, CallbackInfo ci) {
-        PiglinEntity entity = (PiglinEntity)(Object) this;
-        if (stack.isOf(CobblemonItems.RELIC_COIN_POUCH)) {
-            entity.equipStack(EquipmentSlot.OFFHAND, stack);
-            entity.updateDropChances(EquipmentSlot.OFFHAND);
+        Piglin entity = (Piglin)(Object) this;
+        if (stack.is(CobblemonItems.RELIC_COIN_POUCH)) {
+            entity.setItemSlot(EquipmentSlot.OFFHAND, stack);
+            entity.setGuaranteedDrop(EquipmentSlot.OFFHAND);
             ci.cancel();
         }
     }

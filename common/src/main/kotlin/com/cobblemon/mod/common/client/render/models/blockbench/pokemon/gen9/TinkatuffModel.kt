@@ -8,19 +8,19 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen9
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class TinkatuffModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class TinkatuffModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("tinkatuff")
     override val head = getPart("head")
     override val rightArm = getPart("arm_right")
@@ -29,23 +29,23 @@ class TinkatuffModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bi
     override val leftLeg = getPart("leg_left")
 
     override var portraitScale = 1.9F
-    override var portraitTranslation = Vec3d(0.0, -0.41, 0.0)
+    override var portraitTranslation = Vec3(0.0, -0.41, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.4, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.4, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walking: Pose
+    lateinit var sleep: Pose
+    lateinit var battleidle: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("tinkatuff", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("tinkatuff", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("tinkatuff", "blink") }
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("tinkatuff", "sleep"))
+            animations = arrayOf(bedrock("tinkatuff", "sleep"))
         )
 
         standing = registerPose(
@@ -54,7 +54,7 @@ class TinkatuffModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bi
             transformTicks = 10,
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("tinkatuff", "ground_idle")
             )
@@ -65,7 +65,7 @@ class TinkatuffModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bi
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("tinkatuff", "ground_walk")
             )
@@ -77,14 +77,11 @@ class TinkatuffModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bi
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("tinkatuff", "battle_idle")
             )
         )
     }
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isPosedIn(standing, walking, battleidle, sleep)) bedrockStateful("tinkatuff", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walking, battleidle, sleep)) bedrockStateful("tinkatuff", "faint") else null
 }

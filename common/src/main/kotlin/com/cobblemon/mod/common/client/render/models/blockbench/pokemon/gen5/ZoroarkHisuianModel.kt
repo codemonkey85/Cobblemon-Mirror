@@ -8,18 +8,17 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen5
 
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class ZoroarkHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class ZoroarkHisuianModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("zoroark_hisuian")
     override val head = getPart("head")
 
@@ -30,16 +29,16 @@ class ZoroarkHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFram
     override val rightArm = getPart("arm_right")
 
     override var portraitScale = 1.8F
-    override var portraitTranslation = Vec3d(-1.15, 1.54, 0.0)
+    override var portraitTranslation = Vec3(-1.15, 1.54, 0.0)
 
     override var profileScale = 0.46F
-    override var profileTranslation = Vec3d(-0.05, 1.06, 0.0)
+    override var profileTranslation = Vec3(-0.05, 1.06, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var portrait: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walking: CobblemonPose
+    lateinit var portrait: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("zoroark_hisuian", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("zoroark_hisuian", "cry") }
 
     override fun registerPoses() {
 
@@ -47,7 +46,7 @@ class ZoroarkHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFram
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.PROFILE,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("zoroark_hisuian", "ground_idle")
             )
@@ -57,7 +56,7 @@ class ZoroarkHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFram
             poseName = "walking",
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("zoroark_hisuian", "ground_walk"),
                 bedrock("zoroark_hisuian", "hair_setup")
@@ -68,7 +67,7 @@ class ZoroarkHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFram
             poseName = "portrait",
             poseType = PoseType.PORTRAIT,
             transformTicks = 0,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("zoroark_hisuian", "portrait")
             )
@@ -76,6 +75,6 @@ class ZoroarkHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFram
     }
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walking)) bedrockStateful("zoroark_hisuian", "faint") else null
 }

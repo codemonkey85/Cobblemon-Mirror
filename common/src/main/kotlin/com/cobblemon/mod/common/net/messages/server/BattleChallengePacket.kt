@@ -11,16 +11,16 @@ package com.cobblemon.mod.common.net.messages.server
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
 import java.util.UUID
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class BattleChallengePacket(val targetedEntityId: Int, val selectedPokemonId: UUID) : NetworkPacket<BattleChallengePacket> {
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeInt(this.targetedEntityId)
-        buffer.writeUuid(this.selectedPokemonId)
+        buffer.writeUUID(this.selectedPokemonId)
     }
     companion object {
         val ID = cobblemonResource("battle_challenge")
-        fun decode(buffer: PacketByteBuf) = BattleChallengePacket(buffer.readInt(), buffer.readUuid())
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleChallengePacket(buffer.readInt(), buffer.readUUID())
     }
 }

@@ -10,9 +10,8 @@ package com.cobblemon.mod.common.api.spawning.condition
 
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.spawning.context.SubmergedSpawningContext
-import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.util.Merger
-import net.minecraft.fluid.Fluid
+import net.minecraft.world.level.material.Fluid
 
 /**
  * Base type for a spawning condition that applies to some kind of [SubmergedSpawningContext]. This
@@ -38,9 +37,9 @@ abstract class SubmergedTypeSpawningCondition<T : SubmergedSpawningContext> : Ar
             false
         } else if (maxDepth != null && ctx.depth > maxDepth!!) {
             false
-        } else if (fluidIsSource != null && ctx.fluid.isStill != fluidIsSource!!) {
+        } else if (fluidIsSource != null && ctx.fluid.isSource != fluidIsSource!!) {
             false
-        } else !(ctx.fluid.isEmpty || (fluid != null && !fluid!!.fits(ctx.fluid.fluid, ctx.fluidRegistry)))
+        } else !(ctx.fluid.isEmpty || (fluid != null && !fluid!!.fits(ctx.fluid.type, ctx.fluidRegistry)))
     }
 
     override fun copyFrom(other: SpawningCondition<*>, merger: Merger) {

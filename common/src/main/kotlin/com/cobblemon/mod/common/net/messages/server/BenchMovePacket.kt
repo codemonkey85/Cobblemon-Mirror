@@ -13,8 +13,12 @@ import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.net.serverhandling.storage.BenchMoveHandler
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.readUUID
+import com.cobblemon.mod.common.util.writeString
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
-import net.minecraft.network.PacketByteBuf
 
 /**
  * Tells the server to exchange a current move with a benched move in the specified Pokémon's
@@ -30,18 +34,18 @@ import net.minecraft.network.PacketByteBuf
  */
 class BenchMovePacket(val isParty: Boolean, val uuid: UUID, val oldMove: MoveTemplate, val newMove: MoveTemplate) : NetworkPacket<BenchMovePacket> {
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(isParty)
-        buffer.writeUuid(uuid)
+        buffer.writeUUID(uuid)
         buffer.writeString(oldMove.name)
         buffer.writeString(newMove.name)
     }
 
     companion object {
         val ID = cobblemonResource("bench_move")
-        fun decode(buffer: PacketByteBuf): BenchMovePacket {
+        fun decode(buffer: RegistryFriendlyByteBuf): BenchMovePacket {
             val isParty = buffer.readBoolean()
-            val uuid = buffer.readUuid()
+            val uuid = buffer.readUUID()
             val oldMove = Moves.getByName(buffer.readString())!!
             val newMove = Moves.getByName(buffer.readString())!!
             return BenchMovePacket(isParty, uuid, oldMove, newMove)

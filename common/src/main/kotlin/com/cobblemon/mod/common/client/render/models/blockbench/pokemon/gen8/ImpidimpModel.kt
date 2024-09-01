@@ -14,13 +14,13 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFr
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class ImpidimpModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class ImpidimpModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("impidimp")
     override val head = getPart("head")
 
@@ -30,15 +30,15 @@ class ImpidimpModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 1.87F
-    override var portraitTranslation = Vec3d(-0.11, -0.19, 0.0)
+    override var portraitTranslation = Vec3(-0.11, -0.19, 0.0)
 
     override var profileScale = 0.75F
-    override var profileTranslation = Vec3d(0.0, 0.6, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.6, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("impidimp", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("impidimp", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("impidimp", "blink") }
@@ -46,7 +46,7 @@ class ImpidimpModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
                 poseName = "standing",
                 poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("impidimp", "ground_idle")
                 )
@@ -56,7 +56,7 @@ class ImpidimpModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
                 poseName = "walk",
                 poseTypes = PoseType.MOVING_POSES,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("impidimp", "ground_idle"),
                         BipedWalkAnimation(this, periodMultiplier = 0.6F, amplitudeMultiplier = 0.9F),

@@ -13,19 +13,18 @@ import com.bedrockk.molang.runtime.value.DoubleValue
 import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.asDimensionTypeMoLangValue
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.asWorldMoLangValue
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.getQueryStruct
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.molang.ObjectValue
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.cobblemon.mod.common.api.spawning.context.calculators.SpawningContextCalculator
-import com.cobblemon.mod.common.util.asExpression
+import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.resolveBoolean
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.registry.entry.RegistryEntry
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
-import net.minecraft.world.dimension.DimensionType
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
+import net.minecraft.core.registries.Registries
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.dimension.DimensionType
 
 /**
  * An early rule that filters possible locations that would go into a [SpawningContext].
@@ -45,14 +44,14 @@ class LocationRuleCalculator : SpawnRuleComponent {
     @Transient
     private val reusableContext = StringValue("")
     @Transient
-    private lateinit var reusableWorldValue: ObjectValue<RegistryEntry<World>>
+    private lateinit var reusableWorldValue: ObjectValue<Holder<Level>>
     @Transient
-    private lateinit var reusableDimensionTypeValue: ObjectValue<RegistryEntry<DimensionType>>
+    private lateinit var reusableDimensionTypeValue: ObjectValue<Holder<DimensionType>>
 
-    val allow = "true".asExpression()
+    val allow = "true".asExpressionLike()
 
     override fun isAllowedPosition(
-        world: ServerWorld,
+        world: ServerLevel,
         pos: BlockPos,
         contextCalculator: SpawningContextCalculator<*, *>
     ): Boolean {
@@ -62,15 +61,15 @@ class LocationRuleCalculator : SpawnRuleComponent {
         reusableContext.value = contextCalculator.name
 
         if (!this::reusableWorldValue.isInitialized) {
-            reusableWorldValue = world.registryManager.get(RegistryKeys.WORLD).getEntry(world.registryKey).get().asWorldMoLangValue()
+            reusableWorldValue = world.registryAccess().registryOrThrow(Registries.DIMENSION).getHolder(world.dimension()).get().asWorldMoLangValue()
         } else {
-            reusableWorldValue.obj = world.registryManager.get(RegistryKeys.WORLD).getEntry(world.registryKey).get()
+            reusableWorldValue.obj = world.registryAccess().registryOrThrow(Registries.DIMENSION).getHolder(world.dimension()).get()
         }
 
         if (!this::reusableDimensionTypeValue.isInitialized) {
-            reusableDimensionTypeValue = world.dimensionEntry.asDimensionTypeMoLangValue()
+            reusableDimensionTypeValue = world.dimensionTypeRegistration().asDimensionTypeMoLangValue()
         } else {
-            reusableDimensionTypeValue.obj = world.dimensionEntry
+            reusableDimensionTypeValue.obj = world.dimensionTypeRegistration()
         }
 
         runtime.environment.setSimpleVariable("x", reusableX)

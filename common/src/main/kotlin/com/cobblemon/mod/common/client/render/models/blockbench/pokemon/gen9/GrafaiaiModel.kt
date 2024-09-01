@@ -10,27 +10,27 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen9
 
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class GrafaiaiModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class GrafaiaiModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("grafaiai")
     override val head = getPart("head")
 
     override var portraitScale = 1.5F
-    override var portraitTranslation = Vec3d(-0.1, 0.05, 0.0)
+    override var portraitTranslation = Vec3(-0.1, 0.05, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.5, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.5, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var sleeping: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walking: Pose
+    lateinit var sleeping: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("grafaiai", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("grafaiai", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("grafaiai", "blink") }
@@ -39,7 +39,7 @@ class GrafaiaiModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("grafaiai", "ground_idle")
             )
@@ -49,7 +49,7 @@ class GrafaiaiModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("grafaiai", "ground_walk")
             )
@@ -59,7 +59,7 @@ class GrafaiaiModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseType = PoseType.SLEEP,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("grafaiai", "sleep")
             )
         )

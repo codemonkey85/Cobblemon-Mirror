@@ -11,16 +11,16 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.QuadrupedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class PersianAlolanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class PersianAlolanModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("persian_alolan")
     override val head = getPart("head")
 
@@ -30,14 +30,14 @@ class PersianAlolanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame,
     override val hindRightLeg = getPart("leg_back_right1")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.76, -0.11, 0.0)
+    override var portraitTranslation = Vec3(-0.76, -0.11, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.38, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.38, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var sleep: Pose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("persian_alolan", "blink")}
@@ -45,7 +45,7 @@ class PersianAlolanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame,
             poseName = "standing",
             poseTypes = STATIONARY_POSES + UI_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("persian_alolan", "ground_idle")
             )
@@ -53,14 +53,14 @@ class PersianAlolanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame,
 
         sleep = registerPose(
                 poseType = PoseType.SLEEP,
-                idleAnimations = arrayOf(bedrock("persian_alolan", "sleep"))
+                animations = arrayOf(bedrock("persian_alolan", "sleep"))
         )
 
         walk = registerPose(
             poseName = "walk",
             poseTypes = MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 QuadrupedWalkAnimation(this, periodMultiplier = 0.5F, amplitudeMultiplier = 1.1F),
                 singleBoneLook(),
                 bedrock("persian_alolan", "ground_idle")
@@ -71,6 +71,6 @@ class PersianAlolanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame,
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("persian_alolan", "faint") else null
 }

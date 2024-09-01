@@ -20,13 +20,13 @@ import com.cobblemon.mod.common.util.asExpressionLike
 import java.util.concurrent.CompletableFuture
 import kotlin.math.pow
 import kotlin.math.sqrt
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 class MoveToTargetActionEffectKeyframe : ActionEffectKeyframe {
     val speed = 1F
     val timeout = "4".asExpressionLike()
     var proximity = -1F
-    val timeoutActionEffect: Identifier? = null
+    val timeoutActionEffect: ResourceLocation? = null
 
     override fun play(context: ActionEffectContext): CompletableFuture<Unit> {
         val user = context.findOneProvider<UsersProvider>()?.entities?.firstOrNull() as? PokemonEntity ?: return CompletableFuture.completedFuture(Unit)
@@ -36,7 +36,7 @@ class MoveToTargetActionEffectKeyframe : ActionEffectKeyframe {
 
         var timedOut = false
 
-        val proximity = this.proximity.takeIf { it != -1F } ?: (sqrt(2 * user.boundingBox.xLength.pow(2)) + 1.5F + sqrt(2 * target.boundingBox.xLength.pow(2))).toFloat()
+        val proximity = this.proximity.takeIf { it != -1F } ?: (sqrt(2 * user.boundingBox.xsize.pow(2)) + 1.5F + sqrt(2 * target.boundingBox.xsize.pow(2))).toFloat()
 
         if (target.distanceTo(user) !in proximity..20F) {
             future.complete(Unit)
@@ -69,7 +69,7 @@ class MoveToTargetActionEffectKeyframe : ActionEffectKeyframe {
             }
         }
 
-        nav.startMovingTo(target.x, target.y, target.z, speed.toDouble(), navContext)
+        nav.moveTo(target.x, target.y, target.z, speed.toDouble(), navContext)
         return future
     }
 }

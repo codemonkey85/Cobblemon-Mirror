@@ -14,40 +14,40 @@ import com.cobblemon.mod.common.api.tags.CobblemonBiomeTags
 import com.cobblemon.mod.common.block.ApricornBlock
 import com.cobblemon.mod.common.util.randomNoCopy
 import com.google.common.collect.Lists
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.core.Direction.*
+import net.minecraft.tags.BlockTags
+import net.minecraft.util.RandomSource
+import net.minecraft.world.level.LevelSimulatedReader
+import net.minecraft.world.level.WorldGenLevel
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.HorizontalDirectionalBlock
+import net.minecraft.world.level.block.LeavesBlock
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.chunk.status.ChunkStatus
+import net.minecraft.world.level.levelgen.feature.Feature
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext
+import net.minecraft.world.level.levelgen.feature.TreeFeature
+import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration
 import kotlin.random.Random.Default.nextInt
-import net.minecraft.block.BlockState
-import net.minecraft.block.Blocks
-import net.minecraft.block.HorizontalFacingBlock
-import net.minecraft.block.LeavesBlock
-import net.minecraft.registry.tag.BlockTags
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
-import net.minecraft.util.math.Direction.*
-import net.minecraft.util.math.random.Random
-import net.minecraft.world.StructureWorldAccess
-import net.minecraft.world.TestableWorld
-import net.minecraft.world.chunk.ChunkStatus
-import net.minecraft.world.gen.feature.Feature
-import net.minecraft.world.gen.feature.SingleStateFeatureConfig
-import net.minecraft.world.gen.feature.TreeFeature
-import net.minecraft.world.gen.feature.util.FeatureContext
 
-class ApricornTreeFeature : Feature<SingleStateFeatureConfig>(SingleStateFeatureConfig.CODEC) {
+class ApricornTreeFeature : Feature<BlockStateConfiguration>(BlockStateConfiguration.CODEC) {
 
-    override fun generate(context: FeatureContext<SingleStateFeatureConfig>) : Boolean {
-        val worldGenLevel: StructureWorldAccess = context.world
-        val random = context.random
-        val origin = context.origin
+    override fun place(context: FeaturePlaceContext<BlockStateConfiguration>) : Boolean {
+        val worldGenLevel: WorldGenLevel = context.level()
+        val random = context.random()
+        val origin = context.origin()
 
-        val isGenerating = worldGenLevel.getChunk(origin).status != ChunkStatus.FULL
+        val isGenerating = worldGenLevel.getChunk(origin).persistedStatus != ChunkStatus.FULL
 
         if (isGenerating) {
             val biome = worldGenLevel.getBiome(origin)
-            val multiplier = if (biome.isIn(CobblemonBiomeTags.HAS_APRICORNS_SPARSE)) {
+            val multiplier = if (biome.`is`(CobblemonBiomeTags.HAS_APRICORNS_SPARSE)) {
                 0.1F
-            } else if (biome.isIn(CobblemonBiomeTags.HAS_APRICORNS_DENSE)) {
+            } else if (biome.`is`(CobblemonBiomeTags.HAS_APRICORNS_DENSE)) {
                 10F
-            } else if (biome.isIn(CobblemonBiomeTags.HAS_APRICORNS_NORMAL)) {
+            } else if (biome.`is`(CobblemonBiomeTags.HAS_APRICORNS_NORMAL)) {
                 1.0F
             } else {
                 return false
@@ -58,16 +58,16 @@ class ApricornTreeFeature : Feature<SingleStateFeatureConfig>(SingleStateFeature
             }
         }
 
-        if (!worldGenLevel.getBlockState(origin.down()).isIn(BlockTags.DIRT)) {
+        if (!worldGenLevel.getBlockState(origin.below()).`is`(BlockTags.DIRT)) {
             return false
         }
 
         // Create trunk
-        val logState = CobblemonBlocks.APRICORN_LOG.defaultState
+        val logState = CobblemonBlocks.APRICORN_LOG.defaultBlockState()
         for (y in 0..4) {
             try {
-                val logPos = origin.offset(UP, y)
-                worldGenLevel.setBlockState(logPos, logState, 2)
+                val logPos = origin.relative(UP, y)
+                worldGenLevel.setBlock(logPos, logState, 2)
             } catch (exception: Exception) {
                 exception.printStackTrace()
             }
@@ -75,63 +75,63 @@ class ApricornTreeFeature : Feature<SingleStateFeatureConfig>(SingleStateFeature
 
         // Decorate with leaves
         val allApricornSpots: MutableList<List<Pair<Direction, BlockPos>>> = mutableListOf()
-        val leafBlock = CobblemonBlocks.APRICORN_LEAVES.defaultState
+        val leafBlock = CobblemonBlocks.APRICORN_LEAVES.defaultBlockState()
 
-        val layerOnePos = origin.offset(UP)
+        val layerOnePos = origin.relative(UP)
         for (direction in listOf(NORTH, EAST, SOUTH, WEST)) {
-            var leafPos = layerOnePos.offset(direction)
-            setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistanceFromLogs(leafBlock, worldGenLevel, leafPos))
+            var leafPos = layerOnePos.relative(direction)
+            setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistance(leafBlock, worldGenLevel, leafPos))
             for (offset in 1..3) {
-                leafPos = leafPos.up()
-                setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistanceFromLogs(leafBlock, worldGenLevel, leafPos))
+                leafPos = leafPos.above()
+                setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistance(leafBlock, worldGenLevel, leafPos))
             }
         }
 
         val layerOneExtenders = getLayerOneVariation(layerOnePos, random)
-        setBlockIfClear(worldGenLevel, layerOneExtenders.first, LeavesBlock.updateDistanceFromLogs(leafBlock, worldGenLevel, layerOneExtenders.first))
-        setBlockIfClear(worldGenLevel, layerOneExtenders.second, LeavesBlock.updateDistanceFromLogs(leafBlock, worldGenLevel, layerOneExtenders.second))
+        setBlockIfClear(worldGenLevel, layerOneExtenders.first, LeavesBlock.updateDistance(leafBlock, worldGenLevel, layerOneExtenders.first))
+        setBlockIfClear(worldGenLevel, layerOneExtenders.second, LeavesBlock.updateDistance(leafBlock, worldGenLevel, layerOneExtenders.second))
 
         for (coords in listOf(Pair(1, 1), Pair(-1, -1), Pair(1, -1), Pair(-1, 1))) {
-            var leafPos = layerOnePos.add(coords.first, 0, coords.second)
-            setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistanceFromLogs(leafBlock, worldGenLevel, leafPos))
+            var leafPos = layerOnePos.offset(coords.first, 0, coords.second)
+            setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistance(leafBlock, worldGenLevel, leafPos))
             for (offset in 1..3) {
-                leafPos = leafPos.up()
-                setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistanceFromLogs(leafBlock, worldGenLevel, leafPos))
+                leafPos = leafPos.above()
+                setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistance(leafBlock, worldGenLevel, leafPos))
             }
         }
 
-        val layerTwoPos = origin.add(0, 2, 0)
+        val layerTwoPos = origin.offset(0, 2, 0)
         for (direction in Lists.newArrayList(NORTH, EAST, SOUTH, WEST)) {
             val apricornSpots = mutableListOf<Pair<Direction, BlockPos>>()
-            var leafPos = layerTwoPos.add(direction.offsetX * 2, direction.offsetY * 2, direction.offsetZ * 2)
+            var leafPos = layerTwoPos.offset(direction.stepX * 2, direction.stepY * 2, direction.stepZ * 2)
 
-            setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistanceFromLogs(leafBlock, worldGenLevel, leafPos))
-            apricornSpots.add(direction.opposite to leafPos.offset(direction))
+            setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistance(leafBlock, worldGenLevel, leafPos))
+            apricornSpots.add(direction.opposite to leafPos.relative(direction))
 
-            leafPos = leafPos.up()
-            setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistanceFromLogs(leafBlock, worldGenLevel, leafPos))
-            apricornSpots.add(direction.opposite to leafPos.offset(direction))
+            leafPos = leafPos.above()
+            setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistance(leafBlock, worldGenLevel, leafPos))
+            apricornSpots.add(direction.opposite to leafPos.relative(direction))
 
             allApricornSpots.add(apricornSpots)
         }
 
         for (coords in Lists.newArrayList(Pair(1, 2), Pair(-1, 2), Pair(1, -2), Pair(-2, 1), Pair(2, 1), Pair(-2, -1), Pair(-1, -2), Pair(2, -1))) {
             val apricornSpots = mutableListOf<Pair<Direction, BlockPos>>()
-            var leafPos = layerTwoPos.add(coords.first, 0, coords.second)
-            setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistanceFromLogs(leafBlock, worldGenLevel, leafPos))
+            var leafPos = layerTwoPos.offset(coords.first, 0, coords.second)
+            setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistance(leafBlock, worldGenLevel, leafPos))
 
             for (direction in listOf(NORTH, EAST, SOUTH, WEST)) {
-                val apricornPos = leafPos.offset(direction)
+                val apricornPos = leafPos.relative(direction)
                 if (isAir(worldGenLevel, apricornPos)) {
                     apricornSpots.add(direction.opposite to apricornPos)
                 }
             }
 
-            leafPos = leafPos.up()
-            setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistanceFromLogs(leafBlock, worldGenLevel, leafPos))
+            leafPos = leafPos.above()
+            setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistance(leafBlock, worldGenLevel, leafPos))
 
             for (direction in listOf(NORTH, EAST, SOUTH, WEST)) {
-                val apricornPos = leafPos.offset(direction)
+                val apricornPos = leafPos.relative(direction)
                 if (isAir(worldGenLevel, apricornPos)) {
                     apricornSpots.add(direction.opposite to apricornPos)
                 }
@@ -141,17 +141,17 @@ class ApricornTreeFeature : Feature<SingleStateFeatureConfig>(SingleStateFeature
         }
 
         // Topper
-        val topperPos = origin.add(0, 5, 0)
-        setBlockIfClear(worldGenLevel, topperPos, LeavesBlock.updateDistanceFromLogs(leafBlock, worldGenLevel, topperPos))
+        val topperPos = origin.offset(0, 5, 0)
+        setBlockIfClear(worldGenLevel, topperPos, LeavesBlock.updateDistance(leafBlock, worldGenLevel, topperPos))
 
         for (direction in Lists.newArrayList(NORTH, EAST, SOUTH, WEST)) {
-            val leafPos = topperPos.offset(direction)
-            setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistanceFromLogs(leafBlock, worldGenLevel, leafPos))
+            val leafPos = topperPos.relative(direction)
+            setBlockIfClear(worldGenLevel, leafPos, LeavesBlock.updateDistance(leafBlock, worldGenLevel, leafPos))
         }
 
-        for (blocks in getLayerFourVariation(origin.offset(UP, 4), random)) {
+        for (blocks in getLayerFourVariation(origin.relative(UP, 4), random)) {
             for (block in blocks) {
-                setBlockIfClear(worldGenLevel, block, LeavesBlock.updateDistanceFromLogs(leafBlock, worldGenLevel, block))
+                setBlockIfClear(worldGenLevel, block, LeavesBlock.updateDistance(leafBlock, worldGenLevel, block))
             }
         }
 
@@ -160,13 +160,13 @@ class ApricornTreeFeature : Feature<SingleStateFeatureConfig>(SingleStateFeature
                 .randomNoCopy(allApricornSpots.size.coerceAtMost(8))
                 .map { it.random() }
                 .forEach {
-                    if(worldGenLevel.getBlockState(it.second.offset(it.first)).block.equals(leafBlock.block)) {
+                    if(worldGenLevel.getBlockState(it.second.relative(it.first)).block.equals(leafBlock.block)) {
                         setBlockIfClear(
                             worldGenLevel,
                             it.second,
-                            context.config.state
-                                .with(HorizontalFacingBlock.FACING, it.first)
-                                .with(
+                            context.config().state
+                                .setValue(HorizontalDirectionalBlock.FACING, it.first)
+                                .setValue(
                                     ApricornBlock.AGE,
                                     if (isGenerating) random.nextInt(ApricornBlock.MAX_AGE + 1) else 0
                                 )
@@ -177,27 +177,27 @@ class ApricornTreeFeature : Feature<SingleStateFeatureConfig>(SingleStateFeature
         return true
     }
 
-    private fun setBlockIfClear(worldGenLevel: StructureWorldAccess, blockPos: BlockPos, blockState: BlockState) {
+    private fun setBlockIfClear(worldGenLevel: WorldGenLevel, blockPos: BlockPos, blockState: BlockState) {
         if (!TreeFeature.isAirOrLeaves(worldGenLevel, blockPos)) {
             return
         }
-        worldGenLevel.setBlockState(blockPos, blockState, 3)
+        worldGenLevel.setBlock(blockPos, blockState, 3)
     }
 
-    private fun getLayerOneVariation(origin: BlockPos, random: Random): Pair<BlockPos, BlockPos> {
+    private fun getLayerOneVariation(origin: BlockPos, random: RandomSource): Pair<BlockPos, BlockPos> {
         var direction = NORTH
         when (random.nextInt(4)) {
             1 -> direction = EAST
             2 -> direction = SOUTH
             3 -> direction = WEST
         }
-        val posOne = origin.add(direction.offsetX * 2, direction.offsetY * 2, direction.offsetZ * 2)
+        val posOne = origin.offset(direction.stepX * 2, direction.stepY * 2, direction.stepZ * 2)
         val offset = if (random.nextBoolean()) -1 else 1
-        val posTwo = if (direction.offsetX == 0) posOne.add(offset, 0, 0) else posOne.add(0, 0, offset)
+        val posTwo = if (direction.stepX == 0) posOne.offset(offset, 0, 0) else posOne.offset(0, 0, offset)
         return posOne to posTwo
     }
 
-    private fun getLayerFourVariation(origin: BlockPos, random: Random): List<List<BlockPos>> {
+    private fun getLayerFourVariation(origin: BlockPos, random: RandomSource): List<List<BlockPos>> {
         val variationList = mutableListOf<List<BlockPos>>()
         val usedDirections = mutableListOf<Direction>()
 
@@ -213,9 +213,9 @@ class ApricornTreeFeature : Feature<SingleStateFeatureConfig>(SingleStateFeature
                 }
             }
 
-            val posOne = origin.add(direction.offsetX * 2, direction.offsetY * 2, direction.offsetZ * 2)
+            val posOne = origin.offset(direction.stepX * 2, direction.stepY * 2, direction.stepZ * 2)
             val offset = if (random.nextBoolean()) -1 else 1
-            val posTwo = if (direction.offsetX == 0) posOne.add(offset, 0, 0) else posOne.add(0, 0, offset)
+            val posTwo = if (direction.stepX == 0) posOne.offset(offset, 0, 0) else posOne.offset(0, 0, offset)
             if (random.nextInt(3) == 0) {
                 variationList.add(listOf(posOne, posTwo))
             } else {
@@ -225,13 +225,9 @@ class ApricornTreeFeature : Feature<SingleStateFeatureConfig>(SingleStateFeature
         return variationList
     }
 
-    private fun isAir(testableWorld: TestableWorld, blockPos: BlockPos?): Boolean {
-        return testableWorld.testBlockState(
-            blockPos
-        ) { blockState: BlockState ->
-            blockState.isOf(
-                Blocks.AIR
-            )
+    private fun isAir(testableWorld: LevelSimulatedReader, blockPos: BlockPos?): Boolean {
+        return testableWorld.isStateAtPosition(blockPos) { blockState: BlockState ->
+            blockState.`is`(Blocks.AIR)
         }
     }
 

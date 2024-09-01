@@ -8,35 +8,34 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen2
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation.Companion.X_AXIS
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class CleffaModel(root: ModelPart) : PokemonPoseableModel() {
+class CleffaModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("cleffa")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(0.0, -1.3, 0.0)
+    override var portraitTranslation = Vec3(0.0, -1.3, 0.0)
 
     override var profileScale = 1.15F
-    override var profileTranslation = Vec3d(0.0, 0.05, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.05, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var leftShoulder: PokemonPose
-    lateinit var rightShoulder: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var leftShoulder: Pose
+    lateinit var rightShoulder: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("cleffa", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("cleffa", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("cleffa", "blink") }
@@ -45,7 +44,7 @@ class CleffaModel(root: ModelPart) : PokemonPoseableModel() {
             poseTypes = STATIONARY_POSES + UI_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("cleffa", "ground_idle")
             )
         )
@@ -57,7 +56,7 @@ class CleffaModel(root: ModelPart) : PokemonPoseableModel() {
             poseType = PoseType.SHOULDER_LEFT,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("cleffa", "ground_idle")
             ),
             transformedParts = arrayOf(
@@ -70,7 +69,7 @@ class CleffaModel(root: ModelPart) : PokemonPoseableModel() {
             poseType = PoseType.SHOULDER_RIGHT,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("cleffa", "ground_idle")
             ),
             transformedParts = arrayOf(
@@ -83,14 +82,11 @@ class CleffaModel(root: ModelPart) : PokemonPoseableModel() {
             poseTypes = MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("cleffa", "ground_idle"),
                 bedrock("cleffa", "ground_walk")
             )
         )
     }
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("cleffa", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walk)) bedrockStateful("cleffa", "faint") else null
 }

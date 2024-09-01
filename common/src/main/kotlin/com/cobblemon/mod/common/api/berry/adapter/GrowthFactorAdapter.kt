@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.api.berry.GrowthFactor
 import com.cobblemon.mod.common.util.adapters.CobblemonGrowthFactorAdapter
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonSerializer
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import kotlin.reflect.KClass
 
 /**
@@ -28,8 +28,8 @@ interface GrowthFactorAdapter : JsonDeserializer<GrowthFactor>, JsonSerializer<G
      * Register a [GrowthFactor] to be used by this adapter.
      *
      * @param type The [KClass] of the [GrowthFactor].
-     * @param identifier The expected [Identifier] in the parsed JSON.
+     * @param identifier The expected [ResourceLocation] in the parsed JSON.
      */
-    fun register(type: KClass<out GrowthFactor>, identifier: Identifier)
+    fun register(type: KClass<out GrowthFactor>, identifier: ResourceLocation)
 
 }

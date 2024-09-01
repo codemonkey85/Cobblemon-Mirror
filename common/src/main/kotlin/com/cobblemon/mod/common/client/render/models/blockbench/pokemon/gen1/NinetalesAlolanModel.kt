@@ -11,16 +11,16 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.QuadrupedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class NinetalesAlolanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class NinetalesAlolanModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("ninetales_alolan")
     override val head = getPart("head")
 
@@ -30,10 +30,10 @@ class NinetalesAlolanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFram
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 1.7F
-    override var portraitTranslation = Vec3d(-0.4, 0.85, 0.0)
+    override var portraitTranslation = Vec3(-0.4, 0.85, 0.0)
 
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.0, 0.67, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.67, 0.0)
 
     // Alolan Nintales Portaits/Profiles
     // override var portraitScale = 1.65F
@@ -42,15 +42,15 @@ class NinetalesAlolanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFram
     // override var profileScale = 0.7F
     // override var profileTranslation = Vec3d(0.0, 0.67, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var sleep: Pose
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("ninetales_alolan", "blink")}
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("ninetales_alolan", "sleep"))
+            animations = arrayOf(bedrock("ninetales_alolan", "sleep"))
         )
 
         standing = registerPose(
@@ -58,7 +58,7 @@ class NinetalesAlolanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFram
             poseTypes = STATIONARY_POSES + UI_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("ninetales_alolan", "ground_idle")
             )
@@ -69,7 +69,7 @@ class NinetalesAlolanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFram
             poseTypes = MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("ninetales_alolan", "ground_idle"),
                 QuadrupedWalkAnimation(this, periodMultiplier = 0.5F, amplitudeMultiplier = 1.1F)
@@ -80,6 +80,6 @@ class NinetalesAlolanModel(root: ModelPart) : PokemonPoseableModel(), HeadedFram
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("ninetales_alolan", "faint") else null
 }

@@ -10,9 +10,9 @@ package com.cobblemon.mod.common.pokemon.evolution.requirements
 
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.requirements.template.EntityQueryRequirement
-import net.minecraft.entity.LivingEntity
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 
 /**
  * A [EntityQueryRequirement] for when a [Pokemon] is expected to be in a certain area.
@@ -26,6 +26,6 @@ class AreaRequirement : EntityQueryRequirement {
         const val ADAPTER_VARIANT = "area"
     }
 
-    val box: Box = Box.from(Vec3d.ZERO)
-    override fun check(pokemon: Pokemon, queriedEntity: LivingEntity) = box.contains(queriedEntity.pos)
+    val box: AABB = AABB.unitCubeFromLowerCorner(Vec3.ZERO)
+    override fun check(pokemon: Pokemon, queriedEntity: LivingEntity) = box.contains(queriedEntity.position())
 }

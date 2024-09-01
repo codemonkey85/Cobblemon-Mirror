@@ -8,17 +8,17 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen4
 
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.QuadrupedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class BastiodonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class BastiodonModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("bastiodon")
     override val head = getPart("head")
 
@@ -28,17 +28,17 @@ class BastiodonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qu
     override val foreRightLeg = getPart("right_front_upper_leg")
 
     override var portraitScale = 1.4F
-    override var portraitTranslation = Vec3d(-0.75, -0.2, 0.0)
+    override var portraitTranslation = Vec3(-0.75, -0.2, 0.0)
 
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.0, 0.6, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.6, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battleIdle: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var battleIdle: CobblemonPose
+    lateinit var sleep: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("bastiodon", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("bastiodon", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("bastiodon", "blink") }
@@ -48,7 +48,7 @@ class BastiodonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qu
             poseName = "sleep",
             poseType = PoseType.SLEEP,
             quirks = arrayOf(sleepQuirk),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("bastiodon", "sleep")
             )
         )
@@ -58,7 +58,7 @@ class BastiodonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qu
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("bastiodon", "ground_idle")
             )
@@ -68,7 +68,7 @@ class BastiodonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qu
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("bastiodon", "ground_walk")
             )
@@ -79,7 +79,7 @@ class BastiodonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qu
             poseTypes = PoseType.STATIONARY_POSES,
             condition = { it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("bastiodon", "battle_idle")
             )
@@ -88,6 +88,6 @@ class BastiodonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qu
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("bastiodon", "faint") else null
 }

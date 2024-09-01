@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.api.spawning.detail
 
-import net.minecraft.entity.Entity
+import net.minecraft.world.entity.Entity
 
 /**
  * A spawn result for spawn actions which involves some number of entities. This is used to maintain

@@ -12,21 +12,21 @@ import com.cobblemon.mod.common.api.text.textClickHandlers
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
-import java.util.UUID
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
+import net.minecraft.server.level.ServerPlayer
+import java.util.*
 
 object ClickTextCommand {
-    fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
+    fun register(dispatcher: CommandDispatcher<CommandSourceStack>) {
         dispatcher.register(
-            CommandManager.literal("cobblemonclicktext")
-                .requires { src -> src.entity is ServerPlayerEntity }
+            Commands.literal("cobblemonclicktext")
+                .requires { src -> src.entity is ServerPlayer }
                 .then(
                     RequiredArgumentBuilder
-                        .argument<ServerCommandSource, String>("callback", StringArgumentType.greedyString())
+                        .argument<CommandSourceStack, String>("callback", StringArgumentType.greedyString())
                         .executes { ctx ->
-                            val player = ctx.source.entity as ServerPlayerEntity
+                            val player = ctx.source.entity as ServerPlayer
                             textClickHandlers[UUID.fromString(ctx.getArgument("callback", String::class.java))]?.invoke(player)
                             return@executes 1
                         }

@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.util.math.geometry
 
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.phys.Vec3
 
 /**
  * A three dimensional point in space.
@@ -24,11 +24,11 @@ data class GeometricPoint(val x: Float, val y: Float, val z: Float) {
     operator fun plus(right: GeometricPoint): GeometricPoint = add(this, right)
     operator fun times(scalar: Float): GeometricPoint = multiply(this, scalar)
 
-    fun toVec3d() = Vec3d(x.toDouble(), y.toDouble(), z.toDouble())
+    fun toVec3d() = Vec3(x.toDouble(), y.toDouble(), z.toDouble())
 
     constructor() : this(0f, 0f, 0f)
     constructor(x: Double, y: Double, z: Double): this(x.toFloat(), y.toFloat(), z.toFloat())
-    constructor(vec3d: Vec3d) : this(vec3d.x, vec3d.y, vec3d.z)
+    constructor(vec3d: Vec3) : this(vec3d.x, vec3d.y, vec3d.z)
 
     companion object {
 

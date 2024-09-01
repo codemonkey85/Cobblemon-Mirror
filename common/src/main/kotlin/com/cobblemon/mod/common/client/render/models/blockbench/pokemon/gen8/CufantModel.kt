@@ -8,32 +8,27 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen8
 
-import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
-import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.asExpressionLike
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class CufantModel (root: ModelPart) : PokemonPoseableModel() {
+class CufantModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("cufant")
 
     override var portraitScale = 1.5F
-    override var portraitTranslation = Vec3d(-0.32, 0.13, 0.0)
+    override var portraitTranslation = Vec3(-0.32, 0.13, 0.0)
 
     override var profileScale = 0.62F
-    override var profileTranslation = Vec3d(0.05, 0.80, 0.0)
+    override var profileTranslation = Vec3(0.05, 0.80, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battle_idle: PokemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var battle_idle: CobblemonPose
 
     override fun registerPoses() {
         animations["physical"] = "q.bedrock_primary('cufant', 'physical', 'look', q.curve('symmetrical_wide'))".asExpressionLike()
@@ -48,8 +43,8 @@ class CufantModel (root: ModelPart) : PokemonPoseableModel() {
 
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            animations = mutableMapOf("faint" to faint),
-            idleAnimations = arrayOf(bedrock("cufant", "sleep"))
+            namedAnimations = mutableMapOf("faint" to faint),
+            animations = arrayOf(bedrock("cufant", "sleep"))
         )
 
         standing = registerPose(
@@ -57,8 +52,8 @@ class CufantModel (root: ModelPart) : PokemonPoseableModel() {
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             quirks = arrayOf(blink),
             condition = { !it.isBattling },
-            animations = mutableMapOf("faint" to faint),
-            idleAnimations = arrayOf(
+            namedAnimations = mutableMapOf("faint" to faint),
+            animations = arrayOf(
                 bedrock("cufant", "ground_idle")
             )
         )
@@ -67,8 +62,8 @@ class CufantModel (root: ModelPart) : PokemonPoseableModel() {
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            animations = mutableMapOf("faint" to faint),
-            idleAnimations = arrayOf(
+            namedAnimations = mutableMapOf("faint" to faint),
+            animations = arrayOf(
                 bedrock("cufant", "ground_walk")
             )
         )
@@ -78,8 +73,8 @@ class CufantModel (root: ModelPart) : PokemonPoseableModel() {
             poseTypes = PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            animations = mutableMapOf("faint" to faint),
-            idleAnimations = arrayOf(
+            namedAnimations = mutableMapOf("faint" to faint),
+            animations = arrayOf(
                 bedrock("cufant", "battle_idle")
             )
         )

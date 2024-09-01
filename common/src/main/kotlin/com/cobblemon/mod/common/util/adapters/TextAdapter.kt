@@ -12,9 +12,9 @@ import com.cobblemon.mod.common.api.text.text
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
+import net.minecraft.network.chat.Component
 import java.lang.reflect.Type
-import net.minecraft.text.Text
 
-object TextAdapter : JsonDeserializer<Text> {
+object TextAdapter : JsonDeserializer<Component> {
     override fun deserialize(json: JsonElement, type: Type, ctx: JsonDeserializationContext) = json.asString.text()
 }

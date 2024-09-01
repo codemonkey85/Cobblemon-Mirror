@@ -12,8 +12,8 @@ import com.cobblemon.mod.common.api.drop.DropEntry
 import com.cobblemon.mod.common.api.drop.DropTable
 import com.cobblemon.mod.common.api.events.Cancelable
 import com.cobblemon.mod.common.api.events.CobblemonEvents
-import net.minecraft.entity.LivingEntity
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.LivingEntity
 
 /**
  * Cancelable event posted to [CobblemonEvents.LOOT_DROPPED] when a [DropTable] is used to drop items. This
@@ -35,7 +35,7 @@ import net.minecraft.server.network.ServerPlayerEntity
  */
 class LootDroppedEvent(
     val table: DropTable,
-    val player: ServerPlayerEntity?,
+    val player: ServerPlayer?,
     val entity: LivingEntity?,
     val drops: MutableList<DropEntry>
 ) : Cancelable()
