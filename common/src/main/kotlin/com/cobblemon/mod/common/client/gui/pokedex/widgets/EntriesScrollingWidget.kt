@@ -55,7 +55,6 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
             val newEntry = PokemonScrollSlotRow(
                 listChunk.toMutableList(),
                 discoveryList,
-                index == 0,
                 setPokedexEntry
             )
             addEntry(newEntry)
@@ -114,7 +113,6 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
     class PokemonScrollSlotRow(
         val dexDataList:  MutableList<PokedexEntry>,
         val discoveryLevelList: MutableList<PokedexEntryProgress>,
-        val isFirstRow: Boolean = false,
         val setPokedexEntry : (PokedexEntry) -> (Unit)
     ): Slot<PokemonScrollSlotRow>() {
         companion object {
@@ -161,7 +159,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
                 val matrices = context.pose()
 
                 val startPosX = x + ((SCROLL_SLOT_SPACING + SCROLL_SLOT_SIZE) * index)
-                val startPosY = y + if (isFirstRow) (SCROLL_SLOT_SPACING + 1) else SCROLL_SLOT_SPACING
+                val startPosY = y + SCROLL_SLOT_SPACING + 1
 
                 blitk(
                     matrixStack = matrices,
@@ -279,7 +277,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
         private fun getHoveredSlotIndex(mouseX: Int, mouseY: Int): Int {
             dexDataList.forEachIndexed { index, _ ->
                 val startPosX = x + ((SCROLL_SLOT_SPACING + SCROLL_SLOT_SIZE) * index)
-                val startPosY = y + if (isFirstRow) (SCROLL_SLOT_SPACING + 1) else SCROLL_SLOT_SPACING
+                val startPosY = y + SCROLL_SLOT_SPACING + 1
 
                 if (mouseX in startPosX..(startPosX + SCROLL_SLOT_SIZE)
                     && mouseY in startPosY..(startPosY + SCROLL_SLOT_SIZE)) {
