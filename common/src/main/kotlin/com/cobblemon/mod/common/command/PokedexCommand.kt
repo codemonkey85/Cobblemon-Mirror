@@ -11,8 +11,12 @@ package com.cobblemon.mod.common.command
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.permission.CobblemonPermissions
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
+import com.cobblemon.mod.common.api.pokedex.def.PokedexDef
+import com.cobblemon.mod.common.api.pokemon.PokemonSpecies.species
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.api.text.text
+import com.cobblemon.mod.common.command.argument.DexArgumentType
 import com.cobblemon.mod.common.command.argument.FormArgumentType
 import com.cobblemon.mod.common.command.argument.SpeciesArgumentType
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
@@ -39,7 +43,11 @@ object PokedexCommand {
         val commandArgumentBuilder = Commands.literal(NAME)
         val grantCommandBuilder = Commands.literal(GRANT_NAME).then(
             Commands.argument("player", EntityArgument.player())
-                .then(Commands.literal("all").executes(::executeGrantAll))
+                .then(Commands.literal("all")
+                    .then(
+                        Commands.argument("dex", DexArgumentType.dex()).executes(::executeGrantAll)
+                    )
+                )
                 .then(Commands.literal("only").then(
                     Commands.argument("species", SpeciesArgumentType.species()).then(
                         Commands.argument("form", FormArgumentType.form()).executes(::executeGrantOnly)
@@ -48,12 +56,15 @@ object PokedexCommand {
         )
         val revokeCommandBuilder = Commands.literal(REVOKE_NAME).then(
             Commands.argument("player", EntityArgument.player())
-                .then(Commands.literal("all").executes(::executeRemoveAll))
-                .then(Commands.literal("only").then(
-                    Commands.argument("species", SpeciesArgumentType.species()).then(
-                        Commands.argument("form", FormArgumentType.form()).executes(::executeRemoveOnly)
-                    )
-                ))
+                .then(Commands.literal("all").then(
+                    Commands.argument("dex", DexArgumentType.dex()).executes(::executeRemoveAll)
+                )
+            )
+            .then(Commands.literal("only").then(
+                Commands.argument("species", SpeciesArgumentType.species()).then(
+                    Commands.argument("form", FormArgumentType.form()).executes(::executeRemoveOnly)
+                )
+            ))
         )
         commandArgumentBuilder
             .then(grantCommandBuilder)
@@ -98,11 +109,21 @@ object PokedexCommand {
     }
     private fun executeGrantAll(context: CommandContext<CommandSourceStack>): Int {
         val players = context.getArgument("player", EntitySelector::class.java).findPlayers(context.source)
-        players.forEach {
-            val dex = Cobblemon.playerDataManager.getPokedexData(it)
-            //FIXME
-            //dex.grantedWithCommand(null, null)
-            it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
+        val dexDef = context.getArgument("dex", PokedexDef::class.java)
+        players.forEach { player ->
+            val dex = Cobblemon.playerDataManager.getPokedexData(player)
+            dexDef.getEntries().forEach { dexEntry ->
+                val speciesRecord = dex.getOrCreateSpeciesRecord(dexEntry.speciesId)
+                dexEntry.forms.forEach { form ->
+                    form.unlockForms.forEach {unlockForm ->
+                        val formRecord = speciesRecord.getOrCreateFormRecord(unlockForm)
+                        formRecord.setKnowledgeProgress(PokedexEntryProgress.CAUGHT)
+                        formRecord.addAllShinyStatesAndGenders()
+                    }
+                }
+                speciesRecord.addAspects(dexEntry.variations.flatMap { it.aspects }.toSet())
+            }
+            player.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"
         context.source.sendSystemMessage(

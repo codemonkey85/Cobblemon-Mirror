@@ -87,6 +87,12 @@ class FormDexRecord {
     fun hasSeenShinyState(shiny: Boolean): Boolean = seenShinyStates.contains(if (shiny) "shiny" else "normal")
     fun getSeenShinyStates(): Set<String> = seenShinyStates
 
+    //Used when granting all entries in dex, should figure out better way
+    fun addAllShinyStatesAndGenders() {
+        genders.addAll(listOf(Gender.MALE, Gender.FEMALE))
+        seenShinyStates.addAll(listOf("shiny", "normal"))
+    }
+
     fun setKnowledgeProgress(newKnowledge: PokedexEntryProgress) {
         knowledge = newKnowledge
         speciesDexRecord.onFormRecordUpdated(this)
