@@ -23,7 +23,6 @@ import com.cobblemon.mod.common.battles.dispatch.InstructionSet
 import com.cobblemon.mod.common.battles.dispatch.UntilDispatch
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.text.Text
 import java.util.concurrent.CompletableFuture
 import net.minecraft.network.chat.Component
 
