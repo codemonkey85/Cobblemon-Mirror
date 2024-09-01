@@ -12,10 +12,10 @@ import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.net.messages.server.storage.party.SwapPartyPokemonPacket
 import com.cobblemon.mod.common.util.party
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object SwapPartyPokemonHandler : ServerNetworkPacketHandler<SwapPartyPokemonPacket> {
-    override fun handle(packet: SwapPartyPokemonPacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: SwapPartyPokemonPacket, server: MinecraftServer, player: ServerPlayer) {
         val party = player.party()
         val pokemon1 = party[packet.position1] ?: return
         val pokemon2 = party[packet.position2] ?: return

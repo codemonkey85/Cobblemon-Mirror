@@ -8,40 +8,41 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen7
 
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class WishiwashiSoloModel (root: ModelPart) : PokemonPoseableModel(){
+class WishiwashiSoloModel (root: ModelPart) : PokemonPosableModel(root){
     override val rootPart = root.registerChildWithAllChildren("wishiwashi_solo")
 
     override var portraitScale = 3.0F
-    override var portraitTranslation = Vec3d(-0.4, -3.1, 0.0)
+    override var portraitTranslation = Vec3(-0.4, -3.1, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.2, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.2, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var floating: PokemonPose
-    lateinit var swimming: PokemonPose
-    lateinit var watersleep: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var floating: Pose
+    lateinit var swimming: Pose
+    lateinit var watersleep: Pose
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("wishiwashi_solo", "blink") }
         watersleep = registerPose(
             poseType = PoseType.SLEEP,
-            condition = { it.isTouchingWater },
-            idleAnimations = arrayOf(bedrock("wishiwashi_solo", "water_sleep"))
+            condition = { it.isInWater },
+            animations = arrayOf(bedrock("wishiwashi_solo", "water_sleep"))
         )
 
         standing = registerPose(
             poseName = "standing",
             poseTypes = PoseType.STANDING_POSES - PoseType.FLOAT,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("wishiwashi_solo", "ground_idle")
             )
         )
@@ -50,7 +51,7 @@ class WishiwashiSoloModel (root: ModelPart) : PokemonPoseableModel(){
             poseName = "walking",
             poseTypes = PoseType.MOVING_POSES - PoseType.SWIM,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("wishiwashi_solo", "ground_walk")
             )
         )
@@ -59,7 +60,7 @@ class WishiwashiSoloModel (root: ModelPart) : PokemonPoseableModel(){
             poseName = "floating",
             poseTypes = PoseType.UI_POSES + PoseType.FLOAT,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("wishiwashi_solo", "water_idle")
             )
         )
@@ -68,7 +69,7 @@ class WishiwashiSoloModel (root: ModelPart) : PokemonPoseableModel(){
             poseName = "swimming",
             poseType = PoseType.SWIM,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("wishiwashi_solo", "water_swim")
             )
         )

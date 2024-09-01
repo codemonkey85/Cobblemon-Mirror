@@ -10,11 +10,13 @@ package com.cobblemon.mod.common.loot
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.loot.LootPool
-import net.minecraft.loot.LootTables
-import net.minecraft.loot.entry.LootTableEntry
-import net.minecraft.loot.provider.number.UniformLootNumberProvider
-import net.minecraft.util.Identifier
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.level.storage.loot.BuiltInLootTables
+import net.minecraft.world.level.storage.loot.LootPool
+import net.minecraft.world.level.storage.loot.entries.NestedLootTable
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator
 import org.jetbrains.annotations.ApiStatus
 
 /**
@@ -30,43 +32,48 @@ object LootInjector {
 
     private val VILLAGE_HOUSE = cobblemonResource("injection/chests/village_house")
 
-    private val villageHouseLootTables = hashSetOf(
-        LootTables.VILLAGE_DESERT_HOUSE_CHEST,
-        LootTables.VILLAGE_PLAINS_CHEST,
-        LootTables.VILLAGE_SAVANNA_HOUSE_CHEST,
-        LootTables.VILLAGE_SNOWY_HOUSE_CHEST,
-        LootTables.VILLAGE_TAIGA_HOUSE_CHEST,
+    private val villageHouseBuiltInLootTables = hashSetOf(
+        BuiltInLootTables.VILLAGE_DESERT_HOUSE, 
+        BuiltInLootTables.VILLAGE_PLAINS_HOUSE,
+        BuiltInLootTables.VILLAGE_SAVANNA_HOUSE,
+        BuiltInLootTables.VILLAGE_SNOWY_HOUSE,
+        BuiltInLootTables.VILLAGE_TAIGA_HOUSE,
     )
 
     private val injections = hashSetOf(
-        LootTables.ABANDONED_MINESHAFT_CHEST,
-        LootTables.ANCIENT_CITY_CHEST,
-        LootTables.BASTION_BRIDGE_CHEST,
-        LootTables.BASTION_HOGLIN_STABLE_CHEST,
-        LootTables.BASTION_OTHER_CHEST,
-        LootTables.BASTION_TREASURE_CHEST,
-        LootTables.END_CITY_TREASURE_CHEST,
-        LootTables.IGLOO_CHEST_CHEST,
-        LootTables.JUNGLE_TEMPLE_CHEST,
-        LootTables.NETHER_BRIDGE_CHEST,
-        LootTables.PILLAGER_OUTPOST_CHEST,
-        LootTables.SHIPWRECK_SUPPLY_CHEST,
-        LootTables.SIMPLE_DUNGEON_CHEST,
-        LootTables.SPAWN_BONUS_CHEST,
-        LootTables.STRONGHOLD_CORRIDOR_CHEST,
-        LootTables.WOODLAND_MANSION_CHEST
-    ).apply { addAll(villageHouseLootTables) }
+        BuiltInLootTables.ABANDONED_MINESHAFT,
+        BuiltInLootTables.ANCIENT_CITY,
+        BuiltInLootTables.BASTION_BRIDGE,
+        BuiltInLootTables.BASTION_HOGLIN_STABLE,
+        BuiltInLootTables.BASTION_OTHER,
+        BuiltInLootTables.BASTION_TREASURE,
+        BuiltInLootTables.END_CITY_TREASURE,
+        BuiltInLootTables.IGLOO_CHEST,
+        BuiltInLootTables.JUNGLE_TEMPLE,
+        BuiltInLootTables.NETHER_BRIDGE,
+        BuiltInLootTables.PILLAGER_OUTPOST,
+        BuiltInLootTables.SHIPWRECK_SUPPLY,
+        BuiltInLootTables.SIMPLE_DUNGEON,
+        BuiltInLootTables.SPAWN_BONUS_CHEST,
+        BuiltInLootTables.STRONGHOLD_CORRIDOR,
+        BuiltInLootTables.WOODLAND_MANSION,
+        BuiltInLootTables.FISHING_TREASURE
+    ).apply { addAll(villageHouseBuiltInLootTables) }
+
+    private val injectionIds = injections.map {it.location()}.toSet()
+
+    private val villageInjectionIds = villageHouseBuiltInLootTables.map { it.location() }.toSet()
 
     /**
      * Attempts to inject a Cobblemon injection loot table to a loot table being loaded.
      * This will automatically query the existence of an injection.
      *
-     * @param id The [Identifier] of the loot table being loaded.
+     * @param id The [ResourceLocation] of the loot table being loaded.
      * @param provider The job invoked if the injection is possible, this is what the platform needs to do to append the loot table.
      * @return If the injection was made.
      */
-    fun attemptInjection(id: Identifier, provider: (LootPool.Builder) -> Unit): Boolean {
-        if (!this.injections.contains(id)) {
+    fun attemptInjection(id: ResourceLocation, provider: (LootPool.Builder) -> Unit): Boolean {
+        if (!this.injectionIds.contains(id)) {
             return false
         }
         val resulting = this.convertToPotentialInjected(id)
@@ -78,11 +85,11 @@ object LootInjector {
     /**
      * Takes a source ID and converts it into the target injection.
      *
-     * @param source The [Identifier] of the base loot table.
-     * @return The [Identifier] for the expected Cobblemon injection.
+     * @param source The [ResourceLocation] of the base loot table.
+     * @return The [ResourceLocation] for the expected Cobblemon injection.
      */
-    private fun convertToPotentialInjected(source: Identifier): Identifier {
-        if (this.villageHouseLootTables.contains(source)) {
+    private fun convertToPotentialInjected(source: ResourceLocation): ResourceLocation {
+        if (this.villageInjectionIds.contains(source)) {
             return VILLAGE_HOUSE
         }
         return cobblemonResource("$PREFIX${source.path}")
@@ -91,13 +98,17 @@ object LootInjector {
     /**
      * Creates a loot pool builder with our injection.
      *
-     * @param resulting The [Identifier] for our injection table.
+     * @param resulting The [ResourceLocation] for our injection table.
      * @return A [LootPool.Builder] with the [resulting] table.
      */
-    private fun injectLootPool(resulting: Identifier): LootPool.Builder {
-        return LootPool.builder()
-            .with(LootTableEntry.builder(resulting).weight(1))
-            .bonusRolls(UniformLootNumberProvider.create(0F, 1F))
+    private fun injectLootPool(resulting: ResourceLocation): LootPool.Builder {
+        return LootPool.lootPool()
+            .add(
+                NestedLootTable
+                    .lootTableReference(ResourceKey.create(Registries.LOOT_TABLE, resulting))
+                    .setWeight(1)
+            )
+            .setBonusRolls(UniformGenerator.between(0F, 1F))
     }
 
 }

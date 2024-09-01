@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:master_rod"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.craft_master_rod"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.craft_master_rod.description"
+    },
+    "frame": "challenge"
+  },
+  "parent": "cobblemon:use_bait",
+  "criteria": {
+    "craft_rod": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:master_rod"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

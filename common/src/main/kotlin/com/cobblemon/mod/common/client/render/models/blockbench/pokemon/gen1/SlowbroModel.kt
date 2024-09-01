@@ -9,28 +9,30 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import com.cobblemon.mod.common.util.isUnderWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class SlowbroModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class SlowbroModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("slowbro")
     override val head = getPart("head")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.23, -0.1, 0.0)
+    override var portraitTranslation = Vec3(-0.23, -0.1, 0.0)
 
     override var profileScale = 0.95F
-    override var profileTranslation = Vec3d(0.0, 0.3, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.3, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var float: PokemonPose
-    lateinit var swim: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var float: Pose
+    lateinit var swim: Pose
+    lateinit var battleidle: Pose
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("slowbro", "blink1") }
@@ -42,7 +44,7 @@ class SlowbroModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = UI_POSES + PoseType.STAND,
             quirks = arrayOf(blink, blink2, bite),
             condition = { !it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("slowbro", "ground_idle")
             )
@@ -52,7 +54,7 @@ class SlowbroModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "walk",
             poseType = PoseType.WALK,
             quirks = arrayOf(blink, blink2, bite),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("slowbro", "ground_walk")
             )
@@ -62,7 +64,7 @@ class SlowbroModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "float",
             poseType = PoseType.FLOAT,
             quirks = arrayOf(blink, blink2, bite),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("slowbro", "water_idle")
             )
@@ -72,7 +74,7 @@ class SlowbroModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "swim",
             poseType = PoseType.SWIM,
             quirks = arrayOf(blink, blink2, bite),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("slowbro", "water_swim")
             )
@@ -83,8 +85,8 @@ class SlowbroModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink, blink2, bite),
-            condition = { it.isBattling && !it.isSubmergedInWater},
-            idleAnimations = arrayOf(
+            condition = { it.isBattling && !it.isUnderWater },
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("slowbro", "battle_idle")
             )
@@ -93,6 +95,6 @@ class SlowbroModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("slowbro", "faint") else null
 }

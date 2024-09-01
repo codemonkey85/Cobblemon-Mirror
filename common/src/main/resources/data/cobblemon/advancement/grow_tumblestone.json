@@ -1,0 +1,25 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:tumblestone_cluster"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.grow_tumblestone"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.grow_tumblestone.description"
+    }
+  },
+  "parent": "cobblemon:obtain_tumblestone",
+  "criteria": {
+    "planted_tumblestone": {
+      "trigger": "cobblemon:plant_tumblestone"
+    }
+  },
+  "requirements": [
+    [
+      "planted_tumblestone"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

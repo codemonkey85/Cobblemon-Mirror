@@ -12,8 +12,8 @@ import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.brewing.ingredient.CobblemonIngredient
 import com.cobblemon.mod.common.brewing.ingredient.CobblemonItemIngredient
 import com.cobblemon.mod.common.brewing.ingredient.CobblemonPotionIngredient
-import net.minecraft.item.Item
-import net.minecraft.potion.Potions
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.alchemy.Potions
 
 object BrewingRecipes {
 
@@ -44,7 +44,9 @@ object BrewingRecipes {
             convert(CobblemonItems.SUPER_POTION, CobblemonItems.AGUAV_BERRY, CobblemonItems.HYPER_POTION),
             convert(CobblemonItems.SUPER_POTION, CobblemonItems.IAPAPA_BERRY, CobblemonItems.HYPER_POTION),
             convert(CobblemonItems.HYPER_POTION, CobblemonItems.VIVICHOKE, CobblemonItems.MAX_POTION),
-            convert(CobblemonItems.MAX_POTION, CobblemonItems.LUM_BERRY, CobblemonItems.FULL_RESTORE)
+            convert(CobblemonItems.MAX_POTION, CobblemonItems.LUM_BERRY, CobblemonItems.FULL_RESTORE),
+
+            convert(CobblemonItems.POTION, CobblemonItems.PETAYA_BERRY, CobblemonItems.THROAT_SPRAY)
         )
     }
     

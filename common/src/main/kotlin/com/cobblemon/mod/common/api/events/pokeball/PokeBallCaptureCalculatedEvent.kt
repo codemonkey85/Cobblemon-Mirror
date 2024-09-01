@@ -11,8 +11,8 @@ package com.cobblemon.mod.common.api.events.pokeball
 import com.cobblemon.mod.common.api.pokeball.catching.CaptureContext
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.LivingEntity
 
 /**
  * Event fired when a Poké Ball has completed its capture calculation and is about to begin shaking
@@ -27,8 +27,8 @@ class PokeBallCaptureCalculatedEvent(
     val pokeBallEntity: EmptyPokeBallEntity,
     var captureResult: CaptureContext
 ) {
-    fun ifPlayer(action: PokeBallCaptureCalculatedEvent.(player: ServerPlayerEntity) -> Unit) {
-        if (thrower is ServerPlayerEntity) {
+    fun ifPlayer(action: PokeBallCaptureCalculatedEvent.(player: ServerPlayer) -> Unit) {
+        if (thrower is ServerPlayer) {
             action(this, thrower)
         }
     }

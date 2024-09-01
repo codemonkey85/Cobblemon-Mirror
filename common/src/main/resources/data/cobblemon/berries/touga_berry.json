@@ -1,31 +1,23 @@
 {
   "baseYield": {
-    "min": 2,
-    "max": 4
+    "min": 1,
+    "max": 3
   },
   "preferredBiomeTags": [
     "cobblemon:is_forest"
   ],
   "growthTime": {
-    "min": 55,
-    "max": 65
+    "min": 45,
+    "max": 55
   },
   "refreshRate": {
-    "min": 15,
-    "max": 25
+    "min": 23,
+    "max": 27
   },
   "favoriteMulches": [
     "peat"
   ],
-  "growthFactors": [
-    {
-      "variant": "cobblemon:preferred_biome",
-      "bonusYield": {
-        "min": 1,
-        "max": 2
-      }
-    }
-  ],
+  "growthFactors": [],
   "randomizedGrowthPoints": true,
   "spawnConditions": [],
   "growthPoints": [
@@ -80,7 +72,7 @@
     {
       "position": {
         "x": 8.0,
-        "y": 0,
+        "y": 0.0,
         "z": 8.0
       },
       "rotation": {
@@ -92,7 +84,7 @@
     {
       "position": {
         "x": 8.0,
-        "y": 0,
+        "y": 0.0,
         "z": 8.0
       },
       "rotation": {
@@ -104,7 +96,7 @@
     {
       "position": {
         "x": 8.0,
-        "y": 0,
+        "y": 0.0,
         "z": 7.75
       },
       "rotation": {
@@ -150,6 +142,18 @@
       }
     }
   ],
+  "stageOnePositioning": {
+    "position": {
+      "x": 8.15,
+      "y": 3.25,
+      "z": 8.1
+    },
+    "rotation": {
+      "x": 5.0,
+      "y": -10.0,
+      "z": -7.5
+    }
+  },
   "mutations": {
     "cobblemon:occa_berry": "cobblemon:tamato_berry",
     "cobblemon:colbur_berry": "cobblemon:spelon_berry"
@@ -157,12 +161,14 @@
   "sproutShape": "blossom-sprout",
   "matureShape": "blossom-mature",
   "flavors": {
-    "SPICY": 40
+    "SPICY": 30,
+    "DRY": 10
   },
   "weight": 1.0,
   "tintIndexes": [],
   "flowerModel": "cobblemon:flower.geo",
   "flowerTexture": "cobblemon:flower",
   "fruitModel": "cobblemon:touga_berry.geo",
-  "fruitTexture": "cobblemon:touga"
+  "fruitTexture": "cobblemon:touga",
+  "boneMealChance": 0.4
 }

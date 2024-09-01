@@ -9,32 +9,32 @@
 package com.cobblemon.mod.common.item
 
 import com.cobblemon.mod.common.CobblemonSounds
-import net.minecraft.block.Block
-import net.minecraft.block.FacingBlock
-import net.minecraft.item.Item
-import net.minecraft.item.ItemUsageContext
-import net.minecraft.sound.SoundCategory
-import net.minecraft.util.ActionResult
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.context.UseOnContext
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.DirectionalBlock
 
-class TumblestoneItem(settings: Settings, val block: Block) : Item(settings) {
+class TumblestoneItem(settings: Properties, val block: Block) : Item(settings) {
 
-    override fun useOnBlock(context: ItemUsageContext): ActionResult {
-        if (context.player == null) return ActionResult.FAIL
+    override fun useOn(context: UseOnContext): InteractionResult {
+        if (context.player == null) return InteractionResult.FAIL
 
-        val state = context.world.getBlockState(context.blockPos)
-        val world = context.world
-        val pos = context.blockPos
-        val direction = context.side
+        val state = context.level.getBlockState(context.clickedPos)
+        val world = context.level
+        val pos = context.clickedPos
+        val direction = context.clickedFace
 
-        if (state.isSideSolidFullSquare(world, pos, direction)) {
-            if (!world.getBlockState(pos.offset(direction)).isAir) return ActionResult.FAIL
-            if (!context.player!!.isCreative) context.stack.decrement(1)
-            world.setBlockState(pos.offset(direction), block.defaultState.with(FacingBlock.FACING, direction))
-            world.playSound(null, pos, CobblemonSounds.TUMBLESTONE_PLACE, SoundCategory.BLOCKS)
-            return ActionResult.SUCCESS
+        if (state.isFaceSturdy(world, pos, direction)) { // todo (techdaan): ensure this is the right mapping
+            if (!world.getBlockState(pos.relative(direction)).isAir) return InteractionResult.FAIL
+            if (!context.player!!.isCreative) context.itemInHand.shrink(1)
+            world.setBlockAndUpdate(pos.relative(direction), block.defaultBlockState().setValue(DirectionalBlock.FACING, direction))
+            world.playSound(null, pos, CobblemonSounds.TUMBLESTONE_PLACE, SoundSource.BLOCKS)
+            return InteractionResult.SUCCESS
         }
 
-        return ActionResult.FAIL
+        return InteractionResult.FAIL
     }
 
 }

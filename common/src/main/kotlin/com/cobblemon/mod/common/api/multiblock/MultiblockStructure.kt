@@ -8,41 +8,40 @@
 
 package com.cobblemon.mod.common.api.multiblock
 
-import net.minecraft.block.BlockState
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.ActionResult
-import net.minecraft.util.Hand
-import net.minecraft.util.hit.BlockHitResult
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.random.Random
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.core.HolderLookup
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.entity.player.Player
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.util.RandomSource
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.phys.BlockHitResult
 
 interface MultiblockStructure {
     val controllerBlockPos: BlockPos
 
-    fun onUse(
+    fun useWithoutItem(
         blockState: BlockState,
-        world: World,
+        world: Level,
         blockPos: BlockPos,
-        player: PlayerEntity,
-        interactionHand: Hand,
+        player: Player,
         blockHitResult: BlockHitResult
-    ): ActionResult
+    ): InteractionResult
 
-    fun onBreak(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity?)
+    fun playerWillDestroy(world: Level, pos: BlockPos, state: BlockState, player: Player?)
 
-    fun tick(world: World)
+    fun tick(world: Level)
 
-    fun syncToClient(world: World)
+    fun syncToClient(world: Level)
 
-    fun markDirty(world: World)
-    fun writeToNbt(): NbtCompound
-    fun getComparatorOutput(state: BlockState, world: World?, pos: BlockPos?): Int {
+    fun markDirty(world: Level)
+    fun writeToNbt(registryLookup: HolderLookup.Provider): CompoundTag
+    fun getAnalogOutputSignal(state: BlockState, world: Level?, pos: BlockPos?): Int {
         return 0
     }
 
-    fun markRemoved(world: World):Unit
-    fun onTriggerEvent(state: BlockState?, world: ServerWorld?, pos: BlockPos?, random: Random?)
+    fun setRemoved(world: Level)
+    fun onTriggerEvent(state: BlockState?, world: ServerLevel?, pos: BlockPos?, random: RandomSource?)
 }

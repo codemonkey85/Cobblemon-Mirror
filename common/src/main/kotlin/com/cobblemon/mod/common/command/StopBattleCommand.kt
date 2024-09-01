@@ -15,26 +15,26 @@ import com.cobblemon.mod.common.util.player
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
+import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.server.level.ServerPlayer
 
 object StopBattleCommand {
 
-    fun register(dispatcher : CommandDispatcher<ServerCommandSource>) {
-        dispatcher.register(CommandManager.literal("stopbattle")
+    fun register(dispatcher : CommandDispatcher<CommandSourceStack>) {
+        dispatcher.register(Commands.literal("stopbattle")
             .permission(CobblemonPermissions.STOP_BATTLE)
             .then(
-                CommandManager.argument("player", EntityArgumentType.player())
+                Commands.argument("player", EntityArgument.player())
                     .executes(::execute)
             ))
     }
 
-    private fun execute(context: CommandContext<ServerCommandSource>) : Int {
+    private fun execute(context: CommandContext<CommandSourceStack>) : Int {
         val entity = context.source.entity
-        val player = context.player("player") ?: (if (entity is ServerPlayerEntity) entity else return 0)
-        if (!player.world.isClient) {
+        val player = context.player("player") ?: (if (entity is ServerPlayer) entity else return 0)
+        if (!player.level().isClientSide) {
             val battle = BattleRegistry.getBattleByParticipatingPlayer(player) ?: return 0
             battle.stop()
         }

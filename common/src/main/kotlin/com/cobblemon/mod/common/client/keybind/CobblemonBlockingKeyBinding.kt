@@ -8,8 +8,8 @@
 
 package com.cobblemon.mod.common.client.keybind
 
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.util.InputUtil
+import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.client.Minecraft
 
 /**
  * An extension for the [CobblemonKeyBinding] to prevent the [onPress] from rapidly triggering when holding down the associated key
@@ -19,7 +19,7 @@ import net.minecraft.client.util.InputUtil
  */
 abstract class CobblemonBlockingKeyBinding(
     name: String,
-    type: InputUtil.Type = InputUtil.Type.KEYSYM,
+    type: InputConstants.Type = InputConstants.Type.KEYSYM,
     key: Int,
     category: String
 ) : CobblemonKeyBinding(name, type, key, category) {
@@ -29,17 +29,17 @@ abstract class CobblemonBlockingKeyBinding(
     open fun onRelease() {}
 
     override fun onTick() {
-        if (isPressed && !wasDown) {
+        if (isDown && !wasDown) {
             wasDown = true
             timeDown = 0F
             onPress()
-        } else if (!isPressed && wasDown) {
+        } else if (!isDown && wasDown) {
             onRelease()
             wasDown = false
-        } else if (!isPressed) {
+        } else if (!isDown) {
             wasDown = false
         } else if (wasDown) {
-            timeDown += MinecraftClient.getInstance().tickDelta
+            timeDown += Minecraft.getInstance().timer.getGameTimeDeltaPartialTick(false)
         }
     }
 }

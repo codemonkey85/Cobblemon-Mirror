@@ -11,8 +11,8 @@ package com.cobblemon.mod.common.api.events.pokemon
 import com.cobblemon.mod.common.api.events.Cancelable
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.Vec3d
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.phys.Vec3
 
 /**
  * Event fired when a party [Pokemon] is sent out. Cancelling this event prevents a corresponding
@@ -23,8 +23,8 @@ import net.minecraft.util.math.Vec3d
  */
 data class PokemonSentPreEvent(
     val pokemon: Pokemon,
-    val level: ServerWorld,
-    val position: Vec3d
+    val level: ServerLevel,
+    val position: Vec3
 ) : Cancelable()
 
 /**

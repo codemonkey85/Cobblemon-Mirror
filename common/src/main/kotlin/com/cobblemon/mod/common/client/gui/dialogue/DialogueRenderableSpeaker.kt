@@ -8,6 +8,6 @@
 
 package com.cobblemon.mod.common.client.gui.dialogue
 
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
 
-class DialogueRenderableSpeaker(val name: MutableText?, val face: RenderableFace?)
+class DialogueRenderableSpeaker(val name: MutableComponent?, val face: RenderableFace?)

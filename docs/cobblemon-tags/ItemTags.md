@@ -15,30 +15,30 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:ancient_poke_balls</summary>
 
-- cobblemon:ancient_poke_ball
-- cobblemon:ancient_citrine_ball
-- cobblemon:ancient_verdant_ball
 - cobblemon:ancient_azure_ball
+- cobblemon:ancient_citrine_ball
+- cobblemon:ancient_feather_ball
+- cobblemon:ancient_gigaton_ball
+- cobblemon:ancient_great_ball
+- cobblemon:ancient_heavy_ball
+- cobblemon:ancient_ivory_ball
+- cobblemon:ancient_jet_ball
+- cobblemon:ancient_leaden_ball
+- cobblemon:ancient_origin_ball
+- cobblemon:ancient_poke_ball
 - cobblemon:ancient_roseate_ball
 - cobblemon:ancient_slate_ball
-- cobblemon:ancient_ivory_ball
-- cobblemon:ancient_great_ball
 - cobblemon:ancient_ultra_ball
-- cobblemon:ancient_feather_ball
+- cobblemon:ancient_verdant_ball
 - cobblemon:ancient_wing_ball
-- cobblemon:ancient_jet_ball
-- cobblemon:ancient_heavy_ball
-- cobblemon:ancient_leaden_ball
-- cobblemon:ancient_gigaton_ball
-- cobblemon:ancient_origin_ball
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:apples</summary>
 
-- cobblemon:tart_apple
 - cobblemon:sweet_apple
+- cobblemon:tart_apple
 
 </details>
 
@@ -102,74 +102,74 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:berries</summary>
 
+- cobblemon:aguav_berry
+- cobblemon:apicot_berry
+- cobblemon:aspear_berry
+- cobblemon:babiri_berry
+- cobblemon:belue_berry
+- cobblemon:bluk_berry
+- cobblemon:charti_berry
 - cobblemon:cheri_berry
 - cobblemon:chesto_berry
-- cobblemon:pecha_berry
-- cobblemon:rawst_berry
-- cobblemon:aspear_berry
-- cobblemon:oran_berry
-- cobblemon:persim_berry
-- cobblemon:razz_berry
-- cobblemon:bluk_berry
-- cobblemon:nanab_berry
-- cobblemon:wepear_berry
-- cobblemon:pinap_berry
-- cobblemon:leppa_berry
-- cobblemon:lum_berry
-- cobblemon:figy_berry
-- cobblemon:wiki_berry
-- cobblemon:mago_berry
-- cobblemon:aguav_berry
-- cobblemon:iapapa_berry
-- cobblemon:sitrus_berry
-- cobblemon:touga_berry
-- cobblemon:cornn_berry
-- cobblemon:magost_berry
-- cobblemon:rabuta_berry
-- cobblemon:nomel_berry
-- cobblemon:enigma_berry
-- cobblemon:pomeg_berry
-- cobblemon:kelpsy_berry
-- cobblemon:qualot_berry
-- cobblemon:hondew_berry
-- cobblemon:grepa_berry
-- cobblemon:tamato_berry
-- cobblemon:spelon_berry
-- cobblemon:pamtre_berry
-- cobblemon:watmel_berry
-- cobblemon:durin_berry
-- cobblemon:belue_berry
-- cobblemon:kee_berry
-- cobblemon:maranga_berry
-- cobblemon:hopo_berry
-- cobblemon:liechi_berry
-- cobblemon:ganlon_berry
-- cobblemon:salac_berry
-- cobblemon:petaya_berry
-- cobblemon:apicot_berry
-- cobblemon:lansat_berry
-- cobblemon:starf_berry
-- cobblemon:micle_berry
-- cobblemon:custap_berry
-- cobblemon:jaboca_berry
-- cobblemon:rowap_berry
-- cobblemon:babiri_berry
-- cobblemon:charti_berry
 - cobblemon:chilan_berry
 - cobblemon:chople_berry
 - cobblemon:coba_berry
 - cobblemon:colbur_berry
+- cobblemon:cornn_berry
+- cobblemon:custap_berry
+- cobblemon:durin_berry
+- cobblemon:enigma_berry
+- cobblemon:figy_berry
+- cobblemon:ganlon_berry
+- cobblemon:grepa_berry
 - cobblemon:haban_berry
+- cobblemon:hondew_berry
+- cobblemon:hopo_berry
+- cobblemon:iapapa_berry
+- cobblemon:jaboca_berry
 - cobblemon:kasib_berry
 - cobblemon:kebia_berry
+- cobblemon:kee_berry
+- cobblemon:kelpsy_berry
+- cobblemon:lansat_berry
+- cobblemon:leppa_berry
+- cobblemon:liechi_berry
+- cobblemon:lum_berry
+- cobblemon:mago_berry
+- cobblemon:magost_berry
+- cobblemon:maranga_berry
+- cobblemon:micle_berry
+- cobblemon:nanab_berry
+- cobblemon:nomel_berry
 - cobblemon:occa_berry
+- cobblemon:oran_berry
+- cobblemon:pamtre_berry
 - cobblemon:passho_berry
 - cobblemon:payapa_berry
+- cobblemon:pecha_berry
+- cobblemon:persim_berry
+- cobblemon:petaya_berry
+- cobblemon:pinap_berry
+- cobblemon:pomeg_berry
+- cobblemon:qualot_berry
+- cobblemon:rabuta_berry
+- cobblemon:rawst_berry
+- cobblemon:razz_berry
 - cobblemon:rindo_berry
 - cobblemon:roseli_berry
+- cobblemon:rowap_berry
+- cobblemon:salac_berry
 - cobblemon:shuca_berry
+- cobblemon:sitrus_berry
+- cobblemon:spelon_berry
+- cobblemon:starf_berry
+- cobblemon:tamato_berry
 - cobblemon:tanga_berry
+- cobblemon:touga_berry
 - cobblemon:wacan_berry
+- cobblemon:watmel_berry
+- cobblemon:wepear_berry
+- cobblemon:wiki_berry
 - cobblemon:yache_berry
 
 </details>
@@ -177,12 +177,30 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:black_tumblestones</summary>
 
-- cobblemon:small_budding_black_tumblestone
-- cobblemon:medium_budding_black_tumblestone
-- cobblemon:large_budding_black_tumblestone
-- cobblemon:black_tumblestone_cluster
-- cobblemon:black_tumblestone_block
 - cobblemon:black_tumblestone
+- cobblemon:black_tumblestone_block
+- cobblemon:black_tumblestone_brick_slab
+- cobblemon:black_tumblestone_brick_stairs
+- cobblemon:black_tumblestone_brick_wall
+- cobblemon:black_tumblestone_bricks
+- cobblemon:black_tumblestone_cluster
+- cobblemon:chiseled_black_tumblestone_bricks
+- cobblemon:chiseled_polished_black_tumblestone
+- cobblemon:large_budding_black_tumblestone
+- cobblemon:medium_budding_black_tumblestone
+- cobblemon:polished_black_tumblestone
+- cobblemon:polished_black_tumblestone_slab
+- cobblemon:polished_black_tumblestone_stairs
+- cobblemon:polished_black_tumblestone_wall
+- cobblemon:small_budding_black_tumblestone
+
+</details>
+
+<details>
+<summary><b>Tag:</b> #items:black_tumblestone_bricks</summary>
+
+- cobblemon:black_tumblestone_bricks
+- cobblemon:chiseled_black_tumblestone_bricks
 
 </details>
 
@@ -197,8 +215,8 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:cobblemon_seeds</summary>
 
-- cobblemon:vivichoke_seeds
 - #cobblemon:mint_seeds
+- cobblemon:vivichoke_seeds
 
 </details>
 
@@ -206,11 +224,11 @@ This file contains tags related to items in cobblemon.
 <summary><b>Tag:</b> #items:cooked_meat</summary>
 
 - minecraft:cooked_beef
-- minecraft:cooked_porkchop
 - minecraft:cooked_chicken
-- minecraft:cooked_mutton
-- minecraft:cooked_rabbit
 - minecraft:cooked_cod
+- minecraft:cooked_mutton
+- minecraft:cooked_porkchop
+- minecraft:cooked_rabbit
 - minecraft:cooked_salmon
 
 </details>
@@ -238,68 +256,68 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:deep_seas</summary>
 
-- cobblemon:deep_sea_tooth
 - cobblemon:deep_sea_scale
+- cobblemon:deep_sea_tooth
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:dusk_stone_ores</summary>
 
-- cobblemon:dusk_stone_ore
 - cobblemon:deepslate_dusk_stone_ore
+- cobblemon:dusk_stone_ore
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:ethers</summary>
 
-- cobblemon:ether
-- cobblemon:max_ether
 - cobblemon:elixir
+- cobblemon:ether
 - cobblemon:max_elixir
+- cobblemon:max_ether
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:evolution_items</summary>
 
-- cobblemon:link_cable
-- cobblemon:dragon_scale
-- cobblemon:kings_rock
-- cobblemon:metal_coat
-- cobblemon:upgrade
-- cobblemon:dubious_disc
+- #cobblemon:evolution_stones
+- #cobblemon:teacups
+- #cobblemon:teapots
+- cobblemon:auspicious_armor
+- cobblemon:berry_sweet
+- cobblemon:black_augurite
+- cobblemon:clover_sweet
 - cobblemon:deep_sea_scale
 - cobblemon:deep_sea_tooth
+- cobblemon:dragon_scale
+- cobblemon:dubious_disc
 - cobblemon:electirizer
-- cobblemon:magmarizer
-- cobblemon:oval_stone
-- cobblemon:protector
-- cobblemon:reaper_cloth
-- cobblemon:prism_scale
-- cobblemon:sachet
-- cobblemon:whipped_dream
-- cobblemon:strawberry_sweet
-- cobblemon:love_sweet
-- cobblemon:berry_sweet
-- cobblemon:clover_sweet
 - cobblemon:flower_sweet
-- cobblemon:star_sweet
-- cobblemon:ribbon_sweet
-- cobblemon:chipped_pot
-- cobblemon:cracked_pot
-- cobblemon:sweet_apple
-- cobblemon:tart_apple
 - cobblemon:galarica_cuff
 - cobblemon:galarica_wreath
-- cobblemon:black_augurite
+- cobblemon:kings_rock
+- cobblemon:link_cable
+- cobblemon:love_sweet
+- cobblemon:magmarizer
+- cobblemon:malicious_armor
+- cobblemon:metal_coat
+- cobblemon:oval_stone
 - cobblemon:peat_block
-- #cobblemon:evolution_stones
+- cobblemon:prism_scale
+- cobblemon:protector
 - cobblemon:razor_claw
 - cobblemon:razor_fang
-- cobblemon:auspicious_armor
-- cobblemon:malicious_armor
+- cobblemon:reaper_cloth
+- cobblemon:ribbon_sweet
+- cobblemon:sachet
+- cobblemon:star_sweet
+- cobblemon:strawberry_sweet
+- cobblemon:sweet_apple
+- cobblemon:tart_apple
+- cobblemon:upgrade
+- cobblemon:whipped_dream
 
 </details>
 
@@ -322,23 +340,23 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:experience_candies</summary>
 
-- cobblemon:rare_candy
-- cobblemon:exp_candy_xs
-- cobblemon:exp_candy_s
-- cobblemon:exp_candy_m
 - cobblemon:exp_candy_l
+- cobblemon:exp_candy_m
+- cobblemon:exp_candy_s
 - cobblemon:exp_candy_xl
+- cobblemon:exp_candy_xs
+- cobblemon:rare_candy
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:feathers</summary>
 
+- cobblemon:clever_feather
+- cobblemon:genius_feather
 - cobblemon:health_feather
 - cobblemon:muscle_feather
 - cobblemon:resist_feather
-- cobblemon:genius_feather
-- cobblemon:clever_feather
 - cobblemon:swift_feather
 
 </details>
@@ -346,8 +364,8 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:fire_stone_ores</summary>
 
-- cobblemon:fire_stone_ore
 - cobblemon:deepslate_fire_stone_ore
+- cobblemon:fire_stone_ore
 - cobblemon:nether_fire_stone_ore
 
 </details>
@@ -356,11 +374,12 @@ This file contains tags related to items in cobblemon.
 <summary><b>Tag:</b> #items:fossils</summary>
 
 - cobblemon:armor_fossil
-- cobblemon:fossilized_bird
 - cobblemon:claw_fossil
 - cobblemon:cover_fossil
-- cobblemon:fossilized_dino
 - cobblemon:dome_fossil
+- cobblemon:fossilized_bird
+- cobblemon:fossilized_dino
+- cobblemon:fossilized_drake
 - cobblemon:fossilized_fish
 - cobblemon:helix_fossil
 - cobblemon:jaw_fossil
@@ -375,9 +394,9 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:fossil_machine_parts</summary>
 
-- cobblemon:restoration_tank
-- cobblemon:monitor
 - cobblemon:fossil_analyzer
+- cobblemon:monitor
+- cobblemon:restoration_tank
 
 </details>
 
@@ -391,77 +410,77 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:herbs</summary>
 
-- cobblemon:revival_herb
-- cobblemon:mirror_herb
-- cobblemon:white_herb
 - cobblemon:mental_herb
+- cobblemon:mirror_herb
 - cobblemon:power_herb
+- cobblemon:revival_herb
+- cobblemon:white_herb
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:ice_stone_ores</summary>
 
-- cobblemon:ice_stone_ore
 - cobblemon:deepslate_ice_stone_ore
+- cobblemon:ice_stone_ore
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:leaf_stone_ores</summary>
 
-- cobblemon:leaf_stone_ore
 - cobblemon:deepslate_leaf_stone_ore
+- cobblemon:leaf_stone_ore
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:machines</summary>
 
-- cobblemon:healing_machine
-- cobblemon:pc
-- cobblemon:pasture
-- cobblemon:restoration_tank
-- cobblemon:monitor
 - cobblemon:fossil_analyzer
+- cobblemon:healing_machine
+- cobblemon:monitor
+- cobblemon:pasture
+- cobblemon:pc
+- cobblemon:restoration_tank
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:mints</summary>
 
-- cobblemon:lonely_mint
 - cobblemon:adamant_mint
-- cobblemon:naughty_mint
-- cobblemon:brave_mint
 - cobblemon:bold_mint
-- cobblemon:impish_mint
-- cobblemon:lax_mint
-- cobblemon:relaxed_mint
-- cobblemon:modest_mint
-- cobblemon:mild_mint
-- cobblemon:rash_mint
-- cobblemon:quiet_mint
+- cobblemon:brave_mint
 - cobblemon:calm_mint
-- cobblemon:gentle_mint
 - cobblemon:careful_mint
-- cobblemon:sassy_mint
-- cobblemon:timid_mint
+- cobblemon:gentle_mint
 - cobblemon:hasty_mint
+- cobblemon:impish_mint
 - cobblemon:jolly_mint
+- cobblemon:lax_mint
+- cobblemon:lonely_mint
+- cobblemon:mild_mint
+- cobblemon:modest_mint
 - cobblemon:naive_mint
+- cobblemon:naughty_mint
+- cobblemon:quiet_mint
+- cobblemon:rash_mint
+- cobblemon:relaxed_mint
+- cobblemon:sassy_mint
 - cobblemon:serious_mint
+- cobblemon:timid_mint
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:mint_leaf</summary>
 
-- cobblemon:red_mint_leaf
 - cobblemon:blue_mint_leaf
 - cobblemon:cyan_mint_leaf
-- cobblemon:pink_mint_leaf
 - cobblemon:green_mint_leaf
+- cobblemon:pink_mint_leaf
+- cobblemon:red_mint_leaf
 - cobblemon:white_mint_leaf
 
 </details>
@@ -469,11 +488,11 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:mint_seeds</summary>
 
-- cobblemon:red_mint_seeds
 - cobblemon:blue_mint_seeds
 - cobblemon:cyan_mint_seeds
-- cobblemon:pink_mint_seeds
 - cobblemon:green_mint_seeds
+- cobblemon:pink_mint_seeds
+- cobblemon:red_mint_seeds
 - cobblemon:white_mint_seeds
 
 </details>
@@ -481,121 +500,121 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:moon_stone_ores</summary>
 
-- cobblemon:moon_stone_ore
 - cobblemon:deepslate_moon_stone_ore
 - cobblemon:dripstone_moon_stone_ore
+- cobblemon:moon_stone_ore
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:mutated_berries</summary>
 
-- cobblemon:leppa_berry
-- cobblemon:lum_berry
-- cobblemon:figy_berry
-- cobblemon:wiki_berry
-- cobblemon:mago_berry
 - cobblemon:aguav_berry
-- cobblemon:iapapa_berry
-- cobblemon:sitrus_berry
-- cobblemon:touga_berry
-- cobblemon:cornn_berry
-- cobblemon:magost_berry
-- cobblemon:rabuta_berry
-- cobblemon:nomel_berry
-- cobblemon:enigma_berry
-- cobblemon:pomeg_berry
-- cobblemon:kelpsy_berry
-- cobblemon:qualot_berry
-- cobblemon:hondew_berry
-- cobblemon:grepa_berry
-- cobblemon:tamato_berry
-- cobblemon:spelon_berry
-- cobblemon:pamtre_berry
-- cobblemon:watmel_berry
-- cobblemon:durin_berry
-- cobblemon:belue_berry
-- cobblemon:kee_berry
-- cobblemon:maranga_berry
-- cobblemon:hopo_berry
-- cobblemon:liechi_berry
-- cobblemon:ganlon_berry
-- cobblemon:salac_berry
-- cobblemon:petaya_berry
 - cobblemon:apicot_berry
-- cobblemon:lansat_berry
-- cobblemon:starf_berry
-- cobblemon:micle_berry
+- cobblemon:belue_berry
+- cobblemon:cornn_berry
 - cobblemon:custap_berry
+- cobblemon:durin_berry
+- cobblemon:enigma_berry
+- cobblemon:figy_berry
+- cobblemon:ganlon_berry
+- cobblemon:grepa_berry
+- cobblemon:hondew_berry
+- cobblemon:hopo_berry
+- cobblemon:iapapa_berry
 - cobblemon:jaboca_berry
+- cobblemon:kee_berry
+- cobblemon:kelpsy_berry
+- cobblemon:lansat_berry
+- cobblemon:leppa_berry
+- cobblemon:liechi_berry
+- cobblemon:lum_berry
+- cobblemon:mago_berry
+- cobblemon:magost_berry
+- cobblemon:maranga_berry
+- cobblemon:micle_berry
+- cobblemon:nomel_berry
+- cobblemon:pamtre_berry
+- cobblemon:petaya_berry
+- cobblemon:pomeg_berry
+- cobblemon:qualot_berry
+- cobblemon:rabuta_berry
 - cobblemon:rowap_berry
+- cobblemon:salac_berry
+- cobblemon:sitrus_berry
+- cobblemon:spelon_berry
+- cobblemon:starf_berry
+- cobblemon:tamato_berry
+- cobblemon:touga_berry
+- cobblemon:watmel_berry
+- cobblemon:wiki_berry
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:plants</summary>
 
-- #cobblemon:cobblemon_seeds
-- #cobblemon:apricorns
 - #cobblemon:apricorn_sprouts
-- #cobblemon:mint_leaf
+- #cobblemon:apricorns
 - #cobblemon:berries
+- #cobblemon:cobblemon_seeds
 - #cobblemon:herbs
-- cobblemon:vivichoke
-- cobblemon:medicinal_leek
+- #cobblemon:mint_leaf
 - cobblemon:big_root
 - cobblemon:energy_root
+- cobblemon:medicinal_leek
 - cobblemon:pep_up_flower
+- cobblemon:vivichoke
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:poke_balls</summary>
 
-- cobblemon:poke_ball
-- cobblemon:slate_ball
-- cobblemon:azure_ball
-- cobblemon:verdant_ball
-- cobblemon:roseate_ball
-- cobblemon:citrine_ball
-- cobblemon:great_ball
-- cobblemon:ultra_ball
-- cobblemon:master_ball
-- cobblemon:safari_ball
-- cobblemon:fast_ball
-- cobblemon:level_ball
-- cobblemon:lure_ball
-- cobblemon:heavy_ball
-- cobblemon:love_ball
-- cobblemon:friend_ball
-- cobblemon:moon_ball
-- cobblemon:sport_ball
-- cobblemon:net_ball
-- cobblemon:dive_ball
-- cobblemon:nest_ball
-- cobblemon:repeat_ball
-- cobblemon:timer_ball
-- cobblemon:luxury_ball
-- cobblemon:premier_ball
-- cobblemon:dusk_ball
-- cobblemon:heal_ball
-- cobblemon:quick_ball
-- cobblemon:cherish_ball
-- cobblemon:park_ball
-- cobblemon:dream_ball
-- cobblemon:beast_ball
 - #cobblemon:ancient_poke_balls
+- cobblemon:azure_ball
+- cobblemon:beast_ball
+- cobblemon:cherish_ball
+- cobblemon:citrine_ball
+- cobblemon:dive_ball
+- cobblemon:dream_ball
+- cobblemon:dusk_ball
+- cobblemon:fast_ball
+- cobblemon:friend_ball
+- cobblemon:great_ball
+- cobblemon:heal_ball
+- cobblemon:heavy_ball
+- cobblemon:level_ball
+- cobblemon:love_ball
+- cobblemon:lure_ball
+- cobblemon:luxury_ball
+- cobblemon:master_ball
+- cobblemon:moon_ball
+- cobblemon:nest_ball
+- cobblemon:net_ball
+- cobblemon:park_ball
+- cobblemon:poke_ball
+- cobblemon:premier_ball
+- cobblemon:quick_ball
+- cobblemon:repeat_ball
+- cobblemon:roseate_ball
+- cobblemon:safari_ball
+- cobblemon:slate_ball
+- cobblemon:sport_ball
+- cobblemon:timer_ball
+- cobblemon:ultra_ball
+- cobblemon:verdant_ball
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:potions</summary>
 
-- cobblemon:potion
-- cobblemon:super_potion
+- cobblemon:full_restore
 - cobblemon:hyper_potion
 - cobblemon:max_potion
-- cobblemon:full_restore
+- cobblemon:potion
+- cobblemon:super_potion
 
 </details>
 
@@ -614,11 +633,11 @@ This file contains tags related to items in cobblemon.
 <summary><b>Tag:</b> #items:raw_meat</summary>
 
 - minecraft:beef
-- minecraft:porkchop
 - minecraft:chicken
-- minecraft:mutton
-- minecraft:rabbit
 - minecraft:cod
+- minecraft:mutton
+- minecraft:porkchop
+- minecraft:rabbit
 - minecraft:salmon
 
 </details>
@@ -626,22 +645,40 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:red_tumblestones</summary>
 
-- cobblemon:small_budding_tumblestone
-- cobblemon:medium_budding_tumblestone
+- cobblemon:chiseled_polished_tumblestone
+- cobblemon:chiseled_tumblestone_bricks
 - cobblemon:large_budding_tumblestone
-- cobblemon:tumblestone_cluster
-- cobblemon:tumblestone_block
+- cobblemon:medium_budding_tumblestone
+- cobblemon:polished_tumblestone
+- cobblemon:polished_tumblestone_slab
+- cobblemon:polished_tumblestone_stairs
+- cobblemon:polished_tumblestone_wall
+- cobblemon:small_budding_tumblestone
 - cobblemon:tumblestone
+- cobblemon:tumblestone_block
+- cobblemon:tumblestone_brick_slab
+- cobblemon:tumblestone_brick_stairs
+- cobblemon:tumblestone_brick_wall
+- cobblemon:tumblestone_bricks
+- cobblemon:tumblestone_cluster
+
+</details>
+
+<details>
+<summary><b>Tag:</b> #items:red_tumblestone_bricks</summary>
+
+- cobblemon:chiseled_tumblestone_bricks
+- cobblemon:tumblestone_bricks
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:remedies</summary>
 
-- cobblemon:remedy
 - cobblemon:fine_remedy
-- cobblemon:superb_remedy
 - cobblemon:heal_powder
+- cobblemon:remedy
+- cobblemon:superb_remedy
 
 </details>
 
@@ -651,38 +688,38 @@ This file contains tags related to items in cobblemon.
 - cobblemon:antidote
 - cobblemon:awakening
 - cobblemon:burn_heal
-- cobblemon:ice_heal
-- cobblemon:paralyze_heal
 - cobblemon:full_heal
 - cobblemon:full_restore
+- cobblemon:ice_heal
+- cobblemon:paralyze_heal
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:revives</summary>
 
-- cobblemon:revive
 - cobblemon:max_revive
+- cobblemon:revive
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:seeds</summary>
 
-- minecraft:wheat_seeds
+- #cobblemon:cobblemon_seeds
+- minecraft:beetroot_seeds
 - minecraft:melon_seeds
 - minecraft:pumpkin_seeds
-- minecraft:beetroot_seeds
 - minecraft:torchflower_seeds
-- #cobblemon:cobblemon_seeds
+- minecraft:wheat_seeds
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:shiny_stone_ores</summary>
 
-- cobblemon:shiny_stone_ore
 - cobblemon:deepslate_shiny_stone_ore
+- cobblemon:shiny_stone_ore
 
 </details>
 
@@ -696,73 +733,99 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:sky_tumblestones</summary>
 
-- cobblemon:small_budding_sky_tumblestone
-- cobblemon:medium_budding_sky_tumblestone
+- cobblemon:chiseled_polished_sky_tumblestone
+- cobblemon:chiseled_sky_tumblestone_bricks
 - cobblemon:large_budding_sky_tumblestone
-- cobblemon:sky_tumblestone_cluster
-- cobblemon:sky_tumblestone_block
+- cobblemon:medium_budding_sky_tumblestone
+- cobblemon:polished_sky_tumblestone
+- cobblemon:polished_sky_tumblestone_slab
+- cobblemon:polished_sky_tumblestone_stairs
+- cobblemon:polished_sky_tumblestone_wall
 - cobblemon:sky_tumblestone
+- cobblemon:sky_tumblestone_block
+- cobblemon:sky_tumblestone_brick_slab
+- cobblemon:sky_tumblestone_brick_stairs
+- cobblemon:sky_tumblestone_brick_wall
+- cobblemon:sky_tumblestone_bricks
+- cobblemon:sky_tumblestone_cluster
+- cobblemon:small_budding_sky_tumblestone
+
+</details>
+
+<details>
+<summary><b>Tag:</b> #items:sky_tumblestone_bricks</summary>
+
+- cobblemon:chiseled_sky_tumblestone_bricks
+- cobblemon:sky_tumblestone_bricks
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:sun_stone_ores</summary>
 
-- cobblemon:sun_stone_ore
 - cobblemon:deepslate_sun_stone_ore
+- cobblemon:sun_stone_ore
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:sweets</summary>
 
-- cobblemon:strawberry_sweet
-- cobblemon:love_sweet
 - cobblemon:berry_sweet
 - cobblemon:clover_sweet
 - cobblemon:flower_sweet
-- cobblemon:star_sweet
+- cobblemon:love_sweet
 - cobblemon:ribbon_sweet
+- cobblemon:star_sweet
+- cobblemon:strawberry_sweet
+
+</details>
+
+<details>
+<summary><b>Tag:</b> #items:teacups</summary>
+
+- cobblemon:masterpiece_teacup
+- cobblemon:unremarkable_teacup
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:teapots</summary>
 
-- cobblemon:cracked_pot
 - cobblemon:chipped_pot
+- cobblemon:cracked_pot
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:thunder_stone_ores</summary>
 
-- cobblemon:thunder_stone_ore
 - cobblemon:deepslate_thunder_stone_ore
+- cobblemon:thunder_stone_ore
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:tier_1_poke_balls</summary>
 
-- cobblemon:poke_ball
-- cobblemon:citrine_ball
-- cobblemon:verdant_ball
-- cobblemon:azure_ball
-- cobblemon:roseate_ball
-- cobblemon:slate_ball
-- cobblemon:premier_ball
-- cobblemon:safari_ball
-- cobblemon:heal_ball
-- cobblemon:ancient_poke_ball
-- cobblemon:ancient_citrine_ball
-- cobblemon:ancient_verdant_ball
 - cobblemon:ancient_azure_ball
-- cobblemon:ancient_roseate_ball
-- cobblemon:ancient_slate_ball
-- cobblemon:ancient_ivory_ball
+- cobblemon:ancient_citrine_ball
 - cobblemon:ancient_feather_ball
 - cobblemon:ancient_heavy_ball
+- cobblemon:ancient_ivory_ball
+- cobblemon:ancient_poke_ball
+- cobblemon:ancient_roseate_ball
+- cobblemon:ancient_slate_ball
+- cobblemon:ancient_verdant_ball
+- cobblemon:azure_ball
+- cobblemon:citrine_ball
+- cobblemon:heal_ball
+- cobblemon:poke_ball
+- cobblemon:premier_ball
+- cobblemon:roseate_ball
+- cobblemon:safari_ball
+- cobblemon:slate_ball
+- cobblemon:verdant_ball
 
 </details>
 
@@ -776,21 +839,21 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:tier_2_poke_balls</summary>
 
-- cobblemon:great_ball
+- cobblemon:ancient_great_ball
+- cobblemon:ancient_leaden_ball
+- cobblemon:ancient_wing_ball
+- cobblemon:dive_ball
 - cobblemon:fast_ball
+- cobblemon:friend_ball
+- cobblemon:great_ball
+- cobblemon:heavy_ball
 - cobblemon:level_ball
 - cobblemon:lure_ball
-- cobblemon:heavy_ball
-- cobblemon:friend_ball
 - cobblemon:moon_ball
-- cobblemon:sport_ball
-- cobblemon:park_ball
-- cobblemon:net_ball
-- cobblemon:dive_ball
 - cobblemon:nest_ball
-- cobblemon:ancient_great_ball
-- cobblemon:ancient_wing_ball
-- cobblemon:ancient_leaden_ball
+- cobblemon:net_ball
+- cobblemon:park_ball
+- cobblemon:sport_ball
 
 </details>
 
@@ -804,16 +867,16 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:tier_3_poke_balls</summary>
 
-- cobblemon:ultra_ball
+- cobblemon:ancient_gigaton_ball
+- cobblemon:ancient_jet_ball
+- cobblemon:ancient_ultra_ball
+- cobblemon:dusk_ball
 - cobblemon:love_ball
+- cobblemon:luxury_ball
+- cobblemon:quick_ball
 - cobblemon:repeat_ball
 - cobblemon:timer_ball
-- cobblemon:luxury_ball
-- cobblemon:dusk_ball
-- cobblemon:quick_ball
-- cobblemon:ancient_ultra_ball
-- cobblemon:ancient_jet_ball
-- cobblemon:ancient_gigaton_ball
+- cobblemon:ultra_ball
 
 </details>
 
@@ -827,8 +890,8 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:tier_4_poke_balls</summary>
 
-- cobblemon:dream_ball
 - cobblemon:beast_ball
+- cobblemon:dream_ball
 
 </details>
 
@@ -842,77 +905,86 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:tier_5_poke_balls</summary>
 
-- cobblemon:master_ball
 - cobblemon:ancient_origin_ball
+- cobblemon:master_ball
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:tumblestones</summary>
 
-- cobblemon:tumblestone
 - cobblemon:black_tumblestone
 - cobblemon:sky_tumblestone
+- cobblemon:tumblestone
+
+</details>
+
+<details>
+<summary><b>Tag:</b> #items:tumblestone_bricks</summary>
+
+- #cobblemon:black_tumblestone_bricks
+- #cobblemon:red_tumblestone_bricks
+- #cobblemon:sky_tumblestone_bricks
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:type_gems</summary>
 
-- cobblemon:normal_gem
-- cobblemon:fire_gem
-- cobblemon:water_gem
-- cobblemon:grass_gem
-- cobblemon:electric_gem
-- cobblemon:rock_gem
-- cobblemon:ground_gem
 - cobblemon:bug_gem
-- cobblemon:poison_gem
-- cobblemon:ghost_gem
-- cobblemon:psychic_gem
 - cobblemon:dark_gem
-- cobblemon:fairy_gem
 - cobblemon:dragon_gem
-- cobblemon:ice_gem
+- cobblemon:electric_gem
+- cobblemon:fairy_gem
 - cobblemon:fighting_gem
+- cobblemon:fire_gem
 - cobblemon:flying_gem
+- cobblemon:ghost_gem
+- cobblemon:grass_gem
+- cobblemon:ground_gem
+- cobblemon:ice_gem
+- cobblemon:normal_gem
+- cobblemon:poison_gem
+- cobblemon:psychic_gem
+- cobblemon:rock_gem
 - cobblemon:steel_gem
+- cobblemon:water_gem
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:vitamins</summary>
 
-- cobblemon:hp_up
-- cobblemon:protein
-- cobblemon:iron
 - cobblemon:calcium
-- cobblemon:zinc
 - cobblemon:carbos
-- cobblemon:pp_up
+- cobblemon:hp_up
+- cobblemon:iron
 - cobblemon:pp_max
+- cobblemon:pp_up
+- cobblemon:protein
+- cobblemon:zinc
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:water_stone_ores</summary>
 
-- cobblemon:water_stone_ore
 - cobblemon:deepslate_water_stone_ore
+- cobblemon:water_stone_ore
 
 </details>
 
 <details>
 <summary><b>Tag:</b> #items:x_items</summary>
 
+- cobblemon:dire_hit
+- cobblemon:guard_spec
+- cobblemon:x_accuracy
 - cobblemon:x_attack
 - cobblemon:x_defence
 - cobblemon:x_special_attack
 - cobblemon:x_special_defence
 - cobblemon:x_speed
-- cobblemon:x_accuracy
-- cobblemon:dire_hit
-- cobblemon:guard_spec
 
 </details>
 
@@ -968,69 +1040,114 @@ This file contains tags related to items in cobblemon.
 </details>
 
 <details>
+<summary><b>Tag:</b> #held:is_friendship_booster</summary>
+
+- cobblemon:soothe_bell
+
+</details>
+
+<details>
 <summary><b>Tag:</b> #held:is_held_item</summary>
 
+- #cobblemon:type_gems
+- cobblemon:ability_shield
+- cobblemon:absorb_bulb
+- cobblemon:air_balloon
 - cobblemon:assault_vest
 - cobblemon:big_root
+- cobblemon:binding_band
 - cobblemon:black_belt
 - cobblemon:black_glasses
 - cobblemon:black_sludge
+- cobblemon:blunder_policy
+- cobblemon:bright_powder
+- cobblemon:cell_battery
 - cobblemon:charcoal_stick
 - cobblemon:choice_band
 - cobblemon:choice_scarf
 - cobblemon:choice_specs
 - cobblemon:cleanse_tag
-- cobblemon:exp_share
+- cobblemon:covert_cloak
+- cobblemon:damp_rock
+- cobblemon:deep_sea_scale
+- cobblemon:deep_sea_scale
+- cobblemon:deep_sea_tooth
+- cobblemon:deep_sea_tooth
+- cobblemon:destiny_knot
 - cobblemon:dragon_fang
+- cobblemon:eject_button
+- cobblemon:eject_pack
+- cobblemon:everstone
+- cobblemon:eviolite
+- cobblemon:exp_share
+- cobblemon:expert_belt
 - cobblemon:fairy_feather
+- cobblemon:flame_orb
+- cobblemon:flame_orb
+- cobblemon:float_stone
 - cobblemon:focus_band
+- cobblemon:focus_sash
 - cobblemon:hard_stone
+- cobblemon:heat_rock
 - cobblemon:heavy_duty_boots
+- cobblemon:icy_rock
+- cobblemon:iron_ball
+- cobblemon:kings_rock
+- cobblemon:kings_rock
 - cobblemon:leftovers
+- cobblemon:life_orb
+- cobblemon:life_orb
+- cobblemon:light_ball
 - cobblemon:light_clay
+- cobblemon:loaded_dice
+- cobblemon:lucky_egg
+- cobblemon:lucky_egg
 - cobblemon:magnet
+- cobblemon:medicinal_leek
+- cobblemon:mental_herb
+- cobblemon:metal_coat
+- cobblemon:metal_coat
+- cobblemon:metal_powder
 - cobblemon:miracle_seed
+- cobblemon:mirror_herb
 - cobblemon:muscle_band
 - cobblemon:mystic_water
 - cobblemon:never_melt_ice
 - cobblemon:poison_barb
-- cobblemon:quick_claw
-- cobblemon:razor_claw
-- cobblemon:razor_fang
-- cobblemon:rocky_helmet
-- cobblemon:safety_goggles
-- cobblemon:sharp_beak
-- cobblemon:silk_scarf
-- cobblemon:silver_powder
-- cobblemon:soft_sand
-- cobblemon:spell_tag
-- cobblemon:twisted_spoon
-- cobblemon:wise_glasses
-- cobblemon:bright_powder
-- cobblemon:metal_powder
-- cobblemon:quick_powder
-- cobblemon:destiny_knot
-- cobblemon:everstone
 - cobblemon:power_anklet
 - cobblemon:power_band
 - cobblemon:power_belt
 - cobblemon:power_bracer
+- cobblemon:power_herb
 - cobblemon:power_lens
 - cobblemon:power_weight
-- cobblemon:mental_herb
-- cobblemon:mirror_herb
-- cobblemon:power_herb
-- cobblemon:life_orb
-- cobblemon:toxic_orb
-- cobblemon:flame_orb
-- cobblemon:white_herb
+- cobblemon:quick_claw
+- cobblemon:quick_powder
+- cobblemon:razor_claw
+- cobblemon:razor_fang
+- cobblemon:red_card
+- cobblemon:ring_target
+- cobblemon:rocky_helmet
+- cobblemon:safety_goggles
+- cobblemon:sharp_beak
+- cobblemon:shell_bell
+- cobblemon:silk_scarf
+- cobblemon:silver_powder
 - cobblemon:smoke_ball
-- cobblemon:lucky_egg
-- cobblemon:kings_rock
-- cobblemon:deep_sea_scale
-- cobblemon:deep_sea_tooth
-- cobblemon:metal_coat
-- #cobblemon:type_gems
+- cobblemon:smoke_ball
+- cobblemon:smooth_rock
+- cobblemon:soft_sand
+- cobblemon:spell_tag
+- cobblemon:sticky_barb
+- cobblemon:toxic_orb
+- cobblemon:toxic_orb
+- cobblemon:twisted_spoon
+- cobblemon:weakness_policy
+- cobblemon:white_herb
+- cobblemon:white_herb
+- cobblemon:wise_glasses
+- minecraft:bone
+- minecraft:snowball
 
 </details>
 
@@ -1150,8 +1267,8 @@ This file contains tags related to items in cobblemon.
 <summary><b>Tag:</b> #items:logs</summary>
 
 - cobblemon:apricorn_log
-- cobblemon:stripped_apricorn_log
 - cobblemon:apricorn_wood
+- cobblemon:stripped_apricorn_log
 - cobblemon:stripped_apricorn_wood
 
 </details>
@@ -1160,8 +1277,8 @@ This file contains tags related to items in cobblemon.
 <summary><b>Tag:</b> #items:logs_that_burn</summary>
 
 - cobblemon:apricorn_log
-- cobblemon:stripped_apricorn_log
 - cobblemon:apricorn_wood
+- cobblemon:stripped_apricorn_log
 - cobblemon:stripped_apricorn_wood
 
 </details>
@@ -1169,9 +1286,9 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:piglin_loved</summary>
 
+- cobblemon:relic_coin
 - cobblemon:relic_coin_pouch
 - cobblemon:relic_coin_sack
-- cobblemon:relic_coin
 
 </details>
 
@@ -1204,9 +1321,21 @@ This file contains tags related to items in cobblemon.
 - cobblemon:green_mint_seeds
 - cobblemon:pink_mint_seeds
 - cobblemon:red_mint_seeds
-- cobblemon:white_mint_seeds
 - cobblemon:revival_herb
 - cobblemon:vivichoke_seeds
+- cobblemon:white_mint_seeds
+
+</details>
+
+<details>
+<summary><b>Tag:</b> #items:walls</summary>
+
+- cobblemon:black_tumblestone_brick_wall
+- cobblemon:polished_black_tumblestone_wall
+- cobblemon:polished_sky_tumblestone_wall
+- cobblemon:polished_tumblestone_wall
+- cobblemon:sky_tumblestone_brick_wall
+- cobblemon:tumblestone_brick_wall
 
 </details>
 

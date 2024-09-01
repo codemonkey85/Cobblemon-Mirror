@@ -11,9 +11,9 @@ package com.cobblemon.mod.common.registry
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.conditional.RegistryLikeIdentifierCondition
 import com.cobblemon.mod.common.api.conditional.RegistryLikeTagCondition
-import net.minecraft.item.Item
-import net.minecraft.registry.tag.TagKey
-import net.minecraft.util.Identifier
+import net.minecraft.world.item.Item
+import net.minecraft.tags.TagKey
+import net.minecraft.resources.ResourceLocation
 
 /**
  * A [RegistryLikeCondition] that expects a [TagKey] attached to the [Item] registry.
@@ -26,11 +26,11 @@ import net.minecraft.util.Identifier
 class ItemTagCondition(tag: TagKey<Item>) : RegistryLikeTagCondition<Item>(tag)
 
 /**
- * A [RegistryLikeCondition] that expects an [Identifier] to match.
+ * A [RegistryLikeCondition] that expects an [ResourceLocation] to match.
  *
  * @property identifier The identifier for the item being referenced.
  *
  * @author Licious
  * @since October 28th, 2022
  */
-class ItemIdentifierCondition(identifier: Identifier) : RegistryLikeIdentifierCondition<Item>(identifier)
+class ItemIdentifierCondition(identifier: ResourceLocation) : RegistryLikeIdentifierCondition<Item>(identifier)

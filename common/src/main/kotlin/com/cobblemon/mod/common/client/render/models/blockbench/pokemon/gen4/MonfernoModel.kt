@@ -8,21 +8,21 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen4
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class MonfernoModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame {
+class MonfernoModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("monferno")
     override val head = getPart("head")
 
@@ -30,16 +30,16 @@ class MonfernoModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 2.2F
-    override var portraitTranslation = Vec3d(-0.2, 0.4, 0.0)
+    override var portraitTranslation = Vec3(-0.2, 0.4, 0.0)
 
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.0, 0.6, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.6, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var battleidle: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("monferno", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("monferno", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("monferno", "blink") }
@@ -47,7 +47,7 @@ class MonfernoModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
                 poseName = "standing",
                 poseTypes = STATIONARY_POSES + UI_POSES,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("monferno", "ground_idle")
                 )
@@ -57,7 +57,7 @@ class MonfernoModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
                 poseName = "walk",
                 poseTypes = MOVING_POSES,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("monferno", "ground_walk")
                 )
@@ -69,7 +69,7 @@ class MonfernoModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("monferno", "battle_idle")
             )
@@ -77,8 +77,5 @@ class MonfernoModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
         )
     }
 
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isPosedIn(standing, walk, battleidle)) bedrockStateful("monferno", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walk, battleidle)) bedrockStateful("monferno", "faint") else null
 }

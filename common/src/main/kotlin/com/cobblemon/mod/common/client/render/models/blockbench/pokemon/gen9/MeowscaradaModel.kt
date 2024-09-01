@@ -10,28 +10,29 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen9
 
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class MeowscaradaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class MeowscaradaModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("meowscarada")
     override val head = getPart("head")
 
     override var portraitScale = 1.9F
-    override var portraitTranslation = Vec3d(-0.3, 3.0, 0.0)
+    override var portraitTranslation = Vec3(-0.3, 3.0, 0.0)
 
     override var profileScale = 0.46F
-    override var profileTranslation = Vec3d(0.0, 1.1, 0.0)
+    override var profileTranslation = Vec3(0.0, 1.1, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walking: Pose
+    lateinit var sleep: Pose
+    lateinit var battleidle: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("meowscarada", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("meowscarada", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("meowscarada", "blink") }
@@ -43,7 +44,7 @@ class MeowscaradaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         sleep = registerPose(
             poseType = PoseType.SLEEP,
             quirks = arrayOf(blink, sleep1, sleep2, sleep3, sleep4),
-            idleAnimations = arrayOf(bedrock("meowscarada", "sleep"))
+            animations = arrayOf(bedrock("meowscarada", "sleep"))
         )
 
         standing = registerPose(
@@ -52,7 +53,7 @@ class MeowscaradaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             transformTicks = 10,
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("meowscarada", "ground_idle")
             )
@@ -63,7 +64,7 @@ class MeowscaradaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("meowscarada", "ground_walk")
             )
@@ -75,7 +76,7 @@ class MeowscaradaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("meowscarada", "battle_idle")
             )
@@ -83,6 +84,6 @@ class MeowscaradaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
     }
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walking, battleidle, sleep)) bedrockStateful("meowscarada", "faint") else null
 }

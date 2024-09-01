@@ -8,10 +8,10 @@
 
 package com.cobblemon.mod.common.item.interactive
 
-import net.minecraft.entity.Entity
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * An item that will affect an [Entity].
@@ -23,13 +23,13 @@ import net.minecraft.server.network.ServerPlayerEntity
 interface InteractiveItem<T : Entity> {
 
     /**
-     * Fired when a [ServerPlayerEntity] interacts with the target entity.
+     * Fired when a [ServerPlayer] interacts with the target entity.
      *
-     * @param player The [ServerPlayerEntity] interacting with the [entity].
+     * @param player The [ServerPlayer] interacting with the [entity].
      * @param entity The [Entity] of type [T] being interacted.
      * @param stack The [ItemStack] used in this interaction. [ItemStack.getItem] will always be of the same type as this [InteractiveItem].
      * @return true if the interaction was successful and no further interactions should be processed
      */
-    fun onInteraction(player: ServerPlayerEntity, entity: T, stack: ItemStack): Boolean
+    fun onInteraction(player: ServerPlayer, entity: T, stack: ItemStack): Boolean
 
 }

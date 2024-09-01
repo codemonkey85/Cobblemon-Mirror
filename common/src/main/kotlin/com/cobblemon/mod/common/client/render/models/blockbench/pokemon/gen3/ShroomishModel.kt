@@ -8,21 +8,21 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class ShroomishModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame {
+class ShroomishModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("shroomish")
     override val head = getPart("torso")
 
@@ -30,17 +30,17 @@ class ShroomishModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
     override val rightLeg = getPart("foot_right")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.1, -1.2, 0.0)
+    override var portraitTranslation = Vec3(-0.1, -1.2, 0.0)
 
     override var profileScale = 1.0F
-    override var profileTranslation = Vec3d(0.0, 0.3, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.3, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var battling: PokemonPose
-    lateinit var sleeping: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: Pose
+    lateinit var battling: Pose
+    lateinit var sleeping: Pose
+    lateinit var walk: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("shroomish", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("shroomish", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("shroomish", "blink") }
@@ -49,8 +49,8 @@ class ShroomishModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseTypes = STATIONARY_POSES + UI_POSES,
             quirks = arrayOf(blink),
             condition = { !it.isBattling },
-            idleAnimations = arrayOf(
-                singleBoneLook(),
+            animations = arrayOf(
+                singleBoneLook(pitchMultiplier = 0.5F),
                 bedrock("shroomish", "ground_idle")
             )
         )
@@ -59,8 +59,8 @@ class ShroomishModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseName = "walk",
             poseTypes = MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
-                singleBoneLook(),
+            animations = arrayOf(
+                singleBoneLook(pitchMultiplier = 0.5F),
                 bedrock("shroomish", "ground_walk")
             )
         )
@@ -71,8 +71,8 @@ class ShroomishModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
-                singleBoneLook(),
+            animations = arrayOf(
+                singleBoneLook(pitchMultiplier = 0.5F),
                 bedrock("shroomish", "battle_idle")
             )
         )
@@ -81,14 +81,11 @@ class ShroomishModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseName = "sleeping",
             poseType = PoseType.SLEEP,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("shroomish", "sleep")
             )
         )
     }
 
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isPosedIn(standing, walk, battling, sleeping)) bedrockStateful("shroomish", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walk, battling, sleeping)) bedrockStateful("shroomish", "faint") else null
 }

@@ -8,29 +8,29 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class WailordModel(root: ModelPart) : PokemonPoseableModel() {
+class WailordModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("wailord")
     override var portraitScale = 0.45F
-    override var portraitTranslation = Vec3d(-0.38, 0.8, 6.69)
+    override var portraitTranslation = Vec3(-0.38, 0.8, 6.69)
 
     override var profileScale = 0.25F
-    override var profileTranslation = Vec3d(0.0, 1.2, -10.0)
+    override var profileTranslation = Vec3(0.0, 1.2, -10.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var floating: PokemonPose
-    lateinit var swimming: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var floating: Pose
+    lateinit var swimming: Pose
+    lateinit var sleep: Pose
+    lateinit var battleidle: Pose
 
     val offsetY = 0.0
     override fun registerPoses() {
@@ -38,7 +38,7 @@ class WailordModel(root: ModelPart) : PokemonPoseableModel() {
 
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("wailord", "sleep"))
+            animations = arrayOf(bedrock("wailord", "sleep"))
         )
 
         standing = registerPose(
@@ -46,7 +46,7 @@ class WailordModel(root: ModelPart) : PokemonPoseableModel() {
             poseTypes = PoseType.STANDING_POSES - PoseType.FLOAT,
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("wailord", "ground_idle")
             ),
             transformedParts = arrayOf(
@@ -58,7 +58,7 @@ class WailordModel(root: ModelPart) : PokemonPoseableModel() {
             poseName = "walking",
             poseTypes = PoseType.MOVING_POSES - PoseType.SWIM,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("wailord", "ground_idle"),
                 bedrock("wailord", "ground_walk")
             ),
@@ -71,7 +71,7 @@ class WailordModel(root: ModelPart) : PokemonPoseableModel() {
             poseName = "floating",
             poseTypes = PoseType.UI_POSES + PoseType.FLOAT,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("wailord", "water_idle")
             )
         )
@@ -80,7 +80,7 @@ class WailordModel(root: ModelPart) : PokemonPoseableModel() {
             poseName = "swimming",
             poseType = PoseType.SWIM,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("wailord", "water_swim")
             )
         )
@@ -91,7 +91,7 @@ class WailordModel(root: ModelPart) : PokemonPoseableModel() {
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("wailord", "battle_idle")
             ),
             transformedParts = arrayOf(
@@ -99,10 +99,7 @@ class WailordModel(root: ModelPart) : PokemonPoseableModel() {
             )
         )
     }
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isPosedIn(standing, walk, sleep, battleidle)) bedrockStateful("wailord", "faint") else
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walk, sleep, battleidle)) bedrockStateful("wailord", "faint") else
         if (state.isPosedIn(floating, swimming)) bedrockStateful("wailord", "faint_water")
         else null
 }

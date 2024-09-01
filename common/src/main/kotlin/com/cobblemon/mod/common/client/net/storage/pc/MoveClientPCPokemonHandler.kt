@@ -11,10 +11,10 @@ package com.cobblemon.mod.common.client.net.storage.pc
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.net.messages.client.storage.pc.MoveClientPCPokemonPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object MoveClientPCPokemonHandler : ClientNetworkPacketHandler<MoveClientPCPokemonPacket> {
-    override fun handle(packet: MoveClientPCPokemonPacket, client: MinecraftClient) {
+    override fun handle(packet: MoveClientPCPokemonPacket, client: Minecraft) {
         CobblemonClient.storage.moveInPC(packet.storeID, packet.pokemonID, packet.newPosition)
     }
 }

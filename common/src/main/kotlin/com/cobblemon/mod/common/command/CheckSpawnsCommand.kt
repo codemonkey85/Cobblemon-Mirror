@@ -27,13 +27,13 @@ import com.cobblemon.mod.common.util.permission
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext
+import net.minecraft.commands.CommandSourceStack
 import java.text.DecimalFormat
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.text.MutableText
-import net.minecraft.util.math.MathHelper
+import net.minecraft.commands.Commands
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.util.Mth
 
 object CheckSpawnsCommand {
     const val PURPLE_THRESHOLD = 0.01F
@@ -41,17 +41,17 @@ object CheckSpawnsCommand {
     const val YELLOW_THRESHOLD = 5F
     val df = DecimalFormat("#.##")
 
-    fun register(dispatcher : CommandDispatcher<ServerCommandSource>) {
-        dispatcher.register(CommandManager.literal("checkspawn")
+    fun register(dispatcher : CommandDispatcher<CommandSourceStack>) {
+        dispatcher.register(Commands.literal("checkspawn")
             .permission(CobblemonPermissions.CHECKSPAWNS)
             .then(
-                CommandManager.argument("bucket", SpawnBucketArgumentType.spawnBucket())
+                Commands.argument("bucket", SpawnBucketArgumentType.spawnBucket())
                     .requires { it.player != null }
-                    .executes { execute(it, it.source.playerOrThrow) }
+                    .executes { execute(it, it.source.playerOrException) }
             ))
     }
 
-    private fun execute(context: CommandContext<ServerCommandSource>, player: ServerPlayerEntity) : Int {
+    private fun execute(context: CommandContext<CommandSourceStack>, player: ServerPlayer) : Int {
         if (!config.enableSpawning) {
             return 0
         }
@@ -64,10 +64,10 @@ object CheckSpawnsCommand {
             spawner = spawner,
             area = SpawningArea(
                 cause = cause,
-                world = player.world as ServerWorld,
-                baseX = MathHelper.ceil(player.x - config.worldSliceDiameter / 2F),
-                baseY = MathHelper.ceil(player.y - config.worldSliceHeight / 2F),
-                baseZ = MathHelper.ceil(player.z - config.worldSliceDiameter / 2F),
+                world = player.level() as ServerLevel,
+                baseX = Mth.ceil(player.x - config.worldSliceDiameter / 2F),
+                baseY = Mth.ceil(player.y - config.worldSliceHeight / 2F),
+                baseZ = Mth.ceil(player.z - config.worldSliceDiameter / 2F),
                 length = config.worldSliceDiameter,
                 height = config.worldSliceHeight,
                 width = config.worldSliceDiameter
@@ -78,8 +78,8 @@ object CheckSpawnsCommand {
 
         val spawnProbabilities = spawner.getSpawningSelector().getProbabilities(spawner, contexts)
 
-        val spawnNames = mutableMapOf<String, MutableText>()
-        val namedProbabilities = mutableMapOf<MutableText, Float>()
+        val spawnNames = mutableMapOf<String, MutableComponent>()
+        val namedProbabilities = mutableMapOf<MutableComponent, Float>()
 
         spawnProbabilities.entries.forEach {
             val nameText = it.key.getName()
@@ -93,7 +93,7 @@ object CheckSpawnsCommand {
         }
 
         val sortedEntries = namedProbabilities.entries.sortedByDescending { it.value }
-        val messages = mutableListOf<MutableText>()
+        val messages = mutableListOf<MutableComponent>()
         sortedEntries.forEach { (name, percentage) ->
             val message = name + ": " + applyColour("${df.format(percentage)}%".text(), percentage)
 //            player.sendMessage()
@@ -101,20 +101,20 @@ object CheckSpawnsCommand {
         }
 
         if (messages.isEmpty()) {
-            player.sendMessage(lang("command.checkspawns.nothing").red())
+            player.sendSystemMessage(lang("command.checkspawns.nothing").red())
         } else {
-            player.sendMessage(lang("command.checkspawns.spawns").underline())
+            player.sendSystemMessage(lang("command.checkspawns.spawns").underline())
             val msg = messages[0]
             for (nextMessage in messages.subList(1, messages.size)) {
                 msg.add(", ".text() + nextMessage)
             }
-            player.sendMessage(msg)
+            player.sendSystemMessage(msg)
         }
 
         return Command.SINGLE_SUCCESS
     }
 
-    fun applyColour(name: MutableText, percentage: Float): MutableText {
+    fun applyColour(name: MutableComponent, percentage: Float): MutableComponent {
         return if (percentage < PURPLE_THRESHOLD) {
             name.lightPurple()
         } else if (percentage < RED_THRESHOLD) {

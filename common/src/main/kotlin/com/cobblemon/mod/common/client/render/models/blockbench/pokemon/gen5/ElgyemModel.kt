@@ -8,18 +8,20 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen5
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class ElgyemModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class ElgyemModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("elgyem")
     override val head = getPart("head")
     override val rightArm = getPart("arm_right")
@@ -28,20 +30,24 @@ class ElgyemModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
     override val leftLeg = getPart("leg_left")
 
     override var portraitScale = 2.5F
-    override var portraitTranslation = Vec3d(-0.2, -0.8, 0.0)
+    override var portraitTranslation = Vec3(-0.2, -0.8, 0.0)
 
     override var profileScale = 0.85F
-    override var profileTranslation = Vec3d(0.0, 0.5, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.5, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var sleep: Pose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var battleidle: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
+
+    val shoulderOffset = 5.6
 
     override fun registerPoses() {
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("elgyem", "sleep"))
+            animations = arrayOf(bedrock("elgyem", "sleep"))
         )
 
         standing = registerPose(
@@ -49,7 +55,7 @@ class ElgyemModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             transformTicks = 10,
             condition = { !it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("elgyem", "ground_idle")
             )
@@ -59,7 +65,7 @@ class ElgyemModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 5,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("elgyem", "ground_walk")
             )
@@ -70,14 +76,35 @@ class ElgyemModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("elgyem", "battle_idle")
             )
         )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                //quirks = arrayOf(blink),
+                animations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("elgyem", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                //quirks = arrayOf(blink),
+                animations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("elgyem", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset)
+                )
+        )
     }
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isPosedIn(standing, walk, battleidle, sleep)) bedrockStateful("elgyem", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walk, battleidle, sleep)) bedrockStateful("elgyem", "faint") else null
 }

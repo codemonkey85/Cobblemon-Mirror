@@ -13,14 +13,14 @@ import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.moves.categories.DamageCategories
 import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.battles.MoveTarget
-import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import com.cobblemon.mod.common.util.*
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class MovesRegistrySyncPacket(moves: List<MoveTemplate>) : DataRegistrySyncPacket<MoveTemplate, MovesRegistrySyncPacket>(moves) {
 
     override val id = ID
 
-    override fun encodeEntry(buffer: PacketByteBuf, entry: MoveTemplate) {
+    override fun encodeEntry(buffer: RegistryFriendlyByteBuf, entry: MoveTemplate) {
         buffer.writeString(entry.name)
         buffer.writeInt(entry.num)
         buffer.writeString(entry.elementalType.name)
@@ -31,11 +31,11 @@ class MovesRegistrySyncPacket(moves: List<MoveTemplate>) : DataRegistrySyncPacke
         buffer.writeInt(entry.pp)
         buffer.writeInt(entry.priority)
         buffer.writeDouble(entry.critRatio)
-        buffer.writeVarInt(entry.effectChances.size)
+        buffer.writeInt(entry.effectChances.size)
         entry.effectChances.forEach { chance -> buffer.writeDouble(chance) }
     }
 
-    override fun decodeEntry(buffer: PacketByteBuf): MoveTemplate {
+    override fun decodeEntry(buffer: RegistryFriendlyByteBuf): MoveTemplate? {
         val name = buffer.readString()
         val num = buffer.readInt()
         val type = ElementalTypes.getOrException(buffer.readString())
@@ -47,7 +47,7 @@ class MovesRegistrySyncPacket(moves: List<MoveTemplate>) : DataRegistrySyncPacke
         val priority = buffer.readInt()
         val critRatio = buffer.readDouble()
         val effectChances = arrayListOf<Double>()
-        repeat(buffer.readVarInt()) {
+        repeat(buffer.readInt()) {
             effectChances += buffer.readDouble()
         }
         return MoveTemplate(name, num, type, damageCategory, power, target, accuracy, pp, priority, critRatio, effectChances.toTypedArray(), null)
@@ -59,6 +59,6 @@ class MovesRegistrySyncPacket(moves: List<MoveTemplate>) : DataRegistrySyncPacke
 
     companion object {
         val ID = cobblemonResource("moves_sync")
-        fun decode(buffer: PacketByteBuf): MovesRegistrySyncPacket = MovesRegistrySyncPacket(emptyList()).apply { decodeBuffer(buffer) }
+        fun decode(buffer: RegistryFriendlyByteBuf): MovesRegistrySyncPacket = MovesRegistrySyncPacket(emptyList()).apply { decodeBuffer(buffer) }
     }
 }

@@ -10,9 +10,8 @@ package com.cobblemon.mod.common.api.spawning.condition
 
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.spawning.context.GroundedSpawningContext
-import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.util.Merger
-import net.minecraft.block.Block
+import net.minecraft.world.level.block.Block
 
 /**
  * Base type for a spawning condition that applies to some kind of [GroundedSpawningContext]. This
@@ -39,6 +38,11 @@ abstract class GroundedTypeSpawningCondition<T : GroundedSpawningContext> : Area
         if (other is GroundedTypeSpawningCondition) {
             neededBaseBlocks = merger.merge(neededBaseBlocks, other.neededBaseBlocks)?.toMutableList()
         }
+    }
+
+    override fun isValid(): Boolean {
+        val containsNullValues = neededBaseBlocks != null && neededBaseBlocks!!.any {it == null}
+        return super.isValid() && !containsNullValues
     }
 }
 

@@ -1,0 +1,96 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:premier_ball"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.craft_base_balls"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.craft_base_balls.description"
+    }
+  },
+  "parent": "cobblemon:craft_poke_ball",
+  "criteria": {
+    "poke_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "cobblemon:poke_ball"
+          }
+        ]
+      }
+    },
+	"citrine_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "cobblemon:citrine_ball"
+          }
+        ]
+      }
+    },
+	"verdant_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "cobblemon:verdant_ball"
+          }
+        ]
+      }
+    },
+	"azure_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "cobblemon:azure_ball"
+          }
+        ]
+      }
+    },
+	"roseate_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "cobblemon:roseate_ball"
+          }
+        ]
+      }
+    },
+	"slate_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "cobblemon:slate_ball"
+          }
+        ]
+      }
+    },
+	"premier_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "cobblemon:premier_ball"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    ["poke_ball"],
+    ["citrine_ball"],
+	["verdant_ball"],
+	["azure_ball"],
+	["roseate_ball"],
+	["slate_ball"],
+	["premier_ball"]
+  ],
+  "sends_telemetry_event": false
+}

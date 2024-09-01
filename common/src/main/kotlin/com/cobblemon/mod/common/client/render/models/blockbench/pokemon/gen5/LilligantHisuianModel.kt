@@ -8,19 +8,19 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen5
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.BimanualSwingAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class LilligantHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class LilligantHisuianModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("lilligant_hisuian")
     override val head = getPart("head")
 
@@ -30,15 +30,15 @@ class LilligantHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFr
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 2.76F
-    override var portraitTranslation = Vec3d(-0.31, 1.85, 0.0)
+    override var portraitTranslation = Vec3(-0.31, 1.85, 0.0)
 
     override var profileScale = 0.65F
-    override var profileTranslation = Vec3d(0.0, 0.76, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.76, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("lilligant_hisuian", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("lilligant_hisuian", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("lilligant_hisuian", "blink") }
@@ -46,7 +46,7 @@ class LilligantHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFr
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("lilligant_hisuian", "ground_idle")
             )
@@ -56,7 +56,7 @@ class LilligantHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFr
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("lilligant_hisuian", "ground_idle"),
                 BipedWalkAnimation(this, periodMultiplier = 0.6F, amplitudeMultiplier = 0.9F),
@@ -68,6 +68,6 @@ class LilligantHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFr
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("lilligant_hisuian", "faint") else null
 }

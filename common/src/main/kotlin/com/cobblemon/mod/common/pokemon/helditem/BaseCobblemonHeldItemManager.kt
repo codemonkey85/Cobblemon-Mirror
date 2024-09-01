@@ -9,14 +9,15 @@
 package com.cobblemon.mod.common.pokemon.helditem
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.CobblemonItemComponents
 import com.cobblemon.mod.common.api.pokemon.helditem.HeldItemManager
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.battles.runner.ShowdownService
 import com.google.common.collect.HashBiMap
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.registry.Registries
-import net.minecraft.text.Text
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.chat.Component
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 
 /**
  * The base Cobblemon implementation of an [HeldItemManager].
@@ -36,8 +37,8 @@ abstract class BaseCobblemonHeldItemManager : HeldItemManager {
         for (i in 0 until itemsJson.size()) {
             showdownIds += itemsJson[i].asString
         }
-        Registries.ITEM.forEach { item ->
-            val identifier = Registries.ITEM.getId(item)
+        BuiltInRegistries.ITEM.forEach { item ->
+            val identifier = BuiltInRegistries.ITEM.getKey(item)
             if (identifier.namespace == Cobblemon.MODID) {
                 val formattedPath = identifier.path.replace("_", "")
                 if (showdownIds.contains(formattedPath)) {
@@ -47,9 +48,18 @@ abstract class BaseCobblemonHeldItemManager : HeldItemManager {
         }
     }
 
-    override fun showdownId(pokemon: BattlePokemon): String? = this.showdownIdOf(pokemon.effectedPokemon.heldItemNoCopy().item)
+    override fun showdownId(pokemon: BattlePokemon): String? {
+        val item = pokemon.effectedPokemon.heldItemNoCopy()
+        val identifier = item.get(CobblemonItemComponents.HELD_ITEM_REP)?.item ?: BuiltInRegistries.ITEM.getKey(item.item)
 
-    override fun nameOf(showdownId: String): Text = this.itemIds[showdownId]?.name ?: Text.of(showdownId)
+        val formattedPath = identifier.path.replace("_", "")
+        if (this.itemIds.containsKey(formattedPath)) {
+            return formattedPath
+        }
+        return null
+    }
+
+    override fun nameOf(showdownId: String): Component = this.itemIds[showdownId]?.description ?: Component.literal(showdownId)
 
     // This is safe to do as any item triggers will only happen if a Pokémon has a valid held item to begin with.
     override fun give(pokemon: BattlePokemon, showdownId: String) {
@@ -77,8 +87,8 @@ abstract class BaseCobblemonHeldItemManager : HeldItemManager {
      * @param item The [Item] being queried.
      * @return The literal Showdown ID if any.
      */
-    private fun showdownIdOf(item: Item): String? {
-        val identifier = Registries.ITEM.getId(item)
+    fun showdownIdOf(item: Item): String? {
+        val identifier = BuiltInRegistries.ITEM.getKey(item)
         val formattedPath = identifier.path.replace("_", "")
         if (this.itemIds.containsKey(formattedPath)) {
             return formattedPath

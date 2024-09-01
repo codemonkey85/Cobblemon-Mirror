@@ -12,16 +12,19 @@ import com.bedrockk.molang.runtime.struct.MoStruct
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.bedrockk.molang.runtime.value.StringValue
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunction
 import com.cobblemon.mod.common.api.moves.animations.ActionEffectTimeline
 import com.cobblemon.mod.common.api.moves.categories.DamageCategories
 import com.cobblemon.mod.common.api.moves.categories.DamageCategory
+import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.battles.MoveTarget
+import com.cobblemon.mod.common.util.codec.CodecUtils
+import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.lang
 import com.google.gson.annotations.SerializedName
-import net.minecraft.text.MutableText
+import com.mojang.serialization.Codec
+import net.minecraft.network.chat.MutableComponent
 
 /**
  * This class represents the base of a Move.
@@ -68,9 +71,9 @@ open class MoveTemplate(
     }
 
 
-    val displayName: MutableText
+    val displayName: MutableComponent
         get() = lang("move.$name")
-    val description: MutableText
+    val description: MutableComponent
         get() = lang("move.$name.desc")
     val maxPp: Int
         get() = 8 * pp / 5
@@ -91,6 +94,30 @@ open class MoveTemplate(
 
     companion object {
         fun dummy(name: String) = Dummy(name)
+
+        @JvmStatic
+        val BY_STRING_CODEC: Codec<MoveTemplate> = CodecUtils.createByStringCodec(
+            Moves::getByName,
+            MoveTemplate::name
+        ) { id -> "No MoveTemplate for ID $id" }
+        val hiddenPowerTable = arrayOf(
+            ElementalTypes.FIGHTING,
+            ElementalTypes.FLYING,
+            ElementalTypes.POISON,
+            ElementalTypes.GROUND,
+            ElementalTypes.ROCK,
+            ElementalTypes.BUG,
+            ElementalTypes.GHOST,
+            ElementalTypes.STEEL,
+            ElementalTypes.FIRE,
+            ElementalTypes.WATER,
+            ElementalTypes.GRASS,
+            ElementalTypes.ELECTRIC,
+            ElementalTypes.PSYCHIC,
+            ElementalTypes.ICE,
+            ElementalTypes.DRAGON,
+            ElementalTypes.DARK
+        )
     }
 
     /**
@@ -112,5 +139,57 @@ open class MoveTemplate(
             raisedPpStages = raisedPpStages,
             template = this
         )
+    }
+
+    fun getEffectiveElementalType(pokemon: Pokemon?) : ElementalType {
+        if(pokemon == null) {
+            return this.elementalType
+        }
+        if (name == "hiddenpower") {
+            val ivs = pokemon.ivs
+            val ivArray = arrayOf(
+                ivs[Stats.HP],
+                ivs[Stats.ATTACK],
+                ivs[Stats.DEFENCE],
+                ivs[Stats.SPEED],
+                ivs[Stats.SPECIAL_ATTACK],
+                ivs[Stats.SPECIAL_DEFENCE]
+            ).map { it ?: return@getEffectiveElementalType ElementalTypes.NORMAL }
+            var tableIndex = 0
+            ivArray.forEachIndexed { index, it ->
+                tableIndex += (it % 2) shl index
+            }
+            tableIndex = tableIndex * 15 / 63
+            return hiddenPowerTable[tableIndex.coerceAtMost(hiddenPowerTable.size - 1)]
+        }
+        // TODO: Handle ability suppression: clientactivebattlepokemon needs data about volatiles
+        // TODO: Handle Liquid Voice: need to know what moves have the sound flag
+        // TODO: Handle weatherball, naturalgift, judgement, technoblast, terrainpulse, and terrablast
+        if (this.elementalType == ElementalTypes.NORMAL) {
+            if( this.damageCategory != DamageCategories.STATUS) {
+                return when (pokemon.ability.name) {
+                    "pixilate" -> ElementalTypes.FAIRY
+                    "aerilate" -> ElementalTypes.FLYING
+                    "refrigerate" -> ElementalTypes.ICE
+                    "galvanize" -> ElementalTypes.ELECTRIC
+                    else -> this.elementalType
+                }
+            }
+        } else if (pokemon.ability.name == "normalize") {
+            /*
+            * Exceptions that ignore normalize that we'll need to deal with at some point:
+            * hiddenpower
+            * weatherball
+            * naturalgift
+            * judgement
+            * technoblast
+            * multi-attack
+            * z-moves
+            * terrainpulse
+            * terrablast?
+            * */
+            return ElementalTypes.NORMAL
+        }
+        return this.elementalType
     }
 }

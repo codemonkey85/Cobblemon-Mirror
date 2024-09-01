@@ -15,10 +15,10 @@ import com.cobblemon.mod.common.api.pokemon.evolution.ContextEvolution
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.registry.BlockIdentifierCondition
-import net.minecraft.block.Block
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.util.Identifier
-import net.minecraft.world.World
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Block
 
 /**
  * Represents a [ContextEvolution] with [RegistryLikeCondition] of type [Block] context.
@@ -31,6 +31,7 @@ import net.minecraft.world.World
 open class BlockClickEvolution(
     override val id: String,
     override val result: PokemonProperties,
+    override val shedder: PokemonProperties?,
     override val requiredContext: RegistryLikeCondition<Block>,
     override var optional: Boolean,
     override var consumeHeldItem: Boolean,
@@ -40,7 +41,8 @@ open class BlockClickEvolution(
     constructor(): this(
         id = "id",
         result = PokemonProperties(),
-        requiredContext = BlockIdentifierCondition(Identifier("minecraft", "dirt")),
+        shedder = null,
+        requiredContext = BlockIdentifierCondition(ResourceLocation.fromNamespaceAndPath("minecraft", "dirt")),
         optional = true,
         consumeHeldItem = true,
         requirements = mutableSetOf(),
@@ -48,7 +50,7 @@ open class BlockClickEvolution(
     )
 
     override fun testContext(pokemon: Pokemon, context: BlockInteractionContext): Boolean {
-        return this.requiredContext.fits(context.block, context.world.registryManager.get(RegistryKeys.BLOCK))
+        return this.requiredContext.fits(context.block, context.world.registryAccess().registryOrThrow(Registries.BLOCK))
     }
 
     override fun equals(other: Any?) = other is BlockClickEvolution && other.id.equals(this.id, true)
@@ -61,7 +63,7 @@ open class BlockClickEvolution(
 
     data class BlockInteractionContext(
         val block: Block,
-        val world: World
+        val world: Level
     )
 
     companion object {

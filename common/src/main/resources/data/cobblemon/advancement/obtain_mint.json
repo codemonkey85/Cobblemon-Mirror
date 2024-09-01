@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:cyan_mint_leaf"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.obtain_mint"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.obtain_mint.description"
+    }
+  },
+  "parent": "cobblemon:any_plant",
+  "criteria": {
+    "check_inv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#cobblemon:mint_leaf"
+          }
+        ]
+      }
+    }
+  }
+}

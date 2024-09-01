@@ -9,9 +9,7 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.fossil
 
 import com.cobblemon.mod.common.api.scheduling.SchedulingTracker
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
-import net.minecraft.entity.Entity
-import kotlin.math.floor
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 
 /**
  * Floating state for a fossil Pokémon in the resurrection machine.
@@ -19,7 +17,7 @@ import kotlin.math.floor
  * @author Hiroku
  * @since October 30th, 2023
  */
-class FossilState(startAge: Int = -1, startPartialTicks: Float = 0F) : PoseableEntityState<Entity>() {
+class FossilState(startAge: Int = -1, startPartialTicks: Float = 0F) : PosableState() {
     var totalPartialTicks = 0F
     init {
         // generate phase offset if new

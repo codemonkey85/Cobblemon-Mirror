@@ -17,7 +17,7 @@ import com.cobblemon.mod.common.battles.dispatch.GO
 import com.cobblemon.mod.common.battles.dispatch.InterpreterInstruction
 import com.cobblemon.mod.common.battles.dispatch.WaitDispatch
 import com.cobblemon.mod.common.util.battleLang
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 
 /**
  * Format: |-start|POKEMON|EFFECT
@@ -36,7 +36,7 @@ class StartInstruction(val message: BattleMessage): InterpreterInstruction {
             val optionalEffect = message.effect()
             val optionalPokemon = message.battlePokemonFromOptional(battle)
             val optionalPokemonName = optionalPokemon?.getName()
-            val extraEffect = message.effectAt(2)?.typelessData ?: Text.literal("UNKOWN")
+            val extraEffect = message.effectAt(2)?.typelessData ?: Component.literal("UNKOWN")
 
             // skip adding contexts for every time the perish counter decrements
             if (!effectID.contains("perish")) {
@@ -50,7 +50,7 @@ class StartInstruction(val message: BattleMessage): InterpreterInstruction {
                     battleLang("start.reflecttype", pokemon.getName(), optionalPokemonName)
                 else
                     when (effectID) {
-                        "confusion", "perish3" -> return@dispatch GO // Skip
+                        "perish3" -> return@dispatch GO // Skip
                         "perish2", "perish1", "perish0",
                         "stockpile1", "stockpile2", "stockpile3" -> battleLang("start.${effectID.dropLast(1)}", pokemon.getName(), effectID.last().digitToInt())
                         "dynamax" -> battleLang("start.${message.effectAt(2)?.id ?: effectID}", pokemon.getName()).yellow()

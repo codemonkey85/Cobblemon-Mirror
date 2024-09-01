@@ -7,7 +7,10 @@
  */
 
 package com.cobblemon.mod.common.pokemon.ai
+
+import com.cobblemon.mod.common.util.asExpressionLike
+
 class FlyBehaviour {
     val canFly = false
-    val flySpeedHorizontal = 0.3F
+    val flySpeedHorizontal = "0.3".asExpressionLike()
 }

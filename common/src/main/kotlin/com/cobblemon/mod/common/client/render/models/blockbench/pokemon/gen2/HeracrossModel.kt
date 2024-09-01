@@ -15,16 +15,16 @@ import com.cobblemon.mod.common.client.render.models.blockbench.createTransforma
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class HeracrossModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BimanualFrame, BiWingedFrame {
+class HeracrossModel (root: ModelPart) : PokemonPosableModel(root), BipedFrame, BimanualFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("heracross")
 
     override val leftArm = getPart("arm_right")
@@ -36,15 +36,15 @@ class HeracrossModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, Bim
     override val rightWing = getPart("wing_left")
 
     override var portraitScale = 1.6F
-    override var portraitTranslation = Vec3d(-0.2, 0.37, 0.0)
+    override var portraitTranslation = Vec3(-0.2, 0.37, 0.0)
 
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(-0.02, 0.64, 0.0)
+    override var profileTranslation = Vec3(-0.02, 0.64, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var hovering: PokemonPose
-    lateinit var flying:PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var hovering: CobblemonPose
+    lateinit var flying: CobblemonPose
 
 
     override fun registerPoses() {
@@ -58,7 +58,7 @@ class HeracrossModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, Bim
                         leftWing.createTransformation().withVisibility(visibility = false),
                         rightWing.createTransformation().withVisibility(visibility = false)
                 ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("heracross", "ground_idle")
             )
         )
@@ -67,7 +67,7 @@ class HeracrossModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, Bim
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES - PoseType.FLY,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("heracross", "ground_idle"),
                 BipedWalkAnimation(this,0.6F, 1F),
                 BimanualSwingAnimation(this, 0.6F, 1F)
@@ -78,11 +78,11 @@ class HeracrossModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, Bim
             poseName = "hovering",
             poseType = PoseType.HOVER,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("heracross", "air_idle"),
                 WingFlapIdleAnimation(this,
                     flapFunction = sineFunction(verticalShift = 35F.toRadians(), period = 0.1F, amplitude = 0.6F),
-                    timeVariable = { state, _, _ -> state?.animationSeconds ?: 0F },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = ModelPartTransformation.Y_AXIS
                 )
             )
@@ -92,11 +92,11 @@ class HeracrossModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, Bim
                 poseName = "flying",
                 poseType = PoseType.FLY,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         bedrock("heracross", "air_idle"),
                         WingFlapIdleAnimation(this,
                                 flapFunction = sineFunction(verticalShift = 35F.toRadians(), period = 0.1F, amplitude = 0.6F),
-                                timeVariable = { state, _, _ -> state?.animationSeconds ?: 0F },
+                                timeVariable = { state, _, _ -> state.animationSeconds },
                                 axis = ModelPartTransformation.Y_AXIS
                         )
                 ),

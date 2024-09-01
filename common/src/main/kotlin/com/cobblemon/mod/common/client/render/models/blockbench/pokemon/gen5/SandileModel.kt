@@ -8,26 +8,27 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen5
 
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.asExpressionLike
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class SandileModel (root: ModelPart) : PokemonPoseableModel() {
+class SandileModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("sandile")
 
     override var portraitScale = 2.54F
-    override var portraitTranslation = Vec3d(-0.5, -1.9, 0.0)
+    override var portraitTranslation = Vec3(-0.5, -1.9, 0.0)
 
     override var profileScale = 0.84F
-    override var profileTranslation = Vec3d(0.05, 0.48, 0.0)
+    override var profileTranslation = Vec3(0.05, 0.48, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battle_idle: PokemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var battle_idle: CobblemonPose
 
     override fun registerPoses() {
 //        animations["physical"] = "q.bedrock_primary('sandile', 'physical', 'look', q.curve('symmetrical_wide'))".asExpressionLike()
@@ -44,8 +45,8 @@ class SandileModel (root: ModelPart) : PokemonPoseableModel() {
         sleep = registerPose(
             poseType = PoseType.SLEEP,
             quirks = arrayOf(bite),
-            animations = mutableMapOf("faint" to faint),
-            idleAnimations = arrayOf(bedrock("sandile", "sleep"))
+            namedAnimations = mutableMapOf("faint" to faint),
+            animations = arrayOf(bedrock("sandile", "sleep"))
         )
 
         standing = registerPose(
@@ -53,8 +54,8 @@ class SandileModel (root: ModelPart) : PokemonPoseableModel() {
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             quirks = arrayOf(blink, bite),
             condition = { !it.isBattling },
-            animations = mutableMapOf("faint" to faint),
-            idleAnimations = arrayOf(
+            namedAnimations = mutableMapOf("faint" to faint),
+            animations = arrayOf(
                 bedrock("sandile", "ground_idle")
             )
         )
@@ -63,8 +64,8 @@ class SandileModel (root: ModelPart) : PokemonPoseableModel() {
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            animations = mutableMapOf("faint" to faint),
-            idleAnimations = arrayOf(
+            namedAnimations = mutableMapOf("faint" to faint),
+            animations = arrayOf(
                 bedrock("sandile", "ground_walk")
             )
         )
@@ -74,8 +75,8 @@ class SandileModel (root: ModelPart) : PokemonPoseableModel() {
             poseTypes = PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink, bite),
             condition = { it.isBattling },
-            animations = mutableMapOf("faint" to faint),
-            idleAnimations = arrayOf(
+            namedAnimations = mutableMapOf("faint" to faint),
+            animations = arrayOf(
                 bedrock("sandile", "battle_idle")
             )
         )

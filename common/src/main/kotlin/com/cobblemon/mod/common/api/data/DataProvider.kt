@@ -8,8 +8,8 @@
 
 package com.cobblemon.mod.common.api.data
 
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Provides a general listener for resource and data pack updates notifying the [DataRegistry] listening.
@@ -28,21 +28,21 @@ interface DataProvider {
     fun <T : DataRegistry> register(registry: T): T
 
     /**
-     * Attempts to find a [DataRegistry] with the given [Identifier].
+     * Attempts to find a [DataRegistry] with the given [ResourceLocation].
      * See [DataRegistry.id].
      *
-     * @param registryIdentifier The [Identifier]
+     * @param registryIdentifier The [ResourceLocation]
      * @return The [DataRegistry] if existing.
      */
-    fun fromIdentifier(registryIdentifier: Identifier): DataRegistry?
+    fun fromIdentifier(registryIdentifier: ResourceLocation): DataRegistry?
 
     /**
      * Syncs all of [DataRegistry]s in this provider to a player when requested from the server.
      * This should not be invoked in a single player game instance, the default implementation already makes this check.
      *
-     * @param player The [ServerPlayerEntity] being synchronized to the server.
+     * @param player The [ServerPlayer] being synchronized to the server.
      */
-    fun sync(player: ServerPlayerEntity)
+    fun sync(player: ServerPlayer)
 
-    fun doAfterSync(player: ServerPlayerEntity, action: () -> Unit)
+    fun doAfterSync(player: ServerPlayer, action: () -> Unit)
 }

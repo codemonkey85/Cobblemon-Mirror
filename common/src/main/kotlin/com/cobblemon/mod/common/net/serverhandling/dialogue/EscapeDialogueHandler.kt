@@ -12,10 +12,10 @@ import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.net.messages.server.dialogue.EscapeDialoguePacket
 import com.cobblemon.mod.common.util.activeDialogue
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object EscapeDialogueHandler : ServerNetworkPacketHandler<EscapeDialoguePacket> {
-    override fun handle(packet: EscapeDialoguePacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: EscapeDialoguePacket, server: MinecraftServer, player: ServerPlayer) {
         val dialogue = player.activeDialogue ?: return
         dialogue.escape()
     }

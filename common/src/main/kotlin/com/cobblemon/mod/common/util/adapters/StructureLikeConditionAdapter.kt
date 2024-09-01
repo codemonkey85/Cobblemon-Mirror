@@ -13,8 +13,8 @@ import com.cobblemon.mod.common.api.conditional.RegistryLikeIdentifierCondition
 import com.cobblemon.mod.common.api.conditional.RegistryLikeTagCondition
 import com.cobblemon.mod.common.registry.StructureIdentifierCondition
 import com.cobblemon.mod.common.registry.StructureTagCondition
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.world.gen.structure.Structure
+import net.minecraft.core.registries.Registries
+import net.minecraft.world.level.levelgen.structure.Structure
 
 /**
  * A type adapter for [StructureLikeCondition]s.
@@ -24,7 +24,7 @@ import net.minecraft.world.gen.structure.Structure
  */
 object StructureLikeConditionAdapter : RegistryLikeAdapter<Structure> {
     override val registryLikeConditions = mutableListOf(
-        RegistryLikeTagCondition.resolver(RegistryKeys.STRUCTURE, ::StructureTagCondition),
+        RegistryLikeTagCondition.resolver(Registries.STRUCTURE, ::StructureTagCondition),
         RegistryLikeIdentifierCondition.resolver(::StructureIdentifierCondition)
     )
 }

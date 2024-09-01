@@ -11,8 +11,7 @@ package com.cobblemon.mod.common.client.gui
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.client.gui.GuiGraphics
 
 class TypeIcon(
     val x: Number,
@@ -33,13 +32,13 @@ class TypeIcon(
         private val smallTypesResource = cobblemonResource("textures/gui/types_small.png")
     }
 
-    fun render(context: DrawContext) {
+    fun render(context: GuiGraphics) {
         val diameter = if (small) (TYPE_ICON_DIAMETER / 2) else TYPE_ICON_DIAMETER
         val offsetX = if (centeredX) (((diameter / 2) * SCALE) + (if (secondaryType != null) (doubleCenteredOffset) else 0F)) else 0F;
 
         if (secondaryType != null) {
             blitk(
-                matrixStack = context.matrices,
+                matrixStack = context.pose(),
                 texture = if (small) smallTypesResource else typesResource,
                 x = (x.toFloat() + secondaryOffset - offsetX) / SCALE,
                 y = y.toFloat() / SCALE,
@@ -53,7 +52,7 @@ class TypeIcon(
         }
 
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = if (small) smallTypesResource else typesResource,
             x = (x.toFloat() - offsetX) / SCALE,
             y = y.toFloat() / SCALE,

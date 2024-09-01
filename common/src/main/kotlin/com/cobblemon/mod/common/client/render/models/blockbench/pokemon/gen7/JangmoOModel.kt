@@ -11,13 +11,13 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen7
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.QuadrupedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class JangmoOModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class JangmoOModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("jangmo_o")
     override val head = getPart("head")
 
@@ -27,15 +27,15 @@ class JangmoOModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
     override val hindRightLeg = getPart("leg_back_right1")
 
     override var portraitScale = 1.75F
-    override var portraitTranslation = Vec3d(-0.22, -0.1, 0.0)
+    override var portraitTranslation = Vec3(-0.22, -0.1, 0.0)
 
     override var profileScale = 0.64F
-    override var profileTranslation = Vec3d(0.0, 0.77, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.77, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-//    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("jangmo-o", "cry") }
+//    override val cryAnimation = CryProvider { bedrockStateful("jangmo-o", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("jangmo-o", "blink") }
@@ -43,7 +43,7 @@ class JangmoOModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
             poseName = "standing",
             poseTypes = PoseType.UI_POSES + PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                     bedrock("jangmo-o", "ground_idle"),
                 singleBoneLook()
             )
@@ -53,7 +53,7 @@ class JangmoOModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                     bedrock("jangmo-o", "ground_idle"),
                 QuadrupedWalkAnimation(this, periodMultiplier = 1.1F),
                 singleBoneLook()
@@ -63,6 +63,6 @@ class JangmoOModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("jangmo-o", "faint") else null
 }

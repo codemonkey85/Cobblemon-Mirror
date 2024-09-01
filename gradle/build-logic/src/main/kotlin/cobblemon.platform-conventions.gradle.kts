@@ -16,7 +16,7 @@ val bundle: Configuration by configurations.creating {
 loom {
     val clientConfig = runConfigs.getByName("client")
     clientConfig.runDir = "runClient"
-    clientConfig.programArg("--username=CobblemonDev")
+    clientConfig.programArg("--username=AshKetchum")
     //This is AshKetchum's UUID so you get an Ash Ketchum skin
     clientConfig.programArg("--uuid=93e4e551-589a-41cb-ab2d-435266c8e035")
     val serverConfig = runConfigs.getByName("server")
@@ -35,6 +35,9 @@ tasks {
         archiveBaseName.set("Cobblemon-${project.name}")
         configurations = listOf(bundle)
         mergeServiceFiles()
+
+        relocate ("org.graalvm", "com.cobblemon.mod.relocations.graalvm")
+        relocate ("com.oracle", "com.cobblemon.mod.relocations.oracle")
     }
 
     remapJar {

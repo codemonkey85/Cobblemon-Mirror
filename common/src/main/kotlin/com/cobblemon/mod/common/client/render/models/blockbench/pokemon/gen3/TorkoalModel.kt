@@ -11,13 +11,14 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.QuadrupedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class TorkoalModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class TorkoalModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("torkoal")
     override val head = getPart("neck")
 
@@ -27,14 +28,14 @@ class TorkoalModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 2.5F
-    override var portraitTranslation = Vec3d(-1.3, -0.5, 0.0)
+    override var portraitTranslation = Vec3(-1.3, -0.5, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.43, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.43, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var battleidle: CobblemonPose
 
     override fun registerPoses() {
         standing = registerPose(
@@ -42,7 +43,7 @@ class TorkoalModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             condition = { !it.isBattling },
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("torkoal", "ground_idle")
             )
@@ -52,7 +53,7 @@ class TorkoalModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("torkoal", "ground_idle"),
                 QuadrupedWalkAnimation(this, periodMultiplier = 0.7F, amplitudeMultiplier = 0.7F)
@@ -64,7 +65,7 @@ class TorkoalModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
             poseTypes = PoseType.STATIONARY_POSES,
             condition = { it.isBattling },
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("torkoal", "battle_idle")
             )

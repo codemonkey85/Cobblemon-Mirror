@@ -8,36 +8,40 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen9
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.BimanualSwingAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class GimmighoulRoamingModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class GimmighoulRoamingModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("gimmighoul_roaming")
     override val head = getPart("head")
 
     override var portraitScale = 2.5F
-    override var portraitTranslation = Vec3d(0.0, -1.3, 0.0)
+    override var portraitTranslation = Vec3(0.0, -1.3, 0.0)
 
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.0, 0.76, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.76, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battleIdle: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var battleIdle: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var shoulderLeft: CobblemonPose
+    lateinit var shoulderRight: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("gimmighoul_roaming", "cry") }
+    val shoulderOffset = 1
+
+
+    override val cryAnimation = CryProvider { bedrockStateful("gimmighoul_roaming", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("gimmighoul_roaming", "blink") }
@@ -48,7 +52,7 @@ class GimmighoulRoamingModel (root: ModelPart) : PokemonPoseableModel(), HeadedF
             poseName = "sleep",
             poseType = PoseType.SLEEP,
             quirks = arrayOf(sleepQuirk),
-            idleAnimations = arrayOf(bedrock("gimmighoul_roaming", "sleep"))
+            animations = arrayOf(bedrock("gimmighoul_roaming", "sleep"))
         )
 
         standing = registerPose(
@@ -56,7 +60,7 @@ class GimmighoulRoamingModel (root: ModelPart) : PokemonPoseableModel(), HeadedF
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             condition = { !it.isBattling },
             quirks = arrayOf(blink,quirk),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("gimmighoul_roaming", "ground_idle")
             )
@@ -66,7 +70,7 @@ class GimmighoulRoamingModel (root: ModelPart) : PokemonPoseableModel(), HeadedF
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("gimmighoul_roaming", "ground_walk")
             )
@@ -77,15 +81,36 @@ class GimmighoulRoamingModel (root: ModelPart) : PokemonPoseableModel(), HeadedF
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("gimmighoul_roaming", "battle_idle")
             )
         )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                quirks = arrayOf(blink),
+                animations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("gimmighoul_roaming", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                quirks = arrayOf(blink),
+                animations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("gimmighoul_roaming", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset)
+                )
+        )
     }
 
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = bedrockStateful("gimmighoul_roaming", "faint")
+    override fun getFaintAnimation(state: PosableState) = bedrockStateful("gimmighoul_roaming", "faint")
 }

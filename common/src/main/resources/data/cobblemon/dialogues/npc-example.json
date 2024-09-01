@@ -1,0 +1,75 @@
+{
+  "escapeAction": "q.dialogue.set_page('quitter')",
+  "speakers": {
+    "npc": {
+      "name": {
+        "type": "expression",
+        "expression": "q.npc.name"
+      },
+      "face": "q.npc.face();"
+    },
+    "player": {
+      "face": "q.player.face();",
+      "name": {
+        "type": "expression",
+        "expression": "q.player.username"
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "player-chat",
+      "speaker": "player",
+      "lines": [
+        {
+          "type": "expression",
+          "expression": "'Hello, I\\'m ' + q.player.username + '!'"
+        }
+      ],
+      "input": "q.dialogue.set_page(q.npc.was_hurt_by(q.player) ? 'hurt-1' : 'npc-chat');"
+    },
+    {
+      "id": "hurt-1",
+      "speaker": "npc",
+      "lines": ["Do you think I'd talk to you after you attacked me!? Get out of here!"],
+      "input": "q.dialogue.close();"
+    },
+    {
+      "id": "npc-chat",
+      "speaker": "npc",
+      "lines": [
+        {
+          "type": "expression",
+          "expression": "'Hello, ' + q.player.username + '! I\\'m ' + q.npc.name + '!'"
+        }
+      ],
+      "input": {
+        "type": "option",
+        "vertical": false,
+        "options": [
+          {
+            "text": "Battle",
+            "value": "battle",
+            "action": [
+              "q.dialogue.close();",
+              "q.npc.battle(q.player);"
+            ]
+          },
+          {
+            "text": "Trade",
+            "value": "trade",
+            "action": [],
+            "isSelectable": "false"
+          },
+          {
+            "text": "Cancel",
+            "value": "cancel",
+            "action": [
+              "q.dialogue.close()"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

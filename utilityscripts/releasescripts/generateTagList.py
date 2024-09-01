@@ -1,16 +1,17 @@
 import os
 import json
+import argparse
 
 # Define constants
 BASE_PATHS = [
-    "../../common/src/main/resources/data/cobblemon/tags",
-    "../../common/src/main/resources/data/minecraft/tags"
+    "{root}/common/src/main/resources/data/cobblemon/tags",
+    "{root}/common/src/main/resources/data/minecraft/tags"
 ]
 OUTPUT_PATHS = {
-    'blocks': "../../docs/cobblemon-tags/BlocksTags.md",
-    'entity_types': "../../docs/cobblemon-tags/EntityTypesTags.md",
-    'items': "../../docs/cobblemon-tags/ItemTags.md",
-    'biome': "../../docs/cobblemon-tags/BiomeTags.md",
+    'blocks': "{root}/docs/cobblemon-tags/BlocksTags.md",
+    'entity_types': "{root}/docs/cobblemon-tags/EntityTypesTags.md",
+    'items': "{root}/docs/cobblemon-tags/ItemTags.md",
+    'biome': "{root}/docs/cobblemon-tags/BiomeTags.md",
 }
 DETAIL_TAGFILE_HEADERS = {
     'blocks': "# Block Tags\n\nThis file contains tags related to blocks in cobblemon.\n\n## Tags:\n",
@@ -49,9 +50,19 @@ def process_json_file(json_path, file_handle):
         tags = [entry['id'] if isinstance(entry, dict) and 'id' in entry else entry for entry in data.get('values', [])]
         tag_directory = os.path.basename(os.path.dirname(json_path))
         json_file_base = os.path.basename(json_path)
-        file_handle.write(f"\n<details>\n<summary><b>Tag:</b> #{tag_directory}:{json_file_base[:-5]}</summary>\n\n")
+
+        # Collect all tag details in a list
+        tag_details = []
         for tag in tags:
-            file_handle.write(f"- {tag}\n")
+            tag_details.append(f"- {tag}\n")
+
+        # Sort the tag details
+        tag_details.sort()
+
+        # Write the sorted tag details to the file
+        file_handle.write(f"\n<details>\n<summary><b>Tag:</b> #{tag_directory}:{json_file_base[:-5]}</summary>\n\n")
+        for tag_detail in tag_details:
+            file_handle.write(tag_detail)
         file_handle.write("\n</details>\n")
 
 
@@ -75,10 +86,23 @@ def generate_detailed_tag_lists():
     output_files = open_files_and_write_headers()
     process_base_paths(output_files)
     close_files(output_files)
+    print("Detailed tag lists generated successfully.")
+
 
 def main():
+    parser = argparse.ArgumentParser(description='Generate detailed tag lists.')
+    parser.add_argument('-r', '--root', type=str, default='../../',
+                        help='Root of the cobblemon repository. Default ../../')
+    args = parser.parse_args()
+
+    # Replace {root} in BASE_PATHS and OUTPUT_PATHS with the user-provided root
+    global BASE_PATHS, OUTPUT_PATHS
+    BASE_PATHS = [path.format(root=args.root) for path in BASE_PATHS]
+    OUTPUT_PATHS = {key: path.format(root=args.root) for key, path in OUTPUT_PATHS.items()}
+
     generate_detailed_tag_lists()
 
 
 if __name__ == "__main__":
     main()
+

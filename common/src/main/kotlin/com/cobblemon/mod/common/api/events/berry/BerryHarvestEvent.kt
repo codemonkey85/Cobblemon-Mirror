@@ -10,17 +10,17 @@ package com.cobblemon.mod.common.api.events.berry
 
 import com.cobblemon.mod.common.api.berry.Berry
 import com.cobblemon.mod.common.block.entity.BerryBlockEntity
-import net.minecraft.block.BlockState
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.state.BlockState
 
 /**
  * An event fired when [BerryBlockEntity.harvest] is invoked.
  *
  * @property berry The [Berry] the tree is attached to.
- * @property player The [ServerPlayerEntity] harvesting the tree.
+ * @property player The [ServerPlayer] harvesting the tree.
  * @property world The [World] the tree is in.
  * @property pos The [BlockPos] of the tree.
  * @property state The [BlockState] of the tree.
@@ -32,8 +32,8 @@ import net.minecraft.world.World
  */
 data class BerryHarvestEvent(
     override val berry: Berry,
-    val player: ServerPlayerEntity,
-    val world: World,
+    val player: ServerPlayer,
+    val world: Level,
     val pos: BlockPos,
     val state: BlockState,
     val blockEntity: BerryBlockEntity,

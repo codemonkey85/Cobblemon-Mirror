@@ -10,47 +10,47 @@ package com.cobblemon.mod.common.block
 
 import com.cobblemon.mod.common.block.entity.DisplayCaseBlockEntity
 import com.cobblemon.mod.common.item.PokeBallItem
-import net.minecraft.block.*
-import net.minecraft.block.HorizontalFacingBlock.*
-import net.minecraft.entity.ai.pathing.NavigationType
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.BlockItem
-import net.minecraft.item.ItemPlacementContext
-import net.minecraft.state.StateManager
-import net.minecraft.state.property.DirectionProperty
-import net.minecraft.util.ActionResult
-import net.minecraft.util.Hand
-import net.minecraft.util.ItemScatterer
-import net.minecraft.util.hit.BlockHitResult
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
-import net.minecraft.world.BlockView
-import net.minecraft.world.World
-import net.minecraft.world.WorldAccess
+import com.mojang.serialization.MapCodec
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.world.Containers
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.BlockItem
+import net.minecraft.world.item.context.BlockPlaceContext
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.LevelAccessor
+import net.minecraft.world.level.block.BaseEntityBlock
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING
+import net.minecraft.world.level.block.RenderShape
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.StateDefinition
+import net.minecraft.world.level.block.state.properties.DirectionProperty
+import net.minecraft.world.level.pathfinder.PathComputationType
+import net.minecraft.world.phys.BlockHitResult
 
 @Suppress("OVERRIDE_DEPRECATION")
-class DisplayCaseBlock(settings: Settings) : BlockWithEntity(settings) {
+class DisplayCaseBlock(settings: Properties) : BaseEntityBlock(settings) {
     init {
-        this.defaultState = this.stateManager.defaultState
-            .with(FACING, Direction.NORTH)
-            .with(ITEM_DIRECTION, Direction.NORTH)
+        registerDefaultState(stateDefinition.any()
+            .setValue(FACING, Direction.NORTH)
+            .setValue(ITEM_DIRECTION, Direction.NORTH))
     }
 
-    companion object {
-        val ITEM_DIRECTION = DirectionProperty.of("item_facing")
-    }
-
-    override fun getPlacementState(ctx: ItemPlacementContext): BlockState? {
-        var blockState = defaultState
-        val worldView = ctx.world
-        val blockPos = ctx.blockPos
-        ctx.placementDirections.forEach { direction ->
+    override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState? {
+        var blockState = defaultBlockState()
+        val worldView = ctx.level
+        val blockPos = ctx.clickedPos
+        ctx.nearestLookingDirections.forEach { direction ->
             if (direction.axis.isHorizontal) {
                 blockState = blockState
-                    .with(FACING, direction)
-                    .with(ITEM_DIRECTION, direction)
+                    .setValue(FACING, direction)
+                    .setValue(ITEM_DIRECTION, direction)
                         as BlockState
-                if (blockState.canPlaceAt(worldView, blockPos)) {
+                if (blockState.canSurvive(worldView, blockPos)) {
                     return blockState
                 }
             }
@@ -58,54 +58,53 @@ class DisplayCaseBlock(settings: Settings) : BlockWithEntity(settings) {
         return null
     }
 
-    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+    override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(FACING)
         builder.add(ITEM_DIRECTION)
     }
 
-    override fun createBlockEntity(pos: BlockPos, state: BlockState): DisplayCaseBlockEntity {
+    override fun newBlockEntity(pos: BlockPos, state: BlockState): DisplayCaseBlockEntity {
         return DisplayCaseBlockEntity(pos, state)
     }
 
-    override fun getStateForNeighborUpdate(
+    override fun updateShape(
         state: BlockState,
         direction: Direction,
         neighborState: BlockState,
-        world: WorldAccess,
+        world: LevelAccessor,
         pos: BlockPos,
         neighborPos: BlockPos
     ): BlockState {
-        return if (direction == state.get(FACING) && !state.canPlaceAt(world, pos)) Blocks.AIR.defaultState
-        else super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos)
+        return if (direction == state.getValue(FACING) && !state.canSurvive(world, pos)) Blocks.AIR.defaultBlockState()
+        else super.updateShape(state, direction, neighborState, world, pos, neighborPos)
     }
 
-    override fun onUse(
+    override fun useWithoutItem(
         state: BlockState,
-        world: World,
+        world: Level,
         pos: BlockPos,
-        player: PlayerEntity,
-        hand: Hand,
-        hit: BlockHitResult
-    ): ActionResult {
+        player: Player,
+        blockHitResult: BlockHitResult
+    ): InteractionResult {
         val entity = world.getBlockEntity(pos) as DisplayCaseBlockEntity
-        val result = entity.updateItem(player, hand)
-        if ((hit.side != Direction.UP && hit.side != Direction.DOWN) && result == ActionResult.SUCCESS) {
-            world.setBlockState(pos, state.with(ITEM_DIRECTION, hit.side.opposite))
+        val result = entity.updateItem(player, InteractionHand.MAIN_HAND)
+        if ((blockHitResult.direction != Direction.UP && blockHitResult.direction != Direction.DOWN) && result == InteractionResult.SUCCESS) {
+            world.setBlockAndUpdate(pos, state.setValue(ITEM_DIRECTION, blockHitResult.direction.opposite))
         }
         return result
     }
 
-    override fun onBreak(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity) {
+    override fun playerWillDestroy(world: Level, pos: BlockPos, state: BlockState, player: Player): BlockState {
         val entity = world.getBlockEntity(pos) as DisplayCaseBlockEntity
         if (!entity.getStack().isEmpty && !player.isCreative) {
-            ItemScatterer.spawn(world, pos, entity.inv)
+            Containers.dropContents(world, pos, entity.inv)
         }
-        super.onBreak(world, pos, state, player)
+        return super.playerWillDestroy(world, pos, state, player)
     }
 
-    override fun getRenderType(state: BlockState?) = BlockRenderType.MODEL
+    override fun getRenderShape(state: BlockState) = RenderShape.MODEL
 
-    override fun getComparatorOutput(state: BlockState, world: World, pos: BlockPos): Int {
+    override fun getAnalogOutputSignal(state: BlockState, world: Level, pos: BlockPos): Int {
         val stack = (world.getBlockEntity(pos) as DisplayCaseBlockEntity).getStack()
 
         if (stack.isEmpty) return 0
@@ -114,8 +113,17 @@ class DisplayCaseBlock(settings: Settings) : BlockWithEntity(settings) {
         return 1
     }
 
-    override fun hasComparatorOutput(state: BlockState?) = true
+    override fun hasAnalogOutputSignal(state: BlockState): Boolean = true
 
-    override fun canPathfindThrough(state: BlockState, world: BlockView, pos: BlockPos, type: NavigationType) = false
+    override fun codec(): MapCodec<out BaseEntityBlock> {
+        return CODEC
+    }
+
+    override fun isPathfindable(state: BlockState, type: PathComputationType): Boolean = false
+
+    companion object {
+        val CODEC = simpleCodec(::DisplayCaseBlock)
+        val ITEM_DIRECTION = DirectionProperty.create("item_facing")
+    }
 
 }

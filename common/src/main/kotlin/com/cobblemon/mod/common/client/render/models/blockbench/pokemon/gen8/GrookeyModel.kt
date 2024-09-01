@@ -13,13 +13,14 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFr
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class GrookeyModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class GrookeyModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("grookey")
     override val head = getPart("head")
 
@@ -31,16 +32,16 @@ class GrookeyModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
     val stick = getPart("stick")
 
     override var portraitScale = 2.2F
-    override var portraitTranslation = Vec3d(-0.2, -0.9, 0.0)
+    override var portraitTranslation = Vec3(-0.2, -0.9, 0.0)
 
     override var profileScale = 0.75F
-    override var profileTranslation = Vec3d(0.0, 0.6, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.6, 0.0)
 
-    lateinit var battleidle: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var battleidle: Pose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("grookey", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("grookey", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("grookey", "blink") }
@@ -53,7 +54,7 @@ class GrookeyModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
                 stick.createTransformation().withVisibility(visibility = false),
                 stick_hair.createTransformation().withVisibility(visibility = true)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("grookey", "ground_idle")
             )
@@ -67,7 +68,7 @@ class GrookeyModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
                 stick.createTransformation().withVisibility(visibility = false),
                 stick_hair.createTransformation().withVisibility(visibility = true)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("grookey", "ground_walk")
             )
@@ -83,7 +84,7 @@ class GrookeyModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
                 stick.createTransformation().withVisibility(visibility = true),
                 stick_hair.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("grookey", "battle_idle")
             )

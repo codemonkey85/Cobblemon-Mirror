@@ -12,10 +12,10 @@ import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.net.messages.server.storage.party.MovePartyPokemonPacket
 import com.cobblemon.mod.common.util.party
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object MovePartyPokemonHandler : ServerNetworkPacketHandler<MovePartyPokemonPacket> {
-    override fun handle(packet: MovePartyPokemonPacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: MovePartyPokemonPacket, server: MinecraftServer, player: ServerPlayer) {
         val party = player.party()
         val pokemon = party[packet.oldPosition] ?: return
         if (pokemon.uuid != packet.pokemonID) {

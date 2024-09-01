@@ -8,34 +8,33 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class PsyduckModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class PsyduckModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("psyduck")
     override val head = getPart("head")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.1, -0.55, 0.0)
+    override var portraitTranslation = Vec3(-0.1, -0.55, 0.0)
 
     override var profileScale = 0.95F
-    override var profileTranslation = Vec3d(0.0, 0.32, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.32, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var float: PokemonPose
-    lateinit var swim: PokemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var float: CobblemonPose
+    lateinit var swim: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("psyduck", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("psyduck", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("psyduck", "blink")}
@@ -43,7 +42,7 @@ class PsyduckModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "standing",
             poseTypes = UI_POSES + PoseType.STAND,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("psyduck", "ground_idle")
             )
@@ -51,14 +50,14 @@ class PsyduckModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
         sleep = registerPose(
                 poseType = PoseType.SLEEP,
-                idleAnimations = arrayOf(bedrock("psyduck", "sleep"))
+                animations = arrayOf(bedrock("psyduck", "sleep"))
         )
 
         walk = registerPose(
             poseName = "walk",
             poseType = PoseType.WALK,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("psyduck", "ground_walk")
             )
@@ -67,7 +66,7 @@ class PsyduckModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         float = registerPose(
             poseType = PoseType.FLOAT,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("psyduck", "water_idle")
             )
@@ -76,15 +75,12 @@ class PsyduckModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         swim = registerPose(
             poseType = PoseType.SWIM,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("psyduck", "water_swim")
             )
         )
     }
 
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = bedrockStateful("psyduck", "faint")
+    override fun getFaintAnimation(state: PosableState) = bedrockStateful("psyduck", "faint")
 }

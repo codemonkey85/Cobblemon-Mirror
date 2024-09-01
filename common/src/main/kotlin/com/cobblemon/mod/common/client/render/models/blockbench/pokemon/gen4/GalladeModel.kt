@@ -8,40 +8,40 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen4
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.PrimaryAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class GalladeModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class GalladeModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("gallade")
     override val head = getPart("head")
 
     override var portraitScale = 2.6F
-    override var portraitTranslation = Vec3d(-0.15, 2.1, 0.0)
+    override var portraitTranslation = Vec3(-0.15, 2.1, 0.0)
 
     override var profileScale = 0.65F
-    override var profileTranslation = Vec3d(0.0, 0.76, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.76, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walking: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var battleidle: CobblemonPose
 
-    override val cryAnimation = CryProvider { entity, _ -> if (entity.isBattling) bedrockStateful("gallade", "battle_cry") else bedrockStateful("gallade", "cry") }
+    override val cryAnimation = CryProvider { if (it.isBattling) bedrockStateful("gallade", "battle_cry") else bedrockStateful("gallade", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("gallade", "blink") }
         val quirk = quirk(secondsBetweenOccurrences = 10F to 60F) { PrimaryAnimation(bedrockStateful("gallade", "battle_quirk")) }
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("gallade", "sleep"))
+            animations = arrayOf(bedrock("gallade", "sleep"))
         )
 
         standing = registerPose(
@@ -50,7 +50,7 @@ class GalladeModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             transformTicks = 10,
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("gallade", "ground_idle")
             )
@@ -61,7 +61,7 @@ class GalladeModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("gallade", "ground_walk")
             )
@@ -73,16 +73,13 @@ class GalladeModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             transformTicks = 10,
             quirks = arrayOf(blink, quirk),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("gallade", "battle_idle")
             )
         )
     }
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isPosedIn(standing, walking, sleep)) bedrockStateful("gallade", "faint") else
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walking, sleep)) bedrockStateful("gallade", "faint") else
         if (state.isPosedIn(battleidle)) bedrockStateful("gallade", "battle_faint")
         else null
 }

@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:love_ball"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.own_zangoose_seviper"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.own_zangoose_seviper.description"
+    },
+	"hidden": true
+  },
+  "parent": "cobblemon:first_catch",
+  "criteria": {
+	"zangoose_seviper": {
+      "trigger": "cobblemon:party",
+	  "conditions": {
+		  "party": [ "cobblemon:zangoose", "cobblemon:seviper" ]
+	  }
+    }
+  }
+}

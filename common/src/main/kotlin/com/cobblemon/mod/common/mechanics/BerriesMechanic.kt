@@ -8,14 +8,14 @@
 
 package com.cobblemon.mod.common.mechanics
 
-import com.bedrockk.molang.Expression
-import com.cobblemon.mod.common.util.asExpression
+import com.cobblemon.mod.common.api.molang.ExpressionLike
+import com.cobblemon.mod.common.util.asExpressionLike
 
 class BerriesMechanic {
-    val portionHealRatio: Expression = "0.33".asExpression()
-    val sitrusHealAmount: Expression = "v.pokemon.max_hp * 0.33".asExpression()
-    val friendshipRaiseAmount: Expression = "v.pokemon.friendship < 100 ? 10 : (v.pokemon.friendship < 200 ? 5 : 1)".asExpression()
-    val evLowerAmount: Expression = "10".asExpression()
-    val ppRestoreAmount: Expression = "10".asExpression()
-    val oranRestoreAmount: Expression = "10".asExpression()
+    val portionHealRatio: ExpressionLike = "0.33".asExpressionLike()
+    val sitrusHealAmount: ExpressionLike = "v.pokemon.max_hp * 0.33".asExpressionLike()
+    val friendshipRaiseAmount: ExpressionLike = "v.pokemon.friendship < 100 ? 10 : (v.pokemon.friendship < 200 ? 5 : 1)".asExpressionLike()
+    val evLowerAmount: ExpressionLike = "10".asExpressionLike()
+    val ppRestoreAmount: ExpressionLike = "10".asExpressionLike()
+    val oranRestoreAmount: ExpressionLike = "10".asExpressionLike()
 }

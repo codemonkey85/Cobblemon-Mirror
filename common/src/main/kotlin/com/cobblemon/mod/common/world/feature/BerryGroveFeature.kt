@@ -12,29 +12,29 @@ import com.cobblemon.mod.common.api.berry.BerryHelper
 import com.cobblemon.mod.common.api.tags.CobblemonBlockTags
 import com.cobblemon.mod.common.block.BerryBlock
 import com.cobblemon.mod.common.util.weightedSelection
-import net.minecraft.block.Blocks
-import net.minecraft.block.GrassBlock
-import net.minecraft.util.math.Vec3i
-import net.minecraft.util.math.intprovider.ClampedNormalIntProvider
-import net.minecraft.world.StructureWorldAccess
-import net.minecraft.world.chunk.ChunkStatus
-import net.minecraft.world.gen.blockpredicate.BlockPredicate
-import net.minecraft.world.gen.feature.DefaultFeatureConfig
-import net.minecraft.world.gen.feature.Feature
-import net.minecraft.world.gen.feature.PlacedFeatures
-import net.minecraft.world.gen.feature.SimpleBlockFeatureConfig
-import net.minecraft.world.gen.feature.util.FeatureContext
-import net.minecraft.world.gen.placementmodifier.BlockFilterPlacementModifier
-import net.minecraft.world.gen.stateprovider.BlockStateProvider
-import net.minecraft.world.gen.stateprovider.RandomizedIntBlockStateProvider
+import net.minecraft.core.Vec3i
+import net.minecraft.data.worldgen.placement.PlacementUtils
+import net.minecraft.util.valueproviders.ClampedNormalInt
+import net.minecraft.world.level.WorldGenLevel
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.GrassBlock
+import net.minecraft.world.level.chunk.status.ChunkStatus
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate
+import net.minecraft.world.level.levelgen.feature.Feature
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration
+import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider
+import net.minecraft.world.level.levelgen.feature.stateproviders.RandomizedIntStateProvider
+import net.minecraft.world.level.levelgen.placement.BlockPredicateFilter
 
-class BerryGroveFeature : Feature<DefaultFeatureConfig>(DefaultFeatureConfig.CODEC){
-    override fun generate(context: FeatureContext<DefaultFeatureConfig>): Boolean {
-        val worldGenLevel: StructureWorldAccess = context.world!!
-        val random = context.random!!
-        val origin = context.origin!!
+class BerryGroveFeature : Feature<NoneFeatureConfiguration>(NoneFeatureConfiguration.CODEC){
+    override fun place(context: FeaturePlaceContext<NoneFeatureConfiguration>): Boolean {
+        val worldGenLevel: WorldGenLevel = context.level()
+        val random = context.random()
+        val origin = context.origin()
 
-        val isGenerating = worldGenLevel.getChunk(origin).status != ChunkStatus.FULL
+        val isGenerating = worldGenLevel.getChunk(origin).persistedStatus != ChunkStatus.FULL
 
         if (!isGenerating) return false
         val biome = worldGenLevel.getBiome(origin)
@@ -48,16 +48,16 @@ class BerryGroveFeature : Feature<DefaultFeatureConfig>(DefaultFeatureConfig.COD
             (cond.getGroveSize(random).takeIf { cond.canSpawn(berry, biome) } ) ?: 0
         } ?: 0
         var numTreesLeftToGen = numTreesToGen
-        val defTreeState = BlockStateProvider.of(pickedTree.defaultState.with(BerryBlock.WAS_GENERATED, true))
+        val defTreeState = BlockStateProvider.simple(pickedTree.defaultBlockState().setValue(BerryBlock.WAS_GENERATED, true))
 
-        val randomTreeStateProvider = RandomizedIntBlockStateProvider(
+        val randomTreeStateProvider = RandomizedIntStateProvider(
             defTreeState, BerryBlock.AGE,
-            ClampedNormalIntProvider.of(4f, 1f, 3, 5))
-        val blockPlaceFeature = PlacedFeatures.createEntry(
+            ClampedNormalInt.of(4f, 1f, 3, 5))
+        val blockPlaceFeature = PlacementUtils.inlinePlaced(
             SIMPLE_BLOCK,
-            SimpleBlockFeatureConfig(randomTreeStateProvider),
-            BlockFilterPlacementModifier.of(BlockPredicate.matchingBlockTag(CobblemonBlockTags.BERRY_REPLACEABLE)),
-            BlockFilterPlacementModifier.of(BlockPredicate.matchingBlockTag(Vec3i(0, -1, 0), CobblemonBlockTags.BERRY_WILD_SOIL))
+            SimpleBlockConfiguration(randomTreeStateProvider),
+            BlockPredicateFilter.forPredicate(BlockPredicate.matchesTag(CobblemonBlockTags.BERRY_REPLACEABLE)),
+            BlockPredicateFilter.forPredicate(BlockPredicate.matchesTag(Vec3i(0, -1, 0), CobblemonBlockTags.BERRY_WILD_SOIL))
         ).value()
         val possiblePositions = listOf(
             origin.north(),
@@ -68,33 +68,33 @@ class BerryGroveFeature : Feature<DefaultFeatureConfig>(DefaultFeatureConfig.COD
             origin.south().west(),
             origin.west(),
             origin.north().west(),
-            origin.up().north(),
-            origin.up().north().east(),
-            origin.up().east(),
-            origin.up().south().east(),
-            origin.up().south(),
-            origin.up().south().west(),
-            origin.up().west(),
-            origin.up().north().west(),
-            origin.down().north(),
-            origin.down().north().east(),
-            origin.down().east(),
-            origin.down().south().east(),
-            origin.down().south(),
-            origin.down().south().west(),
-            origin.down().west(),
-            origin.down().north().west(),
+            origin.above().north(),
+            origin.above().north().east(),
+            origin.above().east(),
+            origin.above().south().east(),
+            origin.above().south(),
+            origin.above().south().west(),
+            origin.above().west(),
+            origin.above().north().west(),
+            origin.below().north(),
+            origin.below().north().east(),
+            origin.below().east(),
+            origin.below().south().east(),
+            origin.below().south(),
+            origin.below().south().west(),
+            origin.below().west(),
+            origin.below().north().west(),
         ).shuffled()
         for (dir in possiblePositions) {
             if (numTreesLeftToGen > 0) {
-                if (blockPlaceFeature?.generate(worldGenLevel, context.generator, random, dir) == true) {
-                    worldGenLevel.updateNeighbors(dir, worldGenLevel.getBlockState(dir).block)
+                if (blockPlaceFeature?.place(worldGenLevel, context.chunkGenerator(), random, dir) == true) {
+                    worldGenLevel.blockUpdated(dir, worldGenLevel.getBlockState(dir).block)
                     numTreesLeftToGen--
-                    val below = worldGenLevel.getBlockState(dir.down())
-                    if (below.isOf(Blocks.GRASS_BLOCK) && below.get(GrassBlock.SNOWY)) {
-                        worldGenLevel.setBlockState(dir.down(), below.with(GrassBlock.SNOWY, false), 2)
+                    val below = worldGenLevel.getBlockState(dir.below())
+                    if (below.`is`(Blocks.GRASS_BLOCK) && below.getValue(GrassBlock.SNOWY)) {
+                        worldGenLevel.setBlock(dir.below(), below.setValue(GrassBlock.SNOWY, false), 2)
                     }
-                    worldGenLevel.setBlockState(dir.up(), Blocks.AIR.defaultState, 2)
+                    worldGenLevel.setBlock(dir.above(), Blocks.AIR.defaultBlockState(), 2)
                 }
             }
         }

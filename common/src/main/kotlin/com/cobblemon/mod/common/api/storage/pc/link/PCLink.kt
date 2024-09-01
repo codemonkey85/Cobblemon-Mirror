@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.api.storage.pc.link
 
 import com.cobblemon.mod.common.api.storage.pc.PCStore
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * A registered connection from a UUID to a specific PC. The purpose of this interface
@@ -31,5 +31,5 @@ open class PCLink(
      * to check if the link is still valid, and you may choose to remove the link
      * using [PCLinkManager.removeLink] if you find that it's no longer valid.
      */
-    open fun isPermitted(player: ServerPlayerEntity) = true
+    open fun isPermitted(player: ServerPlayer) = true
 }

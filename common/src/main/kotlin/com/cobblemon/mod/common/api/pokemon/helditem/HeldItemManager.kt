@@ -15,8 +15,8 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.helditem.BaseCobblemonHeldItemManager
 import com.cobblemon.mod.common.pokemon.helditem.CobblemonEmptyHeldItemManager
 import com.cobblemon.mod.common.pokemon.helditem.CobblemonHeldItemManager
-import net.minecraft.item.ItemStack
-import net.minecraft.text.Text
+import net.minecraft.world.item.ItemStack
+import net.minecraft.network.chat.Component
 
 /**
  * Responsible for querying [BattlePokemon] for the presence of held items and their consumption.
@@ -38,12 +38,12 @@ interface HeldItemManager {
     fun showdownId(pokemon: BattlePokemon): String?
 
     /**
-     * Queries the [Text] representation of the item under the given [showdownId].
+     * Queries the [Component] representation of the item under the given [showdownId].
      *
      * @param showdownId The literal ID of the held item on Showdown.
-     * @return The [Text] representation.
+     * @return The [Component] representation.
      */
-    fun nameOf(showdownId: String): Text
+    fun nameOf(showdownId: String): Component
 
     /**
      * Invoked when an action instruction is sent from the Showdown server of type '-item'

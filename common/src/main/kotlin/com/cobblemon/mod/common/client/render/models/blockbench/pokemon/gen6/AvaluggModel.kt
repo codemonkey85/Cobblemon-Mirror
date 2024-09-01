@@ -8,20 +8,21 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen6
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class AvaluggModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame, HeadedFrame {
+class AvaluggModel (root: ModelPart) : PokemonPosableModel(root), QuadrupedFrame, HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("avalugg")
     override val head = getPart("head")
 
@@ -31,36 +32,36 @@ class AvaluggModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame, H
     override val foreRightLeg = getPart("leg_front_right")
 
     override var portraitScale = 1.0F
-    override var portraitTranslation = Vec3d(-1.35, 1.5, 0.0)
+    override var portraitTranslation = Vec3(-1.35, 1.5, 0.0)
 
     override var profileScale = 0.27F
-    override var profileTranslation = Vec3d(-0.05, 1.2, 0.0)
+    override var profileTranslation = Vec3(-0.05, 1.2, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
-    lateinit var water_surface_idle: PokemonPose
-    lateinit var water_surface_swim: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walking: Pose
+    lateinit var sleep: Pose
+    lateinit var battleidle: Pose
+    lateinit var water_surface_idle: Pose
+    lateinit var water_surface_swim: Pose
 
     val wateroffset = -3.5
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("avalugg", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("avalugg", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("avalugg", "blink") }
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("avalugg", "sleep"))
+            animations = arrayOf(bedrock("avalugg", "sleep"))
         )
 
         standing = registerPose(
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES - PoseType.FLOAT,
             transformTicks = 10,
-            condition = { !it.isBattling && !it.isTouchingWater },
+            condition = { !it.isBattling && !it.isInWater },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("avalugg", "ground_idle")
             )
@@ -70,9 +71,9 @@ class AvaluggModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame, H
             poseName = "walking",
             poseTypes = PoseType.MOVING_POSES - PoseType.SWIM,
             transformTicks = 10,
-            condition = { !it.isTouchingWater },
+            condition = { !it.isInWater },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("avalugg", "ground_walk")
             )
@@ -82,8 +83,8 @@ class AvaluggModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame, H
             poseName = "surface_idle",
             poseTypes = PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink),
-            condition = { it.isTouchingWater },
-            idleAnimations = arrayOf(
+            condition = { it.isInWater },
+            animations = arrayOf(
                 bedrock("avalugg", "water_idle"),
             ),
             transformedParts = arrayOf(
@@ -94,9 +95,9 @@ class AvaluggModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame, H
         water_surface_swim = registerPose(
             poseName = "surface_swim",
             poseTypes = PoseType.MOVING_POSES,
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("avalugg", "water_swim"),
             ),
             transformedParts = arrayOf(
@@ -110,14 +111,11 @@ class AvaluggModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame, H
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("avalugg", "battle_idle")
             )
         )
     }
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isPosedIn(standing, walking, battleidle, sleep, water_surface_idle, water_surface_swim)) bedrockStateful("avalugg", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walking, battleidle, sleep, water_surface_idle, water_surface_swim)) bedrockStateful("avalugg", "faint") else null
 }

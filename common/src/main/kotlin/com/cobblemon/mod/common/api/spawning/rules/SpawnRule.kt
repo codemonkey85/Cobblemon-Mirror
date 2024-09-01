@@ -10,8 +10,8 @@ package com.cobblemon.mod.common.api.spawning.rules
 
 import com.cobblemon.mod.common.api.spawning.rules.component.SpawnRuleComponent
 import com.cobblemon.mod.common.api.text.text
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 
 /**
  * A bundling of [SpawnRuleComponent]s.
@@ -21,8 +21,8 @@ import net.minecraft.util.Identifier
  */
 class SpawnRule {
 
-    lateinit var id: Identifier
-    val displayName: Text = "Spawn Rule".text()
+    lateinit var id: ResourceLocation
+    val displayName: Component = "Spawn Rule".text()
     var enabled: Boolean = true
 //    val pool: String? = null Kinda difficult to see how this would get used in practice.
     val components: MutableList<SpawnRuleComponent> = mutableListOf()

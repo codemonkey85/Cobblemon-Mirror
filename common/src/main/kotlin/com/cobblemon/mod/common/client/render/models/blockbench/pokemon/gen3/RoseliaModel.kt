@@ -8,34 +8,31 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.BimanualSwingAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class RoseliaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class RoseliaModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("roselia")
     override val head = getPart("head")
 
     override var portraitScale = 2.24F
-    override var portraitTranslation = Vec3d(-0.26, -0.07, 0.0)
+    override var portraitTranslation = Vec3(-0.26, -0.07, 0.0)
 
     override var profileScale = 0.6F
-    override var profileTranslation = Vec3d(0.0, 0.82, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.82, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battleIdle: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var battleIdle: CobblemonPose
+    lateinit var sleep: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("roselia", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("roselia", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("roselia", "blink") }
@@ -44,7 +41,7 @@ class RoseliaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("roselia", "sleep")
             )
         )
@@ -54,7 +51,7 @@ class RoseliaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             condition = { !it.isBattling },
             quirks = arrayOf(blink, quirk),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("roselia", "ground_idle")
             )
@@ -64,7 +61,7 @@ class RoseliaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("roselia", "ground_walk")
             )
@@ -75,7 +72,7 @@ class RoseliaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink, quirk),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("roselia", "battle_idle")
             )
@@ -84,6 +81,6 @@ class RoseliaModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("roselia", "faint") else null
 }

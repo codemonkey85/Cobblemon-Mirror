@@ -8,11 +8,11 @@
 
 package com.cobblemon.mod.common.api.permission
 
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 interface Permission {
 
-    val identifier: Identifier
+    val identifier: ResourceLocation
 
     val literal: String
 

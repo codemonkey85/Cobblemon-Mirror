@@ -10,18 +10,23 @@ package com.cobblemon.mod.common.net.messages.client.data
 
 import com.cobblemon.mod.common.pokemon.properties.PropertiesCompletionProvider
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 internal class PropertiesCompletionRegistrySyncPacket(suggestions: Collection<PropertiesCompletionProvider.SuggestionHolder>) : DataRegistrySyncPacket<PropertiesCompletionProvider.SuggestionHolder, PropertiesCompletionRegistrySyncPacket>(suggestions) {
 
     override val id = ID
 
-    override fun encodeEntry(buffer: PacketByteBuf, entry: PropertiesCompletionProvider.SuggestionHolder) {
+    override fun encodeEntry(
+        buffer: RegistryFriendlyByteBuf,
+        entry: PropertiesCompletionProvider.SuggestionHolder
+    ) {
         buffer.writeCollection(entry.keys) { pb, value -> pb.writeString(value) }
         buffer.writeCollection(entry.suggestions) { pb, value -> pb.writeString(value) }
     }
 
-    override fun decodeEntry(buffer: PacketByteBuf): PropertiesCompletionProvider.SuggestionHolder {
+    override fun decodeEntry(buffer: RegistryFriendlyByteBuf): PropertiesCompletionProvider.SuggestionHolder? {
         val keys = buffer.readList { pb -> pb.readString() }
         val suggestions = buffer.readList { pb -> pb.readString() }
         return PropertiesCompletionProvider.SuggestionHolder(keys, suggestions)
@@ -35,7 +40,7 @@ internal class PropertiesCompletionRegistrySyncPacket(suggestions: Collection<Pr
 
     companion object {
         val ID = cobblemonResource("properties_completion_sync")
-        fun decode(buffer: PacketByteBuf): PropertiesCompletionRegistrySyncPacket = PropertiesCompletionRegistrySyncPacket(emptyList()).apply { decodeBuffer(buffer) }
+        fun decode(buffer: RegistryFriendlyByteBuf): PropertiesCompletionRegistrySyncPacket = PropertiesCompletionRegistrySyncPacket(emptyList()).apply { decodeBuffer(buffer) }
     }
 
 }

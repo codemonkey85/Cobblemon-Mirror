@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture
 class SavePositionActionEffectKeyframe: ConditionalActionEffectKeyframe() {
     override fun playWhenTrue(context: ActionEffectContext): CompletableFuture<Unit> {
         val user = context.findOneProvider<UsersProvider>()?.entities?.firstOrNull() ?: return skip()
-        context.runtime.environment.setSimpleVariable("${user.uuidAsString}-pos", ObjectValue(user.pos))
+        context.runtime.environment.setSimpleVariable("${user.stringUUID}-pos", ObjectValue(user.position()))
         return skip()
     }
 }

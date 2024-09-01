@@ -14,13 +14,13 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFr
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class TyranitarModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame, BimanualFrame, HeadedFrame {
+class TyranitarModel(root: ModelPart) : PokemonPosableModel(root), BipedFrame, BimanualFrame, HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("tyranitar")
     override val head = getPart("head")
 
@@ -30,15 +30,15 @@ class TyranitarModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame, Bima
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 1.21F
-    override var portraitTranslation = Vec3d(-0.43, 3.73, 0.0)
+    override var portraitTranslation = Vec3(-0.43, 3.73, 0.0)
 
     override var profileScale = 0.33F
-    override var profileTranslation = Vec3d(0.02, 1.31, 0.0)
+    override var profileTranslation = Vec3(0.02, 1.31, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("tyranitar", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("tyranitar", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("tyranitar", "blink") }
@@ -46,7 +46,7 @@ class TyranitarModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame, Bima
                 poseName = "standing",
                 poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(pitchMultiplier = 0.2F, yawMultiplier = 0.4F),
                         bedrock("tyranitar", "ground_idle")
                 )
@@ -56,7 +56,7 @@ class TyranitarModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame, Bima
                 poseName = "walk",
                 poseTypes = PoseType.MOVING_POSES,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(pitchMultiplier = 0.2F, yawMultiplier = 0.4F),
                         bedrock("tyranitar", "ground_idle"),
                         BipedWalkAnimation(this, periodMultiplier = 0.6F, amplitudeMultiplier = 0.9F),

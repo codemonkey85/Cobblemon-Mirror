@@ -12,14 +12,14 @@ import com.cobblemon.mod.common.Cobblemon
 import com.mojang.brigadier.StringReader
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
+import net.minecraft.ResourceLocationException
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
-import net.minecraft.util.InvalidIdentifierException
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 
-fun Identifier.extractTo(directory : File) {
+fun ResourceLocation.extractTo(directory : File) {
     val stream = Cobblemon::class.java.getResourceAsStream(String.format("/assets/%s/%s", namespace, path))
         ?: throw Exception("Could not read $this")
     Files.copy(stream, directory.toPath(), StandardCopyOption.REPLACE_EXISTING)
@@ -31,31 +31,31 @@ fun Identifier.extractTo(directory : File) {
  *
  * @param namespace The namespace that will default if none is present, defaults to [Cobblemon.MODID].
  */
-fun String.asIdentifierDefaultingNamespace(namespace: String = Cobblemon.MODID): Identifier {
+fun String.asIdentifierDefaultingNamespace(namespace: String = Cobblemon.MODID): ResourceLocation {
     val id = this.lowercase()
-    return if (id.contains(":")) Identifier(id.substringBefore(":"), id.substringAfter(":")) else Identifier(namespace, id)
+    return if (id.contains(":")) ResourceLocation.fromNamespaceAndPath(id.substringBefore(":"), id.substringAfter(":")) else ResourceLocation.fromNamespaceAndPath(namespace, id)
 }
 
 /**
- * Attempts to parse an [Identifier] from the [StringReader].
- * Unlike [Identifier.fromCommandInput] this will default the namespace to the given [namespace] if non-present.
+ * Attempts to parse an [ResourceLocation] from the [StringReader].
+ * Unlike [ResourceLocation.fromCommandInput] this will default the namespace to the given [namespace] if non-present.
  * This is useful for when we want to automatically assign an identifier to our mod.
  *
  * @throws CommandSyntaxException If the raw data is not a valid identifier.
  *
- * @param namespace The [Identifier.namespace] being assigned if none is present.
- * @return The parsed [Identifier].
+ * @param namespace The [ResourceLocation.namespace] being assigned if none is present.
+ * @return The parsed [ResourceLocation].
  */
-fun StringReader.asIdentifierDefaultingNamespace(namespace: String = Cobblemon.MODID): Identifier {
+fun StringReader.asIdentifierDefaultingNamespace(namespace: String = Cobblemon.MODID): ResourceLocation {
     val start = this.cursor
-    while (this.canRead() && Identifier.isCharValid(this.peek())) {
+    while (this.canRead() && ResourceLocation.isAllowedInResourceLocation(this.peek())) {
         this.skip()
     }
     val raw = this.string.substring(start, this.cursor)
     try {
         return raw.asIdentifierDefaultingNamespace(namespace)
-    } catch (e: InvalidIdentifierException) {
+    } catch (e: ResourceLocationException) {
         this.cursor = start
-        throw SimpleCommandExceptionType(Text.translatable("argument.id.invalid")).createWithContext(this)
+        throw SimpleCommandExceptionType(Component.translatable("argument.id.invalid")).createWithContext(this)
     }
 }

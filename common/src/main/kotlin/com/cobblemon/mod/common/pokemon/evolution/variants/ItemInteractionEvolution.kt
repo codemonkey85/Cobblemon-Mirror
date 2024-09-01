@@ -15,11 +15,10 @@ import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequi
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.predicate.NbtItemPredicate
 import com.cobblemon.mod.common.registry.ItemIdentifierCondition
-import net.minecraft.item.ItemStack
-import net.minecraft.predicate.NbtPredicate
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.util.Identifier
-import net.minecraft.world.World
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
 
 /**
  * Represents a [ContextEvolution] with [NbtItemPredicate] context.
@@ -32,6 +31,7 @@ import net.minecraft.world.World
 open class ItemInteractionEvolution(
     override val id: String,
     override val result: PokemonProperties,
+    override val shedder: PokemonProperties?,
     override val requiredContext: NbtItemPredicate,
     override var optional: Boolean,
     override var consumeHeldItem: Boolean,
@@ -41,7 +41,8 @@ open class ItemInteractionEvolution(
     constructor(): this(
         id = "id",
         result = PokemonProperties(),
-        requiredContext = NbtItemPredicate(ItemIdentifierCondition(Identifier("minecraft", "fish")), NbtPredicate.ANY),
+        shedder = null,
+        requiredContext = NbtItemPredicate(ItemIdentifierCondition(ResourceLocation.fromNamespaceAndPath("minecraft", "fish")), null),
         optional = true,
         consumeHeldItem = true,
         requirements = mutableSetOf(),
@@ -49,8 +50,8 @@ open class ItemInteractionEvolution(
     )
 
     override fun testContext(pokemon: Pokemon, context: ItemInteractionContext): Boolean =
-        this.requiredContext.item.fits(context.stack.item, context.world.registryManager.get(RegistryKeys.ITEM))
-        && this.requiredContext.nbt.test(context.stack)
+        this.requiredContext.item.fits(context.stack.item, context.world.registryAccess().registryOrThrow(Registries.ITEM))
+        && this.requiredContext.nbt?.matches(context.stack) ?: true
 
     override fun equals(other: Any?) = other is ItemInteractionEvolution && other.id.equals(this.id, true)
 
@@ -62,7 +63,7 @@ open class ItemInteractionEvolution(
 
     data class ItemInteractionContext(
         val stack: ItemStack,
-        val world: World
+        val world: Level
     )
 
     companion object {

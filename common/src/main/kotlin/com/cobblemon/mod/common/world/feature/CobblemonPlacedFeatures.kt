@@ -10,11 +10,12 @@ package com.cobblemon.mod.common.world.feature
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.tags.CobblemonBiomeTags
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.tag.BiomeTags
-import net.minecraft.world.gen.GenerationStep
-import net.minecraft.world.gen.feature.PlacedFeature
-import net.minecraft.world.gen.feature.PlacedFeatures
+import com.cobblemon.mod.common.util.cobblemonResource
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
+import net.minecraft.tags.BiomeTags
+import net.minecraft.world.level.levelgen.GenerationStep
+import net.minecraft.world.level.levelgen.placement.PlacedFeature
 
 object CobblemonPlacedFeatures {
 
@@ -41,13 +42,13 @@ object CobblemonPlacedFeatures {
 
     fun register() {
         // We don't need to pass in any tags, the feature implementation handles it, while not a perfect system it works
-        Cobblemon.implementation.addFeatureToWorldGen(APRICORN_TREES, GenerationStep.Feature.VEGETAL_DECORATION, null)
-        Cobblemon.implementation.addFeatureToWorldGen(MINTS, GenerationStep.Feature.VEGETAL_DECORATION, null)
-        Cobblemon.implementation.addFeatureToWorldGen(MEDICINAL_LEEK, GenerationStep.Feature.VEGETAL_DECORATION, null)
-        Cobblemon.implementation.addFeatureToWorldGen(BIG_ROOT, GenerationStep.Feature.VEGETAL_DECORATION, BiomeTags.IS_OVERWORLD)
-        Cobblemon.implementation.addFeatureToWorldGen(REVIVAL_HERB, GenerationStep.Feature.VEGETAL_DECORATION, CobblemonBiomeTags.HAS_REVIVAL_HERBS)
-        Cobblemon.implementation.addFeatureToWorldGen(BERRY_GROVE, GenerationStep.Feature.VEGETAL_DECORATION, BiomeTags.IS_OVERWORLD)
+        Cobblemon.implementation.addFeatureToWorldGen(APRICORN_TREES, GenerationStep.Decoration.VEGETAL_DECORATION, null)
+        Cobblemon.implementation.addFeatureToWorldGen(MINTS, GenerationStep.Decoration.VEGETAL_DECORATION, null)
+        Cobblemon.implementation.addFeatureToWorldGen(MEDICINAL_LEEK, GenerationStep.Decoration.VEGETAL_DECORATION, null)
+        Cobblemon.implementation.addFeatureToWorldGen(BIG_ROOT, GenerationStep.Decoration.VEGETAL_DECORATION, BiomeTags.IS_OVERWORLD)
+        Cobblemon.implementation.addFeatureToWorldGen(REVIVAL_HERB, GenerationStep.Decoration.VEGETAL_DECORATION, CobblemonBiomeTags.HAS_REVIVAL_HERBS)
+        Cobblemon.implementation.addFeatureToWorldGen(BERRY_GROVE, GenerationStep.Decoration.VEGETAL_DECORATION, BiomeTags.IS_OVERWORLD)
     }
 
-    private fun of(id: String): RegistryKey<PlacedFeature> = PlacedFeatures.of("${Cobblemon.MODID}:$id")
+    private fun of(id: String): ResourceKey<PlacedFeature> = ResourceKey.create(Registries.PLACED_FEATURE, cobblemonResource(id))
 }

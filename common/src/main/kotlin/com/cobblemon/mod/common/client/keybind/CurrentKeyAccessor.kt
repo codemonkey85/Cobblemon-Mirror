@@ -9,9 +9,9 @@
 package com.cobblemon.mod.common.client.keybind
 
 import com.cobblemon.mod.common.mixin.accessor.KeyBindingAccessor
-import net.minecraft.client.option.KeyBinding
-import net.minecraft.client.util.InputUtil
+import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.client.KeyMapping
 
-fun KeyBinding.boundKey(): InputUtil.Key {
+fun KeyMapping.boundKey(): InputConstants.Key {
     return (this as KeyBindingAccessor).boundKey()
 }

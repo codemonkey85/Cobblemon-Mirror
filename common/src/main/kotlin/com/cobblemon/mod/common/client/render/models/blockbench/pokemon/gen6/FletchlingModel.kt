@@ -9,21 +9,22 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen6
 
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.WingFlapIdleAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.parabolaFunction
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class FletchlingModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BiWingedFrame {
+class FletchlingModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("fletchling")
     override val leftWing = getPart("wing_left")
     override val rightWing = getPart("wing_right")
@@ -33,31 +34,35 @@ class FletchlingModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, B
     private val tail = getPart("tail")
 
     override var portraitScale = 2.8F
-    override var portraitTranslation = Vec3d(-0.25, -1.65, 0.0)
+    override var portraitTranslation = Vec3(-0.25, -1.65, 0.0)
 
     override var profileScale = 1.2F
-    override var profileTranslation = Vec3d(0.0, -0.01, 0.0)
+    override var profileTranslation = Vec3(0.0, -0.01, 0.0)
 
-    //    lateinit var sleep: PokemonPose
-    lateinit var stand: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var hover: PokemonPose
-    lateinit var fly: PokemonPose
+    //    lateinit var sleep: Pose
+    lateinit var stand: Pose
+    lateinit var walk: Pose
+    lateinit var hover: Pose
+    lateinit var fly: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("fletchling", "cry") }
+    val shoulderOffset = -2
+
+    override val cryAnimation = CryProvider { bedrockStateful("fletchling", "cry") }
 
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("fletchling", "sleep"))
+//            animations = arrayOf(bedrock("fletchling", "sleep"))
 //        )
         val blink = quirk { bedrockStateful("fletchling", "blink") }
         stand = registerPose(
             poseName = "standing",
-            poseTypes = PoseType.SHOULDER_POSES + PoseType.UI_POSES + PoseType.STAND,
+            poseTypes = PoseType.UI_POSES + PoseType.STAND,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("fletchling", "ground_idle")
             )
@@ -68,11 +73,11 @@ class FletchlingModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, B
             poseType = PoseType.HOVER,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 WingFlapIdleAnimation(this,
                     flapFunction = sineFunction(verticalShift = -10F.toRadians(), period = 0.9F, amplitude = 0.6F),
-                    timeVariable = { state, _, _ -> state?.animationSeconds ?: 0F },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = ModelPartTransformation.Z_AXIS
                 )
             )
@@ -83,11 +88,11 @@ class FletchlingModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, B
             poseType = PoseType.FLY,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 WingFlapIdleAnimation(this,
                     flapFunction = sineFunction(verticalShift = -14F.toRadians(), period = 0.9F, amplitude = 0.9F),
-                    timeVariable = { state, _, _ -> state?.animationSeconds ?: 0F },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = ModelPartTransformation.Z_AXIS
                 )
             )
@@ -98,7 +103,7 @@ class FletchlingModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, B
             poseType = PoseType.WALK,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("fletchling", "ground_idle"),
                 rootPart.translation(
@@ -106,7 +111,7 @@ class FletchlingModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, B
                         peak = -4F,
                         period = 0.4F
                     ),
-                    timeVariable = { state, _, _ -> state?.animationSeconds },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = ModelPartTransformation.Y_AXIS
                 ),
                 head.translation(
@@ -116,7 +121,7 @@ class FletchlingModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, B
                         verticalShift = (-10F).toRadians()
                     ),
                     axis = ModelPartTransformation.X_AXIS,
-                    timeVariable = { state, _, _ -> state?.animationSeconds }
+                    timeVariable = { state, _, _ -> state.animationSeconds }
                 ),
                 leftLeg.rotation(
                     function = parabolaFunction(
@@ -151,7 +156,7 @@ class FletchlingModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, B
                         phaseShift = 0.00F,
                         verticalShift = (-20F).toRadians()
                     ),
-                    timeVariable = { state, _, _ -> state?.animationSeconds },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = ModelPartTransformation.Z_AXIS
                 ),
                 rightWing.translation(
@@ -173,6 +178,30 @@ class FletchlingModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, B
                     timeVariable = { _, _, ageInTicks -> ageInTicks / 20 },
                 ),
             )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                quirks = arrayOf(blink),
+                animations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("fletchling", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                quirks = arrayOf(blink),
+                animations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("fletchling", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset)
+                )
         )
     }
 }

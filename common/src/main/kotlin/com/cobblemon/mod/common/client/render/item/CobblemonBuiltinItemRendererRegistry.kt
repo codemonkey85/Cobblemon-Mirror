@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.item
 
-import net.minecraft.item.Item
+import net.minecraft.world.item.Item
 
 /**
  * A registry of [CobblemonBuiltinItemRenderer]s.

@@ -8,17 +8,15 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen2
 
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.QuadrupedWalkAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class FurretModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame {
+class FurretModel (root: ModelPart) : PokemonPosableModel(root), QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("furret")
 
     override val foreLeftLeg = getPart("arm_left")
@@ -27,13 +25,13 @@ class FurretModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame {
     override val hindRightLeg = getPart("leg_right")
 
     override var portraitScale = 2.1F
-    override var portraitTranslation = Vec3d(-0.6, 0.2, 0.0)
+    override var portraitTranslation = Vec3(-0.6, 0.2, 0.0)
 
     override var profileScale = 0.82F
-    override var profileTranslation = Vec3d(0.0, 0.54, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.54, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("furret", "blink") }
@@ -42,7 +40,7 @@ class FurretModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame {
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("furret", "ground_idle")
             )
         )
@@ -51,7 +49,7 @@ class FurretModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame {
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 QuadrupedWalkAnimation(this, periodMultiplier = 0.6F, amplitudeMultiplier = 0.9F),
                 bedrock("furret", "pose")
             )
@@ -60,6 +58,6 @@ class FurretModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("furret", "faint") else null
 }

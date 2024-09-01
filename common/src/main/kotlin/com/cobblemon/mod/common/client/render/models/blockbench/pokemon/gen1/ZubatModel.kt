@@ -10,36 +10,36 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation.Companion.X_AXIS
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class ZubatModel(root: ModelPart) : PokemonPoseableModel() {
+class ZubatModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("zubat")
 
     val wings_folded = getPart("wings_folded")
     val wings_open = getPart("wings_open")
 
     override var portraitScale = 1.7F
-    override var portraitTranslation = Vec3d(0.0, 0.0, 0.0)
+    override var portraitTranslation = Vec3(0.0, 0.0, 0.0)
 
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.0, 0.7, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.7, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var hover: PokemonPose
-    lateinit var fly: PokemonPose
-    lateinit var shoulderLeft: PokemonPose
-    lateinit var shoulderRight: PokemonPose
+    lateinit var sleep: Pose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var hover: Pose
+    lateinit var fly: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
 
     val shoulderOffset = 0
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("zubat", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("zubat", "cry") }
 
     override fun registerPoses() {
         val twitch = quirk { bedrockStateful("zubat", "eartwitch") }
@@ -50,7 +50,7 @@ class ZubatModel(root: ModelPart) : PokemonPoseableModel() {
                 wings_open.createTransformation().withVisibility(visibility = true),
             ),
             quirks = arrayOf(twitch),
-            idleAnimations = arrayOf(bedrock("zubat", "sleep"))
+            animations = arrayOf(bedrock("zubat", "sleep"))
         )
 
         standing = registerPose(
@@ -62,7 +62,7 @@ class ZubatModel(root: ModelPart) : PokemonPoseableModel() {
             ),
             transformTicks = 10,
             quirks = arrayOf(twitch),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("zubat", "ground_idle")
             )
         )
@@ -76,7 +76,7 @@ class ZubatModel(root: ModelPart) : PokemonPoseableModel() {
             ),
             transformTicks = 10,
             quirks = arrayOf(twitch),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("zubat", "ground_walk")
             )
         )
@@ -90,7 +90,7 @@ class ZubatModel(root: ModelPart) : PokemonPoseableModel() {
             ),
             transformTicks = 10,
             quirks = arrayOf(twitch),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("zubat", "air_idle")
             )
         )
@@ -104,14 +104,14 @@ class ZubatModel(root: ModelPart) : PokemonPoseableModel() {
             ),
             quirks = arrayOf(twitch),
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("zubat", "air_fly")
             )
         )
 
         shoulderLeft = registerPose(
             poseType = PoseType.SHOULDER_LEFT,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("zubat", "shoulder_left")
             ),
             transformedParts = arrayOf(
@@ -121,7 +121,7 @@ class ZubatModel(root: ModelPart) : PokemonPoseableModel() {
 
         shoulderRight = registerPose(
             poseType = PoseType.SHOULDER_RIGHT,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("zubat", "shoulder_right")
             ),
             transformedParts = arrayOf(
@@ -132,6 +132,6 @@ class ZubatModel(root: ModelPart) : PokemonPoseableModel() {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("zubat", "faint") else null
 }
