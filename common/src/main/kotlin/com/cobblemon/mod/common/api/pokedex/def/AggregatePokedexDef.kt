@@ -38,7 +38,7 @@ class AggregatePokedexDef(
         if (!squash) {
             return Dexes.dexEntryMap.values.filter { it.id in subDexIds }.flatMap { it.getEntries() }
         } else {
-            val speciesToEntry = mutableMapOf<ResourceLocation, PokedexEntry>()
+            val speciesToEntry = linkedMapOf<ResourceLocation, PokedexEntry>()
             subDexIds.forEach { dexId ->
                 Dexes.dexEntryMap[dexId]?.getEntries()?.forEach { entry ->
                     val preExisting = speciesToEntry[entry.speciesId]

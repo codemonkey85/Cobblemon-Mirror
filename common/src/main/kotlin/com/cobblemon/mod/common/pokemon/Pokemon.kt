@@ -504,6 +504,11 @@ open class Pokemon : ShowdownIdentifiable {
 
     init {
         storeCoordinates.subscribe { if (it != null && it.store !is PCStore && this.tetheringId != null) afterOnServer(ticks = 1) { this.tetheringId = null } }
+        storeCoordinates.subscribe {
+            it?.store?.getObservingPlayers()?.forEach {
+                CobblemonEvents.POKEMON_GAINED.post(PokemonGainedEvent(it.uuid, this))
+            }
+        }
     }
 
     open fun getStat(stat: Stat) = Cobblemon.statProvider.getStatForPokemon(this, stat)

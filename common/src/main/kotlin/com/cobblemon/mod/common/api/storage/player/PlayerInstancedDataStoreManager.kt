@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.api.storage.player
 import com.cobblemon.mod.common.api.pokedex.PokedexManager
 import com.cobblemon.mod.common.api.scheduling.ScheduledTask
 import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
+import java.util.UUID
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
@@ -56,12 +57,17 @@ class PlayerInstancedDataStoreManager {
             .build()
     }
 
-    fun get(player: Player, dataType: PlayerInstancedDataStoreType): InstancedPlayerData {
+    fun get(playerId: UUID, dataType: PlayerInstancedDataStoreType): InstancedPlayerData {
         if (!factories.contains(dataType)) {
             throw UnsupportedOperationException("No factory registered for $dataType")
         }
-        return factories[dataType]!!.getForPlayer(player)
+        return factories[dataType]!!.getForPlayer(playerId)
     }
+
+    fun get(player: Player, dataType: PlayerInstancedDataStoreType): InstancedPlayerData {
+        return get(player.uuid, dataType)
+    }
+
     fun saveAllOfOneType(dataType: PlayerInstancedDataStoreType) {
         if (!factories.contains(dataType)) {
             throw UnsupportedOperationException("No factory registered for $dataType")
@@ -95,10 +101,18 @@ class PlayerInstancedDataStoreManager {
     }
 
     fun getGenericData(player: ServerPlayer): GeneralPlayerData {
-        return get(player, PlayerInstancedDataStoreType.GENERAL) as GeneralPlayerData
+        return getGenericData(player.uuid)
+    }
+
+    fun getGenericData(playerId: UUID): GeneralPlayerData {
+        return get(playerId, PlayerInstancedDataStoreType.GENERAL) as GeneralPlayerData
     }
 
     fun getPokedexData(player: ServerPlayer): PokedexManager {
-        return get(player, PlayerInstancedDataStoreType.POKEDEX) as PokedexManager
+        return getPokedexData(player.uuid)
+    }
+
+    fun getPokedexData(playerId: UUID): PokedexManager {
+        return get(playerId, PlayerInstancedDataStoreType.POKEDEX) as PokedexManager
     }
 }

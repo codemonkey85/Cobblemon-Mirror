@@ -70,6 +70,7 @@ object PokedexCommand {
         val form = context.getArgument("form", FormData::class.java)
         players.forEach {
             val dex = Cobblemon.playerDataManager.getPokedexData(it)
+
             //dex.grantedWithCommand(species, form)
             it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
         }

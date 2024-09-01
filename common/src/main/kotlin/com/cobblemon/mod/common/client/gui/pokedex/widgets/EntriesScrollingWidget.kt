@@ -209,7 +209,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
                         matrixStack = matrices,
                         rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),
                         state = state,
-                        partialTicks = tickDelta,
+                        partialTicks = 0F,
                         scale = 4.5F
                     )
                     matrices.popPose()
