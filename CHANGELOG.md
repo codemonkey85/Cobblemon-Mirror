@@ -41,6 +41,7 @@
 - Added a `battleInvulnerability` gamerule to make players invulnerable to any damage during a battle
 - Added a `mobTargetInBattle` gamerule to exclude players from being targeted by mobs during a battle
 - Added battle log messages for switching out Pokémon
+- Added Evolution particles and sounds for Pokemon that are sent out when evolution is started.
 
 ### Added cries to the following Pokémon
 - Timburr, Gurdurr, Conkeldurr
