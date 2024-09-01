@@ -19,6 +19,7 @@ import com.cobblemon.mod.common.net.messages.server.pokemon.interact.InteractPok
 import com.cobblemon.mod.common.net.messages.server.trade.AcceptTradeRequestPacket
 import com.cobblemon.mod.common.net.messages.server.trade.OfferTradePacket
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.getPlayer
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.Multimap
 import net.minecraft.client.Minecraft
@@ -113,6 +114,18 @@ fun createPlayerInteractGui(optionsPacket: PlayerInteractOptionsPacket): Interac
             }
         }
     }
+
+    if (!addBattleOption && optionsPacket.targetId.getPlayer() != null) {
+        // Player who is currently unable to battle
+        options.put(Orientation.TOP_RIGHT, InteractWheelOption(
+                iconResource = cobblemonResource("textures/gui/interact/icon_battle.png"),
+                secondaryIconResource = null,
+                colour = { Vector3f(0.5f, 0.5f, 0.5f) },
+                tooltipText = "cobblemon.ui.interact.battle.unavailable",
+                onPress = {}
+        ))
+    }
+
     return InteractWheelGUI(options, Component.translatable("cobblemon.ui.interact.player"))
 }
 
