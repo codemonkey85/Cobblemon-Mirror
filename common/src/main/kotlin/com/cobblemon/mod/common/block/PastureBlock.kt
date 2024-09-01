@@ -53,6 +53,7 @@ import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 import java.util.*
+import net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED
 
 @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
 class PastureBlock(settings: Properties): BaseEntityBlock(settings), SimpleWaterloggedBlock, PreEmptsExplosion {
@@ -61,7 +62,6 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), SimpleWater
 
         val PART: EnumProperty<PasturePart> = EnumProperty.create("part", PasturePart::class.java)
         val ON: BooleanProperty = BooleanProperty.create("on")
-        val WATERLOGGED: BooleanProperty = BooleanProperty.create("waterlogged")
 
         private val SOUTH_AABB_TOP = buildCollider(top = true, Direction.NORTH)
         private val NORTH_AABB_TOP = buildCollider(top = true, Direction.SOUTH)

@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.client.render.ModelLayer
 import com.cobblemon.mod.common.client.render.ModelVariationSet
+import com.cobblemon.mod.common.client.render.SpriteType
 import com.cobblemon.mod.common.client.render.VaryingRenderableResolver
 import com.cobblemon.mod.common.client.render.models.blockbench.*
 import com.cobblemon.mod.common.client.render.models.blockbench.bedrock.animation.BedrockAnimationRepository
@@ -230,6 +231,13 @@ abstract class VaryingModelRepository<T : PosableModel> {
             }
         } catch(_: IllegalStateException) { }
         return this.variations[fallback]!!.getLayers(aspects)
+    }
+
+    fun getSprite(name: ResourceLocation, aspects: Set<String>, type: SpriteType): ResourceLocation? {
+        try {
+            return this.variations[name]?.getSprite(aspects, type)
+        } catch (_: IllegalStateException) {}
+        return null
     }
 
     companion object {

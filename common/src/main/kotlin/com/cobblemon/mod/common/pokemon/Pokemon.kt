@@ -281,7 +281,7 @@ open class Pokemon : ShowdownIdentifiable {
     var friendship = this.form.baseFriendship
         private set(value) {
             // Don't check on client, that way we don't need to actually sync the config value it doesn't affect anything
-            if (!this.isClient || !this.isPossibleFriendship(value)) {
+            if (!this.isPossibleFriendship(value)) {
                 return
             }
             FRIENDSHIP_UPDATED.post(FriendshipUpdatedEvent(this, value)) {
@@ -1001,7 +1001,7 @@ open class Pokemon : ShowdownIdentifiable {
      */
     fun setFriendship(value: Int, coerceSafe: Boolean = true): Boolean {
         val sanitizedAmount = if (coerceSafe) value.absoluteValue.coerceAtMost(Cobblemon.config.maxPokemonFriendship) else value.absoluteValue
-        if (!this.isClient || !this.isPossibleFriendship(sanitizedAmount)) {
+        if (!this.isPossibleFriendship(sanitizedAmount)) {
             return false
         }
         this.friendship = sanitizedAmount

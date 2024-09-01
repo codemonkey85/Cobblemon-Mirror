@@ -58,7 +58,7 @@ class FishingSpawnCause(
             entity.pokemon.forcedAspects += FISHED_ASPECT
 
             bait?.effects?.forEach { it ->
-                if (Math.random() < it.chance) return
+                if (Math.random() > it.chance) return
                 when (it.type) {
                     FishingBait.Effects.SHINY_REROLL -> shinyReroll(entity, it)
                     FishingBait.Effects.NATURE -> alterNatureAttempt(entity, it)
