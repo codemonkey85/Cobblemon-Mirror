@@ -3,7 +3,9 @@
 ## [1.5.3](#1-5-3)
 ### Fixes
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating
+- Big Roots and Energy Roots now share the same sounds as intented.
 - Fixed Cubone's cry not having a sound.
+- Fixed sounds made by blocks playing at a lower pitch than intended.
 - Fixed the Seafloor spawning context not being a usable context.
 - Fixed Pokemon spawning in non-full blocks like slabs.
 - Fixed Gilded Chests not dropping the chest itself when broken, only the contents.
@@ -49,11 +51,14 @@
 ### Changes
 - Altered the item model for Medicinal Leeks and Roasted Leeks to be held like sticks and other rod items. 
 - Adjusted some berry balance values like yield and growth times
+- Adjusted volumes of sounds made by Display Cases, Berry Bushes, Energy Root, Medicinal Leek, Vivichoke, Mints, Revival Herbs and Gilded Chests.
 - Changes to mulch buffs/durations
 - Weedle, Caterpie, Spearow, Smoochum, Mew, Murkrow, Larvitar, Taillow, Plusle, Minun, Beldum, Starly, Buneary, Combee, Pachirisu, Pidove, Petilil, Hisui Bias Petilil, Zorua, Hisuian Zorua, Elgyem, Fletchling, Skrelp, Klefki, Fomantis, Morelull, Dreepy, Shroodle, Tatsugiri, Glimmet, and Roaming Gimmighoul are now shoulder mountable
 - Chikorita's ability to look around removed due to the awkwardness of it.
 - Link Cable recipe has been redesigned
 - Updated potion sprites
+- Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs
+- Updated UI sounds for clicking and evolving Pokémon
 - Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users. 
 
 ### Pokémon Added
@@ -76,6 +81,7 @@
 
 ### Developer
 - PokemonBattle now starts on turn 0.
+- All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.
 
 ### Data Pack & Resource Pack Creators
 - Added support for "shedders" similar to Shedinja's evolution logic.
