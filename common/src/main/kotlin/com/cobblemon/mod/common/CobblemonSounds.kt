@@ -293,7 +293,7 @@ object CobblemonSounds : PlatformRegistry<Registry<SoundEvent>, ResourceKey<Regi
     @JvmField
     val BIG_ROOT_SOUNDS = SoundType(0.8f, 1.1f,
         BIG_ROOT_BREAK,
-        SoundEvents.ROOTS_STEPSoundEvents.ROOTS_STEP,
+        SoundEvents.ROOTS_STEP,
         ENERGY_ROOT_PLACE,
         SoundEvents.ROOTS_HIT,
         SoundEvents.ROOTS_FALL

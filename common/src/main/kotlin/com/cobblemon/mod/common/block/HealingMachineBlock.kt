@@ -30,7 +30,6 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
-import net.minecraft.state.property.BooleanProperty
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -38,6 +37,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
+import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.IntegerProperty
 import net.minecraft.world.level.block.state.properties.Property
 import net.minecraft.world.level.pathfinder.PathComputationType
@@ -72,7 +72,7 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
         // Charge level 6 is used only when healing machine is active
         const val MAX_CHARGE_LEVEL = 5
         val CHARGE_LEVEL: IntegerProperty = IntegerProperty.create("charge", 0, MAX_CHARGE_LEVEL + 1)
-        val NATURAL: BooleanProperty = BooleanProperty.of("natural")
+        val NATURAL: BooleanProperty = BooleanProperty.create("natural")
     }
 
     init {
