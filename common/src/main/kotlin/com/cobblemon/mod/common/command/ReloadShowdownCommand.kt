@@ -12,26 +12,26 @@ import com.cobblemon.mod.common.battles.runner.ShowdownService
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.text.Text
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
+import net.minecraft.network.chat.Component
 
 object ReloadShowdownCommand {
 
-    fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
-        val command = CommandManager.literal("reloadshowdown")
-            .requires { it.hasPermissionLevel(4) }
+    fun register(dispatcher: CommandDispatcher<CommandSourceStack>) {
+        val command = Commands.literal("reloadshowdown")
+            .requires { it.hasPermission(4) }
             .executes(::execute)
         dispatcher.register(command)
     }
 
-    private fun execute(context: CommandContext<ServerCommandSource>): Int {
+    private fun execute(context: CommandContext<CommandSourceStack>): Int {
         try {
             ShowdownService.service.closeConnection()
             ShowdownService.service.openConnection()
             ShowdownService.service.registerSpecies()
             ShowdownService.service.registerBagItems()
-            context.source.sendMessage(Text.of("Reloaded showdown"))
+            context.source.sendSystemMessage(Component.literal("Reloaded showdown"))
         } catch (e: Exception) {
             e.printStackTrace()
         }

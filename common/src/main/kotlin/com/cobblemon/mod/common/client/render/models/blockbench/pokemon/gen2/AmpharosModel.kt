@@ -8,32 +8,32 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen2
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class AmpharosModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class AmpharosModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("ampharos")
     override val head = getPart("head")
 
     override var portraitScale = 1.9F
-    override var portraitTranslation = Vec3d(-0.15, 2.2, 0.0)
+    override var portraitTranslation = Vec3(-0.15, 2.2, 0.0)
 
     override var profileScale = 0.55F
-    override var profileTranslation = Vec3d(0.0, 0.9, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.9, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walking: Pose
+    lateinit var sleep: Pose
+    lateinit var battleidle: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("ampharos", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("ampharos", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("ampharos", "blink") }
@@ -41,7 +41,7 @@ class AmpharosModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         val quirk = quirk(secondsBetweenOccurrences = 60F to 120F) { bedrockStateful("ampharos", "quirk_toes") }
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("ampharos", "sleep"))
+            animations = arrayOf(bedrock("ampharos", "sleep"))
         )
 
         standing = registerPose(
@@ -50,7 +50,7 @@ class AmpharosModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             transformTicks = 10,
             condition = { !it.isBattling },
             quirks = arrayOf(blink, glow, quirk),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("ampharos", "ground_idle")
             )
@@ -61,7 +61,7 @@ class AmpharosModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("ampharos", "ground_walk")
             )
@@ -73,16 +73,13 @@ class AmpharosModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             transformTicks = 10,
             quirks = arrayOf(blink, glow),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("ampharos", "battle_idle")
             )
         )
     }
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isPosedIn(standing, walking, sleep)) bedrockStateful("ampharos", "faint") else
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walking, sleep)) bedrockStateful("ampharos", "faint") else
         if (state.isPosedIn(battleidle)) bedrockStateful("ampharos", "battle_faint")
         else null
 }

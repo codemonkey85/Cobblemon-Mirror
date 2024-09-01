@@ -1,0 +1,29 @@
+{
+  "parent": "cobblemon:first_catch",
+  "display": {
+    "icon": {
+      "id": "cobblemon:rare_candy"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.first_evolution"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.first_evolution.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+	"announce_to_chat": true,
+	"hidden": false
+  },
+  "criteria": {
+	"evolve": {
+	  "trigger": "cobblemon:pokemon_evolved",
+	  "conditions": {
+			"species": "any",
+			"evolution": "any",
+			"times": 1
+		}
+	}
+  },
+  "sends_telemetry_event": false
+}

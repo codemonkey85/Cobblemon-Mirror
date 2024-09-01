@@ -9,20 +9,20 @@
 package com.cobblemon.mod.common.api.conditional
 
 import com.google.gson.JsonElement
-import net.minecraft.registry.Registry
-import net.minecraft.util.Identifier
+import net.minecraft.core.Registry
+import net.minecraft.resources.ResourceLocation
 
 /**
- * A condition for some registry type which asserts that the entry must have the given [Identifier].
+ * A condition for some registry type which asserts that the entry must have the given [ResourceLocation].
  *
  * @author Hiroku
  * @since July 16th, 2022
  */
-open class RegistryLikeIdentifierCondition<T>(val identifier: Identifier) : RegistryLikeCondition<T> {
+open class RegistryLikeIdentifierCondition<T : Any>(val identifier: ResourceLocation) : RegistryLikeCondition<T> {
     companion object {
-        fun <T> resolver(
-            constructor: (Identifier) -> RegistryLikeIdentifierCondition<T>
-        ): (JsonElement) -> RegistryLikeIdentifierCondition<T>? = { constructor(Identifier(it.asString)) }
+        fun <T: Any> resolver(
+            constructor: (ResourceLocation) -> RegistryLikeIdentifierCondition<T>
+        ): (JsonElement) -> RegistryLikeIdentifierCondition<T>? = { constructor(ResourceLocation.parse(it.asString)) }
     }
-    override fun fits(t: T, registry: Registry<T>) = registry.getId(t) == identifier
+    override fun fits(t: T, registry: Registry<T>) = registry.getKey(t) == identifier
 }

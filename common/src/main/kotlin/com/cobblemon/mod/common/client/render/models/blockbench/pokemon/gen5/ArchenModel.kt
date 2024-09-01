@@ -8,41 +8,40 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen5
 
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.cobblemon.mod.common.util.isBattling
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class ArchenModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class ArchenModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("archen")
     override val head = getPart("head")
 
-    override var portraitTranslation = Vec3d(-0.32, -0.07, 0.0)
+    override var portraitTranslation = Vec3(-0.32, -0.07, 0.0)
     override var portraitScale = 1.81F
 
-    override var profileTranslation = Vec3d(-0.02, 0.87, 0.0)
+    override var profileTranslation = Vec3(-0.02, 0.87, 0.0)
     override var profileScale = 0.58F
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var swim: PokemonPose
-    lateinit var float: PokemonPose
-    lateinit var falling: PokemonPose
-    lateinit var battleIdle: PokemonPose
-    lateinit var shoulderLeft: PokemonPose
-    lateinit var shoulderRight: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walking: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var swim: CobblemonPose
+    lateinit var float: CobblemonPose
+    lateinit var falling: CobblemonPose
+    lateinit var battleIdle: CobblemonPose
+    lateinit var shoulderLeft: CobblemonPose
+    lateinit var shoulderRight: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, pose -> if (pose.isPosedIn(battleIdle)) bedrockStateful("archen", "battle_cry") else bedrockStateful("archen", "cry") }
+    override val cryAnimation = CryProvider { if (it.isPosedIn(battleIdle)) bedrockStateful("archen", "battle_cry") else bedrockStateful("archen", "cry") }
 
     val shoulderOffset = 0
 
@@ -55,7 +54,7 @@ class ArchenModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "sleep",
             poseType = PoseType.SLEEP,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("archen", "sleep")
             )
         )
@@ -64,9 +63,9 @@ class ArchenModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES - PoseType.HOVER,
             quirks = arrayOf(blink, idleQuirk, quirk),
-            condition = { !it.isFalling()  && !it.isTouchingWater && !it.isBattling },
+            condition = { (it.getEntity() as? PokemonEntity)?.isFalling() != true && !it.isInWater && !it.isBattling },
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("archen", "ground_idle")
             )
@@ -75,10 +74,10 @@ class ArchenModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         walking = registerPose(
             poseName = "walking",
             poseTypes = PoseType.MOVING_POSES - PoseType.SWIM,
-            condition = { !it.isFalling()  && !it.isTouchingWater },
+            condition = { (it.getEntity() as? PokemonEntity)?.isFalling() != true && !it.isInWater },
             quirks = arrayOf(blink),
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("archen", "ground_walk")
             )
@@ -88,9 +87,9 @@ class ArchenModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "swim",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("archen", "surfacewater_swim")
             )
@@ -100,9 +99,9 @@ class ArchenModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "float",
             poseTypes = PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink, idleQuirk),
-            condition = { it.isTouchingWater },
+            condition = { it.isInWater },
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("archen", "surfacewater_idle")
             )
@@ -113,7 +112,7 @@ class ArchenModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink, quirk),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("archen", "battle_idle")
             )
@@ -123,9 +122,9 @@ class ArchenModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "falling",
             poseTypes = PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink),
-            condition = { it.isFalling() },
+            condition = { (it.getEntity() as? PokemonEntity)?.isFalling() == true },
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("archen", "chicken_fall")
             )
         )
@@ -133,7 +132,7 @@ class ArchenModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         shoulderLeft = registerPose(
             poseType = PoseType.SHOULDER_LEFT,
             quirks = arrayOf(blink, quirk),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("archen", "shoulder_left")
             ),
@@ -145,7 +144,7 @@ class ArchenModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         shoulderRight = registerPose(
             poseType = PoseType.SHOULDER_RIGHT,
             quirks = arrayOf(blink, quirk),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("archen", "shoulder_right")
             ),
@@ -156,6 +155,6 @@ class ArchenModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
     }
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walking)) bedrockStateful("archen", "faint") else null
 }

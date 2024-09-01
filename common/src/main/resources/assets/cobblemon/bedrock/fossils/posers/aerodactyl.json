@@ -2,18 +2,19 @@
   "maxScale": 0.9,
   "yTranslation": 0.0,
   "yGrowthPoint": 0.6875,
-  "animations": [
-    "bedrock(aerodactyl_fetus, sleep)"
-  ],
-  "quirks": [
-    {
-      "name": "quirk",
-      "animations": [
-        "bedrock(shieldon_fetus, quirk)"
-      ],
-      "loopTimes": 1,
-      "minSeconds": 30,
-      "maxSeconds": 60
+  "poses": {
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('aerodactyl_fetus', 'sleep')"],
+      "quirks": [
+        {
+          "name": "quirk",
+          "animations": ["q.bedrock_stateful('aerodactyl_fetus', 'quirk')"],
+          "loopTimes": 1,
+          "minSecondsBetweenOccurrences": 30,
+          "maxSecondsBetweenOccurrences": 60
+        }
+      ]
     }
-  ]
+  }
 }

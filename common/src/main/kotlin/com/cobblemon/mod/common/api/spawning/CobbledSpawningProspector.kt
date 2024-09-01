@@ -14,15 +14,15 @@ import com.cobblemon.mod.common.api.spawning.prospecting.SpawningProspector
 import com.cobblemon.mod.common.api.spawning.spawner.Spawner
 import com.cobblemon.mod.common.api.spawning.spawner.SpawningArea
 import com.cobblemon.mod.common.api.tags.CobblemonBlockTags
-import net.minecraft.block.Blocks
-import net.minecraft.entity.LivingEntity
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.ChunkSectionPos.getSectionCoord
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.LightType
-import net.minecraft.world.chunk.Chunk
-import net.minecraft.world.chunk.ChunkStatus
+import net.minecraft.core.BlockPos
+import net.minecraft.core.SectionPos.blockToSectionCoord
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.level.LightLayer
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.chunk.ChunkAccess
+import net.minecraft.world.level.chunk.status.ChunkStatus
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 
 /**
  * A spawning prospector that takes a straightforward approach
@@ -40,8 +40,8 @@ object CobblemonSpawningProspector : SpawningProspector {
         val world = area.world
         var baseY = area.baseY
         var height = area.height
-        if (baseY < world.bottomY) {
-            val difference = world.bottomY - baseY
+        if (baseY < world.minBuildHeight) {
+            val difference = world.minBuildHeight - baseY
             baseY += difference
             height -= difference
             if (height < 1) {
@@ -49,8 +49,8 @@ object CobblemonSpawningProspector : SpawningProspector {
             }
         }
 
-        if (baseY + height >= world.topY) {
-            val difference = baseY + height - 1 - world.topY
+        if (baseY + height >= world.maxBuildHeight) {
+            val difference = baseY + height - 1 - world.maxBuildHeight
             height -= difference
             if (height < 1) {
                 throw IllegalStateException("World slice was attempted with totally awful base and dimensions")
@@ -58,46 +58,50 @@ object CobblemonSpawningProspector : SpawningProspector {
         }
 
         val minimumDistanceBetweenEntities = config.minimumDistanceBetweenEntities
-        val nearbyEntityPositions = area.world.getOtherEntities(
+        val nearbyEntityPositions = area.world.getEntities(
             area.cause.entity,
-            Box.of(
-                Vec3d(area.baseX + area.length / 2.0, baseY + height / 2.0, area.baseZ + area.width / 2.0),
+            AABB.ofSize(
+                Vec3(
+                    area.baseX + area.length / 2.0,
+                    baseY + height / 2.0,
+                    area.baseZ + area.width / 2.0
+                ),
                 area.length + minimumDistanceBetweenEntities,
                 height + minimumDistanceBetweenEntities,
                 area.width + minimumDistanceBetweenEntities
             )
         ).filterIsInstance<LivingEntity>()
-            .map { it.pos }
+            .map { it.position() }
 
-        val defaultState = Blocks.STONE.defaultState
+        val defaultState = Blocks.STONE.defaultBlockState()
         val defaultBlockData = WorldSlice.BlockData(defaultState, 0, 0)
 
         val blocks = Array(area.length) { Array(height) { Array(area.width) { defaultBlockData } } }
-        val skyLevel = Array(area.length) { Array(area.width) { world.topY } }
-        val pos = BlockPos.Mutable()
+        val skyLevel = Array(area.length) { Array(area.width) { world.maxBuildHeight } }
+        val pos = BlockPos.MutableBlockPos()
 
-        val chunks = mutableMapOf<Pair<Int, Int>, Chunk?>()
+        val chunks = mutableMapOf<Pair<Int, Int>, ChunkAccess?>()
         val yRange = (baseY until baseY + height).reversed()
-        val lightingProvider = world.lightingProvider
+        val lightingProvider = world.lightEngine
         for (x in area.baseX until area.baseX + area.length) {
             for (z in area.baseZ until area.baseZ + area.width) {
-                val query = chunks.computeIfAbsent(Pair(getSectionCoord(x), getSectionCoord(z))) {
+                val query = chunks.computeIfAbsent(Pair(blockToSectionCoord(x), blockToSectionCoord(z))) {
                     world.getChunk(it.first, it.second, ChunkStatus.FULL, false)
                 } ?: continue
 
-                var canSeeSky = world.isSkyVisibleAllowingSea(pos.set(x, yRange.first, z))
+                var canSeeSky = world.canSeeSkyFromBelowWater(pos.set(x, yRange.first, z))
                 for (y in yRange) {
-                    val skyLight = lightingProvider.get(LightType.SKY).getLightLevel(pos.set(x, y, z))
+                    val skyLight = lightingProvider.getLayerListener(LightLayer.SKY).getLightValue(pos.set(x, y, z))
                     val state = query.getBlockState(pos.set(x, y, z))
                     blocks[x - area.baseX][y - baseY][z - area.baseZ] = WorldSlice.BlockData(
                         state = state,
-                        light = world.getLightLevel(pos),
+                        light = world.getMaxLocalRawBrightness(pos),
                         skyLight = skyLight
                     )
                     if (canSeeSky) {
                         skyLevel[x - area.baseX][z - area.baseZ] = y
                     }
-                    if (state.fluidState.isEmpty && !state.isIn(CobblemonBlockTags.SEES_SKY)) {
+                    if (state.fluidState.isEmpty && !state.`is`(CobblemonBlockTags.SEES_SKY)) {
                         canSeeSky = false
                     }
                 }

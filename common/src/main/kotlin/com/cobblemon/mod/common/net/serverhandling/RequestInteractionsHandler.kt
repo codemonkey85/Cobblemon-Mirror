@@ -14,14 +14,14 @@ import com.cobblemon.mod.common.battles.BattleRegistry
 import com.cobblemon.mod.common.net.messages.client.PlayerInteractOptionsPacket
 import com.cobblemon.mod.common.net.messages.server.RequestPlayerInteractionsPacket
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 import java.util.EnumSet
 
 object RequestInteractionsHandler : ServerNetworkPacketHandler<RequestPlayerInteractionsPacket> {
     override fun handle(
         packet: RequestPlayerInteractionsPacket,
         server: MinecraftServer,
-        player: ServerPlayerEntity
+        player: ServerPlayer
     ) {
         //We could potentially check if the targeted player has pokemon here
         val options = EnumSet.of(PlayerInteractOptionsPacket.Options.TRADE)

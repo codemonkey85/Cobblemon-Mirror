@@ -10,12 +10,11 @@ package com.cobblemon.mod.common.api.net
 
 import com.cobblemon.mod.common.CobblemonNetwork
 import com.cobblemon.mod.common.util.server
-import io.netty.buffer.Unpooled
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.registry.RegistryKey
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
-import net.minecraft.world.World
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload
+import net.minecraft.resources.ResourceKey
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.level.Level
 
 /**
  * Platform abstract blueprint of a packet being sent out.
@@ -24,26 +23,26 @@ import net.minecraft.world.World
  * @author Hiroku, Licious
  * @since November 27th, 2021
  */
-interface NetworkPacket<T: NetworkPacket<T>> : Encodable {
+interface NetworkPacket<T: NetworkPacket<T>> : CustomPacketPayload, Encodable {
 
     /**
      *
      */
-    val id: Identifier
+    val id: ResourceLocation
 
     /**
      * TODO
      *
      * @param player
      */
-    fun sendToPlayer(player: ServerPlayerEntity) = CobblemonNetwork.sendPacketToPlayer(player, this)
+    fun sendToPlayer(player: ServerPlayer) = CobblemonNetwork.sendPacketToPlayer(player, this)
 
     /**
      * TODO
      *
      * @param players
      */
-    fun sendToPlayers(players: Iterable<ServerPlayerEntity>) {
+    fun sendToPlayers(players: Iterable<ServerPlayer>) {
         if (players.any()) {
             CobblemonNetwork.sendPacketToPlayers(players, this)
         }
@@ -59,7 +58,7 @@ interface NetworkPacket<T: NetworkPacket<T>> : Encodable {
      * TODO
      *
      */
-    fun sendToServer() = CobblemonNetwork.sendPacketToServer(this)
+    fun sendToServer() = CobblemonNetwork.sendToServer(this)
 
     // A copy from PlayerManager#sendToAround to work with our packets
     /**
@@ -72,9 +71,9 @@ interface NetworkPacket<T: NetworkPacket<T>> : Encodable {
      * @param worldKey
      * @param exclusionCondition
      */
-    fun sendToPlayersAround(x: Double, y: Double, z: Double, distance: Double, worldKey: RegistryKey<World>, exclusionCondition: (ServerPlayerEntity) -> Boolean = { false }) {
+    fun sendToPlayersAround(x: Double, y: Double, z: Double, distance: Double, worldKey: ResourceKey<Level>, exclusionCondition: (ServerPlayer) -> Boolean = { false }) {
         val server = server() ?: return
-        server.playerManager.playerList.filter { player ->
+        server.playerList.players.filter { player ->
             if (exclusionCondition.invoke(player))
                 return@filter false
             val xDiff = x - player.x
@@ -85,15 +84,5 @@ interface NetworkPacket<T: NetworkPacket<T>> : Encodable {
         .forEach { player -> CobblemonNetwork.sendPacketToPlayer(player, this) }
     }
 
-    /**
-     * TODO
-     *
-     * @return
-     */
-    fun toBuffer(): PacketByteBuf {
-        val buffer = PacketByteBuf(Unpooled.buffer())
-        this.encode(buffer)
-        return buffer
-    }
-
+    override fun type() = CustomPacketPayload.Type<T>(id)
 }

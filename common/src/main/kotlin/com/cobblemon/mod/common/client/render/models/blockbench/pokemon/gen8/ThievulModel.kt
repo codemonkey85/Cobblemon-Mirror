@@ -11,13 +11,14 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen8
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class ThievulModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class ThievulModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("thievul")
     override val head = getPart("head")
 
@@ -27,17 +28,17 @@ class ThievulModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.7, 1.11, 0.0)
+    override var portraitTranslation = Vec3(-0.7, 1.11, 0.0)
 
     override var profileScale = 0.65F
-    override var profileTranslation = Vec3d(0.0, 0.7, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.7, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var sleep: Pose
+    lateinit var battleidle: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("thievul", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("thievul", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("thievul", "blink")}
@@ -46,7 +47,7 @@ class ThievulModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
         sleep = registerPose(
             poseType = PoseType.SLEEP,
             quirks = arrayOf(sleepquirk),
-            idleAnimations = arrayOf(bedrock("thievul", "sleep"))
+            animations = arrayOf(bedrock("thievul", "sleep"))
         )
 
         standing = registerPose(
@@ -55,7 +56,7 @@ class ThievulModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { !it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("thievul", "ground_idle")
             )
@@ -66,7 +67,7 @@ class ThievulModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("thievul", "ground_walk")
             )
@@ -78,7 +79,7 @@ class ThievulModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("thievul", "battle_idle")
             )
@@ -87,6 +88,6 @@ class ThievulModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk, sleep, battleidle)) bedrockStateful("thievul", "faint") else null
 }

@@ -25,6 +25,7 @@ import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.text.Text
 import java.util.concurrent.CompletableFuture
+import net.minecraft.network.chat.Component
 
 /**
  * Format: |-activate|POKEMON|EFFECT
@@ -75,10 +76,10 @@ class ActivateInstruction(val instructionSet: InstructionSet, val message: Battl
     override fun postActionEffect(battle: PokemonBattle) {
         battle.dispatch {
             val pokemon = message.battlePokemon(0, battle) ?: return@dispatch GO
-            val extraEffect = message.effectAt(2)?.typelessData ?: Text.literal("UNKNOWN")
+            val extraEffect = message.effectAt(2)?.typelessData ?: Component.literal("UNKNOWN")
             val effect = message.effectAt(1) ?: return@dispatch GO
             val pokemonName = pokemon.getName()
-            val sourceName = message.battlePokemonFromOptional(battle)?.getName() ?: Text.literal("UNKNOWN")
+            val sourceName = message.battlePokemonFromOptional(battle)?.getName() ?: Component.literal("UNKNOWN")
 
             if (effect.id == "sketch" && pokemon.effectedPokemon.moveSet.any { it.name == "sketch" } && extraEffect is String) {
                 // Apply Sketch to the pokemon's current moveset if it was successfully used in battle

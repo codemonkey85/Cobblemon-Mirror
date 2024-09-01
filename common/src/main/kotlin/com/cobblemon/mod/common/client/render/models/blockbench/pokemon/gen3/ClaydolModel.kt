@@ -8,29 +8,29 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class ClaydolModel(root: ModelPart) : PokemonPoseableModel() {
+class ClaydolModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("claydol")
 
     override var portraitScale = 1.6F
-    override var portraitTranslation = Vec3d(-0.7, 1.0, 0.0)
+    override var portraitTranslation = Vec3(-0.7, 1.0, 0.0)
 
     override var profileScale = 0.65F
-    override var profileTranslation = Vec3d(0.0, 0.8, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.8, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var sleep: Pose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
     override fun registerPoses() {
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("claydol", "sleep"))
+            animations = arrayOf(bedrock("claydol", "sleep"))
         )
 
         val blink = quirk { bedrockStateful("claydol", "blink") }
@@ -38,7 +38,7 @@ class ClaydolModel(root: ModelPart) : PokemonPoseableModel() {
             poseName = "hover",
             poseTypes = PoseType.STATIONARY_POSES - PoseType.HOVER + PoseType.UI_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("claydol", "air_idle")
             )
         )
@@ -47,7 +47,7 @@ class ClaydolModel(root: ModelPart) : PokemonPoseableModel() {
             poseName = "fly",
             poseTypes = PoseType.MOVING_POSES + PoseType.FLY,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("claydol", "air_fly")
             )
         )

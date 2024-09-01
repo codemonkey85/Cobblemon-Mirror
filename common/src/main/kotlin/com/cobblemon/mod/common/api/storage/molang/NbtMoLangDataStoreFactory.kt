@@ -12,11 +12,12 @@ import com.bedrockk.molang.runtime.struct.VariableStruct
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.readMoValueFromNBT
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.writeMoValueToNBT
 import com.cobblemon.mod.common.platform.events.PlatformEvents
-import java.nio.file.Path
-import java.util.UUID
-import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtAccounter
 import net.minecraft.nbt.NbtIo
-import net.minecraft.util.WorldSavePath
+import net.minecraft.world.level.storage.LevelResource
+import java.nio.file.Path
+import java.util.*
 
 object NbtMoLangDataStoreFactory : MoLangDataStoreFactory {
     lateinit var savePath: Path
@@ -27,7 +28,7 @@ object NbtMoLangDataStoreFactory : MoLangDataStoreFactory {
     var saveTicks = 20 * 5 // Every 5 seconds. It's really not going to end up being that much dirty data nor take long.
 
     init {
-        PlatformEvents.SERVER_STARTED.subscribe { event -> savePath = event.server.getSavePath(WorldSavePath.PLAYERDATA).parent }
+        PlatformEvents.SERVER_STARTED.subscribe { event -> savePath = event.server.getWorldPath(LevelResource.PLAYER_DATA_DIR).parent }
         PlatformEvents.SERVER_PLAYER_LOGOUT.subscribe { event ->
             val uuid = event.player.uuid
             if (uuid in dirty) {
@@ -61,13 +62,13 @@ object NbtMoLangDataStoreFactory : MoLangDataStoreFactory {
             cache[uuid]!!
         else {
             val file = this.file(uuid)
-            if (!file.exists()) {
+            if (!file.toFile().exists()) {
                 val data = VariableStruct()
                 cache[uuid] = data
                 return data
             }
 
-            val nbt = NbtIo.readCompressed(file(uuid))
+            val nbt = NbtIo.readCompressed(file(uuid), NbtAccounter.unlimitedHeap())
 
             // If it's not a VariableStruct then someone's fucked around and will subsequently find out
             val data = readMoValueFromNBT(nbt) as VariableStruct
@@ -79,11 +80,11 @@ object NbtMoLangDataStoreFactory : MoLangDataStoreFactory {
     fun save(uuid: UUID) {
         val file = file(uuid)
         val data = cache[uuid] ?: return
-        val nbt = writeMoValueToNBT(data)!! as NbtCompound
-        file.parentFile.mkdirs()
+        val nbt = writeMoValueToNBT(data)!! as CompoundTag
+        file.toFile().parentFile.mkdirs()
         NbtIo.writeCompressed(nbt, file)
         dirty -= uuid
     }
 
-    private fun file(uuid: UUID) = savePath.resolve("playermolangdata/${uuid.toString().substring(0, 2)}/$uuid.dat").toFile()
+    private fun file(uuid: UUID) = savePath.resolve("playermolangdata/${uuid.toString().substring(0, 2)}/$uuid.dat")
 }

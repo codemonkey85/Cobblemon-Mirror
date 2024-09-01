@@ -8,10 +8,10 @@
 
 package com.cobblemon.mod.common.api.drop
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.Vec3d
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.phys.Vec3
 
 /**
  * Something that can be dropped from a [DropTable]. This does not strictly need to be an item.
@@ -52,5 +52,5 @@ interface DropEntry {
      */
     val maxSelectableTimes: Int
     /** The logic to use to actually drop the thing. */
-    fun drop(entity: LivingEntity?, world: ServerWorld, pos: Vec3d, player: ServerPlayerEntity?)
+    fun drop(entity: LivingEntity?, world: ServerLevel, pos: Vec3, player: ServerPlayer?)
 }

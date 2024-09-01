@@ -8,13 +8,13 @@
 
 package com.cobblemon.mod.common.api.mulch
 
-import net.minecraft.util.StringIdentifiable
+import net.minecraft.util.StringRepresentable
 
 /**
  * Represents the different types of Mulch implemented in the mod.
  *
  */
-enum class MulchVariant(val duration: Int = -1) : StringIdentifiable {
+enum class MulchVariant(val duration: Int = -1) : StringRepresentable {
     COARSE,
     GROWTH(5),
     HUMID,
@@ -25,7 +25,7 @@ enum class MulchVariant(val duration: Int = -1) : StringIdentifiable {
     SURPRISE(3),
     NONE;
 
-    override fun asString(): String {
+    override fun getSerializedName(): String {
         return name.lowercase()
     }
 

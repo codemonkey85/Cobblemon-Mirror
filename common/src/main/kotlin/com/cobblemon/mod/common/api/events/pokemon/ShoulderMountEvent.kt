@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.api.events.pokemon
 
 import com.cobblemon.mod.common.api.events.Cancelable
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Event that is fired when a Player mounts a Pokemon to a shoulder
@@ -19,7 +19,7 @@ import net.minecraft.server.network.ServerPlayerEntity
  * @since 2022-01-26
  */
 data class ShoulderMountEvent(
-    val player: ServerPlayerEntity,
+    val player: ServerPlayer,
     val pokemon: Pokemon,
     val isLeft: Boolean
 ) : Cancelable()

@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.api.events.starter
 import com.cobblemon.mod.common.api.events.Cancelable
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Event fired when a starter Pokémon is chosen.
@@ -19,4 +19,4 @@ import net.minecraft.server.network.ServerPlayerEntity
  * @author Hiroku
  * @since August 1st, 2022
  */
-data class StarterChosenEvent(val player: ServerPlayerEntity, val properties: PokemonProperties, var pokemon: Pokemon) : Cancelable()
+data class StarterChosenEvent(val player: ServerPlayer, val properties: PokemonProperties, var pokemon: Pokemon) : Cancelable()

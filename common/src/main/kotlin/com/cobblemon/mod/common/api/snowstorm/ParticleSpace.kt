@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.api.snowstorm
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Settings around the space in which the particle functions.
@@ -37,13 +37,13 @@ class ParticleSpace(
     val isLocalSpace: Boolean
         get() = localPosition || localRotation
 
-    fun readFromBuffer(buffer: PacketByteBuf) {
+    fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         localPosition = buffer.readBoolean()
         localRotation = buffer.readBoolean()
         localVelocity = buffer.readBoolean()
     }
 
-    fun writeToBuffer(buffer: PacketByteBuf) {
+    fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(localPosition)
         buffer.writeBoolean(localRotation)
         buffer.writeBoolean(localVelocity)

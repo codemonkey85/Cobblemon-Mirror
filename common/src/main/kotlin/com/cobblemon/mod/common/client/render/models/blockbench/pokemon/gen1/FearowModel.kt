@@ -14,17 +14,17 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFr
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class FearowModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BiWingedFrame {
+class FearowModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("fearow")
     override val leftWing = getPart("wing_left")
     override val rightWing = getPart("wing_right")
@@ -34,17 +34,17 @@ class FearowModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedF
     private val tail = getPart("tail")
 
     override var portraitScale = 1.9F
-    override var portraitTranslation = Vec3d(-1.6, 0.4, 0.0)
+    override var portraitTranslation = Vec3(-1.6, 0.4, 0.0)
 
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(-0.2, 0.7, 0.0)
+    override var profileTranslation = Vec3(-0.2, 0.7, 0.0)
 
-    lateinit var stand: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var hover: PokemonPose
-    lateinit var fly: PokemonPose
+    lateinit var stand: Pose
+    lateinit var walk: Pose
+    lateinit var hover: Pose
+    lateinit var fly: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("fearow", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("fearow", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("fearow", "blink") }
@@ -53,7 +53,7 @@ class FearowModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedF
             poseTypes = UI_POSES + PoseType.STAND,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("fearow", "ground_idle")
             )
@@ -64,12 +64,11 @@ class FearowModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedF
             poseType = PoseType.HOVER,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
-                bedrock("fearow", "blink"),
                 WingFlapIdleAnimation(this,
                     flapFunction = sineFunction(verticalShift = -10F.toRadians(), period = 0.9F, amplitude = 0.6F),
-                    timeVariable = { state, _, _ -> state?.animationSeconds ?: 0F },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = ModelPartTransformation.Z_AXIS
                 )
             )
@@ -80,12 +79,11 @@ class FearowModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedF
             poseType = PoseType.FLY,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
-                bedrock("fearow", "blink"),
                 WingFlapIdleAnimation(this,
                     flapFunction = sineFunction(verticalShift = -14F.toRadians(), period = 0.9F, amplitude = 0.9F),
-                    timeVariable = { state, _, _ -> state?.animationSeconds ?: 0F },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = ModelPartTransformation.Z_AXIS
                 )
             )
@@ -96,7 +94,7 @@ class FearowModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedF
             poseType = PoseType.WALK,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("fearow", "ground_idle"),
                 BipedWalkAnimation(this)

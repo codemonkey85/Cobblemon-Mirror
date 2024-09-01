@@ -18,8 +18,8 @@ import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
+import net.minecraft.commands.SharedSuggestionProvider
 import java.util.concurrent.CompletableFuture
-import net.minecraft.command.CommandSource
 
 class PokemonPropertiesArgumentType: ArgumentType<PokemonProperties> {
 
@@ -64,7 +64,7 @@ class PokemonPropertiesArgumentType: ArgumentType<PokemonProperties> {
         return this.suggestSpeciesAndPropertyKeys(builder)
     }
 
-    private fun suggestSpeciesAndPropertyKeys(builder: SuggestionsBuilder) = CommandSource.suggestMatching(this.collectSpeciesIdentifiers() + PropertiesCompletionProvider.keys(), builder)
+    private fun suggestSpeciesAndPropertyKeys(builder: SuggestionsBuilder) = SharedSuggestionProvider.suggest(this.collectSpeciesIdentifiers() + PropertiesCompletionProvider.keys(), builder)
 
     private fun collectSpeciesIdentifiers() = PokemonSpecies.species.map { if (it.resourceIdentifier.namespace == Cobblemon.MODID) it.resourceIdentifier.path else it.resourceIdentifier.toString() }
 

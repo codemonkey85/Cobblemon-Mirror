@@ -22,16 +22,15 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.isBoxLoaded
 import com.cobblemon.mod.common.util.squeezeWithinBounds
 import com.cobblemon.mod.common.util.toVec3f
-import net.minecraft.entity.ai.pathing.NavigationType
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.ChunkSectionPos
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
-import net.minecraft.world.chunk.Chunk
-import net.minecraft.world.chunk.ChunkStatus
-import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules.DO_POKEMON_SPAWNING
-import net.minecraft.util.math.ChunkPos
+import net.minecraft.core.BlockPos
+import net.minecraft.core.SectionPos
+import net.minecraft.world.level.ChunkPos
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.chunk.ChunkAccess
+import net.minecraft.world.level.chunk.status.ChunkStatus
+import net.minecraft.world.level.pathfinder.PathComputationType
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 
 /**
  * A type of [TickingSpawner] that operates within some area. When this spawner type
@@ -66,12 +65,15 @@ abstract class AreaSpawner(
         val constrainedArea = if (area != null) constrainArea(area) else null
         if (constrainedArea != null) {
 
-            val areaBox = Box.of(Vec3d(constrainedArea.getCenter().toVec3f()), CHUNK_REACH * 16.0 * 2, 1000.0, CHUNK_REACH * 16.0 * 2)
+            val areaBox = AABB.ofSize(
+                Vec3(
+                    constrainedArea.getCenter().toVec3f()
+                ), CHUNK_REACH * 16.0 * 2, 1000.0, CHUNK_REACH * 16.0 * 2)
             if (!constrainedArea.world.isBoxLoaded(areaBox)) {
                 return null
             }
 
-            val numberNearby = constrainedArea.world.getEntitiesByClass(
+            val numberNearby = constrainedArea.world.getEntitiesOfClass(
                 PokemonEntity::class.java,
                 areaBox,
                 PokemonEntity::countsTowardsSpawnCap
@@ -97,9 +99,9 @@ abstract class AreaSpawner(
         return null
     }
 
-    fun isValidStartPoint(world: World, chunk: Chunk, startPos: BlockPos.Mutable): Boolean {
+    fun isValidStartPoint(world: Level, chunk: ChunkAccess, startPos: BlockPos.MutableBlockPos): Boolean {
         val y = startPos.y
-        if (!world.canSetBlock(startPos) || !world.canSetBlock(startPos.setY(y + 1))) {
+        if (!world.isLoaded(startPos) || !world.isLoaded(startPos.setY(y + 1))) {
             return false
         }
 
@@ -107,7 +109,7 @@ abstract class AreaSpawner(
         val above = chunk.getBlockState(startPos.setY(y + 1))
 
         // Above must be non-solid
-         if (!above.canPathfindThrough(world, startPos, NavigationType.AIR)) {
+         if (!above.isPathfindable(PathComputationType.AIR)) {
              return false
          }
         // Position must be non-air
@@ -119,13 +121,13 @@ abstract class AreaSpawner(
     }
 
     fun constrainArea(area: SpawningArea): SpawningArea? {
-        val basePos = BlockPos.Mutable(area.baseX, area.baseY, area.baseZ)
+        val basePos = BlockPos.MutableBlockPos(area.baseX, area.baseY, area.baseZ)
         val originalY = area.baseY
 
-        val (chunkX, chunkZ) = Pair(ChunkSectionPos.getSectionCoord(area.baseX), ChunkSectionPos.getSectionCoord(area.baseZ))
+        val (chunkX, chunkZ) = Pair(SectionPos.blockToSectionCoord(area.baseX), SectionPos.blockToSectionCoord(area.baseZ))
 
         // if the chunk isn't loaded, we don't want to go further & we don't want the getChunk function below to load/create the chunk.
-        if (!area.world.isChunkLoaded(ChunkPos.toLong(chunkX, chunkZ))) return null
+        if (!area.world.areEntitiesLoaded(ChunkPos.asLong(chunkX, chunkZ))) return null
 
         val chunk = area.world.getChunk(chunkX, chunkZ, ChunkStatus.FULL) ?: return null
 
@@ -149,8 +151,8 @@ abstract class AreaSpawner(
 
         if (valid) {
             val min = area.world.squeezeWithinBounds(basePos)
-            val max = area.world.squeezeWithinBounds(basePos.add(area.length, area.height, area.width))
-            if (area.world.canSetBlock(min) && area.world.canSetBlock(max) &&
+            val max = area.world.squeezeWithinBounds(basePos.move(area.length, area.height, area.width))
+            if (area.world.isLoaded(min) && area.world.isLoaded(max) &&
                 min.x < max.x && min.y < max.y && min.z < max.z
             ) {
                 return SpawningArea(

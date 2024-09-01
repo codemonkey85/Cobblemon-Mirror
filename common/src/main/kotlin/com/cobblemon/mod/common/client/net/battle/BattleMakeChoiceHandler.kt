@@ -11,10 +11,10 @@ package com.cobblemon.mod.common.client.net.battle
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.net.messages.client.battle.BattleMakeChoicePacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object BattleMakeChoiceHandler : ClientNetworkPacketHandler<BattleMakeChoicePacket> {
-    override fun handle(packet: BattleMakeChoicePacket, client: MinecraftClient) {
+    override fun handle(packet: BattleMakeChoicePacket, client: Minecraft) {
         val battle = CobblemonClient.battle ?: return
         CobblemonClient.battleOverlay.passedSeconds = 0F
         battle.mustChoose = true

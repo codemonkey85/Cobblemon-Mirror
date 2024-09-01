@@ -11,16 +11,17 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen4
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
+import com.cobblemon.mod.common.util.isBattling
 import com.cobblemon.mod.common.util.isStandingOnRedSand
 import com.cobblemon.mod.common.util.isStandingOnSand
 import com.cobblemon.mod.common.util.isStandingOnSandOrRedSand
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class HippowdonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class HippowdonModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("hippowdon")
     override val head = getPart("head")
 
@@ -28,29 +29,29 @@ class HippowdonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
     private val redsand = getPart("redsand")
 
     override var portraitScale = 0.6F
-    override var portraitTranslation = Vec3d(-0.63, 0.73, 0.0)
+    override var portraitTranslation = Vec3(-0.63, 0.73, 0.0)
 
     override var profileScale = 0.4F
-    override var profileTranslation = Vec3d(-0.1, 1.0, 0.0)
+    override var profileTranslation = Vec3(-0.1, 1.0, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battleidle: PokemonPose
-    lateinit var standingsand: PokemonPose
-    lateinit var walksand: PokemonPose
-    lateinit var battleidlesand: PokemonPose
-    lateinit var battleidleredsand: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var sleepsand: PokemonPose
-    lateinit var sleepredsand: PokemonPose
-    lateinit var standingredsand: PokemonPose
-    lateinit var walkredsand: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var battleidle: CobblemonPose
+    lateinit var standingsand: CobblemonPose
+    lateinit var walksand: CobblemonPose
+    lateinit var battleidlesand: CobblemonPose
+    lateinit var battleidleredsand: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var sleepsand: CobblemonPose
+    lateinit var sleepredsand: CobblemonPose
+    lateinit var standingredsand: CobblemonPose
+    lateinit var walkredsand: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, pose ->
+    override val cryAnimation = CryProvider {
         when {
-            pose.isPosedIn(standingsand, walksand) -> bedrockStateful("hippowdon", "sand_cry")
-            pose.isPosedIn(battleidle) -> bedrockStateful("hippowdon", "battle_cry")
-            pose.isPosedIn(battleidlesand, battleidleredsand) -> bedrockStateful("hippowdon", "sand_battle_cry")
+            it.isPosedIn(standingsand, walksand) -> bedrockStateful("hippowdon", "sand_cry")
+            it.isPosedIn(battleidle) -> bedrockStateful("hippowdon", "battle_cry")
+            it.isPosedIn(battleidlesand, battleidleredsand) -> bedrockStateful("hippowdon", "sand_battle_cry")
             else -> bedrockStateful("hippowdon", "cry")
         }
     }
@@ -62,12 +63,12 @@ class HippowdonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            condition = { !it.isStandingOnSand() },
+            condition = { it.getEntity()?.isStandingOnSand() != true },
             transformedParts = arrayOf(
                 sand.createTransformation().withVisibility(visibility = false),
                 redsand.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("hippowdon", "sleep")
             )
@@ -76,12 +77,12 @@ class HippowdonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         sleepredsand = registerPose(
             poseName = "sleepsand",
             poseType = PoseType.SLEEP,
-            condition = { it.isStandingOnRedSand() },
+            condition = { it.getEntity()?.isStandingOnRedSand() == true },
             transformedParts = arrayOf(
                 sand.createTransformation().withVisibility(visibility = false),
                 redsand.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("hippowdon", "sand_sleep")
             )
@@ -90,13 +91,13 @@ class HippowdonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         standing = registerPose(
             poseName = "standing",
             poseTypes = PoseType.UI_POSES + PoseType.STATIONARY_POSES,
-            condition = { !it.isBattling && !it.isStandingOnSandOrRedSand() },
+            condition = { !it.isBattling && it.getEntity()?.isStandingOnSandOrRedSand() != true },
             quirks = arrayOf(blink, idlequirk),
             transformedParts = arrayOf(
                 sand.createTransformation().withVisibility(visibility = false),
                 redsand.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("hippowdon", "ground_idle")
             )
@@ -105,13 +106,13 @@ class HippowdonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         walk = registerPose(
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
-            condition = { !it.isStandingOnSandOrRedSand() },
+            condition = { it.getEntity()?.isStandingOnSandOrRedSand() != true },
             quirks = arrayOf(blink),
             transformedParts = arrayOf(
                 sand.createTransformation().withVisibility(visibility = false),
                 redsand.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("hippowdon", "ground_walk")
             )
@@ -121,12 +122,12 @@ class HippowdonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "standingsand",
             poseTypes = PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink, idlequirk),
-            condition = { !it.isBattling && it.isStandingOnSand() },
+            condition = { !it.isBattling && it.getEntity()?.isStandingOnSand() == true },
             transformedParts = arrayOf(
                 sand.createTransformation().withVisibility(visibility = false),
                 redsand.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("hippowdon", "sand_idle")
             )
@@ -136,12 +137,12 @@ class HippowdonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "standingredsand",
             poseTypes = PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink, idlequirk),
-            condition = { !it.isBattling && it.isStandingOnRedSand() },
+            condition = { !it.isBattling && it.getEntity()?.isStandingOnRedSand() == true },
             transformedParts = arrayOf(
                 sand.createTransformation().withVisibility(visibility = false),
                 redsand.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("hippowdon", "sand_idle")
             )
@@ -150,13 +151,13 @@ class HippowdonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         walksand = registerPose(
             poseName = "walksand",
             poseTypes = PoseType.MOVING_POSES,
-            condition = { it.isStandingOnSand() },
+            condition = { it.getEntity()?.isStandingOnSand() == true },
             quirks = arrayOf(blink),
             transformedParts = arrayOf(
                 sand.createTransformation().withVisibility(visibility = false),
                 redsand.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("hippowdon", "sand_swim")
             )
         )
@@ -164,13 +165,13 @@ class HippowdonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         walkredsand = registerPose(
             poseName = "walkredsand",
             poseTypes = PoseType.MOVING_POSES,
-            condition = { it.isStandingOnRedSand() },
+            condition = { it.getEntity()?.isStandingOnRedSand() == true },
             quirks = arrayOf(blink),
             transformedParts = arrayOf(
                 sand.createTransformation().withVisibility(visibility = false),
                 redsand.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("hippowdon", "sand_swim")
             )
         )
@@ -178,13 +179,13 @@ class HippowdonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         battleidle = registerPose(
             poseName = "battleidle",
             poseTypes = PoseType.STATIONARY_POSES,
-            condition = { it.isBattling && !it.isStandingOnSandOrRedSand() },
+            condition = { it.isBattling && it.getEntity()?.isStandingOnSandOrRedSand() == true },
             quirks = arrayOf(blink),
             transformedParts = arrayOf(
                 sand.createTransformation().withVisibility(visibility = false),
                 redsand.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("hippowdon", "battle_idle")
             )
@@ -193,13 +194,13 @@ class HippowdonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         battleidlesand = registerPose(
             poseName = "battleidlesand",
             poseTypes = PoseType.STATIONARY_POSES,
-            condition = { it.isStandingOnSand() && it.isBattling },
+            condition = { it.getEntity()?.isStandingOnSand() == true && it.isBattling },
             quirks = arrayOf(blink),
             transformedParts = arrayOf(
                 sand.createTransformation().withVisibility(visibility = true),
                 redsand.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("hippowdon", "sand_battle_idle")
             )
@@ -208,13 +209,13 @@ class HippowdonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         battleidleredsand = registerPose(
             poseName = "battleidleredsand",
             poseTypes = PoseType.STATIONARY_POSES,
-            condition = { it.isStandingOnRedSand() && it.isBattling },
+            condition = { it.getEntity()?.isStandingOnRedSand() == true && it.isBattling },
             quirks = arrayOf(blink),
             transformedParts = arrayOf(
                 sand.createTransformation().withVisibility(visibility = false),
                 redsand.createTransformation().withVisibility(visibility = true)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("hippowdon", "sand_battle_idle")
             )
@@ -222,6 +223,6 @@ class HippowdonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
     }
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("hippowdon", "faint") else null
 }

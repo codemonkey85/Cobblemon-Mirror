@@ -13,13 +13,13 @@ import com.cobblemon.mod.common.client.render.models.blockbench.animation.Primar
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class SirfetchdModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame {
+class SirfetchdModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("sirfetchd")
     override val head = getPart("head")
 
@@ -27,15 +27,15 @@ class SirfetchdModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bi
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 2.2F
-    override var portraitTranslation = Vec3d(-0.35, -0.5, 0.0)
+    override var portraitTranslation = Vec3(-0.35, -0.5, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(-0.1, 0.42, 0.0)
+    override var profileTranslation = Vec3(-0.1, 0.42, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("sirfetchd", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("sirfetchd", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("sirfetchd", "blink") }
@@ -45,7 +45,7 @@ class SirfetchdModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bi
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink, swag),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("sirfetchd", "ground_idle")
             )
@@ -56,7 +56,7 @@ class SirfetchdModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bi
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 5,
             quirks = arrayOf(blink, swag),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("sirfetchd", "ground_idle"),
                 BipedWalkAnimation(this, periodMultiplier = 0.6F, amplitudeMultiplier = 0.9F),
@@ -66,6 +66,6 @@ class SirfetchdModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bi
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("sirfetchd", "faint") else null
 }

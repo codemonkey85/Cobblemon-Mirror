@@ -9,7 +9,7 @@
 package com.cobblemon.mod.common.entity.pokemon
 
 import com.cobblemon.mod.common.api.entity.Despawner
-import net.minecraft.entity.Entity
+import net.minecraft.world.entity.Entity
 
 /**
  * The aging despawner applies strictly to mobs that can age. Its logic is relatively simple: the closer to
@@ -42,12 +42,12 @@ class CobblemonAgingDespawner<T : Entity>(
     override fun beginTracking(entity: T) {}
     override fun shouldDespawn(entity: T): Boolean {
         val age = getAgeTicks(entity)
-        if (age < minAgeTicks || (entity is PokemonEntity && entity.isBusy) || entity.hasVehicle()) {
+        if (age < minAgeTicks || (entity is PokemonEntity && entity.isBusy) || entity.isPassenger()) {
             return false
         }
 
         // TODO an AFK check at some point, don't count the AFK ones.
-        val closestDistance = entity.world.players.minOfOrNull { it.distanceTo(entity) } ?: Float.MAX_VALUE
+        val closestDistance = entity.level().players().minOfOrNull { it.distanceTo(entity) } ?: Float.MAX_VALUE
         return when {
             closestDistance < nearDistance -> false
             age > maxAgeTicks || closestDistance > farDistance -> true

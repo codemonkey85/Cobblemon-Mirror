@@ -9,10 +9,10 @@
 package com.cobblemon.mod.common.api.conditional
 
 import com.google.gson.JsonElement
-import net.minecraft.registry.Registry
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.tag.TagKey
-import net.minecraft.util.Identifier
+import net.minecraft.core.Registry
+import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.TagKey
 
 /**
  * A condition for some registry type that asserts that the entry must be inside the given [TagKey]. This is presented
@@ -21,18 +21,18 @@ import net.minecraft.util.Identifier
  * @author Hiroku
  * @since July 16th, 2022
  */
-open class RegistryLikeTagCondition<T>(val tag: TagKey<T>) : RegistryLikeCondition<T> {
+open class RegistryLikeTagCondition<T : Any>(val tag: TagKey<T>) : RegistryLikeCondition<T> {
 
     companion object {
         const val PREFIX = "#"
-        fun <T> resolver(
-            registryKey: RegistryKey<Registry<T>>,
+        fun <T : Any> resolver(
+            ResourceKey: ResourceKey<Registry<T>>,
             constructor: (TagKey<T>) -> RegistryLikeTagCondition<T>
         ): (JsonElement) -> RegistryLikeTagCondition<T>? = {
             val firstSymbol = it.asString.substring(0, 1)
             if (firstSymbol == PREFIX) {
-                val identifier = Identifier(it.asString.substring(1))
-                constructor(TagKey.of(registryKey, identifier))
+                val identifier = ResourceLocation.parse(it.asString.substring(1))
+                constructor(TagKey.create(ResourceKey, identifier))
             } else {
                 null
             }
@@ -46,9 +46,9 @@ open class RegistryLikeTagCondition<T>(val tag: TagKey<T>) : RegistryLikeConditi
 //            return false
 //        }
 
-        return registry.getKey(t)
-            .flatMap(registry::getEntry)
-            .map { entry -> entry.isIn(tag) }
+        return registry.getResourceKey(t)
+            .flatMap(registry::getHolder)
+            .map { entry -> entry.`is`(tag) }
             .orElse(false)
     }
 }

@@ -8,31 +8,32 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen6
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class TyrantrumModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class TyrantrumModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("tyrantrum")
 
     override val head = getPart("head")
 
-    override var portraitTranslation = Vec3d(-0.86, 2.0, 5.0)
+    override var portraitTranslation = Vec3(-0.86, 2.0, 5.0)
     override var portraitScale = 0.59F
 
-    override var profileTranslation = Vec3d(0.02, 1.28, -10.0)
+    override var profileTranslation = Vec3(0.02, 1.28, -10.0)
     override var profileScale = 0.29F
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var battleidle: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("tyrantrum", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("tyrantrum", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("tyrantrum", "blink") }
@@ -41,7 +42,7 @@ class TyrantrumModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("tyrantrum", "sleep"))
+            animations = arrayOf(bedrock("tyrantrum", "sleep"))
         )
 
         standing = registerPose(
@@ -49,7 +50,7 @@ class TyrantrumModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("tyrantrum", "ground_idle")
             )
@@ -59,7 +60,7 @@ class TyrantrumModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink, walkquirk),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("tyrantrum", "ground_walk")
             )
@@ -70,7 +71,7 @@ class TyrantrumModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("tyrantrum", "battle_idle")
             )
@@ -79,6 +80,6 @@ class TyrantrumModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("tyrantrum", "faint") else null
 }

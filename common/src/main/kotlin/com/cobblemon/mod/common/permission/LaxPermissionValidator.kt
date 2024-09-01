@@ -11,8 +11,8 @@ package com.cobblemon.mod.common.permission
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.permission.Permission
 import com.cobblemon.mod.common.api.permission.PermissionValidator
-import net.minecraft.command.CommandSource
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * A [PermissionValidator] that uses the permission level vanilla system.
@@ -24,6 +24,6 @@ class LaxPermissionValidator : PermissionValidator {
         Cobblemon.LOGGER.info("Booting LaxPermissionValidator, permissions will be checked using Minecrafts permission level system, see https://minecraft.fandom.com/wiki/Permission_level")
     }
 
-    override fun hasPermission(player: ServerPlayerEntity, permission: Permission) = player.hasPermissionLevel(permission.level.numericalValue)
-    override fun hasPermission(source: CommandSource, permission: Permission) = source.hasPermissionLevel(permission.level.numericalValue)
+    override fun hasPermission(player: ServerPlayer, permission: Permission) = player.hasPermissions(permission.level.numericalValue)
+    override fun hasPermission(source: CommandSourceStack, permission: Permission) = source.hasPermission(permission.level.numericalValue)
 }

@@ -10,19 +10,19 @@ package com.cobblemon.mod.common.client.gui.summary.widgets.screens.info
 
 import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.network.chat.Component
 
 class InfoOneLineWidget(
     pX: Int,
     pY: Int,
     width: Int,
     height: Int = ROW_HEIGHT,
-    private val label: MutableText,
-    private val value: MutableText,
-) : SoundlessWidget(pX, pY, width, height, Text.literal("InfoOneLineWidget")) {
+    private val label: MutableComponent,
+    private val value: MutableComponent,
+) : SoundlessWidget(pX, pY, width, height, Component.literal("InfoOneLineWidget")) {
     companion object {
         private val FONT = CobblemonResources.DEFAULT_LARGE
         private const val ROW_HEIGHT = 15
@@ -32,13 +32,13 @@ class InfoOneLineWidget(
     }
 
 
-    override fun renderButton(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
 
         // Label
         val label = InfoBlockWidget(
             pX = x + LABEL_HORIZONTAL_OFFSET,
             pY = y,
-            blockWidth = MinecraftClient.getInstance().textRenderer.getWidth(label),
+            blockWidth = Minecraft.getInstance().font.width(label),
             blockHeight = height,
             text = label,
             font = FONT,
@@ -50,7 +50,7 @@ class InfoOneLineWidget(
         val value = InfoBlockWidget(
             pX = x + VALUE_HORIZONTAL_OFFSET,
             pY = y,
-            blockWidth = MinecraftClient.getInstance().textRenderer.getWidth(value),
+            blockWidth = Minecraft.getInstance().font.width(value),
             blockHeight = height,
             text = value,
             font = FONT,

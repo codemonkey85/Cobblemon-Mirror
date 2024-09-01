@@ -11,13 +11,13 @@ package com.cobblemon.mod.common.client.net.trade
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.net.messages.client.trade.TradeUpdatedPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object TradeUpdatedHandler : ClientNetworkPacketHandler<TradeUpdatedPacket> {
-    override fun handle(packet: TradeUpdatedPacket, client: MinecraftClient) {
+    override fun handle(packet: TradeUpdatedPacket, client: Minecraft) {
         val trade = CobblemonClient.trade ?: return
 
-        if (packet.playerId == MinecraftClient.getInstance().player?.uuid) {
+        if (packet.playerId == Minecraft.getInstance().player?.uuid) {
             trade.myOffer.set(packet.pokemon)
         } else {
             trade.oppositeOffer.set(packet.pokemon)

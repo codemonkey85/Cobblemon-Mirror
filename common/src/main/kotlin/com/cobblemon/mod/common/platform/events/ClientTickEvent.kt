@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.platform.events
 
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 /**
  * Event fired whenever the game ticks on the client side.
@@ -19,18 +19,18 @@ import net.minecraft.client.MinecraftClient
 interface ClientTickEvent {
 
     /**
-     * The [MinecraftClient] instance.
+     * The [Minecraft] instance.
      */
-    val client: MinecraftClient
+    val client: Minecraft
 
     /**
      * Fired during the Pre tick phase.
      */
-    data class Pre(override val client: MinecraftClient) : ClientTickEvent
+    data class Pre(override val client: Minecraft) : ClientTickEvent
 
     /**
      * Fired during the Post tick phase.
      */
-    data class Post(override val client: MinecraftClient) : ClientTickEvent
+    data class Post(override val client: Minecraft) : ClientTickEvent
 
 }

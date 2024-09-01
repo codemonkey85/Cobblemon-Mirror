@@ -13,8 +13,8 @@ import com.cobblemon.mod.common.battles.ActiveBattlePokemon
 import com.cobblemon.mod.common.battles.BattleRegistry
 import com.cobblemon.mod.common.battles.actor.PlayerBattleActor
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.LivingEntity
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * A [CatchRateModifier] that resolves the catch rate based on an ongoing battle.
@@ -25,13 +25,13 @@ import net.minecraft.server.network.ServerPlayerEntity
  * @since May 7th, 2022
  */
 open class BattleModifier(
-    private val calculator: (player: ServerPlayerEntity, playerPokemon: Iterable<ActiveBattlePokemon>, pokemon: Pokemon) -> Float
+    private val calculator: (player: ServerPlayer, playerPokemon: Iterable<ActiveBattlePokemon>, pokemon: Pokemon) -> Float
 ) : CatchRateModifier {
 
     override fun isGuaranteed(): Boolean = false
 
     override fun value(thrower: LivingEntity, pokemon: Pokemon): Float {
-        val player = thrower as? ServerPlayerEntity ?: return 1F
+        val player = thrower as? ServerPlayer ?: return 1F
         val team = BattleRegistry
             .getBattleByParticipatingPlayer(player)
             ?.actors?.firstOrNull { actor -> actor is PlayerBattleActor && actor.uuid == player.uuid }?.activePokemon
@@ -45,6 +45,6 @@ open class BattleModifier(
 
     override fun modifyCatchRate(currentCatchRate: Float, thrower: LivingEntity, pokemon: Pokemon): Float = this.behavior(thrower, pokemon).mutator(currentCatchRate, this.value(thrower, pokemon))
 
-    open fun modifyCatchRate(currentCatchRate: Float, player: ServerPlayerEntity, playerPokemon: Iterable<ActiveBattlePokemon>, pokemon: Pokemon): Float = this.calculator.invoke(player, playerPokemon, pokemon)
+    open fun modifyCatchRate(currentCatchRate: Float, player: ServerPlayer, playerPokemon: Iterable<ActiveBattlePokemon>, pokemon: Pokemon): Float = this.calculator.invoke(player, playerPokemon, pokemon)
 
 }

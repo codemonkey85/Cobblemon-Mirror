@@ -11,30 +11,30 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class TangelaModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame {
+class TangelaModel(root: ModelPart) : PokemonPosableModel(root), BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("tangela")
 
     override val leftLeg = getPart("leftfoot")
     override val rightLeg = getPart("rightfoot")
 
     override var portraitScale = 2.2F
-    override var portraitTranslation = Vec3d(-0.1, -1.6, 0.0)
+    override var portraitTranslation = Vec3(-0.1, -1.6, 0.0)
 
     override var profileScale = 1.2F
-    override var profileTranslation = Vec3d(0.0, -0.09, 0.0)
+    override var profileTranslation = Vec3(0.0, -0.09, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("tangela", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("tangela", "cry") }
     // Animating illegally rn. Created a new file for this cry. hope it works
 
     override fun registerPoses() {
@@ -42,7 +42,7 @@ class TangelaModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame {
             poseName = "standing",
             poseTypes = STATIONARY_POSES + UI_POSES,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 //bedrock("tangela", "ground_idle")
             )
         )
@@ -51,7 +51,7 @@ class TangelaModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame {
             poseName = "walk",
             poseTypes = MOVING_POSES,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 BipedWalkAnimation(this, amplitudeMultiplier = 1F, periodMultiplier = 0.4F)
                 //bedrock("tangela", "ground_walk")
             )
@@ -60,6 +60,6 @@ class TangelaModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("tangela", "faint") else null
 }

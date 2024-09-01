@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.api.storage.pc.PCStore
 import com.cobblemon.mod.common.block.entity.PCBlockEntity
 import com.cobblemon.mod.common.util.toVec3d
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * A [PCLink] that is based on proximity to a specific PC. If the PC is broken or the player is moved
@@ -28,12 +28,12 @@ class ProximityPCLink(
     pcBlockEntity: PCBlockEntity,
     val maxDistance: Double = 10.0
 ) : PCLink(pc, playerID) {
-    val world = pcBlockEntity.world
-    val pos = pcBlockEntity.pos
+    val world = pcBlockEntity.level
+    val pos = pcBlockEntity.blockPos
 
-    override fun isPermitted(player: ServerPlayerEntity): Boolean {
-        val isWithinRange = player.world == world && player.pos.isInRange(pos.toVec3d(), maxDistance)
-        val pcStillStanding = player.world.getBlockEntity(pos) is PCBlockEntity
+    override fun isPermitted(player: ServerPlayer): Boolean {
+        val isWithinRange = player.level() == world && player.position().closerThan(pos.toVec3d(), maxDistance)
+        val pcStillStanding = player.level().getBlockEntity(pos) is PCBlockEntity
         if (!isWithinRange || !pcStillStanding) {
             PCLinkManager.removeLink(playerID)
         }

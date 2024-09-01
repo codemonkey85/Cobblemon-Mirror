@@ -24,16 +24,16 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.math.toRGB
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
-import net.minecraft.util.math.MathHelper
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
+import net.minecraft.util.Mth
 
 class MoveSlotWidget(
     pX: Int, pY: Int,
     val move: Move?,
     private val movesWidget: MovesWidget,
-    private val pokemon: Pokemon,
-    ): SoundlessWidget(pX, pY, MOVE_WIDTH, MOVE_HEIGHT, Text.literal(move?.name ?: "")) {
+        private val pokemon: Pokemon,
+): SoundlessWidget(pX, pY, MOVE_WIDTH, MOVE_HEIGHT, Component.literal(move?.name ?: "")) {
 
     companion object {
         private val moveResource = cobblemonResource("textures/gui/summary/summary_move.png")
@@ -67,11 +67,12 @@ class MoveSlotWidget(
     }.apply {
         addWidget(this)
     }
-    override fun renderButton(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
-        val elementalType:ElementalType = Moves.getByNameOrDummy(move?.name ?: "").getEffectiveElementalType(pokemon)
-        val matrices = context.matrices
-        hovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height
+    val elementalType:ElementalType = Moves.getByNameOrDummy(move?.name ?: "").getEffectiveElementalType(pokemon)
+    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+        val matrices = context.pose()
+        isHovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height
         if (move != null) {
+            val moveTemplate = Moves.getByNameOrDummy(move.name)
             val rgb = elementalType.hue.toRGB()
 
             if (movesWidget.selectedMove == move) {
@@ -108,11 +109,11 @@ class MoveSlotWidget(
                     height = MOVE_HEIGHT
             )
 
-            var movePPText = Text.literal("${move.currentPp}/${move.maxPp}").bold()
+            var movePPText = Component.literal("${move.currentPp}/${move.maxPp}").bold()
 
-            if (move.currentPp <= MathHelper.floor(move.maxPp / 2F)) {
-                movePPText = if (move.currentPp == 0) movePPText.red() else movePPText.gold()
-            }
+        if (move.currentPp <= Mth.floor(move.maxPp / 2F)) {
+            movePPText = if (move.currentPp == 0) movePPText.red() else movePPText.gold()
+        }
 
             drawScaledText(
                     context = context,

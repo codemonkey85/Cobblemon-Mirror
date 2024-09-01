@@ -13,7 +13,6 @@ import com.cobblemon.mod.common.api.storage.player.adapter.JsonPlayerData
 import com.cobblemon.mod.common.util.getPlayer
 import com.cobblemon.mod.common.util.removeIf
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
 import java.util.*
 
 class JsonPlayerDataStoreFactory : PlayerDataStoreFactory {

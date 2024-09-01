@@ -10,12 +10,12 @@ package com.cobblemon.mod.fabric.mixin;
 
 import com.cobblemon.mod.common.client.render.shader.CobblemonShaders;
 import com.cobblemon.mod.common.util.ShaderRegistryData;
+import com.mojang.blaze3d.shaders.Program;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.impl.client.rendering.FabricShaderProgram;
-import net.minecraft.client.gl.ShaderProgram;
-import net.minecraft.client.gl.ShaderStage;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.resource.ResourceFactory;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.server.packs.resources.ResourceProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,8 +30,8 @@ import java.util.function.Consumer;
 public class GameRendererMixin {
 
 
-    @Inject(method = "loadPrograms", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void lodestone$registerShaders(ResourceFactory factory, CallbackInfo ci, List<ShaderStage> list, List<Pair<ShaderProgram, Consumer<ShaderProgram>>> list2) throws IOException {
+    @Inject(method = "reloadShaders", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void lodestone$registerShaders(ResourceProvider factory, CallbackInfo ci, List<Program> list, List<Pair<ShaderInstance, Consumer<ShaderInstance>>> list2) throws IOException {
         CobblemonShaders.INSTANCE.init();
         CobblemonShaders.INSTANCE.getSHADERS_TO_REGISTER().forEach((pair) -> {
             ShaderRegistryData data = pair.getFirst().invoke(factory);

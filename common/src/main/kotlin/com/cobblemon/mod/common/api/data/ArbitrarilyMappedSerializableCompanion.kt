@@ -10,8 +10,10 @@ package com.cobblemon.mod.common.api.data
 
 import com.cobblemon.mod.common.api.codec.CodecMapped
 import com.cobblemon.mod.common.api.codec.MappedCodec
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
 import com.mojang.serialization.Codec
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * A utility class to help give Codec support for map adapted class hierarchies.
@@ -31,13 +33,13 @@ abstract class ArbitrarilyMappedSerializableCompanion<T : CodecMapped, K>(
         subtypes[key] = RegisteredSubtype(clazz, codec)
     }
 
-    fun writeToBuffer(buffer: PacketByteBuf, value: T) {
+    fun writeToBuffer(buffer: RegistryFriendlyByteBuf, value: T) {
         val typeString = stringFromKey(keyFromValue(value))
         buffer.writeString(typeString)
         value.writeToBuffer(buffer)
     }
 
-    fun readFromBuffer(buffer: PacketByteBuf): T {
+    fun readFromBuffer(buffer: RegistryFriendlyByteBuf): T {
         val typeString = buffer.readString()
         val clazz = subtypes[keyFromString(typeString)]?.clazz ?: throw IllegalArgumentException("Unrecognized subtype: $typeString")
         val value = clazz.getDeclaredConstructor().newInstance()

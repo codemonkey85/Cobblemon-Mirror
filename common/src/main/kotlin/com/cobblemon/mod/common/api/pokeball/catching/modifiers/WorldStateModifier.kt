@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.api.pokeball.catching.modifiers
 import com.cobblemon.mod.common.api.pokeball.catching.CatchRateModifier
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
 
 /**
  * A [CatchRateModifier] that resolves the catch rate based on the Entity attached to the target Pokémon.

@@ -14,7 +14,7 @@ import com.cobblemon.mod.common.api.pokemon.stats.Stat
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.item.CobblemonItem
 
-class XStatItem(val stat: Stat, stages: Int = 2) : CobblemonItem(Settings()), SimpleBagItemConvertible {
+class XStatItem(val stat: Stat, stages: Int = 2) : CobblemonItem(Properties()), SimpleBagItemLike {
     override val bagItem = object : BagItem {
         override val itemName = "item.cobblemon.x_${stat.identifier.path}"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) = target.health > 0

@@ -11,7 +11,6 @@ repositories {
 
 dependencies {
     implementation(libs.kotlin)
-    implementation(libs.indra.common)
 
     implementation(libs.licenser)
     implementation(libs.shadow)

@@ -27,8 +27,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.toRGB
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.MutableText
+import net.minecraft.client.gui.GuiGraphics
 
 class MoveSwapScreen(
     x: Int,
@@ -40,7 +39,7 @@ class MoveSwapScreen(
     y,
     lang("ui.moves.switch"),
     SLOT_HEIGHT + SLOT_SPACING
-    ) {
+) {
     companion object {
         const val SLOT_HEIGHT = 18
         const val SLOT_SPACING = 3
@@ -59,7 +58,7 @@ class MoveSwapScreen(
         override fun getNarration() = move?.displayName ?: lang("ui.moves.forget")
         val elementalType = move?.getEffectiveElementalType(pokemon) ?: ElementalTypes.NORMAL
         override fun render(
-            context: DrawContext,
+            context: GuiGraphics,
             index: Int,
             rowTop: Int,
             rowLeft: Int,
@@ -70,7 +69,7 @@ class MoveSwapScreen(
             isHovered: Boolean,
             partialTicks: Float
         ) {
-            val matrices = context.matrices
+            val matrices = context.pose()
             val tweakedRowTop = rowTop - (SLOT_SPACING / 2) + 1
             if (move != null) {
                 val rgb = elementalType.hue.toRGB()
@@ -219,7 +218,7 @@ class MoveSwapScreen(
             if (isMouseOver(d, e)) {
                 val pokemon = pane.movesWidget.summary.selectedPokemon
                 val isParty = pokemon in CobblemonClient.storage.myParty
-                CobblemonNetwork.sendPacketToServer(
+                CobblemonNetwork.sendToServer(
                     BenchMovePacket(
                         isParty = isParty,
                         uuid = pokemon.uuid,

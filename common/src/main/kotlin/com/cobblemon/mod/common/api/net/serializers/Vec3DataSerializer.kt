@@ -8,22 +8,27 @@
 
 package com.cobblemon.mod.common.api.net.serializers
 
-import net.minecraft.entity.data.TrackedDataHandler
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.cobblemonResource
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.codec.StreamCodec
+import net.minecraft.network.syncher.EntityDataSerializer
+import net.minecraft.world.phys.Vec3
 
-object Vec3DataSerializer : TrackedDataHandler<Vec3d> {
-    override fun write(buffer: PacketByteBuf, vec: Vec3d) {
+object Vec3DataSerializer : EntityDataSerializer<Vec3> {
+    val ID = cobblemonResource("vec3d")
+    fun write(buffer: RegistryFriendlyByteBuf, vec: Vec3) {
         buffer.writeDouble(vec.x)
         buffer.writeDouble(vec.y)
         buffer.writeDouble(vec.z)
     }
 
-    override fun read(buffer: PacketByteBuf) = Vec3d(
+    fun read(buffer: RegistryFriendlyByteBuf) = Vec3(
         buffer.readDouble(),
         buffer.readDouble(),
         buffer.readDouble()
     )
 
-    override fun copy(vec: Vec3d) = Vec3d(vec.x, vec.y, vec.z)
+    override fun copy(vec: Vec3) = Vec3(vec.x, vec.y, vec.z)
+    override fun codec() = StreamCodec.of(::write, ::read)
+
 }

@@ -8,8 +8,8 @@
 
 package com.cobblemon.mod.common.client.keybind
 
-import net.minecraft.client.option.KeyBinding
-import net.minecraft.client.util.InputUtil
+import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.client.KeyMapping
 
 /**
  * An extensions for Minecraft's [KeyBinding]
@@ -20,15 +20,15 @@ import net.minecraft.client.util.InputUtil
  */
 abstract class CobblemonKeyBinding(
     name: String,
-    type: InputUtil.Type = InputUtil.Type.KEYSYM,
+    type: InputConstants.Type = InputConstants.Type.KEYSYM,
     key: Int,
     category: String
-): KeyBinding(name, type, key, category) {
+): KeyMapping(name, type, key, category) {
 
     abstract fun onPress()
 
     open fun onTick() {
-        if (this.wasPressed()) {
+        if (this.consumeClick()) {
             onPress()
         }
     }

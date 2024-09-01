@@ -8,41 +8,41 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen7
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class MimikyuModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class MimikyuModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("mimikyu")
     override val head = getPart("head")
 
     override var portraitScale = 2.5F
-    override var portraitTranslation = Vec3d(0.0, -2.3, 0.0)
+    override var portraitTranslation = Vec3(0.0, -2.3, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.5, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.5, 0.0)
 
-    lateinit var shoulderLeft: PokemonPose
-    lateinit var shoulderRight: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("mimikyu", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("mimikyu", "cry") }
 
     override fun registerPoses() {
         standing = registerPose(
             poseName = "standing",
             poseTypes = STATIONARY_POSES + UI_POSES,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("mimikyu", "ground_idle")
             )
         )
@@ -50,7 +50,7 @@ class MimikyuModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         walk = registerPose(
             poseName = "walk",
             poseTypes = MOVING_POSES,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("mimikyu", "ground_idle")
                 //bedrock("mimikyu", "ground_walk")
             )
@@ -60,7 +60,7 @@ class MimikyuModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
         shoulderLeft = registerPose(
             poseType = PoseType.SHOULDER_LEFT,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("mimikyu", "shoulder_left")
             ),
             transformedParts = arrayOf(
@@ -70,7 +70,7 @@ class MimikyuModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
         shoulderRight = registerPose(
             poseType = PoseType.SHOULDER_RIGHT,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("mimikyu", "shoulder_right")
             ),
             transformedParts = arrayOf(
@@ -81,6 +81,6 @@ class MimikyuModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("mimikyu", "faint") else null
 }

@@ -23,8 +23,8 @@ import com.cobblemon.mod.common.net.messages.client.battle.BattleSwitchPokemonPa
 import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler.SEND_OUT_DURATION
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.swap
-import net.minecraft.entity.LivingEntity
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.server.level.ServerLevel
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -64,11 +64,11 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
                     activePokemon.battlePokemon = pokemon
                     activePokemon.illusion = illusion
 
-                    val targetPos = battleActor.getSide().getOppositeSide().actors.filterIsInstance<EntityBackedBattleActor<*>>().firstOrNull()?.entity?.pos?.let { pos ->
-                        val offset = pos.subtract(entity.pos)
-                        val idealPos = entity.pos.add(offset.multiply(0.33))
+                    val targetPos = battleActor.getSide().getOppositeSide().actors.filterIsInstance<EntityBackedBattleActor<*>>().firstOrNull()?.entity?.position()?.let { pos ->
+                        val offset = pos.subtract(entity.position())
+                        val idealPos = entity.position().add(offset.scale(0.33))
                         idealPos
-                    } ?: entity.pos
+                    } ?: entity.position()
 
                     actor.stillSendingOutCount++
                     battle.sendSidedUpdate(actor, BattleSwitchPokemonPacket(pnx, pokemon, true, illusion), BattleSwitchPokemonPacket(pnx, pokemon, false, illusion))
@@ -76,7 +76,7 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
                     pokemon.effectedPokemon.sendOutWithAnimation(
                         source = entity,
                         battleId = battle.battleId,
-                        level = entity.world as ServerWorld,
+                        level = entity.level() as ServerLevel,
                         doCry = false,
                         position = targetPos,
                         illusion = illusion?.let { IllusionEffect(it.effectedPokemon) }
@@ -151,8 +151,8 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
                 else {
                     val lastPosition = activePokemon.position
                     // Send out at previous Pokémon's location if it is known, otherwise actor location
-                    val world = lastPosition?.first ?: entity.world as ServerWorld
-                    val pos = lastPosition?.second ?: entity.pos
+                    val world = lastPosition?.first ?: entity.level() as ServerLevel
+                    val pos = lastPosition?.second ?: entity.position()
                     newPokemon.effectedPokemon.sendOutWithAnimation(
                         source = entity,
                         battleId = battle.battleId,

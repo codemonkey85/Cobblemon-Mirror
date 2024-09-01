@@ -9,8 +9,8 @@
 package com.cobblemon.mod.common.api
 
 import com.cobblemon.mod.common.pokemon.feature.CobblemonSeason
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.WorldAccess
+import net.minecraft.core.BlockPos
+import net.minecraft.world.level.LevelAccessor
 
 /**
  * Figures out what season it is at a particular position. Season is just a general approximation
@@ -20,5 +20,5 @@ import net.minecraft.world.WorldAccess
  * @since November 25th, 2022
  */
 fun interface SeasonResolver {
-    operator fun invoke(world: WorldAccess, pos: BlockPos): CobblemonSeason?
+    operator fun invoke(world: LevelAccessor, pos: BlockPos): CobblemonSeason?
 }

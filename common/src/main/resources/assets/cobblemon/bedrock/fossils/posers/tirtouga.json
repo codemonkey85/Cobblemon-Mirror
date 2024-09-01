@@ -2,18 +2,19 @@
   "maxScale": 0.7,
   "yTranslation": -0.05,
   "yGrowthPoint": 0.5625,
-  "animations": [
-    "bedrock(tirtouga_fetus, sleep)"
-  ],
-  "quirks": [
-    {
-      "name": "quirk",
-      "animations": [
-        "bedrock(tirtouga_fetus, quirk)"
-      ],
-      "loopTimes": 1,
-      "minSeconds": 30,
-      "maxSeconds": 60
+  "poses": {
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('tirtouga_fetus', 'sleep')"],
+      "quirks": [
+        {
+          "name": "quirk",
+          "animations": ["q.bedrock_stateful('tirtouga_fetus', 'quirk')"],
+          "loopTimes": 1,
+          "minSecondsBetweenOccurrences": 30,
+          "maxSecondsBetweenOccurrences": 60
+        }
+      ]
     }
-  ]
+  }
 }

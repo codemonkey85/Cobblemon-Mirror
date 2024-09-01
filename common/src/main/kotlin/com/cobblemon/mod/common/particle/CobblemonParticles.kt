@@ -9,16 +9,16 @@
 package com.cobblemon.mod.common.particle
 
 import com.cobblemon.mod.common.platform.PlatformRegistry
-import net.minecraft.particle.ParticleType
-import net.minecraft.registry.Registries
-import net.minecraft.registry.Registry
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.RegistryKeys
+import net.minecraft.core.Registry
+import net.minecraft.core.particles.ParticleType
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
 
-object CobblemonParticles : PlatformRegistry<Registry<ParticleType<*>>, RegistryKey<Registry<ParticleType<*>>>, ParticleType<*>>() {
+object CobblemonParticles : PlatformRegistry<Registry<ParticleType<*>>, ResourceKey<Registry<ParticleType<*>>>, ParticleType<*>>() {
 
-    override val registry: Registry<ParticleType<*>> = Registries.PARTICLE_TYPE
-    override val registryKey: RegistryKey<Registry<ParticleType<*>>> = RegistryKeys.PARTICLE_TYPE
+    override val registry: Registry<ParticleType<*>> = BuiltInRegistries.PARTICLE_TYPE
+    override val resourceKey: ResourceKey<Registry<ParticleType<*>>> = Registries.PARTICLE_TYPE
 
     val SNOWSTORM_PARTICLE_TYPE = this.create("snowstorm", SnowstormParticleType())
 

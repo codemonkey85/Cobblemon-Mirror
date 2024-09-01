@@ -10,7 +10,9 @@ package com.cobblemon.mod.common.net.messages.client.battle
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Tells the participants that the capture on the specified Pokémon has finished.
@@ -22,12 +24,12 @@ import net.minecraft.network.PacketByteBuf
  */
 class BattleCaptureEndPacket(val targetPNX: String, val succeeded: Boolean) : NetworkPacket<BattleCaptureEndPacket> {
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(targetPNX)
         buffer.writeBoolean(succeeded)
     }
     companion object {
         val ID = cobblemonResource("battle_capture_end")
-        fun decode(buffer: PacketByteBuf) = BattleCaptureEndPacket(buffer.readString(), buffer.readBoolean())
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleCaptureEndPacket(buffer.readString(), buffer.readBoolean())
     }
 }

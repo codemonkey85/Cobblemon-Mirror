@@ -8,20 +8,20 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen7
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation.Companion.Y_AXIS
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class NaganadelModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BiWingedFrame {
+class NaganadelModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("naganadel")
     override val head = getPart("head")
 
@@ -29,28 +29,28 @@ class NaganadelModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BiW
     override val rightWing = getPart("wing_right")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(0.0, 4.3, 0.0)
+    override var portraitTranslation = Vec3(0.0, 4.3, 0.0)
 
     override var profileScale = 0.4F
-    override var profileTranslation = Vec3d(0.05, 1.3, 0.0)
+    override var profileTranslation = Vec3(0.05, 1.3, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
     override fun registerPoses() {
         standing = registerPose(
             poseName = "standing",
             poseTypes = STATIONARY_POSES + UI_POSES,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("naganadel", "ground_idle"),
                 wingFlap(
                     flapFunction = sineFunction(verticalShift = -10F.toRadians(), period = 0.9F, amplitude = 0.4F),
-                    timeVariable = { state, _, _ -> state?.animationSeconds ?: 0F },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = Y_AXIS
                 ),
                 rootPart.translation(function = sineFunction(amplitude = -3F, period = 0.9F), axis = Y_AXIS) { state, _, _ ->
-                    state?.animationSeconds ?: 0F
+                    state.animationSeconds
                 }
             )
         )
@@ -58,17 +58,15 @@ class NaganadelModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BiW
         walk = registerPose(
             poseName = "walk",
             poseTypes = MOVING_POSES,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("naganadel", "ground_idle"),
                 wingFlap(
                     flapFunction = sineFunction(verticalShift = -10F.toRadians(), period = 0.9F, amplitude = 0.4F),
-                    timeVariable = { state, _, _ -> state?.animationSeconds ?: 0F },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = Y_AXIS
                 ),
-                rootPart.translation(function = sineFunction(amplitude = -3F, period = 0.9F), axis = Y_AXIS) { state, _, _ ->
-                    state?.animationSeconds ?: 0F
-                }
+                rootPart.translation(function = sineFunction(amplitude = -3F, period = 0.9F), axis = Y_AXIS) { state, _, _ -> state.animationSeconds }
                 //bedrock("naganadel", "ground_walk")
             )
         )
@@ -76,6 +74,6 @@ class NaganadelModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BiW
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("naganadel", "faint") else null
 }

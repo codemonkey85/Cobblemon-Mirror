@@ -10,13 +10,19 @@ package com.cobblemon.mod.common.client.net.data
 
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.net.messages.client.data.DataRegistrySyncPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class DataRegistrySyncPacketHandler<P, T : DataRegistrySyncPacket<P, T>> : ClientNetworkPacketHandler<T> {
-    override fun handle(packet: T, client: MinecraftClient) {
+    override fun handle(packet: T, client: Minecraft) {
+        val buffer = requireNotNull(packet.buffer) { "Buffer missing on DataRegistrySyncPacket" }
+
         packet.entries.clear()
-        packet.entries.addAll(packet.buffer!!.readList(packet::decodeEntry).filterNotNull())
-        packet.buffer!!.release()
+        packet.entries.addAll(buffer.readList { buf ->
+            val entry = packet.decodeEntry(buf as RegistryFriendlyByteBuf)
+            entry
+        }.filterNotNull())
+        buffer.release()
         packet.synchronizeDecoded(packet.entries)
     }
 }

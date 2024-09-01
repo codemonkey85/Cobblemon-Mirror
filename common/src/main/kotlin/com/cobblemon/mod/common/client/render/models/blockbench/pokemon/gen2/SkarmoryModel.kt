@@ -12,14 +12,14 @@ import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedW
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
-import com.cobblemon.mod.common.client.render.models.blockbench.pose.Bone
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class SkarmoryModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWingedFrame, HeadedFrame {
+class SkarmoryModel (root: ModelPart) : PokemonPosableModel(root), BipedFrame, BiWingedFrame, HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("skarmory")
     override val head = getPart("lower_neck")
 
@@ -30,17 +30,17 @@ class SkarmoryModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWi
     override val rightWing = getPart("right_wing")
 
     override var portraitScale = 2.49F
-    override var portraitTranslation = Vec3d(-1.05, 1.1, 0.0)
+    override var portraitTranslation = Vec3(-1.05, 1.1, 0.0)
 
     override var profileScale = 0.69F
-    override var profileTranslation = Vec3d(0.0, 0.7, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.7, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleeping: PokemonPose
-    lateinit var hovering: PokemonPose
-    lateinit var flying: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var sleeping: CobblemonPose
+    lateinit var hovering: CobblemonPose
+    lateinit var flying: CobblemonPose
+    lateinit var battleidle: CobblemonPose
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("skarmory", "blink") }
@@ -48,7 +48,7 @@ class SkarmoryModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWi
         sleeping = registerPose(
             poseName = "sleeping",
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("skarmory", "sleep")
             )
         )
@@ -58,7 +58,7 @@ class SkarmoryModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWi
             poseTypes = PoseType.STATIONARY_POSES - PoseType.HOVER + PoseType.UI_POSES,
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("skarmory", "ground_idle")
             )
@@ -68,7 +68,7 @@ class SkarmoryModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWi
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES - PoseType.FLY,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("skarmory", "ground_idle"),
                 BipedWalkAnimation(this,0.6F, 1F)
@@ -79,7 +79,7 @@ class SkarmoryModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWi
             poseName = "hovering",
             poseType = PoseType.HOVER,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("skarmory", "air_idle")
             )
         )
@@ -88,7 +88,7 @@ class SkarmoryModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWi
             poseName = "flying",
             poseType = PoseType.FLY,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("skarmory", "air_idle")
             )
         )
@@ -98,7 +98,7 @@ class SkarmoryModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWi
             poseTypes = PoseType.STATIONARY_POSES,
             condition = { it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("skarmory", "battle_idle")
             )
         )

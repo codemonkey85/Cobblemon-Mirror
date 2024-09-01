@@ -8,30 +8,29 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen4
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class CombeeModel (root: ModelPart) : PokemonPoseableModel() {
+class CombeeModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("combee")
 
     override var portraitScale = 1.8F
-    override var portraitTranslation = Vec3d(-0.11, -0.77, 0.0)
+    override var portraitTranslation = Vec3(-0.11, -0.77, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.35, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.35, 0.0)
 
-    lateinit var hover: PokemonPose
-    lateinit var fly: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var shoulderLeft: PokemonPose
-    lateinit var shoulderRight: PokemonPose
+    lateinit var hover: Pose
+    lateinit var fly: Pose
+    lateinit var sleep: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
 
     val shoulderOffset = 4
     val shoulderZOffset = 8
@@ -43,14 +42,14 @@ class CombeeModel (root: ModelPart) : PokemonPoseableModel() {
 
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("combee", "air_sleep"))
+            animations = arrayOf(bedrock("combee", "air_sleep"))
         )
 
         hover = registerPose(
             poseName = "hover",
             poseTypes = PoseType.UI_POSES + PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink1, blink2, blink3),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("combee", "air_idle")
             )
         )
@@ -59,7 +58,7 @@ class CombeeModel (root: ModelPart) : PokemonPoseableModel() {
             poseName = "fly",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink1, blink2, blink3),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("combee", "air_fly")
             )
         )
@@ -67,7 +66,7 @@ class CombeeModel (root: ModelPart) : PokemonPoseableModel() {
         shoulderLeft = registerPose(
                 poseType = PoseType.SHOULDER_LEFT,
                 quirks = arrayOf(blink1, blink2, blink3),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         bedrock("combee", "air_idle")
                 ),
                 transformedParts = arrayOf(
@@ -79,7 +78,7 @@ class CombeeModel (root: ModelPart) : PokemonPoseableModel() {
         shoulderRight = registerPose(
                 poseType = PoseType.SHOULDER_RIGHT,
                 quirks = arrayOf(blink1, blink2, blink3),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         bedrock("combee", "air_idle")
                 ),
                 transformedParts = arrayOf(
@@ -89,8 +88,5 @@ class CombeeModel (root: ModelPart) : PokemonPoseableModel() {
         )
     }
 
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isPosedIn(hover, fly, sleep)) bedrockStateful("combee", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(hover, fly, sleep)) bedrockStateful("combee", "faint") else null
 }

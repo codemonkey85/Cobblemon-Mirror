@@ -9,9 +9,9 @@
 package com.cobblemon.mod.common.net.messages.client.battle
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
-import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.Identifier
+import com.cobblemon.mod.common.util.*
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Used to indicate that a capture is being started in a battle. This is
@@ -22,15 +22,15 @@ import net.minecraft.util.Identifier
  * @author Hiroku
  * @since July 2nd, 2022
  */
-class BattleCaptureStartPacket(val pokeBallType: Identifier, val aspects: Set<String>, val targetPNX: String) : NetworkPacket<BattleCaptureStartPacket> {
+class BattleCaptureStartPacket(val pokeBallType: ResourceLocation, val aspects: Set<String>, val targetPNX: String) : NetworkPacket<BattleCaptureStartPacket> {
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeIdentifier(pokeBallType)
         buffer.writeCollection(aspects) { _, aspect -> buffer.writeString(aspect) }
         buffer.writeString(targetPNX)
     }
     companion object {
         val ID = cobblemonResource("battle_capture_start")
-        fun decode(buffer: PacketByteBuf) = BattleCaptureStartPacket(buffer.readIdentifier(), buffer.readList { it.readString() }.toSet(), buffer.readString())
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleCaptureStartPacket(buffer.readIdentifier(), buffer.readList { it.readString() }.toSet(), buffer.readString())
     }
 }

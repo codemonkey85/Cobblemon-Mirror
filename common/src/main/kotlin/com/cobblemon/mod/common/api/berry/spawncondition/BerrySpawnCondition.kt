@@ -9,12 +9,12 @@
 package com.cobblemon.mod.common.api.berry.spawncondition
 
 import com.cobblemon.mod.common.api.berry.Berry
-import net.minecraft.registry.entry.RegistryEntry
-import net.minecraft.util.math.random.Random
-import net.minecraft.world.biome.Biome
+import net.minecraft.core.Holder
+import net.minecraft.util.RandomSource
+import net.minecraft.world.level.biome.Biome
 
 interface BerrySpawnCondition {
-    fun getGroveSize(random: Random): Int
+    fun getGroveSize(random: RandomSource): Int
 
-    fun canSpawn(berry: Berry, biome: RegistryEntry<Biome>): Boolean
+    fun canSpawn(berry: Berry, biome: Holder<Biome>): Boolean
 }

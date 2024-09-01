@@ -10,10 +10,10 @@ package com.cobblemon.mod.common.client.net.pokemon.update
 
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.net.messages.client.PokemonUpdatePacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 class PokemonUpdatePacketHandler<T : PokemonUpdatePacket<T>> : ClientNetworkPacketHandler<T> {
-    override fun handle(packet: T, client: MinecraftClient) {
+    override fun handle(packet: T, client: Minecraft) {
         packet.applyToPokemon()
     }
 }

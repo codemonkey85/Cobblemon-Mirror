@@ -10,6 +10,8 @@ package com.cobblemon.mod.common.pokemon
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.pokemon.stats.Stat
+import com.mojang.serialization.Codec
+import com.mojang.serialization.DataResult
 import kotlin.math.min
 
 class EVs : PokemonStats() {
@@ -55,6 +57,25 @@ class EVs : PokemonStats() {
         const val MAX_STAT_VALUE = 252
         const val MAX_TOTAL_VALUE = 510
 
-        fun createEmpty() : EVs = Cobblemon.statProvider.createEmptyEVs()
+        @JvmStatic
+        fun createEmpty(): EVs = Cobblemon.statProvider.createEmptyEVs()
+
+        @JvmStatic
+        val CODEC: Codec<EVs> = Codec.unboundedMap(Stat.PERMANENT_ONLY_CODEC, Codec.intRange(0, MAX_STAT_VALUE))
+            .comapFlatMap(
+                { map ->
+                    if (map.values.sum() > MAX_TOTAL_VALUE) {
+                        return@comapFlatMap DataResult.error { "EVs cannot exceed a total of $MAX_TOTAL_VALUE" }
+                    }
+                    val evs = Cobblemon.statProvider.createEmptyEVs()
+                    map.forEach { (stat, value) -> evs[stat] = value }
+                    return@comapFlatMap DataResult.success(evs)
+                },
+                { ivs ->
+                    val map = hashMapOf<Stat, Int>()
+                    ivs.forEach { (stat, value) -> map[stat] = value }
+                    return@comapFlatMap map
+                }
+            )
     }
 }

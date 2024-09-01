@@ -17,7 +17,7 @@ import com.cobblemon.mod.common.api.scheduling.delayedFuture
 import com.cobblemon.mod.common.net.messages.client.effect.RunPosableMoLangPacket
 import com.cobblemon.mod.common.util.asExpressionLike
 import java.util.concurrent.CompletableFuture
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
 
 /**
  * An action effect keyframe that will run client-side MoLang for all entities that fit the entity condition.
@@ -40,12 +40,12 @@ class EntityMoLangActionEffectKeyframe : ConditionalActionEffectKeyframe(), Enti
             .flatMap { prov -> prov.entities.filter { test(context, it, isUser = prov is UsersProvider) } }
 
         for (entity in entities) {
-            val world = entity.world as ServerWorld
+            val world = entity.level() as ServerLevel
             val players = world.getPlayers { it.distanceTo(entity) <= visibilityRange }
             val pkt = RunPosableMoLangPacket(entityId = entity.id, expressions = expressions)
             players.forEach { it.sendPacket(pkt) }
         }
 
-        return delayedFuture(seconds = delay.resolveFloat(context.runtime), serverThread = true)
+        return delayedFuture(seconds = delay.resolveFloat(context.runtime))
     }
 }

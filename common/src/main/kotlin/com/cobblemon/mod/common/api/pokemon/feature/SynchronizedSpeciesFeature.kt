@@ -8,8 +8,7 @@
 
 package com.cobblemon.mod.common.api.pokemon.feature
 
-import com.cobblemon.mod.common.api.net.Decodable
-import com.cobblemon.mod.common.api.net.Encodable
+import com.cobblemon.mod.common.api.serialization.BufferSerializer
 
 /**
  * A species feature that can be synchronized to the client. These must be managed by a [SynchronizedSpeciesFeatureProvider].
@@ -17,4 +16,4 @@ import com.cobblemon.mod.common.api.net.Encodable
  * @author Hiroku
  * @since November 13th, 2023
  */
-interface SynchronizedSpeciesFeature : SpeciesFeature, Encodable, Decodable
+interface SynchronizedSpeciesFeature : SpeciesFeature, BufferSerializer

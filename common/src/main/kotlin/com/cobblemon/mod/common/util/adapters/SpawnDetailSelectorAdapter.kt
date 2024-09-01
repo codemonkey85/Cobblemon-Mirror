@@ -11,6 +11,8 @@ package com.cobblemon.mod.common.util.adapters
 import com.cobblemon.mod.common.api.spawning.rules.selector.ExpressionSpawnDetailSelector
 import com.cobblemon.mod.common.api.spawning.rules.selector.SpawnDetailSelector
 import com.cobblemon.mod.common.util.asExpression
+import com.cobblemon.mod.common.util.asExpressionLike
+import com.google.gson.JsonArray
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -19,8 +21,8 @@ import java.lang.reflect.Type
 
 object SpawnDetailSelectorAdapter : JsonDeserializer<SpawnDetailSelector> {
     override fun deserialize(json: JsonElement, type: Type, ctx: JsonDeserializationContext): SpawnDetailSelector {
-        return if (json.isJsonPrimitive) {
-            val expression = json.asString.asExpression()
+        return if (json.isJsonPrimitive || json.isJsonArray) {
+            val expression = if (json.isJsonPrimitive) json.asString.asExpressionLike() else (json as JsonArray).asExpressionLike()
             ExpressionSpawnDetailSelector().also { it.expression = expression }
         } else {
             json as JsonObject

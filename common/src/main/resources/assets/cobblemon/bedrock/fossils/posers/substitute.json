@@ -2,7 +2,10 @@
   "maxScale": 1.0,
   "yTranslation": 0,
   "yGrowthPoint": 0.625,
-  "animations": [
-    "bedrock(substitute_fetus, sleep)"
-  ]
+  "poses": {
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('substitute_fetus', 'sleep')"]
+    }
+  }
 }

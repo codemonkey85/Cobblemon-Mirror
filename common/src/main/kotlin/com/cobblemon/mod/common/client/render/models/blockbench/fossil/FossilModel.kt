@@ -8,20 +8,27 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.fossil
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityModel
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.StatelessAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.ModelFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.animation.PoseAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Bone
 import com.cobblemon.mod.common.client.render.models.blockbench.quirk.ModelQuirk
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.entity.Entity
+import com.google.gson.annotations.SerializedName
+import net.minecraft.client.model.geom.ModelPart
 
-class FossilModel(root: Bone) : PoseableEntityModel<Entity>() {
-    override val isForLivingEntityRenderer = false
-    //TODO: Find a better way to fetch this bone name - Update the BlockEntityModel too when you figure it out
-    val boneName: String = root.children.entries.first().key
-    override val rootPart = (root as ModelPart).registerChildWithAllChildren(boneName)
+/**
+ * A model for rendering in the restoration tank. This model is not intended to be used for living entities.
+ *
+ * @author Hiroku
+ * @since October 30th, 2023
+ */
+class FossilModel(root: Bone) : PosableModel(root) {
+    @Transient
+    @SerializedName("dummy")
+    override var isForLivingEntityRenderer = false
+    @Transient
+    @SerializedName("Something that isn't root part. Gson thinks they're the same as the root field and so field duplication. Stupid.")
+    override val rootPart = (root as ModelPart).registerChildWithAllChildren(root.children.entries.first().key)
     // Represents a very rough middle of the model
     // The reason to do this is to
     // 1. The embryo is aligned with the center of the model
@@ -29,15 +36,14 @@ class FossilModel(root: Bone) : PoseableEntityModel<Entity>() {
     var yGrowthPoint = 0F
     var maxScale = 1F
     var yTranslation = 0F // Offset inside the tank
-    var tankAnimations: Array<StatelessAnimation<Entity, out ModelFrame>> = emptyArray()
-    var tankQuirks: Array<ModelQuirk<Entity, *>> = emptyArray()
+    var tankAnimations: Array<PoseAnimation> = emptyArray()
+    var tankQuirks: Array<ModelQuirk<*>> = emptyArray()
+
     override fun registerPoses() {
         registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = tankAnimations,
+            animations = tankAnimations,
             quirks = tankQuirks
         )
     }
-
-    override fun getState(entity: Entity) = throw NotImplementedError("This is not supported for fossil models")
 }

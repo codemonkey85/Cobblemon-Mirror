@@ -8,11 +8,11 @@
 
 package com.cobblemon.mod.common.util
 
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.core.BlockPos
+import net.minecraft.world.phys.Vec3
 
 /**
  * For conversion from BlockPos to Vec3d */
-fun BlockPos.toVec3d(): Vec3d {
-    return Vec3d(this.x.toDouble(), this.y.toDouble(), this.z.toDouble())
+fun BlockPos.toVec3d(): Vec3 {
+    return Vec3(this.x.toDouble(), this.y.toDouble(), this.z.toDouble())
 }

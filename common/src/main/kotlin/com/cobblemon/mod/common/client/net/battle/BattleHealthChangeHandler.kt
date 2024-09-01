@@ -12,10 +12,10 @@ import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.battle.animations.HealthChangeAnimation
 import com.cobblemon.mod.common.net.messages.client.battle.BattleHealthChangePacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object BattleHealthChangeHandler : ClientNetworkPacketHandler<BattleHealthChangePacket> {
-    override fun handle(packet: BattleHealthChangePacket, client: MinecraftClient) {
+    override fun handle(packet: BattleHealthChangePacket, client: Minecraft) {
         val battle = CobblemonClient.battle ?: return
         val (_, activePokemon) = battle.getPokemonFromPNX(packet.pnx)
         packet.newMaxHealth?.let { activePokemon.battlePokemon?.maxHp = it }
