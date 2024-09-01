@@ -334,7 +334,9 @@ class PokedexGUI private constructor(
 
         if (filteredPokedex.isNotEmpty()) {
             if (init && initSpecies != null) {
-                setSelectedEntry(entries.first { it.speciesId == initSpecies })
+                val entry = entries.first { it.speciesId == initSpecies }
+                setSelectedEntry(entry)
+                scrollScreen.scrollAmount = (entries.indexOf(entry).toDouble() / entries.size.toDouble()) * scrollScreen.maxScroll
             } else {
                 setSelectedEntry(entries.first())
             }
