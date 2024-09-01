@@ -24,7 +24,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
-class PokedexItem(val type: PokedexTypes) : CobblemonItem(Item.Properties()) {
+class PokedexItem(val type: PokedexTypes): CobblemonItem(Item.Properties().stacksTo(1)) {
 
     override fun getUseDuration(stack: ItemStack, user: LivingEntity): Int = 72000
 

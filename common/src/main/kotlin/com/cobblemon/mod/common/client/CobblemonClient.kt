@@ -211,7 +211,8 @@ object CobblemonClient {
             CobblemonBlocks.LARGE_BUDDING_SKY_TUMBLESTONE,
             CobblemonBlocks.SKY_TUMBLESTONE_CLUSTER,
             CobblemonBlocks.GIMMIGHOUL_CHEST,
-            CobblemonBlocks.DISPLAY_CASE
+            CobblemonBlocks.DISPLAY_CASE,
+            CobblemonBlocks.LECTERN
         )
 
         this.createBoatModelLayers()
@@ -244,6 +245,7 @@ object CobblemonClient {
         this.implementation.registerBlockEntityRenderer(CobblemonBlockEntities.RESTORATION_TANK, ::RestorationTankRenderer)
         this.implementation.registerBlockEntityRenderer(CobblemonBlockEntities.GILDED_CHEST, ::GildedChestBlockRenderer)
         this.implementation.registerBlockEntityRenderer(CobblemonBlockEntities.DISPLAY_CASE, ::DisplayCaseRenderer)
+        this.implementation.registerBlockEntityRenderer(CobblemonBlockEntities.LECTERN, ::LecternBlockEntityRenderer)
     }
 
     private fun registerEntityRenderers() {

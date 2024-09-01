@@ -41,7 +41,7 @@ public abstract class ItemRendererMixin {
         cancellable = true
     )
     private void cobblemon$overridePokedexModel(ItemStack stack, ItemDisplayContext renderMode, boolean leftHanded, PoseStack matrices, MultiBufferSource multiBufferSource, int i, int j, BakedModel model, CallbackInfo ci) {
-        boolean shouldOverride = renderMode != ItemDisplayContext.GUI && renderMode != ItemDisplayContext.FIXED && renderMode != ItemDisplayContext.GROUND;
+        boolean shouldOverride = renderMode != ItemDisplayContext.GUI && renderMode != ItemDisplayContext.FIXED;
         if (shouldOverride && stack.getItem() instanceof PokedexItem) {
             BakedModel replacementModel = CobblemonBakingOverrides.INSTANCE.getPokedexOverride(((PokedexItem) stack.getItem()).getType()).getModel();
             if (!model.equals(replacementModel)) {

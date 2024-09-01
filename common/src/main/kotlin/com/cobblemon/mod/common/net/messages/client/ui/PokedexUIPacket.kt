@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.client.net.gui.PokedexUIPacketHandler
 import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.readEnumConstant
 import com.cobblemon.mod.common.util.readIdentifier
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeEnumConstant
@@ -37,6 +38,6 @@ class PokedexUIPacket(val type: PokedexTypes, val initSpecies: ResourceLocation?
     companion object {
         val ID = cobblemonResource("pokedex_ui")
 
-        fun decode(buffer: RegistryFriendlyByteBuf) = PokedexUIPacket(buffer.readEnum(PokedexTypes::class.java), buffer.readNullable { it.readIdentifier() })
+        fun decode(buffer: RegistryFriendlyByteBuf) = PokedexUIPacket(buffer.readEnumConstant(PokedexTypes::class.java), buffer.readNullable { it.readIdentifier() })
     }
 }
