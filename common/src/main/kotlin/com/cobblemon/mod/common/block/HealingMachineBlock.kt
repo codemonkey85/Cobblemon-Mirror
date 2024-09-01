@@ -30,6 +30,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
+import net.minecraft.state.property.BooleanProperty
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -71,11 +72,13 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
         // Charge level 6 is used only when healing machine is active
         const val MAX_CHARGE_LEVEL = 5
         val CHARGE_LEVEL: IntegerProperty = IntegerProperty.create("charge", 0, MAX_CHARGE_LEVEL + 1)
+        val NATURAL: BooleanProperty = BooleanProperty.of("natural")
     }
 
     init {
         registerDefaultState(stateDefinition.any()
             .setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH)
+            .setValue(NATURAL, false)
             .setValue(CHARGE_LEVEL, 0))
     }
 
@@ -108,7 +111,7 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
-        builder.add(HorizontalDirectionalBlock.FACING)
+        builder.add(HorizontalDirectionalBlock.FACING, NATURAL)
         builder.add(*arrayOf<Property<*>>(CHARGE_LEVEL))
     }
 

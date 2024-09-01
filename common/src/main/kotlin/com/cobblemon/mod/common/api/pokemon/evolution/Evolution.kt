@@ -195,7 +195,7 @@ interface Evolution : EvolutionLike {
         }
         // we want to instantly tick for example you might only evolve your Bulbasaur at level 34 so Venusaur should be immediately available
         pokemon.lockedEvolutions.filterIsInstance<PassiveEvolution>().forEach { evolution -> evolution.attemptEvolution(pokemon) }
-        pokemon.getOwnerPlayer()?.playSound(CobblemonSounds.EVOLVING, 1F, 1F)
+        pokemon.getOwnerPlayer()?.playSound(CobblemonSounds.EVOLUTION_UI, 1F, 1F)
         this.shed(pokemon)
         CobblemonEvents.EVOLUTION_COMPLETE.post(EvolutionCompleteEvent(pokemon, this))
     }

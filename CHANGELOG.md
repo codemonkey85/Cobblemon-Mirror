@@ -25,7 +25,9 @@
 ## [1.5.3](#1-5-3)
 ### Fixes
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating
+- Big Roots and Energy Roots now share the same sounds as intented.
 - Fixed Cubone's cry not having a sound.
+- Fixed sounds made by blocks playing at a lower pitch than intended.
 - Fixed the Seafloor spawning context not being a usable context.
 - Fixed Pokemon spawning in non-full blocks like slabs.
 - Fixed Gilded Chests not dropping the chest itself when broken, only the contents.
@@ -42,12 +44,15 @@
 - Fixed Pokémon entity not spawning when starting a battle while recalling said Pokémon
 - Fixed species comparison not using namespace for both sides in PokemonProperties.isSubsetOf.
 - Fixed PokemonProperties#asString prefixing nicknames with a '$'
+- Fixed reviving items throwing an exception when used in battle
+- Fixed messages for Focus Sash, Confusion, Mummy, Ice Face, Own Tempo, and Revive
 - Fixed PC not saving when Pokemon was changed outside.
 - Fixed shearble Pokemon not dropping correct wool colors.
 - Fixed pasture spawning Pokemon inside solid blocks when closest spawning position is blocked off.
 - Fixed Tumbling Down advancement not being granted by tumblestone variants.
 - Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server
 - Fixed empty JsonPlayerData files resulting in players being unable to join server/world
+- Fixed crumbling_arch_ruins from generating a giant cube of air and removed the chest
 
 ### Additions
 - Added extra visuals to early berry growth stages
@@ -55,6 +60,11 @@
 - Moves impacted by the abilities Pixelate, Refrigerate, Aerilate, Galvanize, and Normalize now display as their altered typing.
 - Added Polished Tumblestone and Tumblestone Brick block sets from Tumblestone, Black Tumblestone, and Sky Tumblestone.
 - Added Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
+- Added ston_henge_ruins, luna_henge_ruins, and sol_henge_ruins structures.
+- Added Eject Pack, Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
+- Added a `battleInvulnerability` gamerule to make players invulnerable to any damage during a battle
+- Added a `mobTargetInBattle` gamerule to exclude players from being targeted by mobs during a battle
+- Added battle log messages for switching out Pokémon
 
 ### Added cries to the following Pokémon
 - Timburr, Gurdurr, Conkeldurr
@@ -63,6 +73,7 @@
 ### Changes
 - Altered the item model for Medicinal Leeks and Roasted Leeks to be held like sticks and other rod items. 
 - Adjusted some berry balance values like yield and growth times
+- Adjusted volumes of sounds made by Display Cases, Berry Bushes, Energy Root, Medicinal Leek, Vivichoke, Mints, Revival Herbs and Gilded Chests.
 - Changes to mulch buffs/durations
 - Dreepy is now shoulder mountable
 - Link Cable recipe has been redesigned
@@ -71,6 +82,8 @@
 - Chikorita's ability to look around removed due to the awkwardness of it.
 - Link Cable recipe has been redesigned
 - Updated potion sprites
+- Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs
+- Updated UI sounds for clicking and evolving Pokémon
 - Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users. 
 
 ### Pokémon Added
@@ -92,6 +105,8 @@
 - Kakuna, Beedrill, Snorlax, Munchlax, and Lurantis received model updates
 
 ### Developer
+- PokemonBattle now starts on turn 0.
+- All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.
 
 ### Data Pack & Resource Pack Creators
 - Added support for "shedders" similar to Shedinja's evolution logic.
