@@ -48,13 +48,15 @@ class FormArgumentType : ArgumentType<FormData> {
         builder: SuggestionsBuilder
     ): CompletableFuture<Suggestions> {
         return CompletableFuture.supplyAsync {
-            var curIdx = builder.start - 2
             val formToken = builder.remaining
+
+            var curIdx = builder.start - 2
             while (builder.input[curIdx] != ' ') {
                 curIdx--
             }
             curIdx++
             val speciesToken = builder.input.substring(curIdx, builder.start - 1)
+
             val species = PokemonSpecies.getByName(speciesToken) ?: PokemonSpecies.species.first()
             val forms = species.forms.union(listOf(species.standardForm)).filter { it.formOnlyShowdownId().lowercase().startsWith(formToken) }
             forms.forEach { str ->

@@ -90,6 +90,10 @@ class SpeciesDexRecord {
         aspects.addAll(pokemon.aspects)
     }
 
+    fun addAspects(addedAspects: Set<String>) {
+        aspects.addAll(addedAspects)
+    }
+
     /** Returns true if the given Pokémon contains new information. Internal because it's only to be called from [FormDexRecord.wouldBeDifferent]. */
     internal fun wouldBeDifferent(pokemon: Pokemon) = pokemon.aspects.any { it !in aspects }
 
