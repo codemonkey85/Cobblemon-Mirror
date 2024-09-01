@@ -500,6 +500,8 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
         variationButtons.forEach { removeWidget(it.getWidget()) }
         variationButtons.clear()
 
+        val form = species.forms.find { it.name.equals(pokedexForm.displayForm, ignoreCase = true) } ?: species.standardForm
+        maleRatio = form.maleRatio
 
         val seenGenders = CobblemonClient.clientPokedexData.getSeenGenders(pokedexEntry, pokedexForm)
         if (seenGenders.isEmpty()) {

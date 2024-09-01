@@ -30,13 +30,13 @@ class PokedexManager(
 
     fun encounter(pokemon: Pokemon) {
         val speciesId = pokemon.species.resourceIdentifier
-        val formName = pokemon.form.formOnlyShowdownId()
+        val formName = pokemon.form.name
         getOrCreateSpeciesRecord(speciesId).getOrCreateFormRecord(formName).encountered(pokemon)
     }
 
     fun catch(pokemon: Pokemon) {
         val speciesId = pokemon.species.resourceIdentifier
-        val formName = pokemon.form.formOnlyShowdownId()
+        val formName = pokemon.form.name
         getOrCreateSpeciesRecord(speciesId).getOrCreateFormRecord(formName).caught(pokemon)
     }
 
