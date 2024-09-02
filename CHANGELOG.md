@@ -54,6 +54,7 @@
 - Updated UI sounds for clicking and evolving Pokémon
 - Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users.
 - Kakuna, Beedrill, Snorlax, Munchlax, and Lurantis received model updates
+- Vivillon wings will stop being clear when you remove any Vivillon related resourcepacks. The default pattern will be the meadow wings. 
 
 ### Fixes
 - Fixed trading Pokémon setting their friendsip to 0 instead of the base value.
