@@ -8,10 +8,10 @@
 
 package com.cobblemon.mod.common.api.pokedex.entry
 
+import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
-import com.cobblemon.mod.common.net.messages.client.data.DexEntrySyncPacket
 import com.cobblemon.mod.common.util.adapters.ExpressionLikeAdapter
 import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.cobblemon.mod.common.util.cobblemonResource
@@ -22,8 +22,8 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.PackType
 
-object DexEntries : JsonDataRegistry<PokedexEntry> {
-    override val id = cobblemonResource("dex_entries")
+object DexEntryAdditions : JsonDataRegistry<DexEntryAdditions.DexEntryAddition> {
+    override val id = cobblemonResource("dex_entry_additions")
     override val type = PackType.SERVER_DATA
 
     override val gson: Gson = GsonBuilder()
@@ -33,28 +33,26 @@ object DexEntries : JsonDataRegistry<PokedexEntry> {
         .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .create()
 
-    override val typeToken: TypeToken<PokedexEntry> = TypeToken.get(PokedexEntry::class.java)
-    override val resourcePath = "dex_entries"
+    override val typeToken: TypeToken<DexEntryAddition> = TypeToken.get(DexEntryAddition::class.java)
+    override val resourcePath = "dex_entry_additions"
 
-    val entries = mutableMapOf<ResourceLocation, PokedexEntry>()
+    override val observable = SimpleObservable<DexEntryAdditions>()
 
-    override fun reload(data: Map<ResourceLocation, PokedexEntry>) {
-        data.forEach { _, entry ->
-            entries[entry.id] = entry
-            if (entry.forms.isEmpty()) {
-                entry.forms.add(PokedexForm())
-            }
-            entry.forms.forEach {
-                if (it.unlockForms.isEmpty()) {
-                    it.unlockForms = mutableSetOf(it.displayForm)
-                }
-            }
+    val entries = mutableListOf<PokedexEntry>()
+
+    override fun reload(data: Map<ResourceLocation, DexEntryAddition>) {
+        data.entries.forEach { (key, addition) ->
+            DexEntries.entries[addition.entryId]?.add(addition)
+                ?: return@forEach Cobblemon.LOGGER.error("Unable to find dex entry {} to add to from dex entry addition {}", addition.entryId, key) // Skip if the entry doesn't exist
         }
         observable.emit(this)
     }
 
-    override val observable = SimpleObservable<DexEntries>()
-    override fun sync(player: ServerPlayer) {
-        DexEntrySyncPacket(entries.values)
+    override fun sync(player: ServerPlayer) {} // It'd be synced as part of the DexEntries
+
+    class DexEntryAddition {
+        val entryId: ResourceLocation = cobblemonResource("some_addition")
+        val forms: List<PokedexForm> = emptyList()
+        val variations: List<PokedexCosmeticVariation> = emptyList()
     }
 }

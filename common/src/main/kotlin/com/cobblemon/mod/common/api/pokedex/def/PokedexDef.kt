@@ -31,7 +31,6 @@ abstract class PokedexDef: ClientDataSynchronizer<PokedexDef> {
     // The sort order for the dex
     var sortOrder: Int = 0
 
-
     abstract fun getEntries(): List<PokedexEntry>
 
     companion object {

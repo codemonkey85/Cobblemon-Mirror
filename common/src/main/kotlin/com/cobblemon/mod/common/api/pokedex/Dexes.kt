@@ -45,6 +45,7 @@ object Dexes : JsonDataRegistry<PokedexDef> {
     override fun reload(data: Map<ResourceLocation, PokedexDef>) {
         dexEntryMap.clear()
         data.entries.sortedBy { it.value.sortOrder }.forEach { (id, def) -> dexEntryMap[id] = def }
+        observable.emit(this)
     }
 
     override fun sync(player: ServerPlayer) {

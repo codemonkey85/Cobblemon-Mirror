@@ -39,6 +39,10 @@ class SimplePokedexDef(
 
     private val entries = mutableListOf<ResourceLocation>()
 
+    fun appendEntries(entries: List<ResourceLocation>) {
+        this.entries.addAll(entries)
+    }
+
     override fun getEntries() = entries.mapNotNull { DexEntries.entries[it] }
 
     override fun shouldSynchronize(other: PokedexDef) = true

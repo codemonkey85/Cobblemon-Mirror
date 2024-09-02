@@ -21,7 +21,7 @@ class PokedexEntry(
     val displayAspects: MutableSet<String> = mutableSetOf(),
     val conditionAspects: MutableSet<String> = mutableSetOf(),
     val forms: MutableList<PokedexForm> = mutableListOf(),
-    val variations: MutableList<PokedexCosmeticVariation>
+    val variations: MutableList<PokedexCosmeticVariation> = mutableListOf()
 ) {
     fun clone() = PokedexEntry(
         id,
@@ -48,6 +48,21 @@ class PokedexEntry(
         }
 
         return copy
+    }
+
+    fun add(addition: DexEntryAdditions.DexEntryAddition) {
+        addition.forms.forEach { form ->
+            if (form.displayForm !in forms.map { it.displayForm }) {
+                forms.add(form)
+            } else {
+                forms.find { it.displayForm == form.displayForm }!!.unlockForms.addAll(form.unlockForms)
+            }
+        }
+        addition.variations.forEach { variation ->
+            if (variation.displayName !in variations.map { it.displayName }) {
+                variations.add(variation)
+            }
+        }
     }
 
     fun encode(buf: RegistryFriendlyByteBuf) {

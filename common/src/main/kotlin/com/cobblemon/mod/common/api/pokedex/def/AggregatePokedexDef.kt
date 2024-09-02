@@ -34,6 +34,10 @@ class AggregatePokedexDef(
     var squash = true
         private set
 
+    fun appendSubDexIds(subDexIds: List<ResourceLocation>) {
+        this.subDexIds.addAll(subDexIds)
+    }
+
     override fun getEntries(): List<PokedexEntry> {
         if (!squash) {
             return Dexes.dexEntryMap.values.filter { it.id in subDexIds }.flatMap { it.getEntries() }
