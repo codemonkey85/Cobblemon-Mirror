@@ -105,7 +105,11 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
                     actor.sendMessage(battleLang("withdraw.self", publicName))
                     battle.actors.filter { it != actor }.forEach { it.sendMessage(battleLang("withdraw.other", actor.getName(), publicName)) }
                 }
+                // Pokemon may switch in and out of battle (or get KO'd) in the same turn.
+                // Need to update faceOpponents for exp/ev awards
                 battle.majorBattleActions[pokemon.uuid] = publicMessage
+                pokemon.facedOpponents.addAll(actor.getSide().getOppositeSide().activePokemon.mapNotNull { it.battlePokemon })
+                actor.getSide().getOppositeSide().activePokemon.forEach { it.battlePokemon?.facedOpponents?.add(pokemon) }
 
                 setOf(
                     BattleDispatch {
