@@ -14,15 +14,15 @@ import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.keybind.keybinds.SummaryBinding
 import com.cobblemon.mod.common.net.messages.server.starter.RequestStarterScreenPacket
 import com.cobblemon.mod.common.util.lang
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.util.InputUtil
+import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.client.Minecraft
 
 /**
  * Util class for preventing clicks until the player has a party member, this will automatically handle starter selection
  */
 abstract class CobblemonPartyLockedKeyBinding(
     name: String,
-    type: InputUtil.Type,
+    type: InputConstants.Type,
     key: Int,
     category: String
 ) : CobblemonKeyBinding(name, type, key, category) {
@@ -30,7 +30,7 @@ abstract class CobblemonPartyLockedKeyBinding(
     private var skippedStarterSelectionMessageShown = false
 
     override fun onTick() {
-        if (this.wasPressed() && this.hasPartyMembers()) {
+        if (this.consumeClick() && this.hasPartyMembers()) {
             this.onPress()
         }
     }
@@ -47,17 +47,17 @@ abstract class CobblemonPartyLockedKeyBinding(
         val startersLocked = CobblemonClient.clientPlayerData.starterLocked
         if (!starterSelected && !havePokemon) {
             if (startersLocked) {
-                MinecraftClient.getInstance().player?.sendMessage(lang("ui.starter.cannotchoose").red(), false)
+                Minecraft.getInstance().player?.displayClientMessage(lang("ui.starter.cannotchoose").red(), false)
             } else {
                 RequestStarterScreenPacket().sendToServer()
             }
             return false
         } else if (!startersLocked && !starterSelected && havePokemon) {
             if (!skippedStarterSelectionMessageShown) {
-                MinecraftClient.getInstance().player?.sendMessage(
+                Minecraft.getInstance().player?.displayClientMessage(
                     lang(
                         "ui.starter.skippedchoosing",
-                        SummaryBinding.boundKey().localizedText
+                        SummaryBinding.boundKey().displayName
                     ).yellow(), false
                 )
                 /** Only show the info message about skipping the selection once per MC instance */

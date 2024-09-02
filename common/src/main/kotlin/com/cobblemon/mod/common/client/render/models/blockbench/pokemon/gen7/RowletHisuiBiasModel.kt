@@ -14,8 +14,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.createTransforma
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
@@ -23,10 +23,10 @@ import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class RowletHisuiBiasModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWingedFrame {
+class RowletHisuiBiasModel(root: ModelPart) : PokemonPosableModel(root), BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("rowlet_hisui_bias")
 
     private val wingsOpen = getPart("wings_open")
@@ -38,18 +38,18 @@ class RowletHisuiBiasModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame
     override val leftLeg = getPart("foot_left")
     override val rightLeg = getPart("foot_right")
 
-    override var portraitTranslation = Vec3d(-0.3, -0.34, 0.0)
+    override var portraitTranslation = Vec3(-0.3, -0.34, 0.0)
     override var portraitScale = 1.77F
 
-    override var profileTranslation = Vec3d(-0.04, 0.58, 0.0)
+    override var profileTranslation = Vec3(-0.04, 0.58, 0.0)
     override var profileScale = 0.76F
 
-    lateinit var fly: PokemonPose
-    lateinit var flyidle: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var fly: CobblemonPose
+    lateinit var flyidle: CobblemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("rowlet_hisui_bias", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("rowlet_hisui_bias", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("rowlet_hisui_bias", "blink") }
@@ -61,7 +61,7 @@ class RowletHisuiBiasModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame
                         wingsClosed.createTransformation().withVisibility(true)
                 ),
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         bedrock("rowlet_hisui_bias", "ground_idle")
                 )
         )
@@ -75,11 +75,11 @@ class RowletHisuiBiasModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame
                         wingsOpen.createTransformation().withVisibility(true),
                         wingsClosed.createTransformation().withVisibility(false)
                 ),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         bedrock("rowlet_hisui_bias", "flying_idle"),
                         WingFlapIdleAnimation(this,
                                 flapFunction = sineFunction(verticalShift = -8F.toRadians(), period = 1.0F, amplitude = 0.4F),
-                                timeVariable = { state, _, _ -> state?.animationSeconds ?: 0F },
+                                timeVariable = { state, _, _ -> state.animationSeconds },
                                 axis = ModelPartTransformation.Z_AXIS
                         )
                 )
@@ -94,11 +94,11 @@ class RowletHisuiBiasModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame
                         wingsOpen.createTransformation().withVisibility(true),
                         wingsClosed.createTransformation().withVisibility(false)
                 ),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         bedrock("rowlet_hisui_bias", "flying_idle"),
                         WingFlapIdleAnimation(this,
                                 flapFunction = sineFunction(verticalShift = -14F.toRadians(), period = 0.9F, amplitude = 0.9F),
-                                timeVariable = { state, _, _ -> state?.animationSeconds ?: 0F },
+                                timeVariable = { state, _, _ -> state.animationSeconds },
                                 axis = ModelPartTransformation.Z_AXIS
                         )
                 )
@@ -112,7 +112,7 @@ class RowletHisuiBiasModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame
                         wingsOpen.createTransformation().withVisibility(false),
                         wingsClosed.createTransformation().withVisibility(true)
                 ),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         bedrock("rowlet_hisui_bias", "ground_idle"),
                         BipedWalkAnimation(this, periodMultiplier = 0.8F, amplitudeMultiplier = 0.7F)
                         //bedrock("rowlet_hisui_bias", "ground_walk")
@@ -122,6 +122,6 @@ class RowletHisuiBiasModel(root: ModelPart) : PokemonPoseableModel(), BipedFrame
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("rowlet_hisui_bias", "faint") else null
 }

@@ -9,18 +9,18 @@
 package com.cobblemon.mod.fabric.mixin;
 
 import com.cobblemon.mod.fabric.brewing.CobblemonFabricBreweryRegistry;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.BrewingStandScreenHandler;
+import net.minecraft.world.inventory.BrewingStandMenu;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(BrewingStandScreenHandler.PotionSlot.class)
+@Mixin(BrewingStandMenu.PotionSlot.class)
 public class PotionSlotMixin {
 
-    @Inject(method = "matches", at = @At("RETURN"), cancellable = true)
-    private static void cobblemon$matches(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "mayPlaceItem", at = @At("RETURN"), cancellable = true)
+    private static void cobblemon$mayPlaceItem(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue()) {
             return;
         }

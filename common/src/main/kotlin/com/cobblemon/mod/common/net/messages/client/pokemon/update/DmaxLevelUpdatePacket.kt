@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readSizedInt
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Updates the Dynamax level of the Pokémon.
@@ -30,6 +30,6 @@ class DmaxLevelUpdatePacket(pokemon: () -> Pokemon, value: Int) : IntUpdatePacke
 
     companion object {
         val ID = cobblemonResource("dmax_level_update")
-        fun decode(buffer: PacketByteBuf) = DmaxLevelUpdatePacket(decodePokemon(buffer), buffer.readSizedInt(IntSize.U_BYTE))
+        fun decode(buffer: RegistryFriendlyByteBuf) = DmaxLevelUpdatePacket(decodePokemon(buffer), buffer.readSizedInt(IntSize.U_BYTE))
     }
 }

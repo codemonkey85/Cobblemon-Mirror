@@ -11,8 +11,8 @@ package com.cobblemon.mod.common.client
 import com.cobblemon.mod.common.BakingOverride
 import com.cobblemon.mod.common.util.cobblemonModel
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.util.ModelIdentifier
-import net.minecraft.util.Identifier
+import net.minecraft.client.resources.model.ModelResourceLocation
+import net.minecraft.resources.ResourceLocation
 
 /**
  * The purpose of this class is to hold models that we want baked, but aren't associated with
@@ -102,7 +102,7 @@ object CobblemonBakingOverrides {
         cobblemonModel("surprise_mulch", "none")
     )
 
-    fun registerOverride(modelLocation: Identifier, modelIdentifier: ModelIdentifier): BakingOverride {
+    fun registerOverride(modelLocation: ResourceLocation, modelIdentifier: ModelResourceLocation): BakingOverride {
         val result = BakingOverride(modelLocation, modelIdentifier)
         models.add(result)
         return result

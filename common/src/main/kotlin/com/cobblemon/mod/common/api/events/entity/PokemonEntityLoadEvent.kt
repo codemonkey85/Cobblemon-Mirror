@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.api.events.entity
 
 import com.cobblemon.mod.common.api.events.Cancelable
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.CompoundTag
 
 /**
  * An event fired when a [PokemonEntity] is being loaded from NBT. This could be from sending a Pokémon
@@ -26,4 +26,4 @@ import net.minecraft.nbt.NbtCompound
  * @author Hiroku
  * @since January 7th, 2022
  */
-data class PokemonEntityLoadEvent(val pokemonEntity: PokemonEntity, val nbt: NbtCompound) : Cancelable()
+data class PokemonEntityLoadEvent(val pokemonEntity: PokemonEntity, val nbt: CompoundTag) : Cancelable()

@@ -11,11 +11,11 @@ package com.cobblemon.mod.common.client.net
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.gui.interact.wheel.createPlayerInteractGui
 import com.cobblemon.mod.common.net.messages.client.PlayerInteractOptionsPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object PlayerInteractOptionsHandler : ClientNetworkPacketHandler<PlayerInteractOptionsPacket> {
-    override fun handle(packet: PlayerInteractOptionsPacket, client: MinecraftClient) {
-        MinecraftClient.getInstance().setScreen(createPlayerInteractGui(packet))
+    override fun handle(packet: PlayerInteractOptionsPacket, client: Minecraft) {
+        Minecraft.getInstance().setScreen(createPlayerInteractGui(packet))
     }
 
 }

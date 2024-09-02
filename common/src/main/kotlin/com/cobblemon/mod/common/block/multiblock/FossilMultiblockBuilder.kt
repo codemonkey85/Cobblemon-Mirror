@@ -13,24 +13,24 @@ import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.multiblock.MultiblockEntity
 import com.cobblemon.mod.common.api.multiblock.builder.MultiblockStructureBuilder
-import com.cobblemon.mod.common.block.RestorationTankBlock
 import com.cobblemon.mod.common.api.multiblock.condition.BlockRelativeCondition
+import com.cobblemon.mod.common.block.RestorationTankBlock
 import com.cobblemon.mod.common.util.DataKeys
 import com.cobblemon.mod.common.util.blockPositionsAsList
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.predicate.BlockPredicate
-import net.minecraft.predicate.StatePredicate
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
-import net.minecraft.util.shape.VoxelShape
-import net.minecraft.util.shape.VoxelShapes
+import net.minecraft.advancements.critereon.BlockPredicate
+import net.minecraft.advancements.critereon.StatePropertiesPredicate
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.phys.shapes.Shapes
+import net.minecraft.world.phys.shapes.VoxelShape
 
 class FossilMultiblockBuilder(val centerPos: BlockPos) : MultiblockStructureBuilder {
     override val boundingBox: VoxelShape =
-        VoxelShapes.union(
-            VoxelShapes.cuboid(
+        Shapes.or(
+            Shapes.box(
                 centerPos.x - 1.toDouble(),
                 centerPos.y - 1.toDouble(),
                 centerPos.z.toDouble(),
@@ -38,7 +38,7 @@ class FossilMultiblockBuilder(val centerPos: BlockPos) : MultiblockStructureBuil
                 centerPos.y + 2.toDouble(),
                 centerPos.z + 1.toDouble()
             ),
-            VoxelShapes.cuboid(
+            Shapes.box(
                 centerPos.x.toDouble(),
                 centerPos.y - 1.toDouble(),
                 centerPos.z - 1.toDouble(),
@@ -61,7 +61,7 @@ class FossilMultiblockBuilder(val centerPos: BlockPos) : MultiblockStructureBuil
         )
     )
 
-    override fun form(world: ServerWorld) {
+    override fun form(world: ServerLevel) {
         //We want to create a MultiblockStructure here and pass a reference to it in every constituent block's entity
         val blocks = boundingBox.blockPositionsAsList()
         val dirsToCheck = listOf(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST)
@@ -87,11 +87,11 @@ class FossilMultiblockBuilder(val centerPos: BlockPos) : MultiblockStructureBuil
             - Apion
          */
         var monitorPositions = blocks.filter {
-            MONITOR_PRED.test(world, it)
+            MONITOR_PRED.matches(world, it)
         }
 
         var fossilAnalyzerPositions = monitorPositions.map {
-            if (FOSSIL_ANALYZER_PRED.test(world, it.down())) it.down()
+            if (FOSSIL_ANALYZER_PRED.matches(world, it.below())) it.below()
             else null
         }
 
@@ -100,8 +100,8 @@ class FossilMultiblockBuilder(val centerPos: BlockPos) : MultiblockStructureBuil
                 return@map null
             }
             dirsToCheck.forEach {
-                if (RESTORATION_TANK_PRED.test(world, analyzerPosition.offset(it))) {
-                    return@map analyzerPosition.offset(it)
+                if (RESTORATION_TANK_PRED.matches(world, analyzerPosition.relative(it))) {
+                    return@map analyzerPosition.relative(it)
                 }
             }
             return@map null
@@ -120,11 +120,11 @@ class FossilMultiblockBuilder(val centerPos: BlockPos) : MultiblockStructureBuil
         val monitorEntity = world.getBlockEntity(monitorPos) as? MultiblockEntity
         val analyzerEntity = world.getBlockEntity(fossilAnalyzerPos) as? MultiblockEntity
         val tankBaseEntity = world.getBlockEntity(restorationTankPos) as? MultiblockEntity
-        val tankTopEntity = world.getBlockEntity(restorationTankPos.up()) as? MultiblockEntity
+        val tankTopEntity = world.getBlockEntity(restorationTankPos.above()) as? MultiblockEntity
         val structure = FossilMultiblockStructure(monitorPos, fossilAnalyzerPos, restorationTankPos)
 
         structure.tankConnectorDirection = dirsToCheck.filter {
-            val adjPos = restorationTankPos.offset(it)
+            val adjPos = restorationTankPos.relative(it)
             return@filter adjPos == fossilAnalyzerPos
         }.first()
 
@@ -135,7 +135,7 @@ class FossilMultiblockBuilder(val centerPos: BlockPos) : MultiblockStructureBuil
         structure.syncToClient(world)
         structure.markDirty(world)
 
-        world.playSound(null, centerPos, CobblemonSounds.FOSSIL_MACHINE_ASSEMBLE, SoundCategory.BLOCKS)
+        world.playSound(null, centerPos, CobblemonSounds.FOSSIL_MACHINE_ASSEMBLE, SoundSource.BLOCKS)
 
         //Set these to null so the builders can be freed
         analyzerEntity?.multiblockBuilder = null
@@ -146,22 +146,24 @@ class FossilMultiblockBuilder(val centerPos: BlockPos) : MultiblockStructureBuil
 
     companion object {
         val NBT_TO_CHECK = run {
-            val nbt = NbtCompound()
+            val nbt = CompoundTag()
             nbt.putBoolean(DataKeys.FORMED, false)
             return@run nbt
         }
-        val MONITOR_PRED = BlockPredicate.Builder.create().blocks(CobblemonBlocks.MONITOR)
-            .nbt(NBT_TO_CHECK)
+        val MONITOR_PRED = BlockPredicate.Builder.block()
+            .of(CobblemonBlocks.MONITOR)
+            .hasNbt(NBT_TO_CHECK)
             .build()
-        val FOSSIL_ANALYZER_PRED = BlockPredicate.Builder.create()
-            .blocks(CobblemonBlocks.FOSSIL_ANALYZER)
-            .nbt(NBT_TO_CHECK)
+        val FOSSIL_ANALYZER_PRED = BlockPredicate.Builder.block()
+            .of(CobblemonBlocks.FOSSIL_ANALYZER)
+            .hasNbt(NBT_TO_CHECK)
             .build()
 
-        val RESTORATION_TANK_PRED = BlockPredicate.Builder.create()
-            .nbt(NBT_TO_CHECK)
-            .blocks(CobblemonBlocks.RESTORATION_TANK)
-            .state(StatePredicate.Builder.create().exactMatch(RestorationTankBlock.PART, RestorationTankBlock.TankPart.BOTTOM).build())
+        val RESTORATION_TANK_PRED = BlockPredicate.Builder.block()
+            .hasNbt(NBT_TO_CHECK)
+            .of(CobblemonBlocks.RESTORATION_TANK)
+            .setProperties(StatePropertiesPredicate.Builder.properties()
+                .hasProperty(RestorationTankBlock.PART, RestorationTankBlock.TankPart.BOTTOM))
             .build()
         //lol thanks mojang for not allowing nbt puts to be chained
     }

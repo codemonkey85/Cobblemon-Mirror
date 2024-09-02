@@ -10,9 +10,9 @@ package com.cobblemon.mod.common.api.pokemon.experience
 
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
-import net.minecraft.command.CommandSource
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.ItemStack
 
 /**
  * A source of experience gain for a Pokémon. This could be a battle, a command, something like a level-up item, etc.
@@ -32,12 +32,12 @@ open class SidemodExperienceSource(
 ) : ExperienceSource
 
 open class CandyExperienceSource(
-    val player: ServerPlayerEntity,
+    val player: ServerPlayer,
     val stack: ItemStack
 ) : ExperienceSource
 
 open class CommandExperienceSource(
-    val source: CommandSource
+    val source: CommandSourceStack
 ) : ExperienceSource
 
 open class BattleExperienceSource(

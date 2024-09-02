@@ -13,13 +13,14 @@ import com.cobblemon.mod.common.client.render.models.blockbench.createTransforma
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class SamurottHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class SamurottHisuianModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("samurott_hisui")
     override val head = getPart("head")
     override val foreLeftLeg= getPart("leg_front_left")
@@ -30,23 +31,23 @@ class SamurottHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFra
     val seamitar_left = getPart("seamitar_hand_left")
 
     override var portraitScale = 1.32F
-    override var portraitTranslation = Vec3d(-0.67, 1.3, 0.0)
+    override var portraitTranslation = Vec3(-0.67, 1.3, 0.0)
     override var profileScale = 0.6F
-    override var profileTranslation = Vec3d(0.0, 0.8, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.8, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var battleidle: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("samurott_hisuian", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("samurott_hisuian", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("samurott_hisuian", "blink") }
         //sleep = registerPose(
         //    poseType = PoseType.SLEEP,
         //    transformTicks = 10,
-        //    idleAnimations = arrayOf(bedrock("samurott_hisuian", "sleep"))
+        //    animations = arrayOf(bedrock("samurott_hisuian", "sleep"))
         //)
 
         standing = registerPose(
@@ -56,12 +57,12 @@ class SamurottHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFra
                 condition = { !it.isBattling },
                 quirks = arrayOf(blink),
                 transformedParts = arrayOf(
-                        seamitar_right.createTransformation().withVisibility(visibility = false),
-                        seamitar_left.createTransformation().withVisibility(visibility = false)
+                    seamitar_right.createTransformation().withVisibility(visibility = false),
+                    seamitar_left.createTransformation().withVisibility(visibility = false)
                 ),
-                idleAnimations = arrayOf(
-                        singleBoneLook(),
-                        bedrock("samurott_hisuian", "ground_idle")
+                animations = arrayOf(
+                    singleBoneLook(),
+                    bedrock("samurott_hisuian", "ground_idle")
                 )
         )
 
@@ -72,12 +73,12 @@ class SamurottHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFra
                 quirks = arrayOf(blink),
                 condition = { it.isBattling },
                 transformedParts = arrayOf(
-                        seamitar_right.createTransformation().withVisibility(visibility = false),
-                        seamitar_left.createTransformation().withVisibility(visibility = false)
+                    seamitar_right.createTransformation().withVisibility(visibility = false),
+                    seamitar_left.createTransformation().withVisibility(visibility = false)
                 ),
-                idleAnimations = arrayOf(
-                        singleBoneLook(),
-                        bedrock("samurott_hisuian", "battle_pose")
+                animations = arrayOf(
+                    singleBoneLook(),
+                    bedrock("samurott_hisuian", "battle_pose")
                 )
         )
 
@@ -87,13 +88,13 @@ class SamurottHisuianModel (root: ModelPart) : PokemonPoseableModel(), HeadedFra
                 transformTicks = 10,
                 quirks = arrayOf(blink),
                 transformedParts = arrayOf(
-                        seamitar_right.createTransformation().withVisibility(visibility = false),
-                        seamitar_left.createTransformation().withVisibility(visibility = false)
+                    seamitar_right.createTransformation().withVisibility(visibility = false),
+                    seamitar_left.createTransformation().withVisibility(visibility = false)
                 ),
-                idleAnimations = arrayOf(
-                        singleBoneLook(),
-                        bedrock("samurott_hisuian", "ground_idle"),
-                        QuadrupedWalkAnimation(this, periodMultiplier = 0.8F, amplitudeMultiplier = 0.8F)
+                animations = arrayOf(
+                    singleBoneLook(),
+                    bedrock("samurott_hisuian", "ground_idle"),
+                    QuadrupedWalkAnimation(this, periodMultiplier = 0.8F, amplitudeMultiplier = 0.8F)
                 )
         )
     }

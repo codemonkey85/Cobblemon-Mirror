@@ -11,14 +11,14 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class FarfetchdModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame {
+class FarfetchdModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("farfetchd")
     override val head = getPart("neck")
 
@@ -26,18 +26,18 @@ class FarfetchdModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 2.6F
-    override var portraitTranslation = Vec3d(-0.2, -1.0, 0.0)
+    override var portraitTranslation = Vec3(-0.2, -1.0, 0.0)
 
     override var profileScale = 1.1F
-    override var profileTranslation = Vec3d(-0.1, 0.1, 0.0)
+    override var profileTranslation = Vec3(-0.1, 0.1, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var hover: PokemonPose
-    lateinit var fly: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var hover: Pose
+    lateinit var fly: Pose
+    lateinit var sleep: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("farfetchd", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("farfetchd", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("farfetchd", "blink") }
@@ -47,7 +47,7 @@ class FarfetchdModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
 
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("farfetchd", "sleep"))
+            animations = arrayOf(bedrock("farfetchd", "sleep"))
         )
 
         standing = registerPose(
@@ -55,7 +55,7 @@ class FarfetchdModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseTypes = PoseType.STATIONARY_POSES + UI_POSES - PoseType.HOVER,
             transformTicks = 10,
             quirks = arrayOf(blink, leakflipidle, wink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("farfetchd", "ground_idle")
             )
@@ -66,7 +66,7 @@ class FarfetchdModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseTypes = PoseType.MOVING_POSES - PoseType.FLY,
             transformTicks = 5,
             quirks = arrayOf(blink, leakflipwalk),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("farfetchd", "ground_walk")
             )
@@ -76,7 +76,7 @@ class FarfetchdModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseName = "hover",
             poseType = PoseType.HOVER,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("farfetchd", "air_idle")
             )
         )
@@ -85,7 +85,7 @@ class FarfetchdModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             poseName = "fly",
             poseType = PoseType.FLY,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("farfetchd", "air_fly")
             )
         )
@@ -93,6 +93,6 @@ class FarfetchdModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("farfetchd", "faint") else null
 }

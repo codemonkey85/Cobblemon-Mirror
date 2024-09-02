@@ -10,27 +10,27 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen5
 
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class CottoneeModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame{
+class CottoneeModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame{
     override val rootPart = root.registerChildWithAllChildren("cottonee")
 
     override val head = getPart("body")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.1, -1.5, 0.0)
+    override var portraitTranslation = Vec3(-0.1, -1.5, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.35, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.35, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("cottonee", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("cottonee", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("cottonee", "blink") }
@@ -39,7 +39,7 @@ class CottoneeModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame{
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(disableY = true)
                 //bedrock("cottonee", "ground_idle")
             )
@@ -49,7 +49,7 @@ class CottoneeModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame{
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(disableY = true)
                 //bedrock("cottonee", "ground_walk")
             )
@@ -58,6 +58,6 @@ class CottoneeModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame{
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("cottonee", "faint") else null
 }

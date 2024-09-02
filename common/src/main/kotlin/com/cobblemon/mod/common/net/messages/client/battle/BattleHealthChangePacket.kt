@@ -10,7 +10,9 @@ package com.cobblemon.mod.common.net.messages.client.battle
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Informs the client that a Pokémon's health has changed. Executes a tile animation.
@@ -22,7 +24,7 @@ import net.minecraft.network.PacketByteBuf
  */
 class BattleHealthChangePacket(val pnx: String, val newHealth: Float, val newMaxHealth: Float? = null) : NetworkPacket<BattleHealthChangePacket> {
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(pnx)
         buffer.writeFloat(newHealth)
         buffer.writeNullable(newMaxHealth) { _, newMaxHealth -> buffer.writeFloat(newMaxHealth) }
@@ -30,6 +32,6 @@ class BattleHealthChangePacket(val pnx: String, val newHealth: Float, val newMax
 
     companion object {
         val ID = cobblemonResource("battle_health_change")
-        fun decode(buffer: PacketByteBuf) = BattleHealthChangePacket(buffer.readString(), buffer.readFloat(), buffer.readNullable { buffer.readFloat() })
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleHealthChangePacket(buffer.readString(), buffer.readFloat(), buffer.readNullable { buffer.readFloat() })
     }
 }

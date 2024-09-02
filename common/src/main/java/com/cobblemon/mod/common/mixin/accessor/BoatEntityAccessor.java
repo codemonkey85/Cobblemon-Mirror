@@ -8,16 +8,16 @@
 
 package com.cobblemon.mod.common.mixin.accessor;
 
-import net.minecraft.entity.vehicle.BoatEntity;
+import net.minecraft.world.entity.vehicle.Boat;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(BoatEntity.class)
+@Mixin(Boat.class)
 public interface BoatEntityAccessor {
 
-    @Accessor
+    @Accessor("lastYd")
     void setFallVelocity(double fallVelocity);
 
-    @Accessor
-    BoatEntity.Location getLocation();
+    @Accessor("status")
+    Boat.Status getLocation();
 }

@@ -12,6 +12,8 @@ import com.cobblemon.mod.common.api.spawning.rules.selector.ConditionalSpawningC
 import com.cobblemon.mod.common.api.spawning.rules.selector.ExpressionSpawningContextSelector
 import com.cobblemon.mod.common.api.spawning.rules.selector.SpawningContextSelector
 import com.cobblemon.mod.common.util.asExpression
+import com.cobblemon.mod.common.util.asExpressionLike
+import com.google.gson.JsonArray
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -20,8 +22,8 @@ import java.lang.reflect.Type
 
 object SpawningContextSelectorAdapter : JsonDeserializer<SpawningContextSelector> {
     override fun deserialize(json: JsonElement, type: Type, ctx: JsonDeserializationContext): SpawningContextSelector {
-        return if (json.isJsonPrimitive) {
-            val expression = json.asString.asExpression()
+        return if (json.isJsonPrimitive || json.isJsonArray) {
+            val expression = if (json.isJsonPrimitive) json.asString.asExpressionLike() else (json as JsonArray).asExpressionLike()
             ExpressionSpawningContextSelector().also { it.expression = expression }
         } else {
             json as JsonObject

@@ -8,34 +8,29 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen5
 
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.BimanualSwingAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class DarumakaModel (root: ModelPart) : PokemonPoseableModel() {
+class DarumakaModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("darumaka")
 
     override var portraitScale = 1.96F
-    override var portraitTranslation = Vec3d(-0.18, -0.84, 0.0)
+    override var portraitTranslation = Vec3(-0.18, -0.84, 0.0)
 
     override var profileScale = 0.76F
-    override var profileTranslation = Vec3d(0.0, 0.57, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.57, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var battleidle: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("darumaka", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("darumaka", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("darumaka", "blink") }
@@ -44,7 +39,7 @@ class DarumakaModel (root: ModelPart) : PokemonPoseableModel() {
 
         sleep = registerPose(
                 poseType = PoseType.SLEEP,
-                idleAnimations = arrayOf(bedrock("darumaka", "sleep"))
+                animations = arrayOf(bedrock("darumaka", "sleep"))
         )
 
         standing = registerPose(
@@ -52,7 +47,7 @@ class DarumakaModel (root: ModelPart) : PokemonPoseableModel() {
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             quirks = arrayOf(blink, quirk, quirk2),
                 condition = { !it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("darumaka", "ground_idle")
             )
         )
@@ -63,7 +58,7 @@ class DarumakaModel (root: ModelPart) : PokemonPoseableModel() {
                 transformTicks = 10,
                 quirks = arrayOf(blink, quirk),
                 condition = { it.isBattling },
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         bedrock("darumaka", "battle_idle")
                 )
 
@@ -73,7 +68,7 @@ class DarumakaModel (root: ModelPart) : PokemonPoseableModel() {
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink, quirk),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("darumaka", "ground_walk")
             )
         )
@@ -81,6 +76,6 @@ class DarumakaModel (root: ModelPart) : PokemonPoseableModel() {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("darumaka", "faint") else null
 }

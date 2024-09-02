@@ -8,21 +8,17 @@
 
 package com.cobblemon.mod.common.client.entity
 
-import com.bedrockk.molang.runtime.value.DoubleValue
 import com.cobblemon.mod.common.api.entity.EntitySideDelegate
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunctions
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.getQueryStruct
 import com.cobblemon.mod.common.api.reactive.SettableObservable
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
-import com.cobblemon.mod.common.api.scheduling.SchedulingTracker
-import com.cobblemon.mod.common.client.render.pokeball.PokeBallPoseableState
+import com.cobblemon.mod.common.client.render.pokeball.PokeBallPosableState
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity.CaptureState
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity.CaptureState.NOT
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.entity.data.TrackedData
+import net.minecraft.network.syncher.EntityDataAccessor
 
-class EmptyPokeBallClientDelegate : PokeBallPoseableState(), EntitySideDelegate<EmptyPokeBallEntity> {
+class EmptyPokeBallClientDelegate : PokeBallPosableState(), EntitySideDelegate<EmptyPokeBallEntity> {
     override val stateEmitter: SettableObservable<CaptureState> = SettableObservable(NOT)
     override val shakeEmitter = SimpleObservable<Unit>()
 
@@ -38,26 +34,22 @@ class EmptyPokeBallClientDelegate : PokeBallPoseableState(), EntitySideDelegate<
 
     override fun initialize(entity: EmptyPokeBallEntity) {
         this.currentEntity = entity
-        age = entity.age
+        age = entity.tickCount
         initSubscriptions()
-        this.runtime.environment.getQueryStruct().addFunctions(mapOf(
-            "pokeball_type" to java.util.function.Function {
-                return@Function DoubleValue(currentEntity.pokeBall.name.toString())
-            }
-        ))
+        this.runtime.environment.query.addFunctions(getEntity().struct.functions)
     }
 
     override fun tick(entity: EmptyPokeBallEntity) {
         super.tick(entity)
-        updateLocatorPosition(entity.pos)
         incrementAge(entity)
     }
 
-    override fun onTrackedDataSet(data: TrackedData<*>) {
-        super.onTrackedDataSet(data)
+    override fun onSyncedDataUpdated(data: EntityDataAccessor<*>) {
+        super.onSyncedDataUpdated(data)
         when (data) {
             EmptyPokeBallEntity.CAPTURE_STATE -> stateEmitter.set(currentEntity.captureState)
             EmptyPokeBallEntity.SHAKE -> shakeEmitter.emit(Unit)
+            EmptyPokeBallEntity.ASPECTS -> currentAspects = currentEntity.aspects
         }
     }
 }

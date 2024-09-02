@@ -2,19 +2,19 @@
   "maxScale": 0.85,
   "yTranslation": 0,
   "yGrowthPoint": 0.75,
-
-  "animations": [
-    "bedrock(arctovish_fetus, sleep)"
-  ],
-  "quirks": [
-    {
-      "name": "quirk1",
-      "animations": [
-        "bedrock(arctovish_fetus, quirk1)"
-      ],
-      "loopTimes": 1,
-      "minSeconds": 30,
-      "maxSeconds": 60
+  "poses": {
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('arctovish_fetus', 'sleep')"],
+      "quirks": [
+        {
+          "name": "quirk1",
+          "animations": ["q.bedrock_stateful('arctovish_fetus', 'quirk1')"],
+          "loopTimes": 1,
+          "minSecondsBetweenOccurrences": 30,
+          "maxSecondsBetweenOccurrences": 60
+        }
+      ]
     }
-  ]
+  }
 }

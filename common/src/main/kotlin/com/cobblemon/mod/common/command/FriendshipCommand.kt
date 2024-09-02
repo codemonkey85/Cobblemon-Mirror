@@ -15,23 +15,23 @@ import com.cobblemon.mod.common.util.commandLang
 import com.cobblemon.mod.common.util.permission
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
+import net.minecraft.server.level.ServerPlayer
 
 object FriendshipCommand {
 
-    fun register(dispatcher : CommandDispatcher<ServerCommandSource>) {
-        dispatcher.register(CommandManager.literal("friendship")
+    fun register(dispatcher : CommandDispatcher<CommandSourceStack>) {
+        dispatcher.register(Commands.literal("friendship")
             .permission(CobblemonPermissions.FRIENDSHIP)
             .then(
-                CommandManager.argument("slot", PartySlotArgumentType.partySlot())
-                    .executes { execute(it.source, it.source.playerOrThrow, PartySlotArgumentType.getPokemon(it, "slot")) }
+                Commands.argument("slot", PartySlotArgumentType.partySlot())
+                    .executes { execute(it.source, it.source.playerOrException, PartySlotArgumentType.getPokemon(it, "slot")) }
             ))
     }
 
-    private fun execute(source: ServerCommandSource, target: ServerPlayerEntity, pokemon: Pokemon) : Int {
-        source.sendFeedback({ commandLang("friendship", pokemon.getDisplayName(), pokemon.friendship) }, true)
+    private fun execute(source: CommandSourceStack, target: ServerPlayer, pokemon: Pokemon) : Int {
+        source.sendSuccess({ commandLang("friendship", pokemon.getDisplayName(), pokemon.friendship) }, true)
         return Command.SINGLE_SUCCESS
     }
 

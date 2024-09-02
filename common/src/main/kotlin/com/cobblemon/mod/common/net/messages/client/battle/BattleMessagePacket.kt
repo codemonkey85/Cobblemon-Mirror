@@ -10,8 +10,9 @@ package com.cobblemon.mod.common.net.messages.client.battle
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.text.Text
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.ComponentSerialization
 
 /**
  * Sends messages to add to the battle message queue on the client.
@@ -19,18 +20,18 @@ import net.minecraft.text.Text
  * @author Hiroku
  * @since May 22nd, 2022
  */
-class BattleMessagePacket(val messages: List<Text>) : NetworkPacket<BattleMessagePacket> {
+class BattleMessagePacket(val messages: List<Component>) : NetworkPacket<BattleMessagePacket> {
 
     override val id = ID
 
-    constructor(vararg messages: Text): this(messages.toList())
+    constructor(vararg messages: Component): this(messages.toList())
 
-    override fun encode(buffer: PacketByteBuf) {
-        buffer.writeCollection(this.messages) { pb, value -> pb.writeText(value) }
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeCollection(this.messages) { pb, value -> ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.encode(buffer, value) }
     }
 
     companion object {
         val ID = cobblemonResource("battle_message")
-        fun decode(buffer: PacketByteBuf) = BattleMessagePacket(buffer.readList { it.readText() })
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleMessagePacket(buffer.readList { ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buffer) })
     }
 }

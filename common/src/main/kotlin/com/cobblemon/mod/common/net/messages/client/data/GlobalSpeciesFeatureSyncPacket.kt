@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.api.pokemon.feature.GlobalSpeciesFeatures
 import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatureProvider
 import com.cobblemon.mod.common.api.pokemon.feature.SynchronizedSpeciesFeatureProvider
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Syncs a species feature provider that was registered under [GlobalSpeciesFeatures].
@@ -22,9 +22,10 @@ import net.minecraft.network.PacketByteBuf
  */
 class GlobalSpeciesFeatureSyncPacket(speciesFeatures: Map<String, SpeciesFeatureProvider<*>>) : SpeciesFeatureSyncPacket<GlobalSpeciesFeatureSyncPacket>(speciesFeatures) {
     override val id = ID
+
     override fun synchronizeDecoded(entries: Collection<Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>>>) = GlobalSpeciesFeatures.loadOnClient(entries)
     companion object {
         val ID = cobblemonResource("global_species_feature_sync")
-        fun decode(buffer: PacketByteBuf) = GlobalSpeciesFeatureSyncPacket(emptyMap()).apply { decodeBuffer(buffer) }
+        fun decode(buffer: RegistryFriendlyByteBuf) = GlobalSpeciesFeatureSyncPacket(emptyMap()).apply { decodeBuffer(buffer) }
     }
 }

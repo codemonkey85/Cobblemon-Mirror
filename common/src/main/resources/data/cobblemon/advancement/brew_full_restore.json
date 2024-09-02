@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:full_restore"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.brew_full_restore"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.brew_full_restore.description"
+    }
+  },
+  "parent": "cobblemon:brew_potion",
+  "criteria": {
+    "check_inv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:full_restore"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

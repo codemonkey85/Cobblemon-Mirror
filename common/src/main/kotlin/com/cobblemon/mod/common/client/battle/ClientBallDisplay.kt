@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.client.battle
 import com.cobblemon.mod.common.api.reactive.SettableObservable
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
 import com.cobblemon.mod.common.api.scheduling.ClientTaskTracker
-import com.cobblemon.mod.common.client.render.pokeball.PokeBallPoseableState
+import com.cobblemon.mod.common.client.render.pokeball.PokeBallPosableState
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.cobblemon.mod.common.pokeball.PokeBall
 
@@ -21,7 +21,7 @@ import com.cobblemon.mod.common.pokeball.PokeBall
  * @author Hiroku
  * @since July 2nd, 2022
  */
-class ClientBallDisplay(val pokeBall: PokeBall, val aspects: Set<String>) : PokeBallPoseableState() {
+class ClientBallDisplay(val pokeBall: PokeBall, val aspects: Set<String>) : PokeBallPosableState() {
     override val stateEmitter = SettableObservable(EmptyPokeBallEntity.CaptureState.FALL)
     override val shakeEmitter = SimpleObservable<Unit>()
     override val schedulingTracker = ClientTaskTracker

@@ -8,18 +8,17 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen5
 
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class ZoroarkModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class ZoroarkModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("zoroark")
     override val head = getPart("head")
 
@@ -29,16 +28,16 @@ class ZoroarkModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
     override val leftArm = getPart("arm_left")
     override val rightArm = getPart("arm_right")
 
-    override var portraitTranslation = Vec3d(-0.89, 2.09, 0.0)
+    override var portraitTranslation = Vec3(-0.89, 2.09, 0.0)
     override var portraitScale = 1.49F
 
-    override var profileTranslation = Vec3d(0.0, 1.08, -6.0)
+    override var profileTranslation = Vec3(0.0, 1.08, -6.0)
     override var profileScale = 0.44F
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walking: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("zoroark", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("zoroark", "cry") }
 
     override fun registerPoses() {
 
@@ -46,7 +45,7 @@ class ZoroarkModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("zoroark", "ground_idle")
             )
@@ -56,7 +55,7 @@ class ZoroarkModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
             poseName = "walking",
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("zoroark", "ground_walk")
             )
@@ -64,6 +63,6 @@ class ZoroarkModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bipe
     }
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walking)) bedrockStateful("zoroark", "faint") else null
 }

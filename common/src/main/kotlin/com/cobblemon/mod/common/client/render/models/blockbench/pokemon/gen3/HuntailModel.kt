@@ -11,27 +11,27 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.WaveAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.WaveSegment
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class HuntailModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class HuntailModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("huntail")
     override val head = getPart("head")
 
     override var portraitScale = 2.6F
-    override var portraitTranslation = Vec3d(-1.3, -2.5, 0.0)
+    override var portraitTranslation = Vec3(-1.3, -2.5, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.0, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.0, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var floating: PokemonPose
-    lateinit var swimming: PokemonPose
+    lateinit var standing: Pose
+    lateinit var floating: Pose
+    lateinit var swimming: Pose
 
     private val tail = getPart("tail")
     private val tail2 = getPart("tail2")
@@ -51,11 +51,10 @@ class HuntailModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         standing = registerPose(
             poseName = "standing",
             poseTypes = PoseType.STANDING_POSES,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("huntail", "ground_idle"),
                 WaveAnimation(
-                    frame = this,
                     waveFunction = sineFunction(
                         period = 8F,
                         amplitude = 0.8F
@@ -82,7 +81,7 @@ class HuntailModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         floating = registerPose(
             poseName = "floating",
             poseTypes = PoseType.UI_POSES + PoseType.FLOAT,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("huntail", "water_idle")
             )
@@ -91,7 +90,7 @@ class HuntailModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         swimming = registerPose(
             poseName = "swimming",
             poseType = PoseType.SWIM,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("huntail", "water_swim"),
             )

@@ -9,11 +9,10 @@
 package com.cobblemon.mod.common.battles
 
 import com.cobblemon.mod.common.net.IntSize
-import com.cobblemon.mod.common.util.lang
-import com.cobblemon.mod.common.util.readSizedInt
-import com.cobblemon.mod.common.util.writeSizedInt
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.text.MutableText
+import com.cobblemon.mod.common.util.*
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.ComponentSerialization
+import net.minecraft.network.chat.MutableComponent
 
 // note: showdown calls it gameType, but in MC GameType would collide with plugins and shit a lot.
 
@@ -26,7 +25,7 @@ object BattleTypes {
 
     fun makeBattleType(
         name: String,
-        displayName: MutableText = lang("battle.types.$name"),
+        displayName: MutableComponent = lang("battle.types.$name"),
         actorsPerSide: Int,
         slotsPerActor: Int
     ) = object : BattleType {
@@ -39,7 +38,7 @@ object BattleTypes {
 
 interface BattleType {
     val name: String
-    val displayName: MutableText
+    val displayName: MutableComponent
     val actorsPerSide: Int
     val slotsPerActor: Int
 
@@ -47,9 +46,9 @@ interface BattleType {
         get() = actorsPerSide * slotsPerActor
 
     companion object {
-        fun loadFromBuffer(buffer: PacketByteBuf): BattleType {
+        fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): BattleType {
             val name = buffer.readString()
-            val displayName = buffer.readText()
+            val displayName = ComponentSerialization.STREAM_CODEC.decode(buffer)
             val actorsPerSide = buffer.readSizedInt(IntSize.U_BYTE)
             val slotsPerActor = buffer.readSizedInt(IntSize.U_BYTE)
             return BattleTypes.makeBattleType(
@@ -60,9 +59,9 @@ interface BattleType {
             )
         }
     }
-    fun saveToBuffer(buffer: PacketByteBuf): PacketByteBuf {
+    fun saveToBuffer(buffer: RegistryFriendlyByteBuf): RegistryFriendlyByteBuf {
         buffer.writeString(name)
-        buffer.writeText(displayName)
+        ComponentSerialization.STREAM_CODEC.encode(buffer, displayName)
         buffer.writeSizedInt(IntSize.U_BYTE, actorsPerSide)
         buffer.writeSizedInt(IntSize.U_BYTE, slotsPerActor)
         return buffer

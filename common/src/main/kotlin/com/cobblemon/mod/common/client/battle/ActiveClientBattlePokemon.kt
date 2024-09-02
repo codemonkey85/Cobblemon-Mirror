@@ -15,7 +15,7 @@ import com.cobblemon.mod.common.api.gui.ColourLibrary.SIDE_2_BATTLE_COLOUR
 import com.cobblemon.mod.common.battles.Targetable
 import com.cobblemon.mod.common.client.battle.animations.TileAnimation
 import java.util.concurrent.ConcurrentLinkedQueue
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 class ActiveClientBattlePokemon(val actor: ClientBattleActor, var battlePokemon: ClientBattlePokemon?) : Targetable {
     var animations = ConcurrentLinkedQueue<TileAnimation>()
     var xDisplacement = 0F
@@ -30,7 +30,7 @@ class ActiveClientBattlePokemon(val actor: ClientBattleActor, var battlePokemon:
     override fun isAllied(other: Targetable) = actor.side == (other as ActiveClientBattlePokemon).actor.side
     override fun hasPokemon() = battlePokemon != null
     fun getHue(): Int {
-        val playerUUID = MinecraftClient.getInstance().player?.uuid ?: return 0xFAFAFA
+        val playerUUID = Minecraft.getInstance().player?.uuid ?: return 0xFAFAFA
         val actor = battlePokemon?.actor ?: return 0xFAFAFA
         val side = actor.side
         val battle = actor.side.battle

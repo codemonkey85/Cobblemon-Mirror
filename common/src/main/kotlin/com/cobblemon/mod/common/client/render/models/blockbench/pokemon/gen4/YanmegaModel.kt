@@ -12,33 +12,33 @@ import com.cobblemon.mod.common.client.render.models.blockbench.createTransforma
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.triangleFunction
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class YanmegaModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class YanmegaModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("yanmega")
     override val head = getPart("head")
 
     override var portraitScale = 1.6F
-    override var portraitTranslation = Vec3d(-0.55, -0.9, 0.0)
+    override var portraitTranslation = Vec3(-0.55, -0.9, 0.0)
 
     override var profileScale = 0.61F
-    override var profileTranslation = Vec3d(0.0, 0.8, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.8, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var hover: PokemonPose
-    lateinit var flying:PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var hover: CobblemonPose
+    lateinit var flying: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("yanmega", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("yanmega", "cry") }
 
     override fun registerPoses() {
         val wingFrame1 = object : BiWingedFrame {
@@ -56,7 +56,7 @@ class YanmegaModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         standing = registerPose(
             poseName = "standing",
             poseTypes = STATIONARY_POSES + UI_POSES - PoseType.HOVER,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("yanmega", "ground_idle")
             )
@@ -65,17 +65,17 @@ class YanmegaModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         walk = registerPose(
             poseName = "walk",
             poseTypes = MOVING_POSES - PoseType.FLY,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("yanmega", "air_idle"),
                 wingFrame1.wingFlap(
                     flapFunction = triangleFunction(period = 0.1F, amplitude = 0.5F),
-                    timeVariable = { state, _, ageInTicks -> state?.animationSeconds ?: ageInTicks },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = ModelPartTransformation.Z_AXIS
                 ),
                 wingFrame2.wingFlap(
                     flapFunction = triangleFunction(period = 0.1F, amplitude = 0.5F),
-                    timeVariable = { state, _, ageInTicks -> 0.01F + (state?.animationSeconds ?: (ageInTicks / 20)) },
+                    timeVariable = { state, _, _ -> 0.01F + state.animationSeconds },
                     axis = ModelPartTransformation.Z_AXIS
                 )
                 //bedrock("yanmega", "ground_walk")
@@ -88,17 +88,17 @@ class YanmegaModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         hover = registerPose(
             poseName = "hovering",
             poseType = PoseType.HOVER,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("yanmega", "air_idle"),
                 wingFrame1.wingFlap(
                     flapFunction = triangleFunction(period = 0.1F, amplitude = 0.5F),
-                    timeVariable = { state, _, ageInTicks -> state?.animationSeconds ?: ageInTicks },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = ModelPartTransformation.Z_AXIS
                 ),
                 wingFrame2.wingFlap(
                     flapFunction = triangleFunction(period = 0.1F, amplitude = 0.5F),
-                    timeVariable = { state, _, ageInTicks -> 0.01F + (state?.animationSeconds ?: (ageInTicks / 20)) },
+                    timeVariable = { state, _, _ -> 0.01F + state.animationSeconds },
                     axis = ModelPartTransformation.Z_AXIS
                 )
             ),
@@ -110,17 +110,17 @@ class YanmegaModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         flying = registerPose(
             poseName = "flying",
             poseType = PoseType.FLY,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("yanmega", "air_idle"),
                 wingFrame1.wingFlap(
                     flapFunction = triangleFunction(period = 0.1F, amplitude = 0.5F),
-                    timeVariable = { state, _, ageInTicks -> state?.animationSeconds ?: ageInTicks },
+                    timeVariable = { state, _, _ -> state.animationSeconds },
                     axis = ModelPartTransformation.Z_AXIS
                 ),
                 wingFrame2.wingFlap(
                     flapFunction = triangleFunction(period = 0.1F, amplitude = 0.5F),
-                    timeVariable = { state, _, ageInTicks -> 0.01F + (state?.animationSeconds ?: (ageInTicks / 20)) },
+                    timeVariable = { state, _, _ -> 0.01F + state.animationSeconds },
                     axis = ModelPartTransformation.Z_AXIS
                 )
                 //bedrock("yanmega", "ground_walk")
@@ -133,6 +133,6 @@ class YanmegaModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("yanmega", "faint") else null
 }

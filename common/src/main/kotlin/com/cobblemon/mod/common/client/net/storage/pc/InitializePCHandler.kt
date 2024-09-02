@@ -12,10 +12,10 @@ import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.storage.ClientPC
 import com.cobblemon.mod.common.net.messages.client.storage.pc.InitializePCPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object InitializePCHandler : ClientNetworkPacketHandler<InitializePCPacket> {
-    override fun handle(packet: InitializePCPacket, client: MinecraftClient) {
+    override fun handle(packet: InitializePCPacket, client: Minecraft) {
         CobblemonClient.storage.pcStores[packet.storeID] = ClientPC(packet.storeID, packet.boxCount)
     }
 }

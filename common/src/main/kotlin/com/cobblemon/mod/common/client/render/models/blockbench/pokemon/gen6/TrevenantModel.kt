@@ -8,36 +8,36 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen6
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class TrevenantModel  (root: ModelPart) : PokemonPoseableModel() {
+class TrevenantModel  (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("trevenant")
 
     override var portraitScale = 1.6F
-    override var portraitTranslation = Vec3d(-0.2, 1.8, 0.0)
+    override var portraitTranslation = Vec3(-0.2, 1.8, 0.0)
 
     override var profileScale = 0.45F
-    override var profileTranslation = Vec3d(0.0, 0.93, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.93, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var sleep: Pose
+    lateinit var battleidle: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("trevenant", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("trevenant", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("trevenant", "blink")}
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("trevenant", "sleep"))
+            animations = arrayOf(bedrock("trevenant", "sleep"))
         )
 
         standing = registerPose(
@@ -46,7 +46,7 @@ class TrevenantModel  (root: ModelPart) : PokemonPoseableModel() {
             condition = { !it.isBattling },
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("trevenant", "ground_idle")
             )
         )
@@ -55,7 +55,7 @@ class TrevenantModel  (root: ModelPart) : PokemonPoseableModel() {
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 5,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("trevenant", "ground_walk")
             )
         )
@@ -65,16 +65,13 @@ class TrevenantModel  (root: ModelPart) : PokemonPoseableModel() {
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("trevenant", "battle_idle")
             )
         )
     }
 
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isPosedIn(standing, walk, sleep)) bedrockStateful("trevenant", "faint") else
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walk, sleep)) bedrockStateful("trevenant", "faint") else
         if (state.isPosedIn(battleidle)) bedrockStateful("trevenant", "battle_faint")
         else null
 }

@@ -8,7 +8,6 @@
 
 package com.cobblemon.mod.common.mixin.invoker;
 
-import com.cobblemon.mod.common.integration.adorn.AdornCompatibility;
 import java.util.List;
 import juuxel.adorn.block.variant.BlockVariantSet;
 import juuxel.adorn.block.variant.BlockVariantSets;
@@ -28,6 +27,6 @@ public abstract class AdornRegisterInvoker {
 
     @Inject(method = "register()V", at = @At("HEAD"), remap = false)
     void register(CallbackInfo ci) {
-        variantSets.add(AdornCompatibility.INSTANCE);
+//        variantSets.add(AdornCompatibility.INSTANCE);
     }
 }

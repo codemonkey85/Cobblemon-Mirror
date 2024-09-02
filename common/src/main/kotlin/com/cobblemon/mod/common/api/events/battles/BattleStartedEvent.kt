@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.api.events.battles
 
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.events.Cancelable
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
 
 /**
  * Event fired before a [PokemonBattle] is started. Canceling this event prevents the battle from being
@@ -21,7 +21,7 @@ import net.minecraft.text.MutableText
  * @author Segfault Guy
  * @since March 26th 2023
  */
-data class BattleStartedPreEvent (override val battle: PokemonBattle, var reason: MutableText? = null) : BattleEvent, Cancelable()
+data class BattleStartedPreEvent (override val battle: PokemonBattle, var reason: MutableComponent? = null) : BattleEvent, Cancelable()
 
 /**
  * Event fired after a [PokemonBattle] starts.

@@ -12,8 +12,8 @@ import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.battles.BagItems
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.world.item.ItemStack
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * A bag item effect that links to a script in Showdown. Implementations must be added to
@@ -43,7 +43,7 @@ interface BagItem {
      * hands, is non-zero on size, that the battle is still tolerant of a forced action for bag use, and that this
      * bag item can still be used.
      */
-    fun canStillUse(player: ServerPlayerEntity, battle: PokemonBattle, actor: BattleActor, target: BattlePokemon, stack: ItemStack): Boolean {
-        return stack in player.handItems && stack.count > 0 && canUse(battle, target) && actor.canFitForcedAction()
+    fun canStillUse(player: ServerPlayer, battle: PokemonBattle, actor: BattleActor, target: BattlePokemon, stack: ItemStack): Boolean {
+        return stack in player.handSlots && stack.count > 0 && canUse(battle, target) && actor.canFitForcedAction()
     }
 }

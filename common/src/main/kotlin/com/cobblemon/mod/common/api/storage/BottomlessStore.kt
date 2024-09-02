@@ -14,8 +14,8 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.DataKeys
 import com.google.gson.JsonObject
 import java.util.UUID
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerPlayer
 
 class BottomlessPosition(val currentIndex: Int) : StorePosition
 
@@ -38,8 +38,8 @@ open class BottomlessStore(override val uuid: UUID) : PokemonStore<BottomlessPos
     override fun getFirstAvailablePosition() = BottomlessPosition(pokemon.size)
     override fun isValidPosition(position: BottomlessPosition) = position.currentIndex >= 0
     operator fun get(index: Int) = index.takeIf { it in pokemon.indices }?.let { pokemon[it] }
-    override fun getObservingPlayers() = emptySet<ServerPlayerEntity>()
-    override fun sendTo(player: ServerPlayerEntity) {}
+    override fun getObservingPlayers() = emptySet<ServerPlayer>()
+    override fun sendTo(player: ServerPlayer) {}
 
     override fun initialize() {
         pokemon.forEachIndexed { index, pokemon ->
@@ -50,17 +50,17 @@ open class BottomlessStore(override val uuid: UUID) : PokemonStore<BottomlessPos
         }
     }
 
-    override fun saveToNBT(nbt: NbtCompound): NbtCompound {
-        pokemon.forEachIndexed { index, pokemon -> nbt.put(DataKeys.STORE_SLOT + index, pokemon.saveToNBT(NbtCompound())) }
+    override fun saveToNBT(nbt: CompoundTag): CompoundTag {
+        pokemon.forEachIndexed { index, pokemon -> nbt.put(DataKeys.STORE_SLOT + index, pokemon.saveToNBT()) }
         return nbt
     }
 
-    override fun loadFromNBT(nbt: NbtCompound): BottomlessStore {
+    override fun loadFromNBT(nbt: CompoundTag): BottomlessStore {
         var i = -1
         while (nbt.contains(DataKeys.STORE_SLOT + ++i)) {
             val pokemonNBT = nbt.getCompound(DataKeys.STORE_SLOT + i)
             try {
-                pokemon.add(Pokemon().loadFromNBT(pokemonNBT))
+                pokemon.add(Pokemon.loadFromNBT(pokemonNBT))
             } catch(_: InvalidSpeciesException) {
                 handleInvalidSpeciesNBT(pokemonNBT)
             }
@@ -69,7 +69,7 @@ open class BottomlessStore(override val uuid: UUID) : PokemonStore<BottomlessPos
     }
 
     override fun saveToJSON(json: JsonObject): JsonObject {
-        pokemon.forEachIndexed { index, pokemon -> json.add(DataKeys.STORE_SLOT + index, pokemon.saveToJSON(JsonObject())) }
+        pokemon.forEachIndexed { index, pokemon -> json.add(DataKeys.STORE_SLOT + index, pokemon.saveToJSON()) }
         return json
     }
 
@@ -78,7 +78,7 @@ open class BottomlessStore(override val uuid: UUID) : PokemonStore<BottomlessPos
         while (json.has(DataKeys.STORE_SLOT + ++i)) {
             val pokemonJSON = json.getAsJsonObject(DataKeys.STORE_SLOT + i)
             try {
-                pokemon.add(Pokemon().loadFromJSON(pokemonJSON))
+                pokemon.add(Pokemon.loadFromJSON(pokemonJSON))
             } catch (_: InvalidSpeciesException) {
                 handleInvalidSpeciesJSON(pokemonJSON)
             }
@@ -86,12 +86,12 @@ open class BottomlessStore(override val uuid: UUID) : PokemonStore<BottomlessPos
         return this
     }
 
-    override fun loadPositionFromNBT(nbt: NbtCompound): StoreCoordinates<BottomlessPosition> {
+    override fun loadPositionFromNBT(nbt: CompoundTag): StoreCoordinates<BottomlessPosition> {
         val slot = nbt.getByte(DataKeys.STORE_SLOT).toInt()
         return StoreCoordinates(this, BottomlessPosition(slot))
     }
 
-    override fun savePositionToNBT(position: BottomlessPosition, nbt: NbtCompound) {
+    override fun savePositionToNBT(position: BottomlessPosition, nbt: CompoundTag) {
         nbt.putByte(DataKeys.STORE_SLOT, position.currentIndex.toByte())
     }
 
@@ -102,10 +102,10 @@ open class BottomlessStore(override val uuid: UUID) : PokemonStore<BottomlessPos
             this.pokemon.add(pokemon)
             storeChangeObservable.emit(Unit)
         } else if (position.currentIndex in 0 until this.pokemon.size) {
-            var startIndex = position.currentIndex;
+            var startIndex = position.currentIndex
             if (pokemon != null) {
                 this.pokemon.add(position.currentIndex, pokemon)
-                startIndex += 1;
+                startIndex += 1
             } else {
                 this.pokemon.removeAt(position.currentIndex)
             }

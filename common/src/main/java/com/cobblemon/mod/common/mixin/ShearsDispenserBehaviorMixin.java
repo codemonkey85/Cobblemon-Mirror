@@ -10,21 +10,21 @@ package com.cobblemon.mod.common.mixin;
 
 import com.cobblemon.mod.common.block.ShearableBlock;
 import kotlin.Unit;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.dispenser.ShearsDispenserBehavior;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.dispenser.ShearsDispenseItemBehavior;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ShearsDispenserBehavior.class)
+@Mixin(ShearsDispenseItemBehavior.class)
 public abstract class ShearsDispenserBehaviorMixin {
 
     // This exists, so we can execute our custom interaction only if no one redirected shears interactions to overwrite the vanilla ones.
-    @Inject(method = "tryShearBlock", at = @At("HEAD"), cancellable = true)
-    private static void cobblemon$tryApricornHarvest(ServerWorld world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "tryShearBeehive", at = @At("HEAD"), cancellable = true)
+    private static void cobblemon$tryApricornHarvest(ServerLevel world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         final BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof ShearableBlock shearableBlock) {
             cir.setReturnValue(shearableBlock.attemptShear(world, state, pos, () -> Unit.INSTANCE));

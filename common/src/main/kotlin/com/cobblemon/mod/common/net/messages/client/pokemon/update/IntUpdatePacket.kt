@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.writeSizedInt
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * A specific type of update for a Pokémon which updates a single integer value.
@@ -26,7 +26,7 @@ abstract class IntUpdatePacket<T : NetworkPacket<T>>(pokemon: () -> Pokemon, val
 
     abstract fun getSize(): IntSize
 
-    override fun encodeValue(buffer: PacketByteBuf) {
+    override fun encodeValue(buffer: RegistryFriendlyByteBuf) {
         buffer.writeSizedInt(this.getSize(), this.value)
     }
 }

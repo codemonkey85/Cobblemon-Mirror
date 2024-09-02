@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.api.pasture
 import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.util.readSizedInt
 import com.cobblemon.mod.common.util.writeSizedInt
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * A set of permissions for using a pasture block.
@@ -29,14 +29,14 @@ class PasturePermissions(
     val maxPokemon: Int
 ) {
     companion object {
-        fun decode(buffer: PacketByteBuf) = PasturePermissions(
+        fun decode(buffer: RegistryFriendlyByteBuf) = PasturePermissions(
             canUnpastureOthers = buffer.readBoolean(),
             canPasture = buffer.readBoolean(),
             maxPokemon = buffer.readSizedInt(IntSize.SHORT)
         )
     }
 
-    fun encode(buffer: PacketByteBuf) {
+    fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(canUnpastureOthers)
         buffer.writeBoolean(canPasture)
         buffer.writeSizedInt(IntSize.SHORT, maxPokemon)

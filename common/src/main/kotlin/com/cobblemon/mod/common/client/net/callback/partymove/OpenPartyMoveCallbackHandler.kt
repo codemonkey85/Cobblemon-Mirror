@@ -19,10 +19,10 @@ import com.cobblemon.mod.common.client.gui.interact.partyselect.PartySelectGUI
 import com.cobblemon.mod.common.net.messages.client.callback.OpenPartyMoveCallbackPacket
 import com.cobblemon.mod.common.net.messages.server.callback.partymove.PartyMoveSelectCancelledPacket
 import com.cobblemon.mod.common.net.messages.server.callback.partymove.PartyPokemonMoveSelectedPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object OpenPartyMoveCallbackHandler : ClientNetworkPacketHandler<OpenPartyMoveCallbackPacket> {
-    override fun handle(packet: OpenPartyMoveCallbackPacket, client: MinecraftClient) {
+    override fun handle(packet: OpenPartyMoveCallbackPacket, client: Minecraft) {
         val pokemonToMoves = packet.pokemonList.toMap()
         val cancel: (Any) -> Unit = {
             CobblemonNetwork.sendToServer(PartyMoveSelectCancelledPacket(uuid = packet.uuid))
@@ -41,7 +41,7 @@ object OpenPartyMoveCallbackHandler : ClientNetworkPacketHandler<OpenPartyMoveCa
                 title = "".text(),
                 moves = pokemonToMoves[pokemonSelectDTO]!!,
                 onCancel = cancel,
-                onBack = { MinecraftClient.getInstance().setScreen(PartySelectGUI(partySelectConfiguration)) },
+                onBack = { Minecraft.getInstance().setScreen(PartySelectGUI(partySelectConfiguration)) },
                 onSelect = { gui, moveSelectDTO ->
                     val pokemonIndex = packet.pokemonList.indexOfFirst { it.first == pokemonSelectDTO }
                     val moveIndex = pokemonToMoves[pokemonSelectDTO]!!.indexOf(moveSelectDTO)
@@ -56,9 +56,9 @@ object OpenPartyMoveCallbackHandler : ClientNetworkPacketHandler<OpenPartyMoveCa
             pokemon = pokemonToMoves.keys.toList(),
             onCancel = cancel,
             onBack = cancel,
-            onSelect = { _, it -> MinecraftClient.getInstance().setScreen(MoveSelectGUI(makeMoveSelectConfiguration(it))) }
+            onSelect = { _, it -> Minecraft.getInstance().setScreen(MoveSelectGUI(makeMoveSelectConfiguration(it))) }
         )
 
-        MinecraftClient.getInstance().setScreen(PartySelectGUI(partySelectConfiguration))
+        Minecraft.getInstance().setScreen(PartySelectGUI(partySelectConfiguration))
     }
 }

@@ -8,10 +8,11 @@
 
 package com.cobblemon.mod.common.api.battles.model.actor
 
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.Vec3d
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.phys.Vec3
+
 
 interface FleeableBattleActor {
     val fleeDistance: Float
-    fun getWorldAndPosition(): Pair<ServerWorld, Vec3d>?
+    fun getWorldAndPosition(): Pair<ServerLevel, Vec3>?
 }

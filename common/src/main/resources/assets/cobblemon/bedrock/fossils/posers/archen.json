@@ -2,36 +2,33 @@
   "maxScale": 0.55,
   "yTranslation": 0,
   "yGrowthPoint": 0.5625,
-  "animations": [
-    "bedrock(archen_fetus, sleep)"
-  ],
-  "quirks": [
-    {
-      "name": "quirk",
-      "animations": [
-        "bedrock(archen_fetus, quirk1)"
-      ],
-      "loopTimes": 1,
-        "minSeconds": 45,
-      "maxSeconds": 180
-    },
-    {
-      "name": "quirk",
-      "animations": [
-        "bedrock(archen_fetus, quirk2)"
-      ],
-      "loopTimes": 1,
-      "minSeconds": 45,
-      "maxSeconds": 180
-    },
-    {
-      "name": "quirk",
-      "animations": [
-        "bedrock(archen_fetus, quirk3)"
-      ],
-      "loopTimes": 1,
-      "minSeconds": 45,
-      "maxSeconds": 180
+  "poses": {
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('archen_fetus', 'sleep')"],
+      "quirks": [
+        {
+          "name": "quirk",
+          "animations": ["q.bedrock_stateful('archen_fetus', 'quirk1')"],
+          "loopTimes": 1,
+          "minSecondsBetweenOccurrences": 45,
+          "maxSecondsBetweenOccurrences": 180
+        },
+        {
+          "name": "quirk",
+          "animations": ["q.bedrock_stateful('archen_fetus', 'quirk2')"],
+          "loopTimes": 1,
+          "minSecondsBetweenOccurrences": 45,
+          "maxSecondsBetweenOccurrences": 180
+        },
+        {
+          "name": "quirk",
+          "animations": ["q.bedrock_stateful('archen_fetus', 'quirk3')"],
+          "loopTimes": 1,
+          "minSecondsBetweenOccurrences": 45,
+          "maxSecondsBetweenOccurrences": 180
+        }
+      ]
     }
-  ]
+  }
 }

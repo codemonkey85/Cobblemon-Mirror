@@ -11,71 +11,82 @@ package com.cobblemon.mod.common.block
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.item.MintLeafItem
-import net.minecraft.block.*
-import net.minecraft.item.Item
-import net.minecraft.item.ItemConvertible
-import net.minecraft.registry.tag.BlockTags
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.state.StateManager
-import net.minecraft.state.property.BooleanProperty
-import net.minecraft.state.property.IntProperty
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.random.Random
-import net.minecraft.util.shape.VoxelShape
-import net.minecraft.util.shape.VoxelShapes
-import net.minecraft.world.BlockView
-import net.minecraft.world.World
-import net.minecraft.world.WorldView
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.BlockPos
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.tags.BlockTags
+import net.minecraft.util.RandomSource
+import net.minecraft.util.StringRepresentable
+import net.minecraft.world.item.Item
+import net.minecraft.world.level.BlockGetter
+import net.minecraft.world.level.ItemLike
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.LevelReader
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.BonemealableBlock
+import net.minecraft.world.level.block.CropBlock
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.StateDefinition
+import net.minecraft.world.level.block.state.properties.BooleanProperty
+import net.minecraft.world.level.block.state.properties.IntegerProperty
+import net.minecraft.world.phys.shapes.CollisionContext
+import net.minecraft.world.phys.shapes.Shapes
+import net.minecraft.world.phys.shapes.VoxelShape
 
 @Suppress("OVERRIDE_DEPRECATION", "MemberVisibilityCanBePrivate")
-class MintBlock(private val mintType: MintType, settings: Settings) : CropBlock(settings), Fertilizable {
+class MintBlock(private val mintType: MintType, settings: Properties) : CropBlock(settings), BonemealableBlock {
 
     init {
-        defaultState = stateManager.defaultState
-            .with(AGE, 0)
-            .with(IS_WILD, false)
+        registerDefaultState(stateDefinition.any()
+            .setValue(AGE, 0)
+            .setValue(IS_WILD, false))
     }
 
     // DO NOT use withAge
     // Explanation for these 2 beautiful copy pasta are basically that we need to keep the blockstate and that's not possible with the default impl :(
-    override fun randomTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: Random) {
-        if (world.getBaseLightLevel(pos, 0) < 9 || this.isMature(state) || random.nextInt(8) != 0) {
+    override fun randomTick(state: BlockState, world: ServerLevel, pos: BlockPos, random: RandomSource) {
+        if (world.getRawBrightness(pos, 0) < 9 || this.isMaxAge(state) || random.nextInt(8) != 0) {
             return
         }
-        this.applyGrowth(world, pos, state, false)
+        this.growCrops(world, pos, state, false)
     }
 
-    override fun applyGrowth(world: World, pos: BlockPos, state: BlockState) {
-        this.applyGrowth(world, pos, state, true)
+    override fun growCrops(world: Level, pos: BlockPos, state: BlockState) {
+        this.growCrops(world, pos, state, true)
     }
 
-    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+    override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(AGE)
         builder.add(IS_WILD)
     }
 
-    override fun canPlaceAt(state: BlockState, world: WorldView, pos: BlockPos): Boolean {
-        val floor = world.getBlockState(pos.down())
+    override fun canSurvive(state: BlockState, world: LevelReader, pos: BlockPos): Boolean {
+        val floor = world.getBlockState(pos.below())
         // A bit of a copy pasta but we don't have access to the BlockState being attempted to be placed above on the canPlantOnTop
-        return (world.getBaseLightLevel(pos, 0) >= 8 || world.isSkyVisible(pos)) && ((this.isWild(state) && floor.isIn(BlockTags.DIRT)) || this.canPlantOnTop(floor, world, pos))
+        return (world.getRawBrightness(pos, 0) >= 8 || world.canSeeSky(pos)) && ((this.isWild(state) && floor.`is`(BlockTags.DIRT)) || this.mayPlaceOn(floor, world, pos))
     }
 
-    override fun getSeedsItem(): ItemConvertible = this.mintType.getSeed()
+    override fun getBaseSeedId(): ItemLike = this.mintType.getSeed()
 
-    override fun getGrowthAmount(world: World): Int = 1
+    override fun getBonemealAgeIncrease(world: Level): Int = 1
 
-    override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape = AGE_TO_SHAPE[this.getAge(state)]
+    override fun getShape(state: BlockState, world: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape = AGE_TO_SHAPE[this.getAge(state)]
 
-    fun isWild(state: BlockState): Boolean = state.get(IS_WILD)
+    fun isWild(state: BlockState): Boolean = state.getValue(IS_WILD)
 
-    private fun applyGrowth(world: World, pos: BlockPos, state: BlockState, useRandomGrowthAmount: Boolean) {
-        val growthAmount = if (useRandomGrowthAmount) this.getGrowthAmount(world) else 1
+    private fun growCrops(world: Level, pos: BlockPos, state: BlockState, useRandomGrowthAmount: Boolean) {
+        val growthAmount = if (useRandomGrowthAmount) this.getBonemealAgeIncrease(world) else 1
         val newAge = (this.getAge(state) + growthAmount).coerceAtMost(MATURE_AGE)
-        world.setBlockState(pos, state.with(AGE, newAge), NOTIFY_LISTENERS)
+        world.setBlock(pos, state.setValue(AGE, newAge), UPDATE_CLIENTS)
+    }
+
+    override fun codec(): MapCodec<out CropBlock> {
+        return CODEC
     }
 
     @Suppress("unused")
-    enum class MintType {
+    enum class MintType : StringRepresentable {
 
         RED,
         BLUE,
@@ -111,21 +122,30 @@ class MintBlock(private val mintType: MintType, settings: Settings) : CropBlock(
             WHITE -> CobblemonBlocks.WHITE_MINT
         }
 
+        override fun getSerializedName(): String = this.name.lowercase()
+
+        companion object {
+            val CODEC = StringRepresentable.fromEnum(::values)
+        }
     }
 
     companion object {
+        val CODEC: MapCodec<MintBlock> = RecordCodecBuilder.mapCodec { it.group(
+            MintType.CODEC.fieldOf("mintType").forGetter(MintBlock::mintType),
+            propertiesCodec()
+        ).apply(it, ::MintBlock) }
 
-        val AGE: IntProperty = CropBlock.AGE
+        val AGE: IntegerProperty = CropBlock.AGE
         const val MATURE_AGE = MAX_AGE
-        val IS_WILD: BooleanProperty = BooleanProperty.of("is_wild")
+        val IS_WILD: BooleanProperty = BooleanProperty.create("is_wild")
 
-        private val AGE_0_SHAPE = VoxelShapes.cuboid(0.0, -0.9, 0.0, 1.0, 0.1, 1.0)
-        private val AGE_1_TO_2_SHAPE = VoxelShapes.cuboid(0.0, -0.9, 0.0, 1.0, 0.2, 1.0)
-        private val AGE_3_SHAPE = VoxelShapes.cuboid(0.0, -0.9, 0.0, 1.0, 0.3, 1.0)
-        private val AGE_4_SHAPE = VoxelShapes.cuboid(0.0, -0.9, 0.0, 1.0, 0.4, 1.0)
-        private val AGE_5_SHAPE = VoxelShapes.cuboid(0.0, -0.9, 0.0, 1.0, 0.5, 1.0)
-        private val AGE_6_SHAPE = VoxelShapes.cuboid(0.0, -0.9, 0.0, 1.0, 0.6, 1.0)
-        private val AGE_7_SHAPE = VoxelShapes.cuboid(0.0, -0.9, 0.0, 1.0, 0.7, 1.0)
+        private val AGE_0_SHAPE = Shapes.box(0.0, -0.9, 0.0, 1.0, 0.1, 1.0)
+        private val AGE_1_TO_2_SHAPE = Shapes.box(0.0, -0.9, 0.0, 1.0, 0.2, 1.0)
+        private val AGE_3_SHAPE = Shapes.box(0.0, -0.9, 0.0, 1.0, 0.3, 1.0)
+        private val AGE_4_SHAPE = Shapes.box(0.0, -0.9, 0.0, 1.0, 0.4, 1.0)
+        private val AGE_5_SHAPE = Shapes.box(0.0, -0.9, 0.0, 1.0, 0.5, 1.0)
+        private val AGE_6_SHAPE = Shapes.box(0.0, -0.9, 0.0, 1.0, 0.6, 1.0)
+        private val AGE_7_SHAPE = Shapes.box(0.0, -0.9, 0.0, 1.0, 0.7, 1.0)
 
         val AGE_TO_SHAPE = arrayOf(
             AGE_0_SHAPE,

@@ -15,10 +15,10 @@ import com.cobblemon.mod.common.net.messages.server.trade.UpdateTradeOfferPacket
 import com.cobblemon.mod.common.trade.TradeManager
 import com.cobblemon.mod.common.util.party
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object UpdateTradeOfferHandler : ServerNetworkPacketHandler<UpdateTradeOfferPacket> {
-    override fun handle(packet: UpdateTradeOfferPacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: UpdateTradeOfferPacket, server: MinecraftServer, player: ServerPlayer) {
         val trade = TradeManager.getActiveTrade(player.uuid) ?: return player.sendPacket(CancelTradePacket())
         val tradeParticipant = trade.getTradeParticipant(player.uuid)
         val newOffer = packet.newOffer

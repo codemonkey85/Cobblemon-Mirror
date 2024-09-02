@@ -10,13 +10,13 @@ package com.cobblemon.mod.common.net.messages.client.dialogue.dto
 
 import com.cobblemon.mod.common.api.net.Decodable
 import com.cobblemon.mod.common.api.net.Encodable
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class DialogueOptionSetDTO(
     var deadline: Float = 0F,
     var options: List<DialogueOptionDTO> = emptyList()
 ): Encodable, Decodable {
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeFloat(deadline)
         buffer.writeInt(options.size)
         options.forEach { option ->
@@ -24,7 +24,7 @@ class DialogueOptionSetDTO(
         }
     }
 
-    override fun decode(buffer: PacketByteBuf) {
+    override fun decode(buffer: RegistryFriendlyByteBuf) {
         deadline = buffer.readFloat()
         val size = buffer.readInt()
         options = (0 until size).map { DialogueOptionDTO().apply { decode(buffer) } }

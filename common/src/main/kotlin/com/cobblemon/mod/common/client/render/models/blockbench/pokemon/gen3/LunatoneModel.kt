@@ -8,42 +8,42 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class LunatoneModel (root: ModelPart) : PokemonPoseableModel() {
+class LunatoneModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("lunatone")
 
     override var portraitScale = 1.05F
-    override var portraitTranslation = Vec3d(0.23, 0.53, 0.0)
+    override var portraitTranslation = Vec3(0.23, 0.53, 0.0)
 
     override var profileScale = 0.73F
-    override var profileTranslation = Vec3d(0.05, 0.68, 0.0)
+    override var profileTranslation = Vec3(0.05, 0.68, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var standing: CobblemonPose
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("lunatone", "blink") }
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("lunatone", "sleep"))
+            animations = arrayOf(bedrock("lunatone", "sleep"))
         )
 
         standing = registerPose(
             poseName = "standing",
             poseTypes = PoseType.ALL_POSES - PoseType.SLEEP,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("lunatone", "ground_idle")
             )
         )
     }
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(sleep)) bedrockStateful("lunatone", "faint") else null
 }

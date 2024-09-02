@@ -9,11 +9,10 @@
 package com.cobblemon.mod.common.api.scheduling
 
 import java.util.concurrent.CompletableFuture
+import com.cobblemon.mod.common.util.runOnServer
 
 @Deprecated("Use afterOnServer or afterOnClient; ambiguous side is not good for your health")
 @JvmOverloads
-
-
 fun after(ticks: Int = 0, seconds: Float = 0F, serverThread: Boolean = false, action: () -> Unit) {
     val scheduler = if (serverThread) ServerTaskTracker else ClientTaskTracker
     scheduler.after(seconds = seconds + ticks / 20F, action)
@@ -46,3 +45,11 @@ fun lerpOnServer(seconds: Float = 0F, action: (Float) -> Unit) = ServerTaskTrack
 @JvmOverloads
 fun lerpOnClient(seconds: Float = 0F, action: (Float) -> Unit) = ClientTaskTracker.lerp(seconds = seconds, action = action)
 fun taskBuilder() = ScheduledTask.Builder()
+
+fun delayedFuture(seconds: Float): CompletableFuture<Unit> {
+    val future = CompletableFuture<Unit>()
+    afterOnServer(seconds = seconds) {
+        future.complete(Unit)
+    }
+    return future
+}

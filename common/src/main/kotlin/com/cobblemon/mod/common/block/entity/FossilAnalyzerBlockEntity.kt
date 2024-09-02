@@ -13,12 +13,12 @@ import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.api.fossil.Fossils
 import com.cobblemon.mod.common.api.multiblock.builder.MultiblockStructureBuilder
 import com.cobblemon.mod.common.block.multiblock.FossilMultiblockStructure
-import net.minecraft.block.BlockState
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.inventory.SidedInventory
-import net.minecraft.item.ItemStack
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.world.WorldlyContainer
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.block.state.BlockState
 
 class FossilAnalyzerBlockEntity(
     pos: BlockPos, state: BlockState,
@@ -27,15 +27,15 @@ class FossilAnalyzerBlockEntity(
 
     val inv = FossilAnalyzerInventory(this)
 
-    class FossilAnalyzerInventory(val analyzerEntity: FossilAnalyzerBlockEntity) : SidedInventory {
-        override fun clear() {
+    class FossilAnalyzerInventory(val analyzerEntity: FossilAnalyzerBlockEntity) : WorldlyContainer {
+        override fun clearContent() {
             if(analyzerEntity.multiblockStructure != null && analyzerEntity.multiblockStructure is FossilMultiblockStructure) {
                 val fossilMultiblockStructure = analyzerEntity.multiblockStructure as FossilMultiblockStructure
                 fossilMultiblockStructure.fossilInventory.clear()
             }
         }
 
-        override fun size(): Int {
+        override fun getContainerSize(): Int {
             if (analyzerEntity.multiblockStructure != null) {
                 return 3
             }
@@ -46,7 +46,7 @@ class FossilAnalyzerBlockEntity(
             return false
         }
 
-        override fun getStack(slot: Int): ItemStack {
+        override fun getItem(slot: Int): ItemStack {
             if (analyzerEntity.multiblockStructure != null && analyzerEntity.multiblockStructure is FossilMultiblockStructure) {
                 val fossilMultiblockStructure = analyzerEntity.multiblockStructure as FossilMultiblockStructure
                 if (fossilMultiblockStructure.fossilInventory.size > slot) {
@@ -57,41 +57,38 @@ class FossilAnalyzerBlockEntity(
         }
 
         //Unimplemented since no extract
-        override fun removeStack(slot: Int, amount: Int): ItemStack {
-            return removeStack(slot)
+        override fun removeItem(slot: Int, amount: Int): ItemStack {
+            return removeItemNoUpdate(slot)
         }
 
-        override fun removeStack(slot: Int): ItemStack {
+        override fun removeItemNoUpdate(slot: Int): ItemStack {
             return ItemStack.EMPTY
         }
 
-        override fun setStack(slot: Int, stack: ItemStack) {
+        override fun setItem(slot: Int, stack: ItemStack) {
             if (analyzerEntity.multiblockStructure != null && analyzerEntity.multiblockStructure is FossilMultiblockStructure) {
                 val struct = analyzerEntity.multiblockStructure as FossilMultiblockStructure
-                analyzerEntity.world?.let {
+                analyzerEntity.level?.let {
                     struct.insertFossil(stack, it)
                 }
             }
         }
 
-        override fun markDirty() {
-            if (analyzerEntity.world != null) {
-                analyzerEntity.multiblockStructure?.markDirty(analyzerEntity.world!!)
+        override fun setChanged() {
+            if (analyzerEntity.level != null) {
+                analyzerEntity.multiblockStructure?.markDirty(analyzerEntity.level!!)
             }
         }
 
-        override fun canPlayerUse(player: PlayerEntity?): Boolean {
-            return false
-        }
-
-        override fun getAvailableSlots(side: Direction?): IntArray {
+        override fun stillValid(player: Player) = false
+        override fun getSlotsForFace(side: Direction): IntArray {
             if(analyzerEntity.multiblockStructure != null && analyzerEntity.multiblockStructure is FossilMultiblockStructure) {
                 return intArrayOf(0,1,2)
             }
             return IntArray(0)
         }
 
-        override fun canInsert(slot: Int, stack: ItemStack?, dir: Direction?): Boolean {
+        override fun canPlaceItemThroughFace(slot: Int, stack: ItemStack, dir: Direction?): Boolean {
             if (analyzerEntity.multiblockStructure is FossilMultiblockStructure) {
                 val structure = analyzerEntity.multiblockStructure as FossilMultiblockStructure
                 return stack?.let { Fossils.isFossilIngredient(it) } == true
@@ -102,8 +99,6 @@ class FossilAnalyzerBlockEntity(
             return false
         }
 
-        override fun canExtract(slot: Int, stack: ItemStack?, dir: Direction?): Boolean {
-            return false
-        }
+        override fun canTakeItemThroughFace(slot: Int, stack: ItemStack, direction: Direction) = false
     }
 }

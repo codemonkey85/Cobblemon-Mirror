@@ -11,23 +11,23 @@ package com.cobblemon.mod.common.client.render.boat
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatEntity
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatType
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.render.OverlayTexture
-import net.minecraft.client.render.RenderLayer
-import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.entity.EntityRenderer
-import net.minecraft.client.render.entity.EntityRendererFactory
-import net.minecraft.client.render.entity.model.BoatEntityModel
-import net.minecraft.client.render.entity.model.ChestBoatEntityModel
-import net.minecraft.client.render.entity.model.EntityModelLayer
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.MathHelper
-import net.minecraft.util.math.RotationAxis
+import net.minecraft.client.model.BoatModel
+import net.minecraft.client.model.ChestBoatModel
+import net.minecraft.client.model.geom.ModelLayerLocation
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.entity.EntityRenderer
+import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.math.Axis
+import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.Mth
 import org.joml.Quaternionf
 
-class CobblemonBoatRenderer(ctx: EntityRendererFactory.Context, private val hasChest: Boolean) : EntityRenderer<CobblemonBoatEntity>(ctx) {
+class CobblemonBoatRenderer(ctx: EntityRendererProvider.Context, private val hasChest: Boolean) : EntityRenderer<CobblemonBoatEntity>(ctx) {
 
-    private val boatModels = hashMapOf<CobblemonBoatType, Pair<Identifier, BoatEntityModel>>()
+    private val boatModels = hashMapOf<CobblemonBoatType, Pair<ResourceLocation, BoatModel>>()
 
     init {
         this.shadowRadius = 0.8F
@@ -36,53 +36,53 @@ class CobblemonBoatRenderer(ctx: EntityRendererFactory.Context, private val hasC
         }
     }
 
-    override fun getTexture(entity: CobblemonBoatEntity): Identifier = this.boatModels[entity.boatType]!!.first
+    override fun getTextureLocation(entity: CobblemonBoatEntity): ResourceLocation = this.boatModels[entity.boatType]!!.first
 
-    override fun render(entity: CobblemonBoatEntity, yaw: Float, tickDelta: Float, matrices: MatrixStack, vertexConsumers: VertexConsumerProvider, light: Int) {
-        matrices.push()
+    override fun render(entity: CobblemonBoatEntity, yaw: Float, tickDelta: Float, matrices: PoseStack, vertexConsumers: MultiBufferSource, light: Int) {
+        matrices.pushPose()
         matrices.translate(0F, 0.375F, 0F)
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180F - yaw))
-        val h = entity.damageWobbleTicks - tickDelta
-        val j = (entity.damageWobbleStrength - tickDelta).coerceAtLeast(0F)
+        matrices.mulPose(Axis.YP.rotationDegrees(180F - yaw))
+        val h = entity.hurtTime - tickDelta
+        val j = (entity.damage - tickDelta).coerceAtLeast(0F)
         if (h > 0F) {
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(MathHelper.sin(h) * h * j / 10F * entity.damageWobbleSide))
+            matrices.mulPose(Axis.XP.rotationDegrees(Mth.sin(h) * h * j / 10F * entity.hurtDir))
         }
-        val k = entity.interpolateBubbleWobble(tickDelta)
-        if (!MathHelper.approximatelyEquals(k, 0F)) {
-            matrices.multiply(Quaternionf().setAngleAxis(entity.interpolateBubbleWobble(tickDelta) * 0.017453292F, 1F, 0F, 1F))
+        val k = entity.getBubbleAngle(tickDelta)
+        if (!Mth.equal(k, 0F)) {
+            matrices.mulPose(Quaternionf().setAngleAxis(entity.getBubbleAngle(tickDelta) * 0.017453292F, 1F, 0F, 1F))
         }
         val (identifier, entityModel) = this.boatModels[entity.boatType]!!
         matrices.scale(-1F, -1F, 1F)
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90F))
-        entityModel.setAngles(entity, tickDelta, 0F, -0.1F, 0F, 0F)
-        val vertexConsumer = vertexConsumers.getBuffer(entityModel.getLayer(identifier))
-        entityModel.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1F, 1F, 1F, 1F)
-        if (!entity.isSubmergedInWater) {
-            val vertexConsumer2 = vertexConsumers.getBuffer(RenderLayer.getWaterMask())
-            entityModel.waterPatch.render(matrices, vertexConsumer2, light, OverlayTexture.DEFAULT_UV)
+        matrices.mulPose(Axis.YP.rotationDegrees(90F))
+        entityModel.setupAnim(entity, tickDelta, 0F, -0.1F, 0F, 0F)
+        val vertexConsumer = vertexConsumers.getBuffer(entityModel.renderType(identifier))
+        entityModel.renderToBuffer(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY, -0x1)
+        if (!entity.isUnderWater) {
+            val vertexConsumer2 = vertexConsumers.getBuffer(RenderType.waterMask())
+            entityModel.waterPatch().render(matrices, vertexConsumer2, light, OverlayTexture.NO_OVERLAY)
         }
-        matrices.pop()
+        matrices.popPose()
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light)
     }
 
     companion object {
 
-        private fun generateTextureIdentifier(type: CobblemonBoatType, hasChest: Boolean): Identifier {
+        private fun generateTextureIdentifier(type: CobblemonBoatType, hasChest: Boolean): ResourceLocation {
             val boatSubPath = if (hasChest) "chest_boat" else "boat"
             val path = "textures/entity/$boatSubPath/${type.name.lowercase()}.png"
             return cobblemonResource(path)
         }
 
-        private fun generateBoatModel(ctx: EntityRendererFactory.Context, type: CobblemonBoatType, hasChest: Boolean): BoatEntityModel {
+        private fun generateBoatModel(ctx: EntityRendererProvider.Context, type: CobblemonBoatType, hasChest: Boolean): BoatModel {
             val modelLayer = this.createBoatModelLayer(type, hasChest)
-            val modelPart = ctx.getPart(modelLayer)
-            return if (hasChest) ChestBoatEntityModel(modelPart) else BoatEntityModel(modelPart)
+            val modelPart = ctx.bakeLayer(modelLayer)
+            return if (hasChest) ChestBoatModel(modelPart) else BoatModel(modelPart)
         }
 
-        internal fun createBoatModelLayer(type: CobblemonBoatType, hasChest: Boolean): EntityModelLayer {
+        internal fun createBoatModelLayer(type: CobblemonBoatType, hasChest: Boolean): ModelLayerLocation {
             val boatSubPath = if (hasChest) "chest_boat" else "boat"
             val path = "$boatSubPath/${type.name.lowercase()}"
-            return EntityModelLayer(cobblemonResource(path), "main")
+            return ModelLayerLocation(cobblemonResource(path), "main")
         }
 
     }

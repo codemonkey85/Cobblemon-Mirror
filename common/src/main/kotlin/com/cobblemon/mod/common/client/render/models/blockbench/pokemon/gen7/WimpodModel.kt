@@ -8,18 +8,17 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen7
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class WimpodModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame {
+class WimpodModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("wimpod")
     override val head = getPart("head")
 
@@ -27,18 +26,18 @@ class WimpodModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.35, -1.6, 0.0)
+    override var portraitTranslation = Vec3(-0.35, -1.6, 0.0)
 
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.0, 0.71, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.71, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var floating: PokemonPose
-    lateinit var swimming: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var floating: Pose
+    lateinit var swimming: Pose
+    lateinit var sleep: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("wimpod", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("wimpod", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("wimpod", "blink")}
@@ -48,7 +47,7 @@ class WimpodModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
         sleep = registerPose(
             poseName = "sleeping",
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("wimpod", "sleep"))
+            animations = arrayOf(bedrock("wimpod", "sleep"))
         )
 
         standing = registerPose(
@@ -56,7 +55,7 @@ class WimpodModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
             poseTypes = PoseType.UI_POSES + PoseType.STAND,
             transformTicks = 10,
             quirks = arrayOf(blink, leftTwitch, rightTwitch),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(disableX = true),
                 bedrock("wimpod", "ground_idle")
             )
@@ -67,7 +66,7 @@ class WimpodModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
             transformTicks = 10,
             poseType = PoseType.WALK,
             quirks = arrayOf(blink, leftTwitch, rightTwitch),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(disableX = true),
                 bedrock("wimpod", "ground_walk")
             )
@@ -78,7 +77,7 @@ class WimpodModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
             transformTicks = 10,
             poseType = PoseType.FLOAT,
             quirks = arrayOf(blink, leftTwitch, rightTwitch),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(disableX = true),
                 bedrock("wimpod", "water_idle")
             )
@@ -89,14 +88,11 @@ class WimpodModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
             transformTicks = 10,
             poseType = PoseType.SWIM,
             quirks = arrayOf(blink, leftTwitch, rightTwitch),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(disableX = true),
                 bedrock("wimpod", "water_swim"),
             )
         )
     }
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isPosedIn(standing, walk, sleep)) bedrockStateful("wimpod", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walk, sleep)) bedrockStateful("wimpod", "faint") else null
 }

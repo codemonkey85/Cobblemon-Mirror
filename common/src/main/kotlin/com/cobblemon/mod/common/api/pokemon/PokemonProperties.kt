@@ -21,23 +21,26 @@ import com.cobblemon.mod.common.api.pokemon.status.Statuses
 import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
 import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.api.types.tera.TeraTypes
+import com.cobblemon.mod.common.api.types.tera.elemental.ElementalTypeTeraType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.*
 import com.cobblemon.mod.common.pokemon.status.PersistentStatus
 import com.cobblemon.mod.common.util.*
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.mojang.serialization.Codec
+import net.minecraft.ResourceLocationException
+import net.minecraft.core.HolderLookup
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.StringTag
+import net.minecraft.nbt.Tag
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.level.Level
+import java.util.*
 import kotlin.random.Random
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.nbt.NbtElement
-import net.minecraft.nbt.NbtList
-import net.minecraft.nbt.NbtString
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
-import net.minecraft.util.InvalidIdentifierException
-import net.minecraft.world.World
-import java.util.UUID
 
 /**
  * A grouping of typical, selectable properties for a Pokémon. This is serializable
@@ -54,14 +57,28 @@ import java.util.UUID
  */
 open class PokemonProperties {
     companion object {
+
+        @JvmStatic
+        val CODEC: Codec<PokemonProperties> = Codec.STRING.xmap(
+            { parse(it) },
+            { it.asString() }
+        )
+
+        @JvmStatic
+        val CUSTOM_PROPERTIES_CODEC: Codec<MutableList<CustomPokemonProperty>> = Codec.list(Codec.STRING)
+            .xmap(
+                { string -> parse(string.joinToString(" ")).customProperties },
+                { customProperties -> customProperties.map { it.asString() } }
+            )
+
         @JvmOverloads
         fun parse(string: String, delimiter: String = " ", assigner: String = "="): PokemonProperties {
             val props = PokemonProperties()
             props.originalString = string
             val keyPairs = string.splitMap(delimiter, assigner)
-            props.customProperties = CustomPokemonProperty.properties.mapNotNull { property ->
-                val matchedKeyPair = keyPairs.find { it.first.lowercase() in property.keys }
-                if (matchedKeyPair == null) {
+            props.customProperties = CustomPokemonProperty.properties.flatMap { property ->
+                val matchedKeyPairs = keyPairs.filter { it.first.lowercase() in property.keys }
+                if (matchedKeyPairs.isEmpty()) {
                     if (!property.needsKey) {
                         var savedProperty: CustomPokemonProperty? = null
                         val keyPair = keyPairs.find { keyPair ->
@@ -71,16 +88,23 @@ open class PokemonProperties {
                         if (keyPair != null) {
                             keyPairs.remove(keyPair)
                         }
-                        return@mapNotNull savedProperty
+                        return@flatMap savedProperty?.let { listOf(it) } ?: emptyList()
                     } else {
-                        return@mapNotNull null
+                        return@flatMap emptyList()
                     }
                 } else {
-                    keyPairs.remove(matchedKeyPair)
-                    return@mapNotNull property.fromString(matchedKeyPair.second)
+                    val properties = mutableListOf<CustomPokemonProperty>()
+                    for ((customKey, customValue) in matchedKeyPairs) {
+                        val property = property.fromString(customValue)
+                        keyPairs.remove(customKey to customValue)
+                        if (property != null) {
+                            properties.add(property)
+                        }
+                    }
+                    return@flatMap properties
                 }
             }.toMutableList()
-            props.gender = Gender.values().toList().parsePropertyOfCollection(keyPairs, listOf("gender"), labelsOptional = true) { it.name.lowercase() }
+            props.gender = Gender.entries.toList().parsePropertyOfCollection(keyPairs, listOf("gender"), labelsOptional = true) { it.name.lowercase() }
             props.level = parseIntProperty(keyPairs, listOf("level", "lvl", "l"))?.coerceIn(1, Cobblemon.config.maxPokemonLevel)
             props.shiny = parseBooleanProperty(keyPairs, listOf("shiny", "s"))
             props.species = parseSpeciesIdentifier(keyPairs)
@@ -91,11 +115,12 @@ open class PokemonProperties {
             props.ability = parseStringOfRegistry(keyPairs, listOf("ability")) { Abilities.get(it)?.name }
             props.status = parseStringOfRegistry(keyPairs, listOf("status")) { (Statuses.getStatus(it) ?: Statuses.getStatus(it.asIdentifierDefaultingNamespace()))?.showdownName }
             props.nickname = parseText(keyPairs, listOf("nickname", "nick"))
-            props.teraType = parseStringOfRegistry(keyPairs, listOf("tera_type", "tera")) { ElementalTypes.get(it)?.name }
+            props.type = parseStringOfRegistry(keyPairs, listOf("type", "elemental_type")) { ElementalTypes.get(it)?.name }
+            props.teraType = parseIdentifierOfRegistry(keyPairs, listOf("tera_type", "tera")) { TeraTypes.get(it)?.id?.simplify() }
             props.dmaxLevel = parseIntProperty(keyPairs, listOf("dmax_level", "dmax"))?.coerceIn(0, Cobblemon.config.maxDynamaxLevel)
             props.gmaxFactor = parseBooleanProperty(keyPairs, listOf("gmax_factor", "gmax"))
             props.tradeable = parseBooleanProperty(keyPairs, listOf("tradeable", "tradable"))
-            props.originalTrainerType = OriginalTrainerType.values().toList().parsePropertyOfCollection(keyPairs, listOf("originaltrainertype", "ottype"), labelsOptional = true) { it.name.lowercase() }
+            props.originalTrainerType = OriginalTrainerType.entries.toList().parsePropertyOfCollection(keyPairs, listOf("originaltrainertype", "ottype"), labelsOptional = true) { it.name.lowercase() }
             props.originalTrainer = parsePlayerProperty(keyPairs, listOf("originaltrainer", "ot"))
 
             val maybeIVs = IVs()
@@ -116,13 +141,13 @@ open class PokemonProperties {
             return keyPairs.findLast { it.first in labels }
         }
 
-        private fun parseText(keyPairs: MutableList<Pair<String, String?>>, labels: Iterable<String>): MutableText? {
+        private fun parseText(keyPairs: MutableList<Pair<String, String?>>, labels: Iterable<String>): MutableComponent? {
             val matchingKeyPair = getMatchedKeyPair(keyPairs, labels) ?: return null
             val value = matchingKeyPair.second
             return if (value.isNullOrBlank()) {
                 null
             } else {
-                Text.translatable(value)
+                Component.translatable(value)
             }
         }
 
@@ -136,13 +161,13 @@ open class PokemonProperties {
             }
         }
 
-        private fun parseIdentifierOfRegistry(keyPairs: MutableList<Pair<String, String?>>, validKeys: List<String>, valueFetcher: (Identifier) -> String?): String? {
+        private fun parseIdentifierOfRegistry(keyPairs: MutableList<Pair<String, String?>>, validKeys: List<String>, valueFetcher: (ResourceLocation) -> String?): String? {
             val matched = getMatchedKeyPair(keyPairs, validKeys) ?: return null
             val value = matched.second?.lowercase() ?: return null
             return try {
                 val identifier = value.asIdentifierDefaultingNamespace()
                 valueFetcher(identifier)
-            } catch (_: InvalidIdentifierException) {
+            } catch (_: ResourceLocationException) {
                 null
             }
         }
@@ -152,7 +177,7 @@ open class PokemonProperties {
             val value = matched.second?.lowercase() ?: return null
             return try {
                 valueFetcher(value)
-            } catch (_: InvalidIdentifierException) {
+            } catch (_: ResourceLocationException) {
                 null
             }
         }
@@ -168,7 +193,7 @@ open class PokemonProperties {
                     try {
                         val species = PokemonSpecies.getByIdentifier(value.asIdentifierDefaultingNamespace()) ?: return null
                         return if (species.resourceIdentifier.namespace == Cobblemon.MODID) species.resourceIdentifier.path else species.resourceIdentifier.toString()
-                    } catch (e: InvalidIdentifierException) {
+                    } catch (e: ResourceLocationException) {
                         return null
                     }
                 }
@@ -183,7 +208,7 @@ open class PokemonProperties {
                             val identifier = cleanSpeciesName(pair.first).asIdentifierDefaultingNamespace()
                             val found = PokemonSpecies.getByIdentifier(identifier) ?: return@find false
                             if (found.resourceIdentifier.namespace == Cobblemon.MODID) found.resourceIdentifier.path else found.resourceIdentifier.toString()
-                        } catch (e: InvalidIdentifierException) {
+                        } catch (e: ResourceLocationException) {
                             return@find false
                         }
                     }
@@ -262,7 +287,7 @@ open class PokemonProperties {
     var originalString: String = ""
 
     var species: String? = null
-    var nickname: MutableText? = null
+    var nickname: MutableComponent? = null
     var form: String? = null
     var shiny: Boolean? = null
     var gender: Gender? = null
@@ -273,6 +298,7 @@ open class PokemonProperties {
     var ability: String? = null
     var aspects: Set<String> = emptySet()
     var status: String? = null
+    var type: String? = null
     var teraType: String? = null
     var dmaxLevel: Int? = null
     var gmaxFactor: Boolean? = null
@@ -288,7 +314,7 @@ open class PokemonProperties {
         species = species?.let {
             return@let try {
                 PokemonSpecies.getByIdentifier(it.asIdentifierDefaultingNamespace())
-            } catch (e: InvalidIdentifierException) {
+            } catch (e: ResourceLocationException) {
                 PokemonSpecies.random()
             }
         } ?: PokemonSpecies.random(),
@@ -315,7 +341,7 @@ open class PokemonProperties {
                 } else {
                     PokemonSpecies.getByIdentifier(it.asIdentifierDefaultingNamespace())
                 }
-            } catch (e: InvalidIdentifierException) {
+            } catch (e: ResourceLocationException) {
                 null
             }
         }?.let { pokemon.species = it }
@@ -356,7 +382,7 @@ open class PokemonProperties {
             when (type) {
                 OriginalTrainerType.PLAYER -> {
                     when (ot.length) {
-                        in 3..16 -> server()?.userCache?.findByName(ot)?.get()?.id // OT is a Username
+                        in 3..16 -> server()?.profileCache?.get(ot)?.get()?.id // OT is a Username
                         36 -> UUID.fromString(ot) // OT is a UUID
                         else -> null // OT is invalid
                     }?.let { uuid -> pokemon.setOriginalTrainer(uuid) }
@@ -393,7 +419,7 @@ open class PokemonProperties {
                 if (pokemon.species != species) {
                     return false
                 }
-            } catch (e: InvalidIdentifierException) {
+            } catch (e: ResourceLocationException) {
                 return false
             }
         }
@@ -410,6 +436,7 @@ open class PokemonProperties {
         evs?.forEach{ stat ->
             if (stat.value != pokemon.evs[stat.key]) { return false }
         }
+        type?.takeIf { pokemon.types.none { type -> type.name.equals(it, true) } }?.let { return false }
         teraType?.takeIf { it.asIdentifierDefaultingNamespace() != pokemon.teraType.id }?.let { return false }
         dmaxLevel?.takeIf { it != pokemon.dmaxLevel }?.let { return false }
         gmaxFactor?.takeIf { it != pokemon.gmaxFactor }?.let { return false }
@@ -435,7 +462,7 @@ open class PokemonProperties {
                 if (properties.species != species.resourceIdentifier.toString()) {
                     return false
                 }
-            } catch (_: InvalidIdentifierException) {}
+            } catch (_: ResourceLocationException) {}
         }
         nickname?.takeIf { it.string != properties.nickname?.string }?.let { return false }
         form?.takeIf { !it.equals(properties.form, true) }?.let { return false }
@@ -458,6 +485,7 @@ open class PokemonProperties {
                 if (stat.value != propertiesEVs[stat.key]) { return false }
             }
         }
+        type?.takeIf { !it.equals(properties.type, true) }?.let { return false }
         teraType?.takeIf { it != properties.teraType }?.let { return false }
         dmaxLevel?.takeIf { it != properties.dmaxLevel }?.let { return false }
         gmaxFactor?.takeIf { it != properties.gmaxFactor }?.let { return false }
@@ -480,51 +508,58 @@ open class PokemonProperties {
         val baseTypes = pokemon.form.types.toList()
         if (this.shiny == null) pokemon.shiny = Cobblemon.config.shinyRate.checkRate()
         if (this.teraType == null) pokemon.teraType =
-            if (Cobblemon.config.teraTypeRate.checkRate()) TeraTypes.random(true)
+            if (Cobblemon.config.teraTypeRate.checkRate()) {
+                var picked = TeraTypes.random(true)
+                while (picked is ElementalTypeTeraType && picked.type in pokemon.types) {
+                    picked = TeraTypes.random(true)
+                }
+                picked
+            }
             else TeraTypes.forElementalType(baseTypes.random())
     }
 
-    fun createEntity(world: World): PokemonEntity {
+    fun createEntity(world: Level): PokemonEntity {
         return PokemonEntity(world, create())
     }
 
     // TODO Codecs at some point
-    fun saveToNBT(): NbtCompound {
-        val nbt = NbtCompound()
+    fun saveToNBT(registryLookup: HolderLookup.Provider): CompoundTag {
+        val nbt = CompoundTag()
         originalString.let { nbt.putString(DataKeys.POKEMON_PROPERTIES_ORIGINAL_TEXT, it) }
         level?.let { nbt.putInt(DataKeys.POKEMON_LEVEL, it) }
         shiny?.let { nbt.putBoolean(DataKeys.POKEMON_SHINY, it) }
         gender?.let { nbt.putString(DataKeys.POKEMON_GENDER, it.name) }
         species?.let { nbt.putString(DataKeys.POKEMON_SPECIES_TEXT, it) }
-        nickname?.let { nbt.putString(DataKeys.POKEMON_NICKNAME, Text.Serializer.toJson(it)) }
+        nickname?.let { nbt.putString(DataKeys.POKEMON_NICKNAME, Component.Serializer.toJson(it, registryLookup)) }
         form?.let { nbt.putString(DataKeys.POKEMON_FORM_ID, it) }
         friendship?.let { nbt.putInt(DataKeys.POKEMON_FRIENDSHIP, it) }
         pokeball?.let { nbt.putString(DataKeys.POKEMON_CAUGHT_BALL, it) }
         nature?.let { nbt.putString(DataKeys.POKEMON_NATURE, it) }
         ability?.let { nbt.putString(DataKeys.POKEMON_ABILITY, it) }
         status?.let { nbt.putString(DataKeys.POKEMON_STATUS_NAME, it) }
-        ivs?.let { nbt.put(DataKeys.POKEMON_IVS, it.saveToNBT(NbtCompound())) }
-        evs?.let { nbt.put(DataKeys.POKEMON_EVS, it.saveToNBT(NbtCompound())) }
+        ivs?.let { nbt.put(DataKeys.POKEMON_IVS, it.saveToNBT(CompoundTag())) }
+        evs?.let { nbt.put(DataKeys.POKEMON_EVS, it.saveToNBT(CompoundTag())) }
+        type?.let { nbt.putString(DataKeys.ELEMENTAL_TYPE, it) }
         teraType?.let { nbt.putString(DataKeys.POKEMON_TERA_TYPE, it) }
         dmaxLevel?.let { nbt.putInt(DataKeys.POKEMON_DMAX_LEVEL, it) }
         gmaxFactor?.let { nbt.putBoolean(DataKeys.POKEMON_GMAX_FACTOR, it) }
         tradeable?.let { nbt.putBoolean(DataKeys.POKEMON_TRADEABLE, it) }
         originalTrainerType?.let { nbt.putInt(DataKeys.POKEMON_ORIGINAL_TRAINER_TYPE, it.ordinal) }
         originalTrainer?.let { nbt.putString(DataKeys.POKEMON_ORIGINAL_TRAINER, it) }
-        val custom = NbtList()
-        customProperties.map { NbtString.of(it.asString()) }.forEach { custom.add(it) }
+        val custom = ListTag()
+        customProperties.map { StringTag.valueOf(it.asString()) }.forEach { custom.add(it) }
         nbt.put(DataKeys.POKEMON_PROPERTIES_CUSTOM, custom)
         return nbt
     }
 
     // TODO Codecs at some point
-    fun loadFromNBT(tag: NbtCompound): PokemonProperties {
+    fun loadFromNBT(tag: CompoundTag, registryLookup: HolderLookup.Provider): PokemonProperties {
         originalString = tag.getString(DataKeys.POKEMON_PROPERTIES_ORIGINAL_TEXT)
         level = if (tag.contains(DataKeys.POKEMON_LEVEL)) tag.getInt(DataKeys.POKEMON_LEVEL) else null
         shiny = if (tag.contains(DataKeys.POKEMON_SHINY)) tag.getBoolean(DataKeys.POKEMON_SHINY) else null
         gender = if (tag.contains(DataKeys.POKEMON_GENDER)) Gender.valueOf(tag.getString(DataKeys.POKEMON_GENDER)) else null
         species = if (tag.contains(DataKeys.POKEMON_SPECIES_TEXT)) tag.getString(DataKeys.POKEMON_SPECIES_TEXT) else null
-        nickname = if (tag.contains(DataKeys.POKEMON_NICKNAME)) Text.Serializer.fromJson(tag.getString(DataKeys.POKEMON_NICKNAME)) else null
+        nickname = if (tag.contains(DataKeys.POKEMON_NICKNAME)) Component.Serializer.fromJson(tag.getString(DataKeys.POKEMON_NICKNAME), registryLookup) else null
         form = if (tag.contains(DataKeys.POKEMON_FORM_ID)) tag.getString(DataKeys.POKEMON_FORM_ID) else null
         friendship = if (tag.contains(DataKeys.POKEMON_FRIENDSHIP)) tag.getInt(DataKeys.POKEMON_FRIENDSHIP) else null
         pokeball = if (tag.contains(DataKeys.POKEMON_CAUGHT_BALL)) tag.getString(DataKeys.POKEMON_CAUGHT_BALL) else null
@@ -533,15 +568,16 @@ open class PokemonProperties {
         status = if (tag.contains(DataKeys.POKEMON_STATUS_NAME)) tag.getString(DataKeys.POKEMON_STATUS_NAME) else null
         ivs = if (tag.contains(DataKeys.POKEMON_IVS)) ivs?.loadFromNBT(tag.getCompound(DataKeys.POKEMON_IVS)) as IVs? else null
         evs = if (tag.contains(DataKeys.POKEMON_EVS)) evs?.loadFromNBT(tag.getCompound(DataKeys.POKEMON_EVS)) as EVs? else null
+        type = if (tag.contains(DataKeys.ELEMENTAL_TYPE)) tag.getString(DataKeys.ELEMENTAL_TYPE) else null
         teraType = if (tag.contains(DataKeys.POKEMON_TERA_TYPE)) tag.getString(DataKeys.POKEMON_TERA_TYPE) else null
         dmaxLevel = if (tag.contains(DataKeys.POKEMON_DMAX_LEVEL)) tag.getInt(DataKeys.POKEMON_DMAX_LEVEL) else null
         gmaxFactor = if (tag.contains(DataKeys.POKEMON_GMAX_FACTOR)) tag.getBoolean(DataKeys.POKEMON_GMAX_FACTOR) else null
         tradeable = if (tag.contains(DataKeys.POKEMON_TRADEABLE)) tag.getBoolean(DataKeys.POKEMON_TRADEABLE) else null
         originalTrainerType = if (tag.contains(DataKeys.POKEMON_ORIGINAL_TRAINER_TYPE)) OriginalTrainerType.valueOf(tag.getString(DataKeys.POKEMON_ORIGINAL_TRAINER_TYPE)) else null
         originalTrainer = if (tag.contains(DataKeys.POKEMON_ORIGINAL_TRAINER)) tag.getString(DataKeys.POKEMON_ORIGINAL_TRAINER) else null
-        val custom = tag.getList(DataKeys.POKEMON_PROPERTIES_CUSTOM, NbtElement.STRING_TYPE.toInt())
+        val custom = tag.getList(DataKeys.POKEMON_PROPERTIES_CUSTOM, Tag.TAG_STRING.toInt())
         // This is kinda gross
-        custom.forEach { customProperties.addAll(parse(it.asString()).customProperties) }
+        custom.forEach { customProperties.addAll(parse(it.asString).customProperties) }
         updateAspects()
         return this
     }
@@ -554,7 +590,7 @@ open class PokemonProperties {
         shiny?.let { json.addProperty(DataKeys.POKEMON_SHINY, it) }
         gender?.let { json.addProperty(DataKeys.POKEMON_GENDER, it.name) }
         species?.let { json.addProperty(DataKeys.POKEMON_SPECIES_TEXT, it) }
-        nickname?.let { json.addProperty(DataKeys.POKEMON_NICKNAME, Text.Serializer.toJson(it)) }
+        //nickname?.let { json.addProperty(DataKeys.POKEMON_NICKNAME, Text.Serialization.toJsonString(it)) }
         form?.let { json.addProperty(DataKeys.POKEMON_FORM_ID, it) }
         friendship?.let { json.addProperty(DataKeys.POKEMON_FRIENDSHIP, it) }
         pokeball?.let { json.addProperty(DataKeys.POKEMON_CAUGHT_BALL, it) }
@@ -563,6 +599,7 @@ open class PokemonProperties {
         status?.let { json.addProperty(DataKeys.POKEMON_STATUS_NAME, it) }
         ivs?.let { json.add(DataKeys.POKEMON_IVS, it.saveToJSON(JsonObject())) }
         evs?.let { json.add(DataKeys.POKEMON_EVS, it.saveToJSON(JsonObject())) }
+        type?.let { json.addProperty(DataKeys.ELEMENTAL_TYPE, it) }
         teraType?.let { json.addProperty(DataKeys.POKEMON_TERA_TYPE, it) }
         dmaxLevel?.let { json.addProperty(DataKeys.POKEMON_DMAX_LEVEL, it) }
         gmaxFactor?.let { json.addProperty(DataKeys.POKEMON_GMAX_FACTOR, it) }
@@ -583,7 +620,7 @@ open class PokemonProperties {
         shiny = json.get(DataKeys.POKEMON_SHINY)?.asBoolean
         gender = json.get(DataKeys.POKEMON_GENDER)?.asString?.let { Gender.valueOf(it) }
         species = json.get(DataKeys.POKEMON_SPECIES_TEXT)?.asString
-        nickname = json.get(DataKeys.POKEMON_NICKNAME)?.asString?.let { Text.Serializer.fromJson(it) }
+        //nickname = json.get(DataKeys.POKEMON_NICKNAME)?.asString?.let { Text.Serialization.fromJson(it) }
         form = json.get(DataKeys.POKEMON_FORM_ID)?.asString
         friendship = json.get(DataKeys.POKEMON_FRIENDSHIP)?.asInt
         pokeball = json.get(DataKeys.POKEMON_CAUGHT_BALL)?.asString
@@ -592,6 +629,7 @@ open class PokemonProperties {
         status = json.get(DataKeys.POKEMON_STATUS_NAME)?.asString
         ivs?.loadFromJSON(json.getAsJsonObject(DataKeys.POKEMON_IVS))
         evs?.loadFromJSON(json.getAsJsonObject(DataKeys.POKEMON_EVS))
+        type = json.get(DataKeys.ELEMENTAL_TYPE)?.asString
         teraType = json.get(DataKeys.POKEMON_TERA_TYPE)?.asString
         dmaxLevel = json.get(DataKeys.POKEMON_DMAX_LEVEL)?.asInt
         gmaxFactor = json.get(DataKeys.POKEMON_GMAX_FACTOR)?.asBoolean
@@ -624,6 +662,7 @@ open class PokemonProperties {
         evs?.forEach{ stat ->
             pieces.add("${stat.key}_ev=${stat.value}")
         }
+        type?.let { pieces.add("type=$it") }
         teraType?.let { pieces.add("tera_type=$it") }
         dmaxLevel?.let { pieces.add("dmax_level=$it") }
         gmaxFactor?.let { pieces.add("gmax_factor=$it") }

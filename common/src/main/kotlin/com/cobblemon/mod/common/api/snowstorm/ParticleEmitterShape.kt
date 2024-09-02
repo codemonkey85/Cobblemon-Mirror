@@ -14,26 +14,23 @@ import com.bedrockk.molang.ast.NumberExpression
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.codec.CodecMapped
 import com.cobblemon.mod.common.api.data.ArbitrarilyMappedSerializableCompanion
-import com.cobblemon.mod.common.util.asExpression
+import com.cobblemon.mod.common.util.*
 import com.cobblemon.mod.common.util.codec.EXPRESSION_CODEC
-import com.cobblemon.mod.common.util.getString
 import com.cobblemon.mod.common.util.math.convertSphericalToCartesian
 import com.cobblemon.mod.common.util.math.getRotationMatrix
 import com.cobblemon.mod.common.util.math.times
-import com.cobblemon.mod.common.util.resolveDouble
-import com.cobblemon.mod.common.util.resolveVec3d
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.phys.AABB
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
-import net.minecraft.entity.Entity
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.phys.Vec3
 
 interface ParticleEmitterShape : CodecMapped {
     companion object : ArbitrarilyMappedSerializableCompanion<ParticleEmitterShape, ParticleEmitterShapeType>(
@@ -52,8 +49,8 @@ interface ParticleEmitterShape : CodecMapped {
 
     val type: ParticleEmitterShapeType
 
-    fun getNewParticlePosition(runtime: MoLangRuntime, entity: Entity?): Vec3d
-    fun getCenter(runtime: MoLangRuntime, entity: Entity?): Vec3d
+    fun getNewParticlePosition(runtime: MoLangRuntime, entity: Entity?): Vec3
+    fun getCenter(runtime: MoLangRuntime, entity: Entity?): Vec3
 }
 
 enum class ParticleEmitterShapeType {
@@ -94,7 +91,7 @@ class SphereParticleEmitterShape(
         return CODEC.encodeStart(ops, this)
     }
 
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         offset = Triple(
             MoLang.createParser(buffer.readString()).parseExpression(),
             MoLang.createParser(buffer.readString()).parseExpression(),
@@ -104,7 +101,7 @@ class SphereParticleEmitterShape(
         surfaceOnly = buffer.readBoolean()
     }
 
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(offset.first.getString())
         buffer.writeString(offset.second.getString())
         buffer.writeString(offset.third.getString())
@@ -112,11 +109,11 @@ class SphereParticleEmitterShape(
         buffer.writeBoolean(surfaceOnly)
     }
 
-    override fun getCenter(runtime: MoLangRuntime, entity: Entity?): Vec3d {
+    override fun getCenter(runtime: MoLangRuntime, entity: Entity?): Vec3 {
         return runtime.resolveVec3d(offset)
     }
 
-    override fun getNewParticlePosition(runtime: MoLangRuntime, entity: Entity?): Vec3d {
+    override fun getNewParticlePosition(runtime: MoLangRuntime, entity: Entity?): Vec3 {
         val radius = runtime.resolveDouble(radius) * if (surfaceOnly) 1.0 else Random.Default.nextDouble()
         val theta = Math.PI * 2 * Random.Default.nextDouble()
         val psi = Math.PI * 2 * Random.Default.nextDouble()
@@ -144,12 +141,12 @@ class PointParticleEmitterShape(
 
     override val type = ParticleEmitterShapeType.POINT
     override fun getNewParticlePosition(runtime: MoLangRuntime, entity: Entity?) = runtime.resolveVec3d(offset)
-    override fun getCenter(runtime: MoLangRuntime, entity: Entity?): Vec3d {
-        return Vec3d.ZERO
+    override fun getCenter(runtime: MoLangRuntime, entity: Entity?): Vec3 {
+        return Vec3.ZERO
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         offset = Triple(
             MoLang.createParser(buffer.readString()).parseExpression(),
             MoLang.createParser(buffer.readString()).parseExpression(),
@@ -157,7 +154,7 @@ class PointParticleEmitterShape(
         )
     }
 
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(offset.first.getString())
         buffer.writeString(offset.second.getString())
         buffer.writeString(offset.third.getString())
@@ -200,7 +197,7 @@ class BoxParticleEmitterShape(
         return CODEC.encodeStart(ops, this)
     }
 
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         offset = Triple(
             MoLang.createParser(buffer.readString()).parseExpression(),
             MoLang.createParser(buffer.readString()).parseExpression(),
@@ -214,7 +211,7 @@ class BoxParticleEmitterShape(
         surfaceOnly = buffer.readBoolean()
     }
 
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(offset.first.getString())
         buffer.writeString(offset.second.getString())
         buffer.writeString(offset.third.getString())
@@ -226,23 +223,47 @@ class BoxParticleEmitterShape(
 
     override fun getCenter(runtime: MoLangRuntime, entity: Entity?) = runtime.resolveVec3d(offset)
 
-    override fun getNewParticlePosition(runtime: MoLangRuntime, entity: Entity?): Vec3d {
+    override fun getNewParticlePosition(runtime: MoLangRuntime, entity: Entity?): Vec3 {
         val center = getCenter(runtime, entity)
-        val sizes = runtime.resolveVec3d(boxSize).multiply(2.0).add(0.0001, 0.0001, 0.0001)
+        val sizes = runtime.resolveVec3d(boxSize).scale(2.0).add(0.0001, 0.0001, 0.0001)
         val disposition = if (surfaceOnly) {
             when (Random.Default.nextInt(6)) {
-                0 -> Vec3d(-1/2.0 * sizes.x, Random.Default.nextDouble(sizes.y) - sizes.y / 2.0, Random.Default.nextDouble(sizes.z) - sizes.z / 2.0)
-                1 -> Vec3d(1/2.0 * sizes.x, Random.Default.nextDouble(sizes.y) - sizes.y / 2.0, Random.Default.nextDouble(sizes.z) - sizes.z / 2.0)
-                2 -> Vec3d(Random.Default.nextDouble(sizes.x) - sizes.x / 2.0, -1/2.0 * sizes.y, Random.Default.nextDouble(sizes.z) - sizes.z / 2.0)
-                3 -> Vec3d(Random.Default.nextDouble(sizes.x) - sizes.x / 2.0, 1/2.0 * sizes.y, Random.Default.nextDouble(sizes.z) - sizes.z / 2.0)
-                4 -> Vec3d(Random.Default.nextDouble(sizes.x) - sizes.x / 2.0, Random.Default.nextDouble(sizes.y) - sizes.y / 2.0, -1/2.0 * sizes.z)
-                else -> Vec3d(Random.Default.nextDouble(sizes.x) - sizes.x / 2.0, Random.Default.nextDouble(sizes.y) - sizes.y / 2.0, 1/2.0 * sizes.z)
+                0 -> Vec3(
+                    -1 / 2.0 * sizes.x,
+                    Random.nextDouble(sizes.y) - sizes.y / 2.0,
+                    Random.nextDouble(sizes.z) - sizes.z / 2.0
+                )
+                1 -> Vec3(
+                    1 / 2.0 * sizes.x,
+                    Random.nextDouble(sizes.y) - sizes.y / 2.0,
+                    Random.nextDouble(sizes.z) - sizes.z / 2.0
+                )
+                2 -> Vec3(
+                    Random.nextDouble(sizes.x) - sizes.x / 2.0,
+                    -1 / 2.0 * sizes.y,
+                    Random.nextDouble(sizes.z) - sizes.z / 2.0
+                )
+                3 -> Vec3(
+                    Random.nextDouble(sizes.x) - sizes.x / 2.0,
+                    1 / 2.0 * sizes.y,
+                    Random.nextDouble(sizes.z) - sizes.z / 2.0
+                )
+                4 -> Vec3(
+                    Random.nextDouble(sizes.x) - sizes.x / 2.0,
+                    Random.nextDouble(sizes.y) - sizes.y / 2.0,
+                    -1 / 2.0 * sizes.z
+                )
+                else -> Vec3(
+                    Random.nextDouble(sizes.x) - sizes.x / 2.0,
+                    Random.nextDouble(sizes.y) - sizes.y / 2.0,
+                    1 / 2.0 * sizes.z
+                )
             }
         } else {
-            Vec3d(
-                Random.Default.nextDouble(sizes.x) - sizes.x / 2,
-                Random.Default.nextDouble(sizes.y) - sizes.y / 2,
-                Random.Default.nextDouble(sizes.z) - sizes.z / 2
+            Vec3(
+                Random.nextDouble(sizes.x) - sizes.x / 2,
+                Random.nextDouble(sizes.y) - sizes.y / 2,
+                Random.nextDouble(sizes.z) - sizes.z / 2
             )
         }
 
@@ -288,10 +309,14 @@ class DiscParticleEmitterShape(
     }
 
     override val type = ParticleEmitterShapeType.DISC
-    override fun getNewParticlePosition(runtime: MoLangRuntime, entity: Entity?): Vec3d {
+    override fun getNewParticlePosition(runtime: MoLangRuntime, entity: Entity?): Vec3 {
         val center = getCenter(runtime, entity)
-        val normal = runtime.resolveVec3d(normal).let { if (it == Vec3d.ZERO) Vec3d(0.0, 1.0, 0.0) else it }.normalize()
-        val baseLine = Vec3d(0.0, 1.0, 0.0)
+        val normal = runtime.resolveVec3d(normal).let { if (it == Vec3.ZERO) Vec3(
+            0.0,
+            1.0,
+            0.0
+        ) else it }.normalize()
+        val baseLine = Vec3(0.0, 1.0, 0.0)
         val radius = runtime.resolveDouble(radius)
         val rotation = getRotationMatrix(from = baseLine, to = normal)
         val distance = if (surfaceOnly) radius else Random.Default.nextDouble(radius)
@@ -299,13 +324,13 @@ class DiscParticleEmitterShape(
         // Polar to cartesian
         val x = distance * cos(theta)
         val z = distance * sin(theta)
-        val displacement = rotation * Vec3d(x, 0.0, z)
+        val displacement = rotation * Vec3(x, 0.0, z)
         return center.add(displacement)
     }
 
     override fun getCenter(runtime: MoLangRuntime, entity: Entity?) = runtime.resolveVec3d(offset)
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         offset = Triple(
             MoLang.createParser(buffer.readString()).parseExpression(),
             MoLang.createParser(buffer.readString()).parseExpression(),
@@ -320,7 +345,7 @@ class DiscParticleEmitterShape(
         surfaceOnly = buffer.readBoolean()
     }
 
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(offset.first.getString())
         buffer.writeString(offset.second.getString())
         buffer.writeString(offset.third.getString())
@@ -345,24 +370,52 @@ class EntityBoundingBoxParticleEmitterShape(
     }
 
     override val type = ParticleEmitterShapeType.ENTITY_BOUNDING_BOX
-    override fun getNewParticlePosition(runtime: MoLangRuntime, entity: Entity?): Vec3d {
+    override fun getNewParticlePosition(runtime: MoLangRuntime, entity: Entity?): Vec3 {
         val box = getBox(entity)
         val center = getCenter(runtime, entity)
-        val sizes = Vec3d(box.maxX - box.minX, box.maxY - box.minY, box.maxZ - box.minZ)
+        val sizes = Vec3(
+            box.maxX - box.minX,
+            box.maxY - box.minY,
+            box.maxZ - box.minZ
+        )
         val disposition = if (surfaceOnly) {
             when (Random.Default.nextInt(6)) {
-                0 -> Vec3d(-1/2.0 * sizes.x, Random.Default.nextDouble(sizes.y) - sizes.y / 2.0, Random.Default.nextDouble(sizes.z) - sizes.z / 2.0)
-                1 -> Vec3d(1/2.0 * sizes.x, Random.Default.nextDouble(sizes.y) - sizes.y / 2.0, Random.Default.nextDouble(sizes.z) - sizes.z / 2.0)
-                2 -> Vec3d(Random.Default.nextDouble(sizes.x) - sizes.x / 2.0, -1/2.0 * sizes.y, Random.Default.nextDouble(sizes.z) - sizes.z / 2.0)
-                3 -> Vec3d(Random.Default.nextDouble(sizes.x) - sizes.x / 2.0, 1/2.0 * sizes.y, Random.Default.nextDouble(sizes.z) - sizes.z / 2.0)
-                4 -> Vec3d(Random.Default.nextDouble(sizes.x) - sizes.x / 2.0, Random.Default.nextDouble(sizes.y) - sizes.y / 2.0, -1/2.0 * sizes.z)
-                else -> Vec3d(Random.Default.nextDouble(sizes.x) - sizes.x / 2.0, Random.Default.nextDouble(sizes.y) - sizes.y / 2.0, 1/2.0 * sizes.z)
+                0 -> Vec3(
+                    -1 / 2.0 * sizes.x,
+                    Random.nextDouble(sizes.y) - sizes.y / 2.0,
+                    Random.nextDouble(sizes.z) - sizes.z / 2.0
+                )
+                1 -> Vec3(
+                    1 / 2.0 * sizes.x,
+                    Random.nextDouble(sizes.y) - sizes.y / 2.0,
+                    Random.nextDouble(sizes.z) - sizes.z / 2.0
+                )
+                2 -> Vec3(
+                    Random.nextDouble(sizes.x) - sizes.x / 2.0,
+                    -1 / 2.0 * sizes.y,
+                    Random.nextDouble(sizes.z) - sizes.z / 2.0
+                )
+                3 -> Vec3(
+                    Random.nextDouble(sizes.x) - sizes.x / 2.0,
+                    1 / 2.0 * sizes.y,
+                    Random.nextDouble(sizes.z) - sizes.z / 2.0
+                )
+                4 -> Vec3(
+                    Random.nextDouble(sizes.x) - sizes.x / 2.0,
+                    Random.nextDouble(sizes.y) - sizes.y / 2.0,
+                    -1 / 2.0 * sizes.z
+                )
+                else -> Vec3(
+                    Random.nextDouble(sizes.x) - sizes.x / 2.0,
+                    Random.nextDouble(sizes.y) - sizes.y / 2.0,
+                    1 / 2.0 * sizes.z
+                )
             }
         } else {
-            Vec3d(
-                Random.Default.nextDouble(sizes.x) - sizes.x / 2,
-                Random.Default.nextDouble(sizes.y) - sizes.y / 2,
-                Random.Default.nextDouble(sizes.z) - sizes.z / 2
+            Vec3(
+                Random.nextDouble(sizes.x) - sizes.x / 2,
+                Random.nextDouble(sizes.y) - sizes.y / 2,
+                Random.nextDouble(sizes.z) - sizes.z / 2
             )
         }
 
@@ -372,13 +425,18 @@ class EntityBoundingBoxParticleEmitterShape(
     override fun getCenter(runtime: MoLangRuntime, entity: Entity?) = getBox(entity).center
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    fun getBox(entity: Entity?) = entity?.boundingBox ?: Box.of(Vec3d(0.0, 0.0, 0.0), 1.0, 2.0, 1.0)
+    fun getBox(entity: Entity?) = entity?.boundingBox ?: AABB.ofSize(
+        Vec3(
+            0.0,
+            0.0,
+            0.0
+        ), 1.0, 2.0, 1.0)
 
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         surfaceOnly = buffer.readBoolean()
     }
 
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(surfaceOnly)
     }
 }

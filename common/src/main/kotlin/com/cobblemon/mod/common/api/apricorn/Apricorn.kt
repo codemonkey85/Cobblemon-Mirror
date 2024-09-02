@@ -13,8 +13,13 @@ import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.block.ApricornBlock
 import com.cobblemon.mod.common.block.ApricornSaplingBlock
 import com.cobblemon.mod.common.item.ApricornItem
-import net.minecraft.block.MapColor
-import net.minecraft.item.BlockItem
+import com.cobblemon.mod.common.world.feature.CobblemonConfiguredFeatures
+import com.mojang.serialization.Codec
+import net.minecraft.resources.ResourceKey
+import net.minecraft.util.StringRepresentable
+import net.minecraft.world.item.BlockItem
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature
+import net.minecraft.world.level.material.MapColor
 
 /**
  * Contains the different Apricorn variants and util methods to get their item, block, seedling and sapling form.
@@ -22,7 +27,7 @@ import net.minecraft.item.BlockItem
  * @author Licious
  * @since October 29th, 2022
  */
-enum class Apricorn {
+enum class Apricorn : StringRepresentable {
 
     BLACK,
     BLUE,
@@ -73,13 +78,29 @@ enum class Apricorn {
     }
 
     fun mapColor(): MapColor = when(this) {
-        BLACK -> MapColor.BLACK
-        BLUE ->  MapColor.BLUE
-        GREEN ->  MapColor.GREEN
-        PINK ->  MapColor.PINK
-        RED ->  MapColor.RED
-        WHITE ->  MapColor.WHITE
-        YELLOW ->  MapColor.YELLOW
+        BLACK -> MapColor.COLOR_BLACK
+        BLUE ->  MapColor.COLOR_BLUE
+        GREEN ->  MapColor.COLOR_GREEN
+        PINK ->  MapColor.COLOR_PINK
+        RED ->  MapColor.COLOR_RED
+        WHITE ->  MapColor.SNOW
+        YELLOW ->  MapColor.COLOR_YELLOW
+    }
+
+    fun configuredFeature(): ResourceKey<ConfiguredFeature<*, *>> = when(this) {
+        BLACK -> CobblemonConfiguredFeatures.BLACK_APRICORN_TREE_KEY
+        BLUE -> CobblemonConfiguredFeatures.BLUE_APRICORN_TREE_KEY
+        GREEN -> CobblemonConfiguredFeatures.GREEN_APRICORN_TREE_KEY
+        PINK -> CobblemonConfiguredFeatures.PINK_APRICORN_TREE_KEY
+        RED -> CobblemonConfiguredFeatures.RED_APRICORN_TREE_KEY
+        WHITE -> CobblemonConfiguredFeatures.WHITE_APRICORN_TREE_KEY
+        YELLOW -> CobblemonConfiguredFeatures.YELLOW_APRICORN_TREE_KEY
+    }
+
+    override fun getSerializedName() = this.name.lowercase()
+
+    companion object {
+        val CODEC: Codec<Apricorn> = StringRepresentable.fromValues(::values)
     }
 
 }

@@ -11,13 +11,13 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen7
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.QuadrupedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class SalanditModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class SalanditModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("salandit")
     override val head = getPart("head")
 
@@ -27,15 +27,15 @@ class SalanditModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qua
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 2.23F
-    override var portraitTranslation = Vec3d(-0.6, -1.04, 0.0)
+    override var portraitTranslation = Vec3(-0.6, -1.04, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.46, -6.0)
+    override var profileTranslation = Vec3(0.0, 0.46, -6.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-//    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("salandit", "cry") }
+//    override val cryAnimation = CryProvider { bedrockStateful("salandit", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("salandit", "blink") }
@@ -43,7 +43,7 @@ class SalanditModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qua
             poseName = "standing",
             poseTypes = PoseType.UI_POSES + PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("salandit", "ground_idle")
             )
@@ -53,7 +53,7 @@ class SalanditModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qua
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 QuadrupedWalkAnimation(this, periodMultiplier = 1.1F),
                 singleBoneLook(),
                 bedrock("salandit", "ground_idle")
@@ -63,6 +63,6 @@ class SalanditModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qua
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("salandit", "faint") else null
 }

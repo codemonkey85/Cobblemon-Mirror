@@ -18,7 +18,7 @@ import com.cobblemon.mod.common.pokemon.status.statuses.persistent.PoisonStatus
 import com.cobblemon.mod.common.pokemon.status.statuses.persistent.SleepStatus
 import com.cobblemon.mod.common.pokemon.status.statuses.nonpersistent.ConfuseStatus
 import com.cobblemon.mod.common.pokemon.status.statuses.nonpersistent.AttractStatus
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Main API point for Statuses
@@ -56,7 +56,7 @@ object Statuses {
         return status
     }
 
-    fun getStatus(name: Identifier) = allStatuses.find { status -> status.name == name }
+    fun getStatus(name: ResourceLocation) = allStatuses.find { status -> status.name == name }
     fun getStatus(showdownName: String) = allStatuses.find { it.showdownName == showdownName }
     fun getPersistentStatuses() = persistentStatuses
 }

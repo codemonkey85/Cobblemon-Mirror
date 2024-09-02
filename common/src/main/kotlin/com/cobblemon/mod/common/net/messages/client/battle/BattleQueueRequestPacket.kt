@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.net.messages.client.battle
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.battles.ShowdownActionRequest
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Informs the client about the specific battle request that will be made of them at the next upkeep
@@ -25,11 +25,11 @@ import net.minecraft.network.PacketByteBuf
  */
 class BattleQueueRequestPacket(val request: ShowdownActionRequest): NetworkPacket<BattleQueueRequestPacket> {
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         request.saveToBuffer(buffer)
     }
     companion object {
         val ID = cobblemonResource("battle_queue_request")
-        fun decode(buffer: PacketByteBuf) = BattleQueueRequestPacket(ShowdownActionRequest().loadFromBuffer(buffer))
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleQueueRequestPacket(ShowdownActionRequest().loadFromBuffer(buffer))
     }
 }

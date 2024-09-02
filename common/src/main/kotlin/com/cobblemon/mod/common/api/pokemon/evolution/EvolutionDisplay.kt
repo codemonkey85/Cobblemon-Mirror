@@ -10,6 +10,9 @@ package com.cobblemon.mod.common.api.pokemon.evolution
 
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.Species
+import com.cobblemon.mod.common.pokemon.evolution.CobblemonEvolutionDisplay
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 
 /**
  * Represents an evolution of a [Pokemon], this is the client side counterpart of [Evolution].
@@ -30,5 +33,16 @@ interface EvolutionDisplay : EvolutionLike {
      * These are used by the client to resolve the entity it needs to display.
      */
     val aspects: Set<String>
+
+    companion object {
+        @JvmStatic
+        val CODEC: Codec<EvolutionDisplay> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Codec.STRING.fieldOf("id").forGetter(EvolutionDisplay::id),
+                Species.BY_IDENTIFIER_CODEC.fieldOf("species").forGetter(EvolutionDisplay::species),
+                Codec.list(Codec.STRING).fieldOf("aspects").forGetter { it.aspects.toList() }
+            ).apply(instance) { id, species, aspects -> CobblemonEvolutionDisplay(id, species, aspects.toSet()) }
+        }
+    }
 
 }

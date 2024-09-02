@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.frame
 
-import net.minecraft.client.model.ModelPart
+import net.minecraft.client.model.geom.ModelPart
 
 interface QuadrupedFrame : ModelFrame {
     val foreLeftLeg: ModelPart

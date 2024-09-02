@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:big_root"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.obtain_big_root"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.obtain_big_root.description"
+    }
+  },
+  "parent": "cobblemon:any_plant",
+  "criteria": {
+    "check_inv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:big_root"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

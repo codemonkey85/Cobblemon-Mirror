@@ -12,10 +12,9 @@ import com.cobblemon.mod.common.api.PrioritizedList
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.spawning.SpawnCause
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
-import net.minecraft.block.BlockState
-import net.minecraft.registry.tag.BlockTags
-import net.minecraft.registry.tag.FluidTags
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.tags.FluidTags
+import net.minecraft.world.level.block.state.BlockState
 
 /**
  * Calculates some kind of [SpawningContext] from a particular type of input data. This
@@ -30,10 +29,10 @@ import net.minecraft.server.world.ServerWorld
  */
 interface SpawningContextCalculator<I : SpawningContextInput, O : SpawningContext> {
     companion object {
-        val isAirCondition: (BlockState) -> Boolean = { it.isAir || (!it.isSolid && !it.fluidState.isIn(FluidTags.WATER)) }
+        val isAirCondition: (BlockState) -> Boolean = { it.isAir || (!it.isSolid && !it.fluidState.`is`(FluidTags.WATER)) }
         val isSolidCondition: (BlockState) -> Boolean = { it.isSolid }
-        val isWaterCondition: (BlockState) -> Boolean = { it.fluidState.isIn(FluidTags.WATER) && it.fluidState.isStill  }
-        val isLavaCondition: (BlockState) -> Boolean = { it.fluidState.isIn(FluidTags.LAVA) && it.fluidState.isStill }
+        val isWaterCondition: (BlockState) -> Boolean = { it.fluidState.`is`(FluidTags.WATER) && it.fluidState.isSource  }
+        val isLavaCondition: (BlockState) -> Boolean = { it.fluidState.`is`(FluidTags.LAVA) && it.fluidState.isSource }
 
         private val calculators = PrioritizedList<SpawningContextCalculator<*, *>>()
         val prioritizedAreaCalculators: List<AreaSpawningContextCalculator<*>>
@@ -64,5 +63,5 @@ open class SpawningContextInput(
     /** What caused the spawn context, as a [SpawnCause]. */
     val cause: SpawnCause,
     /** The [Level] the spawning context exists in. */
-    val world: ServerWorld
+    val world: ServerLevel
 )

@@ -12,10 +12,10 @@ import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.starter.ClientPlayerData
 import com.cobblemon.mod.common.net.messages.client.starter.SetClientPlayerDataPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object SetClientPlayerDataHandler : ClientNetworkPacketHandler<SetClientPlayerDataPacket> {
-    override fun handle(packet: SetClientPlayerDataPacket, client: MinecraftClient) {
+    override fun handle(packet: SetClientPlayerDataPacket, client: Minecraft) {
         CobblemonClient.clientPlayerData = ClientPlayerData(
             promptStarter = packet.promptStarter,
             starterLocked = packet.starterLocked,

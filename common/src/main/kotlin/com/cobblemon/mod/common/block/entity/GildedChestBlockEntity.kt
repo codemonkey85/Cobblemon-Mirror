@@ -12,42 +12,43 @@ import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.block.chest.GildedChestBlock.Type
 import com.cobblemon.mod.common.block.chest.GildedState
-import net.minecraft.block.BlockState
-import net.minecraft.block.entity.BlockEntityType
-import net.minecraft.block.entity.LootableContainerBlockEntity
-import net.minecraft.block.entity.ViewerCountManager
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.inventory.DoubleInventory
-import net.minecraft.inventory.Inventories
-import net.minecraft.inventory.Inventory
-import net.minecraft.inventory.SidedInventory
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.screen.GenericContainerScreenHandler
-import net.minecraft.sound.SoundCategory
-import net.minecraft.state.property.Properties
-import net.minecraft.text.Text
-import net.minecraft.util.collection.DefaultedList
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.core.HolderLookup
+import net.minecraft.core.NonNullList
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.chat.Component
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.ContainerHelper
+import net.minecraft.world.WorldlyContainer
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.ChestMenu
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.entity.BlockEntityType
+import net.minecraft.world.level.block.entity.ContainerOpenersCounter
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.properties.BlockStateProperties
 
-class GildedChestBlockEntity(pos: BlockPos, state: BlockState, val type: Type = Type.RED) : LootableContainerBlockEntity(CobblemonBlockEntities.GILDED_CHEST, pos, state), SidedInventory {
-    var inventoryContents: DefaultedList<ItemStack> = DefaultedList.ofSize(NUM_SLOTS, ItemStack.EMPTY)
-    val poseableState: GildedState = GildedState()
+class GildedChestBlockEntity(pos: BlockPos, state: BlockState, val type: Type = Type.RED) : RandomizableContainerBlockEntity(CobblemonBlockEntities.GILDED_CHEST, pos, state), WorldlyContainer {
+    var inventoryContents: NonNullList<ItemStack> = NonNullList.withSize(NUM_SLOTS, ItemStack.EMPTY)
+    val posableState: GildedState = GildedState()
 
-    private val stateManager: ViewerCountManager = object : ViewerCountManager() {
-        override fun onContainerOpen(world: World, pos: BlockPos, state: BlockState) {
+    private val stateManager: ContainerOpenersCounter = object : ContainerOpenersCounter() {
+        override fun onOpen(world: Level, pos: BlockPos, state: BlockState) {
             playSound(world, pos, state, CobblemonSounds.GILDED_CHEST_OPEN)
         }
 
-        override fun onContainerClose(world: World, pos: BlockPos, state: BlockState) {
+        override fun onClose(world: Level, pos: BlockPos, state: BlockState) {
             playSound(world, pos, state, CobblemonSounds.GILDED_CHEST_CLOSE)
         }
 
-        override fun onViewerCountUpdate(
-            world: World,
+        override fun openerCountChanged(
+            world: Level,
             pos: BlockPos,
             state: BlockState,
             oldViewerCount: Int,
@@ -56,9 +57,9 @@ class GildedChestBlockEntity(pos: BlockPos, state: BlockState, val type: Type = 
             this@GildedChestBlockEntity.onViewerCountUpdate(world, pos, state, oldViewerCount, newViewerCount)
         }
 
-        override fun isPlayerViewing(player: PlayerEntity): Boolean {
-            if (player.currentScreenHandler is GenericContainerScreenHandler) {
-                val inventory = (player.currentScreenHandler as GenericContainerScreenHandler).inventory
+        override fun isOwnContainer(player: Player): Boolean {
+            if (player.containerMenu is ChestMenu) {
+                val inventory = (player.containerMenu as ChestMenu).container
                 return inventory === this@GildedChestBlockEntity
             }
             return false
@@ -66,105 +67,108 @@ class GildedChestBlockEntity(pos: BlockPos, state: BlockState, val type: Type = 
     }
 
     override fun getType(): BlockEntityType<*> = CobblemonBlockEntities.GILDED_CHEST
-    override fun size() = NUM_SLOTS
 
-    override fun getContainerName() = Text.translatable("block.cobblemon.gilded_chest")
-    override fun createScreenHandler(syncId: Int, playerInventory: PlayerInventory?) =
-        GenericContainerScreenHandler.createGeneric9x3(syncId, playerInventory, this)
+    override fun getContainerSize() = NUM_SLOTS
 
-    override fun onOpen(player: PlayerEntity) {
-        if (!this.removed && !player.isSpectator && type != Type.FAKE) {
-            stateManager.openContainer(player, this.getWorld(), this.getPos(), this.cachedState)
+    override fun getDefaultName() = Component.translatable("block.cobblemon.gilded_chest")
+
+    override fun createMenu(syncId: Int, playerInventory: Inventory): AbstractContainerMenu =
+        ChestMenu.threeRows(syncId, playerInventory, this)
+
+    override fun getItems() = inventoryContents
+
+    override fun startOpen(player: Player) {
+        if (!this.remove && !player.isSpectator && type != Type.FAKE) {
+            stateManager.incrementOpeners(player, level, blockPos, blockState)
         }
     }
 
-    override fun onClose(player: PlayerEntity) {
-        if (!this.removed && !player.isSpectator) {
-            stateManager.closeContainer(player, this.getWorld(), this.getPos(), this.cachedState)
+    override fun stopOpen(player: Player) {
+        if (!this.remove && !player.isSpectator) {
+            stateManager.decrementOpeners(player, level, blockPos, blockState)
         }
     }
 
-    override fun getAvailableSlots(side: Direction): IntArray {
+    override fun getSlotsForFace(side: Direction): IntArray {
         return if (type == Type.FAKE) IntArray(0) else IntArray(NUM_SLOTS) { it }
     }
 
-    override fun canInsert(slot: Int, stack: ItemStack?, dir: Direction?): Boolean {
+    override fun canPlaceItemThroughFace(slot: Int, stack: ItemStack, dir: Direction?): Boolean {
         if (type == Type.FAKE) return false
         return dir != Direction.DOWN
     }
 
-    override fun canExtract(slot: Int, stack: ItemStack?, dir: Direction?): Boolean {
+    override fun canTakeItemThroughFace(slot: Int, stack: ItemStack, dir: Direction): Boolean {
         if (type == Type.FAKE) return false
         return dir == Direction.DOWN
     }
 
-    override fun getInvStackList(): DefaultedList<ItemStack> = inventoryContents
+    override fun stillValid(player: Player) = !player.isSpectator
 
-    override fun setInvStackList(list: DefaultedList<ItemStack>) {
-        inventoryContents = list
+    override fun setItems(inventory: NonNullList<ItemStack>) {
+        inventoryContents = inventory
     }
 
     companion object {
         val NUM_SLOTS = 27
-        fun playSound(world: World, pos: BlockPos, state: BlockState, sound: net.minecraft.sound.SoundEvent) {
+        fun playSound(world: Level, pos: BlockPos, state: BlockState, sound: SoundEvent) {
             var d = pos.x.toDouble() + 0.5
             val e = pos.y.toDouble() + 0.5
             var f = pos.z.toDouble() + 0.5
-            val direction = state.get(Properties.HORIZONTAL_FACING)
-            d += direction.offsetX.toDouble() * 0.5
-            f += direction.offsetZ.toDouble() * 0.5
+            val direction = state.getValue(BlockStateProperties.HORIZONTAL_FACING)
+            d += direction.stepX.toDouble() * 0.5
+            f += direction.stepZ.toDouble() * 0.5
             world.playSound(
                 null,
                 d,
                 e,
                 f,
                 sound,
-                SoundCategory.BLOCKS,
+                SoundSource.BLOCKS,
                 0.5f,
                 world.random.nextFloat() * 0.1f + 0.9f
             )
         }
     }
 
-    override fun onSyncedBlockEvent(type: Int, data: Int): Boolean {
+    override fun triggerEvent(type: Int, data: Int): Boolean {
         if (type == 1) {
             val isNowOpen = data > 0
-            val wasOpen = poseableState.currentPose == "OPEN"
-            val model = poseableState.currentModel ?: return true
+            val wasOpen = posableState.currentPose == "open"
+            val model = posableState.currentModel ?: return true
             if (isNowOpen && !wasOpen) {
-                model.moveToPose(null, poseableState, model.getPose("OPEN")!!)
+                model.moveToPose(posableState, model.poses["open"]!!)
             } else if (!isNowOpen && wasOpen) {
-                model.moveToPose(null, poseableState, model.getPose("CLOSED")!!)
+                model.moveToPose(posableState, model.poses["closed"]!!)
             }
             return true
         }
-        return super.onSyncedBlockEvent(type, data)
+        return super.triggerEvent(type, data)
     }
 
-    fun onViewerCountUpdate(world: World, pos: BlockPos, state: BlockState, oldViewerCount: Int, newViewerCount: Int) {
+    fun onViewerCountUpdate(world: Level, pos: BlockPos, state: BlockState, oldViewerCount: Int, newViewerCount: Int) {
         val block = state.block
-        world.addSyncedBlockEvent(pos, block, 1, newViewerCount)
+        world.blockEvent(pos, block, 1, newViewerCount)
     }
-    override fun writeNbt(nbt: NbtCompound?) {
-        super.writeNbt(nbt)
-        if (!serializeLootTable(nbt)) {
-            Inventories.writeNbt(nbt, inventoryContents)
+
+    override fun saveAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
+        super.saveAdditional(nbt, registryLookup)
+        if (!trySaveLootTable(nbt)) {
+            ContainerHelper.saveAllItems(nbt, inventoryContents, registryLookup)
         }
     }
 
-    override fun readNbt(nbt: NbtCompound?) {
-        super.readNbt(nbt)
-        inventoryContents= DefaultedList.ofSize(
-            size(), ItemStack.EMPTY
-        )
-        if (!deserializeLootTable(nbt)) {
-            Inventories.readNbt(nbt, inventoryContents)
+    override fun loadAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
+        super.loadAdditional(nbt, registryLookup)
+        inventoryContents= NonNullList.withSize(containerSize, ItemStack.EMPTY)
+        if (!tryLoadLootTable(nbt)) {
+            ContainerHelper.loadAllItems(nbt, inventoryContents, registryLookup)
         }
     }
 
-    fun onScheduledTick() {
-        if (!this.removed) {
-            stateManager.updateViewerCount(this.getWorld(), this.getPos(), this.cachedState)
+    fun tick() {
+        if (!this.remove) {
+            stateManager.recheckOpeners(level, blockPos, this.blockState)
         }
     }
 }

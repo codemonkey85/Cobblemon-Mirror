@@ -9,15 +9,15 @@
 package com.cobblemon.mod.common.platform.events
 
 import com.cobblemon.mod.common.api.events.Cancelable
-import net.minecraft.entity.Entity
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Hand
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.item.ItemStack
 
 /**
- * Events related to a [ServerPlayerEntity].
+ * Events related to a [ServerPlayer].
  * As implied by the name these are fired on the server side.
  *
  * @author Licious
@@ -26,25 +26,25 @@ import net.minecraft.util.math.Direction
 interface ServerPlayerEvent {
 
     /**
-     * The [ServerPlayerEntity] triggering the platform specific events.
+     * The [ServerPlayer] triggering the platform specific events.
      */
-    val player: ServerPlayerEntity
+    val player: ServerPlayer
 
     /**
      * Fired when the [player] logs in.
      */
-    data class Login(override val player: ServerPlayerEntity) : ServerPlayerEvent
+    data class Login(override val player: ServerPlayer) : ServerPlayerEvent
 
     /**
      * Fired when the [player] logs out.
      */
-    data class Logout(override val player: ServerPlayerEntity) : ServerPlayerEvent
+    data class Logout(override val player: ServerPlayer) : ServerPlayerEvent
 
     /**
      * Fired when the [player] dies.
      * If canceled the death will be prevented but healing is required in order to not be stuck in a loop.
      */
-    data class Death(override val player: ServerPlayerEntity) : ServerPlayerEvent, Cancelable()
+    data class Death(override val player: ServerPlayer) : ServerPlayerEvent, Cancelable()
 
     /**
      * Fired when the [player] right clicks a block.
@@ -54,7 +54,7 @@ interface ServerPlayerEvent {
      * @property hand The [Hand] that hit the block.
      * @property face The [Direction] of the block if any.
      */
-    data class RightClickBlock(override val player: ServerPlayerEntity, val pos: BlockPos, val hand: Hand, val face: Direction?) : ServerPlayerEvent, Cancelable()
+    data class RightClickBlock(override val player: ServerPlayer, val pos: BlockPos, val hand: InteractionHand, val face: Direction?) : ServerPlayerEvent, Cancelable()
 
     /**
      * Fired when the [player] right clicks an entity.
@@ -64,5 +64,5 @@ interface ServerPlayerEvent {
      * @property hand The [Hand] that clicked the [entity].
      * @property entity The [Entity] the [player] clicked.
      */
-    data class RightClickEntity(override val player: ServerPlayerEntity, val item: ItemStack, val hand: Hand, val entity: Entity): ServerPlayerEvent, Cancelable()
+    data class RightClickEntity(override val player: ServerPlayer, val item: ItemStack, val hand: InteractionHand, val entity: Entity): ServerPlayerEvent, Cancelable()
 }

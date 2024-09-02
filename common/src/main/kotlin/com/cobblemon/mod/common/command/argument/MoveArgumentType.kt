@@ -16,10 +16,11 @@ import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
 import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
+import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import java.util.concurrent.CompletableFuture
-import net.minecraft.command.CommandSource
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
+
 class MoveArgumentType: ArgumentType<MoveTemplate> {
 
     override fun parse(reader: StringReader): MoveTemplate = Moves.getByName(reader.readString()) ?: throw SimpleCommandExceptionType(INVALID_MOVE).createWithContext(reader)
@@ -28,7 +29,7 @@ class MoveArgumentType: ArgumentType<MoveTemplate> {
         context: CommandContext<S>,
         builder: SuggestionsBuilder
     ): CompletableFuture<Suggestions> {
-        return CommandSource.suggestMatching(Moves.names(), builder)
+        return SharedSuggestionProvider.suggest(Moves.names(), builder)
     }
 
     override fun getExamples() = EXAMPLES
@@ -36,7 +37,7 @@ class MoveArgumentType: ArgumentType<MoveTemplate> {
     companion object {
 
         val EXAMPLES: List<String> = listOf("tackle")
-        val INVALID_MOVE: MutableText = Text.translatable("cobblemon.command.pokespawn.invalid-move")
+        val INVALID_MOVE: MutableComponent = Component.translatable("cobblemon.command.pokespawn.invalid-move")
 
         fun move() = MoveArgumentType()
 

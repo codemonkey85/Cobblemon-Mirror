@@ -1,0 +1,184 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:ancient_poke_ball"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.craft_ancient_balls"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.craft_ancient_balls.description"
+    }
+  },
+  "parent": "cobblemon:craft_apricorn_balls",
+  "criteria": {
+    "ancient_poke_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_poke_ball"]
+          }
+        ]
+      }
+    },
+    "ancient_citrine_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_citrine_ball"]
+          }
+        ]
+      }
+    },
+    "ancient_verdant_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_verdant_ball"]
+          }
+        ]
+      }
+    },
+    "ancient_azure_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_azure_ball"]
+          }
+        ]
+      }
+    },
+    "ancient_roseate_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_roseate_ball"]
+          }
+        ]
+      }
+    },
+    "ancient_slate_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_slate_ball"]
+          }
+        ]
+      }
+    },
+    "ancient_ivory_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_ivory_ball"]
+          }
+        ]
+      }
+    },
+    "ancient_great_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_great_ball"]
+          }
+        ]
+      }
+    },
+    "ancient_ultra_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_ultra_ball"]
+          }
+        ]
+      }
+    },
+    "ancient_feather_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_feather_ball"]
+          }
+        ]
+      }
+    },
+    "ancient_wing_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_wing_ball"]
+          }
+        ]
+      }
+    },
+    "ancient_jet_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_jet_ball"]
+          }
+        ]
+      }
+    },
+    "ancient_heavy_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_heavy_ball"]
+          }
+        ]
+      }
+    },
+    "ancient_leaden_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_leaden_ball"]
+          }
+        ]
+      }
+    },
+    "ancient_gigaton_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["cobblemon:ancient_gigaton_ball"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    ["ancient_poke_ball"],
+    ["ancient_citrine_ball"],
+    ["ancient_verdant_ball"],
+    ["ancient_azure_ball"],
+    ["ancient_roseate_ball"],
+    ["ancient_slate_ball"],
+    ["ancient_ivory_ball"],
+    ["ancient_great_ball"],
+    ["ancient_ultra_ball"],
+    ["ancient_feather_ball"],
+    ["ancient_wing_ball"],
+    ["ancient_jet_ball"],
+    ["ancient_heavy_ball"],
+    ["ancient_leaden_ball"],
+    ["ancient_gigaton_ball"]
+  ],
+  "sends_telemetry_event": false
+}

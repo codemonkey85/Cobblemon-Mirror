@@ -13,10 +13,12 @@ import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
 import com.cobblemon.mod.common.client.gui.summary.featurerenderers.SummarySpeciesFeatureRenderer
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.substitute
+import com.cobblemon.mod.common.util.writeString
 import com.google.gson.JsonObject
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * A [SpeciesFeatureProvider] which is a string value selected from a fixed list of choices. Parameters exist
@@ -36,7 +38,7 @@ open class ChoiceSpeciesFeatureProvider(
     override var visible = false
     fun getAspect(feature: StringSpeciesFeature) = aspectFormat.substitute("choice", feature.value)
 
-    override fun encode(buffer: PacketByteBuf) {
+    override fun saveToBuffer(buffer: RegistryFriendlyByteBuf, toClient: Boolean) {
         buffer.writeCollection(keys) { _, value -> buffer.writeString(value) }
         buffer.writeNullable(default) { _, value -> buffer.writeString(value) }
         buffer.writeCollection(choices) { _, value -> buffer.writeString(value) }
@@ -45,7 +47,7 @@ open class ChoiceSpeciesFeatureProvider(
         buffer.writeBoolean(needsKey)
     }
 
-    override fun decode(buffer: PacketByteBuf) {
+    override fun loadFromBuffer(buffer: RegistryFriendlyByteBuf) {
         keys = buffer.readList { buffer.readString() }
         default = buffer.readNullable { buffer.readString() }
         choices = buffer.readList { buffer.readString() }
@@ -58,9 +60,9 @@ open class ChoiceSpeciesFeatureProvider(
         return null
     }
 
-    override fun invoke(buffer: PacketByteBuf, name: String): StringSpeciesFeature? {
+    override fun invoke(buffer: RegistryFriendlyByteBuf, name: String): StringSpeciesFeature? {
         return if (name in keys) {
-            StringSpeciesFeature(name, "").also { it.decode(buffer) }
+            StringSpeciesFeature(name, "").also { it.loadFromBuffer(buffer) }
         } else {
             null
         }
@@ -98,7 +100,7 @@ open class ChoiceSpeciesFeatureProvider(
         }
     }
 
-    override fun invoke(nbt: NbtCompound): StringSpeciesFeature? {
+    override fun invoke(nbt: CompoundTag): StringSpeciesFeature? {
         return if (nbt.contains(keys.first())) {
             StringSpeciesFeature(keys.first(), "").also { it.loadFromNBT(nbt) }
         } else null

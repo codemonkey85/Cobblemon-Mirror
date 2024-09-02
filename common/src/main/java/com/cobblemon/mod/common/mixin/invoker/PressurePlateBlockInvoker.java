@@ -8,17 +8,16 @@
 
 package com.cobblemon.mod.common.mixin.invoker;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockSetType;
-import net.minecraft.block.PressurePlateBlock;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(PressurePlateBlock.class)
 public interface PressurePlateBlockInvoker {
     @Invoker("<init>")
-    static PressurePlateBlock cobblemon$create(PressurePlateBlock.ActivationRule type, AbstractBlock.Settings settings, BlockSetType blockSetType) {
+    static PressurePlateBlock cobblemon$create(BlockSetType type, BlockBehaviour.Properties settings) {
         throw new UnsupportedOperationException();
     }
 }

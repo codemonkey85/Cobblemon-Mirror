@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.api.pokemon.feature
 
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.google.gson.JsonObject
-import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.CompoundTag
 
 /**
  * A piece of state that can be added to some species of Pokémon. Registering an implementing class
@@ -26,8 +26,8 @@ import net.minecraft.nbt.NbtCompound
  */
 interface SpeciesFeature {
     val name: String
-    fun saveToNBT(pokemonNBT: NbtCompound): NbtCompound
-    fun loadFromNBT(pokemonNBT: NbtCompound): SpeciesFeature
+    fun saveToNBT(pokemonNBT: CompoundTag): CompoundTag
+    fun loadFromNBT(pokemonNBT: CompoundTag): SpeciesFeature
     fun saveToJSON(pokemonJSON: JsonObject): JsonObject
     fun loadFromJSON(pokemonJSON: JsonObject): SpeciesFeature
 }

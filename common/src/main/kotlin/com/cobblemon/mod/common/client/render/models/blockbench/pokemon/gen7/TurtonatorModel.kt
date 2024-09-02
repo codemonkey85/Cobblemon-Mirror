@@ -13,13 +13,14 @@ import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedW
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class TurtonatorModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class TurtonatorModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("turtonator")
     override val head = getPart("head")
 
@@ -29,14 +30,14 @@ class TurtonatorModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, B
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 1.62F
-    override var portraitTranslation = Vec3d(-1.14, 1.92, 0.0)
+    override var portraitTranslation = Vec3(-1.14, 1.92, 0.0)
 
     override var profileScale = 0.54F
-    override var profileTranslation = Vec3d(-0.08, 0.87, 0.0)
+    override var profileTranslation = Vec3(-0.08, 0.87, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var battleidle: CobblemonPose
 
 
     override fun registerPoses() {
@@ -46,7 +47,7 @@ class TurtonatorModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, B
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             quirks = arrayOf(blink),
             condition = { !it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("turtonator", "ground_idle")
             )
@@ -56,7 +57,7 @@ class TurtonatorModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, B
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("turtonator", "ground_idle"),
                 BipedWalkAnimation(this, periodMultiplier = 0.6F, amplitudeMultiplier = 0.9F),
@@ -71,7 +72,7 @@ class TurtonatorModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, B
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("turtonator", "battle_idle")
             )
@@ -80,6 +81,6 @@ class TurtonatorModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, B
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("turtonator", "faint") else null
 }

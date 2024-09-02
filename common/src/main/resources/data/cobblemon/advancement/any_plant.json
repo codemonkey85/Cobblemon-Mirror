@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:miracle_seed"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.any_plant"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.any_plant.description"
+    }
+  },
+  "parent": "cobblemon:root",
+  "criteria": {
+    "check_inv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+		  {
+            "items": "#cobblemon:plants"
+          }
+        ]
+      }
+    }
+  }
+}

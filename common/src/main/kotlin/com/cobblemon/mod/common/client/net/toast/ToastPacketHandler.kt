@@ -11,10 +11,10 @@ package com.cobblemon.mod.common.client.net.toast
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.gui.toast.ToastTracker
 import com.cobblemon.mod.common.net.messages.client.toast.ToastPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object ToastPacketHandler : ClientNetworkPacketHandler<ToastPacket> {
-    override fun handle(packet: ToastPacket, client: MinecraftClient) {
-        client.executeSync { ToastTracker.handle(packet, client) }
+    override fun handle(packet: ToastPacket, client: Minecraft) {
+        client.executeIfPossible { ToastTracker.handle(packet, client) }
     }
 }

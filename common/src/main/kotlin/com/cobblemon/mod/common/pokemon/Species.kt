@@ -31,18 +31,19 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.pokemon.ai.PokemonBehaviour
 import com.cobblemon.mod.common.pokemon.lighthing.LightingData
-import com.cobblemon.mod.common.util.readSizedInt
-import com.cobblemon.mod.common.util.writeSizedInt
-import net.minecraft.entity.EntityDimensions
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import com.cobblemon.mod.common.util.codec.CodecUtils
+import com.cobblemon.mod.common.util.*
+import com.mojang.serialization.Codec
+import net.minecraft.world.entity.EntityDimensions
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 
 class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
     var name: String = "Bulbasaur"
-    val translatedName: MutableText
-        get() = Text.translatable("${this.resourceIdentifier.namespace}.species.${this.unformattedShowdownId()}.name")
+    val translatedName: MutableComponent
+        get() = Component.translatable("${this.resourceIdentifier.namespace}.species.${this.unformattedShowdownId()}.name")
     var nationalPokedexNumber = 1
 
     var baseStats = hashMapOf<Stat, Int>()
@@ -59,7 +60,7 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
     var evYield = hashMapOf<Stat, Int>()
         private set
     var experienceGroup = ExperienceGroups.first()
-    var hitbox = EntityDimensions(1F, 1F, false)
+    var hitbox = EntityDimensions.fixed(1F, 1F)
     var primaryType = ElementalTypes.GRASS
         internal set
     var secondaryType: ElementalType? = null
@@ -124,12 +125,12 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
         private set
 
     @Transient
-    lateinit var resourceIdentifier: Identifier
+    lateinit var resourceIdentifier: ResourceLocation
 
     val types: Iterable<ElementalType>
         get() = secondaryType?.let { listOf(primaryType, it) } ?: listOf(primaryType)
 
-    var battleTheme: Identifier = CobblemonSounds.PVW_BATTLE.id
+    var battleTheme: ResourceLocation = CobblemonSounds.PVW_BATTLE.location
 
     var lightingData: LightingData? = null
         private set
@@ -164,7 +165,7 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
 
     fun eyeHeight(entity: PokemonEntity): Float {
         val multiplier = this.resolveEyeHeight(entity) ?: VANILLA_DEFAULT_EYE_HEIGHT
-        return entity.height * multiplier
+        return entity.bbHeight * multiplier
     }
 
     private fun resolveEyeHeight(entity: PokemonEntity): Float? = when {
@@ -175,13 +176,13 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
 
     fun canGmax() = this.forms.find { it.formOnlyShowdownId() == "gmax" } != null
 
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(this.implemented)
         buffer.writeString(this.name)
         buffer.writeInt(this.nationalPokedexNumber)
         buffer.writeMap(this.baseStats,
-            { keyBuffer, stat -> Cobblemon.statProvider.encode(keyBuffer, stat)},
-            { valueBuffer, value -> valueBuffer.writeSizedInt(IntSize.U_SHORT, value) }
+            { _, stat -> Cobblemon.statProvider.encode(buffer, stat)},
+            { _, value -> buffer.writeSizedInt(IntSize.U_SHORT, value) }
         )
         // ToDo remake once we have custom typing support
         buffer.writeString(this.primaryType.name)
@@ -197,7 +198,7 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
         // Hitbox end
         this.moves.encode(buffer)
         buffer.writeCollection(this.pokedex) { pb, line -> pb.writeString(line) }
-        buffer.writeCollection(this.forms) { pb, form -> form.encode(pb) }
+        buffer.writeCollection(this.forms) { _, form -> form.encode(buffer) }
         buffer.writeIdentifier(this.battleTheme)
         buffer.writeCollection(this.features) { pb, feature -> pb.writeString(feature) }
         buffer.writeNullable(this.lightingData) { pb, data ->
@@ -206,13 +207,13 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
         }
     }
 
-    override fun decode(buffer: PacketByteBuf) {
+    override fun decode(buffer: RegistryFriendlyByteBuf) {
         this.implemented = buffer.readBoolean()
         this.name = buffer.readString()
         this.nationalPokedexNumber = buffer.readInt()
         this.baseStats.putAll(buffer.readMap(
-            { keyBuffer -> Cobblemon.statProvider.decode(keyBuffer) },
-            { valueBuffer -> valueBuffer.readSizedInt(IntSize.U_SHORT) })
+            { _ -> Cobblemon.statProvider.decode(buffer) },
+            { _ -> buffer.readSizedInt(IntSize.U_SHORT) })
         )
         this.primaryType = ElementalTypes.getOrException(buffer.readString())
         this.secondaryType = buffer.readNullable { pb -> ElementalTypes.getOrException(pb.readString()) }
@@ -220,12 +221,12 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
         this.height = buffer.readFloat()
         this.weight = buffer.readFloat()
         this.baseScale = buffer.readFloat()
-        this.hitbox = EntityDimensions(buffer.readFloat(), buffer.readFloat(), buffer.readBoolean())
+        this.hitbox = buffer.readEntityDimensions()
         this.moves.decode(buffer)
         this.pokedex.clear()
         this.pokedex += buffer.readList { pb -> pb.readString() }
         this.forms.clear()
-        this.forms += buffer.readList{ pb -> FormData().apply { decode(pb) } }.filterNotNull()
+        this.forms += buffer.readList{ FormData().apply { decode(buffer) } }.filterNotNull()
         this.battleTheme = buffer.readIdentifier()
         this.features.clear()
         this.features += buffer.readList { pb -> pb.readString() }
@@ -283,5 +284,16 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
 
     companion object {
         private const val VANILLA_DEFAULT_EYE_HEIGHT = .85F
+
+        // TODO: Registries have dedicated Codecs, migrate to that once this is a proper registry impl
+        /**
+         * A [Codec] that maps to/from an [Identifier] associated as [Species.resourceIdentifier].
+         * Uses [PokemonSpecies.getByIdentifier] to query.
+         */
+        @JvmStatic
+        val BY_IDENTIFIER_CODEC: Codec<Species> = CodecUtils.createByIdentifierCodec(
+            PokemonSpecies::getByIdentifier,
+            Species::resourceIdentifier
+        ) { identifier -> "No species for ID $identifier" }
     }
 }

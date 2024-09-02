@@ -9,7 +9,7 @@
 package com.cobblemon.mod.common.villager
 
 import com.cobblemon.mod.common.CobblemonItems
-import net.minecraft.item.Item
+import net.minecraft.world.item.Item
 
 object VillagerGatherableItems {
     val villagerGatherableItems = setOf<Item> (
