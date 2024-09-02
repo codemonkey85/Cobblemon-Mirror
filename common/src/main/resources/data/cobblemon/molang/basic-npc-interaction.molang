@@ -1,0 +1,16 @@
+q.player.main_held_item.is_of('minecraft:iron_sword') ? {
+    t.data = q.player.data();
+    t.data.killed_test_npc ? {
+        t.data.killed_test_npc = false;
+        q.player.save_data();
+        q.player.tell('The NPC got his revenge');
+        q.player.damage(10000);
+    } : {
+        t.data.killed_test_npc = true;
+        q.player.save_data();
+        q.npc.damage(10000);
+        q.player.tell('The NPC chose to die for fear of your sword');
+    }
+} : {
+    q.npc.run_dialogue(q.player, 'cobblemon:npc-example');
+}

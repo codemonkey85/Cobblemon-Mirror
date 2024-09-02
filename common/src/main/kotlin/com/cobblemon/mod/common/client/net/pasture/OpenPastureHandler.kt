@@ -14,10 +14,10 @@ import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.pasture.PasturePCGUIConfiguration
 import com.cobblemon.mod.common.client.gui.pc.PCGUI
 import com.cobblemon.mod.common.net.messages.client.pasture.OpenPasturePacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object OpenPastureHandler : ClientNetworkPacketHandler<OpenPasturePacket> {
-    override fun handle(packet: OpenPasturePacket, client: MinecraftClient) {
+    override fun handle(packet: OpenPasturePacket, client: Minecraft) {
 
         val pcConfiguration = PasturePCGUIConfiguration(
             pastureId = packet.pastureId,

@@ -9,15 +9,9 @@
 package com.cobblemon.mod.common.client.keybind
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.client.keybind.keybinds.DebugKeybindings
-import com.cobblemon.mod.common.client.keybind.keybinds.DownShiftPartyBinding
-import com.cobblemon.mod.common.client.keybind.keybinds.HidePartyBinding
-import com.cobblemon.mod.common.client.keybind.keybinds.PartySendBinding
-import com.cobblemon.mod.common.client.keybind.keybinds.SummaryBinding
-import com.cobblemon.mod.common.client.keybind.keybinds.UpShiftPartyBinding
-import com.cobblemon.mod.common.config.CobblemonConfig
+import com.cobblemon.mod.common.client.keybind.keybinds.*
 import com.cobblemon.mod.common.platform.events.PlatformEvents
-import net.minecraft.client.option.KeyBinding
+import net.minecraft.client.KeyMapping
 
 /**
  * Main registry for KeyBinds
@@ -45,7 +39,7 @@ object CobblemonKeyBinds {
     val PARTY_OVERLAY_UP = this.queue(UpShiftPartyBinding)
     val SEND_OUT_POKEMON = this.queue(PartySendBinding)
 
-    fun register(registrar: (KeyBinding) -> Unit) {
+    fun register(registrar: (KeyMapping) -> Unit) {
         this.keyBinds.forEach(registrar::invoke)
     }
 
@@ -54,7 +48,7 @@ object CobblemonKeyBinds {
         this.keyBinds.forEach(CobblemonKeyBinding::onTick)
     }
 
-    private fun queue(keyBinding: CobblemonKeyBinding): KeyBinding {
+    private fun queue(keyBinding: CobblemonKeyBinding): KeyMapping {
         this.keyBinds.add(keyBinding)
         return keyBinding
     }

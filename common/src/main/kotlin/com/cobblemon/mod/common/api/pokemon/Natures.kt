@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.api.berry.Flavor
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.pokemon.Nature
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Registry for all Nature types
@@ -162,7 +162,7 @@ object Natures {
      * Gets a nature by registry name
      * @return a nature type or null
      */
-    fun getNature(name: Identifier): Nature? {
+    fun getNature(name: ResourceLocation): Nature? {
         return allNatures.find { nature -> nature.name == name }
     }
 
@@ -173,7 +173,7 @@ object Natures {
     fun getNature(identifier: String): Nature? {
         val nature = getNature(cobblemonResource(identifier))
         if(nature != null) return nature
-        return getNature(Identifier(identifier))
+        return getNature(ResourceLocation.parse(identifier))
     }
 
     /**

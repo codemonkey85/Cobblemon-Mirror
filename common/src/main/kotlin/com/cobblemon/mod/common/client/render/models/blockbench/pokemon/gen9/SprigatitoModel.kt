@@ -10,28 +10,29 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen9
 
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class SprigatitoModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class SprigatitoModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("sprigatito")
     override val head = getPart("head")
 
     override var portraitScale = 2.1F
-    override var portraitTranslation = Vec3d(-0.35, -0.7, 0.0)
+    override var portraitTranslation = Vec3(-0.35, -0.7, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.53, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.53, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walking: Pose
+    lateinit var sleep: Pose
+    lateinit var battleidle: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("sprigatito", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("sprigatito", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("sprigatito", "blink") }
@@ -40,7 +41,7 @@ class SprigatitoModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         sleep = registerPose(
             poseType = PoseType.SLEEP,
             quirks = arrayOf(earTwitchRight, earTwitchLeft),
-            idleAnimations = arrayOf(bedrock("sprigatito", "sleep"))
+            animations = arrayOf(bedrock("sprigatito", "sleep"))
         )
 
         standing = registerPose(
@@ -49,7 +50,7 @@ class SprigatitoModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             transformTicks = 10,
             condition = { !it.isBattling },
             quirks = arrayOf(blink, earTwitchRight, earTwitchLeft),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("sprigatito", "ground_idle")
             )
@@ -60,7 +61,7 @@ class SprigatitoModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink, earTwitchRight, earTwitchLeft),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("sprigatito", "ground_walk")
             )
@@ -72,7 +73,7 @@ class SprigatitoModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             transformTicks = 10,
             quirks = arrayOf(blink, earTwitchRight, earTwitchLeft),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("sprigatito", "battle_idle")
             )
@@ -80,6 +81,6 @@ class SprigatitoModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
     }
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walking, battleidle, sleep)) bedrockStateful("sprigatito", "faint") else null
 }

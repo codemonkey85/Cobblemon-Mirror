@@ -12,13 +12,13 @@ import com.cobblemon.mod.common.client.render.models.blockbench.animation.Quadru
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class YamperModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class YamperModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("yamper")
     override val head = getPart("head")
 
@@ -28,15 +28,15 @@ class YamperModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadr
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 2.1F
-    override var portraitTranslation = Vec3d(-0.2, -0.7, 0.0)
+    override var portraitTranslation = Vec3(-0.2, -0.7, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.5, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.5, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("yamper", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("yamper", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("yamper", "blink") }
@@ -45,7 +45,7 @@ class YamperModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadr
             poseName = "standing",
             poseTypes = PoseType.UI_POSES + PoseType.STATIONARY_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("yamper", "ground_idle")
             )
@@ -55,7 +55,7 @@ class YamperModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadr
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 QuadrupedWalkAnimation(this),
                 singleBoneLook(),
                 bedrock("yamper", "ground_idle")
@@ -65,6 +65,6 @@ class YamperModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadr
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("yamper", "faint") else null
 }

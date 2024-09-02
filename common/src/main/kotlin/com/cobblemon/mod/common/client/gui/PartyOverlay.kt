@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.client.gui
 
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.api.gui.drawPortraitPokemon
+import com.cobblemon.mod.common.api.gui.drawPosablePortrait
 import com.cobblemon.mod.common.api.text.darkGray
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.api.text.text
@@ -23,19 +23,23 @@ import com.cobblemon.mod.common.client.keybind.keybinds.HidePartyBinding
 import com.cobblemon.mod.common.client.keybind.keybinds.SummaryBinding
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.getDepletableRedGreen
+import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.client.render.renderScaledGuiItemIcon
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.hud.InGameHud
-import net.minecraft.client.gui.screen.ChatScreen
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.client.toast.Toast
-import net.minecraft.util.math.MathHelper
+import net.minecraft.client.DeltaTracker
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.Gui
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.toasts.AdvancementToast
+import net.minecraft.client.gui.components.toasts.Toast
+import net.minecraft.client.gui.screens.ChatScreen
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.util.Mth
 
-class PartyOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.getInstance().itemRenderer) {
+class PartyOverlay : Gui(Minecraft.getInstance()) {
 
     companion object {
         private const val SLOT_HEIGHT = 30
@@ -52,6 +56,7 @@ class PartyOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.ge
         private val genderIconMale = cobblemonResource("textures/gui/party/party_gender_male.png")
         private val genderIconFemale = cobblemonResource("textures/gui/party/party_gender_female.png")
         private val portraitBackground = cobblemonResource("textures/gui/party/party_slot_portrait_background.png")
+        val state = FloatingState()
     }
 
     private val screenExemptions: List<Class<out Screen>> = listOf(
@@ -60,11 +65,11 @@ class PartyOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.ge
     )
 
     val starterToast = CobblemonToast(
-        MathHelper.randomUuid(),
-        CobblemonItems.POKE_BALL.defaultStack,
-        lang("ui.starter.choose_starter_title", SummaryBinding.boundKey().localizedText).red(),
-        lang("ui.starter.choose_starter_description", SummaryBinding.boundKey().localizedText).darkGray(),
-        Toast.TEXTURE,
+        Mth.createInsecureUUID(),
+        CobblemonItems.POKE_BALL.defaultInstance,
+        lang("ui.starter.choose_starter_title", SummaryBinding.boundKey().displayName).red(),
+        lang("ui.starter.choose_starter_description", SummaryBinding.boundKey().displayName).darkGray(),
+        AdvancementToast.BACKGROUND_SPRITE,
         -1F,
         0
     )
@@ -72,21 +77,22 @@ class PartyOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.ge
     private var attachedToast = false
 
     fun resetAttachedToast() {
-        val minecraft = MinecraftClient.getInstance()
-        minecraft.toastManager.clear()
+        val minecraft = Minecraft.getInstance()
+        minecraft.toasts.clear()
         starterToast.nextVisibility = Toast.Visibility.SHOW
         attachedToast = false
     }
 
-    override fun render(context: DrawContext, partialDeltaTicks: Float) {
-        val minecraft = MinecraftClient.getInstance()
+    override fun render(context: GuiGraphics, tickCounter: DeltaTracker) {
+        val partialDeltaTicks = tickCounter.getGameTimeDeltaPartialTick(false)
+        val minecraft = Minecraft.getInstance()
 
         // Hiding if a Screen is open and not exempt
-        if (minecraft.currentScreen != null) {
-            if (!screenExemptions.contains(minecraft.currentScreen?.javaClass as Class<out Screen>))
+        if (minecraft.screen != null) {
+            if (!screenExemptions.contains(minecraft.screen?.javaClass as Class<out Screen>))
                 return
         }
-        if (minecraft.options.debugEnabled) {
+        if (minecraft.debugOverlay.showDebugScreen()) {
             return
         }
         // Hiding if toggled via Keybind
@@ -96,7 +102,7 @@ class PartyOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.ge
 
         val panelX = 0
         val party = CobblemonClient.storage.myParty
-        val matrices = context.matrices
+        val matrices = context.pose()
         if (party.slots.none { it != null }) {
             if (CobblemonClient.clientPlayerData.promptStarter &&
                 !CobblemonClient.clientPlayerData.starterLocked &&
@@ -105,7 +111,7 @@ class PartyOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.ge
             ) {
                 if (!this.attachedToast) {
                     // Adding starter toast on start and connect of client to server.
-                    minecraft.toastManager.add(this.starterToast)
+                    minecraft.toasts.addToast(this.starterToast)
                     this.attachedToast = true
                 }
             }
@@ -113,7 +119,7 @@ class PartyOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.ge
         }
 
         val totalHeight = party.slots.size * SLOT_HEIGHT
-        val midY = minecraft.window.scaledHeight / 2
+        val midY = minecraft.window.guiScaledHeight / 2
         val startY = (midY - totalHeight / 2) - ((SLOT_SPACING * 5) / 2)
         val portraitFrameOffsetX = 22
         val portraitFrameOffsetY = 2
@@ -141,15 +147,23 @@ class PartyOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.ge
                     y + PORTRAIT_DIAMETER
                 )
 
-                matrices.push()
+                matrices.pushPose()
                 matrices.translate(
                     panelX + portraitFrameOffsetX + selectedOffsetX + PORTRAIT_DIAMETER / 2.0 - 1.0,
                     y.toDouble() - 12,
                     0.0
                 )
 
-                drawPortraitPokemon(pokemon.species, pokemon.aspects, matrices, partialTicks = partialDeltaTicks)
-                matrices.pop()
+                drawPosablePortrait(
+                    identifier = pokemon.species.resourceIdentifier,
+                    aspects = pokemon.aspects,
+                    matrixStack = matrices,
+                    partialTicks = 0F, // partialDeltaTicks, //Before you get any funny ideas about party animated pokemon, make sure they each get their own state instead of sharing.
+                    contextScale = pokemon.form.baseScale,
+                    repository = PokemonModelRepository,
+                    state = state
+                )
+                matrices.popPose()
                 context.disableScissor()
             }
 

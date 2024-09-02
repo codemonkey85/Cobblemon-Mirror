@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:potion"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.brew_potion"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.brew_potion.description"
+    }
+  },
+  "parent": "cobblemon:medicinal_brew",
+  "criteria": {
+    "check_inv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:potion"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

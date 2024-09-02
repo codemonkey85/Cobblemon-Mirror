@@ -17,7 +17,7 @@ import com.cobblemon.mod.common.berry.PreferredBiomeGrowthFactor
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonElement
 import com.google.gson.JsonSerializationContext
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
@@ -38,7 +38,7 @@ object CobblemonGrowthFactorAdapter : GrowthFactorAdapter {
         this.register(PreferredBiomeGrowthFactor::class, PreferredBiomeGrowthFactor.ID)
     }
 
-    override fun register(type: KClass<out GrowthFactor>, identifier: Identifier) {
+    override fun register(type: KClass<out GrowthFactor>, identifier: ResourceLocation) {
         val existing = this.types.put(identifier.toString(), type)
         if (existing != null) {
             Cobblemon.LOGGER.debug("Replaced {} under ID {} with {} in the {}", existing::class.qualifiedName, identifier.toString(), type.qualifiedName, this::class.qualifiedName)

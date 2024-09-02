@@ -8,34 +8,34 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen6
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation.Companion.Y_AXIS
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class VivillonModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BiWingedFrame {
+class VivillonModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("vivillon")
     override val head = getPart("head")
     override val leftWing = getPart("wing_left")
     override val rightWing = getPart("wing_right")
 
     override var portraitScale = 2.8F
-    override var portraitTranslation = Vec3d(-0.3, 0.2, 0.0)
+    override var portraitTranslation = Vec3(-0.3, 0.2, 0.0)
 
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.1, 0.8, 0.0)
+    override var profileTranslation = Vec3(0.1, 0.8, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var sleep: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("vivillon", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("vivillon", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("vivillon", "blink")}
@@ -43,7 +43,7 @@ class VivillonModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BiWi
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("vivillon", "sleep")
             )
         )
@@ -52,7 +52,7 @@ class VivillonModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BiWi
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("vivillon", "air_idle")
             ),
@@ -63,7 +63,7 @@ class VivillonModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BiWi
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("vivillon", "air_fly")
             ),
@@ -72,7 +72,7 @@ class VivillonModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BiWi
     }
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk))
 //        bedrockStateful("vivillon", "faint")
 //    else null

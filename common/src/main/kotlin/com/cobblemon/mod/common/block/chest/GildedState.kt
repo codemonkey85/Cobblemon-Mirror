@@ -9,14 +9,13 @@
 package com.cobblemon.mod.common.block.chest
 
 import com.cobblemon.mod.common.api.scheduling.SchedulingTracker
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
-import net.minecraft.entity.Entity
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 
-class GildedState : PoseableEntityState<Entity>() {
+class GildedState : PosableState() {
     override fun getEntity() = null
 
     init {
-        setPose("CLOSED")
+        setPose("closed")
     }
 
     override fun updatePartialTicks(partialTicks: Float) {

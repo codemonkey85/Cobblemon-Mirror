@@ -12,8 +12,8 @@ import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.brewing.ingredient.CobblemonIngredient
 import com.cobblemon.mod.common.brewing.ingredient.CobblemonItemIngredient
 import com.cobblemon.mod.common.brewing.ingredient.CobblemonPotionIngredient
-import net.minecraft.item.Item
-import net.minecraft.potion.Potions
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.alchemy.Potions
 
 object BrewingRecipes {
 

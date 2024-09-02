@@ -10,9 +10,9 @@ package com.cobblemon.mod.common.api.events.berry
 
 import com.cobblemon.mod.common.api.berry.Berry
 import com.cobblemon.mod.common.block.BerryBlock
-import net.minecraft.block.BlockState
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.state.BlockState
 
 /**
  * The event fired when [BerryBlock.grow] is invoked and the tree passes to [BerryBlock.MATURE_AGE].
@@ -28,7 +28,7 @@ import net.minecraft.world.World
  */
 data class BerryMutationOfferEvent(
     override val berry: Berry,
-    val world: World,
+    val world: Level,
     val state: BlockState,
     val pos: BlockPos,
     val mutations: MutableSet<Berry>

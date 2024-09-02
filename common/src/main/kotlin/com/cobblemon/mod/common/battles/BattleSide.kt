@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.battles
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.battles.interpreter.ContextManager
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 
 /**
  * Unlike the Showdown side.ts, this can represent multiple actors.
@@ -27,7 +27,7 @@ class BattleSide(vararg val actors: BattleActor) {
     val contextManager = ContextManager()
     fun getOppositeSide() = if (this == battle.side1) battle.side2 else battle.side1
 
-    fun broadcastChatMessage(component: Text) {
+    fun broadcastChatMessage(component: Component) {
         return this.actors.forEach { it.sendMessage(component) }
     }
 

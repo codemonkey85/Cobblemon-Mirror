@@ -14,7 +14,7 @@ import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.battles.ShowdownInterpreter
 import com.cobblemon.mod.common.battles.dispatch.InterpreterInstruction
 import com.cobblemon.mod.common.util.battleLang
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 
 /**
  * Format: |-fieldstart|CONDITION
@@ -32,7 +32,7 @@ class FieldStartInstruction(val message: BattleMessage): InterpreterInstruction 
 
         battle.dispatchWaiting(1.5F) {
             // Note persistent is a CAP ability only we can ignore the flag
-            val lang = battleLang("fieldstart.${effect.id}", source?.getName() ?: Text.literal("UNKNOWN"))
+            val lang = battleLang("fieldstart.${effect.id}", source?.getName() ?: Component.literal("UNKNOWN"))
             battle.broadcastChatMessage(lang)
 
             val type = BattleContext.Type.valueOf(effect.rawData.substringAfterLast(" ").uppercase())

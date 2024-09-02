@@ -9,19 +9,19 @@
 package com.cobblemon.mod.common.world.predicate
 
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.mojang.serialization.Codec
-import net.minecraft.registry.Registries
-import net.minecraft.registry.Registry
-import net.minecraft.world.gen.blockpredicate.BlockPredicate
-import net.minecraft.world.gen.blockpredicate.BlockPredicateType
+import com.mojang.serialization.MapCodec
+import net.minecraft.core.Registry
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType
 
 object CobblemonBlockPredicates {
     @JvmField
     val ALTITUDE = register("altitude", AltitudePredicate.CODEC)
     val BIOME = register("biome", BiomePredicate.CODEC)
 
-    fun <P : BlockPredicate?> register(id: String, codec: Codec<P>): BlockPredicateType<P> {
-        return Registry.register(Registries.BLOCK_PREDICATE_TYPE, cobblemonResource(id), BlockPredicateType { codec })
+    fun <P : BlockPredicate?> register(id: String, codec: MapCodec<P>): BlockPredicateType<P> {
+        return Registry.register(BuiltInRegistries.BLOCK_PREDICATE_TYPE, cobblemonResource(id), BlockPredicateType { codec })
     }
 
     fun touch() = Unit

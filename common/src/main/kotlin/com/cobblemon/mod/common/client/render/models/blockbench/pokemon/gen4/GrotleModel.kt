@@ -8,18 +8,18 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen4
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class GrotleModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class GrotleModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("grotle")
     override val head = getPart("head")
     override val hindLeftLeg = getPart("leg_back_left")
@@ -28,17 +28,17 @@ class GrotleModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadr
     override val foreRightLeg = getPart("leg_front_right")
 
     override var portraitScale = 2.2F
-    override var portraitTranslation = Vec3d(-0.8, -1.0, 0.0)
+    override var portraitTranslation = Vec3(-0.8, -1.0, 0.0)
 
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.0, 0.65, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.65, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var sleep: Pose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var battleidle: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("grotle", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("grotle", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("grotle", "blink") }
@@ -46,7 +46,7 @@ class GrotleModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadr
 
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("grotle", "sleep"))
+            animations = arrayOf(bedrock("grotle", "sleep"))
         )
 
         standing = registerPose(
@@ -55,7 +55,7 @@ class GrotleModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadr
             transformTicks = 10,
             condition = { !it.isBattling },
             quirks = arrayOf(blink, shake),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("grotle", "ground_idle")
             )
@@ -66,7 +66,7 @@ class GrotleModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadr
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("grotle", "ground_walk")
             )
@@ -78,14 +78,11 @@ class GrotleModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quadr
             transformTicks = 10,
             quirks = arrayOf(blink, shake),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("grotle", "battle_idle")
             )
         )
     }
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isPosedIn(standing, walk, battleidle, sleep)) bedrockStateful("grotle", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walk, battleidle, sleep)) bedrockStateful("grotle", "faint") else null
 }

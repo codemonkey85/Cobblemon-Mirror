@@ -16,7 +16,7 @@ import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.dialogue.input.DialogueInput
 import com.cobblemon.mod.common.api.dialogue.input.DialogueNoInput
 import com.google.gson.JsonArray
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
 
 /**
  * A page of a dialogue. This has lines of text and also some kind of input expected from the player.
@@ -38,7 +38,7 @@ class DialoguePage(
             /** The ID is optional, but if you want to be able to jump to this page from other pages then you probably want to set this. */
             id: String = "",
             speaker: String? = null,
-            lines: Iterable<MutableText>,
+            lines: Iterable<MutableComponent>,
             input: DialogueInput = DialogueNoInput(),
             clientActions: Iterable<Expression> = emptyList(),
             /** The thing to do when the player presses ESC while on this page. If null, falls back to the same property on [Dialogue]. */

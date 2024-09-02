@@ -9,10 +9,10 @@
 package com.cobblemon.mod.common.api.drop
 
 import com.cobblemon.mod.common.util.substitute
-import net.minecraft.entity.LivingEntity
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.Vec3d
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.phys.Vec3
 
 /**
  * A drop entry which 'drops' by running a command. The command supports the following placeholders:
@@ -34,15 +34,15 @@ class CommandDropEntry : DropEntry {
     override val quantity = 1
     override val maxSelectableTimes = 1
 
-    override fun drop(entity: LivingEntity?, world: ServerWorld, pos: Vec3d, player: ServerPlayerEntity?) {
+    override fun drop(entity: LivingEntity?, world: ServerLevel, pos: Vec3, player: ServerPlayer?) {
         if (requiresPlayer && player == null) {
             return
         }
 
-        world.server.commandManager.executeWithPrefix(
-            world.server.commandSource,
+        world.server.commands.performPrefixedCommand(
+            world.server.createCommandSourceStack(),
             command.substitute("player", player?.name?.string ?: "")
-                .substitute("world", world.registryKey.value)
+                .substitute("world", world.dimension().location())
                 .substitute("x", pos.x)
                 .substitute("y", pos.y)
                 .substitute("z", pos.z)

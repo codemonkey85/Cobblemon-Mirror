@@ -14,10 +14,12 @@ import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
 import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
 import com.cobblemon.mod.common.client.gui.summary.featurerenderers.SummarySpeciesFeatureRenderer
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
 import com.google.gson.JsonObject
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.RegistryFriendlyByteBuf
 import kotlin.random.Random
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.PacketByteBuf
 
 /**
  * A simple [SpeciesFeature] that is a true/false flag value. It implements [CustomPokemonProperty] for use in
@@ -34,12 +36,12 @@ open class FlagSpeciesFeature(override val name: String) : SynchronizedSpeciesFe
     }
 
     var enabled = false
-    override fun saveToNBT(pokemonNBT: NbtCompound): NbtCompound {
+    override fun saveToNBT(pokemonNBT: CompoundTag): CompoundTag {
         pokemonNBT.putBoolean(name, enabled)
         return pokemonNBT
     }
 
-    override fun loadFromNBT(pokemonNBT: NbtCompound): SpeciesFeature {
+    override fun loadFromNBT(pokemonNBT: CompoundTag): SpeciesFeature {
         enabled = if (pokemonNBT.contains(name)) pokemonNBT.getBoolean(name) else enabled
         return this
     }
@@ -55,11 +57,11 @@ open class FlagSpeciesFeature(override val name: String) : SynchronizedSpeciesFe
         return this
     }
 
-    override fun encode(buffer: PacketByteBuf) {
+    override fun saveToBuffer(buffer: RegistryFriendlyByteBuf, toClient: Boolean) {
         buffer.writeBoolean(enabled)
     }
 
-    override fun decode(buffer: PacketByteBuf) {
+    override fun loadFromBuffer(buffer: RegistryFriendlyByteBuf) {
         enabled = buffer.readBoolean()
     }
 
@@ -89,21 +91,21 @@ class FlagSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<FlagSpecie
     var isAspect = true
     override var visible: Boolean = false
 
-    override fun invoke(buffer: PacketByteBuf, name: String): FlagSpeciesFeature? {
+    override fun invoke(buffer: RegistryFriendlyByteBuf, name: String): FlagSpeciesFeature? {
         return if (name in keys) {
-            FlagSpeciesFeature(name).also { it.decode(buffer) }
+            FlagSpeciesFeature(name).also { it.loadFromBuffer(buffer) }
         } else {
             null
         }
     }
 
-    override fun encode(buffer: PacketByteBuf) {
+    override fun saveToBuffer(buffer: RegistryFriendlyByteBuf, toClient: Boolean) {
         buffer.writeCollection(keys) { _, value -> buffer.writeString(value) }
         buffer.writeNullable(default) { _, value -> buffer.writeString(value) }
         buffer.writeBoolean(isAspect)
     }
 
-    override fun decode(buffer: PacketByteBuf) {
+    override fun loadFromBuffer(buffer: RegistryFriendlyByteBuf) {
         keys = buffer.readList { it.readString() }
         default = buffer.readNullable { it.readString() }
         isAspect = buffer.readBoolean()
@@ -141,7 +143,7 @@ class FlagSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<FlagSpecie
             }
     }
 
-    override fun invoke(nbt: NbtCompound): FlagSpeciesFeature? {
+    override fun invoke(nbt: CompoundTag): FlagSpeciesFeature? {
         return if (nbt.contains(keys.first())) {
             FlagSpeciesFeature(keys.first(), false).also { it.loadFromNBT(nbt) }
         } else null

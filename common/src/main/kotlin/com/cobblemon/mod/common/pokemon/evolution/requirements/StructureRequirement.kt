@@ -11,9 +11,9 @@ package com.cobblemon.mod.common.pokemon.evolution.requirements
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.requirements.template.EntityQueryRequirement
-import net.minecraft.entity.LivingEntity
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.world.gen.structure.Structure
+import net.minecraft.core.registries.Registries
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.level.levelgen.structure.Structure
 
 /**
  * A [EntityQueryRequirement] for when a [Pokemon] is expected to be in a certain structure.
@@ -26,8 +26,8 @@ class StructureRequirement : EntityQueryRequirement {
     val structureCondition: RegistryLikeCondition<Structure>? = null
     val structureAnticondition: RegistryLikeCondition<Structure>? = null
     override fun check(pokemon: Pokemon, queriedEntity: LivingEntity): Boolean {
-        val structures = queriedEntity.world.getChunk(queriedEntity.blockPos).structureReferences
-        val registry = queriedEntity.world.registryManager.get(RegistryKeys.STRUCTURE)
+        val structures = queriedEntity.level().getChunk(queriedEntity.blockPosition()).allReferences
+        val registry = queriedEntity.level().registryAccess().registryOrThrow(Registries.STRUCTURE)
         return (structureCondition == null || structures.any { structureCondition.fits(it.key, registry) }) && (structureAnticondition == null || !structures.any { structureAnticondition.fits(it.key, registry) })
     }
 

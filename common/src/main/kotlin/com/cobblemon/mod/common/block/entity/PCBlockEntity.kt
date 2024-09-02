@@ -13,17 +13,17 @@ import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.api.storage.pc.link.PCLinkManager
 import com.cobblemon.mod.common.api.storage.pc.link.ProximityPCLink
 import com.cobblemon.mod.common.block.PCBlock
-import net.minecraft.block.BlockState
-import net.minecraft.block.Blocks
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.block.entity.BlockEntityTicker
-import net.minecraft.entity.ItemEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.util.TypeFilter
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Box
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityTicker
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.entity.EntityTypeTest
+import net.minecraft.world.phys.AABB
 
 class PCBlockEntity(
     blockPos: BlockPos,
@@ -32,51 +32,53 @@ class PCBlockEntity(
 
     companion object {
         internal val TICKER = BlockEntityTicker<PCBlockEntity> { world, _, _, blockEntity ->
-            if (world.isClient) return@BlockEntityTicker
+            if (world.isClientSide) return@BlockEntityTicker
 
-            blockEntity.togglePCOn(blockEntity.getInRangeViewerCount(world, blockEntity.pos) > 0)
+            blockEntity.togglePCOn(blockEntity.getInRangeViewerCount(world, blockEntity.blockPos) > 0)
         }
     }
 
     private fun togglePCOn(on: Boolean) {
-        val pcBlock = cachedState.block as PCBlock
+        val pcBlock = blockState.block as PCBlock
 
-        if (world != null && !world!!.isClient) {
-            val world = world!!
-            val posBottom = pcBlock.getBasePosition(cachedState, pos)
+        val world = level
+        if (world != null && !world.isClientSide) {
+            val posBottom = pcBlock.getBasePosition(blockState, blockPos)
             val stateBottom = world.getBlockState(posBottom)
 
             val posTop = pcBlock.getPositionOfOtherPart(stateBottom, posBottom)
             val stateTop = world.getBlockState(posTop)
 
             try {
-                if (stateBottom.get(PCBlock.ON) != on) {
-                    world.setBlockState(posTop, stateTop.with(PCBlock.ON, on))
-                    world.setBlockState(posBottom, stateBottom.with(PCBlock.ON, on))
+                if (stateBottom.getValue(PCBlock.ON) != on) {
+                    world.setBlockAndUpdate(posTop, stateTop.setValue(PCBlock.ON, on))
+                    world.setBlockAndUpdate(posBottom, stateBottom.setValue(PCBlock.ON, on))
                 }
             } catch (exception: IllegalArgumentException) {
                 // This is probably a PC from before 1.3. Break it.
-                if (world.getBlockState(pos.up()).block is PCBlock) {
-                    world.setBlockState(pos.up(), Blocks.AIR.defaultState)
+                if (world.getBlockState(blockPos.above()).block is PCBlock) {
+                    world.setBlockAndUpdate(blockPos.above(), Blocks.AIR.defaultBlockState())
                 } else {
-                    world.setBlockState(pos.down(), Blocks.AIR.defaultState)
+                    world.setBlockAndUpdate(blockPos.below(), Blocks.AIR.defaultBlockState())
                 }
-                world.setBlockState(pos, Blocks.AIR.defaultState)
-                world.spawnEntity(ItemEntity(world, pos.x + 0.5, pos.y + 1.0, pos.z + 0.5, ItemStack(CobblemonBlocks.PC)))
+                world.setBlockAndUpdate(blockPos, Blocks.AIR.defaultBlockState())
+                world.addFreshEntity(ItemEntity(world, blockPos.x + 0.5, blockPos.y + 1.0, blockPos.z + 0.5,
+                    ItemStack(CobblemonBlocks.PC)
+                ))
             }
         }
     }
 
-    private fun isPlayerViewing(player: PlayerEntity): Boolean {
+    private fun isPlayerViewing(player: Player): Boolean {
         val pcLink = PCLinkManager.getLink(player.uuid)
         return pcLink != null
                 && pcLink is ProximityPCLink
-                && pcLink.pos == pos
-                && pcLink.world!!.dimension == player.world.dimension
+                && pcLink.pos == blockPos
+                && pcLink.world!!.dimension() == player.level().dimension()
     }
 
-    private fun getInRangeViewerCount(world: World, pos: BlockPos, range: Double = 5.0): Int {
-        val box = Box(
+    private fun getInRangeViewerCount(world: Level, pos: BlockPos, range: Double = 5.0): Int {
+        val box = AABB(
             pos.x.toDouble() - range,
             pos.y.toDouble() - range,
             pos.z.toDouble() - range,
@@ -85,6 +87,6 @@ class PCBlockEntity(
             (pos.z + 1).toDouble() + range
         )
 
-        return world.getEntitiesByType(TypeFilter.instanceOf(PlayerEntity::class.java), box) { player: PlayerEntity? -> isPlayerViewing(player!!) }.size
+        return world.getEntities(EntityTypeTest.forClass(Player::class.java), box) { player: Player? -> isPlayerViewing(player!!) }.size
     }
 }

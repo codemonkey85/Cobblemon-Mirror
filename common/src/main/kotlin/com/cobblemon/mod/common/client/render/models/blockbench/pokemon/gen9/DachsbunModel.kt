@@ -11,16 +11,16 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen9
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class DachsbunModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class DachsbunModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("dachsbun")
     override val head = getPart("head")
 
@@ -30,16 +30,16 @@ class DachsbunModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
     override val foreRightLeg = getPart("leg_front_right")
 
     override var portraitScale = 1.5F
-    override var portraitTranslation = Vec3d(-0.8, 0.25, 0.0)
+    override var portraitTranslation = Vec3(-0.8, 0.25, 0.0)
 
     override var profileScale = 0.6F
-    override var profileTranslation = Vec3d(0.0, 0.8, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.8, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var sleeping: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walking: Pose
+    lateinit var sleeping: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("dachsbun", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("dachsbun", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("dachsbun", "blink") }
@@ -48,7 +48,7 @@ class DachsbunModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
             poseTypes = STATIONARY_POSES + UI_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dachsbun", "ground_idle")
             )
         )
@@ -57,7 +57,7 @@ class DachsbunModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
             poseTypes = MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dachsbun", "ground_walk")
             )
         )
@@ -66,7 +66,7 @@ class DachsbunModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
             poseType = PoseType.SLEEP,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dachsbun", "sleep")
             )
         )

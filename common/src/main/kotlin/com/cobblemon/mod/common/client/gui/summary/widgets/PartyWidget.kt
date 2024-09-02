@@ -18,12 +18,12 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.network.chat.Component
+import net.minecraft.sounds.SoundEvent
 import java.security.InvalidParameterException
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.sound.SoundEvent
-import net.minecraft.text.Text
 
 class PartyWidget(
     pX: Int,
@@ -31,7 +31,7 @@ class PartyWidget(
     val isParty: Boolean,
     val summary: Summary,
     private val partyList: List<Pokemon?>
-) : SoundlessWidget(pX, pY, WIDTH, HEIGHT, Text.literal("PartyOverlay")) {
+) : SoundlessWidget(pX, pY, WIDTH, HEIGHT, Component.literal("PartyOverlay")) {
 
     companion object {
         const val WIDTH = 114
@@ -63,7 +63,7 @@ class PartyWidget(
                 swapSource = null
                 draggedSlot = null
             }
-            MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(CobblemonSounds.GUI_CLICK, 1.0F))
+            Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.GUI_CLICK, 1.0F))
         }
     )
 
@@ -100,8 +100,8 @@ class PartyWidget(
         }
     }
 
-    override fun renderButton(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
-        val matrices = context.matrices
+    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+        val matrices = context.pose()
         blitk(
             matrixStack = matrices,
             texture = backgroundResource,
@@ -137,17 +137,17 @@ class PartyWidget(
         partySlots.forEach { it.render(context, pMouseX, pMouseY, pPartialTicks) }
 
         if (draggedSlot != null) {
-            matrices.push()
+            matrices.pushPose()
             matrices.translate(0.0, 0.0, 500.0)
             draggedSlot!!.render(context, pMouseX, pMouseY, pPartialTicks)
-            matrices.pop()
+            matrices.popPose()
         }
     }
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
         if (swapButton.isHovered) {
             swapButton.onPress()
-            swapButton.isActive = swapEnabled
+            swapButton.buttonActive = swapEnabled
         }
 
         if (swapEnabled) {
@@ -184,12 +184,12 @@ class PartyWidget(
                 playSound(CobblemonSounds.PC_DROP)
             }
         }
-        return super.mouseReleased(pMouseX, pMouseY, pButton)
+        return true
     }
 
     fun enableSwap(boolean: Boolean = true) {
         swapEnabled = boolean
-        swapButton.isActive = boolean
+        swapButton.buttonActive = boolean
     }
 
     private fun getIndexFromPos(mouseX: Double, mouseY: Double): Int {
@@ -214,7 +214,7 @@ class PartyWidget(
     }
 
     fun playSound(soundEvent: SoundEvent) {
-        MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(soundEvent, 1.0F))
+        Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))
     }
 
     fun isWithinScreen(mouseX: Double, mouseY: Double): Boolean = mouseX.toInt() in x..(x + WIDTH)

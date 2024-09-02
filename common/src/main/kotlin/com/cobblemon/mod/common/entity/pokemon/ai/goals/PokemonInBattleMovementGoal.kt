@@ -11,10 +11,10 @@ package com.cobblemon.mod.common.entity.pokemon.ai.goals
 import com.cobblemon.mod.common.battles.BattleRegistry
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.entity.ai.goal.Goal
+import net.minecraft.world.entity.ai.goal.Goal
 
 class PokemonInBattleMovementGoal(val entity: PokemonEntity, val range: Int) : Goal() {
-    override fun canStart(): Boolean {
+    override fun canUse(): Boolean {
         return entity.isBattling && getClosestPokemonEntity() != null && entity.getCurrentPoseType() != PoseType.SLEEP
     }
 
@@ -34,7 +34,7 @@ class PokemonInBattleMovementGoal(val entity: PokemonEntity, val range: Int) : G
     override fun tick() {
         val closestPokemonEntity = getClosestPokemonEntity()
         if (closestPokemonEntity != null) {
-            entity.lookControl.lookAt(closestPokemonEntity.x, closestPokemonEntity.eyeY, closestPokemonEntity.z)
+            entity.lookControl.setLookAt(closestPokemonEntity.x, closestPokemonEntity.eyeY, closestPokemonEntity.z)
         }
     }
 }

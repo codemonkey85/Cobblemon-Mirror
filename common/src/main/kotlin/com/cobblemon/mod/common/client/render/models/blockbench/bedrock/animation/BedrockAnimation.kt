@@ -10,38 +10,29 @@ package com.cobblemon.mod.common.client.render.models.blockbench.bedrock.animati
 
 import com.bedrockk.molang.Expression
 import com.bedrockk.molang.runtime.MoLangRuntime
-import com.bedrockk.molang.runtime.MoParams
-import com.bedrockk.molang.runtime.MoScope
-import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
-import com.bedrockk.molang.runtime.value.MoValue
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunctions
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.getQueryStruct
-import com.cobblemon.mod.common.api.snowstorm.BedrockParticleEffect
-import com.cobblemon.mod.common.api.text.text
+import com.cobblemon.mod.common.api.molang.ExpressionLike
+import com.cobblemon.mod.common.api.snowstorm.BedrockParticleOptions
 import com.cobblemon.mod.common.client.particle.ParticleStorm
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityModel
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.util.asExpression
-import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
+import com.cobblemon.mod.common.util.effectiveName
 import com.cobblemon.mod.common.util.getString
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import com.cobblemon.mod.common.util.resolve
 import com.cobblemon.mod.common.util.resolveDouble
-import java.util.SortedMap
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.model.ModelPart
-import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.client.world.ClientWorld
-import net.minecraft.entity.Entity
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvent
-import net.minecraft.util.Identifier
-import net.minecraft.util.crash.CrashException
-import net.minecraft.util.crash.CrashReport
-import net.minecraft.util.math.Vec3d
+import net.minecraft.CrashReport
+import net.minecraft.ReportedException
+import net.minecraft.client.Minecraft
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.phys.Vec3
+import java.util.*
 
 data class BedrockAnimationGroup(
     val formatVersion: String,
@@ -49,12 +40,12 @@ data class BedrockAnimationGroup(
 )
 
 abstract class BedrockEffectKeyframe(val seconds: Float) {
-    abstract fun <T : Entity> run(entity: T, state: PoseableEntityState<T>)
+    abstract fun run(entity: Entity, state: PosableState)
 }
 
 class BedrockParticleKeyframe(
     seconds: Float,
-    val effect: BedrockParticleEffect,
+    val effect: BedrockParticleOptions,
     val locator: String,
     val scripts: List<Expression>
 ) : BedrockEffectKeyframe(seconds) {
@@ -72,8 +63,8 @@ class BedrockParticleKeyframe(
         }
     }
 
-    override fun <T : Entity> run(entity: T, state: PoseableEntityState<T>) {
-        val world = entity.world as? ClientWorld ?: return
+    override fun run(entity: Entity, state: PosableState) {
+        val world = entity.level() as? ClientLevel ?: return
         val matrixWrapper = state.locatorStates[locator] ?: state.locatorStates["root"]!!
 
         if (this in state.poseParticles) {
@@ -83,14 +74,14 @@ class BedrockParticleKeyframe(
         val particleRuntime = MoLangRuntime()
 
         // Share the query struct from the entity so the particle can query entity properties
-        particleRuntime.environment.structs["query"] = state.runtime.environment.getQueryStruct()
+        particleRuntime.environment.query = state.runtime.environment.query
 
         val storm = ParticleStorm(
             effect = effect,
             matrixWrapper = matrixWrapper,
             world = world,
             runtime = particleRuntime,
-            sourceVelocity = { entity.velocity },
+            sourceVelocity = { entity.deltaMovement },
             sourceAlive = { !entity.isRemoved && this in state.poseParticles },
             sourceVisible = { !entity.isInvisible },
             entity = entity,
@@ -105,18 +96,18 @@ class BedrockParticleKeyframe(
 
 class BedrockSoundKeyframe(
     seconds: Float,
-    val sound: Identifier
+    val sound: ResourceLocation
 ): BedrockEffectKeyframe(seconds) {
-    override fun <T : Entity> run(entity: T, state: PoseableEntityState<T>) {
-        val soundEvent = SoundEvent.of(sound) // Means we don't need to setup a sound registry entry for every single thing
+    override fun run(entity: Entity, state: PosableState) {
+        val soundEvent = SoundEvent.createVariableRangeEvent(sound) // Means we don't need to setup a sound registry entry for every single thing
         if (soundEvent != null) {
-            MinecraftClient.getInstance().soundManager.play(
-                PositionedSoundInstance(
+            Minecraft.getInstance().soundManager.play(
+                SimpleSoundInstance(
                     soundEvent,
-                    SoundCategory.NEUTRAL,
+                    SoundSource.NEUTRAL,
                     1F,
                     1F,
-                    entity.world.random,
+                    entity.level().random,
                     entity.x,
                     entity.y,
                     entity.z
@@ -128,10 +119,10 @@ class BedrockSoundKeyframe(
 
 class BedrockInstructionKeyframe(
     seconds: Float,
-    val expressions: List<Expression>
+    val expressions: ExpressionLike
 ): BedrockEffectKeyframe(seconds) {
-    override fun <T : Entity> run(entity: T, state: PoseableEntityState<T>) {
-        expressions.forEach { expression -> state.runtime.resolve(expression) }
+    override fun run(entity: Entity, state: PosableState) {
+        expressions.resolve(state.runtime)
     }
 }
 
@@ -141,16 +132,10 @@ data class BedrockAnimation(
     val effects: List<BedrockEffectKeyframe>,
     val boneTimelines: Map<String, BedrockBoneTimeline>
 ) {
-    companion object {
-        val sharedRuntime = MoLangRuntime().also {
-            val zero = DoubleValue(0.0)
-            it.environment.getQueryStruct().addFunctions(mapOf(
-                "anim_time" to java.util.function.Function { return@Function zero }
-            ))
-        }
-    }
+    /** Useful to have, gets set after loading the animation. */
+    var name: String = ""
 
-    fun run(model: PoseableEntityModel<*>, state: PoseableEntityState<*>?, animationSeconds: Float, intensity: Float): Boolean {
+    fun run(context: RenderContext, model: PosableModel, state: PosableState, animationSeconds: Float, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, intensity: Float): Boolean {
         var animationSeconds = animationSeconds
         if (shouldLoop) {
             animationSeconds %= animationLength.toFloat()
@@ -158,53 +143,66 @@ data class BedrockAnimation(
             return false
         }
 
+        val runtime = state.runtime
+
+        runtime.environment.setSimpleVariable("limb_swing", DoubleValue(limbSwing.toDouble()))
+        runtime.environment.setSimpleVariable("limb_swing_amount", DoubleValue(limbSwingAmount.toDouble()))
+        runtime.environment.setSimpleVariable("age_in_ticks", DoubleValue(ageInTicks.toDouble()))
+
         boneTimelines.forEach { (boneName, timeline) ->
             val part = model.relevantPartsByName[boneName] ?: if (boneName == "root_part") (model.rootPart as ModelPart) else null
             if (part !== null) {
                 if (!timeline.position.isEmpty()) {
-                    val position = timeline.position.resolve(animationSeconds.toDouble(), state?.runtime ?: sharedRuntime).multiply(intensity.toDouble())
+                    val position = timeline.position.resolve(animationSeconds.toDouble(), runtime).scale(intensity.toDouble())
                     part.apply {
-                        pivotX += position.x.toFloat()
-                        pivotY += position.y.toFloat()
-                        pivotZ += position.z.toFloat()
+                        x += position.x.toFloat()
+                        y += position.y.toFloat()
+                        z += position.z.toFloat()
                     }
                 }
 
                 if (!timeline.rotation.isEmpty()) {
                     try {
-                        val rotation = timeline.rotation.resolve(animationSeconds.toDouble(), state?.runtime ?: sharedRuntime).multiply(intensity.toDouble())
+                        val rotation = timeline.rotation.resolve(animationSeconds.toDouble(), runtime).scale(intensity.toDouble())
                         part.apply {
-                            pitch += rotation.x.toFloat().toRadians()
-                            yaw += rotation.y.toFloat().toRadians()
-                            roll += rotation.z.toFloat().toRadians()
+                            xRot += rotation.x.toFloat().toRadians()
+                            yRot += rotation.y.toFloat().toRadians()
+                            zRot += rotation.z.toFloat().toRadians()
                         }
                     } catch (e: Exception) {
-                        val exception = IllegalStateException("Bad animation for species: ${((model.context.request(RenderContext.ENTITY))!! as PokemonEntity).pokemon.species.name}", e)
+                        val exception = IllegalStateException("Bad animation for entity: ${(model.context.request(RenderContext.ENTITY))!!.effectiveName().string}", e)
                         val crash = CrashReport("Cobblemon encountered an unexpected crash", exception)
-                        val section = crash.addElement("Animation Details")
-                        state?.let {
-                            section.add("Pose", state.currentPose!!)
-                        }
-                        section.add("Bone", boneName)
+                        val section = crash.addCategory("Animation Details")
+                        section.setDetail("Pose", state.currentPose!!)
+                        section.setDetail("Bone", boneName)
 
-                        throw CrashException(crash)
+                        throw ReportedException(crash)
                     }
                 }
 
                 if (!timeline.scale.isEmpty()) {
-                    var scale = timeline.scale.resolve(animationSeconds.toDouble(), state?.runtime ?: sharedRuntime)
-                    val deviation = scale.multiply(-1.0).add(1.0, 1.0, 1.0).multiply(intensity.toDouble())
-                    scale = deviation.subtract(1.0, 1.0, 1.0).multiply(-1.0)
-                    part.xScale *= scale.x.toFloat()
-                    part.yScale *= scale.y.toFloat()
-                    part.zScale *= scale.z.toFloat()
+                    var scale = timeline.scale.resolve(animationSeconds.toDouble(), runtime)
+                    // If the goal is to make the invisible then kick that into gear after 0.5. Maybe could work better somehow else.
+                    if (scale == Vec3.ZERO && intensity > 0.5) {
+                        part.xScale *= scale.x.toFloat()
+                        part.yScale *= scale.y.toFloat()
+                        part.zScale *= scale.z.toFloat()
+                    } else {
+                        // The deviation from 1 is what we want to multiply by the intensity of the animation.
+                        val deviation = scale.scale(-1.0).add(1.0, 1.0, 1.0)
+                        val weakenedDeviation = deviation.scale(intensity.toDouble())
+                        scale = weakenedDeviation.subtract(1.0, 1.0, 1.0).scale(-1.0)
+                        part.xScale *= scale.x.toFloat()
+                        part.yScale *= scale.y.toFloat()
+                        part.zScale *= scale.z.toFloat()
+                    }
                 }
             }
         }
         return true
     }
 
-    fun <T : Entity> applyEffects(entity: T, state: PoseableEntityState<T>, previousSeconds: Float, newSeconds: Float) {
+    fun applyEffects(entity: Entity, state: PosableState, previousSeconds: Float, newSeconds: Float) {
         val effectCondition: (effectKeyframe: BedrockEffectKeyframe) -> Boolean =
             if (previousSeconds > newSeconds) {
                 { it.seconds >= previousSeconds || it.seconds <= newSeconds }
@@ -217,12 +215,12 @@ data class BedrockAnimation(
 }
 
 interface BedrockBoneValue {
-    fun resolve(time: Double, runtime: MoLangRuntime): Vec3d
+    fun resolve(time: Double, runtime: MoLangRuntime): Vec3
     fun isEmpty(): Boolean
 }
 
 object EmptyBoneValue : BedrockBoneValue {
-    override fun resolve(time: Double, runtime: MoLangRuntime) = Vec3d.ZERO
+    override fun resolve(time: Double, runtime: MoLangRuntime) = Vec3.ZERO
     override fun isEmpty() = true
 }
 
@@ -239,12 +237,12 @@ class MolangBoneValue(
 ) : BedrockBoneValue {
     val yMul = if (transformation == Transformation.POSITION) -1 else 1
     override fun isEmpty() = false
-    override fun resolve(time: Double, runtime: MoLangRuntime): Vec3d {
+    override fun resolve(time: Double, runtime: MoLangRuntime): Vec3 {
         val environment = runtime.environment
         environment.setSimpleVariable("anim_time", DoubleValue(time))
-        environment.setSimpleVariable("camera_rotation_x", DoubleValue(MinecraftClient.getInstance().gameRenderer.camera.rotation.x.toDouble()))
-        environment.setSimpleVariable("camera_rotation_y", DoubleValue(MinecraftClient.getInstance().gameRenderer.camera.rotation.y.toDouble()))
-        return Vec3d(
+        environment.setSimpleVariable("camera_rotation_x", DoubleValue(Minecraft.getInstance().gameRenderer.mainCamera.rotation().x.toDouble()))
+        environment.setSimpleVariable("camera_rotation_y", DoubleValue(Minecraft.getInstance().gameRenderer.mainCamera.rotation().y.toDouble()))
+        return Vec3(
             runtime.resolveDouble(x),
             runtime.resolveDouble(y) * yMul,
             runtime.resolveDouble(z)
@@ -252,37 +250,35 @@ class MolangBoneValue(
     }
 
 }
-class BedrockKeyFrameBoneValue : HashMap<Double, BedrockAnimationKeyFrame>(), BedrockBoneValue {
+class BedrockKeyFrameBoneValue : TreeMap<Double, BedrockAnimationKeyFrame>(), BedrockBoneValue {
     fun SortedMap<Double, BedrockAnimationKeyFrame>.getAtIndex(index: Int?): BedrockAnimationKeyFrame? {
         if (index == null) return null
         val key = this.keys.elementAtOrNull(index)
         return if (key != null) this[key] else null
     }
 
-    override fun resolve(time: Double, runtime: MoLangRuntime): Vec3d {
-        val sortedTimeline = toSortedMap()
-
-        var afterIndex : Int? = sortedTimeline.keys.indexOfFirst { it > time }
+    override fun resolve(time: Double, runtime: MoLangRuntime): Vec3 {
+        var afterIndex : Int? = keys.indexOfFirst { it > time }
         if (afterIndex == -1) afterIndex = null
         val beforeIndex = when (afterIndex) {
-            null -> sortedTimeline.size - 1
+            null -> size - 1
             0 -> null
             else -> afterIndex - 1
         }
-        val after = sortedTimeline.getAtIndex(afterIndex)
-        val before = sortedTimeline.getAtIndex(beforeIndex)
+        val after = getAtIndex(afterIndex)
+        val before = getAtIndex(beforeIndex)
 
-        val afterData = after?.pre?.resolve(time, runtime) ?: Vec3d.ZERO
-        val beforeData = before?.post?.resolve(time, runtime) ?: Vec3d.ZERO
+        val afterData = after?.pre?.resolve(time, runtime) ?: Vec3.ZERO
+        val beforeData = before?.post?.resolve(time, runtime) ?: Vec3.ZERO
 
         if (before != null || after != null) {
             if (before != null && before.interpolationType == InterpolationType.SMOOTH || after != null && after.interpolationType == InterpolationType.SMOOTH) {
                 when {
                     before != null && after != null -> {
                         val beforePlusIndex = if (beforeIndex == null || beforeIndex == 0) null else beforeIndex - 1
-                        val beforePlus = sortedTimeline.getAtIndex(beforePlusIndex)
+                        val beforePlus = getAtIndex(beforePlusIndex)
                         val afterPlusIndex = if (afterIndex == null || afterIndex == size - 1) null else afterIndex + 1
-                        val afterPlus = sortedTimeline.getAtIndex(afterPlusIndex)
+                        val afterPlus = getAtIndex(afterPlusIndex)
                         return catmullromLerp(beforePlus, before, after, afterPlus, time, runtime)
                     }
                     before != null -> return beforeData
@@ -292,9 +288,17 @@ class BedrockKeyFrameBoneValue : HashMap<Double, BedrockAnimationKeyFrame>(), Be
             else {
                 when {
                     before != null && after != null -> {
-                        return Vec3d(
-                            beforeData.x + (afterData.x - beforeData.x) * linearLerpAlpha(before.time, after.time, time),
-                            beforeData.y + (afterData.y - beforeData.y) * linearLerpAlpha(before.time, after.time, time),
+                        return Vec3(
+                            beforeData.x + (afterData.x - beforeData.x) * linearLerpAlpha(
+                                before.time,
+                                after.time,
+                                time
+                            ),
+                            beforeData.y + (afterData.y - beforeData.y) * linearLerpAlpha(
+                                before.time,
+                                after.time,
+                                time
+                            ),
                             beforeData.z + (afterData.z - beforeData.z) * linearLerpAlpha(before.time, after.time, time)
                         )
                     }
@@ -304,7 +308,7 @@ class BedrockKeyFrameBoneValue : HashMap<Double, BedrockAnimationKeyFrame>(), Be
             }
         }
         else {
-            return Vec3d(0.0, 0.0, 0.0)
+            return Vec3(0.0, 0.0, 0.0)
         }
     }
 

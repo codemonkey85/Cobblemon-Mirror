@@ -12,12 +12,12 @@ import com.cobblemon.mod.common.api.interaction.PokemonEntityInteraction
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.item.CobblemonItem
 import com.cobblemon.mod.common.pokemon.evolution.variants.TradeEvolution
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.world.item.ItemStack
+import net.minecraft.server.level.ServerPlayer
 
-class LinkCableItem : CobblemonItem(Settings()), PokemonEntityInteraction {
+class LinkCableItem : CobblemonItem(Properties()), PokemonEntityInteraction {
     override val accepted = setOf(PokemonEntityInteraction.Ownership.OWNER)
-    override fun processInteraction(player: ServerPlayerEntity, entity: PokemonEntity, stack: ItemStack): Boolean {
+    override fun processInteraction(player: ServerPlayer, entity: PokemonEntity, stack: ItemStack): Boolean {
         val pokemon = entity.pokemon
         pokemon.lockedEvolutions.filterIsInstance<TradeEvolution>().forEach { evolution ->
             // If an evolution is possible non-optional or has been successfully queued we will consume the item and stop

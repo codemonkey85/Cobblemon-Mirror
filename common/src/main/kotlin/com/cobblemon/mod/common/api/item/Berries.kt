@@ -9,7 +9,7 @@
 package com.cobblemon.mod.common.api.item
 
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Registry for all Berry types
@@ -101,7 +101,7 @@ object Berries {
      * Gets a berry by registry name
      * @return a berry type or null
      */
-    fun getBerry(name: Identifier): Berry? {
+    fun getBerry(name: ResourceLocation): Berry? {
         return allBerries.find { berry -> berry.name == name }
     }
 }

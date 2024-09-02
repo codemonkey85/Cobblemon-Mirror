@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:vivichoke"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.obtain_vivichoke"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.obtain_vivichoke.description"
+    }
+  },
+  "parent": "cobblemon:any_plant",
+  "criteria": {
+    "check_inv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:vivichoke"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

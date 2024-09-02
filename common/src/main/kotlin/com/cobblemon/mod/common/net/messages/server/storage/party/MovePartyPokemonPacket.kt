@@ -10,12 +10,12 @@ package com.cobblemon.mod.common.net.messages.server.storage.party
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.api.storage.party.PartyPosition
-import com.cobblemon.mod.common.api.storage.party.PartyPosition.Companion.readPartyPosition
-import com.cobblemon.mod.common.api.storage.party.PartyPosition.Companion.writePartyPosition
 import com.cobblemon.mod.common.net.serverhandling.storage.party.MovePartyPokemonHandler
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.readPartyPosition
+import com.cobblemon.mod.common.util.writePartyPosition
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
-import net.minecraft.network.PacketByteBuf
 
 /**
  * Tells the server to move a party Pokémon from one position of the player's party to another.
@@ -27,13 +27,13 @@ import net.minecraft.network.PacketByteBuf
  */
 class MovePartyPokemonPacket(val pokemonID: UUID, val oldPosition: PartyPosition, val newPosition: PartyPosition) : NetworkPacket<MovePartyPokemonPacket> {
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {
-        buffer.writeUuid(pokemonID)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(pokemonID)
         buffer.writePartyPosition(oldPosition)
         buffer.writePartyPosition(newPosition)
     }
     companion object {
         val ID = cobblemonResource("move_party_pokemon")
-        fun decode(buffer: PacketByteBuf) = MovePartyPokemonPacket(buffer.readUuid(), buffer.readPartyPosition(), buffer.readPartyPosition())
+        fun decode(buffer: RegistryFriendlyByteBuf) = MovePartyPokemonPacket(buffer.readUUID(), buffer.readPartyPosition(), buffer.readPartyPosition())
     }
 }

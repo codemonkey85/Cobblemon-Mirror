@@ -8,20 +8,20 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class LombreModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class LombreModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("lombre")
     override val head = getPart("head")
 
@@ -31,18 +31,18 @@ class LombreModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
     override val rightLeg = getPart("leg_right")
 
     override var portraitScale = 2.4F
-    override var portraitTranslation = Vec3d(-0.15, -0.55, 0.0)
+    override var portraitTranslation = Vec3(-0.15, -0.55, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.44, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.44, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var waterstanding: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var waterwalk: PokemonPose
-    lateinit var floating: PokemonPose
-    lateinit var swim: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var standing: Pose
+    lateinit var waterstanding: Pose
+    lateinit var walk: Pose
+    lateinit var waterwalk: Pose
+    lateinit var floating: Pose
+    lateinit var swim: Pose
+    lateinit var sleep: Pose
 
     val wateroffset = 1
 
@@ -52,8 +52,8 @@ class LombreModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
             poseName = "standing",
             poseTypes = PoseType.UI_POSES + PoseType.STAND,
             quirks = arrayOf(blink),
-            condition = { !it.isTouchingWater },
-            idleAnimations = arrayOf(
+            condition = { !it.isInWater },
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("lombre", "ground_idle")
             )
@@ -63,8 +63,8 @@ class LombreModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
             poseName = "waterstanding",
             poseType = PoseType.STAND,
             quirks = arrayOf(blink),
-            condition = { it.isTouchingWater },
-            idleAnimations = arrayOf(
+            condition = { it.isInWater },
+            animations = arrayOf(
                 bedrock("lombre", "water_idle")
             ),
             transformedParts = arrayOf(
@@ -76,8 +76,8 @@ class LombreModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
             poseName = "walk",
             poseType = PoseType.WALK,
             quirks = arrayOf(blink),
-            condition = { !it.isTouchingWater },
-            idleAnimations = arrayOf(
+            condition = { !it.isInWater },
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("lombre", "ground_walk"),
             )
@@ -87,8 +87,8 @@ class LombreModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
             poseName = "waterwalk",
             poseType = PoseType.WALK,
             quirks = arrayOf(blink),
-            condition = { it.isTouchingWater },
-            idleAnimations = arrayOf(
+            condition = { it.isInWater },
+            animations = arrayOf(
                 bedrock("lombre", "water_swim")
             ),
             transformedParts = arrayOf(
@@ -100,7 +100,7 @@ class LombreModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
             poseName = "floating",
             poseType = PoseType.FLOAT,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("lombre", "water_idle"),
             )
         )
@@ -109,7 +109,7 @@ class LombreModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
             poseName = "swim",
             poseType = PoseType.SWIM,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("lombre", "water_swim"),
             )
         )
@@ -118,14 +118,11 @@ class LombreModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Biped
             poseName = "sleep",
             poseType = PoseType.SLEEP,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("lombre", "sleep"),
             )
         )
 
     }
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isNotPosedIn(sleep)) bedrockStateful("lombre", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = if (state.isNotPosedIn(sleep)) bedrockStateful("lombre", "faint") else null
 }

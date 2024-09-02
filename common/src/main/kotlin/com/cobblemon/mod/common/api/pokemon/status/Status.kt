@@ -8,10 +8,10 @@
 
 package com.cobblemon.mod.common.api.pokemon.status
 
-import com.cobblemon.mod.common.api.moves.animations.ActionEffectTimeline
 import com.cobblemon.mod.common.api.moves.animations.ActionEffects
-import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
+import com.cobblemon.mod.common.util.codec.CodecUtils
+import com.mojang.serialization.Codec
 
 /**
  * Represents the base of a status
@@ -19,10 +19,21 @@ import net.minecraft.util.Identifier
  * @author Deltric
  */
 open class Status(
-    val name: Identifier,
+    val name: ResourceLocation,
     val showdownName: String = "",
     val applyMessage: String,
     val removeMessage: String
 ) {
     fun getActionEffect() = ActionEffects.actionEffects[name]
+
+    companion object {
+        /**
+         * A [Codec] for [Status].
+         */
+        @JvmStatic
+        val CODEC: Codec<Status> = CodecUtils.createByIdentifierCodec(
+            Statuses::getStatus,
+            Status::name
+        ) { identifier -> "No Status for ID $identifier" }
+    }
 }

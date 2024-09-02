@@ -18,11 +18,11 @@ import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.item.battle.BagItem
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.battleLang
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.Hand
-import net.minecraft.util.TypedActionResult
+import net.minecraft.world.item.ItemStack
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResultHolder
 
 // TODO probably remove this? Still need to work through Ether logic and apply in other places
 
@@ -32,23 +32,23 @@ interface InteractOrBagItem {
 
     fun getBagItem(stack: ItemStack): BagItem?
 
-    fun onRegularUse(world: ServerWorld, user: ServerPlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
-        return TypedActionResult.success(user.getStackInHand(hand))
+    fun onRegularUse(world: ServerLevel, user: ServerPlayer, hand: InteractionHand): InteractionResultHolder<ItemStack> {
+        return InteractionResultHolder.success(user.getItemInHand(hand))
     }
 
 
 
-    fun onBattleUse(player: ServerPlayerEntity, battlePokemon: BattlePokemon, stack: ItemStack): Boolean {
+    fun onBattleUse(player: ServerPlayer, battlePokemon: BattlePokemon, stack: ItemStack): Boolean {
         val battle = battlePokemon.actor.battle
 
         val bagItem = getBagItem(stack) ?: return false
         if (!battlePokemon.actor.canFitForcedAction()) {
-            player.sendMessage(battleLang("bagitem.cannot").red())
+            player.sendSystemMessage(battleLang("bagitem.cannot").red())
             return false
         }
 
         if (!bagItem.canUse(battle, battlePokemon)) {
-            player.sendMessage(battleLang("bagitem.invalid").red())
+            player.sendSystemMessage(battleLang("bagitem.invalid").red())
             return false
         }
 
@@ -60,10 +60,10 @@ interface InteractOrBagItem {
                 return@map MoveSelectDTO(move).also { it.enabled = enabled }
             }
         ) { _, _, move ->
-            if (stack in player.handItems && !stack.isEmpty && battlePokemon.actor.canFitForcedAction() && battle.turn == turn) {
+            if (stack in player.handSlots && !stack.isEmpty && battlePokemon.actor.canFitForcedAction() && battle.turn == turn) {
                 battlePokemon.actor.forceChoose(BagItemActionResponse(bagItem, battlePokemon, move.moveTemplate.name))
                 if (!player.isCreative) {
-                    stack.decrement(1)
+                    stack.shrink(1)
                 }
             }
         }
@@ -71,20 +71,20 @@ interface InteractOrBagItem {
         return true
     }
 
-    fun checkBattleItem(player: ServerPlayerEntity, battle: PokemonBattle, actor: BattleActor, battlePokemon: BattlePokemon, stack: ItemStack, hand: Hand): Boolean {
+    fun checkBattleItem(player: ServerPlayer, battle: PokemonBattle, actor: BattleActor, battlePokemon: BattlePokemon, stack: ItemStack, hand: InteractionHand): Boolean {
 
         val bagItem = getBagItem(stack) ?: return false
 
         if (!actor.canFitForcedAction()) {
-            player.sendMessage(battleLang("bagitem.cannot").red())
+            player.sendSystemMessage(battleLang("bagitem.cannot").red())
             return false
         }
 
         if (!bagItem.canUse(battle, battlePokemon)) {
-            player.sendMessage(battleLang("bagitem.invalid").red())
+            player.sendSystemMessage(battleLang("bagitem.invalid").red())
             return false
         }
 
-        return player.getStackInHand(hand) === stack
+        return player.getItemInHand(hand) === stack
     }
 }

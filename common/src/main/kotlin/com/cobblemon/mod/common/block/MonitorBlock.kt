@@ -12,25 +12,29 @@ import com.cobblemon.mod.common.api.multiblock.MultiblockBlock
 import com.cobblemon.mod.common.api.multiblock.MultiblockEntity
 import com.cobblemon.mod.common.block.entity.FossilMultiblockEntity
 import com.cobblemon.mod.common.block.multiblock.FossilMultiblockBuilder
-import net.minecraft.block.Block
-import net.minecraft.block.BlockState
-import net.minecraft.block.HorizontalFacingBlock
-import net.minecraft.block.ShapeContext
-import net.minecraft.entity.ai.pathing.NavigationType
-import net.minecraft.item.ItemPlacementContext
-import net.minecraft.state.StateManager
-import net.minecraft.state.property.EnumProperty
-import net.minecraft.util.StringIdentifiable
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
-import net.minecraft.util.shape.VoxelShape
-import net.minecraft.util.shape.VoxelShapes
-import net.minecraft.world.BlockView
-import net.minecraft.world.World
+import com.mojang.serialization.MapCodec
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.util.StringRepresentable
+import net.minecraft.world.item.context.BlockPlaceContext
+import net.minecraft.world.level.BlockGetter
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.BaseEntityBlock
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Rotation
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.StateDefinition
+import net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING
+import net.minecraft.world.level.block.state.properties.EnumProperty
+import net.minecraft.world.level.pathfinder.PathComputationType
+import net.minecraft.world.phys.shapes.CollisionContext
+import net.minecraft.world.phys.shapes.Shapes
+import net.minecraft.world.phys.shapes.VoxelShape
 
-class MonitorBlock(properties: Settings) : MultiblockBlock(properties) {
+class MonitorBlock(settings: Properties) : MultiblockBlock(settings) {
     init {
-        defaultState = defaultState.with(HorizontalFacingBlock.FACING, Direction.NORTH)
+        registerDefaultState(stateDefinition.any()
+            .setValue(HORIZONTAL_FACING, Direction.NORTH))
     }
 
     override fun createMultiBlockEntity(
@@ -42,59 +46,66 @@ class MonitorBlock(properties: Settings) : MultiblockBlock(properties) {
         )
     }
 
-    override fun getPlacementState(blockPlaceContext: ItemPlacementContext): BlockState? {
-        return defaultState.with(HorizontalFacingBlock.FACING, blockPlaceContext.horizontalPlayerFacing)
+    override fun codec(): MapCodec<out BaseEntityBlock> {
+        return CODEC
     }
 
-    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
-        builder.add(HorizontalFacingBlock.FACING)
+    override fun getStateForPlacement(blockPlaceContext: BlockPlaceContext): BlockState {
+        return defaultBlockState().setValue(HORIZONTAL_FACING, blockPlaceContext.horizontalDirection)
+    }
+
+    override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
+        builder.add(HORIZONTAL_FACING)
         builder.add(SCREEN)
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun hasComparatorOutput(state: BlockState?): Boolean {
+    override fun hasAnalogOutputSignal(state: BlockState): Boolean {
         // TODO: return false if not attached to a multiblock structure
         return true
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun getComparatorOutput(state: BlockState, world: World?, pos: BlockPos?): Int {
-        if(world == null || pos == null) {
-            return 0
-        }
+    override fun getAnalogOutputSignal(state: BlockState, world: Level, pos: BlockPos): Int {
         val monitorEntity = world.getBlockEntity(pos) as? MultiblockEntity
         val multiBlockEntity = monitorEntity?.multiblockStructure
         if(multiBlockEntity != null) {
-            return multiBlockEntity.getComparatorOutput(state, world, pos)
+            return multiBlockEntity.getAnalogOutputSignal(state, world, pos)
         }
         return 0
     }
 
-    override fun getOutlineShape(
-        state: BlockState?,
-        world: BlockView?,
-        pos: BlockPos?,
-        context: ShapeContext?
+    override fun getShape(
+        state: BlockState,
+        blockGetter: BlockGetter,
+        pos: BlockPos,
+        collisionContext: CollisionContext
     ): VoxelShape {
         return HITBOX
     }
+
     @Deprecated("Deprecated in Java")
-    override fun canPathfindThrough(state: BlockState?, world: BlockView?, pos: BlockPos?, type: NavigationType?): Boolean {
+    override fun rotate(state: BlockState, rotation: Rotation): BlockState {
+        return state.setValue(HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)))
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun isPathfindable(state: BlockState, type: PathComputationType): Boolean {
         return false
     }
 
     companion object {
+        val CODEC = simpleCodec(::MonitorBlock)
+
         //0 is off
-        val SCREEN = EnumProperty.of("screen", MonitorScreen::class.java)
-        val HITBOX = VoxelShapes.union(
-            VoxelShapes.cuboid(0.0625, 0.0, 0.0625, 0.9375, 0.375, 0.9375),
-            VoxelShapes.cuboid(0.0625, 0.875, 0.0625, 0.9375, 1.0, 0.9375),
-            VoxelShapes.cuboid(0.8125, 0.375, 0.0625, 0.9375, 0.875, 0.9375),
-            VoxelShapes.cuboid(0.1875, 0.375, 0.125, 0.8125, 0.875, 0.9375),
-            VoxelShapes.cuboid(0.0625, 0.375, 0.0625, 0.1875, 0.875, 0.9375)
+        val SCREEN = EnumProperty.create("screen", MonitorScreen::class.java)
+        val HITBOX = Shapes.or(
+            Shapes.box(0.0625, 0.0, 0.0625, 0.9375, 0.375, 0.9375),
+            Shapes.box(0.0625, 0.875, 0.0625, 0.9375, 1.0, 0.9375),
+            Shapes.box(0.8125, 0.375, 0.0625, 0.9375, 0.875, 0.9375),
+            Shapes.box(0.1875, 0.375, 0.125, 0.8125, 0.875, 0.9375),
+            Shapes.box(0.0625, 0.375, 0.0625, 0.1875, 0.875, 0.9375)
         )
     }
-    enum class MonitorScreen : StringIdentifiable {
+    enum class MonitorScreen : StringRepresentable {
         OFF,
         BLUE_PROGRESS_1,
         BLUE_PROGRESS_2,
@@ -107,6 +118,6 @@ class MonitorBlock(properties: Settings) : MultiblockBlock(properties) {
         BLUE_PROGRESS_9,
         GREEN_PROGRESS_9;
 
-        override fun asString(): String = this.name.lowercase()
+        override fun getSerializedName(): String = this.name.lowercase()
     }
 }

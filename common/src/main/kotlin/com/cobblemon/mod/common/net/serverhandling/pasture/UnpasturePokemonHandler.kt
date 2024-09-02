@@ -16,12 +16,12 @@ import com.cobblemon.mod.common.net.messages.client.pasture.ClosePasturePacket
 import com.cobblemon.mod.common.net.messages.client.pasture.PokemonUnpasturedPacket
 import com.cobblemon.mod.common.net.messages.server.pasture.UnpasturePokemonPacket
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object UnpasturePokemonHandler : ServerNetworkPacketHandler<UnpasturePokemonPacket> {
-    override fun handle(packet: UnpasturePokemonPacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: UnpasturePokemonPacket, server: MinecraftServer, player: ServerPlayer) {
         val pastureLink = PastureLinkManager.getLinkByPlayer(player) ?: return player.sendPacket(ClosePasturePacket())
-        val pastureBlockEntity = player.world.getBlockEntity(pastureLink.pos) as? PokemonPastureBlockEntity ?: return
+        val pastureBlockEntity = player.level().getBlockEntity(pastureLink.pos) as? PokemonPastureBlockEntity ?: return
 
         val tethered = pastureBlockEntity.tetheredPokemon.find { it.pokemonId == packet.pokemonId }
         if (tethered != null && tethered.playerId == player.uuid) {

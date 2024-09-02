@@ -17,10 +17,10 @@ import com.cobblemon.mod.common.util.player
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.server.command.CommandManager.argument
-import net.minecraft.server.command.CommandManager.literal
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands.argument
+import net.minecraft.commands.Commands.literal
+import net.minecraft.commands.arguments.EntityArgument
 
 object QueryLearnsetCommand {
 
@@ -30,18 +30,18 @@ object QueryLearnsetCommand {
     private const val MOVE = "move"
     private const val NO_SUCCESS = 0
 
-    fun register(dispatcher : CommandDispatcher<ServerCommandSource>) {
+    fun register(dispatcher : CommandDispatcher<CommandSourceStack>) {
         dispatcher.register(
             literal(NAME)
                 .permission(CobblemonPermissions.QUERY_LEARNSET)
-                .then(argument(PLAYER, EntityArgumentType.player())
+                .then(argument(PLAYER, EntityArgument.player())
                 .then(argument(SLOT, PartySlotArgumentType.partySlot())
                 .then(argument(MOVE, MoveArgumentType.move())
                 .executes(this::execute))))
         )
     }
 
-    private fun execute(context: CommandContext<ServerCommandSource>): Int {
+    private fun execute(context: CommandContext<CommandSourceStack>): Int {
         val player = context.player(PLAYER)
         val pokemon = PartySlotArgumentType.getPokemonOf(context, SLOT, player)
         val move = MoveArgumentType.getMove(context, MOVE)

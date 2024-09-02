@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:link_cable"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.trade_pokemon"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.trade_pokemon.description"
+    }
+  },
+  "parent": "cobblemon:first_catch",
+  "criteria": {
+    "trade": {
+      "trigger": "cobblemon:trade_pokemon",
+	  "conditions": {
+		  "traded": "any",
+		  "received": "any"
+	  }
+    }
+  },
+  "sends_telemetry_event": false
+}

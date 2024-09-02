@@ -9,14 +9,14 @@
 package com.cobblemon.mod.common.block.sign
 
 import com.cobblemon.mod.common.block.entity.CobblemonHangingSignBlockEntity
-import net.minecraft.block.BlockState
-import net.minecraft.block.HangingSignBlock
-import net.minecraft.block.WoodType
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.util.math.BlockPos
+import net.minecraft.core.BlockPos
+import net.minecraft.world.level.block.CeilingHangingSignBlock
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.properties.WoodType
 
-class CobblemonHangingSignBlock(settings: Settings, woodType: WoodType) : HangingSignBlock(settings, woodType) {
+class CobblemonHangingSignBlock(settings: Properties, woodType: WoodType) : CeilingHangingSignBlock(woodType, settings) {
 
-    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = CobblemonHangingSignBlockEntity(pos, state)
+    override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = CobblemonHangingSignBlockEntity(pos, state)
 
 }

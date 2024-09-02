@@ -13,10 +13,11 @@ import com.bedrockk.molang.MoLang
 import com.bedrockk.molang.ast.NumberExpression
 import com.cobblemon.mod.common.util.codec.EXPRESSION_CODEC
 import com.cobblemon.mod.common.util.getString
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
 import com.mojang.serialization.Codec
-import com.mojang.serialization.codecs.ListCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Configuration of the emitter component for a particle effect.
@@ -39,16 +40,16 @@ class BedrockParticleEmitter(
     companion object {
         val CODEC: Codec<BedrockParticleEmitter> = RecordCodecBuilder.create { instance ->
             instance.group(
-                ListCodec(EXPRESSION_CODEC).fieldOf("startExpressions").forGetter { it.startExpressions },
-                ListCodec(EXPRESSION_CODEC).fieldOf("updateExpressions").forGetter { it.updateExpressions },
+                EXPRESSION_CODEC.listOf().fieldOf("startExpressions").forGetter { it.startExpressions },
+                EXPRESSION_CODEC.listOf().fieldOf("updateExpressions").forGetter { it.updateExpressions },
                 ParticleEmitterRate.codec.fieldOf("rate").forGetter { it.rate },
                 ParticleEmitterShape.codec.fieldOf("shape").forGetter { it.shape },
                 ParticleEmitterLifetime.codec.fieldOf("lifetime").forGetter { it.lifetime },
                 EventTriggerTimeline.CODEC.fieldOf("eventTimeline").forGetter { it.eventTimeline },
-                ListCodec(SimpleEventTrigger.CODEC).fieldOf("creationEvents").forGetter { it.creationEvents },
-                ListCodec(SimpleEventTrigger.CODEC).fieldOf("expirationEvents").forGetter { it.expirationEvents },
+                SimpleEventTrigger.CODEC.listOf().fieldOf("creationEvents").forGetter { it.creationEvents },
+                SimpleEventTrigger.CODEC.listOf().fieldOf("expirationEvents").forGetter { it.expirationEvents },
                 EventTriggerTimeline.CODEC.fieldOf("travelDistanceEvents").forGetter { it.travelDistanceEvents },
-                ListCodec(LoopingTravelDistanceEventTrigger.CODEC).fieldOf("loopingTravelDistanceEvents").forGetter { it.loopingTravelDistanceEvents }
+                LoopingTravelDistanceEventTrigger.CODEC.listOf().fieldOf("loopingTravelDistanceEvents").forGetter { it.loopingTravelDistanceEvents }
             ).apply(instance) { startExpressions, updateExpressions, rate, shape, lifetime, eventTimeline, creationEvents, expirationEvents, travelDistanceEvents, loopingTravelDistanceEvents ->
                 BedrockParticleEmitter(
                     startExpressions = startExpressions,
@@ -66,20 +67,20 @@ class BedrockParticleEmitter(
         }
     }
 
-    fun writeToBuffer(buffer: PacketByteBuf) {
+    fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeCollection(startExpressions) { pb, expression -> pb.writeString(expression.getString()) }
         buffer.writeCollection(updateExpressions) { pb, expression -> pb.writeString(expression.getString()) }
         ParticleEmitterRate.writeToBuffer(buffer, rate)
         ParticleEmitterShape.writeToBuffer(buffer, shape)
         ParticleEmitterLifetime.writeToBuffer(buffer, lifetime)
         eventTimeline.encode(buffer)
-        buffer.writeCollection(creationEvents) { pb, event -> event.encode(pb) }
-        buffer.writeCollection(expirationEvents) { pb, event -> event.encode(pb) }
+        buffer.writeCollection(creationEvents) { _, event -> event.encode(buffer) }
+        buffer.writeCollection(expirationEvents) { _, event -> event.encode(buffer) }
         travelDistanceEvents.encode(buffer)
-        buffer.writeCollection(loopingTravelDistanceEvents) { pb, event -> event.encode(pb) }
+        buffer.writeCollection(loopingTravelDistanceEvents) { _, event -> event.encode(buffer) }
     }
 
-    fun readFromBuffer(buffer: PacketByteBuf) {
+    fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         startExpressions = buffer.readList { MoLang.createParser(buffer.readString()).parseExpression() }
         updateExpressions = buffer.readList { MoLang.createParser(buffer.readString()).parseExpression() }
         rate = ParticleEmitterRate.readFromBuffer(buffer)

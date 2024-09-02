@@ -13,13 +13,13 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFr
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class InteleonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class InteleonModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("inteleon")
     override val head = getPart("head")
 
@@ -30,15 +30,15 @@ class InteleonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
     val cape_unfolded = getPart("cape_unfolded")
 
     override var portraitScale = 2.8F
-    override var portraitTranslation = Vec3d(-0.25, 3.0, 0.0)
+    override var portraitTranslation = Vec3(-0.25, 3.0, 0.0)
 
     override var profileScale = 0.6F
-    override var profileTranslation = Vec3d(0.0, 0.89, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.89, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("inteleon", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("inteleon", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("inteleon", "blink") }
@@ -49,7 +49,7 @@ class InteleonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             transformedParts = arrayOf(
                 cape_unfolded.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("inteleon", "ground_idle")
             )
@@ -62,7 +62,7 @@ class InteleonModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             transformedParts = arrayOf(
                 cape_unfolded.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("inteleon", "ground_walk")
             )

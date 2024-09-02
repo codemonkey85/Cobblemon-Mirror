@@ -11,22 +11,18 @@ package com.cobblemon.mod.common.api.snowstorm
 import com.bedrockk.molang.Expression
 import com.bedrockk.molang.ast.NumberExpression
 import com.bedrockk.molang.runtime.MoLangRuntime
-import com.bedrockk.molang.runtime.struct.VariableStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.cobblemon.mod.common.api.codec.CodecMapped
 import com.cobblemon.mod.common.api.data.ArbitrarilyMappedSerializableCompanion
 import com.cobblemon.mod.common.api.snowstorm.ParticleEmitterRate.Companion.OVERFLOW_VARIABLE
-import com.cobblemon.mod.common.util.asExpression
+import com.cobblemon.mod.common.util.*
 import com.cobblemon.mod.common.util.codec.EXPRESSION_CODEC
-import com.cobblemon.mod.common.util.getString
-import com.cobblemon.mod.common.util.resolveDouble
-import com.cobblemon.mod.common.util.resolveInt
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.lang.Integer.min
-import net.minecraft.network.PacketByteBuf
 
 interface ParticleEmitterRate : CodecMapped {
     companion object : ArbitrarilyMappedSerializableCompanion<ParticleEmitterRate, ParticleEmitterRateType>(
@@ -71,11 +67,11 @@ class InstantParticleEmitterRate(var amount: Expression = "1".asExpression()) : 
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         amount = buffer.readString().asExpression()
     }
 
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(amount.getString())
     }
 }
@@ -103,7 +99,7 @@ class SteadyParticleEmitterRate(
         // The emitting rates are all per second, but this runs every tick. Presents some difficulties.
 
         val max = runtime.resolveDouble(maximum).toInt()
-        val variables = runtime.environment.structs["variable"] as VariableStruct
+        val variables = runtime.environment.variable
 
         /*
          * The strategy is that per tick it might be calculated to be 1.2 particles. We can't spawn a fifth
@@ -129,12 +125,12 @@ class SteadyParticleEmitterRate(
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         rate = buffer.readString().asExpression()
         maximum = buffer.readString().asExpression()
     }
 
-    override fun writeToBuffer(buffer: PacketByteBuf) {
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(rate.getString())
         buffer.writeString(maximum.getString())
     }

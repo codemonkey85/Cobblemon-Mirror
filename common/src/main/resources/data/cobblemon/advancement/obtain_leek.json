@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:medicinal_leek"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.obtain_leek"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.obtain_leek.description"
+    }
+  },
+  "parent": "cobblemon:any_plant",
+  "criteria": {
+    "check_inv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:medicinal_leek"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

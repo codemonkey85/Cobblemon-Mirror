@@ -1,36 +1,13 @@
 # Changelog
-
-## [1.5.3](#1-5-3)
-### Fixes
-- Scaled down Amaura's fetus model to avoid clipping through the tank while animating
-- Fixed Cubone's cry not having a sound.
-- Fixed the Seafloor spawning context not being a usable context.
-- Fixed Pokemon spawning in non-full blocks like slabs.
-- Fixed Gilded Chests not dropping the chest itself when broken, only the contents.
-- Fixed Pokémon losing their Hidden Ability through evolution if the middle stage did not have a Hidden Ability.
-- Hidden Power no longer plays the water type action effect. (It now plays the normal type action effect.)
-- Fixed Chimchar and Monferno T posing whenever they sleep.
-- Fixed the Magby line not having any placeholder walk animations.
-- Fixed Duskull and Dusclops using skylight levels for their nether spawn data. There is no sun in the Nether!
-- Fixed Hisuian Zoroark using base Zoroark stats. 
-- Fixed Bellossom clipping into the player head when shoulder mounted.
-- Fixed Shroomish's look range to prevent it from looking higher than it should. 
-- Fixed Crumbling Arch not blending in with the world.
-- Fixed Energy Root applying being usable on a fainted Pokemon.
-- Fixed Pokémon entity not spawning when starting a battle while recalling said Pokémon
-- Fixed species comparison not using namespace for both sides in PokemonProperties.isSubsetOf.
-- Fixed PokemonProperties#asString prefixing nicknames with a '$'
-- Fixed reviving items throwing an exception when used in battle
-- Fixed messages for Focus Sash, Confusion, Mummy, Ice Face, Own Tempo, and Revive
-- Fixed PC not saving when Pokemon was changed outside.
-- Fixed shearble Pokemon not dropping correct wool colors.
-- Fixed pasture spawning Pokemon inside solid blocks when closest spawning position is blocked off.
-- Fixed Tumbling Down advancement not being granted by tumblestone variants.
-- Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server
-- Fixed empty JsonPlayerData files resulting in players being unable to join server/world
-- Fixed crumbling_arch_ruins from generating a giant cube of air and removed the chest
+## [1.6.0 - The Bass Pro Fishing Update (Month Xth, 2024)](#1-6-0)
+#### "Now that there's a fishing mechanic, the mod is actually good!"
 
 ### Additions
+- Added Pokémon (and item) fishing using modified fishing rods - Poké Rods! You'll need a Poké Rod smithing template, a fishing rod, and some type of Poké Ball. Each Poké Ball makes a differently themed rod. Why not?
+- Added Lure Ball functionality, increasing the catch rate of Pokémon that were caught on a fishing rod.
+- Added property chaining support for duplicate CustomPokemonPropertyType elements.
+- Added ``aspect`` and ``unaspect`` PokemonProperty arguments (which also includes commands such as /pokemonedit, /spawnpokemon, and /givepokemon) to allow forcing or un-forcing an aspect on a Pokémon.
+- Added ``type`` alternatively ``elemental_type`` PokemonProperty argument, this is only used for filtering and is not applied to Pokémon. Example ``type=fire`` would be true for Charmander but false for Squirtle.
 - Added extra visuals to early berry growth stages
 - Hidden Power now displays its effective typing.
 - Moves impacted by the abilities Pixelate, Refrigerate, Aerilate, Galvanize, and Normalize now display as their altered typing.
@@ -73,11 +50,71 @@
 #### Gen 9
 - Farigiraf
 
+### Added cries to the following Pokémon
+- Timburr, Gurdurr, Conkeldurr
+- Golett, Golurk
+
 ### Changes
+- Altered the item model for Medicinal Leeks and Roasted Leeks to be held like sticks and other rod items.
+- Adjusted some berry balance values like yield and growth times
+- Adjusted volumes of sounds made by Display Cases, Berry Bushes, Energy Root, Medicinal Leek, Vivichoke, Mints, Revival Herbs and Gilded Chests.
+- Changes to mulch buffs/durations
+- Dreepy is now shoulder mountable
+- Link Cable recipe has been redesigned
+- Updated potion sprites
+- Weedle, Caterpie, Spearow, Smoochum, Mew, Murkrow, Larvitar, Taillow, Plusle, Minun, Beldum, Starly, Buneary, Combee, Pachirisu, Pidove, Petilil, Hisui Bias Petilil, Zorua, Hisuian Zorua, Elgyem, Fletchling, Skrelp, Klefki, Fomantis, Morelull, Dreepy, Shroodle, Tatsugiri, Glimmet, and Roaming Gimmighoul are now shoulder mountable
+- Chikorita's ability to look around removed due to the awkwardness of it.
+- Link Cable recipe has been redesigned
+- Updated potion sprites
+- Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs
+- Updated UI sounds for clicking and evolving Pokémon
+- Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users.
 - Kakuna, Beedrill, Snorlax, Munchlax, and Lurantis received model updates
 
+### Fixes
+- Fixed trading Pokémon setting their friendsip to 0 instead of the base value.
+- Fixed a scenario where a Pokémon that rolled to spawn with a special Tera type sometimes has a Tera type that is already a part of their natural typing.
+- Fixed PokemonProperty argument suggestions for ``tera`` and ``tera_type`` not suggesting ``stellar``.
+- Fixed being able to stack Relic Coin Pouches on top of each other.
+- Fixed Model loader generating misleading crash-reports when client is crashing
+- Scaled down Amaura's fetus model to avoid clipping through the tank while animating
+- Big Roots and Energy Roots now share the same sounds as intented.
+- Fixed Cubone's cry not having a sound.
+- Fixed sounds made by blocks playing at a lower pitch than intended.
+- Fixed the Seafloor spawning context not being a usable context.
+- Fixed Pokemon spawning in non-full blocks like slabs.
+- Fixed Gilded Chests not dropping the chest itself when broken, only the contents.
+- Fixed Pokémon losing their Hidden Ability through evolution if the middle stage did not have a Hidden Ability.
+- Hidden Power no longer plays the water type action effect. (It now plays the normal type action effect.)
+- Fixed Chimchar and Monferno T posing whenever they sleep.
+- Fixed the Magby line not having any placeholder walk animations.
+- Fixed Duskull and Dusclops using skylight levels for their nether spawn data. There is no sun in the Nether!
+- Fixed Hisuian Zoroark using base Zoroark stats.
+- Fixed Bellossom clipping into the player head when shoulder mounted.
+- Fixed Shroomish's look range to prevent it from looking higher than it should.
+- Fixed Crumbling Arch not blending in with the world.
+- Fixed Energy Root applying being usable on a fainted Pokemon.
+- Fixed Pokémon entity not spawning when starting a battle while recalling said Pokémon
+- Fixed species comparison not using namespace for both sides in PokemonProperties.isSubsetOf.
+- Fixed PokemonProperties#asString prefixing nicknames with a '$'
+- Fixed reviving items throwing an exception when used in battle
+- Fixed messages for Focus Sash, Confusion, Mummy, Ice Face, Own Tempo, and Revive
+- Fixed PC not saving when Pokemon was changed outside.
+- Fixed shearble Pokemon not dropping correct wool colors.
+- Fixed pasture spawning Pokemon inside solid blocks when closest spawning position is blocked off.
+- Fixed Tumbling Down advancement not being granted by tumblestone variants.
+- Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server
+- Fixed empty JsonPlayerData files resulting in players being unable to join server/world
+- Fixed crumbling_arch_ruins from generating a giant cube of air and removed the chest
+
 ### Developer
+- SpawnCause is now an implementation of SpawningInfluence.
+- Added "forcedAspects" to Pokemon to make it easier to easily add basic aspects to a Pokémon in a way that persists. We already know that everyone is going to overuse this.
+- Made the Pokemon.aspects setter private. This could technically break sidemods but if you are affected by this then you were using it wrong! Use Pokemon.forcedAspects to fix it.
+- Many types related to ``Pokemon`` including itself now have dedicated ``Codec``, please migrate to them from the NBT/JSON/PacketBuffer write/read methods.
+- ``TeraTypes`` now implements ``Iterable``.
 - PokemonBattle now starts on turn 0.
+- All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.
 
 ### Data Pack & Resource Pack Creators
 - Added support for "shedders" similar to Shedinja's evolution logic.

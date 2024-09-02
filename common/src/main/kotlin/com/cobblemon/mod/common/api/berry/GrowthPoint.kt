@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.api.berry
 
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.phys.Vec3
 
 /**
  * Represents a position in a berry tree where a berry will flower then fruit.
@@ -20,6 +20,6 @@ import net.minecraft.util.math.Vec3d
  * @since December 19th, 2022
  */
 data class GrowthPoint(
-    val position: Vec3d,
-    val rotation: Vec3d
+    val position: Vec3,
+    val rotation: Vec3
 )

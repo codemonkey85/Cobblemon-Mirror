@@ -44,13 +44,13 @@ import com.cobblemon.mod.common.api.reactive.Observable.Companion.filter
 import com.cobblemon.mod.common.api.reactive.Observable.Companion.map
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 @Suppress("unused")
 object CobblemonEvents {
 
     @JvmField
-    val DATA_SYNCHRONIZED = SimpleObservable<ServerPlayerEntity>()
+    val DATA_SYNCHRONIZED = SimpleObservable<ServerPlayer>()
     @JvmField
     val SHOULDER_MOUNT = CancelableObservable<ShoulderMountEvent>()
     @JvmField

@@ -2,38 +2,33 @@
   "maxScale": 0.85,
   "yTranslation": -0.0,
   "yGrowthPoint": 0.625,
-
-
-  "animations": [
-    "bedrock(dracozolt_fetus, sleep)"
-  ],
-  "quirks": [
-    {
-      "name": "quirk",
-      "animations": [
-        "bedrock(dracovish_fetus, quirk1)"
-      ],
-      "loopTimes": 1,
-      "minSeconds": 45,
-      "maxSeconds": 180
-    },
-    {
-      "name": "quirk",
-      "animations": [
-        "bedrock(dracovish_fetus, quirk2)"
-      ],
-      "loopTimes": 1,
-      "minSeconds": 45,
-      "maxSeconds": 180
-    },
-    {
-      "name": "quirk",
-      "animations": [
-        "bedrock(dracovish_fetus, quirk3)"
-      ],
-      "loopTimes": 1,
-      "minSeconds": 45,
-      "maxSeconds": 180
+  "poses": {
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('dracozolt_fetus', 'sleep')"],
+      "quirks": [
+        {
+          "name": "quirk",
+          "animations": ["q.bedrock_stateful('dracozolt_fetus', 'quirk1')"],
+          "loopTimes": 1,
+          "minSecondsBetweenOccurrences": 45,
+          "maxSecondsBetweenOccurrences": 180
+        },
+        {
+          "name": "quirk",
+          "animations": ["q.bedrock_stateful('dracozolt_fetus', 'quirk2')"],
+          "loopTimes": 1,
+          "minSecondsBetweenOccurrences": 45,
+          "maxSecondsBetweenOccurrences": 180
+        },
+        {
+          "name": "quirk",
+          "animations": ["q.bedrock_stateful('dracozolt_fetus', 'quirk3')"],
+          "loopTimes": 1,
+          "minSecondsBetweenOccurrences": 45,
+          "maxSecondsBetweenOccurrences": 180
+        }
+      ]
     }
-  ]
+  }
 }

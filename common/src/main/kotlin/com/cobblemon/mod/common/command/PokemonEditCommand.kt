@@ -18,11 +18,11 @@ import com.cobblemon.mod.common.util.player
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.server.command.CommandManager.argument
-import net.minecraft.server.command.CommandManager.literal
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands.argument
+import net.minecraft.commands.Commands.literal
+import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.server.level.ServerPlayer
 
 object PokemonEditCommand {
 
@@ -34,12 +34,12 @@ object PokemonEditCommand {
     private const val ALIAS = "pokeedit"
     private const val ALIAS_OTHER = "${ALIAS}other"
 
-    fun register(dispatcher : CommandDispatcher<ServerCommandSource>) {
+    fun register(dispatcher : CommandDispatcher<CommandSourceStack>) {
         val selfCommand = dispatcher.register(literal(NAME)
             .permission(CobblemonPermissions.POKEMON_EDIT_SELF)
             .then(argument(SLOT, PartySlotArgumentType.partySlot())
                 .then(argument(PROPERTIES, PokemonPropertiesArgumentType.properties())
-                    .executes{ execute(it, it.source.playerOrThrow) }
+                    .executes{ execute(it, it.source.playerOrException) }
                 )
             )
         )
@@ -47,7 +47,7 @@ object PokemonEditCommand {
 
         val otherCommand = dispatcher.register(literal(NAME_OTHER)
             .permission(CobblemonPermissions.POKEMON_EDIT_OTHER)
-            .then(argument(PLAYER, EntityArgumentType.player())
+            .then(argument(PLAYER, EntityArgument.player())
                 .then(argument(SLOT, PartySlotArgumentType.partySlot())
                     .then(argument(PROPERTIES, PokemonPropertiesArgumentType.properties())
                         .executes { execute(it, it.player()) }
@@ -58,12 +58,12 @@ object PokemonEditCommand {
         dispatcher.register(otherCommand.alias(ALIAS_OTHER))
     }
 
-    private fun execute(context: CommandContext<ServerCommandSource>, player: ServerPlayerEntity): Int {
+    private fun execute(context: CommandContext<CommandSourceStack>, player: ServerPlayer): Int {
         val pokemon = PartySlotArgumentType.getPokemonOf(context, SLOT, player)
         val oldName = pokemon.species.translatedName
         val properties = PokemonPropertiesArgumentType.getPokemonProperties(context, PROPERTIES)
         properties.apply(pokemon)
-        context.source.sendFeedback({ commandLang(NAME, oldName, player.name) }, true)
+        context.source.sendSuccess({ commandLang(NAME, oldName, player.name) }, true)
         return Command.SINGLE_SUCCESS
     }
 

@@ -11,12 +11,12 @@ package com.cobblemon.mod.common.client.keybind.keybinds
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.keybind.CobblemonKeyBinding
 import com.cobblemon.mod.common.client.keybind.KeybindCategories
-import net.minecraft.client.util.InputUtil
+import com.mojang.blaze3d.platform.InputConstants
 
 object DownShiftPartyBinding : CobblemonKeyBinding(
     "key.cobblemon.downshiftparty",
-    InputUtil.Type.KEYSYM,
-    InputUtil.GLFW_KEY_DOWN,
+    InputConstants.Type.KEYSYM,
+    InputConstants.KEY_DOWN,
     KeybindCategories.COBBLEMON_CATEGORY
 ) {
     override fun onPress() {

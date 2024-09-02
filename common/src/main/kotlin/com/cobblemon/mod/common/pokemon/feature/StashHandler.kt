@@ -14,18 +14,18 @@ import com.cobblemon.mod.common.api.pokemon.feature.IntSpeciesFeature
 import com.cobblemon.mod.common.api.pokemon.feature.IntSpeciesFeatureProvider
 import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatures
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.server.level.ServerPlayer
 
 object StashHandler {
-    fun interactMob(player: PlayerEntity, pokemon: Pokemon, itemStack: ItemStack?): Boolean {
-        if (itemStack == null || player !is ServerPlayerEntity || pokemon.getOwnerPlayer() !== player) return false
+    fun interactMob(player: Player, pokemon: Pokemon, itemStack: ItemStack?): Boolean {
+        if (itemStack == null || player !is ServerPlayer|| pokemon.getOwnerPlayer() !== player) return false
         val success = handleItem(pokemon, itemStack.item)
         if (success) {
-            itemStack.decrement(1)
+            itemStack.shrink(1)
         }
         return success
     }
@@ -40,7 +40,7 @@ object StashHandler {
     }
 
     fun handleItem(pokemon: Pokemon, item: Item): Boolean {
-        val itemIdentifier: Identifier = item.registryEntry.registryKey().value
+        val itemIdentifier: ResourceLocation = item.builtInRegistryHolder().key().location()
         val speciesFeatureProviders = SpeciesFeatures.getFeaturesFor(pokemon.species)
         val relevantSpeciesFeatureProviders: List<IntSpeciesFeatureProvider> = speciesFeatureProviders.filter {
             it is IntSpeciesFeatureProvider && it.itemPoints.keys.contains(itemIdentifier)

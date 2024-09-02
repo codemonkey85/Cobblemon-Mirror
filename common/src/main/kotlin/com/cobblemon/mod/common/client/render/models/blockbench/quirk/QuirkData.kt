@@ -8,20 +8,29 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.quirk
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityModel
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.animation.ActiveAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.PrimaryAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.StatefulAnimation
-import net.minecraft.entity.Entity
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 
-open class QuirkData<T : Entity> {
-    val animations = mutableListOf<StatefulAnimation<T, *>>()
-    var primaryAnimation: PrimaryAnimation<T>? = null
+/**
+ * Simple information about [ModelQuirk]s that might be relevant to how it runs.
+ *
+ * @author Hiroku
+ * @since September 30th, 2022
+ */
+open class QuirkData {
+    /** All of the animations that have been started and are currently in effect due to this quirk. */
+    val animations = mutableListOf<ActiveAnimation>()
+    /** The primary animation spawned by this quirk, if relevant. */
+    var primaryAnimation: PrimaryAnimation? = null
 
-    open fun run(entity: T?, model: PoseableEntityModel<T>, state: PoseableEntityState<T>, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
+    /** Runs any active quirk behaviour. Called from [ModelQuirk]. */
+    open fun run(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
         if (primaryAnimation != null && state.primaryAnimation != primaryAnimation) {
             primaryAnimation = null
         }
-        animations.removeIf { !it.run(entity, model, state, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, intensity) }
+        animations.removeIf { !it.run(context, model, state, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, intensity) }
     }
 }

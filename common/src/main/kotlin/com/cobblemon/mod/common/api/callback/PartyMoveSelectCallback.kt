@@ -14,9 +14,9 @@ import com.cobblemon.mod.common.api.moves.Move
 import com.cobblemon.mod.common.net.messages.client.callback.OpenPartyMoveCallbackPacket
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.lang
+import net.minecraft.network.chat.MutableComponent
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.MutableText
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Used for opening a party select screen for players which routes to move selection when they choose a Pokémon.
@@ -31,11 +31,11 @@ object PartyMoveSelectCallbacks {
 
     @JvmOverloads
     fun create(
-        player: ServerPlayerEntity,
-        partyTitle: MutableText = lang("ui.party"),
+        player: ServerPlayer,
+        partyTitle: MutableComponent = lang("ui.party"),
         pokemon: List<Pair<PartySelectPokemonDTO, List<MoveSelectDTO>>>,
-        cancel: (ServerPlayerEntity) -> Unit = {},
-        handler: (ServerPlayerEntity, pokemonIndex: Int, PartySelectPokemonDTO, moveIndex: Int, MoveSelectDTO) -> Unit
+        cancel: (ServerPlayer) -> Unit = {},
+        handler: (ServerPlayer, pokemonIndex: Int, PartySelectPokemonDTO, moveIndex: Int, MoveSelectDTO) -> Unit
     ) {
         val callback = PartyMoveSelectCallback(
             pokemon = pokemon,
@@ -48,13 +48,13 @@ object PartyMoveSelectCallbacks {
 
     @JvmOverloads
     fun createFromPokemon(
-        player: ServerPlayerEntity,
-        partyTitle: MutableText = lang("ui.party"),
+        player: ServerPlayer,
+        partyTitle: MutableComponent = lang("ui.party"),
         pokemon: List<Pokemon>,
         moves: (Pokemon) -> List<Move> = { it.moveSet.getMoves() },
         canSelectPokemon: (Pokemon) -> Boolean = { true },
         canSelectMove: (Pokemon, Move) -> Boolean = { _, _ -> true },
-        cancel: (ServerPlayerEntity) -> Unit = {},
+        cancel: (ServerPlayer) -> Unit = {},
         handler: (Pokemon, Move) -> Unit
     ) {
         val pokemonList = mutableListOf<Pair<PartySelectPokemonDTO, List<MoveSelectDTO>>>()
@@ -75,7 +75,7 @@ object PartyMoveSelectCallbacks {
         )
     }
 
-    fun handleCancelled(player: ServerPlayerEntity, uuid: UUID) {
+    fun handleCancelled(player: ServerPlayer, uuid: UUID) {
         val callback = callbacks[player.uuid] ?: return
         if (callback.uuid != uuid) {
             return
@@ -84,7 +84,7 @@ object PartyMoveSelectCallbacks {
         callback.cancel(player)
     }
 
-    fun handleCallback(player: ServerPlayerEntity, uuid: UUID, pokemonIndex: Int, moveIndex: Int) {
+    fun handleCallback(player: ServerPlayer, uuid: UUID, pokemonIndex: Int, moveIndex: Int) {
         val callback = callbacks[player.uuid] ?: return
         callbacks.remove(player.uuid)
         if (callback.uuid != uuid) {
@@ -114,6 +114,6 @@ object PartyMoveSelectCallbacks {
 class PartyMoveSelectCallback(
     val uuid: UUID = UUID.randomUUID(),
     val pokemon: List<Pair<PartySelectPokemonDTO, List<MoveSelectDTO>>>,
-    val cancel: (ServerPlayerEntity) -> Unit = {},
-    val handler: (ServerPlayerEntity, pokemonIndex: Int, PartySelectPokemonDTO, moveIndex: Int, MoveSelectDTO) -> Unit
+    val cancel: (ServerPlayer) -> Unit = {},
+    val handler: (ServerPlayer, pokemonIndex: Int, PartySelectPokemonDTO, moveIndex: Int, MoveSelectDTO) -> Unit
 )

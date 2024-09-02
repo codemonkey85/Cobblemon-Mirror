@@ -11,7 +11,6 @@ package com.cobblemon.mod.common.net.messages.client.dialogue.dto
 import com.cobblemon.mod.common.api.dialogue.ActiveDialogue
 import com.cobblemon.mod.common.api.dialogue.ArtificialDialogueFaceProvider
 import com.cobblemon.mod.common.api.dialogue.DialogueFaceProvider
-import com.cobblemon.mod.common.api.dialogue.DialogueSpeaker
 import com.cobblemon.mod.common.api.dialogue.ExpressionLikeDialogueFaceProvider
 import com.cobblemon.mod.common.api.dialogue.PlayerDialogueFaceProvider
 import com.cobblemon.mod.common.api.dialogue.ReferenceDialogueFaceProvider
@@ -21,9 +20,9 @@ import com.cobblemon.mod.common.api.dialogue.input.DialogueTextInput
 import com.cobblemon.mod.common.api.molang.ObjectValue
 import com.cobblemon.mod.common.api.net.Decodable
 import com.cobblemon.mod.common.api.net.Encodable
-import com.cobblemon.mod.common.util.resolve
+import com.cobblemon.mod.common.util.*
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
-import net.minecraft.network.PacketByteBuf
 
 class DialogueDTO : Encodable, Decodable {
     lateinit var dialogueId: UUID
@@ -56,8 +55,8 @@ class DialogueDTO : Encodable, Decodable {
         }
     }
 
-    override fun encode(buffer: PacketByteBuf) {
-        buffer.writeUuid(dialogueId)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(dialogueId)
         currentPageDTO.encode(buffer)
         dialogueInput.encode(buffer)
         buffer.writeNullable(speakers) { _, speakers ->
@@ -82,14 +81,14 @@ class DialogueDTO : Encodable, Decodable {
                 } else if (value.face is ReferenceDialogueFaceProvider) {
                     buffer.writeInt(value.face.entityId)
                 } else if (value.face is PlayerDialogueFaceProvider) {
-                    buffer.writeUuid(value.face.playerId)
+                    buffer.writeUUID(value.face.playerId)
                 }
             }
         }
     }
 
-    override fun decode(buffer: PacketByteBuf) {
-        dialogueId = buffer.readUuid()
+    override fun decode(buffer: RegistryFriendlyByteBuf) {
+        dialogueId = buffer.readUUID()
         currentPageDTO = DialoguePageDTO()
         currentPageDTO.decode(buffer)
         dialogueInput = DialogueInputDTO()
@@ -108,7 +107,7 @@ class DialogueDTO : Encodable, Decodable {
                         val aspects = buffer.readList { buffer.readString() }.toSet()
                         key to DialogueSpeakerDTO(name, ArtificialDialogueFaceProvider(modelType, identifier, aspects))
                     }
-                    "player" -> key to DialogueSpeakerDTO(name, PlayerDialogueFaceProvider(buffer.readUuid()))
+                    "player" -> key to DialogueSpeakerDTO(name, PlayerDialogueFaceProvider(buffer.readUUID()))
                     else -> key to DialogueSpeakerDTO(name, null)
                 }
             }

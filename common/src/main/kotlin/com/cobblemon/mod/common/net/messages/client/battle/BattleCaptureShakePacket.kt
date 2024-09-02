@@ -10,7 +10,9 @@ package com.cobblemon.mod.common.net.messages.client.battle
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Packet sent when a PokéBall capturing a battle Pokémon just shook. The direction is included.
@@ -22,12 +24,12 @@ import net.minecraft.network.PacketByteBuf
  */
 class BattleCaptureShakePacket(val targetPNX: String, val direction: Boolean) : NetworkPacket<BattleCaptureShakePacket> {
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(targetPNX)
         buffer.writeBoolean(direction)
     }
     companion object {
         val ID = cobblemonResource("battle_capture_shake")
-        fun decode(buffer: PacketByteBuf) = BattleCaptureShakePacket(buffer.readString(), buffer.readBoolean())
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleCaptureShakePacket(buffer.readString(), buffer.readBoolean())
     }
 }

@@ -13,7 +13,9 @@ import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.battles.ActiveBattlePokemon
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Updates the client about an [ActiveBattlePokemon] that has changed due to transformation during a battle.
@@ -35,7 +37,7 @@ class BattleTransformPokemonPacket(val pnx: String, val updatedPokemon: BattleIn
     constructor(pnx: String, updatedPokemon: BattlePokemon, mock: PokemonProperties, isAlly: Boolean) :
             this(pnx, BattleInitializePacket.ActiveBattlePokemonDTO.fromMock(updatedPokemon, isAlly, mock), isAlly)
 
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(pnx)
         updatedPokemon.saveToBuffer(buffer)
         buffer.writeBoolean(isAlly)
@@ -43,6 +45,6 @@ class BattleTransformPokemonPacket(val pnx: String, val updatedPokemon: BattleIn
 
     companion object {
         val ID = cobblemonResource("battle_transform_pokemon")
-        fun decode(buffer: PacketByteBuf) = BattleTransformPokemonPacket(buffer.readString(), BattleInitializePacket.ActiveBattlePokemonDTO.loadFromBuffer(buffer), buffer.readBoolean())
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleTransformPokemonPacket(buffer.readString(), BattleInitializePacket.ActiveBattlePokemonDTO.loadFromBuffer(buffer), buffer.readBoolean())
     }
 }

@@ -9,9 +9,8 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pose;
 
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.util.math.MatrixStack;
-
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import java.util.Map;
 
 /**
@@ -42,23 +41,17 @@ public interface Bone {
      * @param buffer The vertex consumer deployed by the renderer
      * @param packedLight The light level to be applied to the bone
      * @param packedOverlay The overlay value to be applied to the bone
-     * @param r A value representing the amount of red coloring that should be applied on the RGB scale
-     * @param g A value representing the amount of green coloring that should be applied on the RGB scale
-     * @param b A value representing the amount of blue coloring that should be applied on the RGB scale
-     * @param a The alpha value to apply to the model based on the RGB scale
+     * @param color RGBA packed integer color value
      *
      * @since 1.4.0
      */
     void render(
             RenderContext context,
-            MatrixStack stack,
+            PoseStack stack,
             VertexConsumer buffer,
             int packedLight,
             int packedOverlay,
-            float r,
-            float g,
-            float b,
-            float a
+            int color
     );
 
     /**
@@ -66,5 +59,5 @@ public interface Bone {
      *
      * @since 1.4.0
      */
-    void transform(MatrixStack matrixStack);
+    void transform(PoseStack matrixStack);
 }
