@@ -2,7 +2,9 @@
   "display": {
     "icon": {
       "id": "cobblemon:link_cable",
-	"nbt": "{CustomModelData:1}"
+	"components": {
+        "minecraft:custom_model_data": 1
+      }
     },
     "title": {
       "translate": "advancements.cobblemon.root"
