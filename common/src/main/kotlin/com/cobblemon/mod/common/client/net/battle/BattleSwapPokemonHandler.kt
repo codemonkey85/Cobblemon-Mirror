@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.battle.ActiveClientBattlePokemon
 import com.cobblemon.mod.common.client.battle.ClientBattlePokemon
 import com.cobblemon.mod.common.client.battle.animations.MoveTileOffscreenAnimation
-import com.cobblemon.mod.common.client.battle.animations.SwapAndMoveTileOnscreenAnimation
+import com.cobblemon.mod.common.client.battle.animations.MoveTileOnscreenAnimation
 import com.cobblemon.mod.common.net.messages.client.battle.BattleSwapPokemonPacket
 import net.minecraft.client.Minecraft
 
@@ -27,7 +27,7 @@ object BattleSwapPokemonHandler : ClientNetworkPacketHandler<BattleSwapPokemonPa
 
         if (swapBattlePokemon != null && swapBattlePokemon.hpValue > 0) {
             activeBattlePokemon.animations.add(
-                SwapAndMoveTileOnscreenAnimation(
+                    MoveTileOnscreenAnimation(
                     swapPokemon.battlePokemon as ClientBattlePokemon
                 )
             )
@@ -36,7 +36,7 @@ object BattleSwapPokemonHandler : ClientNetworkPacketHandler<BattleSwapPokemonPa
         }
 
         swapPokemon.animations.add(
-            SwapAndMoveTileOnscreenAnimation(
+                MoveTileOnscreenAnimation(
                     activeBattlePokemon.battlePokemon as ClientBattlePokemon
             )
         )

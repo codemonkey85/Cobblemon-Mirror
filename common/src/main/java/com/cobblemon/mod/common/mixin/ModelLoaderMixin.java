@@ -9,7 +9,6 @@
 package com.cobblemon.mod.common.mixin;
 
 import com.cobblemon.mod.common.client.CobblemonBakingOverrides;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.client.color.block.BlockColors;
@@ -20,8 +19,6 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.ProfilerFiller;
-import org.slf4j.Logger;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,15 +28,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ModelBakery.class)
 public abstract class ModelLoaderMixin {
 
+    @Shadow abstract UnbakedModel getModel(ResourceLocation resourceLocation);
+
     @Shadow protected abstract void registerModel(ModelResourceLocation modelId, UnbakedModel unbakedModel);
-
-    @Final
-    @Shadow
-    private Map<ResourceLocation, UnbakedModel> unbakedCache;
-
-    @Final
-    @Shadow
-    private static Logger LOGGER;
 
     @Inject(
         method = "<init>",
@@ -51,19 +42,8 @@ public abstract class ModelLoaderMixin {
         Map<ResourceLocation, List<BlockStateModelLoader.LoadedJson>> blockStates,
         CallbackInfo ci) {
         CobblemonBakingOverrides.INSTANCE.getModels().forEach(bakingOverride -> {
-            try {
-                BlockModel unbakedModel = this.loadBlockModel(bakingOverride.getModelLocation());
-                this.unbakedCache.put(bakingOverride.getModelIdentifier().id(), unbakedModel);
-                this.registerModel(bakingOverride.getModelIdentifier(), unbakedModel);
-            } catch (IOException e) {
-                LOGGER.error("Error loading a Cobblemon BakedModel:", e);
-                throw new RuntimeException(e);
-            }
+            var unbakedModel = this.getModel(bakingOverride.getModelLocation());
+            this.registerModel(bakingOverride.getModelIdentifier(), unbakedModel);
         });
-    }
-
-    @Shadow
-    private BlockModel loadBlockModel(ResourceLocation id) throws IOException {
-        return null;
     }
 }

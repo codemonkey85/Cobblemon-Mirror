@@ -21,9 +21,10 @@ import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.BaseEntityBlock
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.HorizontalDirectionalBlock
+import net.minecraft.world.level.block.Rotation
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
+import net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING
 import net.minecraft.world.level.block.state.properties.EnumProperty
 import net.minecraft.world.level.pathfinder.PathComputationType
 import net.minecraft.world.phys.shapes.CollisionContext
@@ -33,7 +34,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 class MonitorBlock(settings: Properties) : MultiblockBlock(settings) {
     init {
         registerDefaultState(stateDefinition.any()
-            .setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH))
+            .setValue(HORIZONTAL_FACING, Direction.NORTH))
     }
 
     override fun createMultiBlockEntity(
@@ -50,11 +51,11 @@ class MonitorBlock(settings: Properties) : MultiblockBlock(settings) {
     }
 
     override fun getStateForPlacement(blockPlaceContext: BlockPlaceContext): BlockState {
-        return defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, blockPlaceContext.horizontalDirection)
+        return defaultBlockState().setValue(HORIZONTAL_FACING, blockPlaceContext.horizontalDirection)
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
-        builder.add(HorizontalDirectionalBlock.FACING)
+        builder.add(HORIZONTAL_FACING)
         builder.add(SCREEN)
     }
 
@@ -80,6 +81,12 @@ class MonitorBlock(settings: Properties) : MultiblockBlock(settings) {
     ): VoxelShape {
         return HITBOX
     }
+
+    @Deprecated("Deprecated in Java")
+    override fun rotate(state: BlockState, rotation: Rotation): BlockState {
+        return state.setValue(HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)))
+    }
+
     @Deprecated("Deprecated in Java")
     override fun isPathfindable(state: BlockState, type: PathComputationType): Boolean {
         return false

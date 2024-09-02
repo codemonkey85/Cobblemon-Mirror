@@ -29,7 +29,7 @@ import net.minecraft.util.Mth
  * @since April 22nd, 2023
  */
 class BattleMusicInstance(sound: SoundEvent, volume: Float = 1.0F, pitch: Float = 1.0F) :
-    SimpleSoundInstance(sound, SoundSource.MUSIC, volume, pitch, SoundInstance.createUnseededRandom(), BlockPos.ZERO), TickableSoundInstance {
+    SimpleSoundInstance(sound, SoundSource.MUSIC, volume, pitch, SoundInstance.createUnseededRandom(), 0.0, 0.0, 0.0), TickableSoundInstance {
 
     private val soundManager = Minecraft.getInstance().soundManager;
     private var fade: Boolean = false

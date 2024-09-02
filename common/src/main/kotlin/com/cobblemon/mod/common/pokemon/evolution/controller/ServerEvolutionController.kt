@@ -79,7 +79,7 @@ class ServerEvolutionController(
         if (this.evolutions.add(element)) {
             this.pokemon.getOwnerPlayer()?.sendSystemMessage("cobblemon.ui.evolve.hint".asTranslated(pokemon.getDisplayName()).green())
             this.pokemon.notify(AddEvolutionPacket(this.pokemon, element))
-            this.pokemon.getOwnerPlayer()?.playSound(CobblemonSounds.CAN_EVOLVE, 1F, 1F)
+            this.pokemon.getOwnerPlayer()?.playSound(CobblemonSounds.EVOLUTION_NOTIFICATION, 1F, 1F)
             return true
         }
         return false

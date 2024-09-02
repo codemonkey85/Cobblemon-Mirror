@@ -8,7 +8,6 @@
 
 package com.cobblemon.mod.common.client.net.battle
 
-import com.cobblemon.mod.common.Cobblemon.LOGGER
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.sound.battle.BattleMusicController
 import com.cobblemon.mod.common.client.sound.battle.BattleMusicInstance
@@ -35,7 +34,7 @@ object BattleMusicHandler : ClientNetworkPacketHandler<BattleMusicPacket> {
         else if (newMusic.location != currMusic.location)
             BattleMusicController.switchMusic(newMusic)
         else
-            LOGGER.error("Ignored BattleMusicPacket from server: ${packet.music?.location}")
+            BattleMusicController.switchMusic(newMusic)
     }
 
 }

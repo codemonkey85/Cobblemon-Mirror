@@ -32,7 +32,7 @@ import com.cobblemon.mod.common.util.battleLang
 class HealInstruction(val actor: BattleActor, val publicMessage: BattleMessage, val privateMessage: BattleMessage): InterpreterInstruction {
 
     override fun invoke(battle: PokemonBattle) {
-        val pnx = privateMessage.pnxAndUuid(0)?.first
+        val activePokemon = privateMessage.actorAndActivePokemon(0, battle)?.second // this can be null if pokemon is healed in bench
         val battlePokemon = privateMessage.battlePokemon(0, battle) ?: return
         val rawHpAndStatus = privateMessage.argumentAt(1)?.split(" ") ?: return
         val rawHpRatio = rawHpAndStatus.getOrNull(0) ?: return
@@ -42,9 +42,9 @@ class HealInstruction(val actor: BattleActor, val publicMessage: BattleMessage, 
         ShowdownInterpreter.broadcastOptionalAbility(battle, effect, battlePokemon)
 
         battle.dispatchWaiting {
-            if (pnx != null) {
+            activePokemon?.let {
                 // dynamax changes max health
-                battle.sendSidedUpdate(actor, BattleHealthChangePacket(pnx, newHealth[0], newHealth[1]), BattleHealthChangePacket(pnx, newHealthRatio[0]))
+                battle.sendSidedUpdate(actor, BattleHealthChangePacket(it.getPNX(), newHealth[0], newHealth[1]), BattleHealthChangePacket(it.getPNX(), newHealthRatio[0]))
             }
             val silent = privateMessage.hasOptionalArgument("silent")
             if (!silent) {
@@ -86,9 +86,7 @@ class HealInstruction(val actor: BattleActor, val publicMessage: BattleMessage, 
             val status = Statuses.getStatus(rawStatus) ?: return@dispatchWaiting
             if (status is PersistentStatus && battlePokemon.effectedPokemon.status?.status != status) {
                 battlePokemon.effectedPokemon.applyStatus(status)
-                if (pnx != null) {
-                    battle.sendUpdate(BattlePersistentStatusPacket(pnx, status))
-                }
+                activePokemon?.let { battle.sendUpdate(BattlePersistentStatusPacket(it.getPNX(), status)) }
                 if (!silent) {
                     status.applyMessage.let { battle.broadcastChatMessage(it.asTranslated(battlePokemon.getName())) }
                 }
