@@ -535,7 +535,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
                 .strength(1.0F)
                 .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
                 .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
+                .instrument(NoteBlockInstrument.BIT)
         )
     )
     @JvmField
@@ -546,7 +546,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
                 .strength(1.0F)
                 .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
                 .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
+                .instrument(NoteBlockInstrument.BIT)
         )
     )
     @JvmField
@@ -557,7 +557,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
                 .strength(1.0F)
                 .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
                 .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
+                .instrument(NoteBlockInstrument.BIT)
         )
     )
     @JvmField
@@ -568,7 +568,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
                 .strength(1.0F)
                 .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
                 .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
+                .instrument(NoteBlockInstrument.BIT)
         )
     )
     @JvmField
@@ -579,7 +579,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
                 .strength(1.0F)
                 .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
                 .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
+                .instrument(NoteBlockInstrument.BIT)
         )
     )
     @JvmField
@@ -590,7 +590,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
                 .strength(1.0F)
                 .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
                 .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
+                .instrument(NoteBlockInstrument.BIT)
         )
     )
     @JvmField
@@ -601,7 +601,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
                 .strength(1.0F)
                 .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
                 .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
+                .instrument(NoteBlockInstrument.BIT)
         )
     )
     @JvmField
@@ -612,7 +612,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
                 .strength(1.0F)
                 .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
                 .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
+                .instrument(NoteBlockInstrument.BIT)
         )
     )
     @JvmField
@@ -623,7 +623,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
                 .strength(1.0F)
                 .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
                 .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
+                .instrument(NoteBlockInstrument.BIT)
         )
     )
     @JvmField
@@ -634,7 +634,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
                 .strength(1.0F)
                 .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
                 .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
+                .instrument(NoteBlockInstrument.BIT)
         )
     )
 
