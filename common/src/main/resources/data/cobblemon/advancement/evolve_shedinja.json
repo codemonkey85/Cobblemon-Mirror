@@ -3,7 +3,9 @@
 	"display": {
 		"icon": {
 			"id": "cobblemon:pokemon_model",
-			"nbt": "{\"species\":\"cobblemon:shedinja\",\"aspects\":[\"female\"]}"
+	"components": {
+        "cobblemon:pokemon_item": {"species":"cobblemon:shedinja","aspects":[""]}
+      }
 		},
 		"title": {
 			"translate": "advancements.cobblemon.evolve_shedinja"
