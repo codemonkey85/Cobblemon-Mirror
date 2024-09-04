@@ -520,7 +520,8 @@ class PokedexGUI private constructor(
             cobblemonResource("textures/gui/pokedex/tab_info.png"),
             cobblemonResource("textures/gui/pokedex/tab_abilities.png"),
             cobblemonResource("textures/gui/pokedex/tab_size.png"),
-            cobblemonResource("textures/gui/pokedex/tab_stats.png")
+            cobblemonResource("textures/gui/pokedex/tab_stats.png"),
+            cobblemonResource("textures/gui/pokedex/tab_drops.png")
         )
 
         /**
