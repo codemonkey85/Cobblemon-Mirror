@@ -14,11 +14,12 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.pokedex.CaughtCount
 import com.cobblemon.mod.common.api.pokedex.Dexes
-import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokedex.SeenCount
 import com.cobblemon.mod.common.api.pokedex.def.PokedexDef
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexForm
+import com.cobblemon.mod.common.api.pokedex.filter.EntryFilter
+import com.cobblemon.mod.common.api.pokedex.filter.SearchFilter
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.storage.player.client.ClientPokedexManager
 import com.cobblemon.mod.common.api.text.bold
@@ -327,12 +328,17 @@ class PokedexGUI private constructor(
         //Scroll Screen
         if (::scrollScreen.isInitialized) removeWidget(scrollScreen)
         scrollScreen = EntriesScrollingWidget(x + 26, y + 39) { setSelectedEntry(it) }
-        val entries = filteredPokedex
+        var entries = filteredPokedex
             .flatMap { it.getEntries() }
+
+        for (filter in getFilters()) {
+            entries = entries.filter { filter.test(it) }
+        }
+
         scrollScreen.createEntries(entries)
         addRenderableWidget(scrollScreen)
 
-        if (filteredPokedex.isNotEmpty()) {
+        if (entries.isNotEmpty()) {
             if (init && initSpecies != null) {
                 val entry = entries.first { it.speciesId == initSpecies }
                 setSelectedEntry(entry)
@@ -343,25 +349,13 @@ class PokedexGUI private constructor(
         }
     }
 
-    /*
-    fun filterPokedex(): Collection<DexEntry> {
-        val dexEntries =
-        return dexEntries!!
-    }
-
-     */
-
-    /*
     fun getFilters(): Collection<EntryFilter> {
         val filters: MutableList<EntryFilter> = mutableListOf()
 
-        filters.add(InvisibleFilter(pokedex))
-        filters.add(SearchFilter(pokedex, searchWidget.value))
-        filters.add(RegionFilter(pokedex, selectedRegion))
+        filters.add(SearchFilter(searchWidget.value))
 
         return filters
     }
-     */
 
     fun setSelectedEntry(newSelectedEntry: PokedexEntry) {
         selectedEntry = newSelectedEntry
