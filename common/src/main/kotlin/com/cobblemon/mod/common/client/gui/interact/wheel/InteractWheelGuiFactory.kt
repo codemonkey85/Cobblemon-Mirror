@@ -19,7 +19,6 @@ import com.cobblemon.mod.common.net.messages.server.pokemon.interact.InteractPok
 import com.cobblemon.mod.common.net.messages.server.trade.AcceptTradeRequestPacket
 import com.cobblemon.mod.common.net.messages.server.trade.OfferTradePacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.getPlayer
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.Multimap
 import net.minecraft.client.Minecraft
@@ -100,9 +99,11 @@ fun createPlayerInteractGui(optionsPacket: PlayerInteractOptionsPacket): Interac
     val hasTeamRequest = CobblemonClient.requests.multiBattleTeamRequests.any { it.challengerIds.contains(optionsPacket.targetId) }
     //The way things are positioned should probably be more thought out if more options are added
     var addBattleOption = false
+    var addTradeOption = false
     optionsPacket.options.forEach {
         if (it.equals(PlayerInteractOptionsPacket.Options.TRADE)) {
             options.put(Orientation.TOP_LEFT, trade)
+            addTradeOption = true
         }
         if (!addBattleOption && (hasChallenge || hasTeamRequest || BattleConfigureGUI.battleRequestMap.containsKey(it))) {
             options.put(Orientation.TOP_RIGHT, battle)
@@ -115,15 +116,29 @@ fun createPlayerInteractGui(optionsPacket: PlayerInteractOptionsPacket): Interac
         }
     }
 
-    if (!addBattleOption && optionsPacket.targetId.getPlayer() != null) {
-        // Player who is currently unable to battle
-        options.put(Orientation.TOP_RIGHT, InteractWheelOption(
-                iconResource = cobblemonResource("textures/gui/interact/icon_battle.png"),
-                secondaryIconResource = null,
-                colour = { Vector3f(0.5f, 0.5f, 0.5f) },
-                tooltipText = "cobblemon.ui.interact.battle.unavailable",
-                onPress = {}
-        ))
+    val isPlayer = Minecraft.getInstance().connection?.onlinePlayerIds?.contains(optionsPacket.targetId) ?: false
+    if (isPlayer) {
+        if (!addTradeOption) {
+            // Player who is currently unable to trade
+            options.put(Orientation.TOP_LEFT, InteractWheelOption(
+                    iconResource = cobblemonResource("textures/gui/interact/icon_trade.png"),
+                    secondaryIconResource = null,
+                    colour = { Vector3f(0.5f, 0.5f, 0.5f) },
+                    tooltipText = "cobblemon.ui.interact.trade.unavailable",
+                    onPress = {}
+            ))
+        }
+
+        if (!addBattleOption) {
+            // Player who is currently unable to battle
+            options.put(Orientation.TOP_RIGHT, InteractWheelOption(
+                    iconResource = cobblemonResource("textures/gui/interact/icon_battle.png"),
+                    secondaryIconResource = null,
+                    colour = { Vector3f(0.5f, 0.5f, 0.5f) },
+                    tooltipText = "cobblemon.ui.interact.battle.unavailable",
+                    onPress = {}
+            ))
+        }
     }
 
     return InteractWheelGUI(options, Component.translatable("cobblemon.ui.interact.player"))
