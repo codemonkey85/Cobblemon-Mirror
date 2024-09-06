@@ -358,6 +358,10 @@ class TradeGUI(
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
         when (keyCode) {
+            InputConstants.KEY_E -> {
+                CancelTradePacket().sendToServer()
+                Minecraft.getInstance().setScreen(null)
+            }
             InputConstants.KEY_ESCAPE -> {
 //                playSound(CobblemonSounds.PC_OFF)
                 CancelTradePacket().sendToServer()
