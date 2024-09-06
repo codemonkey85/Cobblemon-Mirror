@@ -455,6 +455,10 @@ class PCGUI(
                 playSound(CobblemonSounds.PC_OFF)
                 UnlinkPlayerFromPCPacket().sendToServer()
             }
+            InputConstants.KEY_E -> {
+                playSound(CobblemonSounds.PC_OFF)
+                UnlinkPlayerFromPCPacket().sendToServer()
+            }
 
             InputConstants.KEY_RIGHT -> {
                 playSound(CobblemonSounds.PC_CLICK)
