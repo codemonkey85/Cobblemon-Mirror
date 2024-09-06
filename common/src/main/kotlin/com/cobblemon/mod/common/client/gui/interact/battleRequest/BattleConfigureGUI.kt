@@ -189,9 +189,9 @@ class BattleConfigureGUI(
         if (activeTeamRequest != null) {
             options = listOf(PlayerInteractOptionsPacket.Options.TEAM_REQUEST)
         } else if (challenge != null) {
-            options =  packet.options.filter { battleRequestMap[it]?.battleFormat?.battleType?.name == challenge.battleFormat?.battleType?.name }
+            options =  packet.options.keys.filter { packet.options[it] === PlayerInteractOptionsPacket.OptionStatus.AVAILABLE && battleRequestMap[it]?.battleFormat?.battleType?.name == challenge.battleFormat?.battleType?.name }
         } else {
-            options = packet.options.filter { battleRequestMap.containsKey(it) }.toList()
+            options = packet.options.keys.filter { packet.options[it] === PlayerInteractOptionsPacket.OptionStatus.AVAILABLE && battleRequestMap.containsKey(it) }.toList()
         }
         val (x, y) = getDimensions()
 
