@@ -12,7 +12,7 @@
       "poseTypes": ["STAND"],
       "isBattle": true,
       "animations": [
-        "q.look('head_ai')",
+        "q.look('head', 0.8, 0.8)",
         "q.bedrock('ledyba', 'battle_idle')"
       ],
       "quirks": [
@@ -24,7 +24,7 @@
       "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE", "FLOAT"],
       "isBattle": false,
       "animations": [
-        "q.look('head_ai')",
+        "q.look('head', 0.8, 0.8)",
         "q.bedrock('ledyba', 'ground_idle')"
       ],
       "quirks": [
@@ -35,7 +35,7 @@
       "poseName": "walking",
       "poseTypes": ["WALK", "SWIM"],
       "animations": [
-        "q.look('head_ai')",
+        "q.look('head', 0.8, 0.8)",
         "q.bedrock('ledyba', 'ground_walk')"
       ],
       "quirks": ["q.bedrock_quirk('ledyba', 'blink')"]
@@ -44,7 +44,7 @@
       "poseName": "hover",
       "poseTypes": ["HOVER"],
       "animations": [
-        "q.look('head_ai')",
+        "q.look('head', 0.8, 0.8)",
         "q.bedrock('ledyba', 'air_idle')"
       ],
       "quirks": [
@@ -55,7 +55,7 @@
       "poseName": "fly",
       "poseTypes": ["FLY"],
       "animations": [
-        "q.look('head_ai')",
+        "q.look('head', 0.8, 0.8)",
         "q.bedrock('ledyba', 'air_fly')"
       ],
       "quirks": ["q.bedrock_quirk('ledyba', 'blink')"]
