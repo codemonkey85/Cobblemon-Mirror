@@ -292,11 +292,6 @@ class StarterSelectionScreen(private val categories: List<RenderableStarterCateg
         updateSelection()
     }
 
-    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        println("ob")
-        return super.keyPressed(keyCode, scanCode, modifiers)
-    }
-
     private fun rightOfCurrentSelection() : Int = if (currentSelection + 1 <= currentCategory.pokemon.size - 1) currentSelection + 1 else 0
 
     private fun left() {
@@ -331,6 +326,16 @@ class StarterSelectionScreen(private val categories: List<RenderableStarterCateg
             type = pokemon.form.primaryType,
             renderText = false
         )
+    }
+
+    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+        this.minecraft?.options?.keyInventory?.let {
+            if (it.matches(keyCode, scanCode)) {
+                Minecraft.getInstance().setScreen(null)
+                return true
+            }
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers)
     }
 
     override fun isPauseScreen() = true

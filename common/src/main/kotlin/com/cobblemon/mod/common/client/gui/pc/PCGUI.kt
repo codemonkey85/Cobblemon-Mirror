@@ -454,7 +454,7 @@ class PCGUI(
             if (it.matches(keyCode, scanCode)) {
                 playSound(CobblemonSounds.PC_OFF)
                 UnlinkPlayerFromPCPacket().sendToServer()
-                this.onClose()
+                Minecraft.getInstance().setScreen(null)
                 return true
             }
         }
