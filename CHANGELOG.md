@@ -77,6 +77,9 @@
 - Fixed Hisuian Zoroark using base Zoroark stats.
 - Fixed Bellossom clipping into the player head when shoulder mounted.
 - Fixed Shroomish's look range to prevent it from looking higher than it should.
+- Fixed Maushold's faint animations not playing. It's sadder than Tandemaus! 
+- Fixed Slowking's battle idle. 
+- Fixed Grafaiai's walk speed to prevent model sliding. 
 - Fixed Crumbling Arch not blending in with the world.
 - Fixed Energy Root applying being usable on a fainted Pokemon.
 - Fixed Pokémon entity not spawning when starting a battle while recalling said Pokémon
