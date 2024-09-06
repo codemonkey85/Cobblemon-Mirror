@@ -93,6 +93,10 @@ class PokeNav : Screen(Component.translatable("cobblemon.ui.pokenav.title")) {
                 button?.onPress()
                 0 to 0
             }
+            InputConstants.KEY_E -> {
+                Minecraft.getInstance().setScreen(null)
+                0 to 0
+            }
             PokeNavigatorBinding.boundKey().value, InputConstants.KEY_LSHIFT, InputConstants.KEY_RSHIFT -> {
                 this.aboutToClose = true
                 0 to 0
