@@ -360,6 +360,7 @@ class TradeGUI(
         this.minecraft?.options?.keyInventory?.let {
             if (it.matches(keyCode, scanCode)) {
                 CancelTradePacket().sendToServer()
+                Minecraft.getInstance().setScreen(null)
                 return true
             }
         }
