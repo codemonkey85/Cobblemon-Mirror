@@ -39,11 +39,11 @@ public abstract class StructurePoolGeneratorMixin {
         String pokecenter = "pokecenter";
         String berry = "berry_farm";
 
-        structureGroups.put(CobblemonStructureIDs.PLAINS_POKECENTER, Set.of(pokecenter));
-        structureGroups.put(CobblemonStructureIDs.DESERT_POKECENTER, Set.of(pokecenter));
-        structureGroups.put(CobblemonStructureIDs.SAVANNA_POKECENTER, Set.of(pokecenter));
-        structureGroups.put(CobblemonStructureIDs.SNOWY_POKECENTER, Set.of(pokecenter));
-        structureGroups.put(CobblemonStructureIDs.TAIGA_POKECENTER, Set.of(pokecenter));
+        structureGroups.put(CobblemonStructureIDs.PLAINS_VILLAGE_POKECENTER, Set.of(pokecenter));
+        structureGroups.put(CobblemonStructureIDs.DESERT_VILLAGE_POKECENTER, Set.of(pokecenter));
+        structureGroups.put(CobblemonStructureIDs.SAVANNA_VILLAGE_POKECENTER, Set.of(pokecenter));
+        structureGroups.put(CobblemonStructureIDs.SNOWY_VILLAGE_POKECENTER, Set.of(pokecenter));
+        structureGroups.put(CobblemonStructureIDs.TAIGA_VILLAGE_POKECENTER, Set.of(pokecenter));
 
         structureGroups.put(CobblemonStructureIDs.SAVANNA_BERRY_SMALL, Set.of(berry));
         structureGroups.put(CobblemonStructureIDs.SAVANNA_BERRY_LARGE, Set.of(berry));
