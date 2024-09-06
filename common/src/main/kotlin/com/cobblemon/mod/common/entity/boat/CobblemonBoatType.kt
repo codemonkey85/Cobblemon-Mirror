@@ -21,14 +21,16 @@ import net.minecraft.world.level.block.state.properties.WoodType
  */
 enum class CobblemonBoatType(val mountedOffset: Float) : StringRepresentable {
 
-    APRICORN(-0.1f);
+    APRICORN(-0.1f),
+    SACCHARINE(-.01f);
 
     /**
      * The base [Item] form of this [CobblemonBoatType].
      */
     val boatItem: Item
         get() = when (this) {
-        APRICORN -> CobblemonItems.APRICORN_BOAT
+            APRICORN -> CobblemonItems.APRICORN_BOAT
+            SACCHARINE -> CobblemonItems.SACCHARINE_BOAT
     }
 
     /**
@@ -36,6 +38,7 @@ enum class CobblemonBoatType(val mountedOffset: Float) : StringRepresentable {
      */
     val chestBoatItem: Item get() = when (this) {
         APRICORN -> CobblemonItems.APRICORN_CHEST_BOAT
+        SACCHARINE -> CobblemonItems.SACCHARINE_CHEST_BOAT
     }
 
     /**
@@ -43,6 +46,7 @@ enum class CobblemonBoatType(val mountedOffset: Float) : StringRepresentable {
      */
     val baseBlock: Block get() = when (this) {
         APRICORN -> CobblemonBlocks.APRICORN_PLANKS
+        SACCHARINE -> CobblemonBlocks.SACCHARINE_PLANKS
     }
 
     /**
@@ -50,6 +54,7 @@ enum class CobblemonBoatType(val mountedOffset: Float) : StringRepresentable {
      */
     val woodType: WoodType get() = when (this) {
         APRICORN -> CobblemonBlocks.APRICORN_WOOD_TYPE
+        SACCHARINE -> CobblemonBlocks.SACCHARINE_WOOD_TYPE
     }
 
 
