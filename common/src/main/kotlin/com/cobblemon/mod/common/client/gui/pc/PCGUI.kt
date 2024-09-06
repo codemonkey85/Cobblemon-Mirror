@@ -450,16 +450,20 @@ class PCGUI(
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+        this.minecraft?.options?.keyInventory?.let {
+            if (it.matches(keyCode, scanCode)) {
+                playSound(CobblemonSounds.PC_OFF)
+                UnlinkPlayerFromPCPacket().sendToServer()
+                this.onClose()
+                return true
+            }
+        }
+
         when (keyCode) {
             InputConstants.KEY_ESCAPE -> {
                 playSound(CobblemonSounds.PC_OFF)
                 UnlinkPlayerFromPCPacket().sendToServer()
             }
-            InputConstants.KEY_E -> {
-                playSound(CobblemonSounds.PC_OFF)
-                UnlinkPlayerFromPCPacket().sendToServer()
-            }
-
             InputConstants.KEY_RIGHT -> {
                 playSound(CobblemonSounds.PC_CLICK)
                 this.storageWidget.box += 1

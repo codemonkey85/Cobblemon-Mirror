@@ -295,11 +295,7 @@ class StarterSelectionScreen(private val categories: List<RenderableStarterCateg
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        when (keyCode) {
-            InputConstants.KEY_E -> {
-                Minecraft.getInstance().setScreen(null)
-            }
-        }
+        println("ob")
         return super.keyPressed(keyCode, scanCode, modifiers)
     }
 

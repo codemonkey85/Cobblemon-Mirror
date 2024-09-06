@@ -9,11 +9,13 @@
 package com.cobblemon.mod.common.client.gui.pokenav
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.summary.Summary
 import com.cobblemon.mod.common.client.keybind.boundKey
 import com.cobblemon.mod.common.client.keybind.keybinds.PokeNavigatorBinding
+import com.cobblemon.mod.common.net.messages.server.storage.pc.UnlinkPlayerFromPCPacket
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.google.common.collect.HashBasedTable
@@ -82,6 +84,12 @@ class PokeNav : Screen(Component.translatable("cobblemon.ui.pokenav.title")) {
      * Cleaned up the original code see [moveSelected] for how the selection moves around.
      */
     override fun keyPressed(pKeyCode: Int, pScanCode: Int, pModifiers: Int): Boolean {
+        this.minecraft?.options?.keyInventory?.let {
+            if (it.matches(pKeyCode, pScanCode)) {
+                this.onClose()
+                return true
+            }
+        }
         val movement: Pair<Int, Int> = when (pKeyCode) {
             InputConstants.KEY_RIGHT, InputConstants.KEY_D -> 1 to 0
             InputConstants.KEY_LEFT, InputConstants.KEY_A -> -1 to 0
@@ -91,10 +99,6 @@ class PokeNav : Screen(Component.translatable("cobblemon.ui.pokenav.title")) {
                 val button = this.buttons.get(currentSelectionPos.first, currentSelectionPos.second)
                 button?.playDownSound(Minecraft.getInstance().soundManager)
                 button?.onPress()
-                0 to 0
-            }
-            InputConstants.KEY_E -> {
-                Minecraft.getInstance().setScreen(null)
                 0 to 0
             }
             PokeNavigatorBinding.boundKey().value, InputConstants.KEY_LSHIFT, InputConstants.KEY_RSHIFT -> {
