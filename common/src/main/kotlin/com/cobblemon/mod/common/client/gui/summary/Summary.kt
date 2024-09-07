@@ -49,7 +49,6 @@ import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.player.Input
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvent
@@ -380,7 +379,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
 
             MOVE_SWAP -> {
                 val movesWidget = mainScreen
-                if (movesWidget is MovesWidget && move != null) {
+                if (movesWidget is MovesWidget) {
                     sideScreen = MoveSwapScreen(
                             x + 216,
                             y + 24,
@@ -388,14 +387,18 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
                             replacedMove = move
                     ).also { switchPane ->
                         val pokemon = selectedPokemon
-                        pokemon.allAccessibleMoves
+                        var moveSlotList = (pokemon.allAccessibleMoves
                                 .filter { template -> pokemon.moveSet.none { it.template == template } }
                                 .map { template ->
                                     val benched = pokemon.benchedMoves.find { it.moveTemplate == template }
                                     MoveSwapScreen.MoveSlot(switchPane, template, benched?.ppRaisedStages
                                             ?: 0, pokemon)
-                                }
-                                .forEach { switchPane.addEntry(it) }
+                                })
+                        if (pokemon.moveSet.getMoves().size > 1 && move != null) {
+                            // Adds the "Forget" slot
+                            moveSlotList += MoveSwapScreen.MoveSlot(switchPane, null, 0, pokemon)
+                        }
+                        moveSlotList.forEach { switchPane.addEntry(it) }
                     }
                 }
             }
@@ -417,8 +420,6 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
     override fun renderMenuBackground(context: GuiGraphics) {}
 
     override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-//        this.renderBackground(context, mouseX, mouseY, delta)
-//        super.render(context, mouseX, mouseY, delta)
         schedulingTracker.update(delta / 20F)
 
         val x = (width - BASE_WIDTH) / 2

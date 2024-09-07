@@ -1390,37 +1390,55 @@ open class Pokemon : ShowdownIdentifiable {
     fun levelUp(source: ExperienceSource) = addExperience(source, getExperienceToNextLevel())
 
     /**
-     * Exchanges an existing move set move with a benched or otherwise accessible move that is not in the move set.
+     * Exchanges an existing move set move with an empty moveslot, benched or otherwise accessible move that is not in the move set.
      *
      * PP is transferred onto the new move using the % of PP that the original move had and applying it to the new one.
+     * If the current moveslot is null, 0 PP is given to the new move.
      *
      * @return true if it succeeded, false if it failed to exchange the moves. Failure can occur if the oldMove is not
      * a move set move.
      */
-    fun exchangeMove(oldMove: MoveTemplate, newMove: MoveTemplate): Boolean {
-        val benchedNewMove = benchedMoves.find { it.moveTemplate == newMove } ?: BenchedMove(newMove, 0)
+    fun exchangeMove(oldMove: MoveTemplate?, newMove: MoveTemplate?): Boolean {
+        if(oldMove == null && newMove == null) return false
 
-        if (moveSet.hasSpace()) {
-            benchedMoves.remove(newMove)
-            val move = newMove.create()
-            move.raisedPpStages = benchedNewMove.ppRaisedStages
-            move.currentPp = move.maxPp
-            moveSet.add(move)
-            return true
-        }
-
-        val currentMove = moveSet.find { it.template == oldMove } ?: return false
-        val currentPPRatio = currentMove.let { it.currentPp / it.maxPp.toFloat() }
-        benchedMoves.doThenEmit {
-            benchedMoves.remove(newMove)
+        if (newMove == null) {
+            // Forget a move
+            if (moveSet.getMoves().size <= 1) return false
+            val currentMove = moveSet.find { it.template == oldMove } ?: return false
             benchedMoves.add(BenchedMove(currentMove.template, currentMove.raisedPpStages))
+            var index = moveSet.getMovesWithNulls().indexOf(currentMove)
+            moveSet.setMove(index, null)
+            // Push the remaining moves up so the nulls are at the end of the list
+            while(index < 3 && moveSet[index + 1] != null) {
+                moveSet.swapMove(index, index+1)
+                index++
+            }
+        } else {
+            val benchedNewMove = benchedMoves.find { it.moveTemplate == newMove } ?: BenchedMove(newMove, 0)
+            if (oldMove == null) {
+                // Placing a move into a empty move slot
+                if (moveSet.hasSpace()) {
+                    val move = benchedNewMove.moveTemplate.create()
+                    move.raisedPpStages = benchedNewMove.ppRaisedStages
+                    move.currentPp = 0 // Avoids allowing infinite power points by forgetting and then remembering a move
+                    moveSet.add(move)
+                    benchedMoves.remove(newMove)
+                    return true
+                }
+            } else {
+                // Exchanging one move for another
+                val currentMove = moveSet.find { it.template == oldMove } ?: return false
+                val currentPPRatio = currentMove.let { it.currentPp / it.maxPp.toFloat() }
+                benchedMoves.doThenEmit {
+                    benchedMoves.remove(newMove)
+                    benchedMoves.add(BenchedMove(currentMove.template, currentMove.raisedPpStages))
+                }
+                val move = newMove.create()
+                move.raisedPpStages = benchedNewMove.ppRaisedStages
+                move.currentPp = (currentPPRatio * move.maxPp).toInt()
+                moveSet.setMove(moveSet.indexOf(currentMove), move)
+            }
         }
-
-        val move = newMove.create()
-        move.raisedPpStages = benchedNewMove.ppRaisedStages
-        move.currentPp = (currentPPRatio * move.maxPp).toInt()
-        moveSet.setMove(moveSet.indexOf(currentMove), move)
-
         return true
     }
 
