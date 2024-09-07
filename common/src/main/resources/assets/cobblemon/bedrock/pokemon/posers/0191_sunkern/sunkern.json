@@ -11,7 +11,7 @@
       "poseTypes": ["STAND"],
       "isBattle": true,
       "animations": [
-        "q.look('head_ai')",
+        "q.look('head')",
         "q.bedrock('sunkern', 'battle_idle')"
       ],
       "quirks": [
@@ -22,7 +22,7 @@
       "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
       "isBattle": false,
       "animations": [
-        "q.look('head_ai')",
+        "q.look('head')",
         "q.bedrock('sunkern', 'ground_idle')"
       ],
       "quirks": [
@@ -32,7 +32,7 @@
     "walking": {
       "poseTypes": ["WALK"],
       "animations": [
-        "q.look('head_ai')",
+        "q.look('head')",
         "q.bedrock('sunkern', 'ground_walk')"
       ],
       "quirks": ["q.bedrock_quirk('sunkern', 'blink')"]
