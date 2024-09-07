@@ -26,6 +26,8 @@ interface ActiveAnimation {
     val isTransition: Boolean
     /** The animation's duration in seconds. */
     val duration: Float
+    /** Whether a primary animation will not remove this animation before playing. */
+    val enduresPrimaryAnimations: Boolean
     /** Runs the animation. Returns true if the animation should continue. */
     fun run(
         context: RenderContext,

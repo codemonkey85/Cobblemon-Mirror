@@ -297,7 +297,11 @@ abstract class PosableState : Schedulable {
         val model = currentModel
         if (model != null) {
             val poseImpl = model.poses[pose] ?: return
-            poseParticles.removeIf { particle -> poseImpl.animations.filterIsInstance<BedrockPoseAnimation>().flatMap { it.particleKeyFrames }.none(particle::isSameAs) }
+            poseParticles.removeIf { particle ->
+                poseImpl.animations.filterIsInstance<BedrockPoseAnimation>().flatMap { it.particleKeyFrames }.none(particle::isSameAs)
+                        && activeAnimations.filterIsInstance<BedrockActiveAnimation>().flatMap { it.animation.effects.filterIsInstance<BedrockParticleKeyframe>() }.none(particle::isSameAs)
+            }
+
             poseImpl.onTransitionedInto(this)
             val entity = getEntity()
             if (entity != null) {

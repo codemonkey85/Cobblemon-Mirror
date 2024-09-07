@@ -52,261 +52,243 @@ object ClientMoLangFunctions {
     )
 
     val animationFunctions = hashMapOf<String, Function<PosableModel, Function<MoParams, Any>>>(
-        "exclude_labels" to java.util.function.Function { model -> Function { params -> {
-                    val labels = params.params.map { it.asString() }
-                    ObjectValue(ExcludedLabels(labels))
-                }
+        "exclude_labels" to Function { model -> Function { params ->
+                val labels = params.params.map { it.asString() }
+                ObjectValue(ExcludedLabels(labels))
             }
         },
-        "bedrock_primary" to java.util.function.Function {
-            model -> Function {
-                params -> {
-                    val group = params.getString(0)
-                    val animation = params.getString(1)
-                    val anim = model.bedrockStateful(group, animation)
-                    val excludedLabels = mutableSetOf<String>()
-                    var curve: WaveFunction = { t ->
-                        if (t < 0.1) {
-                            t * 10
-                        } else if (t < 0.9) {
-                            1F
-                        } else {
-                            1F
-                        }
+        "bedrock_primary" to Function {
+            model -> Function { params ->
+                val group = params.getString(0)
+                val animation = params.getString(1)
+                val anim = model.bedrockStateful(group, animation)
+                val excludedLabels = mutableSetOf<String>()
+                var curve: WaveFunction = { t ->
+                    if (t < 0.1) {
+                        t * 10
+                    } else if (t < 0.9) {
+                        1F
+                    } else {
+                        1F
                     }
-                    for (index in 2 until params.params.size) {
-                        val param = params.get<MoValue>(index)
-                        if (param is ObjectValue<*>) {
-                            val obj = param.obj
-                            if (obj is ExcludedLabels) {
-                                excludedLabels.addAll(obj.labels)
-                            } else {
-                                curve = param.obj as WaveFunction
-                            }
-                            continue
-                        }
-
-                        val label = params.getString(index) ?: continue
-                        excludedLabels.add(label)
-                    }
-
-                    ObjectValue(
-                        PrimaryAnimation(
-                            animation = anim,
-                            excludedLabels = excludedLabels,
-                            curve = curve
-                        )
-                    )
                 }
+                for (index in 2 until params.params.size) {
+                    val param = params.get<MoValue>(index)
+                    if (param is ObjectValue<*>) {
+                        val obj = param.obj
+                        if (obj is ExcludedLabels) {
+                            excludedLabels.addAll(obj.labels)
+                        } else {
+                            curve = param.obj as WaveFunction
+                        }
+                        continue
+                    }
+
+                    val label = params.getString(index) ?: continue
+                    excludedLabels.add(label)
+                }
+
+                ObjectValue(
+                    PrimaryAnimation(
+                        animation = anim,
+                        excludedLabels = excludedLabels,
+                        curve = curve
+                    )
+                )
             }
         },
         "bedrock_stateful" to Function {
-            model -> Function {
-                params -> {
-                    val group = params.getString(0)
-                    val animation = params.getString(1)
-                    val anim = model.bedrockStateful(group, animation)
-                    ObjectValue(anim)
-                }
+            model -> Function { params ->
+                println("It's running")
+                val group = params.getString(0)
+                val animation = params.getString(1)
+                val anim = model.bedrockStateful(group, animation)
+                val enduresPrimary = "endures_primary_animations" in params.params.mapNotNull { it.asString() }
+                anim.enduresPrimaryAnimations = enduresPrimary
+                ObjectValue(anim)
             }
         },
         "bedrock" to Function {
-            model -> Function {
-                params -> {
-                    val group = params.getString(0)
-                    val animation = params.getString(1)
-                    val anim = model.bedrock(group, animation)
-                    ObjectValue(anim)
-                }
+            model -> Function { params ->
+                val group = params.getString(0)
+                val animation = params.getString(1)
+                val anim = model.bedrock(group, animation)
+                ObjectValue(anim)
             }
         },
         "look" to Function {
-            model -> Function {
-                params -> {
-                    val boneName = params.getString(0)
-                    val pitchMultiplier = params.getDoubleOrNull(1) ?: 1F
-                    val yawMultiplier = params.getDoubleOrNull(2) ?: 1F
-                    val maxPitch = params.getDoubleOrNull(3) ?: 70F
-                    val minPitch = params.getDoubleOrNull(4) ?: -45F
-                    val maxYaw = params.getDoubleOrNull(5) ?: 45F
-                    ObjectValue(
-                        SingleBoneLookAnimation(
-                            bone = model.getPart(boneName),
-                            pitchMultiplier = pitchMultiplier.toFloat(),
-                            yawMultiplier = yawMultiplier.toFloat(),
-                            maxPitch = maxPitch.toFloat(),
-                            minPitch = minPitch.toFloat(),
-                            maxYaw = maxYaw.toFloat()
-                        )
+            model -> Function { params ->
+                val boneName = params.getString(0)
+                val pitchMultiplier = params.getDoubleOrNull(1) ?: 1F
+                val yawMultiplier = params.getDoubleOrNull(2) ?: 1F
+                val maxPitch = params.getDoubleOrNull(3) ?: 70F
+                val minPitch = params.getDoubleOrNull(4) ?: -45F
+                val maxYaw = params.getDoubleOrNull(5) ?: 45F
+                ObjectValue(
+                    SingleBoneLookAnimation(
+                        bone = model.getPart(boneName),
+                        pitchMultiplier = pitchMultiplier.toFloat(),
+                        yawMultiplier = yawMultiplier.toFloat(),
+                        maxPitch = maxPitch.toFloat(),
+                        minPitch = minPitch.toFloat(),
+                        maxYaw = maxYaw.toFloat()
                     )
-                }
+                )
             }
         },
         "quadruped_walk" to Function {
-            model -> Function {
-                params -> {
-                    val periodMultiplier = params.getDoubleOrNull(0) ?: 0.6662F
+            model -> Function { params ->
+                val periodMultiplier = params.getDoubleOrNull(0) ?: 0.6662F
 
-                    val amplitudeMultiplier = params.getDoubleOrNull(1) ?: 1.4F
-                    val leftFrontLeftName = params.getStringOrNull(2) ?: "leg_front_left"
-                    val leftFrontRightName = params.getStringOrNull(3) ?: "leg_front_right"
-                    val leftBackLeftName = params.getStringOrNull(4) ?: "leg_back_left"
-                    val leftBackRightName = params.getStringOrNull(5) ?: "leg_back_right"
+                val amplitudeMultiplier = params.getDoubleOrNull(1) ?: 1.4F
+                val leftFrontLeftName = params.getStringOrNull(2) ?: "leg_front_left"
+                val leftFrontRightName = params.getStringOrNull(3) ?: "leg_front_right"
+                val leftBackLeftName = params.getStringOrNull(4) ?: "leg_back_left"
+                val leftBackRightName = params.getStringOrNull(5) ?: "leg_back_right"
 
-                    ObjectValue(
-                        QuadrupedWalkAnimation(
-                            periodMultiplier = periodMultiplier.toFloat(),
-                            amplitudeMultiplier = amplitudeMultiplier.toFloat(),
-                            legFrontLeft = model.getPart(leftFrontLeftName),
-                            legFrontRight = model.getPart(leftFrontRightName),
-                            legBackLeft = model.getPart(leftBackLeftName),
-                            legBackRight = model.getPart(leftBackRightName)
-                        )
+                ObjectValue(
+                    QuadrupedWalkAnimation(
+                        periodMultiplier = periodMultiplier.toFloat(),
+                        amplitudeMultiplier = amplitudeMultiplier.toFloat(),
+                        legFrontLeft = model.getPart(leftFrontLeftName),
+                        legFrontRight = model.getPart(leftFrontRightName),
+                        legBackLeft = model.getPart(leftBackLeftName),
+                        legBackRight = model.getPart(leftBackRightName)
                     )
-                }
+                )
             }
         },
         "biped_walk" to Function {
-            model -> Function {
-                params -> {
-                    val periodMultiplier = params.getDoubleOrNull(0) ?: 0.6662F
-                    val amplitudeMultiplier = params.getDoubleOrNull(1) ?: 1.4F
-                    val leftLegName = params.getStringOrNull(2) ?: "leg_left"
-                    val rightLegName = params.getStringOrNull(3) ?: "leg_right"
+            model -> Function { params ->
+                val periodMultiplier = params.getDoubleOrNull(0) ?: 0.6662F
+                val amplitudeMultiplier = params.getDoubleOrNull(1) ?: 1.4F
+                val leftLegName = params.getStringOrNull(2) ?: "leg_left"
+                val rightLegName = params.getStringOrNull(3) ?: "leg_right"
 
-                    ObjectValue(
-                        BipedWalkAnimation(
-                            periodMultiplier = periodMultiplier.toFloat(),
-                            amplitudeMultiplier = amplitudeMultiplier.toFloat(),
-                            leftLeg = model.getPart(leftLegName),
-                            rightLeg = model.getPart(rightLegName)
-                        )
+                ObjectValue(
+                    BipedWalkAnimation(
+                        periodMultiplier = periodMultiplier.toFloat(),
+                        amplitudeMultiplier = amplitudeMultiplier.toFloat(),
+                        leftLeg = model.getPart(leftLegName),
+                        rightLeg = model.getPart(rightLegName)
                     )
-                }
+                )
             }
         },
         "bimanual_swing" to Function {
-            model -> Function {
-                params -> {
-                    val swingPeriodMultiplier = params.getDoubleOrNull(0) ?: 0.6662F
-                    val amplitudeMultiplier = params.getDoubleOrNull(1) ?: 1F
-                    val leftArmName = params.getStringOrNull(2) ?: "arm_left"
-                    val rightArmName = params.getStringOrNull(3) ?: "arm_right"
+            model -> Function { params ->
+                val swingPeriodMultiplier = params.getDoubleOrNull(0) ?: 0.6662F
+                val amplitudeMultiplier = params.getDoubleOrNull(1) ?: 1F
+                val leftArmName = params.getStringOrNull(2) ?: "arm_left"
+                val rightArmName = params.getStringOrNull(3) ?: "arm_right"
 
-                    ObjectValue(
-                        BimanualSwingAnimation(
-                            swingPeriodMultiplier = swingPeriodMultiplier.toFloat(),
-                            amplitudeMultiplier = amplitudeMultiplier.toFloat(),
-                            leftArm = model.getPart(leftArmName),
-                            rightArm = model.getPart(rightArmName)
-                        )
+                ObjectValue(
+                    BimanualSwingAnimation(
+                        swingPeriodMultiplier = swingPeriodMultiplier.toFloat(),
+                        amplitudeMultiplier = amplitudeMultiplier.toFloat(),
+                        leftArm = model.getPart(leftArmName),
+                        rightArm = model.getPart(rightArmName)
                     )
-                }
+                )
             }
         },
         "sine_wing_flap" to Function {
-            model -> Function {
-                params -> {
+            model -> Function { params ->
 //                    val verticalShift = (-14F).toRadians(), val period = 0.9F, amplitude = 0.9F
-                    val amplitude = params.getDoubleOrNull(0) ?: 0.9F
-                    val period = params.getDoubleOrNull(1) ?: 0.9F
-                    val verticalShift = params.getDoubleOrNull(2) ?: 0F
-                    val axis = params.getStringOrNull(3) ?: "y"
-                    val axisIndex = when (axis) {
-                        "x" -> ModelPartTransformation.X_AXIS
-                        "y" -> ModelPartTransformation.Y_AXIS
-                        "z" -> ModelPartTransformation.Z_AXIS
-                        else -> ModelPartTransformation.Y_AXIS
-                    }
-                    val wingLeft = params.getStringOrNull(4) ?: "wing_left"
-                    val wingRight = params.getStringOrNull(5) ?: "wing_right"
-
-                    ObjectValue(
-                        WingFlapIdleAnimation(
-                            rotation = sineFunction(
-                                verticalShift = verticalShift.toFloat(),
-                                period = period.toFloat(),
-                                amplitude = amplitude.toFloat()
-                            ),
-                            axis = axisIndex,
-                            leftWing = model.getPart(wingLeft),
-                            rightWing = model.getPart(wingRight)
-                        )
-                    )
+                val amplitude = params.getDoubleOrNull(0) ?: 0.9F
+                val period = params.getDoubleOrNull(1) ?: 0.9F
+                val verticalShift = params.getDoubleOrNull(2) ?: 0F
+                val axis = params.getStringOrNull(3) ?: "y"
+                val axisIndex = when (axis) {
+                    "x" -> ModelPartTransformation.X_AXIS
+                    "y" -> ModelPartTransformation.Y_AXIS
+                    "z" -> ModelPartTransformation.Z_AXIS
+                    else -> ModelPartTransformation.Y_AXIS
                 }
+                val wingLeft = params.getStringOrNull(4) ?: "wing_left"
+                val wingRight = params.getStringOrNull(5) ?: "wing_right"
+
+                ObjectValue(
+                    WingFlapIdleAnimation(
+                        rotation = sineFunction(
+                            verticalShift = verticalShift.toFloat(),
+                            period = period.toFloat(),
+                            amplitude = amplitude.toFloat()
+                        ),
+                        axis = axisIndex,
+                        leftWing = model.getPart(wingLeft),
+                        rightWing = model.getPart(wingRight)
+                    )
+                )
             }
         },
         "bedrock_quirk" to Function {
-            model -> Function {
-                params -> {
-                    val animationGroup = params.getString(0)
-                    val animationNames = params.get<MoValue>(1)
-                        ?.let { if (it is ArrayStruct) it.map.values.map { it.asString() } else listOf(it.asString()) }
-                        ?: listOf()
-                    val minSeconds = params.getDoubleOrNull(2) ?: 8F
-                    val maxSeconds = params.getDoubleOrNull(3) ?: 30F
-                    val loopTimes = params.getDoubleOrNull(4)?.toInt() ?: 1
-                    ObjectValue(
-                        model.quirk(
-                            secondsBetweenOccurrences = minSeconds.toFloat() to maxSeconds.toFloat(),
-                            condition = { true },
-                            loopTimes = 1..loopTimes,
-                            animation = { model.bedrockStateful(animationGroup, animationNames.random()) }
-                        )
+            model -> Function { params ->
+                val animationGroup = params.getString(0)
+                val animationNames = params.get<MoValue>(1)
+                    ?.let { if (it is ArrayStruct) it.map.values.map { it.asString() } else listOf(it.asString()) }
+                    ?: listOf()
+                val minSeconds = params.getDoubleOrNull(2) ?: 8F
+                val maxSeconds = params.getDoubleOrNull(3) ?: 30F
+                val loopTimes = params.getDoubleOrNull(4)?.toInt() ?: 1
+                ObjectValue(
+                    model.quirk(
+                        secondsBetweenOccurrences = minSeconds.toFloat() to maxSeconds.toFloat(),
+                        condition = { true },
+                        loopTimes = 1..loopTimes,
+                        animation = { model.bedrockStateful(animationGroup, animationNames.random()) }
                     )
-                }
+                )
             }
         },
         "bedrock_primary_quirk" to Function { model ->
             Function { params ->
-                {
-                    val animationGroup = params.getString(0)
-                    val animationNames = params.get<MoValue>(1)
-                        ?.let { if (it is ArrayStruct) it.map.values.map { it.asString() } else listOf(it.asString()) }
-                        ?: listOf()
-                    val minSeconds = params.getDoubleOrNull(2) ?: 8F
-                    val maxSeconds = params.getDoubleOrNull(3) ?: 30F
-                    val loopTimes = params.getDoubleOrNull(4)?.toInt() ?: 1
-                    val excludedLabels = mutableSetOf<String>()
-                    var curve: WaveFunction = { t ->
-                        if (t < 0.1) {
-                            t * 10
-                        } else if (t < 0.9) {
-                            1F
-                        } else {
-                            1F
-                        }
+                val animationGroup = params.getString(0)
+                val animationNames = params.get<MoValue>(1)
+                    ?.let { if (it is ArrayStruct) it.map.values.map { it.asString() } else listOf(it.asString()) }
+                    ?: listOf()
+                val minSeconds = params.getDoubleOrNull(2) ?: 8F
+                val maxSeconds = params.getDoubleOrNull(3) ?: 30F
+                val loopTimes = params.getDoubleOrNull(4)?.toInt() ?: 1
+                val excludedLabels = mutableSetOf<String>()
+                var curve: WaveFunction = { t ->
+                    if (t < 0.1) {
+                        t * 10
+                    } else if (t < 0.9) {
+                        1F
+                    } else {
+                        1F
                     }
-                    for (index in 5 until params.params.size) {
-                        val param = params.get<MoValue>(index)
-                        if (param is ObjectValue<*>) {
-                            curve = param.obj as WaveFunction
-                            continue
-                        }
-
-                        val label = params.getString(index) ?: continue
-                        excludedLabels.add(label)
-                    }
-                    ObjectValue(
-                        model.quirk(
-                            secondsBetweenOccurrences = minSeconds.toFloat() to maxSeconds.toFloat(),
-                            condition = { true },
-                            loopTimes = 1..loopTimes,
-                            animation = {
-                                PrimaryAnimation(
-                                    model.bedrockStateful(animationGroup, animationNames.random()),
-                                    excludedLabels = excludedLabels,
-                                    curve = curve
-                                )
-                            }
-                        )
-                    )
                 }
+                for (index in 5 until params.params.size) {
+                    val param = params.get<MoValue>(index)
+                    if (param is ObjectValue<*>) {
+                        curve = param.obj as WaveFunction
+                        continue
+                    }
+
+                    val label = params.getString(index) ?: continue
+                    excludedLabels.add(label)
+                }
+                ObjectValue(
+                    model.quirk(
+                        secondsBetweenOccurrences = minSeconds.toFloat() to maxSeconds.toFloat(),
+                        condition = { true },
+                        loopTimes = 1..loopTimes,
+                        animation = {
+                            PrimaryAnimation(
+                                model.bedrockStateful(animationGroup, animationNames.random()),
+                                excludedLabels = excludedLabels,
+                                curve = curve
+                            )
+                        }
+                    )
+                )
             }
         }
     )
 
-    fun PosableModel.animationFunctions(): HashMap<String, Function<MoParams, Any>> = animationFunctions.map { (k, v) -> k to v.apply(this) }.toHashMap();
+    fun PosableModel.animationFunctions(): HashMap<String, Function<MoParams, Any>> = animationFunctions.map { (k, v) -> k to v.apply(this) }.toHashMap()
 
     fun MoLangRuntime.setupClient(): MoLangRuntime {
         environment.query.addFunctions(clientFunctions)

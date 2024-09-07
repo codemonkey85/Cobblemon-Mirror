@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.client.entity
 
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
+import com.bedrockk.molang.runtime.value.MoValue
 import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.entity.PokemonSideDelegate
@@ -71,6 +72,8 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
     var sendOutOffset: Vec3? = null
     var playedSendOutSound: Boolean = false
     var playedThrowingSound: Boolean = false
+
+    var glowTime: Int = 0
 
     val secondsSinceBeamEffectStarted: Float
         get() = (System.currentTimeMillis() - beamStartTime) / 1000F
@@ -283,12 +286,17 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
             },
             "friendship" to java.util.function.Function {
                 return@Function DoubleValue(currentEntity.pokemon.friendship.toDouble())
+            },
+            "evo_glow_time" to java.util.function.Function {
+                it.get<MoValue?>(0).asDouble().let { glowTime = (it * 20).toInt() }
+                return@Function DoubleValue(this.glowTime.toDouble())
             }
         ))
     }
 
     override fun tick(entity: PokemonEntity) {
         incrementAge(entity)
+        glowTime = maxOf(0, glowTime - 1)
     }
 
     fun setPhaseTarget(targetId: Int) {
