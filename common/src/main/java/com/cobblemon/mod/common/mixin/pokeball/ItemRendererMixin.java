@@ -34,7 +34,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ItemRenderer.class)
 public abstract class ItemRendererMixin {
 
-    @Unique private static final String MODEL_PATH = Cobblemon.implementation.getModAPI() == ModAPI.FABRIC ? "fabric_resource" : "standalone";
+    @Unique private final String MODEL_PATH = Cobblemon.implementation.getModAPI() == ModAPI.FABRIC ? "fabric_resource" : "standalone";
 
     @Shadow @Final private ItemModelShaper itemModelShaper;
 
