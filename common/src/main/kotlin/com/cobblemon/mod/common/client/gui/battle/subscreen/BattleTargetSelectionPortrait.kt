@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.gui.battle.subscreen
 
 import com.cobblemon.mod.common.CobblemonSounds
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.battles.InBattleMove
 import com.cobblemon.mod.common.battles.MoveActionResponse
 import com.cobblemon.mod.common.client.CobblemonClient
@@ -57,15 +58,12 @@ class BattleTargetSelectionPortrait(
     }
     var targetTiles = baseTiles
 
-
-
-
     open inner class TargetTile(
-            val targetSelection: BattleTargetSelectionPortrait,
-            val target: ActiveClientBattlePokemon,
-            val x: Float,
-            val y: Float,
-            val index: Int,
+        val targetSelection: BattleTargetSelectionPortrait,
+        val target: ActiveClientBattlePokemon,
+        val x: Float,
+        val y: Float,
+        val index: Int,
     ) {
         private val responseTarget = selectableTargetList?.firstOrNull { it.getPNX() == target.getPNX() }?.getPNX()
         private val isMultiTarget = multiTargetList?.firstOrNull { it.getPNX() == target.getPNX() } != null
@@ -83,17 +81,16 @@ class BattleTargetSelectionPortrait(
             val isAlly = target.isAllied(request.activePokemon)
 
             CobblemonClient.battleOverlay.drawTile(
-                    context,
-                    delta,
-                    activeClientBattlePokemon,
-                    isAlly,
-                    index,
-                    activeClientBattlePokemon.getPNX() == selectedPNX,
-                    selectable && isHovered(mouseX.toDouble(), mouseY.toDouble()),
-                    true
+                context,
+                delta,
+                activeClientBattlePokemon,
+                isAlly,
+                index,
+                PokedexEntryProgress.NONE, // TODO did this work properly
+                activeClientBattlePokemon.getPNX() == selectedPNX,
+                selectable && isHovered(mouseX.toDouble(), mouseY.toDouble()),
+                true
             )
-
-
         }
 
         fun isHovered(mouseX: Double, mouseY: Double): Boolean {

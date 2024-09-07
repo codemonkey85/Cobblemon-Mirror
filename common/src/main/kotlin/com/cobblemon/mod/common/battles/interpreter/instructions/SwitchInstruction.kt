@@ -15,24 +15,21 @@ import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.api.battles.model.actor.EntityBackedBattleActor
 import com.cobblemon.mod.common.api.scheduling.afterOnServer
 import com.cobblemon.mod.common.battles.ActiveBattlePokemon
-import com.cobblemon.mod.common.battles.actor.PokemonBattleActor
-import com.cobblemon.mod.common.battles.actor.PokemonBattleActor
 import com.cobblemon.mod.common.battles.ShowdownInterpreter
+import com.cobblemon.mod.common.battles.actor.PokemonBattleActor
 import com.cobblemon.mod.common.battles.dispatch.*
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.entity.pokemon.effects.IllusionEffect
 import com.cobblemon.mod.common.net.messages.client.battle.BattleSwitchPokemonPacket
 import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler.SEND_OUT_DURATION
-import com.cobblemon.mod.common.util.battleLang
-import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler.SEND_OUT_DURATION
-import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler.SEND_OUT_STAGGER_BASE_DURATION
 import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler.SEND_OUT_STAGGER_RANDOM_MAX_DURATION
+import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.swap
-import net.minecraft.world.entity.LivingEntity
-import net.minecraft.server.level.ServerLevel
 import java.util.concurrent.CompletableFuture
 import kotlin.random.Random
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.LivingEntity
 
 /**
  * Format: |switch|POKEMON|DETAILS|HP STATUS
@@ -67,16 +64,9 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
                     WaitDispatch(0.5F)
                 }
                 else if (pokemonEntity == null && entity != null) {
-
                     activePokemon.battlePokemon = pokemon
                     activePokemon.illusion = illusion
-
-                    val targetPos = battleActor.getSide().getOppositeSide().actors.filterIsInstance<EntityBackedBattleActor<*>>().firstOrNull()?.entity?.position()?.let { pos ->
-                        val offset = pos.subtract(entity.position())
-                        val idealPos = entity.position().add(offset.scale(0.33))
-                        idealPos
-                    } ?: entity.position()
-
+                    val targetPos = ShowdownInterpreter.getSendoutPosition(battle, pnx, battleActor)
                     if (targetPos != null) {
                         val battleSendoutCount = activePokemon.getActorShowdownId()[1].digitToInt() - 1 + actor.stillSendingOutCount
                         actor.stillSendingOutCount++

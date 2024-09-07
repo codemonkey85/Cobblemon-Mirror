@@ -135,15 +135,12 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
             val side1 = if (battle.side1.actors.any { it.uuid == playerUUID }) battle.side1 else battle.side2
             val side2 = if (side1 == battle.side1) battle.side2 else battle.side1
 
-            side1.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, true, index, PokedexEntryProgress.NONE) }
-            side2.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, false, index, battle.knowledge) }
-            
             // Command highlight for Double and Triple Battles
             val isBattleGUIActive = currentScreen is BattleGUI && currentScreen.getCurrentActionSelection() != null
             val selectedPNX = if((battle.battleFormat.battleType.slotsPerActor > 1 || battle.battleFormat.battleType.actorsPerSide > 1) && isBattleGUIActive) battle.getFirstUnansweredRequest()?.activePokemon?.getPNX() else null
 
-            side1.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, true, index, activeClientBattlePokemon.getPNX() == selectedPNX, false, battle.battleFormat.battleType.pokemonPerSide > 1) }
-            side2.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, false, side2.activeClientBattlePokemon.count() - index - 1, false, false, battle.battleFormat.battleType.pokemonPerSide > 1) }
+            side1.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, true, index, PokedexEntryProgress.NONE, activeClientBattlePokemon.getPNX() == selectedPNX, false, battle.battleFormat.battleType.pokemonPerSide > 1) }
+            side2.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, false, side2.activeClientBattlePokemon.count() - index - 1, battle.knowledge, false, false, battle.battleFormat.battleType.pokemonPerSide > 1) }
         }
 
         if (Minecraft.getInstance().screen !is BattleGUI && battle.mustChoose) {
@@ -221,7 +218,6 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
             isHovered = isHovered,
             isCompact = isCompact,
             actorDisplayName = if (!battle.isPvW && ((left && activeBattlePokemon.actor.activePokemon.first() == activeBattlePokemon) || (!left && activeBattlePokemon.actor.activePokemon.last() == activeBattlePokemon))) activeBattlePokemon.actor.displayName else null,
-            isFlatHealth = battlePokemon.isHpFlat,
             dexState = dexState
         )
     }
@@ -244,7 +240,6 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         ballState: ClientBallDisplay? = null,
         maxHealth: Int,
         health: Float,
-        isFlatHealth: Boolean,
         isSelected: Boolean = false,
         isHovered: Boolean = false,
         isCompact: Boolean = false,
@@ -272,25 +267,25 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         if (status != null) {
             val statusWidth = 37
             blitk(
-                    matrixStack = matrixStack,
-                    texture = cobblemonResource("textures/gui/battle/battle_status_" + status.showdownName + ".png"),
-                    x = x + if (isCompact) (if (reversed) 69 else 23 ) else (if (reversed) 56 else 38),
-                    y = y + if (isCompact) 21 else 28,
-                    height = 7,
-                    width = statusWidth,
-                    uOffset = if (reversed) 0 else statusWidth,
-                    textureWidth = statusWidth * 2,
-                    alpha = opacity
+                matrixStack = matrixStack,
+                texture = cobblemonResource("textures/gui/battle/battle_status_" + status.showdownName + ".png"),
+                x = x + if (isCompact) (if (reversed) 69 else 23 ) else (if (reversed) 56 else 38),
+                y = y + if (isCompact) 21 else 28,
+                height = 7,
+                width = statusWidth,
+                uOffset = if (reversed) 0 else statusWidth,
+                textureWidth = statusWidth * 2,
+                alpha = opacity
             )
 
             drawScaledText(
-                    context = context,
-                    font = CobblemonResources.DEFAULT_LARGE,
-                    text = lang("ui.status." + status.showdownName).bold(),
-                    x = x + if(isCompact) (if (reversed) 90 else 28) else (if (reversed) 78 else 42),
-                    y = y + if (isCompact) 22 else 27,
-                    scale = 0.75F,
-                    opacity = opacity
+                context = context,
+                font = CobblemonResources.DEFAULT_LARGE,
+                text = lang("ui.status." + status.showdownName).bold(),
+                x = x + if(isCompact) (if (reversed) 90 else 28) else (if (reversed) 78 else 42),
+                y = y + if (isCompact) 22 else 27,
+                scale = 0.75F,
+                opacity = opacity
             )
         }
 
@@ -363,7 +358,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
                 blitk(
                     matrixStack = matrixStack,
                     texture = seenIndicator,
-                    x = x + 3,
+                    x = x - 1,
                     y = y + 21,
                     height = 6,
                     width = 6,
@@ -372,19 +367,17 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
                     green = 125F / 255F,
                     blue = 125F / 255F
                 )
-            }
-            else if (dexState == PokedexEntryProgress.CAUGHT) {
+            } else if (dexState == PokedexEntryProgress.CAUGHT) {
                 blitk(
                     matrixStack = matrixStack,
-                    texture = seenIndicator,
-                    x = x + 3,
+                    texture = caughtIndicator,
+                    x = x - 1,
                     y = y + 21,
                     height = 6,
                     width = 6,
                     alpha = opacity
                 )
             }
-
         }
 
         // Draw labels
@@ -486,28 +479,26 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         if(actorDisplayName != null) {
             if (!reversed) {
                 drawScaledText(
-                        context = context,
-                        text = actorDisplayName,
-                        x = x + 9,
-                        y = y - 5,
-                        scale = 0.5F,
-                        shadow = true,
-                        opacity = opacity,
-                        )
+                    context = context,
+                    text = actorDisplayName,
+                    x = x + 9,
+                    y = y - 5,
+                    scale = 0.5F,
+                    shadow = true,
+                    opacity = opacity,
+                )
             } else {
                 drawScaledTextJustifiedRight(
-                        context = context,
-                        text = actorDisplayName,
-                        x = x + tileWidth - 9,
-                        y = y - 5,
-                        scale = 0.5F,
-                        shadow = true,
-                        opacity = opacity
+                    context = context,
+                    text = actorDisplayName,
+                    x = x + tileWidth - 9,
+                    y = y - 5,
+                    scale = 0.5F,
+                    shadow = true,
+                    opacity = opacity
                 )
             }
-
         }
-
     }
 
     private fun drawPokeBall(

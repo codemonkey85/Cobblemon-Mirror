@@ -119,21 +119,6 @@ fun drawCenteredText(
 }
 
 @JvmOverloads
-fun drawTextJustifiedRight(
-        context: GuiGraphics,
-        font: ResourceLocation? = null,
-        text: MutableComponent,
-        x: Number,
-        y: Number,
-        colour: Int,
-        shadow: Boolean = true
-) {
-    val comp = text.let { if (font != null) it.font(font) else it }
-    val font = Minecraft.getInstance().font
-    context.drawString(font, comp, x.toInt() - font.width(comp), y.toInt(), colour, shadow)
-}
-
-@JvmOverloads
 fun drawText(
     context: GuiGraphics,
     font: ResourceLocation? = null,
@@ -247,8 +232,7 @@ fun drawPosablePortrait(
 
     val sprite = repository.getSprite(identifier, aspects, SpriteType.PORTRAIT);
 
-    if(sprite == null) {
-
+    if (sprite == null) {
         val model = repository.getPoser(identifier, aspects)
         state.currentAspects = aspects
         state.currentModel = model
@@ -291,7 +275,8 @@ fun drawPosablePortrait(
         val buffer = immediate.getBuffer(renderType)
         val packedLight = LightTexture.pack(11, 7)
 
-        val colour = toHex(r, g, b, a)model.withLayerContext(immediate, state, repository.getLayers(identifier, aspects)) {
+        val colour = toHex(r, g, b, a)
+        model.withLayerContext(immediate, state, repository.getLayers(identifier, aspects)) {
             model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, colour)
             immediate.endBatch()
         }
