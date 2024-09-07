@@ -172,8 +172,7 @@ object PokeBalls : JsonDataRegistry<PokeBall> {
         createDefault("net_ball", CatchRateModifiers.typeBoosting(3F, ElementalTypes.BUG, ElementalTypes.WATER))
         createDefault("dive_ball", CatchRateModifiers.SUBMERGED_IN_WATER, waterDragValue = 0.99F)
         createDefault("nest_ball", CatchRateModifiers.NEST)
-        // ToDo implement effect once pokedex is implemented, we have a custom multiplier of 2.5 instead of the official pokeball
-        createDefault("repeat_ball")
+        createDefault("repeat_ball", CatchRateModifiers.REPEAT)
         createDefault("timer_ball", CatchRateModifiers.turnBased { turn -> (1F * turn * (1229F / 4096F)).coerceAtMost(4F) })
         createDefault("luxury_ball", effects = listOf(FriendshipEarningBoostEffect(2F)))
         createDefault("premier_ball")
