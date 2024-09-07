@@ -21,6 +21,7 @@ import com.cobblemon.mod.common.api.battles.model.actor.EntityBackedBattleActor
 import com.cobblemon.mod.common.api.battles.model.actor.FleeableBattleActor
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.battles.BattleFledEvent
+import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.asMoLangValue
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
@@ -46,14 +47,19 @@ import com.cobblemon.mod.common.net.messages.client.battle.BattleMessagePacket
 import com.cobblemon.mod.common.pokemon.evolution.progress.DefeatEvolutionProgress
 import com.cobblemon.mod.common.pokemon.evolution.progress.LastBattleCriticalHitsEvolutionProgress
 import com.cobblemon.mod.common.pokemon.evolution.requirements.DefeatRequirement
+import com.cobblemon.mod.common.pokemon.helditem.CobblemonHeldItemManager
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.getPlayer
 import net.minecraft.network.chat.Component
+import com.cobblemon.mod.common.util.giveOrDropItemStack
+import com.cobblemon.mod.common.util.itemRegistry
+import net.minecraft.resources.ResourceLocation
 import java.io.File
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentLinkedDeque
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.ItemStack
 
 /**
  * Individual battle instance
@@ -214,11 +220,12 @@ open class PokemonBattle(
 
     fun turn(newTurnNumber: Int) {
         actors.forEach { it.turn() }
+        // TODO: If a pokemon switches in the same turn another pokemon is KO'd it will not receive exp for the KO
         for (side in sides) {
             val opposite = side.getOppositeSide()
-            side.activePokemon.forEach {
-                val battlePokemon = it.battlePokemon ?: return@forEach
-                battlePokemon.facedOpponents.addAll(opposite.activePokemon.mapNotNull { it.battlePokemon })
+            side.activePokemon.filter { it.isAlive() }.forEach { activePokemon ->
+                val battlePokemon = activePokemon.battlePokemon ?: return@forEach
+                battlePokemon.facedOpponents.addAll(opposite.activePokemon.filter { opposingActivePokemon -> opposingActivePokemon.isAlive() }.mapNotNull { it.battlePokemon })
             }
         }
         this.turn = newTurnNumber
@@ -259,6 +266,13 @@ open class PokemonBattle(
                             pokemon.evs.add(stat, amount)
                         }
                     }
+                }
+            }
+            if(actor.itemsUsed.isNotEmpty() && actor.getPlayerUUIDs().count() > 0) {
+                val player = actor.getPlayerUUIDs().first().getPlayer()
+                player?.level()?.itemRegistry.let { registry ->
+                    actor.itemsUsed.mapNotNull { registry?.get(ResourceLocation.tryBySeparator(it.itemName.substringAfter('.'), '.')) }
+                            .forEach { player?.giveOrDropItemStack(ItemStack(it))}
                 }
             }
         }

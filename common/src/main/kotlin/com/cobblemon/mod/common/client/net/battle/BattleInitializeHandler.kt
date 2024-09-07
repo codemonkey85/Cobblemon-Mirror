@@ -46,6 +46,7 @@ object BattleInitializeHandler : ClientNetworkPacketHandler<BattleInitializePack
                 }
             }
             minimised = false
+            this.wildActor = this.findWildActor()
         }
 
         Minecraft.getInstance().setScreen(BattleGUI())

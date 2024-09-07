@@ -13,6 +13,7 @@ import org.joml.Vector3f
 
 data class InteractWheelOption(
     val iconResource: ResourceLocation,
+    val secondaryIconResource: ResourceLocation? = null,
     val tooltipText: String?,
     val colour: () -> Vector3f? = { null },
     val onPress: () -> Unit

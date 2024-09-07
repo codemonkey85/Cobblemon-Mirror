@@ -76,7 +76,7 @@ open class BattlePokemon(
      * The [HeldItemManager] backing this [BattlePokemon].
      */
     val heldItemManager: HeldItemManager by lazy { HeldItemProvider.provide(this) }
-
+    
     val contextManager = ContextManager()
 
     open fun getName(): MutableComponent {
@@ -94,7 +94,7 @@ open class BattlePokemon(
 
     fun isSentOut() = actor.battle.activePokemon.any { it.battlePokemon == this }
     fun canBeSentOut() =
-            if (actor.request?.side?.pokemon?.get(0)?.reviving == true) {
+            if (actor.request?.side?.pokemon?.any{ it.reviving } == true) {
                 !isSentOut() && !willBeSwitchedIn && health <= 0
             } else {
                 !isSentOut() && !willBeSwitchedIn && health > 0

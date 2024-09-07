@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import java.util.EnumSet
 import java.util.UUID
 import net.minecraft.network.RegistryFriendlyByteBuf
+import java.util.EnumMap
 
 /**
  * Used to populate the player interaction menu
@@ -22,15 +23,15 @@ import net.minecraft.network.RegistryFriendlyByteBuf
  * @since November 5th, 2023
  */
 class PlayerInteractOptionsPacket(
-    val options: EnumSet<Options>,
+    val options: Map<Options, OptionStatus>,
     val targetId: UUID,
     val numericTargetId: Int,
-    val selectedPokemonId: UUID
+    val selectedPokemonId: UUID,
     ) : NetworkPacket<PlayerInteractOptionsPacket> {
     companion object {
         val ID = cobblemonResource("player_interactions")
         fun decode(buffer: RegistryFriendlyByteBuf) = PlayerInteractOptionsPacket(
-            buffer.readEnumSet(Options::class.java),
+            buffer.readMap({ reader -> reader.readEnum(Options::class.java) }, { reader -> reader.readEnum(OptionStatus::class.java) }),
             buffer.readUUID(),
             buffer.readInt(),
             buffer.readUUID()
@@ -39,16 +40,29 @@ class PlayerInteractOptionsPacket(
 
     override val id = ID
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeEnumSet(options, Options::class.java)
+        buffer.writeMap(options, { writer, key -> writer.writeEnum(key) }, { writer, value -> writer.writeEnum(value) })
         buffer.writeUUID(targetId)
         buffer.writeInt(numericTargetId)
         buffer.writeUUID(selectedPokemonId)
     }
 
     enum class Options {
-        BATTLE,
+        SINGLE_BATTLE,
+        DOUBLE_BATTLE,
+        TRIPLE_BATTLE,
+        MULTI_BATTLE,
+        ROYAL_BATTLE,
         SPECTATE_BATTLE,
-        TRADE
+        TRADE,
+        TEAM_REQUEST,
+        TEAM_LEAVE,
+    }
+
+    enum class OptionStatus {
+        AVAILABLE,
+        TOO_FAR,
+        INSUFFICIENT_POKEMON,
+        OTHER
     }
 
 }

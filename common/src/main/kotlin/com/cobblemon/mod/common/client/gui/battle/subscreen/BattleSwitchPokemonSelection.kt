@@ -9,6 +9,8 @@
 package com.cobblemon.mod.common.client.gui.battle.subscreen
 
 import com.cobblemon.mod.common.CobblemonSounds
+import com.cobblemon.mod.common.battles.PassActionResponse
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.battles.ShowdownPokemon
 import com.cobblemon.mod.common.battles.SwitchActionResponse
 import com.cobblemon.mod.common.client.CobblemonClient
@@ -33,7 +35,7 @@ class BattleSwitchPokemonSelection(
     battleGUI,
     request,
     x = 12,
-    y = ceil((Minecraft.getInstance().window.guiScaledHeight / 2) - (((SWITCH_TILE_HEIGHT * 3) + (SWITCH_TILE_VERTICAL_SPACING * 2)) / 2)),
+    y = ceil(SWITCH_TILE_HEIGHT*(CobblemonClient.battle?.battleFormat?.battleType?.pokemonPerSide ?: 1) + (SWITCH_TILE_VERTICAL_SPACING * 3)),
     width = 250,
     height = 100,
     battleLang("switch_pokemon")
@@ -83,7 +85,8 @@ class BattleSwitchPokemonSelection(
                     state = state,
                     colour = null,
                     opacity = selection.opacity,
-                    partialTicks = deltaTicks
+                    partialTicks = deltaTicks,
+                    dexState = PokedexEntryProgress.NONE
                 )
             } catch (exception: Exception) {
                 throw exception
@@ -101,15 +104,18 @@ class BattleSwitchPokemonSelection(
                     ?.let { showdownPokemon to it }
             }
             .filter {
-                if (request.side.pokemon[0].reviving) {
-                    "fnt" in it.first.condition
+                if (request.side.pokemon.any { revivingPokemon -> revivingPokemon.uuid == request.activePokemon.battlePokemon?.uuid && revivingPokemon.reviving }) {
+                    "fnt" in it.first.condition//Fainted pokemon in doubles can be on the field
                 } else {
-                    "fnt" !in it.first.condition
+                    "fnt" !in it.first.condition && it.second.uuid !in battleGUI.actor!!.activePokemon.map { it.battlePokemon?.uuid }
                 }
             }
-            .filter { it.second.uuid !in battleGUI.actor!!.activePokemon.map { it.battlePokemon?.uuid } }
             .filter { it.second.uuid !in switchingInPokemon }
 
+        if(showdownPokemonToPokemon.isEmpty() && request.forceSwitch) {
+            // Occurs after a multi-knock out and the player doesn't have enough pokemon to fill every vacant slot
+            battleGUI.selectAction(request, PassActionResponse)
+        }
         showdownPokemonToPokemon.forEachIndexed { index, (showdownPokemon, pokemon) ->
             val row = index / 2
             val column = index % 2
@@ -126,7 +132,9 @@ class BattleSwitchPokemonSelection(
             return
         }
         tiles.forEach { it.render(context, mouseX.toDouble(), mouseY.toDouble(), delta) }
-        backButton.render(context.pose(), mouseX, mouseY, delta)
+        if(!request.forceSwitch) {
+            backButton.render(context, mouseX, mouseY, delta)
+        }
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {

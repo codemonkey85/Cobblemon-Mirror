@@ -36,6 +36,8 @@ class InteractWheelGUI(private val options: Multimap<Orientation, InteractWheelO
     private val buttons = mutableListOf<InteractWheelButton>()
     private var maxPage = 1
     private var currentPage = 0
+    override fun renderBlurredBackground(delta: Float) { }
+    override fun renderMenuBackground(context: GuiGraphics) {}
 
     override fun init() {
         calculateMaxPage()
@@ -96,19 +98,21 @@ class InteractWheelGUI(private val options: Multimap<Orientation, InteractWheelO
         val (x, y) = getButtonPosition(orientation)
         addRenderableWidget(InteractWheelButton(
             iconResource = option?.iconResource,
+            secondaryIconResource = option?.secondaryIconResource,
             buttonResource = buttonResources[orientation]!!,
             tooltipText = option?.tooltipText,
             x = x,
             y = y,
             isEnabled = option != null,
             colour = option?.colour ?: { null },
-            onPress = { option?.onPress?.invoke() }
+            onPress = { option?.onPress?.invoke() },
+            canHover = { a: Double, b: Double -> !isMouseInCenter(a, b)}
         ))
     }
 
     override fun <T> addRenderableWidget(drawableElement: T): T where T : GuiEventListener?, T : Renderable?, T : NarratableEntry? {
         if (drawableElement is InteractWheelButton) {
-            buttons.add(drawableElement)
+//            buttons.add(drawableElement)
         }
         return super.addRenderableWidget(drawableElement)
     }

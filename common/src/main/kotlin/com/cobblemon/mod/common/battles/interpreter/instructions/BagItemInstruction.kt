@@ -13,6 +13,9 @@ import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.battles.dispatch.InterpreterInstruction
 import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.battleLang
+import com.cobblemon.mod.common.util.getPlayer
+import com.cobblemon.mod.common.util.giveOrDropItemStack
+import net.minecraft.world.item.ItemStack
 
 /**
  * Format: |bagitem|POKEMON|ITEM
@@ -25,8 +28,16 @@ class BagItemInstruction(val message: BattleMessage): InterpreterInstruction {
 
     override fun invoke(battle: PokemonBattle) {
         battle.dispatchGo {
+
             val pokemon = message.pokemonByUuid(0, battle)!!
             val item = message.argumentAt(1)!!
+
+            val index = pokemon.actor.itemsUsed.indexOfFirst { item == it.itemName }
+            if (index >= 0) {
+                val player = pokemon.actor.getPlayerUUIDs().first().getPlayer()
+                player?.giveOrDropItemStack(ItemStack(pokemon.actor.itemsUsed[index].returnItem))
+                pokemon.actor.itemsUsed.removeAt(index)
+            }
 
             val ownerName = pokemon.actor.getName()
             val itemName = item.asTranslated()

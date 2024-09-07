@@ -8,10 +8,8 @@
 
 package com.cobblemon.mod.common.client.battle
 
-import com.cobblemon.mod.common.battles.ShowdownActionRequest
-import com.cobblemon.mod.common.battles.ShowdownActionResponse
-import com.cobblemon.mod.common.battles.ShowdownMoveset
-import com.cobblemon.mod.common.battles.ShowdownSide
+import com.cobblemon.mod.common.battles.*
+
 class SingleActionRequest(
     val activePokemon: ActiveClientBattlePokemon,
     val side: ShowdownSide?,
@@ -27,7 +25,6 @@ class SingleActionRequest(
                     SingleActionRequest(targetable, request.side, moveSet, forceSwitch, !request.noCancel)
                 }
             )
-
             return singleActionRequests
         }
     }

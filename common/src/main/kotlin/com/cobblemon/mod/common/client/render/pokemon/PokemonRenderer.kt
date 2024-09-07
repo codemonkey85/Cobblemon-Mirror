@@ -114,20 +114,6 @@ context: EntityRendererProvider.Context
 
         modelNow.setLayerContext(buffer, clientDelegate, PokemonModelRepository.getLayers(entity.pokemon.species.resourceIdentifier, entity.aspects))
 
-
-        // TODO: Need a way to get a shader from a render layer, and need a way to get the renderlayer for the pokemon's main model
-        // TODO: Need packet to sync evo time from server to client
-//        val shader: ShaderInstance? = RenderSystem.getShader()
-//        shader?.let { shader ->
-//            if(shader == GameRenderer.getRenderTypeEntityCutoutProgram() ||
-//                shader == GameRenderer.getRenderTypeEntityTranslucentProgram() ||
-//                shader == GameRenderer.getRenderTypeEntityTranslucentEmissiveProgram()){
-//                val progressUniform = shader.getUniform("u_evo_progress")
-//                // TODO: set this to the actual progress, 0->1->0
-//                progressUniform?.set((sin(entity.ticksLived/20f) + 1f)/2f)
-//            }
-//        }
-
         if (entity.ticksLived < 10) {
             entity.yBodyRot = entity.entityData.get(SPAWN_DIRECTION)
             entity.yBodyRotO = entity.yBodyRot
@@ -141,7 +127,7 @@ context: EntityRendererProvider.Context
         if (this.shouldRenderLabel(entity)) {
             this.renderNameTag(entity, entity.effectiveName(), poseMatrix, buffer, packedLight, partialTicks)
         }
-//        MinecraftClient.getInstance().bufferBuilders.entityVertexConsumers.draw()
+//        Minecraft.getInstance().bufferBuilders.entityVertexConsumers.draw()
     }
 
     fun renderTransition(

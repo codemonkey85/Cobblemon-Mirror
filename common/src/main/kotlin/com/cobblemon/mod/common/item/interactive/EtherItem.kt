@@ -37,6 +37,7 @@ import net.minecraft.world.level.Level
 class EtherItem(val max: Boolean): CobblemonItem(Properties()), PokemonAndMoveSelectingItem {
     override val bagItem = object : BagItem {
         override val itemName = "item.cobblemon.${ if (max) "max_ether" else "ether" }"
+        override val returnItem = Items.GLASS_BOTTLE
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) = target.health > 0 && target.moveSet.any { it.currentPp < it.maxPp }
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "ether $data${ if (max) "" else " 10" }"
     }

@@ -71,6 +71,50 @@
   "item.use": {
     "sounds": [ "cobblemon:use_item" ]
   },
+  "item.pokedex.open": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_open" ]
+  },
+  "item.pokedex.close": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_close" ]
+  },
+  "item.pokedex.click": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_click" ]
+  },
+  "item.pokedex.click_short": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_click_short" ]
+  },
+  "item.pokedex.scan": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_scan" ]
+  },
+  "item.pokedex.scan_open": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_open", "volume": 0.6 }]
+  },
+  "item.pokedex.scan_close": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_close", "volume": 0.6 }]
+  },
+  "item.pokedex.scan_loop": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_loop", "volume": 0.3 }]
+  },
+  "item.pokedex.scan_detail": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_detail", "volume": 0.4 }]
+  },
+  "item.pokedex.zoom_increment": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_zoom_increment" ]
+  },
+  "item.pokedex.snap": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_snap_picture_1" },
+      { "name": "cobblemon:item/pokedex/pokedex_snap_picture_2" },
+      { "name": "cobblemon:item/pokedex/pokedex_snap_picture_3" }
+    ]
+  },
+  "pokemon.can_evolve": {
+    "sounds": [ "cobblemon:pokemon/evolution_notification"]
+  },
   "evolution.notification": {
     "sounds": [ { "name": "cobblemon:evolution/evolution_notification", "volume": 0.7 } ]
   },
@@ -298,6 +342,38 @@
       "cobblemon:block/tumblestone/tumblestone_step_2",
       "cobblemon:block/tumblestone/tumblestone_step_3",
       "cobblemon:block/tumblestone/tumblestone_step_4"
+    ]
+  },
+  "evolution_stone_block.break": {
+    "sounds": [
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_break_1",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_break_2",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_break_3",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_break_4"
+    ]
+  },
+  "evolution_stone_block.hit": {
+    "sounds": [
+      { "name": "cobblemon:block/evolution_stone_block/evolution_stone_block_hit_1", "volume": 0.8 },
+      { "name": "cobblemon:block/evolution_stone_block/evolution_stone_block_hit_2", "volume": 0.8 },
+      { "name": "cobblemon:block/evolution_stone_block/evolution_stone_block_hit_3", "volume": 0.8 },
+      { "name": "cobblemon:block/evolution_stone_block/evolution_stone_block_hit_4", "volume": 0.8 }
+    ]
+  },
+  "evolution_stone_block.place": {
+    "sounds": [
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_place_1",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_place_2",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_place_3",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_place_4"
+    ]
+  },
+  "evolution_stone_block.step": {
+    "sounds": [
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_step_1",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_step_2",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_step_3",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_step_4"
     ]
   },
   "display_case.break": {

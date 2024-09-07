@@ -29,7 +29,7 @@ data class PokeRod(
     val pokeBallId: ResourceLocation,
     //Hex string of color
     val lineColor: String,
-    var name: ResourceLocation// ?// TODO (techdaan) Why was this nullable?
+    var name: ResourceLocation
 ) {
     internal fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeIdentifier(name)
