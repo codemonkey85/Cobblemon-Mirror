@@ -191,6 +191,15 @@ object CobblemonSounds : PlatformRegistry<Registry<SoundEvent>, ResourceKey<Regi
     val TUMBLESTONE_STEP = this.create("tumblestone.step")
 
     @JvmField
+    val EVOLUTION_STONE_BLOCK_BREAK = this.create("evolution_stone_block.break")
+    @JvmField
+    val EVOLUTION_STONE_BLOCK_HIT = this.create("evolution_stone_block.hit")
+    @JvmField
+    val EVOLUTION_STONE_BLOCK_PLACE = this.create("evolution_stone_block.place")
+    @JvmField
+    val EVOLUTION_STONE_BLOCK_STEP = this.create("evolution_stone_block.step")
+
+    @JvmField
     val GIMMIGHOUL_GIVE_ITEM_SMALL = this.create("gimmighoul.give_item_small")
     @JvmField
     val GIMMIGHOUL_REVEAL = this.create("gimmighoul.reveal")
@@ -309,6 +318,15 @@ object CobblemonSounds : PlatformRegistry<Registry<SoundEvent>, ResourceKey<Regi
         TUMBLESTONE_HIT,
         TUMBLESTONE_STEP
     )
+    @JvmField
+    val EVOLUTION_STONE_BLOCK_SOUNDS = SoundType(1f, 1.1f,
+        EVOLUTION_STONE_BLOCK_BREAK,
+        EVOLUTION_STONE_BLOCK_STEP,
+        EVOLUTION_STONE_BLOCK_PLACE,
+        EVOLUTION_STONE_BLOCK_HIT,
+        EVOLUTION_STONE_BLOCK_STEP
+    )
+
 
     @JvmField
     val BERRY_BUSH_SOUNDS = SoundType(0.8f, 1.1f,

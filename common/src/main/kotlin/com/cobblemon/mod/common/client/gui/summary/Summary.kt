@@ -379,7 +379,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
 
             MOVE_SWAP -> {
                 val movesWidget = mainScreen
-                if (movesWidget is MovesWidget && move != null) {
+                if (movesWidget is MovesWidget) {
                     sideScreen = MoveSwapScreen(
                             x + 216,
                             y + 24,
@@ -387,14 +387,18 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
                             replacedMove = move
                     ).also { switchPane ->
                         val pokemon = selectedPokemon
-                        pokemon.allAccessibleMoves
+                        var moveSlotList = (pokemon.allAccessibleMoves
                                 .filter { template -> pokemon.moveSet.none { it.template == template } }
                                 .map { template ->
                                     val benched = pokemon.benchedMoves.find { it.moveTemplate == template }
                                     MoveSwapScreen.MoveSlot(switchPane, template, benched?.ppRaisedStages
                                             ?: 0, pokemon)
-                                }
-                                .forEach { switchPane.addEntry(it) }
+                                })
+                        if (pokemon.moveSet.getMoves().size > 1 && move != null) {
+                            // Adds the "Forget" slot
+                            moveSlotList += MoveSwapScreen.MoveSlot(switchPane, null, 0, pokemon)
+                        }
+                        moveSlotList.forEach { switchPane.addEntry(it) }
                     }
                 }
             }
