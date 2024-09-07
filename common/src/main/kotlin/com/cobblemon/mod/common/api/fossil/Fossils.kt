@@ -22,22 +22,22 @@ import com.cobblemon.mod.common.util.adapters.pokemonPropertiesShortAdapter
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 
 object Fossils: JsonDataRegistry<Fossil> {
 
-    override val id: Identifier = cobblemonResource("fossils")
-    override val type: ResourceType = ResourceType.SERVER_DATA
+    override val id: ResourceLocation = cobblemonResource("fossils")
+    override val type: PackType = PackType.SERVER_DATA
     override val observable = SimpleObservable<Fossils>()
 
     override val gson = GsonBuilder()
         .disableHtmlEscaping()
         .setPrettyPrinting()
-        .registerTypeAdapter(Identifier::class.java, IdentifierAdapter)
+        .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .registerTypeAdapter(PokemonProperties::class.java, pokemonPropertiesShortAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Item::class.java).type, ItemLikeConditionAdapter)
         .registerTypeAdapter(NbtItemPredicate::class.java, NbtItemPredicateAdapter)
@@ -46,9 +46,9 @@ object Fossils: JsonDataRegistry<Fossil> {
     override val typeToken: TypeToken<Fossil> = TypeToken.get(Fossil::class.java)
     override val resourcePath: String = "fossils"
 
-    private val fossils = hashMapOf<Identifier, Fossil>()
+    private val fossils = hashMapOf<ResourceLocation, Fossil>()
 
-    override fun reload(data: Map<Identifier, Fossil>) {
+    override fun reload(data: Map<ResourceLocation, Fossil>) {
         this.fossils.clear()
         data.forEach { (identifier, fossil) ->
             try {
@@ -62,7 +62,7 @@ object Fossils: JsonDataRegistry<Fossil> {
         this.observable.emit(this)
     }
 
-    override fun sync(player: ServerPlayerEntity) {
+    override fun sync(player: ServerPlayer) {
         FossilRegistrySyncPacket(this.all()).sendToPlayer(player)
     }
 
@@ -72,11 +72,11 @@ object Fossils: JsonDataRegistry<Fossil> {
     fun all() = this.fossils.values.toList()
 
     /**
-     * Gets a [Fossil] by its [Identifier].
+     * Gets a [Fossil] by its [ResourceLocation].
      * @param identifier The identifier of the fossil.
      * @return The [Fossil] if loaded, otherwise null.
      */
-    fun getByIdentifier(identifier: Identifier): Fossil? = this.fossils[identifier]
+    fun getByIdentifier(identifier: ResourceLocation): Fossil? = this.fossils[identifier]
 
     /**
      * Looks for a [Fossil] that matches a [ItemStack].

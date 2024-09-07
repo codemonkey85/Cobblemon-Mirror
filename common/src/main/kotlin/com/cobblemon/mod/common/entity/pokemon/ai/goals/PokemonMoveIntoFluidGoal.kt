@@ -10,20 +10,19 @@ package com.cobblemon.mod.common.entity.pokemon.ai.goals
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.closestPosition
+import net.minecraft.core.BlockPos
+import net.minecraft.tags.FluidTags
+import net.minecraft.tags.TagKey
+import net.minecraft.util.Mth
+import net.minecraft.world.entity.ai.goal.Goal
+import net.minecraft.world.level.material.Fluid
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 import kotlin.math.ceil
 import kotlin.math.floor
-import net.minecraft.entity.ai.goal.Goal
-import net.minecraft.fluid.Fluid
-import net.minecraft.registry.tag.FluidTags
-import net.minecraft.registry.tag.TagKey
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.BlockPos.Mutable
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.MathHelper
-import net.minecraft.util.math.Vec3d
 
 class PokemonMoveIntoFluidGoal(private val mob: PokemonEntity) : Goal() {
-    override fun canStart(): Boolean {
+    override fun canUse(): Boolean {
         val avoidsLand = mob.behaviour.moving.walk.avoidsLand
         if (!avoidsLand || mob.owner != null) {
             return false
@@ -32,9 +31,9 @@ class PokemonMoveIntoFluidGoal(private val mob: PokemonEntity) : Goal() {
         val allowsWater = mob.behaviour.moving.swim.canSwimInWater
         val allowsLava = mob.behaviour.moving.swim.canSwimInLava
 
-        val pos = mob.blockPos
+        val pos = mob.blockPosition()
 
-        val fluid = mob.world.getFluidState(pos)
+        val fluid = mob.level().getFluidState(pos)
 
         val allowedFluids = mutableListOf<TagKey<Fluid>>()
         if (allowsWater) {
@@ -48,17 +47,17 @@ class PokemonMoveIntoFluidGoal(private val mob: PokemonEntity) : Goal() {
         val allZ = floor(mob.boundingBox.minZ).toInt()..ceil(mob.boundingBox.maxZ).toInt()
 
         var onSolid = false
-        val mutablePos = Mutable()
+        val mutablePos = BlockPos.MutableBlockPos()
 
         outer@
         for (blockX in allX) {
             for (blockZ in allZ) {
-                if (mob.world.getBlockState(mutablePos.set(blockX, mob.blockY - 1, blockZ)).isSolid) {
+                if (mob.level().getBlockState(mutablePos.set(blockX, mob.blockY - 1, blockZ)).isSolid) {
                     onSolid = true
                 }
                 for (y in mob.blockY..ceil(mob.boundingBox.maxY).toInt()) {
-                    val fluidState = mob.world.getFluidState(mutablePos.set(blockX, y, blockZ))
-                    if (allowedFluids.any { fluidState.isIn(it) }) {
+                    val fluidState = mob.level().getFluidState(mutablePos.set(blockX, y, blockZ))
+                    if (allowedFluids.any { fluidState.`is`(it) }) {
                         return false
                     } else if (mob.y > 62.0) {
                     }
@@ -78,13 +77,13 @@ class PokemonMoveIntoFluidGoal(private val mob: PokemonEntity) : Goal() {
         if (swim.canSwimInWater) {
             appropriateFluids.add(FluidTags.WATER)
         }
-        val iterable = BlockPos.iterate(
-            MathHelper.floor(mob.x - 8.0),
-            MathHelper.floor(mob.y - 8.0),
-            MathHelper.floor(mob.z - 8.0),
-            MathHelper.floor(mob.x + 8.0),
+        val iterable = BlockPos.betweenClosed(
+            Mth.floor(mob.x - 8.0),
+            Mth.floor(mob.y - 8.0),
+            Mth.floor(mob.z - 8.0),
+            Mth.floor(mob.x + 8.0),
             mob.blockY,
-            MathHelper.floor(mob.z + 2.0)
+            Mth.floor(mob.z + 2.0)
         )
 
         val box = mob.boundingBox
@@ -92,19 +91,23 @@ class PokemonMoveIntoFluidGoal(private val mob: PokemonEntity) : Goal() {
             if (mob.tethering?.canRoamTo(pos) == false) {
                 return@closestPosition false
             }
-            val fluid = mob.world.getFluidState(pos)
-            return@closestPosition appropriateFluids.any { fluid.isIn(it) } &&
-                    mob.world.isSpaceEmpty(
-                        Box.of(
-                            Vec3d(pos.x.toDouble(), pos.y - 1.0, pos.z.toDouble()),
-                            box.xLength,
-                            box.yLength,
-                            box.zLength
+            val fluid = mob.level().getFluidState(pos)
+            return@closestPosition appropriateFluids.any { fluid.`is`(it) } &&
+                    mob.level().noCollision(
+                        AABB.ofSize(
+                            Vec3(
+                                pos.x.toDouble(),
+                                pos.y - 1.0,
+                                pos.z.toDouble()
+                            ),
+                            box.xsize,
+                            box.ysize,
+                            box.zsize
                         )
                     )
         }
         if (blockPos != null) {
-            mob.navigation.startMovingTo(blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), 1.0)
+            mob.navigation.moveTo(blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), 1.0)
         }
     }
 }

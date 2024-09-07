@@ -8,13 +8,16 @@
 
 package com.cobblemon.mod.common.api.snowstorm
 
+import com.cobblemon.mod.common.util.readIdentifier
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeIdentifier
+import com.cobblemon.mod.common.util.writeString
 import com.mojang.serialization.Codec
-import com.mojang.serialization.codecs.ListCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.mojang.serialization.codecs.UnboundedMapCodec
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.Identifier
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.resources.ResourceLocation
 
 /**
  * This is an interpretation of the Bedrock Edition particle system. The behaviour of the effects are
@@ -24,8 +27,8 @@ import net.minecraft.util.Identifier
  * @author Hiroku
  * @since January 2nd, 2023
  */
-class BedrockParticleEffect(
-    var id: Identifier = Identifier("effect"),
+class BedrockParticleOptions(
+    var id: ResourceLocation = ResourceLocation.parse("effect"),
     var emitter: BedrockParticleEmitter = BedrockParticleEmitter(),
     var particle: BedrockParticle = BedrockParticle(),
     var curves: MutableList<MoLangCurve> = mutableListOf(),
@@ -33,16 +36,16 @@ class BedrockParticleEffect(
     var events: MutableMap<String, ParticleEvent> = mutableMapOf()
 ) {
     companion object {
-        val CODEC: Codec<BedrockParticleEffect> = RecordCodecBuilder.create { instance ->
+        val CODEC: Codec<BedrockParticleOptions> = RecordCodecBuilder.create { instance ->
             instance.group(
-                Identifier.CODEC.fieldOf("id").forGetter { it.id },
+                ResourceLocation.CODEC.fieldOf("id").forGetter { it.id },
                 BedrockParticleEmitter.CODEC.fieldOf("emitter").forGetter { it.emitter },
                 BedrockParticle.CODEC.fieldOf("particle").forGetter { it.particle },
-                ListCodec(MoLangCurve.codec).fieldOf("curves").forGetter { it.curves },
+                MoLangCurve.codec.listOf().fieldOf("curves").forGetter { it.curves },
                 ParticleSpace.CODEC.fieldOf("space").forGetter { it.space },
                 UnboundedMapCodec(PrimitiveCodec.STRING, ParticleEvent.CODEC).fieldOf("events").forGetter { it.events }
             ).apply(instance) { id, emitter, particle, curves, space, events ->
-                BedrockParticleEffect(
+                BedrockParticleOptions(
                     id = id,
                     emitter = emitter,
                     particle = particle,
@@ -54,7 +57,7 @@ class BedrockParticleEffect(
         }
     }
 
-    fun writeToBuffer(buffer: PacketByteBuf) {
+    fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeIdentifier(id)
         emitter.writeToBuffer(buffer)
         particle.writeToBuffer(buffer)
@@ -63,7 +66,7 @@ class BedrockParticleEffect(
         buffer.writeMap(events, { _, v -> buffer.writeString(v) }) { _, event -> event.encode(buffer) }
     }
 
-    fun readFromBuffer(buffer: PacketByteBuf) {
+    fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         id = buffer.readIdentifier()
         emitter.readFromBuffer(buffer)
         particle.readFromBuffer(buffer)

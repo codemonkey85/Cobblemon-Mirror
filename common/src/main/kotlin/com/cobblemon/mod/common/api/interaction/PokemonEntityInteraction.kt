@@ -10,9 +10,9 @@ package com.cobblemon.mod.common.api.interaction
 
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.sound.SoundEvent
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.world.item.ItemStack
 
 /**
  * An [EntityInteraction] targeting [PokemonEntity]s.
@@ -27,7 +27,7 @@ interface PokemonEntityInteraction : EntityInteraction<PokemonEntity> {
     val sound: SoundEvent?
         get() = CobblemonSounds.ITEM_USE
 
-    override fun onInteraction(player: ServerPlayerEntity, entity: PokemonEntity, stack: ItemStack): Boolean {
+    override fun onInteraction(player: ServerPlayer, entity: PokemonEntity, stack: ItemStack): Boolean {
         val pokemon = entity.pokemon
         val storeCoordinates = pokemon.storeCoordinates.get()
         val ownership = when {
@@ -45,12 +45,12 @@ interface PokemonEntityInteraction : EntityInteraction<PokemonEntity> {
     /**
      * Fired after [EntityInteraction.onInteraction] the [Ownership] is checked if contained in [accepted].
      *
-     * @param player The [ServerPlayerEntity] interacting with the [entity].
+     * @param player The [ServerPlayer] interacting with the [entity].
      * @param entity The [PokemonEntity] being interacted with.
      * @param stack The [ItemStack] used in this interaction.
      * @return true if the interaction was successful and no further interactions should be processed.
      */
-    fun processInteraction(player: ServerPlayerEntity, entity: PokemonEntity, stack: ItemStack): Boolean
+    fun processInteraction(player: ServerPlayer, entity: PokemonEntity, stack: ItemStack): Boolean
 
     /**
      * Represents the ownership status of a Pokemon relative to a Player.

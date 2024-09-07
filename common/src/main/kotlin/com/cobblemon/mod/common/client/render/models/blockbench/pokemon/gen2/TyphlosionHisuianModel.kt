@@ -11,33 +11,34 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen2
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class TyphlosionHisuianModel  (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class TyphlosionHisuianModel  (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("typhlosion_hisui")
     override val head = getPart("head")
 
     override var portraitScale = 1.4F
-    override var portraitTranslation = Vec3d(-0.45, 2.37, 0.0)
+    override var portraitTranslation = Vec3(-0.45, 2.37, 0.0)
 
     override var profileScale = 0.5F
-    override var profileTranslation = Vec3d(0.0, 1.0, 0.0)
+    override var profileTranslation = Vec3(0.0, 1.0, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walking: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var battleidle: CobblemonPose
 
     val spoopy_flame = getPart("fire_main")
     val spoopy_orb1 = getPart("fire_orb_right1")
     val spoopy_orb2 = getPart("fire_orb_middle1")
     val spoopy_orb3 = getPart("fire_orb_left1")
 
-    override val cryAnimation = CryProvider { entity, _ -> if (entity.isBattling) bedrockStateful("typhlosion_hisuian", "battle_cry") else bedrockStateful("typhlosion_hisuian", "cry") }
+    override val cryAnimation = CryProvider { if (it.isBattling) bedrockStateful("typhlosion_hisuian", "battle_cry") else bedrockStateful("typhlosion_hisuian", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("typhlosion_hisuian", "blink") }
@@ -50,7 +51,7 @@ class TyphlosionHisuianModel  (root: ModelPart) : PokemonPoseableModel(), Headed
                         spoopy_orb2.createTransformation().withVisibility(visibility = false),
                         spoopy_orb3.createTransformation().withVisibility(visibility = false)
                 ),
-                idleAnimations = arrayOf(bedrock("typhlosion_hisuian", "sleep"))
+                animations = arrayOf(bedrock("typhlosion_hisuian", "sleep"))
         )
 
         standing = registerPose(
@@ -65,7 +66,7 @@ class TyphlosionHisuianModel  (root: ModelPart) : PokemonPoseableModel(), Headed
                         spoopy_orb2.createTransformation().withVisibility(visibility = false),
                         spoopy_orb3.createTransformation().withVisibility(visibility = false)
                 ),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(minPitch = 0F),
                         bedrock("typhlosion_hisuian", "ground_idle")
                 )
@@ -82,7 +83,7 @@ class TyphlosionHisuianModel  (root: ModelPart) : PokemonPoseableModel(), Headed
                         spoopy_orb2.createTransformation().withVisibility(visibility = false),
                         spoopy_orb3.createTransformation().withVisibility(visibility = false)
                 ),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(minPitch = 0F),
                         bedrock("typhlosion_hisuian", "ground_walk")
                 )
@@ -100,7 +101,7 @@ class TyphlosionHisuianModel  (root: ModelPart) : PokemonPoseableModel(), Headed
                         spoopy_orb3.createTransformation().withVisibility(visibility = true)
                 ),
                 condition = { it.isBattling },
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(minPitch = 0F),
                         bedrock("typhlosion_hisuian", "battle_idle")
                 )
@@ -108,6 +109,6 @@ class TyphlosionHisuianModel  (root: ModelPart) : PokemonPoseableModel(), Headed
     }
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walking, battleidle, sleep)) bedrockStateful("typhlosion_hisuian", "faint") else null
 }

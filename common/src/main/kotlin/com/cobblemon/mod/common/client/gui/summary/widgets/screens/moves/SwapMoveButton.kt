@@ -12,12 +12,11 @@ import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.moves.MoveTemplate
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.client.sound.SoundManager
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.Text
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Button
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.client.sounds.SoundManager
+import net.minecraft.network.chat.Component
 
 /**
  * This Button is specifically made for the Summary to change the order of the Moves
@@ -26,10 +25,10 @@ import net.minecraft.text.Text
  */
 class SwapMoveButton(
     val pX: Int, val pY: Int,
-    var move: MoveTemplate,
+    var move: MoveTemplate?,
     var movesWidget: MovesWidget,
-    onPress: PressAction
-): ButtonWidget((pX + OFFSET_X).toInt(), (pY + OFFSET_Y).toInt(), (WIDTH * SCALE).toInt(), (HEIGHT * SCALE).toInt(), Text.empty(), onPress, DEFAULT_NARRATION_SUPPLIER) {
+    onPress: OnPress
+): Button((pX + OFFSET_X).toInt(), (pY + OFFSET_Y).toInt(), (WIDTH * SCALE).toInt(), (HEIGHT * SCALE).toInt(), Component.empty(), onPress, DEFAULT_NARRATION) {
 
     override fun mouseDragged(d: Double, e: Double, i: Int, f: Double, g: Double): Boolean {
         return false
@@ -42,14 +41,15 @@ class SwapMoveButton(
         private const val OFFSET_Y = 6.5F
         private const val SCALE = 0.5F
         private val switchMoveButtonResource = cobblemonResource("textures/gui/summary/summary_move_swap.png")
+        private val addMoveButtonResource = cobblemonResource("textures/gui/summary/summary_move_add.png")
     }
 
-    override fun renderButton(context: DrawContext, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         val swapScreen = movesWidget.summary.sideScreen
-        var selected = if (swapScreen is MoveSwapScreen) swapScreen.replacedMove?.template == move else false
+        val selected = if (swapScreen is MoveSwapScreen) swapScreen.replacedMove?.template == move else false
         blitk(
-            matrixStack = context.matrices,
-            texture = switchMoveButtonResource,
+            matrixStack = context.pose(),
+            texture = if(move == null) addMoveButtonResource else switchMoveButtonResource,
             x = (pX + OFFSET_X) / SCALE,
             y = (pY + OFFSET_Y) / SCALE,
             width = WIDTH,
@@ -61,7 +61,7 @@ class SwapMoveButton(
     }
 
     override fun playDownSound(soundManager: SoundManager) {
-        soundManager.play(PositionedSoundInstance.master(CobblemonSounds.GUI_CLICK, 1.0F))
+        soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.GUI_CLICK, 1.0F))
     }
 
     fun isHovered(mouseX: Double, mouseY: Double) = mouseX.toFloat() in ((pX + OFFSET_X)..((pX + OFFSET_X) + (WIDTH * SCALE))) && mouseY.toFloat() in ((pY + OFFSET_Y)..((pY + OFFSET_Y) + (HEIGHT * SCALE) - 0.5F))

@@ -8,7 +8,8 @@
 
 package com.cobblemon.mod.common.api.pokemon.evolution
 
-import com.cobblemon.mod.common.Cobblemon.playerData
+import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.Cobblemon.playerDataManager
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.advancement.CobblemonCriteria
@@ -21,6 +22,7 @@ import com.cobblemon.mod.common.api.moves.MoveTemplate
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
 import com.cobblemon.mod.common.api.scheduling.afterOnServer
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
 import com.cobblemon.mod.common.entity.generic.GenericBedrockEntity
 import com.cobblemon.mod.common.item.PokeBallItem
@@ -37,6 +39,7 @@ import com.cobblemon.mod.common.util.party
 import net.minecraft.item.ItemStack
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundCategory.*
+import net.minecraft.world.item.ItemStack
 
 /**
  * Represents an evolution of a [Pokemon], this is the server side counterpart of [EvolutionDisplay].
@@ -117,16 +120,16 @@ interface Evolution : EvolutionLike {
         // If the player has at least one Pokeball in their inventory.
         var pokeballStack: ItemStack? = null
         if (!owner.isCreative) {
-            for (i in 0 until owner.inventory.size()) {
-                val stackI = owner.inventory.getStack(i)
-                if (stackI.isIn(CobblemonItemTags.POKE_BALLS)) {
+            for (i in 0 until owner.inventory.containerSize) {
+                val stackI = owner.inventory.getItem(i)
+                if (stackI.`is`(CobblemonItemTags.POKE_BALLS)) {
                     pokeballStack = stackI
                 }
             }
             if (pokeballStack == null) return false
         }
         // If the player has at least one empty spot in their party.
-        val emptySlot = owner.party().getFirstAvailablePosition() ?: return false
+        owner.party().getFirstAvailablePosition() ?: return false
 
         // Add shed Pokemon to player's party
         val shedPokemon = pokemon.clone()
@@ -134,9 +137,9 @@ interface Evolution : EvolutionLike {
         innerShedder.apply(shedPokemon)
         shedPokemon.caughtBall = ((pokeballStack?.item ?: CobblemonItems.POKE_BALL) as PokeBallItem).pokeBall
         pokemon.storeCoordinates.get()?.store?.add(shedPokemon)
-        CobblemonCriteria.EVOLVE_POKEMON.trigger(owner, EvolvePokemonContext(pokemon.preEvolution!!.species.resourceIdentifier, shedPokemon.species.resourceIdentifier, playerData.get(owner).advancementData.totalEvolvedCount))
+        CobblemonCriteria.EVOLVE_POKEMON.trigger(owner, EvolvePokemonContext(pokemon.preEvolution!!.species.resourceIdentifier, shedPokemon.species.resourceIdentifier, playerDataManager.getGenericData(owner).advancementData.totalEvolvedCount))
         // Consume one of the balls
-        pokeballStack?.decrement(1)
+        pokeballStack?.shrink(1)
 
         return true
     }
@@ -192,12 +195,12 @@ interface Evolution : EvolutionLike {
             } else {
                 pokemon.benchedMoves.add(BenchedMove(move, 0))
             }
-            pokemon.getOwnerPlayer()?.sendMessage(lang("experience.learned_move", pokemon.getDisplayName(), move.displayName))
+            pokemon.getOwnerPlayer()?.sendSystemMessage(lang("experience.learned_move", pokemon.getDisplayName(), move.displayName))
         }
         // we want to instantly tick for example you might only evolve your Bulbasaur at level 34 so Venusaur should be immediately available
         pokemon.evolutions.filterIsInstance<PassiveEvolution>().forEach { evolution -> evolution.attemptEvolution(pokemon) }
         pokemon.lockedEvolutions.filterIsInstance<PassiveEvolution>().forEach { evolution -> evolution.attemptEvolution(pokemon) }
-        pokemon.getOwnerPlayer()?.playSound(CobblemonSounds.EVOLVING, NEUTRAL, 1F, 1F)
+        pokemon.getOwnerPlayer()?.playSound(CobblemonSounds.EVOLUTION_UI, 1F, 1F)
         this.shed(pokemon)
         CobblemonEvents.EVOLUTION_COMPLETE.post(EvolutionCompleteEvent(pokemon, this))
     }

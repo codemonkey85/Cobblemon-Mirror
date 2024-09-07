@@ -8,15 +8,15 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen2
 
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.QuadrupedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class DonphanModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame {
+class DonphanModel (root: ModelPart) : PokemonPosableModel(root), QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("donphan")
 
     override val foreLeftLeg = getPart("leg_front_left")
@@ -25,15 +25,15 @@ class DonphanModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame {
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 1.4F
-    override var portraitTranslation = Vec3d(-0.85, -0.3, 0.0)
+    override var portraitTranslation = Vec3(-0.85, -0.3, 0.0)
 
     override var profileScale = 0.6F
-    override var profileTranslation = Vec3d(-0.1, 0.73, 0.0)
+    override var profileTranslation = Vec3(-0.1, 0.73, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battle_idle: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var battle_idle: CobblemonPose
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("donphan", "blink") }
@@ -41,7 +41,7 @@ class DonphanModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame {
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("donphan", "sleep")
             )
         )
@@ -51,7 +51,7 @@ class DonphanModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame {
             poseTypes = PoseType.UI_POSES + PoseType.STATIONARY_POSES,
             condition = { !it.isBattling },
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("donphan", "ground_idle")
             )
         )
@@ -60,7 +60,7 @@ class DonphanModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame {
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("donphan", "ground_walk")
             )
         )
@@ -69,7 +69,7 @@ class DonphanModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame {
             poseName = "battle_idle",
             poseTypes = PoseType.STATIONARY_POSES,
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("donphan", "battle_idle")
             )
         )
@@ -77,6 +77,6 @@ class DonphanModel (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("donphan", "faint") else null
 }

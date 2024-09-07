@@ -17,6 +17,7 @@ import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.drop.DropEntry
 import com.cobblemon.mod.common.api.drop.ItemDropMethod
 import com.cobblemon.mod.common.api.entity.EntityDimensionsAdapter
+import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.moves.MoveTemplate
 import com.cobblemon.mod.common.api.moves.adapters.MoveTemplateAdapter
 import com.cobblemon.mod.common.api.pokemon.effect.ShoulderEffect
@@ -50,23 +51,23 @@ import com.google.common.collect.HashBasedTable
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import net.minecraft.block.Block
-import net.minecraft.entity.EntityDimensions
-import net.minecraft.entity.effect.StatusEffect
-import net.minecraft.item.Item
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.registry.Registries
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.Box
-import net.minecraft.world.biome.Biome
-import net.minecraft.world.gen.structure.Structure
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
+import net.minecraft.world.effect.MobEffect
+import net.minecraft.world.entity.EntityDimensions
+import net.minecraft.world.item.Item
+import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.levelgen.structure.Structure
+import net.minecraft.world.phys.AABB
 
 object PokemonSpecies : JsonDataRegistry<Species> {
 
     override val id = cobblemonResource("species")
-    override val type = ResourceType.SERVER_DATA
+    override val type = PackType.SERVER_DATA
 
     override val gson: Gson = GsonBuilder()
         .registerTypeAdapter(Stat::class.java, Cobblemon.statProvider.typeAdapter)
@@ -78,25 +79,26 @@ object PokemonSpecies : JsonDataRegistry<Species> {
         .registerTypeAdapter(EntityDimensions::class.java, EntityDimensionsAdapter)
         .registerTypeAdapter(Learnset::class.java, LearnsetAdapter)
         .registerTypeAdapter(Evolution::class.java, CobblemonEvolutionAdapter)
-        .registerTypeAdapter(Box::class.java, BoxAdapter)
+        .registerTypeAdapter(AABB::class.java, BoxAdapter)
         .registerTypeAdapter(AbilityPool::class.java, AbilityPoolAdapter)
         .registerTypeAdapter(EvolutionRequirement::class.java, CobblemonRequirementAdapter)
         .registerTypeAdapter(PreEvolution::class.java, CobblemonPreEvolutionAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(Set::class.java, Evolution::class.java).type, LazySetAdapter(Evolution::class))
         .registerTypeAdapter(IntRange::class.java, IntRangeAdapter)
         .registerTypeAdapter(PokemonProperties::class.java, pokemonPropertiesShortAdapter)
-        .registerTypeAdapter(Identifier::class.java, IdentifierAdapter)
+        .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .registerTypeAdapter(TimeRange::class.java, IntRangesAdapter(TimeRange.timeRanges) { TimeRange(*it) })
         .registerTypeAdapter(ItemDropMethod::class.java, ItemDropMethod.adapter)
         .registerTypeAdapter(SleepDepth::class.java, SleepDepth.adapter)
         .registerTypeAdapter(DropEntry::class.java, DropEntryAdapter)
-        .registerTypeAdapter(NbtCompound::class.java, NbtCompoundAdapter)
+        .registerTypeAdapter(CompoundTag::class.java, NbtCompoundAdapter)
+        .registerTypeAdapter(ExpressionLike::class.java, ExpressionLikeAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Biome::class.java).type, BiomeLikeConditionAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Block::class.java).type, BlockLikeConditionAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Item::class.java).type, ItemLikeConditionAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Structure::class.java).type, StructureLikeConditionAdapter)
         .registerTypeAdapter(EggGroup::class.java, EggGroupAdapter)
-        .registerTypeAdapter(StatusEffect::class.java, RegistryElementAdapter<StatusEffect> { Registries.STATUS_EFFECT })
+        .registerTypeAdapter(MobEffect::class.java, RegistryElementAdapter<MobEffect>(BuiltInRegistries::MOB_EFFECT))
         .registerTypeAdapter(NbtItemPredicate::class.java, NbtItemPredicateAdapter)
         .disableHtmlEscaping()
         .enableComplexMapKeySerialization()
@@ -107,7 +109,7 @@ object PokemonSpecies : JsonDataRegistry<Species> {
 
     override val observable = SimpleObservable<PokemonSpecies>()
 
-    private val speciesByIdentifier = hashMapOf<Identifier, Species>()
+    private val speciesByIdentifier = hashMapOf<ResourceLocation, Species>()
     private val speciesByDex = HashBasedTable.create<String, Int, Species>()
 
     val species: Collection<Species>
@@ -130,7 +132,7 @@ object PokemonSpecies : JsonDataRegistry<Species> {
     }
 
     /**
-     * Finds a species by the pathname of their [Identifier].
+     * Finds a species by the pathname of their [ResourceLocation].
      * This method exists for the convenience of finding Cobble default Pokémon.
      * This uses [getByIdentifier] using the [Cobblemon.MODID] as the namespace and the [name] as the path.
      *
@@ -148,12 +150,12 @@ object PokemonSpecies : JsonDataRegistry<Species> {
     fun getByPokedexNumber(ndex: Int, namespace: String = Cobblemon.MODID) = this.speciesByDex.get(namespace, ndex)
 
     /**
-     * Finds a [Species] by its unique [Identifier].
+     * Finds a [Species] by its unique [ResourceLocation].
      *
      * @param identifier The unique [Species.resourceIdentifier] of the [Species].
      * @return The [Species] if existing.
      */
-    fun getByIdentifier(identifier: Identifier) = this.speciesByIdentifier[identifier]
+    fun getByIdentifier(identifier: ResourceLocation) = this.speciesByIdentifier[identifier]
 
     /**
      * Counts the currently loaded species.
@@ -161,6 +163,20 @@ object PokemonSpecies : JsonDataRegistry<Species> {
      * @return The loaded species amount.
      */
     fun count() = this.speciesByIdentifier.size
+
+    /**
+     * Gets a map of dex numbers to species.
+     *
+     * @return The dex numbers map to species.
+     */
+    fun getSpeciesInNamespace(namespace: String = Cobblemon.MODID): MutableMap<Int, Species> = speciesByDex.row(namespace)
+
+    /**
+     * Get a list of loaded namespaces.
+     *
+     * @return The list of loaded namespaces.
+     */
+    fun getNamespaces() = speciesByDex.rowKeySet().toList()
 
     /**
      * Picks a random [Species].
@@ -171,7 +187,7 @@ object PokemonSpecies : JsonDataRegistry<Species> {
      */
     fun random(): Species = this.implemented.random()
 
-    override fun reload(data: Map<Identifier, Species>) {
+    override fun reload(data: Map<ResourceLocation, Species>) {
         this.speciesByIdentifier.clear()
         this.implemented.clear()
         this.speciesByDex.clear()
@@ -187,7 +203,7 @@ object PokemonSpecies : JsonDataRegistry<Species> {
         }
     }
 
-    override fun sync(player: ServerPlayerEntity) {
+    override fun sync(player: ServerPlayer) {
         SpeciesRegistrySyncPacket(species.toList()).sendToPlayer(player)
     }
 

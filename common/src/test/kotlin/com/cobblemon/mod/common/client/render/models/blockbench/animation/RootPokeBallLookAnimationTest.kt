@@ -17,25 +17,25 @@ internal class RootPokeBallLookAnimationTest {
 //
 //        val desiredZ = PI / 3F //PI / 3
 //
-//        val poseStack = MatrixStack()
-//        poseStack.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(zRot))
-//        val yAxisCop = Vec3f.POSITIVE_Y.copy()
+//        val poseStack = PoseStack()
+//        poseStack.multiply(Vec3f.ZP.getRadialQuaternion(zRot))
+//        val yAxisCop = Vec3f.YP.copy()
 //        yAxisCop.transform(poseStack.peek().normalMatrix)
 //        poseStack.multiply(yAxisCop.getRadialQuaternion(yRot))
-//        val xAxisCop = Vec3f.POSITIVE_X.copy()
+//        val xAxisCop = Vec3f.XP.copy()
 //        xAxisCop.transform(poseStack.peek().normalMatrix)
 //        poseStack.multiply(xAxisCop.getRadialQuaternion(xRot))
-//        val zAxis = Vec3f.POSITIVE_Z.copy()
+//        val zAxis = Vec3f.ZP.copy()
 //        zAxis.transform(poseStack.peek().normalMatrix)
 //
 //        println(zAxis.toVec3d())
 //
 //        poseStack.multiply(zAxis.getRadialQuaternion(desiredZ))
-//        val y = Vec3f.POSITIVE_Y.copy()
+//        val y = Vec3f.YP.copy()
 //        y.transform(poseStack.peek().normalMatrix)
 //        val py1 = y.x
 //
-//        val z = Vec3f.POSITIVE_Z.copy()
+//        val z = Vec3f.ZP.copy()
 //        z.transform(poseStack.peek().normalMatrix)
 //        val pz1 = z.x
 //        val pz3 = z.z
@@ -44,10 +44,10 @@ internal class RootPokeBallLookAnimationTest {
 //        val alpha = acos(pz3 / cos(beta))
 //        val gamma = asin(-py1 / cos(beta))
 //
-//        val poseStack2 = MatrixStack()
-//        poseStack2.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(alpha))
-//        poseStack2.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(beta))
-//        poseStack2.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(gamma))
+//        val poseStack2 = PoseStack()
+//        poseStack2.multiply(Vec3f.XP.getRadialQuaternion(alpha))
+//        poseStack2.multiply(Vec3f.YP.getRadialQuaternion(beta))
+//        poseStack2.multiply(Vec3f.ZP.getRadialQuaternion(gamma))
 //
 //        val alphaD = alpha.toDegrees()
 //        val betaD = beta.toDegrees()

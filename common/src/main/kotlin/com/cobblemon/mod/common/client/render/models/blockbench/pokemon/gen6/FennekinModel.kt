@@ -11,13 +11,13 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen6
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class FennekinModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class FennekinModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("fennekin")
     override val head = getPart("head")
     override val foreLeftLeg= getPart("leg_front_left")
@@ -26,14 +26,14 @@ class FennekinModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 1.8F
-    override var portraitTranslation = Vec3d(-0.35, 0.0, 0.0)
+    override var portraitTranslation = Vec3(-0.35, 0.0, 0.0)
     override var profileScale = 0.6F
-    override var profileTranslation = Vec3d(0.0, 0.84, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.84, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("fennekin", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("fennekin", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("fennekin", "blink") }
@@ -42,7 +42,7 @@ class FennekinModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
                 poseTypes = setOf(PoseType.NONE, PoseType.STAND, PoseType.PORTRAIT, PoseType.PROFILE),
                 transformTicks = 10,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("fennekin", "ground_idle")
                 )
@@ -53,7 +53,7 @@ class FennekinModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Quad
                 poseTypes = setOf(PoseType.SWIM, PoseType.WALK),
                 transformTicks = 10,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("fennekin", "ground_walk")
                 )

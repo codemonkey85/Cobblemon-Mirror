@@ -12,10 +12,10 @@ import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.net.messages.client.pasture.ClosePasturePacket
 import com.cobblemon.mod.common.util.getPlayer
 import com.cobblemon.mod.common.util.removeIf
+import net.minecraft.core.BlockPos
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.BlockPos
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.level.ServerLevel
 
 // Need to use this in the interact with pasture block then use links when handling server-side packets
 // to authenticate that they were able to interact.
@@ -28,10 +28,10 @@ object PastureLinkManager {
         links[playerId] = link
     }
 
-    fun getLinkByPlayer(player: ServerPlayerEntity): PastureLink? {
+    fun getLinkByPlayer(player: ServerPlayer): PastureLink? {
         val link = getLinkByPlayerId(player.uuid)
         if (link != null) {
-            if (link.dimension != player.world.dimensionKey.value || !link.pos.isWithinDistance(player.pos, 10.0)) {
+            if (!player.level().dimensionTypeRegistration().`is`(link.dimension) || !link.pos.closerToCenterThan(player.position(), 10.0)) {
                 links.remove(player.uuid)
                 return null
             }
@@ -40,9 +40,9 @@ object PastureLinkManager {
         return link
     }
 
-    fun removeAt(world: ServerWorld, pos: BlockPos) {
+    fun removeAt(world: ServerLevel, pos: BlockPos) {
         links.removeIf { (uuid, pastureLink) ->
-            val shouldRemove = pastureLink.dimension == world.dimensionKey.value && pastureLink.pos == pos
+            val shouldRemove = world.dimensionTypeRegistration().`is`(pastureLink.dimension) && pastureLink.pos == pos
             uuid.getPlayer()?.sendPacket(ClosePasturePacket())
             return@removeIf shouldRemove
         }

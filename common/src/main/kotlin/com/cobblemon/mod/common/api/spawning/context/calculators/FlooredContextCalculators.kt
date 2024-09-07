@@ -9,16 +9,12 @@
 package com.cobblemon.mod.common.api.spawning.context.calculators
 
 import com.cobblemon.mod.common.Cobblemon.config
-import com.cobblemon.mod.common.api.spawning.context.FlooredSpawningContext
-import com.cobblemon.mod.common.api.spawning.context.GroundedSpawningContext
-import com.cobblemon.mod.common.api.spawning.context.LavafloorSpawningContext
-import com.cobblemon.mod.common.api.spawning.context.SeafloorSpawningContext
-import com.cobblemon.mod.common.api.spawning.context.SurfaceSpawningContext
+import com.cobblemon.mod.common.api.spawning.context.*
 import com.cobblemon.mod.common.api.spawning.context.calculators.SpawningContextCalculator.Companion.isAirCondition
 import com.cobblemon.mod.common.api.spawning.context.calculators.SpawningContextCalculator.Companion.isLavaCondition
 import com.cobblemon.mod.common.api.spawning.context.calculators.SpawningContextCalculator.Companion.isSolidCondition
 import com.cobblemon.mod.common.api.spawning.context.calculators.SpawningContextCalculator.Companion.isWaterCondition
-import net.minecraft.block.BlockState
+import net.minecraft.world.level.block.state.BlockState
 
 /**
  * A spawning context calculator that creates some kind of [FlooredSpawningContext]. The shared
@@ -36,7 +32,7 @@ interface FlooredSpawningContextCalculator<T : FlooredSpawningContext> : AreaSpa
 
     override fun fits(input: AreaSpawningInput): Boolean {
         val floorState = input.slice.getBlockState(input.position)
-        val aboveState = input.slice.getBlockState(input.position.up())
+        val aboveState = input.slice.getBlockState(input.position.above())
         return baseCondition(floorState) && surroundingCondition(aboveState)
     }
 }
@@ -58,7 +54,7 @@ object GroundedSpawningContextCalculator : FlooredSpawningContextCalculator<Grou
         return GroundedSpawningContext(
             cause = input.cause,
             world = input.world,
-            position = input.position.toImmutable(),
+            position = input.position.immutable(),
             light = getLight(input),
             skyLight = getSkyLight(input),
             canSeeSky = getCanSeeSky(input),
@@ -86,7 +82,7 @@ object SeafloorSpawningContextCalculator : FlooredSpawningContextCalculator<Seaf
         return SeafloorSpawningContext(
             cause = input.cause,
             world = input.world,
-            position = input.position.toImmutable(),
+            position = input.position.immutable(),
             light = getLight(input),
             skyLight = getSkyLight(input),
             canSeeSky = getCanSeeSky(input),
@@ -114,7 +110,7 @@ object LavafloorSpawningContextCalculator : FlooredSpawningContextCalculator<Lav
         return LavafloorSpawningContext(
             cause = input.cause,
             world = input.world,
-            position = input.position.toImmutable(),
+            position = input.position.immutable(),
             light = getLight(input),
             skyLight = getSkyLight(input),
             canSeeSky = getCanSeeSky(input),
@@ -143,7 +139,7 @@ object SurfaceSpawningContextCalculator : FlooredSpawningContextCalculator<Surfa
         return SurfaceSpawningContext(
             cause = input.cause,
             world = input.world,
-            position = input.position.toImmutable(),
+            position = input.position.immutable(),
             light = getLight(input),
             skyLight = getSkyLight(input),
             canSeeSky = getCanSeeSky(input),

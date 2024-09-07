@@ -8,11 +8,11 @@
 
 package com.cobblemon.mod.common.mechanics
 
-import com.bedrockk.molang.Expression
-import com.cobblemon.mod.common.util.asExpression
+import com.cobblemon.mod.common.api.molang.ExpressionLike
+import com.cobblemon.mod.common.util.asExpressionLike
 
 class PotionsMechanic {
-    val potionRestoreAmount: Expression = "60".asExpression()
-    val superPotionRestoreAmount: Expression = "100".asExpression()
-    val hyperPotionRestoreAmount: Expression = "150".asExpression()
+    val potionRestoreAmount: ExpressionLike = "60".asExpressionLike()
+    val superPotionRestoreAmount: ExpressionLike = "100".asExpressionLike()
+    val hyperPotionRestoreAmount: ExpressionLike = "150".asExpressionLike()
 }

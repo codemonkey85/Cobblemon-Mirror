@@ -9,33 +9,34 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
-import com.cobblemon.mod.common.entity.PoseType.Companion.SWIMMING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isUnderWater
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class DratiniModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class DratiniModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("dratini")
     override val head = getPart("head")
 
     override var portraitScale = 1.66F
-    override var portraitTranslation = Vec3d(-0.48, 0.35, 0.0)
+    override var portraitTranslation = Vec3(-0.48, 0.35, 0.0)
 
     override var profileScale = 0.58F
-    override var profileTranslation = Vec3d(0.14, 0.83, 0.0)
+    override var profileTranslation = Vec3(0.14, 0.83, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var water_idle: PokemonPose
-    lateinit var water_swim: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var water_sleep: PokemonPose
-    lateinit var surface_swim: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walking: CobblemonPose
+    lateinit var water_idle: CobblemonPose
+    lateinit var water_swim: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var water_sleep: CobblemonPose
+    lateinit var surface_swim: CobblemonPose
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("dratini", "blink") }
@@ -43,8 +44,8 @@ class DratiniModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            condition = { !it.isTouchingWater },
-            idleAnimations = arrayOf(
+            condition = { !it.isInWater },
+            animations = arrayOf(
                 bedrock("dratini", "sleep")
             )
         )
@@ -52,8 +53,8 @@ class DratiniModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         water_sleep = registerPose(
             poseName = "water_sleep",
             poseType = PoseType.SLEEP,
-            condition = { it.isTouchingWater },
-            idleAnimations = arrayOf(
+            condition = { it.isInWater },
+            animations = arrayOf(
                 bedrock("dratini", "water_sleep")
             )
         )
@@ -63,7 +64,7 @@ class DratiniModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = STATIONARY_POSES + UI_POSES - PoseType.FLOAT,
             quirks = arrayOf(blink),
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("dratini", "ground_idle")
             )
@@ -74,7 +75,7 @@ class DratiniModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = MOVING_POSES - PoseType.SWIM,
             quirks = arrayOf(blink),
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dratini", "ground_walk")
             )
         )
@@ -83,7 +84,7 @@ class DratiniModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "water_idle",
             poseType = PoseType.FLOAT,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dratini", "water_idle")
             )
         )
@@ -92,7 +93,7 @@ class DratiniModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "water_swim",
             poseType = PoseType.SWIM,
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dratini", "water_swim")
             )
         )
@@ -100,9 +101,9 @@ class DratiniModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         surface_swim = registerPose(
             poseName = "surface_swim",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.MOVING_POSES,
-            condition = { !it.isSubmergedInWater && it.isTouchingWater},
+            condition = { !it.isUnderWater && it.isInWater},
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dratini", "surfacewater_swim")
             )
         )
@@ -110,6 +111,6 @@ class DratiniModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("dratini", "faint") else null
 }

@@ -8,13 +8,13 @@
 
 package com.cobblemon.mod.common.util
 
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.item.ItemStack
 import java.util.function.Predicate
 import java.util.stream.Collectors
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.item.ItemStack
 
-fun PlayerInventory.removeAmountIf(amount: Int, rule: Predicate<ItemStack>) {
-    this.combinedInventory.forEach {
+fun Inventory.removeAmountIf(amount: Int, rule: Predicate<ItemStack>) {
+    this.compartments.forEach {
         var index = 0
         val matches = it.stream()
             .map { a -> Pair(index++, a) }
@@ -25,7 +25,7 @@ fun PlayerInventory.removeAmountIf(amount: Int, rule: Predicate<ItemStack>) {
         while (remaining > 0) {
             val element = matches.removeFirstOrNull() ?: return@forEach
 
-            val result = this.removeStack(element.first, amount)
+            val result = this.removeItem(element.first, amount)
             remaining -= result.count
         }
     }

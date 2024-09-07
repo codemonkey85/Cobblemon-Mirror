@@ -1,0 +1,43 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:healing_machine"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.healing_machine"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.healing_machine.description"
+    },
+    "frame": "task"
+  },
+  "parent": "cobblemon:use_revive",
+  "criteria": {
+    "use_healing_machine": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {}
+          }
+        ],
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": "cobblemon:healing_machine",
+                "state": {
+                  "charge": "6"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

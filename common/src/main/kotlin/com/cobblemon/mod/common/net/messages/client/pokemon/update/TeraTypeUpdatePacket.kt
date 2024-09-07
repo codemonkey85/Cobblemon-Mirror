@@ -12,7 +12,9 @@ import com.cobblemon.mod.common.api.types.tera.TeraType
 import com.cobblemon.mod.common.api.types.tera.TeraTypes
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import com.cobblemon.mod.common.util.readIdentifier
+import com.cobblemon.mod.common.util.writeIdentifier
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Updates the Tera Type of the Pokémon.
@@ -23,7 +25,7 @@ import net.minecraft.network.PacketByteBuf
 class TeraTypeUpdatePacket(pokemon: () -> Pokemon, value: TeraType) : SingleUpdatePacket<TeraType, TeraTypeUpdatePacket>(pokemon, value) {
     override val id = ID
 
-    override fun encodeValue(buffer: PacketByteBuf) {
+    override fun encodeValue(buffer: RegistryFriendlyByteBuf) {
         buffer.writeIdentifier(value.id)
     }
 
@@ -33,6 +35,6 @@ class TeraTypeUpdatePacket(pokemon: () -> Pokemon, value: TeraType) : SingleUpda
 
     companion object {
         val ID = cobblemonResource("tera_type_update")
-        fun decode(buffer: PacketByteBuf) = TeraTypeUpdatePacket(decodePokemon(buffer), TeraTypes.get(buffer.readIdentifier())!!)
+        fun decode(buffer: RegistryFriendlyByteBuf) = TeraTypeUpdatePacket(decodePokemon(buffer), TeraTypes.get(buffer.readIdentifier())!!)
     }
 }

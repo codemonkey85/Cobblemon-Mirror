@@ -10,37 +10,40 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import com.cobblemon.mod.common.util.isUnderWater
+import com.cobblemon.mod.common.util.isInWater
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class DragonairModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class DragonairModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("dragonair")
     override val head = getPart("head")
 
     override var portraitScale = 2.3F
-    override var portraitTranslation = Vec3d(-0.02, 1.58, 0.0)
+    override var portraitTranslation = Vec3(-0.02, 1.58, 0.0)
 
     override var profileScale = 0.65F
-    override var profileTranslation = Vec3d(0.1, 0.9, 0.0)
+    override var profileTranslation = Vec3(0.1, 0.9, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walking: PokemonPose
-    lateinit var water_idle: PokemonPose
-    lateinit var water_swim: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var water_sleep: PokemonPose
-    lateinit var surface_swim: PokemonPose
-    lateinit var surface_float: PokemonPose
-    lateinit var battle_idle: PokemonPose
-    lateinit var hovering: PokemonPose
-    lateinit var flying: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walking: CobblemonPose
+    lateinit var water_idle: CobblemonPose
+    lateinit var water_swim: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var water_sleep: CobblemonPose
+    lateinit var surface_swim: CobblemonPose
+    lateinit var surface_float: CobblemonPose
+    lateinit var battle_idle: CobblemonPose
+    lateinit var hovering: CobblemonPose
+    lateinit var flying: CobblemonPose
 
     val flyingoffset = -12
 
@@ -50,8 +53,8 @@ class DragonairModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         sleep = registerPose(
             poseName = "sleep",
             poseType = PoseType.SLEEP,
-            condition = { !it.isTouchingWater },
-            idleAnimations = arrayOf(
+            condition = { !it.isInWater },
+            animations = arrayOf(
                 bedrock("dragonair", "sleep")
             )
         )
@@ -59,8 +62,8 @@ class DragonairModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         water_sleep = registerPose(
             poseName = "water_sleep",
             poseType = PoseType.SLEEP,
-            condition = { it.isTouchingWater },
-            idleAnimations = arrayOf(
+            condition = { it.isInWater },
+            animations = arrayOf(
                 bedrock("dragonair", "water_sleep")
             )
         )
@@ -69,9 +72,9 @@ class DragonairModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "standing",
             poseTypes = STATIONARY_POSES + UI_POSES - PoseType.FLOAT - PoseType.HOVER,
             quirks = arrayOf(blink),
-            condition = { !it.isBattling && !it.isTouchingWater},
+            condition = { !it.isBattling && !it.isInWater},
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("dragonair", "ground_idle")
             )
@@ -81,9 +84,9 @@ class DragonairModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "walking",
             poseTypes = MOVING_POSES - PoseType.SWIM - PoseType.FLY,
             quirks = arrayOf(blink),
-            condition = {!it.isTouchingWater},
+            condition = {!it.isInWater},
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dragonair", "ground_walk")
             )
         )
@@ -94,7 +97,7 @@ class DragonairModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
                 quirks = arrayOf(blink),
                 condition = { !it.isBattling },
                 transformTicks = 10,
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("dragonair", "water_idle")
                 ),
@@ -109,7 +112,7 @@ class DragonairModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
                 quirks = arrayOf(blink),
                 condition = { !it.isBattling },
                 transformTicks = 10,
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("dragonair", "water_swim")
                 ),
@@ -121,9 +124,9 @@ class DragonairModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         water_idle = registerPose(
             poseName = "water_idle",
             poseType = PoseType.FLOAT,
-            condition = { it.isSubmergedInWater},
+            condition = { it.isUnderWater},
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dragonair", "water_idle")
             )
         )
@@ -131,9 +134,9 @@ class DragonairModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         water_swim = registerPose(
             poseName = "water_swim",
             poseType = PoseType.SWIM,
-            condition = { it.isSubmergedInWater},
+            condition = { it.isUnderWater},
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dragonair", "water_swim")
             )
         )
@@ -141,9 +144,9 @@ class DragonairModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         surface_float = registerPose(
             poseName = "surface_float",
             poseTypes = PoseType.STATIONARY_POSES,
-            condition = { !it.isSubmergedInWater && it.isTouchingWater},
+            condition = { !it.isUnderWater && it.isInWater},
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dragonair", "surfacewater_idle")
             )
         )
@@ -151,9 +154,9 @@ class DragonairModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
         surface_swim = registerPose(
             poseName = "surface_swim",
             poseTypes = PoseType.MOVING_POSES,
-            condition = { !it.isSubmergedInWater && it.isTouchingWater},
+            condition = { !it.isUnderWater && it.isInWater},
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dragonair", "surfacewater_swim")
             )
         )
@@ -163,7 +166,7 @@ class DragonairModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("dragonair", "battle_idle")
             )
         )
@@ -171,6 +174,6 @@ class DragonairModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("dragonair", "faint") else null
 }

@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.client.net.pasture
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.gui.pc.PCGUI
 import com.cobblemon.mod.common.net.messages.client.pasture.ClosePasturePacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 /**
  * Handles the request to close the pasture GUI.
@@ -21,12 +21,12 @@ import net.minecraft.client.MinecraftClient
  */
 object ClosePastureHandler: ClientNetworkPacketHandler<ClosePasturePacket> {
 
-    override fun handle(packet: ClosePasturePacket, client: MinecraftClient) {
-        if (client.currentScreen !is PCGUI) {
+    override fun handle(packet: ClosePasturePacket, client: Minecraft) {
+        if (client.screen !is PCGUI) {
             return
         }
 
-        val pc = client.currentScreen as PCGUI
+        val pc = client.screen as PCGUI
         pc.configuration.exitFunction.invoke(pc)
     }
 

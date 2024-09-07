@@ -20,6 +20,37 @@
                     "#cobblemon:is_swamp"
                 ]
             }
+        },
+        {
+            "id": "whiscash-fishing-1",
+            "pokemon": "whiscash",
+            "type": "pokemon",
+            "context": "fishing",
+            "bucket": "common",
+            "level": "30-47",
+            "weight": 1.0,
+            "condition": {
+                "minLureLevel": 2,
+                "biomes": [
+                    "#cobblemon:is_swamp"
+                ]
+            }
+        },
+        {
+            "id": "whiscash-fishing-1",
+            "pokemon": "whiscash whiscash_nero",
+            "type": "pokemon",
+            "context": "fishing",
+            "bucket": "common",
+            "level": "30-47",
+            "weight": 0.01,
+            "condition": {
+                "minLureLevel": 2,
+                "bait": "lum_berry",
+                "biomes": [
+                    "#cobblemon:is_swamp"
+                ]
+            }
         }
     ]
 }

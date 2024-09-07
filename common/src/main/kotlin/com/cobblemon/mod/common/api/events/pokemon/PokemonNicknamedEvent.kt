@@ -10,8 +10,8 @@ package com.cobblemon.mod.common.api.events.pokemon
 
 import com.cobblemon.mod.common.api.events.Cancelable
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Event fired when a player attempts to nickname a Pokémon. The nickname that will be applied can be edited, or
@@ -22,7 +22,7 @@ import net.minecraft.text.MutableText
  * @author Hiroku
  * @since April 22nd, 2023
  */
-class PokemonNicknamedEvent(val player: ServerPlayerEntity, val pokemon: Pokemon, var nickname: MutableText?): Cancelable() {
+class PokemonNicknamedEvent(val player: ServerPlayer, val pokemon: Pokemon, var nickname: MutableComponent?): Cancelable() {
     /** A shortcut to using [nickname].getString(). Learn how Text works! */
     val nicknameString: String?
         get() = nickname?.string

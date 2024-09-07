@@ -8,15 +8,15 @@
 
 package com.cobblemon.mod.common.client.sound
 
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.sound.SoundInstance
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.BlockPos
+import net.minecraft.client.Minecraft
+import net.minecraft.client.resources.sounds.SoundInstance
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.core.BlockPos
 
 object CancellableSoundController {
 
-    private val manager = MinecraftClient.getInstance().soundManager
-    private val playingSounds: MutableMap<BlockPos, MutableMap<Identifier, SoundInstance>> = emptyMap<BlockPos, MutableMap<Identifier, SoundInstance>>().toMutableMap()
+    private val manager = Minecraft.getInstance().soundManager
+    private val playingSounds: MutableMap<BlockPos, MutableMap<ResourceLocation, SoundInstance>> = emptyMap<BlockPos, MutableMap<ResourceLocation, SoundInstance>>().toMutableMap()
 
     /** Start a new  and pause all [filteredCategories] sounds currently playing. */
     fun playSound(newSound: CancellableSoundInstance) {
@@ -25,22 +25,22 @@ object CancellableSoundController {
         var idMap = playingSounds[newSound.pos]
         var soundInstance : SoundInstance? = null
         if(idMap == null) {
-            idMap = emptyMap<Identifier, SoundInstance>().toMutableMap()
+            idMap = emptyMap<ResourceLocation, SoundInstance>().toMutableMap()
         } else {
-            soundInstance = idMap[newSound.id]
+            soundInstance = idMap[newSound.location]
         }
         if(soundInstance != null) {
             manager.stop(soundInstance)
         }
-        idMap[newSound.id] = newSound
+        idMap[newSound.location] = newSound
         playingSounds[newSound.pos] = idMap
     }
 
     fun stopSound(soundInstance: CancellableSoundInstance) {
-        this.stopSound(soundInstance.pos, soundInstance.sound.identifier)//import com.cobblemon.mod.common.client.sound.com.cobblemon.mod.common.client.sound.CancellableSoundInstance
+        this.stopSound(soundInstance.pos, soundInstance.sound.location)//import com.cobblemon.mod.common.client.sound.com.cobblemon.mod.common.client.sound.CancellableSoundInstance
 
     }
-    fun stopSound(blockPos: BlockPos, identifier: Identifier) {
+    fun stopSound(blockPos: BlockPos, identifier: ResourceLocation) {
         val idMap = playingSounds.get(blockPos)
         if(idMap != null) {
             val soundInstance = idMap.get(identifier)

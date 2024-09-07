@@ -8,13 +8,13 @@
 
 package com.cobblemon.mod.common.api.storage
 
-import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.CompoundTag
 
 data class StoreCoordinates<T : StorePosition>(
     val store: PokemonStore<T>,
     val position: T
 ) {
-    fun saveToNBT(nbt: NbtCompound) {
+    fun saveToNBT(nbt: CompoundTag) {
         store.savePositionToNBT(position, nbt)
     }
 

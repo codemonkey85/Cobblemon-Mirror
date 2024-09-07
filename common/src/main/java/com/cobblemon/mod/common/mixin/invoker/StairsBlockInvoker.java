@@ -8,16 +8,16 @@
 
 package com.cobblemon.mod.common.mixin.invoker;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.StairsBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(StairsBlock.class)
+@Mixin(StairBlock.class)
 public interface StairsBlockInvoker {
     @Invoker("<init>")
-    static StairsBlock cobblemon$create(BlockState baseBlockState, AbstractBlock.Settings settings) {
+    static StairBlock cobblemon$create(BlockState baseBlockState, BlockBehaviour.Properties settings) {
         throw new UnsupportedOperationException();
     }
 }

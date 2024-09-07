@@ -10,24 +10,23 @@ package com.cobblemon.mod.common.api.fossil
 
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.pokemon.evolution.predicate.NbtItemPredicate
-import net.minecraft.item.ItemStack
-import net.minecraft.registry.Registries
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
-import net.minecraft.util.StringIdentifiable
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.StringRepresentable
+import net.minecraft.world.item.ItemStack
 
 class Fossil(
-    identifier: Identifier,
+    identifier: ResourceLocation,
     val result: PokemonProperties,
     val fossils: List<NbtItemPredicate>
-): StringIdentifiable {
+): StringRepresentable {
 
     @Transient
-    var identifier: Identifier = identifier
+    var identifier: ResourceLocation = identifier
         internal set
 
-    override fun asString(): String {
+    override fun getSerializedName(): String {
         return identifier.toString()
     }
 
@@ -35,7 +34,7 @@ class Fossil(
      * Gets the name of the fossil.
      * @return The name of the fossil.
      */
-    fun getName(): MutableText = Text.translatable("${identifier.namespace}.fossil.${identifier.path}.name")
+    fun getName(): MutableComponent = Component.translatable("${identifier.namespace}.fossil.${identifier.path}.name")
 
     /**
      * Whether the fossil ingredients match this fossil.
@@ -48,7 +47,7 @@ class Fossil(
         }
 
         return this.fossils.all { fossil ->
-            ingredients.any { fossil.item.fits(it.item, Registries.ITEM) && fossil.nbt.test(it) }
+            ingredients.any { fossil.test(it) }
         }
     }
 
@@ -63,8 +62,8 @@ class Fossil(
         }
 
         return ingredients.all { ingredient ->
-            ingredients.count { item -> ingredient.itemMatches(item.registryEntry) }  <=
-                    this.fossils.count { fossil -> fossil.item.fits(ingredient.item, Registries.ITEM) && fossil.nbt.test(ingredient) }
+            ingredients.count { item -> ingredient.`is`(item.itemHolder) }  <=
+                    this.fossils.count { fossil -> fossil.test(ingredient) }
         }
     }
 
@@ -74,7 +73,7 @@ class Fossil(
      * @return True if the [ItemStack] is an ingredient, false otherwise.
      */
     fun isIngredient(itemStack: ItemStack): Boolean {
-        return this.fossils.any { it.item.fits(itemStack.item, Registries.ITEM) && it.nbt.test(itemStack) }
+        return this.fossils.any { it.test(itemStack) }
     }
 
 }

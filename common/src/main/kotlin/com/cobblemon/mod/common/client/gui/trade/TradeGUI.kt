@@ -31,14 +31,14 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
-import java.util.UUID
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.client.util.InputUtil
-import net.minecraft.sound.SoundEvent
-import net.minecraft.text.MutableText
+import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.sounds.SoundEvent
+import java.util.*
 
 /**
  * Notes for Village:
@@ -49,7 +49,7 @@ import net.minecraft.text.MutableText
 class TradeGUI(
     val trade: ClientTrade,
     val traderId: UUID,
-    val traderName: MutableText,
+    val traderName: MutableComponent,
     val traderParty: MutableList<TradeablePokemon?>,
     val party: MutableList<TradeablePokemon?>
 ): Screen(lang("trade.gui.title")) {
@@ -94,7 +94,7 @@ class TradeGUI(
 
     init {
         trade.cancelEmitter.subscribe {
-            super.close()
+            super.onClose()
             // Maybe a sound
         }
 
@@ -104,7 +104,7 @@ class TradeGUI(
             val theirTradedPokemon = traderParty.find { it?.pokemonId == pokemonId2 }
             if (myTradedPokemon == null || theirTradedPokemon == null) {
                 CobblemonNetwork.sendToServer(CancelTradePacket())
-                return@subscribe close()
+                return@subscribe onClose()
             }
             val i1 = party.indexOf(myTradedPokemon)
             val i2 = traderParty.indexOf(theirTradedPokemon)
@@ -117,7 +117,7 @@ class TradeGUI(
             trade.oppositeAcceptedMyOffer.set(false)
             setOfferedPokemon(pokemon = null, isOpposing = true)
             setOfferedPokemon(pokemon = null, isOpposing = false)
-            clearAndInit()
+            rebuildWidgets()
             // Make a sound maybe
         }
         trade.oppositeOffer.subscribe { newOffer: Pokemon? ->
@@ -137,16 +137,16 @@ class TradeGUI(
         val y = (height - BASE_HEIGHT) / 2
 
         // Exit Button
-        this.addDrawableChild(
+        this.addRenderableWidget(
             ExitButton(pX = x + 265, pY = y + 6) {
                 playSound(CobblemonSounds.GUI_CLICK)
-                close()
-                MinecraftClient.getInstance().setScreen(null)
+                onClose()
+                Minecraft.getInstance().setScreen(null)
             }
         )
 
         // Trade Button
-        this.addDrawableChild(
+        this.addRenderableWidget(
             TradeButton(
                 x = x + 120,
                 y = y + 119,
@@ -195,7 +195,7 @@ class TradeGUI(
                         CobblemonNetwork.sendToServer(UpdateTradeOfferPacket(pk?.let { it.pokemonId to PartyPosition(partyIndex) }))
                     }
                 }
-            ).also { widget -> addDrawableChild(widget) }
+            ).also { widget -> addRenderableWidget(widget) }
         }
 
         // Opposing Party
@@ -220,17 +220,17 @@ class TradeGUI(
                 parent = this,
                 isOpposing = true,
                 onPress = {}
-            ).also { widget -> addDrawableChild(widget) }
+            ).also { widget -> addRenderableWidget(widget) }
         }
 
         setOfferedPokemon(pokemon = offeredPokemon, isOpposing = false)
         setOfferedPokemon(pokemon = opposingOfferedPokemon, isOpposing = true)
     }
 
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val x = (width - BASE_WIDTH) / 2
         val y = (height - BASE_HEIGHT) / 2
-        val matrices = context.matrices
+        val matrices = context.pose()
 
         // Render Background Resource
         val backgroundX = x + 68
@@ -321,7 +321,7 @@ class TradeGUI(
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
-            text = MinecraftClient.getInstance().session.username.text().bold(),
+            text = Minecraft.getInstance().user.name.text().bold(),
             x = x + 57,
             y = y - 10.5,
             centered = true,
@@ -345,20 +345,20 @@ class TradeGUI(
             val itemX = x + 50
             val itemY = y + 125
             val itemHovered = mouseX.toFloat() in (itemX.toFloat()..(itemX.toFloat() + 16)) && mouseY.toFloat() in (itemY.toFloat()..(itemY.toFloat() + 16))
-            if (itemHovered) context.drawItemTooltip(MinecraftClient.getInstance().textRenderer, offeredPokemon!!.heldItemNoCopy(), mouseX, mouseY)
+            if (itemHovered) context.renderTooltip(Minecraft.getInstance().font, offeredPokemon!!.heldItemNoCopy(), mouseX, mouseY)
         }
 
         if (opposingOfferedPokemon != null && !opposingOfferedPokemon!!.heldItemNoCopy().isEmpty) {
             val itemX = x + 227
             val itemY = y + 125
             val itemHovered = mouseX.toFloat() in (itemX.toFloat()..(itemX.toFloat() + 16)) && mouseY.toFloat() in (itemY.toFloat()..(itemY.toFloat() + 16))
-            if (itemHovered) context.drawItemTooltip(MinecraftClient.getInstance().textRenderer, opposingOfferedPokemon!!.heldItemNoCopy(), mouseX, mouseY)
+            if (itemHovered) context.renderTooltip(Minecraft.getInstance().font, opposingOfferedPokemon!!.heldItemNoCopy(), mouseX, mouseY)
         }
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
         when (keyCode) {
-            InputUtil.GLFW_KEY_ESCAPE -> {
+            InputConstants.KEY_ESCAPE -> {
 //                playSound(CobblemonSounds.PC_OFF)
                 CancelTradePacket().sendToServer()
             }
@@ -380,9 +380,9 @@ class TradeGUI(
         if (ticksElapsed % 6 == 0) readyProgress = if (readyProgress == READY_PROGRESS_LIMIT) 0 else readyProgress + 1
     }
 
-    override fun close() {
+    override fun onClose() {
         CobblemonNetwork.sendToServer(CancelTradePacket())
-        super.close()
+        super.onClose()
     }
 
     private fun setOfferedPokemon(pokemon: Pokemon?, isOpposing: Boolean = false) {
@@ -419,12 +419,12 @@ class TradeGUI(
     }
 
     private fun playSound(soundEvent: SoundEvent) {
-        MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(soundEvent, 1.0F))
+        Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))
     }
 
-    private fun renderPokemonInfo(pokemon: Pokemon?, isOpposing: Boolean, context: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+    private fun renderPokemonInfo(pokemon: Pokemon?, isOpposing: Boolean, context: GuiGraphics, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         if (pokemon != null) {
-            val matrices = context.matrices
+            val matrices = context.pose()
             // Level
             val levelXOffset = if (isOpposing) 117 else 0
             drawScaledText(
@@ -449,7 +449,7 @@ class TradeGUI(
             val nameXOffset = if (isOpposing) 75 else 0
             val ballResource = cobblemonResource("textures/item/poke_balls/" + pokemon.caughtBall.name.path + ".png")
             blitk(
-                matrixStack = context.matrices,
+                matrixStack = context.pose(),
                 texture = ballResource,
                 x = (x + 73.5 + nameXOffset) / SCALE,
                 y = (y + 12) / SCALE,
@@ -486,9 +486,9 @@ class TradeGUI(
             val itemX = x + (if (isOpposing) 227 else 50)
             val itemY = y + 125
             if (!heldItem.isEmpty) {
-                val textRenderer = MinecraftClient.getInstance().textRenderer
-                context.drawItem(heldItem, itemX, itemY)
-                context.drawItemInSlot(textRenderer, heldItem, itemX, itemY)
+                val textRenderer = Minecraft.getInstance().font
+                context.renderItem(heldItem, itemX, itemY)
+                context.renderItemDecorations(textRenderer, heldItem, itemX, itemY)
             }
 
             // Shiny Icon
@@ -681,7 +681,7 @@ class TradeGUI(
             )
         } else {
             blitk(
-                matrixStack = context.matrices,
+                matrixStack = context.pose(),
                 texture = typeSpacerResource,
                 x = (x + (if (isOpposing) 153 else 73)) / SCALE,
                 y = (y + 113.5) / SCALE,
@@ -694,7 +694,7 @@ class TradeGUI(
         }
     }
 
-    private fun renderInfoLabels(context: DrawContext, x: Int, y: Int) {
+    private fun renderInfoLabels(context: GuiGraphics, x: Int, y: Int) {
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,

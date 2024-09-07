@@ -1,0 +1,117 @@
+{
+	"parent": "cobblemon:harvest_apricorn_seed",
+	"display": {
+		"icon": {
+			"id": "cobblemon:yellow_apricorn_seed"
+		},
+		"title": {
+			"translate": "advancements.cobblemon.rainbow_apricorns"
+		},
+		"description": {
+			"translate": "advancements.cobblemon.rainbow_apricorns.description"
+		},
+		"frame": "goal"
+	},
+	"criteria": {
+		"place_black": {
+			"conditions": {
+				"location": [
+					{
+					"block": "cobblemon:black_apricorn_sapling",
+					"condition": "minecraft:block_state_property"
+					}
+				]
+			},
+			"trigger": "minecraft:placed_block"
+		},
+		"place_blue": {
+			"conditions": {
+				"location": [
+					{
+					"block": "cobblemon:blue_apricorn_sapling",
+					"condition": "minecraft:block_state_property"
+					}
+				]
+			},
+			"trigger": "minecraft:placed_block"
+		},
+		"place_green": {
+			"conditions": {
+				"location": [
+					{
+					"block": "cobblemon:green_apricorn_sapling",
+					"condition": "minecraft:block_state_property"
+					}
+				]
+			},
+			"trigger": "minecraft:placed_block"
+		},
+		"place_pink": {
+			"conditions": {
+				"location": [
+					{
+					"block": "cobblemon:pink_apricorn_sapling",
+					"condition": "minecraft:block_state_property"
+					}
+				]
+			},
+			"trigger": "minecraft:placed_block"
+		},
+		"place_red": {
+			"conditions": {
+				"location": [
+					{
+					"block": "cobblemon:red_apricorn_sapling",
+					"condition": "minecraft:block_state_property"
+					}
+				]
+			},
+			"trigger": "minecraft:placed_block"
+		},
+		"place_white": {
+			"conditions": {
+				"location": [
+					{
+					"block": "cobblemon:white_apricorn_sapling",
+					"condition": "minecraft:block_state_property"
+					}
+				]
+			},
+			"trigger": "minecraft:placed_block"
+		},
+		"place_yellow": {
+			"conditions": {
+				"location": [
+					{
+					"block": "cobblemon:yellow_apricorn_sapling",
+					"condition": "minecraft:block_state_property"
+					}
+				]
+			},
+			"trigger": "minecraft:placed_block"
+		}
+	},
+	"requirements": [
+		[
+			"place_black"
+		],
+		[
+			"place_blue"
+		],
+		[
+			"place_green"
+		],
+		[
+			"place_pink"
+		],
+		[
+			"place_red"
+		],
+		[
+			"place_white"
+		],
+		[
+			"place_yellow"
+		]
+	]
+}

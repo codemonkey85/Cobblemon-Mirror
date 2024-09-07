@@ -9,10 +9,10 @@
 package com.cobblemon.mod.common.api.data
 
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
-import net.minecraft.resource.ResourceManager
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.packs.PackType
+import net.minecraft.server.packs.resources.ResourceManager
 
 /**
  * A registry with data provided by a resource or data pack.
@@ -23,14 +23,14 @@ import net.minecraft.util.Identifier
 interface DataRegistry {
 
     /**
-     * The unique [Identifier] of this registry.
+     * The unique [ResourceLocation] of this registry.
      */
-    val id: Identifier
+    val id: ResourceLocation
 
     /**
-     * The expected [ResourceType].
+     * The expected [PackType].
      */
-    val type: ResourceType
+    val type: PackType
 
     /**
      * An observable that emits whenever this registry has finished reloading.
@@ -47,8 +47,8 @@ interface DataRegistry {
     /**
      * Syncs this registry to a player when requested by the server.
      *
-     * @param player The [ServerPlayerEntity] being synchronized to the server.
+     * @param player The [ServerPlayer] being synchronized to the server.
      */
-    fun sync(player: ServerPlayerEntity)
+    fun sync(player: ServerPlayer)
 
 }

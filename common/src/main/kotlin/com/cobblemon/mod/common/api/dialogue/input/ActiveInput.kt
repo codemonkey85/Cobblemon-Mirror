@@ -26,12 +26,12 @@ class ActiveInput(
     val dialogueInput: DialogueInput
 ) {
     val inputId = UUID.randomUUID()
-    val startTime = server()!!.overworld.time
+    val startTime = server()!!.overworld().gameTime
 
     val struct = toMoLangStruct()
 
     fun handle(input: String) {
-        val secondsToChoose = (server()!!.overworld.time - startTime) / 20F
+        val secondsToChoose = (server()!!.overworld().gameTime - startTime) / 20F
         activeDialogue.runtime.environment.setSimpleVariable("seconds_taken_to_input", DoubleValue(secondsToChoose))
         dialogueInput.handle(this, input)
     }

@@ -8,10 +8,10 @@
 
 package com.cobblemon.mod.common
 
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.render.model.BakedModel
-import net.minecraft.client.util.ModelIdentifier
-import net.minecraft.util.Identifier
+import net.minecraft.client.Minecraft
+import net.minecraft.client.resources.model.BakedModel
+import net.minecraft.client.resources.model.ModelResourceLocation
+import net.minecraft.resources.ResourceLocation
 
 /**
  * Contains information for forcing a model to be baked
@@ -20,10 +20,10 @@ import net.minecraft.util.Identifier
  * @param modelIdentifier The identifier that the BakedModel will be registered to
  */
 data class BakingOverride(
-    val modelLocation: Identifier,
-    val modelIdentifier: ModelIdentifier
+    val modelLocation: ResourceLocation,
+    val modelIdentifier: ModelResourceLocation
 ) {
     fun getModel(): BakedModel {
-        return MinecraftClient.getInstance().bakedModelManager.getModel(modelIdentifier)
+        return Minecraft.getInstance().modelManager.getModel(modelIdentifier)
     }
 }

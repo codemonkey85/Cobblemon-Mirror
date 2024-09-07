@@ -8,19 +8,31 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.quirk
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityModel
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
-import net.minecraft.entity.Entity
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 
-abstract class ModelQuirk<T : Entity, D : QuirkData<T>> {
+/**
+ * An active 'quirk' of a model that performs some combination of behaviours on a rendered model. This is mainly
+ * implemented via [SimpleQuirk] where a set of animations play at random times, but technically can be any quirky
+ * behaviour of a model.
+ *
+ * It is parameterized by what kind of [QuirkData] is needed once a quirk is started.
+ *
+ * @author Hiroku
+ * @since September 30th, 2022
+ */
+abstract class ModelQuirk<D : QuirkData> {
     abstract fun createData(): D
-    protected abstract fun tick(state: PoseableEntityState<T>, data: D)
-    fun tick(entity: T?, model: PoseableEntityModel<T>, state: PoseableEntityState<T>, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
+    protected abstract fun apply(context: RenderContext, state: PosableState, data: D)
+
+    fun apply(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float, intensity: Float) {
         val data = getOrCreateData(state)
-        tick(state, data)
-        data.run(entity, model, state, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, intensity)
+        apply(context, state, data)
+        data.run(context, model, state, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, intensity)
     }
-    fun getOrCreateData(state: PoseableEntityState<T>): D {
+
+    fun getOrCreateData(state: PosableState): D {
         return state.quirks.getOrPut(this, this::createData) as D
     }
 }

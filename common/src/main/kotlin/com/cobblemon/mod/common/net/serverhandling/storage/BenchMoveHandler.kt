@@ -16,10 +16,10 @@ import com.cobblemon.mod.common.net.messages.client.storage.pc.ClosePCPacket
 import com.cobblemon.mod.common.net.messages.server.BenchMovePacket
 import com.cobblemon.mod.common.util.party
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object BenchMoveHandler : ServerNetworkPacketHandler<BenchMovePacket> {
-    override fun handle(packet: BenchMovePacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: BenchMovePacket, server: MinecraftServer, player: ServerPlayer) {
         val pokemonStore: PokemonStore<*> = if (packet.isParty) {
             player.party()
         } else {
@@ -28,15 +28,15 @@ object BenchMoveHandler : ServerNetworkPacketHandler<BenchMovePacket> {
 
         val pokemon = pokemonStore[packet.uuid] ?: return
 
-        if (pokemon.moveSet.none { it.template == packet.oldMove } || pokemon.moveSet.any { it.template == packet.newMove }) {
+        if (pokemon.moveSet.getMovesWithNulls().none { it?.template == packet.oldMove } || pokemon.moveSet.any { it.template == packet.newMove }) {
             // Something inconsistent in the information they're sending, better give them an update on their moveset
             // in case they're just out of date somehow.
             pokemon.moveSet.update()
             return
         }
 
-        if (packet.newMove !in pokemon.allAccessibleMoves) {
-            LOGGER.warn("${player.name} tried to bench ${packet.oldMove.name} for ${packet.newMove.name} but it doesn't have ${packet.newMove.name} learned. Could be a hacker!")
+        if (packet.newMove != null && packet.newMove !in pokemon.allAccessibleMoves) {
+            LOGGER.warn("${player.name} tried to bench ${packet.oldMove?.name} for ${packet.newMove.name} but it doesn't have ${packet.newMove.name} learned. Could be a hacker!")
             return
         }
 

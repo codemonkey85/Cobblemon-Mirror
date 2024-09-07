@@ -8,15 +8,15 @@
 
 package com.cobblemon.mod.common.world.placementmodifier
 
-import com.mojang.serialization.Codec
+import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.BlockPos
+import net.minecraft.util.RandomSource
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate
+import net.minecraft.world.level.levelgen.placement.PlacementContext
+import net.minecraft.world.level.levelgen.placement.PlacementModifier
 import java.util.stream.Stream
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.random.Random
-import net.minecraft.world.gen.blockpredicate.BlockPredicate
-import net.minecraft.world.gen.feature.FeaturePlacementContext
-import net.minecraft.world.gen.placementmodifier.PlacementModifier
 
 /**
  * It's like the count placement modifier, but conditional. If condition fails, doesn't alter the stream.
@@ -29,19 +29,20 @@ class ConditionalCountPlacementModifier(
     val count: Int
 ) : PlacementModifier() {
     companion object {
-        val MODIFIER_CODEC: Codec<ConditionalCountPlacementModifier> = RecordCodecBuilder.create { instance ->
+        val MODIFIER_CODEC: MapCodec<ConditionalCountPlacementModifier> = RecordCodecBuilder.mapCodec { instance ->
             instance
                 .group(
-                    BlockPredicate.BASE_CODEC.fieldOf("predicate").forGetter { it.predicate },
+                    BlockPredicate.CODEC.fieldOf("predicate").forGetter { it.predicate },
                     PrimitiveCodec.INT.fieldOf("count").forGetter { it.count }
                 )
                 .apply(instance, ::ConditionalCountPlacementModifier)
         }
     }
 
-    override fun getType() = CobblemonPlacementModifierTypes.CONDITIONAL_COUNT
-    override fun getPositions(context: FeaturePlacementContext, random: Random, pos: BlockPos): Stream<BlockPos> {
-        return if (predicate.test(context.world, pos)) {
+    override fun type() = CobblemonPlacementModifierTypes.CONDITIONAL_COUNT
+
+    override fun getPositions(context: PlacementContext, random: RandomSource, pos: BlockPos): Stream<BlockPos> {
+        return if (predicate.test(context.level, pos)) {
             val new = mutableListOf<BlockPos>()
             repeat(times = count) { new.add(pos) }
             new.stream()

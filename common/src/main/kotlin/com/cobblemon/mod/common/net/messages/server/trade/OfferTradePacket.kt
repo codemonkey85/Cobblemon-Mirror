@@ -10,17 +10,19 @@ package com.cobblemon.mod.common.net.messages.server.trade
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.readUUID
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
-import net.minecraft.network.PacketByteBuf
 
 class OfferTradePacket(val offeredPlayerId: UUID) : NetworkPacket<OfferTradePacket> {
     companion object {
         val ID = cobblemonResource("offer_trade")
-        fun decode(buffer: PacketByteBuf) = OfferTradePacket(buffer.readUuid())
+        fun decode(buffer: RegistryFriendlyByteBuf) = OfferTradePacket(buffer.readUUID())
     }
     override val id = ID
 
-    override fun encode(buffer: PacketByteBuf) {
-        buffer.writeUuid(offeredPlayerId)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(offeredPlayerId)
     }
 }

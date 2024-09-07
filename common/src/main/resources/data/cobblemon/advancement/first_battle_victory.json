@@ -1,0 +1,35 @@
+{
+  "parent": "cobblemon:craft_poke_ball",
+  "display": {
+    "icon": {
+      "id": "cobblemon:black_belt"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.first_battle_victory"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.first_battle_victory.description"
+    },
+    "frame": "task",
+	"show_toast": true,
+	"announce_to_chat": true,
+	"hidden": false
+  },
+  "criteria": {
+    "win": {
+      "trigger": "cobblemon:battles_won",
+      "conditions": {
+        "count": 1,
+        "battle_types": [
+          "pvp"
+        ]
+      }
+    }
+  },
+	"requirements": [
+		[
+			"win"
+		]
+	],
+  "sends_telemetry_event": false
+}

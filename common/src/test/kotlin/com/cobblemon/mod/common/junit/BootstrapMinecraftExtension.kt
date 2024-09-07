@@ -8,15 +8,15 @@
 
 package com.cobblemon.mod.common.junit
 
-import net.minecraft.Bootstrap
 import net.minecraft.SharedConstants
+import net.minecraft.server.Bootstrap
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.Extension
 import org.junit.jupiter.api.extension.ExtensionContext
 
 class BootstrapMinecraftExtension : Extension, BeforeAllCallback {
     override fun beforeAll(context: ExtensionContext?) {
-        SharedConstants.createGameVersion()
-        Bootstrap.initialize()
+        SharedConstants.tryDetectVersion()
+        Bootstrap.bootStrap()
     }
 }

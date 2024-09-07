@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.api.pokeball.catching
 import com.cobblemon.mod.common.api.pokeball.catching.calculators.CaptureCalculator
 import com.cobblemon.mod.common.pokeball.PokeBall
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
 
 /**
  * A modifier responsible for handling any catch rate calculations a [PokeBall] may impact in a [CaptureCalculator].

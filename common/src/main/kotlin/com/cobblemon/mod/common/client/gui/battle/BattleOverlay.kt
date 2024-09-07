@@ -9,7 +9,8 @@
 package com.cobblemon.mod.common.client.gui.battle
 
 import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.api.gui.drawPortraitPokemon
+import com.cobblemon.mod.common.api.gui.drawPosablePortrait
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.scheduling.Schedulable
 import com.cobblemon.mod.common.api.scheduling.SchedulingTracker
 import com.cobblemon.mod.common.api.text.bold
@@ -23,36 +24,39 @@ import com.cobblemon.mod.common.client.keybind.boundKey
 import com.cobblemon.mod.common.client.keybind.keybinds.PartySendBinding
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.getDepletableRedGreen
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokeBallModelRepository
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.pokemon.status.PersistentStatus
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
+import com.mojang.blaze3d.platform.Lighting
 import com.mojang.blaze3d.systems.RenderSystem
 import java.lang.Double.max
 import java.lang.Double.min
 import java.util.UUID
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.hud.InGameHud
-import net.minecraft.client.gui.screen.ChatScreen
-import net.minecraft.client.render.DiffuseLighting
-import net.minecraft.client.render.LightmapTextureManager
-import net.minecraft.client.render.OverlayTexture
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.MutableText
-import net.minecraft.util.math.MathHelper.ceil
-import net.minecraft.util.math.RotationAxis
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.client.renderer.RenderType
+import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.util.Mth.ceil
+import com.mojang.math.Axis
+import net.minecraft.client.DeltaTracker
+import net.minecraft.client.gui.Gui
+import net.minecraft.client.gui.screens.ChatScreen
+import net.minecraft.client.renderer.LightTexture
 import org.joml.Vector3f
 
-class BattleOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.getInstance().itemRenderer), Schedulable {
+class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
     companion object {
         const val MAX_OPACITY = 1.0
         const val MIN_OPACITY = 0.5
@@ -77,6 +81,8 @@ class BattleOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.g
         val battleInfoRole = cobblemonResource("textures/gui/battle/battle_info_role.png")
         val battleInfoRoleFlipped = cobblemonResource("textures/gui/battle/battle_info_role_flipped.png")
         val battleInfoUnderlay = cobblemonResource("textures/gui/battle/battle_info_underlay.png")
+        val seenIndicator = cobblemonResource("textures/gui/battle/battle_seen_indicator.png")
+        val caughtIndicator = cobblemonResource("textures/gui/battle/battle_seen_indicator.png")
     }
 
     var opacity = MIN_OPACITY
@@ -89,7 +95,8 @@ class BattleOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.g
 
     override val schedulingTracker = SchedulingTracker()
 
-    override fun render(context: DrawContext, tickDelta: Float) {
+    override fun render(context: GuiGraphics, tickCounter: DeltaTracker) {
+        val tickDelta = tickCounter.getGameTimeDeltaPartialTick(false)
         schedulingTracker.update(tickDelta / 20F)
         passedSeconds += tickDelta / 20
         if (passedSeconds > 100) {
@@ -102,26 +109,26 @@ class BattleOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.g
             min(opacity + tickDelta * OPACITY_CHANGE_PER_SECOND, MAX_OPACITY)
         }
 
-        val playerUUID = MinecraftClient.getInstance().player?.uuid ?: return
+        val playerUUID = Minecraft.getInstance().player?.uuid ?: return
         val side1 = if (battle.side1.actors.any { it.uuid == playerUUID }) battle.side1 else battle.side2
         val side2 = if (side1 == battle.side1) battle.side2 else battle.side1
 
-        side1.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, true, index) }
-        side2.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, false, index) }
+        side1.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, true, index, PokedexEntryProgress.NONE) }
+        side2.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, false, index, battle.knowledge) }
 
-        if (MinecraftClient.getInstance().currentScreen !is BattleGUI && battle.mustChoose) {
+        if (Minecraft.getInstance().screen !is BattleGUI && battle.mustChoose) {
             val textOpacity = PROMPT_TEXT_OPACITY_CURVE(passedSeconds)
             drawScaledText(
                 context = context,
-                text = battleLang("ui.actions_label", PartySendBinding.boundKey().localizedText),
-                x = MinecraftClient.getInstance().window.scaledWidth / 2,
-                y = MinecraftClient.getInstance().window.scaledHeight / 5,
+                text = battleLang("ui.actions_label", PartySendBinding.boundKey().displayName),
+                x = Minecraft.getInstance().window.guiScaledWidth / 2,
+                y = Minecraft.getInstance().window.guiScaledHeight / 5,
                 opacity = textOpacity,
                 centered = true
             )
         }
 
-        val currentScreen = MinecraftClient.getInstance().currentScreen
+        val currentScreen = Minecraft.getInstance().screen
 
         if (currentScreen == null || currentScreen is ChatScreen) {
             if (lastKnownBattle != battle.battleId) {
@@ -133,21 +140,20 @@ class BattleOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.g
         }
     }
 
-
-    fun drawTile(context: DrawContext, tickDelta: Float, activeBattlePokemon: ActiveClientBattlePokemon, left: Boolean, rank: Int) {
-        val mc = MinecraftClient.getInstance()
+    fun drawTile(context: GuiGraphics, tickDelta: Float, activeBattlePokemon: ActiveClientBattlePokemon, left: Boolean, rank: Int, dexState: PokedexEntryProgress) {
+        val mc = Minecraft.getInstance()
 
         val battlePokemon = activeBattlePokemon.battlePokemon ?: return
         // First render the underlay
         var x = HORIZONTAL_INSET + rank * HORIZONTAL_SPACING.toFloat()
         val y = VERTICAL_INSET + rank * VERTICAL_SPACING
         if (!left) {
-            x = mc.window.scaledWidth - x - TILE_WIDTH
+            x = mc.window.guiScaledWidth - x - TILE_WIDTH
         }
         val invisibleX = if (left) {
             -TILE_WIDTH - 1F
         } else {
-            mc.window.scaledWidth.toFloat()
+            mc.window.guiScaledWidth.toFloat()
         }
 
         activeBattlePokemon.invisibleX = invisibleX
@@ -180,12 +186,13 @@ class BattleOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.g
             ballState = activeBattlePokemon.ballCapturing,
             maxHealth = battlePokemon.maxHp.toInt(),
             health = battlePokemon.hpValue,
-            isFlatHealth = battlePokemon.isHpFlat
+            isFlatHealth = battlePokemon.isHpFlat,
+            dexState = dexState
         )
     }
 
     fun drawBattleTile(
-        context: DrawContext,
+        context: GuiGraphics,
         x: Float,
         y: Float,
         partialTicks: Float,
@@ -193,21 +200,22 @@ class BattleOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.g
         species: Species,
         level: Int,
         aspects: Set<String>,
-        displayName: MutableText,
+        displayName: MutableComponent,
         gender: Gender,
         status: PersistentStatus?,
-        state: PoseableEntityState<PokemonEntity>?,
+        state: PosableState,
         colour: Triple<Float, Float, Float>?,
         opacity: Float,
         ballState: ClientBallDisplay? = null,
         maxHealth: Int,
         health: Float,
-        isFlatHealth: Boolean
+        isFlatHealth: Boolean,
+        dexState: PokedexEntryProgress
     ) {
         val portraitStartX = x + if (!reversed) PORTRAIT_OFFSET_X else { TILE_WIDTH - PORTRAIT_DIAMETER - PORTRAIT_OFFSET_X }
-        val matrices = context.matrices
+        val matrixStack = context.pose()
         blitk(
-            matrixStack = matrices,
+            matrixStack = matrixStack,
             texture = battleInfoUnderlay,
             y = y + PORTRAIT_OFFSET_Y,
             x = portraitStartX,
@@ -223,13 +231,12 @@ class BattleOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.g
             (portraitStartX + PORTRAIT_DIAMETER).toInt(),
             (y + PORTRAIT_DIAMETER + PORTRAIT_OFFSET_Y).toInt(),
         )
-        val matrixStack = MatrixStack()
+        matrixStack.pushPose()
         matrixStack.translate(
             portraitStartX + PORTRAIT_DIAMETER / 2.0,
             y.toDouble() + PORTRAIT_OFFSET_Y - 5.0 ,
             0.0
         )
-        matrixStack.push()
         if (ballState != null && ballState.stateEmitter.get() == EmptyPokeBallEntity.CaptureState.SHAKE) {
             drawPokeBall(
                 state = ballState,
@@ -237,24 +244,24 @@ class BattleOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.g
                 partialTicks = partialTicks
             )
         } else {
-            matrixStack.push()
-            drawPortraitPokemon(
-                species = species,
+            drawPosablePortrait(
+                identifier = species.resourceIdentifier,
                 aspects = aspects,
                 matrixStack = matrixStack,
                 scale = 18F * (ballState?.scale ?: 1F),
+                contextScale = species.getForm(aspects).baseScale,
+                repository = PokemonModelRepository,
                 reversed = reversed,
                 state = state,
                 partialTicks = partialTicks
             )
-            matrixStack.pop()
         }
-        matrixStack.pop()
+        matrixStack.popPose()
         context.disableScissor()
 
         // Third render the tile
         blitk(
-            matrixStack = matrices,
+            matrixStack = matrixStack,
             texture = if (reversed) battleInfoBaseFlipped else battleInfoBase,
             x = x,
             y = y,
@@ -266,7 +273,7 @@ class BattleOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.g
         if (colour != null) {
             val (r, g, b) = colour
             blitk(
-                matrixStack = matrices,
+                matrixStack = matrixStack,
                 texture = if (reversed) battleInfoRoleFlipped else battleInfoRole,
                 x = x + if (reversed) 93 else 11,
                 y = y + 1,
@@ -277,12 +284,38 @@ class BattleOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.g
                 green = g,
                 blue = b
             )
+            if (dexState == PokedexEntryProgress.ENCOUNTERED) {
+                blitk(
+                    matrixStack = matrixStack,
+                    texture = seenIndicator,
+                    x = x + 3,
+                    y = y + 21,
+                    height = 6,
+                    width = 6,
+                    alpha = opacity,
+                    red = 125F / 255F,
+                    green = 125F / 255F,
+                    blue = 125F / 255F
+                )
+            }
+            else if (dexState == PokedexEntryProgress.CAUGHT) {
+                blitk(
+                    matrixStack = matrixStack,
+                    texture = seenIndicator,
+                    x = x + 3,
+                    y = y + 21,
+                    height = 6,
+                    width = 6,
+                    alpha = opacity
+                )
+            }
+
         }
 
         if (status != null) {
             val statusWidth = 37
             blitk(
-                matrixStack = matrices,
+                matrixStack = matrixStack,
                 texture = cobblemonResource("textures/gui/battle/battle_status_" + status.showdownName + ".png"),
                 x = x + if (reversed) 56 else 38,
                 y = y + 28,
@@ -355,7 +388,7 @@ class BattleOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.g
         val barWidth = hpRatio * fullWidth
         val barX = if (!reversed) infoBoxX - 2 else infoBoxX + 3 + (fullWidth - barWidth)
         blitk(
-            matrixStack = matrices,
+            matrixStack = matrixStack,
             texture = CobblemonResources.WHITE,
             x = barX,
             y = y + 22,
@@ -386,48 +419,49 @@ class BattleOverlay : InGameHud(MinecraftClient.getInstance(), MinecraftClient.g
 
     private fun drawPokeBall(
         state: ClientBallDisplay,
-        matrixStack: MatrixStack,
+        matrixStack: PoseStack,
         scale: Float = 5F,
         partialTicks: Float,
         reversed: Boolean = false
     ) {
+        val context = RenderContext()
         val model = PokeBallModelRepository.getPoser(state.pokeBall.name, state.aspects)
         val texture = PokeBallModelRepository.getTexture(state.pokeBall.name, state.aspects, state.animationSeconds)
-        val renderType = model.getLayer(texture)
+        val renderType = RenderType.entityCutout(texture)//model.getLayer(texture)
 
         RenderSystem.applyModelViewMatrix()
-        val quaternion1 = RotationAxis.POSITIVE_Y.rotationDegrees(-32F * if (reversed) -1F else 1F)
-        val quaternion2 = RotationAxis.POSITIVE_X.rotationDegrees(5F)
+        val quaternion1 = Axis.YP.rotationDegrees(-32F * if (reversed) -1F else 1F)
+        val quaternion2 = Axis.XP.rotationDegrees(5F)
 
-        model.getPose(PoseType.PORTRAIT)?.let { state.setPose(it.poseName) }
-        state.timeEnteredPose = 0F
+        state.currentModel = model
+        state.setPoseToFirstSuitable(PoseType.PORTRAIT)
         state.updatePartialTicks(partialTicks)
-        model.setupAnimStateful(null, state, 0F, 0F, 0F, 0F, 0F)
+        model.applyAnimations(null, state, 0F, 0F, 0F, 0F, 0F)
 
         matrixStack.scale(scale, scale, -scale)
         matrixStack.translate(0.0, 5.5, -4.0)
-        matrixStack.push()
+        matrixStack.pushPose()
 
         matrixStack.scale(scale * state.scale, scale * state.scale, 0.1F)
 
-        matrixStack.multiply(quaternion1)
-        matrixStack.multiply(quaternion2)
+        matrixStack.mulPose(quaternion1)
+        matrixStack.mulPose(quaternion2)
 
         val light1 = Vector3f(2.2F, 4.0F, -4.0F)
         val light2 = Vector3f(1.1F, -4.0F, 7.0F)
         RenderSystem.setShaderLights(light1, light2)
         quaternion1.conjugate()
 
-        val immediate = MinecraftClient.getInstance().bufferBuilders.entityVertexConsumers
+        val immediate = Minecraft.getInstance().renderBuffers().bufferSource()
         val buffer = immediate.getBuffer(renderType)
-        val packedLight = LightmapTextureManager.pack(11, 7)
-        model.render(matrixStack, buffer, packedLight, OverlayTexture.DEFAULT_UV, 1F, 1F, 1F, 1F)
+        val packedLight = LightTexture.pack(11, 7)
+        model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
 
-        immediate.draw()
+        immediate.endBatch()
 
-        matrixStack.pop()
+        matrixStack.popPose()
 
-        DiffuseLighting.enableGuiDepthLighting()
+        Lighting.setupFor3DItems()
     }
 
     fun onLogout() {

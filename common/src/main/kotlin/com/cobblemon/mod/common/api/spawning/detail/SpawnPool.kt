@@ -20,9 +20,9 @@ import com.cobblemon.mod.common.api.spawning.spawner.Spawner
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
 
 /**
  * A collection of [SpawnDetail]s with precalculation logic for optimization of searches.
@@ -37,13 +37,13 @@ import net.minecraft.util.Identifier
  */
 class SpawnPool(val name: String) : JsonDataRegistry<SpawnSet>, Iterable<SpawnDetail> {
     override val id = cobblemonResource("spawn_pool_$name")
-    override val type = ResourceType.SERVER_DATA
+    override val type = PackType.SERVER_DATA
     override val observable = SimpleObservable<SpawnPool>()
     override val gson: Gson = SpawnLoader.gson
     override val typeToken = TypeToken.get(SpawnSet::class.java)
     override val resourcePath = id.path
-    override fun sync(player: ServerPlayerEntity) {}
-    override fun reload(data: Map<Identifier, SpawnSet>) {
+    override fun sync(player: ServerPlayer) {}
+    override fun reload(data: Map<ResourceLocation, SpawnSet>) {
         details.clear()
         for (set in data.values) {
             details.addAll(set.filter { it.isValid() })

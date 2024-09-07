@@ -10,8 +10,8 @@ package com.cobblemon.mod.common.client.render.models.blockbench.bedrock.animati
 
 import com.bedrockk.molang.MoLang
 import com.cobblemon.mod.common.Cobblemon.LOGGER
-import com.cobblemon.mod.common.client.particle.BedrockParticleEffectRepository
-import com.cobblemon.mod.common.util.asExpression
+import com.cobblemon.mod.common.client.particle.BedrockParticleOptionsRepository
+import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.google.gson.JsonArray
 import com.google.gson.JsonDeserializationContext
@@ -25,7 +25,7 @@ import java.lang.reflect.Type
  * Gson adapter for converting bedrock/blockbench json data into a friendlier object model.
  *
  * @author landonjw
- * @since  January 5, 2022
+ * @since January 5, 2022
  */
 object BedrockAnimationAdapter : JsonDeserializer<BedrockAnimation> {
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): BedrockAnimation {
@@ -40,7 +40,7 @@ object BedrockAnimationAdapter : JsonDeserializer<BedrockAnimation> {
             json["particle_effects"]?.asJsonObject?.entrySet()?.forEach { (frame, effectJson) ->
                 fun resolveEffect(jsonObject: JsonObject): BedrockParticleKeyframe {
                     val effectId = jsonObject.get("effect").asString.asIdentifierDefaultingNamespace()
-                    val effect = BedrockParticleEffectRepository.getEffect(effectId)
+                    val effect = BedrockParticleOptionsRepository.getEffect(effectId)
                         ?: throw IllegalArgumentException("Unrecognized particle effect $effectId referenced in animation. Maybe your particle effect isn't named correctly inside the effect file?")
                     val locator = jsonObject.get("locator")?.asString ?: "root"
                     val seconds = frame.toFloat()
@@ -84,11 +84,7 @@ object BedrockAnimationAdapter : JsonDeserializer<BedrockAnimation> {
                 effects.add(
                     BedrockInstructionKeyframe(
                         seconds = frame.toFloat(),
-                        expressions = if (effectJson is JsonArray) {
-                            effectJson.asJsonArray.map { it.asString.let { if (it.endsWith(";")) it.substring(0, it.length - 1) else it }.asExpression() }
-                        } else {
-                            listOf(effectJson.asString.asExpression())
-                        }
+                        expressions = if (effectJson is JsonArray) effectJson.asExpressionLike() else effectJson.asString.asExpressionLike()
                     )
                 )
             }

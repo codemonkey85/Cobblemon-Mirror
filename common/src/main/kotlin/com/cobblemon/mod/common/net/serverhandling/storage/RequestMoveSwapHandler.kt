@@ -12,10 +12,10 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.net.messages.server.RequestMoveSwapPacket
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object RequestMoveSwapHandler : ServerNetworkPacketHandler<RequestMoveSwapPacket> {
-    override fun handle(packet: RequestMoveSwapPacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: RequestMoveSwapPacket, server: MinecraftServer, player: ServerPlayer) {
         val pokemon = Cobblemon.storage.getParty(player).get(packet.slot) ?: return
         val move1 = pokemon.moveSet[packet.move1] ?: return
         val move2 = pokemon.moveSet[packet.move2] ?: return

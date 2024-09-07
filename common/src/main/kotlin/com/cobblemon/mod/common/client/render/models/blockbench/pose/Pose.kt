@@ -9,40 +9,44 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pose
 
 import com.cobblemon.mod.common.api.molang.ExpressionLike
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityModel
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.StatefulAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.StatelessAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.frame.ModelFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.animation.ActiveAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.animation.PoseAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.quirk.ModelQuirk
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.entity.Entity
+
+typealias CobblemonPose = Pose
 
 /**
- * A pose for a model.
+ * A pose for a model. This is a collection of [animations] and [transformedParts] that should be applied to a model.
+ * It also contains any number of [namedAnimations], [ModelQuirk]s, a [condition] for the pose to ever be triggered,
+ * and the different [poseTypes] for which this pose is appropriate for.
+ *
+ * @author Hiroku
+ * @since December 5th, 2021
  */
-class Pose<T : Entity, F : ModelFrame>(
+class Pose(
     var poseName: String,
     val poseTypes: Set<PoseType>,
-    val condition: ((T) -> Boolean)?,
-    val onTransitionedInto: (PoseableEntityState<T>?) -> Unit = {},
+    val condition: ((PosableState) -> Boolean)?,
+    /** What to do after the pose is transitioned into completely. */
+    val onTransitionedInto: (PosableState) -> Unit = {},
+    /** If there are no dedicated transition animations, the interpolation animation will take this many ticks. */
     val transformTicks: Int,
-    val animations: MutableMap<String, ExpressionLike> = mutableMapOf(),
-    val idleAnimations: Array<StatelessAnimation<T, out F>>,
+    val namedAnimations: MutableMap<String, ExpressionLike> = mutableMapOf(),
+    val animations: Array<PoseAnimation>,
     val transformedParts: Array<ModelPartTransformation>,
-    val quirks: Array<ModelQuirk<T, *>>
+    val quirks: Array<ModelQuirk<*>>
 ) {
-    fun isSuitable(entity: T) = condition?.invoke(entity) ?: true
+    fun isSuitable(state: PosableState) = condition?.invoke(state) ?: true
 
-    val transitions = mutableMapOf<String, (Pose<T, out ModelFrame>, Pose<T, out ModelFrame>) -> StatefulAnimation<T, ModelFrame>>()
+    val transitions = mutableMapOf<String, (Pose, Pose) -> ActiveAnimation>()
 
-    fun idleStateless(model: PoseableEntityModel<T>, state: PoseableEntityState<T>?, limbSwing: Float = 0F, limbSwingAmount: Float = 0F, ageInTicks: Float = 0F, headYaw: Float = 0F, headPitch: Float = 0F, intensity: Float) {
-        idleAnimations.forEach { it.apply(null, model, state, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, intensity) }
-    }
-
-    fun idleStateful(entity: T?, model: PoseableEntityModel<T>, state: PoseableEntityState<T>, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float) {
-        idleAnimations.filter { state.shouldIdleRun(it, 0F) }.forEach { idleAnimation ->
-            idleAnimation.apply(entity, model, state, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, state.getIdleIntensity(idleAnimation))
+    fun apply(context: RenderContext, model: PosableModel, state: PosableState, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, headYaw: Float, headPitch: Float) {
+        animations.filter { state.shouldIdleRun(it, 0F) }.forEach { animation ->
+            animation.apply(context, model, state, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, state.getIdleIntensity(animation))
         }
     }
 }

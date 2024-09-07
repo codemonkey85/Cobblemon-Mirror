@@ -6,17 +6,16 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+/*
 package com.cobblemon.mod.common.api.storage.player.adapter
 
-import com.cobblemon.mod.common.api.storage.player.PlayerAdvancementData
 import com.cobblemon.mod.common.api.storage.player.PlayerData
 import com.cobblemon.mod.common.api.storage.player.PlayerDataExtension
 import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mongodb.client.MongoClient
 import com.mongodb.client.model.ReplaceOptions
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import org.bson.Document
 import java.util.UUID
 import kotlin.reflect.KMutableProperty
@@ -31,7 +30,7 @@ class MongoPlayerDataAdapter(
         val gson = GsonBuilder()
             .disableHtmlEscaping()
             .registerTypeAdapter(PlayerDataExtension::class.java, PlayerDataExtensionAdapter)
-            .registerTypeAdapter(Identifier::class.java, IdentifierAdapter)
+            .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
             .create()
     }
 
@@ -64,3 +63,5 @@ class MongoPlayerDataAdapter(
         collection.replaceOne(filter, document, ReplaceOptions().upsert(true))
     }
 }
+
+ */

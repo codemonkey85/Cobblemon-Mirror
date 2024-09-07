@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:tumblestone"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.obtain_tumblestone"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.obtain_tumblestone.description"
+    }
+  },
+  "parent": "cobblemon:root",
+  "criteria": {
+    "check_inv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#cobblemon:tumblestones"
+          }
+        ]
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

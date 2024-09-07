@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.net.messages.server.storage.pc
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.net.serverhandling.storage.pc.UnlinkPlayerFromPCHandler
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Packet sent to remove the PC link for the player.
@@ -23,9 +23,9 @@ import net.minecraft.network.PacketByteBuf
  */
 class UnlinkPlayerFromPCPacket : NetworkPacket<UnlinkPlayerFromPCPacket> {
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {}
+    override fun encode(buffer: RegistryFriendlyByteBuf) {}
     companion object {
         val ID = cobblemonResource("unlink_player_from_pc")
-        fun decode(buffer: PacketByteBuf) = UnlinkPlayerFromPCPacket()
+        fun decode(buffer: RegistryFriendlyByteBuf) = UnlinkPlayerFromPCPacket()
     }
 }

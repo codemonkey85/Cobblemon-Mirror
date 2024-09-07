@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.api.pokeball.catching.effects
 
 import com.cobblemon.mod.common.api.pokeball.catching.CaptureEffect
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
 
 /**
  * A [CaptureEffect] meant to boost earnings of friendship.

@@ -9,31 +9,33 @@
 package com.cobblemon.mod.common.client.render.layer
 
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.render.RenderLayer
-import net.minecraft.client.render.RenderPhase.*
-import net.minecraft.client.render.VertexFormat
-import net.minecraft.client.render.VertexFormats
-import net.minecraft.util.Identifier
-import net.minecraft.util.Util
+import com.mojang.blaze3d.vertex.DefaultVertexFormat
+import com.mojang.blaze3d.vertex.VertexFormat
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.resources.ResourceLocation
 import java.util.function.BiFunction
 import java.util.function.Function
+import net.minecraft.Util
+import net.minecraft.client.renderer.RenderStateShard
+import net.minecraft.client.renderer.RenderStateShard.*
 
 object CobblemonRenderLayers {
     val BERRY_LAYER = run {
-        val multiPhaseParameters = RenderLayer.MultiPhaseParameters.builder()
-            .lightmap(ENABLE_LIGHTMAP)
-            .program(CUTOUT_PROGRAM)
-            .texture(Texture(
+        val multiPhaseParameters = RenderType.CompositeState.builder()
+            .setLightmapState(LIGHTMAP)
+            .setShaderState(RENDERTYPE_CUTOUT_SHADER)
+            .setTextureState(TextureStateShard(
                 cobblemonResource("textures/atlas/berries.png"),
                 false,
                 true
             ))
-            .cull(DISABLE_CULLING)
-            .build(true)
-        RenderLayer.of(
+            .setCullState(NO_CULL)
+            .createCompositeState(true)
+
+        RenderType.create(
             "berries",
-            VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL,
-            VertexFormat.DrawMode.QUADS,
+            DefaultVertexFormat.BLOCK,
+            VertexFormat.Mode.QUADS,
             512,
             true,
             false,
@@ -41,19 +43,21 @@ object CobblemonRenderLayers {
         )
     }
 
-    val ENTITY_TRANSLUCENT: BiFunction<Identifier, Boolean, RenderLayer> = Util.memoize { texture: Identifier, affectsOutline: kotlin.Boolean ->
-        var multiPhaseParameters: RenderLayer.MultiPhaseParameters =
-            RenderLayer.MultiPhaseParameters.builder()
-                .program(ENTITY_TRANSLUCENT_PROGRAM)
-                .texture(Texture(texture, false, false))
-                .transparency(TRANSLUCENT_TRANSPARENCY)
-                .cull(DISABLE_CULLING)
-                .lightmap(ENABLE_LIGHTMAP)
-                .overlay(ENABLE_OVERLAY_COLOR).build(affectsOutline)
-        RenderLayer.of(
+    val ENTITY_TRANSLUCENT: BiFunction<ResourceLocation, Boolean, RenderType> = Util.memoize { texture: ResourceLocation, affectsOutline: kotlin.Boolean ->
+        var multiPhaseParameters: RenderType.CompositeState =
+            RenderType.CompositeState.builder()
+                .setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
+                .setTextureState(TextureStateShard(texture, false, false))
+                .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                .setCullState(RenderStateShard.NO_CULL)
+                .setLightmapState(LIGHTMAP)
+                .setOverlayState(OVERLAY)
+                .createCompositeState(affectsOutline)
+
+        RenderType.create(
             "entity_translucent",
-            VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
-            VertexFormat.DrawMode.QUADS,
+            DefaultVertexFormat.NEW_ENTITY,
+            VertexFormat.Mode.QUADS,
             256,
             true,
             true,
@@ -61,18 +65,20 @@ object CobblemonRenderLayers {
         )
     };
 
-    val ENTITY_CUTOUT: Function<Identifier, RenderLayer> = Util.memoize { texture: Identifier ->
+    val ENTITY_CUTOUT: Function<ResourceLocation, RenderType> = Util.memoize { texture: ResourceLocation ->
         val multiPhaseParameters =
-            RenderLayer.MultiPhaseParameters.builder()
-                .program(ENTITY_CUTOUT_PROGRAM)
-                .texture(Texture(texture, false, false))
-                .transparency(NO_TRANSPARENCY)
-                .lightmap(ENABLE_LIGHTMAP)
-                .overlay(ENABLE_OVERLAY_COLOR).build(true)
-        RenderLayer.of(
+            RenderType.CompositeState.builder()
+                .setShaderState(RENDERTYPE_ENTITY_CUTOUT_SHADER)
+                .setTextureState(TextureStateShard(texture, false, false))
+                .setTransparencyState(NO_TRANSPARENCY)
+                .setLightmapState(LIGHTMAP)
+                .setOverlayState(OVERLAY)
+                .createCompositeState(true)
+
+        RenderType.create(
             "entity_cutout",
-            VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
-            VertexFormat.DrawMode.QUADS,
+            DefaultVertexFormat.NEW_ENTITY,
+            VertexFormat.Mode.QUADS,
             256,
             true,
             false,

@@ -13,7 +13,6 @@ import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.moves.Move
 import com.cobblemon.mod.common.api.moves.MoveSet
-import com.cobblemon.mod.common.api.pokemon.PokemonSpecies.species
 import com.cobblemon.mod.common.api.reactive.Observable.Companion.emitWhile
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription
 import com.cobblemon.mod.common.api.scheduling.Schedulable
@@ -42,17 +41,17 @@ import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.Drawable
-import net.minecraft.client.gui.Element
-import net.minecraft.client.gui.Selectable
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.client.gui.widget.ClickableWidget
-import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.client.util.InputUtil
-import net.minecraft.sound.SoundEvent
-import net.minecraft.text.Text
+import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.AbstractWidget
+import net.minecraft.client.gui.components.Renderable
+import net.minecraft.client.gui.components.events.GuiEventListener
+import net.minecraft.client.gui.narration.NarratableEntry
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.network.chat.Component
+import net.minecraft.sounds.SoundEvent
 
 /**
  * The screen responsible for displaying various information regarding a Pokémon team.
@@ -62,7 +61,8 @@ import net.minecraft.text.Text
  *
  * @param selection The index the [party] will have as the base [selectedPokemon].
  */
-class Summary private constructor(party: Collection<Pokemon?>, private val editable: Boolean, private val selection: Int): Screen(Text.translatable("cobblemon.ui.summary.title")), Schedulable {
+class Summary private constructor(party: Collection<Pokemon?>, private val editable: Boolean, private val selection: Int): Screen(
+    Component.translatable("cobblemon.ui.summary.title")), Schedulable {
 
     companion object {
         const val BASE_WIDTH = 331
@@ -101,7 +101,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
          * @throws IndexOutOfBoundsException If the [selection] is not a possible index of [party].
          */
         fun open(party: Collection<Pokemon?>, editable: Boolean = true, selection: Int = 0) {
-            val mc = MinecraftClient.getInstance()
+            val mc = Minecraft.getInstance()
             val screen = Summary(party, editable, selection)
             mc.setScreen(screen)
         }
@@ -110,14 +110,16 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
     override val schedulingTracker = SchedulingTracker()
 
     internal lateinit var selectedPokemon: Pokemon
-    private lateinit var mainScreen: ClickableWidget
-    lateinit var sideScreen: Element
+    private lateinit var mainScreen: AbstractWidget
+    lateinit var sideScreen: GuiEventListener
     private lateinit var modelWidget: ModelWidget
     private lateinit var nicknameEntryWidget: NicknameEntryWidget
     private val summaryTabs = mutableListOf<SummaryTab>()
     private var mainScreenIndex = INFO
     var sideScreenIndex = PARTY
     private val party = ArrayList(party)
+
+    override fun renderBlurredBackground(delta: Float) { }
 
     /**
      * Initializes the Summary Screen
@@ -145,7 +147,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         displaySideScreen(PARTY)
 
         // Evolve Button
-        addDrawableChild(
+        addRenderableWidget(
                 SummaryButton(
                         buttonX = x + 12F,
                         buttonY = y + 145F,
@@ -205,16 +207,16 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         )
 
         summaryTabs[mainScreenIndex].toggleTab()
-        summaryTabs.forEach { addDrawableChild(it) }
+        summaryTabs.forEach { addRenderableWidget(it) }
 
         // Add Exit Button
-        addDrawableChild(
+        addRenderableWidget(
                 ExitButton(
                         pX = x + 302,
                         pY = y + 145
                 ) {
                     playSound(CobblemonSounds.GUI_CLICK)
-                    MinecraftClient.getInstance().setScreen(null)
+                    Minecraft.getInstance().setScreen(null)
                 }
         )
 
@@ -230,7 +232,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         )
         focused = nicknameEntryWidget
         nicknameEntryWidget.isFocused = false
-        addDrawableChild(nicknameEntryWidget)
+        addRenderableWidget(nicknameEntryWidget)
 
         // Add Model Preview
         modelWidget = ModelWidget(
@@ -243,7 +245,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
                 rotationY = 325F,
                 offsetY = -10.0
         )
-        addDrawable(this.modelWidget)
+        addRenderableOnly(this.modelWidget)
     }
 
     fun swapPartySlot(sourceIndex: Int, targetIndex: Int) {
@@ -279,7 +281,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         moveSetSubscription?.unsubscribe()
         listenToMoveSet()
         displayMainScreen(mainScreenIndex)
-        children().find { it is EvolutionSelectScreen }?.let(this::remove)
+        children().find { it is EvolutionSelectScreen }?.let(this::removeWidget)
         if (this::modelWidget.isInitialized) {
             this.modelWidget.pokemon = selectedPokemon.asRenderablePokemon()
         }
@@ -305,7 +307,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
     /**
      * Returns if this Screen is open or not
      */
-    private fun isOpen() = MinecraftClient.getInstance().currentScreen == this
+    private fun isOpen() = Minecraft.getInstance().screen == this
 
     /**
      * Switch center screen
@@ -315,7 +317,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         val subIndex = if (mainScreenIndex == STATS && mainScreen is StatWidget) (mainScreen as StatWidget).statTabIndex else 0
 
         mainScreenIndex = screen
-        if (::mainScreen.isInitialized) remove(mainScreen)
+        if (::mainScreen.isInitialized) removeWidget(mainScreen)
         if (sideScreenIndex == MOVE_SWAP) displaySideScreen(PARTY)
 
         summaryTabs.forEachIndexed { index, item ->
@@ -351,7 +353,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
                 )
             }
         }
-        addDrawableChild(mainScreen)
+        addRenderableWidget(mainScreen)
     }
 
     /**
@@ -359,7 +361,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
      */
     fun displaySideScreen(screen: Int, move: Move? = null) {
         sideScreenIndex = screen
-        if (::sideScreen.isInitialized) remove(sideScreen)
+        if (::sideScreen.isInitialized) removeWidget(sideScreen)
 
         val x = (width - BASE_WIDTH) / 2
         val y = (height - BASE_HEIGHT) / 2
@@ -377,22 +379,26 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
 
             MOVE_SWAP -> {
                 val movesWidget = mainScreen
-                if (movesWidget is MovesWidget && move != null) {
+                if (movesWidget is MovesWidget) {
                     sideScreen = MoveSwapScreen(
                             x + 216,
-                            y + 22,
+                            y + 24,
                             movesWidget = movesWidget,
                             replacedMove = move
                     ).also { switchPane ->
                         val pokemon = selectedPokemon
-                        pokemon.allAccessibleMoves
+                        var moveSlotList = (pokemon.allAccessibleMoves
                                 .filter { template -> pokemon.moveSet.none { it.template == template } }
                                 .map { template ->
                                     val benched = pokemon.benchedMoves.find { it.moveTemplate == template }
                                     MoveSwapScreen.MoveSlot(switchPane, template, benched?.ppRaisedStages
                                             ?: 0, pokemon)
-                                }
-                                .forEach { switchPane.addEntry(it) }
+                                })
+                        if (pokemon.moveSet.getMoves().size > 1 && move != null) {
+                            // Adds the "Forget" slot
+                            moveSlotList += MoveSwapScreen.MoveSlot(switchPane, null, 0, pokemon)
+                        }
+                        moveSlotList.forEach { switchPane.addEntry(it) }
                     }
                 }
             }
@@ -406,19 +412,19 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
             }
         }
         val element = sideScreen
-        if (element is Drawable && element is Selectable) {
-            addDrawableChild(element)
+        if (element is Renderable && element is NarratableEntry) {
+            addRenderableWidget(element)
         }
     }
 
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        //this.renderBackground(context)
+    override fun renderMenuBackground(context: GuiGraphics) {}
 
+    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         schedulingTracker.update(delta / 20F)
 
         val x = (width - BASE_WIDTH) / 2
         val y = (height - BASE_HEIGHT) / 2
-        val matrices = context.matrices
+        val matrices = context.pose()
 
         // Render Portrait Background
         blitk(
@@ -548,8 +554,8 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         val itemX = x + 3
         val itemY = y + 104
         if (!heldItem.isEmpty) {
-            context.drawItem(heldItem, itemX, itemY)
-            context.drawItemInSlot(MinecraftClient.getInstance().textRenderer, heldItem, itemX, itemY)
+            context.renderItem(heldItem, itemX, itemY)
+            context.renderItemDecorations(Minecraft.getInstance().font, heldItem, itemX, itemY)
         }
 
         drawScaledText(
@@ -584,17 +590,17 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         // Render Item Tooltip
         if (!heldItem.isEmpty) {
             val itemHovered = mouseX.toFloat() in (itemX.toFloat()..(itemX.toFloat() + 16)) && mouseY.toFloat() in (itemY.toFloat()..(itemY.toFloat() + 16))
-            if (itemHovered) context.drawItemTooltip(MinecraftClient.getInstance().textRenderer, heldItem, mouseX, mouseY)
+            if (itemHovered) context.renderTooltip(Minecraft.getInstance().font, heldItem, mouseX, mouseY)
         }
     }
 
     /**
      * Whether this Screen should pause the Game in SinglePlayer
      */
-    override fun shouldPause(): Boolean = false
+    override fun isPauseScreen(): Boolean = false
 
-    override fun mouseScrolled(mouseX: Double, mouseY: Double, amount: Double): Boolean {
-        return children().any { it.mouseScrolled(mouseX, mouseY, amount) }
+    override fun mouseScrolled(mouseX: Double, mouseY: Double, amount: Double, verticalAmount: Double): Boolean {
+        return children().any { it.mouseScrolled(mouseX, mouseY, amount, verticalAmount) }
     }
 
     /*
@@ -609,7 +615,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        if ((keyCode == InputUtil.GLFW_KEY_ENTER || keyCode == InputUtil.GLFW_KEY_KP_ENTER)
+        if ((keyCode == InputConstants.KEY_RETURN || keyCode == InputConstants.KEY_NUMPADENTER)
             && this::nicknameEntryWidget.isInitialized
             && this.nicknameEntryWidget.isFocused
         ) {
@@ -617,22 +623,22 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         }
         if (Cobblemon.config.enableDebugKeys) {
             val model = PokemonModelRepository.getPoser(selectedPokemon.species.resourceIdentifier, selectedPokemon.aspects)
-            if (keyCode == InputUtil.GLFW_KEY_UP) {
+            if (keyCode == InputConstants.KEY_UP) {
                 model.profileTranslation = model.profileTranslation.add(0.0, -0.01, 0.0)
             }
-            if (keyCode == InputUtil.GLFW_KEY_DOWN) {
+            if (keyCode == InputConstants.KEY_DOWN) {
                 model.profileTranslation = model.profileTranslation.add(0.0, 0.01, 0.0)
             }
-            if (keyCode == InputUtil.GLFW_KEY_LEFT) {
+            if (keyCode == InputConstants.KEY_LEFT) {
                 model.profileTranslation = model.profileTranslation.add(-0.01, 0.0, 0.0)
             }
-            if (keyCode == InputUtil.GLFW_KEY_RIGHT) {
+            if (keyCode == InputConstants.KEY_RIGHT) {
                 model.profileTranslation = model.profileTranslation.add(0.01, 0.0, 0.0)
             }
-            if (keyCode == InputUtil.GLFW_KEY_EQUAL) {
+            if (keyCode == InputConstants.KEY_EQUALS) {
                 model.profileScale += 0.01F
             }
-            if (keyCode == InputUtil.GLFW_KEY_MINUS) {
+            if (keyCode == InputConstants.KEY_MINUS) {
                 model.profileScale -= 0.01F
             }
         }
@@ -640,17 +646,17 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
     }
 
     fun playSound(soundEvent: SoundEvent) {
-        MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(soundEvent, 1.0F))
+        Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))
     }
 
-    override fun close() {
+    override fun onClose() {
         if (Cobblemon.config.enableDebugKeys) {
             val model = PokemonModelRepository.getPoser(selectedPokemon.species.resourceIdentifier, selectedPokemon.aspects)
-            MinecraftClient.getInstance().player?.sendMessage(Text.of("Profile Translation: ${model.profileTranslation}"))
-            MinecraftClient.getInstance().player?.sendMessage(Text.of("Profile Scale: ${model.profileScale}"))
+            Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Profile Translation: ${model.profileTranslation}"))
+            Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Profile Scale: ${model.profileScale}"))
             Cobblemon.LOGGER.info("override var profileTranslation = Vec3d(${model.profileTranslation.x}, ${model.profileTranslation.y}, ${model.profileTranslation.z})")
             Cobblemon.LOGGER.info("override var profileScale = ${model.profileScale}F")
         }
-        super.close()
+        super.onClose()
     }
 }

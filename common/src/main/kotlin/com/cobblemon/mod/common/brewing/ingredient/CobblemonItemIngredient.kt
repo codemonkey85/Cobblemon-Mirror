@@ -8,15 +8,15 @@
 
 package com.cobblemon.mod.common.brewing.ingredient
 
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 import org.jetbrains.annotations.ApiStatus
 
 @ApiStatus.Internal
 class CobblemonItemIngredient(val item: Item) : CobblemonIngredient {
 
-    override fun matches(stack: ItemStack): Boolean = stack.isOf(this.item)
+    override fun matches(stack: ItemStack): Boolean = stack.`is`(this.item)
 
-    override fun matchingStacks(): List<ItemStack> = listOf(this.item.defaultStack)
+    override fun matchingStacks(): List<ItemStack> = listOf(this.item.defaultInstance)
 
 }

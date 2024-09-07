@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.cobblemon.mod.common.pokemon.activestate.ShoulderedState
 import com.cobblemon.mod.common.pokemon.effects.PotionBaseEffect
 import com.cobblemon.mod.common.util.party
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 import org.jetbrains.annotations.ApiStatus
 
 /**
@@ -46,13 +46,13 @@ object ShoulderEffectRegistry {
 
     // It was removed by a source such as milk, reapply
     @ApiStatus.Internal
-    fun onEffectEnd(player: ServerPlayerEntity) {
+    fun onEffectEnd(player: ServerPlayer) {
         // Do this next tick so the client syncs correctly.
         // While it is a ticks worth of downtime it's still 1/20th of a second, doubt they'll notice.
         ServerTaskTracker.momentarily { this.refreshEffects(player) }
     }
 
-    private fun refreshEffects(player: ServerPlayerEntity) {
+    private fun refreshEffects(player: ServerPlayer) {
         player.party().filter { it.state is ShoulderedState }.forEach { pkm ->
             pkm.form.shoulderEffects.forEach {
                 it.applyEffect(

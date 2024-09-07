@@ -8,13 +8,13 @@
 
 package com.cobblemon.mod.common.mixin.invoker;
 
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(ClientPlayNetworkHandler.class)
+@Mixin(ClientPacketListener.class)
 public interface ClientPlayNetworkHandlerInvoker {
-    @Invoker
+    @Invoker("postAddEntitySoundInstance")
     void callPlaySpawnSound(Entity entity);
 }

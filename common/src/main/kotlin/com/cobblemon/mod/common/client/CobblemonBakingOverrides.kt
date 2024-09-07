@@ -9,10 +9,11 @@
 package com.cobblemon.mod.common.client
 
 import com.cobblemon.mod.common.BakingOverride
+import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.cobblemon.mod.common.util.cobblemonModel
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.util.ModelIdentifier
-import net.minecraft.util.Identifier
+import net.minecraft.client.resources.model.ModelResourceLocation
+import net.minecraft.resources.ResourceLocation
 
 /**
  * The purpose of this class is to hold models that we want baked, but aren't associated with
@@ -21,6 +22,7 @@ import net.minecraft.util.Identifier
 object CobblemonBakingOverrides {
     val models = mutableListOf<BakingOverride>()
 
+    // Blocks
     val RESTORATION_TANK_FLUID_BUBBLING = registerOverride(
         cobblemonResource("block/restoration_tank_fluid_bubbling"),
         cobblemonModel("restoration_tank_fluid_bubbling", "none")
@@ -102,7 +104,49 @@ object CobblemonBakingOverrides {
         cobblemonModel("surprise_mulch", "none")
     )
 
-    fun registerOverride(modelLocation: Identifier, modelIdentifier: ModelIdentifier): BakingOverride {
+    // Items
+    val POKEDEX_BLACK = registerOverride(
+        cobblemonResource("item/pokedex_black_model"),
+        cobblemonModel("pokedex_black_model", "inventory")
+    )
+    val POKEDEX_BLUE = registerOverride(
+        cobblemonResource("item/pokedex_blue_model"),
+        cobblemonModel("pokedex_blue_model", "inventory")
+    )
+    val POKEDEX_GREEN = registerOverride(
+        cobblemonResource("item/pokedex_green_model"),
+        cobblemonModel("pokedex_green_model", "inventory")
+    )
+    val POKEDEX_PINK = registerOverride(
+        cobblemonResource("item/pokedex_pink_model"),
+        cobblemonModel("pokedex_pink_model", "inventory")
+    )
+    val POKEDEX_RED = registerOverride(
+        cobblemonResource("item/pokedex_red_model"),
+        cobblemonModel("pokedex_red_model", "inventory")
+    )
+    val POKEDEX_WHITE = registerOverride(
+        cobblemonResource("item/pokedex_white_model"),
+        cobblemonModel("pokedex_white_model", "inventory")
+    )
+    val POKEDEX_YELLOW = registerOverride(
+        cobblemonResource("item/pokedex_yellow_model"),
+        cobblemonModel("pokedex_yellow_model", "inventory")
+    )
+
+    fun getPokedexOverride(type: PokedexTypes): BakingOverride {
+        return when (type) {
+            PokedexTypes.BLACK -> POKEDEX_BLACK
+            PokedexTypes.BLUE -> POKEDEX_BLUE
+            PokedexTypes.GREEN -> POKEDEX_GREEN
+            PokedexTypes.PINK -> POKEDEX_PINK
+            PokedexTypes.WHITE -> POKEDEX_WHITE
+            PokedexTypes.YELLOW -> POKEDEX_YELLOW
+            PokedexTypes.RED -> POKEDEX_RED
+        }
+    }
+
+    fun registerOverride(modelLocation: ResourceLocation, modelIdentifier: ModelResourceLocation): BakingOverride {
         val result = BakingOverride(modelLocation, modelIdentifier)
         models.add(result)
         return result

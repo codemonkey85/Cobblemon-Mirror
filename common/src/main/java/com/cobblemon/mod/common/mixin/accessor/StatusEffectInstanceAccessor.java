@@ -8,17 +8,17 @@
 
 package com.cobblemon.mod.common.mixin.accessor;
 
-import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.world.effect.MobEffectInstance;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(StatusEffectInstance.class)
+@Mixin(MobEffectInstance.class)
 public interface StatusEffectInstanceAccessor {
 
     @Accessor
     void setAmplifier(int amplifier);
 
-    @Accessor
+    @Accessor("visible")
     void setShowParticles(boolean showParticles);
 
     @Accessor

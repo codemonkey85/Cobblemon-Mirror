@@ -12,8 +12,7 @@ import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.getQueryStruct
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -28,12 +27,12 @@ interface ActionEffectInstruction : InterpreterInstruction {
     var holds: MutableSet<String>
     //To expose via molang, so action effects can do different stuff in different instructions
     //e.g. "x is confused" vs "x hit itself in confusion"
-    val id: Identifier
+    val id: ResourceLocation
     override fun invoke(battle: PokemonBattle) {
         preActionEffect(battle)
         val runtime = MoLangRuntime()
-        battle.addQueryFunctions(runtime.environment.getQueryStruct())
-        runtime.environment.getQueryStruct().addStandardFunctions()
+        battle.addQueryFunctions(runtime.environment.query)
+        runtime.environment.query.addStandardFunctions()
         addMolangQueries(runtime)
         runActionEffect(battle, runtime)
         postActionEffect(battle)
@@ -44,8 +43,7 @@ interface ActionEffectInstruction : InterpreterInstruction {
     fun postActionEffect(battle: PokemonBattle)
 
     fun addMolangQueries(runtime: MoLangRuntime) {
-        runtime.environment.getQueryStruct()
-            .addFunction("instruction_id") { StringValue(id.toString()) }
+        runtime.environment.query.addFunction("instruction_id") { StringValue(id.toString()) }
     }
 
 }

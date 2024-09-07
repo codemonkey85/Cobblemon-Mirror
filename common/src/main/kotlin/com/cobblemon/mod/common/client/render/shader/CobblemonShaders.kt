@@ -10,26 +10,25 @@ package com.cobblemon.mod.common.client.render.shader
 
 import com.cobblemon.mod.common.util.ShaderRegistryData
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.gl.ShaderProgram
-import net.minecraft.client.render.VertexFormats
-import net.minecraft.resource.ResourceFactory
-import net.minecraft.resource.ResourceManager
+import com.mojang.blaze3d.vertex.DefaultVertexFormat
+import net.minecraft.client.renderer.ShaderInstance
+import net.minecraft.server.packs.resources.ResourceProvider
 import java.util.function.Consumer
 
 object CobblemonShaders {
-    val SHADERS_TO_REGISTER = mutableListOf<Pair<(ResourceFactory) -> ShaderRegistryData, Consumer<ShaderProgram>>>()
-    lateinit var PARTICLE_BLEND: ShaderProgram
+    val SHADERS_TO_REGISTER = mutableListOf<Pair<(ResourceProvider) -> ShaderRegistryData, Consumer<ShaderInstance>>>()
+    lateinit var PARTICLE_BLEND: ShaderInstance
     // This is Material.ALPHA. Weird internal name for "alphatest" shader.
-    lateinit var PARTICLE_CUTOUT: ShaderProgram
+    lateinit var PARTICLE_CUTOUT: ShaderInstance
 
-    private fun registerShader(shader: (ResourceFactory) -> ShaderRegistryData, callback: Consumer<ShaderProgram>){
+    private fun registerShader(shader: (ResourceProvider) -> ShaderRegistryData, callback: Consumer<ShaderInstance>){
         SHADERS_TO_REGISTER.add(Pair(shader, callback))
     }
     fun init(){
-        registerShader({rm: ResourceFactory -> ShaderRegistryData(rm, cobblemonResource("particle_add"), VertexFormats.POSITION_COLOR_TEXTURE_LIGHT) }) {
+        registerShader({rm: ResourceProvider -> ShaderRegistryData(rm, cobblemonResource("particle_add"), DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP) }) {
             PARTICLE_BLEND = it
         }
-        registerShader({rm: ResourceFactory -> ShaderRegistryData(rm, cobblemonResource("particle_cutout"), VertexFormats.POSITION_COLOR_TEXTURE_LIGHT) }) {
+        registerShader({rm: ResourceProvider -> ShaderRegistryData(rm, cobblemonResource("particle_cutout"), DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP) }) {
             PARTICLE_CUTOUT = it
         }
     }

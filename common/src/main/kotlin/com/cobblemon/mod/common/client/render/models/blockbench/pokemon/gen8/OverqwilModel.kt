@@ -12,15 +12,15 @@ import com.cobblemon.mod.common.client.render.models.blockbench.animation.WaveAn
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.WaveSegment
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class OverqwilModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class OverqwilModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("overqwil")
     override val head = getPart("body")
 
@@ -29,15 +29,15 @@ class OverqwilModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
     val wtail = WaveSegment(tail, 7F)
 
     override var portraitScale = 1.99F
-    override var portraitTranslation = Vec3d(-0.65, 0.87, 0.0)
+    override var portraitTranslation = Vec3(-0.65, 0.87, 0.0)
 
     override var profileScale = 0.62F
-    override var profileTranslation = Vec3d(-0.02, 0.95, 0.0)
+    override var profileTranslation = Vec3(-0.02, 0.95, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("overqwil", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("overqwil", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("overqwil", "blink") }
@@ -46,7 +46,7 @@ class OverqwilModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "standing",
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("overqwil", "ground_idle")
             )
         )
@@ -55,10 +55,9 @@ class OverqwilModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("overqwil", "ground_idle"),
                 WaveAnimation(
-                    frame = this,
                     waveFunction = sineFunction(
                         period = 8F,
                         amplitude = 0.4F
@@ -79,6 +78,6 @@ class OverqwilModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("overqwil", "faint") else null
 }

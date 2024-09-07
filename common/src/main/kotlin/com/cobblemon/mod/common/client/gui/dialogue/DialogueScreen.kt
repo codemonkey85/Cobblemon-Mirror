@@ -14,7 +14,6 @@ import com.cobblemon.mod.common.api.dialogue.ArtificialDialogueFaceProvider
 import com.cobblemon.mod.common.api.dialogue.PlayerDialogueFaceProvider
 import com.cobblemon.mod.common.api.dialogue.ReferenceDialogueFaceProvider
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunctions
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.getQueryStruct
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.client.ClientMoLangFunctions.setupClient
@@ -24,19 +23,18 @@ import com.cobblemon.mod.common.client.gui.dialogue.widgets.DialogueNameWidget
 import com.cobblemon.mod.common.client.gui.dialogue.widgets.DialogueOptionWidget
 import com.cobblemon.mod.common.client.gui.dialogue.widgets.DialogueTextInputWidget
 import com.cobblemon.mod.common.client.gui.dialogue.widgets.DialogueTimerWidget
-import com.cobblemon.mod.common.entity.Poseable
+import com.cobblemon.mod.common.entity.PosableEntity
 import com.cobblemon.mod.common.net.messages.client.dialogue.dto.DialogueDTO
 import com.cobblemon.mod.common.net.messages.client.dialogue.dto.DialogueInputDTO
 import com.cobblemon.mod.common.net.messages.server.dialogue.EscapeDialoguePacket
-import com.cobblemon.mod.common.util.asExpression
 import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.asExpressions
 import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.resolve
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.Screen
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.screens.Screen
 
 class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTranslated()) {
     val speakers = dialogueDTO.speakers?.mapNotNull { (key, value) ->
@@ -47,7 +45,7 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
             is ReferenceDialogueFaceProvider -> {
                 key to DialogueRenderableSpeaker(
                     name = name,
-                    face = ReferenceRenderableFace(MinecraftClient.getInstance().world?.getEntityById(face.entityId) as? Poseable ?: return@mapNotNull null)
+                    face = ReferenceRenderableFace(Minecraft.getInstance().level?.getEntity(face.entityId) as? PosableEntity ?: return@mapNotNull null)
                 )
             }
             else -> key to DialogueRenderableSpeaker(name, null)
@@ -68,9 +66,9 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
     lateinit var dialogueFaceWidget: DialogueFaceWidget
 
     val scaledWidth
-        get() = this.client!!.window.scaledWidth
+        get() = this.minecraft!!.window.guiScaledWidth
     val scaledHeight
-        get() = this.client!!.window.scaledHeight
+        get() = this.minecraft!!.window.guiScaledHeight
 
     companion object {
         private const val BOX_WIDTH = 169
@@ -105,18 +103,22 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
         )
     }
 
+    override fun renderBackground(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {}
+
+    override fun renderBlurredBackground(delta: Float) {}
+
     override fun init() {
         super.init()
 
         runtime.environment
-            .getQueryStruct()
+            .query
             .addFunctions(
                 dialogueMolangFunctions
                     .flatMap { it(this@DialogueScreen).entries }
                     .associate { it.key to it.value }
             )
 
-        dialogueDTO.currentPageDTO.clientActions.forEach { runtime.resolve(it.asExpression()) }
+        dialogueDTO.currentPageDTO.clientActions.forEach { runtime.resolve(it.asExpressionLike()) }
         val centerX = scaledWidth / 2F
         val boxMinY = (scaledHeight / 2F - BOX_HEIGHT / 2F) - 10
         val boxMaxY = boxMinY + BOX_HEIGHT
@@ -137,8 +139,8 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
         dialogueBox = DialogueBox(
             dialogueScreen = this,
             messages = dialogueDTO.currentPageDTO.lines,
-            x = (centerX - BOX_WIDTH / 2F).toInt(),
-            y = boxMinY.toInt(),
+            listX = (centerX - BOX_WIDTH / 2F).toInt(),
+            listY = boxMinY.toInt(),
             frameWidth = BOX_WIDTH,
             height = BOX_HEIGHT
         )
@@ -192,33 +194,33 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
             )
         }
 
-        addDrawable(dialogueTimerWidget)
-        addDrawableChild(dialogueTextInputWidget)
-        addDrawableChild(dialogueBox)
-        dialogueOptionWidgets.forEach { addDrawableChild(it) }
-        addDrawable(dialogueNameWidget)
-        addDrawable(dialogueFaceWidget)
+        addRenderableOnly(dialogueTimerWidget)
+        addRenderableWidget(dialogueTextInputWidget)
+        addRenderableWidget(dialogueBox)
+        dialogueOptionWidgets.forEach { addRenderableWidget(it) }
+        addRenderableOnly(dialogueNameWidget)
+        addRenderableOnly(dialogueFaceWidget)
 
         if (dialogueDTO.dialogueInput.inputType == DialogueInputDTO.InputType.TEXT) {
-            focusOn(dialogueTextInputWidget)
+            //focusOn(dialogueTextInputWidget)
         }
 
         dialogueDTO.currentPageDTO.clientActions.flatMap(String::asExpressions).resolve(runtime)
     }
 
-    override fun render(drawContext: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(GuiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         remainingSeconds -= delta / 20F
         dialogueTimerWidget.ratio = if (remainingSeconds <= 0) -1F else remainingSeconds / dialogueDTO.dialogueInput.deadline
-        super.render(drawContext, mouseX, mouseY, delta)
+        super.render(GuiGraphics, mouseX, mouseY, delta)
     }
 
-    override fun shouldPause() = false
+    override fun isPauseScreen() = false
 
     fun update(dialogueDTO: DialogueDTO) {
         this.dialogueDTO = dialogueDTO
         this.remainingSeconds = dialogueDTO.dialogueInput.deadline
         waitingForServerUpdate = false
-        clearAndInit()
+        rebuildWidgets()
     }
 
     fun sendToServer(packet: NetworkPacket<*>) {
@@ -226,7 +228,7 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
         waitingForServerUpdate = true
     }
 
-    override fun close() {
+    override fun onClose() {
         EscapeDialoguePacket().sendToServer()
     }
 }

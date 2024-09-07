@@ -13,18 +13,17 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTr
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation.Companion.Y_AXIS
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation.Companion.Z_AXIS
 import kotlin.math.floor
-import net.minecraft.util.math.Vec3d
-import org.joml.Vector3d
+import net.minecraft.world.phys.Vec3
 
 /**
  * Interpolates a vector based on a Catmull-Rom spline.
  * Frame A to D should be in order based on time. Frame A should be the keyframe before frame B, which should be the keyframe before C, and so on.
  */
-fun catmullromLerp(frameA: BedrockAnimationKeyFrame?, frameB: BedrockAnimationKeyFrame, frameC: BedrockAnimationKeyFrame, frameD: BedrockAnimationKeyFrame?, time: Double, runtime: MoLangRuntime): Vec3d {
-    return Vec3d(
-            catmullromLerp(frameA, frameB, frameC, frameD, X_AXIS, time, runtime),
-            catmullromLerp(frameA, frameB, frameC, frameD, Y_AXIS, time, runtime),
-            catmullromLerp(frameA, frameB, frameC, frameD, Z_AXIS, time, runtime)
+fun catmullromLerp(frameA: BedrockAnimationKeyFrame?, frameB: BedrockAnimationKeyFrame, frameC: BedrockAnimationKeyFrame, frameD: BedrockAnimationKeyFrame?, time: Double, runtime: MoLangRuntime): Vec3 {
+    return Vec3(
+        catmullromLerp(frameA, frameB, frameC, frameD, X_AXIS, time, runtime),
+        catmullromLerp(frameA, frameB, frameC, frameD, Y_AXIS, time, runtime),
+        catmullromLerp(frameA, frameB, frameC, frameD, Z_AXIS, time, runtime)
     )
 }
 
@@ -55,7 +54,7 @@ fun catmullromLerp(frameA: BedrockAnimationKeyFrame?, frameB: BedrockAnimationKe
     return getPointOnSpline(vectors, alpha).b
 }
 
-fun Vec3d.get(axis: Int) = when (axis) {
+fun Vec3.get(axis: Int) = when (axis) {
     0 -> x
     1 -> y
     else -> z
@@ -89,16 +88,4 @@ private fun catmullrom(t: Double, p0: Double, p1: Double, p2: Double, p3: Double
     return (2 * p1 - 2 * p2 + v0 + v1) * t3 + (-3 * p1 + 3 * p2 - 2 * v0 - v1) * t2 + v0 * t + p1
 }
 
-private fun Vector3d.get(axis: Int) : Double {
-    return when (axis) {
-        X_AXIS -> this.x
-        Y_AXIS -> this.y
-        Z_AXIS -> this.z
-        else -> throw IllegalStateException()
-    }
-}
-
-private data class Vector2d(
-        val a: Double,
-        val b: Double
-)
+private data class Vector2d(val a: Double, val b: Double)

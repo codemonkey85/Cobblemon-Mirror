@@ -10,8 +10,8 @@ package com.cobblemon.mod.common.util
 
 import com.cobblemon.mod.common.net.IntSize
 import io.netty.buffer.ByteBuf
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 
 fun ByteBuf.writeConditional(condition: () -> Boolean, writer: () -> Unit) {
     writeConditional(condition(), writer)
@@ -54,7 +54,7 @@ fun ByteBuf.readTimes(size: IntSize = IntSize.U_BYTE, readEntry: () -> Unit) {
     repeat(times) { readEntry() }
 }
 
-fun ByteBuf.writeBox(box: Box) {
+fun ByteBuf.writeBox(box: AABB) {
     this.writeDouble(box.minX)
     this.writeDouble(box.minY)
     this.writeDouble(box.minZ)
@@ -63,7 +63,7 @@ fun ByteBuf.writeBox(box: Box) {
     this.writeDouble(box.maxZ)
 }
 
-fun ByteBuf.readBox(): Box = Box(this.readDouble(), this.readDouble(), this.readDouble(), this.readDouble(), this.readDouble(), this.readDouble())
+fun ByteBuf.readBox(): AABB = AABB(this.readDouble(), this.readDouble(), this.readDouble(), this.readDouble(), this.readDouble(), this.readDouble())
 
 fun <K, V> ByteBuf.writeMapK(size: IntSize = IntSize.U_BYTE, map: Map<K, V>, entryWriter: (Map.Entry<K, V>) -> Unit) {
     writeSizedInt(size, map.size)
@@ -78,10 +78,10 @@ fun <K, V> ByteBuf.readMapK(size: IntSize = IntSize.U_BYTE, map: MutableMap<K, V
     }
 }
 
-fun ByteBuf.writeVec3d(vec3d: Vec3d) {
+fun ByteBuf.writeVec3d(vec3d: Vec3) {
     writeDouble(vec3d.x)
     writeDouble(vec3d.y)
     writeDouble(vec3d.z)
 }
 
-fun ByteBuf.readVec3d() = Vec3d(readDouble(), readDouble(), readDouble())
+fun ByteBuf.readVec3d() = Vec3(readDouble(), readDouble(), readDouble())

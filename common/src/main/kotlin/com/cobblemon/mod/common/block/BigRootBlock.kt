@@ -8,41 +8,58 @@
 
 package com.cobblemon.mod.common.block
 
-import net.minecraft.block.BlockState
-import net.minecraft.block.Blocks
-import net.minecraft.block.ShapeContext
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
-import net.minecraft.util.ActionResult
-import net.minecraft.util.Hand
-import net.minecraft.util.hit.BlockHitResult
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.shape.VoxelShape
-import net.minecraft.util.shape.VoxelShapes
-import net.minecraft.world.BlockView
-import net.minecraft.world.World
+import com.mojang.serialization.MapCodec
+import net.minecraft.core.BlockPos
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import net.minecraft.world.level.BlockGetter
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.phys.BlockHitResult
+import net.minecraft.world.phys.shapes.CollisionContext
+import net.minecraft.world.phys.shapes.Shapes
+import net.minecraft.world.phys.shapes.VoxelShape
 
 @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
-class BigRootBlock(settings: Settings) : RootBlock(settings) {
-    override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape = AABB
+class BigRootBlock(settings: Properties) : RootBlock(settings) {
+    override fun getShape(state: BlockState, world: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape = AABB
 
-    override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
-        val stack = player.getStackInHand(hand)
-        if (stack.isOf(Items.SHEARS) && this.attemptShear(world, state, pos) { stack.damage(1, player) { affected -> affected.sendToolBreakStatus(hand) } }) {
-            return ActionResult.success(world.isClient)
+    override fun useWithoutItem(
+        state: BlockState,
+        world: Level,
+        pos: BlockPos,
+        player: Player,
+        blockHitResult: BlockHitResult
+    ): InteractionResult {
+        val stack = player.getItemInHand(InteractionHand.MAIN_HAND)
+        if (stack.`is`(Items.SHEARS)) {
+            this.attemptShear(world, state, pos) {
+                player.onEquippedItemBroken(stack.item, EquipmentSlot.MAINHAND)
+                stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND)
+            }
+            return InteractionResult.sidedSuccess(world.isClientSide)
         }
-        return super.onUse(state, world, pos, player, hand, hit)
+        return super.useWithoutItem(state, world, pos, player, blockHitResult)
     }
 
-    override fun shearedResultingState(): BlockState = Blocks.HANGING_ROOTS.defaultState
+    override fun shearedResultingState(): BlockState = Blocks.HANGING_ROOTS.defaultBlockState()
 
-    override fun shearedDrop(): ItemStack = Items.STRING.defaultStack
+    override fun shearedDrop(): ItemStack = Items.STRING.defaultInstance
+
+    override fun codec(): MapCodec<out Block> {
+        return CODEC
+    }
 
     companion object {
+        val CODEC = simpleCodec(::BigRootBlock)
 
-        private val AABB = VoxelShapes.cuboid(0.2, 0.3, 0.2, 0.8, 1.0, 0.8)
-
+        private val AABB = Shapes.box(0.2, 0.3, 0.2, 0.8, 1.0, 0.8)
     }
 
 }

@@ -11,7 +11,9 @@ package com.cobblemon.mod.common.net.messages.client.data
 import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatureProvider
 import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatures
 import com.cobblemon.mod.common.api.pokemon.feature.SynchronizedSpeciesFeatureProvider
-import net.minecraft.network.PacketByteBuf
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Base class for a registry sync packet that synchronizes [SynchronizedSpeciesFeatureProvider]s.
@@ -22,9 +24,14 @@ import net.minecraft.network.PacketByteBuf
 abstract class SpeciesFeatureSyncPacket<T : SpeciesFeatureSyncPacket<T>>(
     speciesFeatureProviders: Map<String, SpeciesFeatureProvider<*>>
 ) : DataRegistrySyncPacket<Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>>, T>(
-    speciesFeatureProviders.entries.filterIsInstance<Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>>>().filter { it.value.visible }
+    speciesFeatureProviders.entries
+        .filter { (_, v) -> v is SynchronizedSpeciesFeatureProvider<*> && v.visible}
+        .filterIsInstance<Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>>>()
 ) {
-    override fun encodeEntry(buffer: PacketByteBuf, entry: Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>>) {
+    override fun encodeEntry(
+        buffer: RegistryFriendlyByteBuf,
+        entry: Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>>
+    ) {
 
         val typeName = SpeciesFeatures.types.entries.find { it.value.isInstance(entry.value) }?.key
         val value = entry.value
@@ -36,10 +43,10 @@ abstract class SpeciesFeatureSyncPacket<T : SpeciesFeatureSyncPacket<T>>(
         }
         buffer.writeString(entry.key)
         buffer.writeString(typeName)
-        value.encode(buffer)
+        value.saveToBuffer(buffer, toClient = true)
     }
 
-    override fun decodeEntry(buffer: PacketByteBuf): Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>>? {
+    override fun decodeEntry(buffer: RegistryFriendlyByteBuf): Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>>? {
         if (!buffer.readBoolean()) {
             return null
         }
@@ -57,7 +64,7 @@ abstract class SpeciesFeatureSyncPacket<T : SpeciesFeatureSyncPacket<T>>(
         if (instance !is SynchronizedSpeciesFeatureProvider) {
             throw IllegalStateException("Somehow a non-SynchronizedSpeciesFeatureProvider was sent to the client. Version mismatch?")
         } else {
-            instance.decode(buffer)
+            instance.loadFromBuffer(buffer)
         }
 
         return object : Map.Entry<String, SynchronizedSpeciesFeatureProvider<*>> {

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen5
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.BimanualSwingAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
@@ -15,14 +16,14 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFr
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class OshawottHisuiBiasModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class OshawottHisuiBiasModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("oshawott_hisui_bias")
     override val head = getPart("head")
     override val rightArm = getPart("arm_right")
@@ -33,16 +34,16 @@ class OshawottHisuiBiasModel (root: ModelPart) : PokemonPoseableModel(), HeadedF
     val scalchopbody = getPart("scalchop_torso")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.2, -0.15, 0.0)
+    override var portraitTranslation = Vec3(-0.2, -0.15, 0.0)
     override var profileScale = 0.7F
-    override var profileTranslation = Vec3d(0.0, 0.69, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.69, 0.0)
 
-    lateinit var battleidle: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var battleidle: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("oshawott_hisui_bias", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("oshawott_hisui_bias", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("oshawott_hisui_bias", "blink") }
@@ -55,7 +56,7 @@ class OshawottHisuiBiasModel (root: ModelPart) : PokemonPoseableModel(), HeadedF
                         scalchopbody.createTransformation().withVisibility(visibility = true),
                         rootPart.createTransformation().addPosition(ModelPartTransformation.Y_AXIS, -7)
                 ),
-                idleAnimations = arrayOf(bedrock("oshawott_hisui_bias", "sleep"))
+                animations = arrayOf(bedrock("oshawott_hisui_bias", "sleep"))
         )
 
         standing = registerPose(
@@ -68,7 +69,7 @@ class OshawottHisuiBiasModel (root: ModelPart) : PokemonPoseableModel(), HeadedF
                         scalchop.createTransformation().withVisibility(visibility = false),
                         scalchopbody.createTransformation().withVisibility(visibility = true)
                 ),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("oshawott_hisui_bias", "ground_idle")
                 )
@@ -84,7 +85,7 @@ class OshawottHisuiBiasModel (root: ModelPart) : PokemonPoseableModel(), HeadedF
                         scalchop.createTransformation().withVisibility(visibility = false),
                         scalchopbody.createTransformation().withVisibility(visibility = true)
                 ),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("oshawott_hisui_bias", "ground_idle"),
                         BipedWalkAnimation(this, periodMultiplier = 0.6F, amplitudeMultiplier = 0.9F),
@@ -102,7 +103,7 @@ class OshawottHisuiBiasModel (root: ModelPart) : PokemonPoseableModel(), HeadedF
                         scalchop.createTransformation().withVisibility(visibility = true),
                         scalchopbody.createTransformation().withVisibility(visibility = false)
                 ),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(),
                         bedrock("oshawott_hisui_bias", "ground_idle")
                 )
