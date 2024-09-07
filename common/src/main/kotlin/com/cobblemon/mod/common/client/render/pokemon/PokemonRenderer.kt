@@ -16,7 +16,6 @@ import com.cobblemon.mod.common.client.entity.PokemonClientDelegate.Companion.BE
 import com.cobblemon.mod.common.client.entity.PokemonClientDelegate.Companion.BEAM_SHRINK_TIME
 import com.cobblemon.mod.common.client.keybind.boundKey
 import com.cobblemon.mod.common.client.keybind.keybinds.PartySendBinding
-import com.cobblemon.mod.common.client.render.layer.PokemonEvolutionFlashRenderLayer
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PosablePokemonEntityModel
@@ -78,10 +77,6 @@ context: EntityRendererProvider.Context
 
     val ballContext = RenderContext().also {
         it.put(RenderContext.RENDER_STATE, RenderContext.RenderState.WORLD)
-    }
-
-    init {
-        addFeature(PokemonEvolutionFlashRenderLayer(this))
     }
 
     override fun getTextureLocation(entity: PokemonEntity): ResourceLocation {

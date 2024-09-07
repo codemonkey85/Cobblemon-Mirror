@@ -29,8 +29,7 @@ open class BedrockActiveAnimation(
     override val duration = animation.animationLength.toFloat()
     private var afterAction: (RenderContext, PosableState) -> Unit = { _, _ -> }
 
-    override val isTransition: Boolean
-        get() = isTransformAnimation
+    override var isTransition: Boolean = false
 
     fun andThen(action: (context: RenderContext, PosableState) -> Unit) = this.also {
         it.afterAction = action
