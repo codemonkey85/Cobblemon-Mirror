@@ -10,9 +10,13 @@ package com.cobblemon.mod.common.client.battle
 
 import com.cobblemon.mod.common.CobblemonNetwork
 import com.cobblemon.mod.common.api.battles.model.actor.ActorType
+import com.cobblemon.mod.common.api.battles.model.actor.ActorType
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
+import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.battles.BattleFormat
 import com.cobblemon.mod.common.battles.ForcePassActionResponse
 import com.cobblemon.mod.common.battles.PassActionResponse
+import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.net.messages.server.battle.BattleSelectActionsPacket
 import java.util.UUID
 
@@ -25,6 +29,22 @@ class ClientBattle(
 
     val side1 = ClientBattleSide()
     val side2 = ClientBattleSide()
+    var wildActor: ClientBattleActor? = null
+        set(value) {
+            field = value
+            if (value != null) {
+                val wildMonProps = value.activePokemon[0].battlePokemon?.properties
+                wildMonProps?.let {props ->
+                    val wildSpecies = PokemonSpecies.getByName(props.species!!)!!
+                    //FIXME: Better knowledge checking based on aspects/form and such
+                    knowledge = CobblemonClient.clientPokedexData.getKnowledgeForSpecies(wildSpecies.resourceIdentifier)
+                } ?: PokedexEntryProgress.NONE
+            }
+            else {
+                knowledge = PokedexEntryProgress.NONE
+            }
+        }
+    var knowledge = PokedexEntryProgress.NONE
 
     val sides: Array<ClientBattleSide>
         get() = arrayOf(side1, side2)
@@ -84,4 +104,15 @@ class ClientBattle(
             val otherSide = sides.find { it != playerSide }!!
             return otherSide.actors.all { it.type == ActorType.WILD }
         }
+
+    fun findWildActor(): ClientBattleActor? {
+        sides.forEach {
+            it.actors.forEach { actor ->
+                if (actor.type == ActorType.WILD) {
+                    return actor
+                }
+            }
+        }
+        return null
+    }
 }

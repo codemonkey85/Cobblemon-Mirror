@@ -16,6 +16,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.repository.Pokem
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.cobblemon.mod.common.entity.PoseType
+import com.cobblemon.mod.common.util.toHex
+import com.mojang.authlib.minecraft.client.MinecraftClient
 import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.platform.Lighting
 import com.mojang.blaze3d.systems.RenderSystem
@@ -164,6 +166,21 @@ fun drawText(
 }
 
 @JvmOverloads
+fun drawTextJustifiedRight(
+    context: GuiGraphics,
+    font: ResourceLocation? = null,
+    text: MutableComponent,
+    x: Number,
+    y: Number,
+    colour: Int,
+    shadow: Boolean = true
+) {
+    val comp = text.let { if (font != null) it.font(font) else it }
+    val font = Minecraft.getInstance().font
+    context.drawString(font, comp, x.toInt() - font.width(comp), y.toInt(), colour, shadow)
+}
+
+@JvmOverloads
 fun drawText(
     context: GuiGraphics,
     text: FormattedCharSequence,
@@ -216,7 +233,11 @@ fun drawPosablePortrait(
     limbSwingAmount: Float = 0F,
     ageInTicks: Float = 0F,
     headYaw: Float = 0F,
-    headPitch: Float = 0F
+    headPitch: Float = 0F,
+    r: Float = 1F,
+    g: Float = 1F,
+    b: Float = 1F,
+    a: Float = 1F
 ) {
     RenderSystem.applyModelViewMatrix()
     matrixStack.pushPose()
@@ -270,8 +291,8 @@ fun drawPosablePortrait(
         val buffer = immediate.getBuffer(renderType)
         val packedLight = LightTexture.pack(11, 7)
 
-        model.withLayerContext(immediate, state, repository.getLayers(identifier, aspects)) {
-            model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
+        val colour = toHex(r, g, b, a)model.withLayerContext(immediate, state, repository.getLayers(identifier, aspects)) {
+            model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, colour)
             immediate.endBatch()
         }
 

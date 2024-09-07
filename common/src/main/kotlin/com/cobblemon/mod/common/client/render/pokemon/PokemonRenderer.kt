@@ -141,7 +141,7 @@ context: EntityRendererProvider.Context
         if (this.shouldRenderLabel(entity)) {
             this.renderNameTag(entity, entity.effectiveName(), poseMatrix, buffer, packedLight, partialTicks)
         }
-//        MinecraftClient.getInstance().bufferBuilders.entityVertexConsumers.draw()
+//        Minecraft.getInstance().bufferBuilders.entityVertexConsumers.draw()
     }
 
     fun renderTransition(

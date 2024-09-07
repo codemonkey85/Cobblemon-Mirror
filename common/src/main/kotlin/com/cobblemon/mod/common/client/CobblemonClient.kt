@@ -12,6 +12,8 @@ import com.cobblemon.mod.common.*
 import com.cobblemon.mod.common.Cobblemon.LOGGER
 import com.cobblemon.mod.common.api.berry.Berries
 import com.cobblemon.mod.common.api.scheduling.ClientTaskTracker
+import com.cobblemon.mod.common.api.storage.player.client.ClientPokedexManager
+import com.cobblemon.mod.common.api.storage.player.client.ClientGeneralPlayerData
 import com.cobblemon.mod.common.client.battle.ClientBattle
 import com.cobblemon.mod.common.client.gui.PartyOverlay
 import com.cobblemon.mod.common.client.gui.battle.BattleOverlay
@@ -29,7 +31,6 @@ import com.cobblemon.mod.common.client.render.npc.NPCRenderer
 import com.cobblemon.mod.common.client.render.pokeball.PokeBallRenderer
 import com.cobblemon.mod.common.client.render.pokemon.PokemonRenderer
 import com.cobblemon.mod.common.client.sound.battle.BattleMusicController
-import com.cobblemon.mod.common.client.starter.ClientPlayerData
 import com.cobblemon.mod.common.client.storage.ClientStorageManager
 import com.cobblemon.mod.common.client.tooltips.CobblemonTooltipGenerator
 import com.cobblemon.mod.common.client.tooltips.FishingBaitTooltipGenerator
@@ -39,6 +40,7 @@ import com.cobblemon.mod.common.client.trade.ClientTrade
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatType
 import com.cobblemon.mod.common.platform.events.PlatformEvents
+import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
@@ -60,7 +62,8 @@ object CobblemonClient {
     val storage = ClientStorageManager()
     var trade: ClientTrade? = null
     var battle: ClientBattle? = null
-    var clientPlayerData = ClientPlayerData()
+    var clientPlayerData = ClientGeneralPlayerData()
+    var clientPokedexData = ClientPokedexManager(mutableMapOf())
     /** If true then we won't bother them anymore about choosing a starter even if it's a thing they can do. */
     var checkedStarterScreen = false
     var requests = ClientPlayerActionRequests()
@@ -77,11 +80,13 @@ object CobblemonClient {
 
     val overlay: PartyOverlay by lazy { PartyOverlay() }
     val battleOverlay: BattleOverlay by lazy { BattleOverlay() }
+    val pokedexUsageContext: PokedexUsageContext by lazy { PokedexUsageContext() }
 
     fun onLogin() {
-        clientPlayerData = ClientPlayerData()
+        clientPlayerData = ClientGeneralPlayerData()
         requests = ClientPlayerActionRequests()
         teamData = ClientPlayerTeamData()
+        clientPokedexData = ClientPokedexManager(mutableMapOf())
         storage.onLogin()
         CobblemonDataProvider.canReload = false
     }
@@ -208,7 +213,8 @@ object CobblemonClient {
             CobblemonBlocks.LARGE_BUDDING_SKY_TUMBLESTONE,
             CobblemonBlocks.SKY_TUMBLESTONE_CLUSTER,
             CobblemonBlocks.GIMMIGHOUL_CHEST,
-            CobblemonBlocks.DISPLAY_CASE
+            CobblemonBlocks.DISPLAY_CASE,
+            CobblemonBlocks.LECTERN
         )
 
         this.createBoatModelLayers()
@@ -241,6 +247,7 @@ object CobblemonClient {
         this.implementation.registerBlockEntityRenderer(CobblemonBlockEntities.RESTORATION_TANK, ::RestorationTankRenderer)
         this.implementation.registerBlockEntityRenderer(CobblemonBlockEntities.GILDED_CHEST, ::GildedChestBlockRenderer)
         this.implementation.registerBlockEntityRenderer(CobblemonBlockEntities.DISPLAY_CASE, ::DisplayCaseRenderer)
+        this.implementation.registerBlockEntityRenderer(CobblemonBlockEntities.LECTERN, ::LecternBlockEntityRenderer)
     }
 
     private fun registerEntityRenderers() {

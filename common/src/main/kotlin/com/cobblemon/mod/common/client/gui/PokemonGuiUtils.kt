@@ -16,6 +16,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.repository.Pokem
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
+import com.cobblemon.mod.common.util.toHex
 import com.mojang.blaze3d.platform.Lighting
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.PoseStack
@@ -31,17 +32,31 @@ fun drawProfilePokemon(
     renderablePokemon: RenderablePokemon,
     matrixStack: PoseStack,
     rotation: Quaternionf,
+    poseType: PoseType = PoseType.PROFILE,
     state: PosableState,
     partialTicks: Float,
-    scale: Float = 20F
+    scale: Float = 20F,
+    applyProfileTransform: Boolean = true,
+    applyBaseScale: Boolean = false,
+    r: Float = 1F,
+    g: Float = 1F,
+    b: Float = 1F,
+    a: Float = 1F
 ) = drawProfilePokemon(
     species = renderablePokemon.species.resourceIdentifier,
     aspects = renderablePokemon.aspects,
     matrixStack = matrixStack,
     rotation = rotation,
+    poseType = poseType,
     state = state,
     partialTicks = partialTicks,
-    scale = scale
+    scale = scale,
+    applyProfileTransform = applyProfileTransform,
+    applyBaseScale = applyBaseScale,
+    r = r,
+    g = g,
+    b = b,
+    a = a,
 )
 
 fun drawProfilePokemon(
@@ -49,9 +64,16 @@ fun drawProfilePokemon(
     aspects: Set<String>,
     matrixStack: PoseStack,
     rotation: Quaternionf,
+    poseType: PoseType = PoseType.PROFILE,
     state: PosableState,
     partialTicks: Float,
-    scale: Float = 20F
+    scale: Float = 20F,
+    applyProfileTransform: Boolean = true,
+    applyBaseScale: Boolean = false,
+    r: Float = 1F,
+    g: Float = 1F,
+    b: Float = 1F,
+    a: Float = 1F
 ) {
     RenderSystem.applyModelViewMatrix()
     matrixStack.scale(scale, scale, -scale)
@@ -67,7 +89,8 @@ fun drawProfilePokemon(
         model.context = context
         PokemonModelRepository.getTextureNoSubstitute(species, aspects, 0f)
             .let { context.put(RenderContext.TEXTURE, it) }
-        context.put(RenderContext.SCALE, PokemonSpecies.getByIdentifier(species)!!.getForm(aspects).baseScale)
+        val baseScale = PokemonSpecies.getByIdentifier(species)!!.getForm(aspects).baseScale
+    context.put(RenderContext.SCALE, baseScale)
         context.put(RenderContext.SPECIES, species)
         context.put(RenderContext.ASPECTS, aspects)
         context.put(RenderContext.RENDER_STATE, RenderContext.RenderState.PROFILE)
@@ -78,12 +101,14 @@ fun drawProfilePokemon(
 
         val renderType = RenderType.entityCutout(texture)
 
-        state.setPoseToFirstSuitable(PoseType.PROFILE)
+        state.setPoseToFirstSuitable(poseType)
         state.updatePartialTicks(partialTicks)
         model.applyAnimations(null, state, 0F, 0F, 0F, 0F, 0F)
-        matrixStack.translate(model.profileTranslation.x, model.profileTranslation.y, model.profileTranslation.z - 4.0)
-        matrixStack.scale(model.profileScale, model.profileScale, 1 / model.profileScale)
-
+    if (applyProfileTransform) {    matrixStack.translate(model.profileTranslation.x, model.profileTranslation.y, model.profileTranslation.z - 4.0)
+        matrixStack.scale(model.profileScale, model.profileScale, 1 / model.profileScale)} else {
+        matrixStack.translate(0F, 0F, -4.0F)
+        if (applyBaseScale) matrixStack.scale(baseScale, baseScale, 1 / baseScale)
+    }
         matrixStack.mulPose(rotation)
         Lighting.setupForEntityInInventory() // TODO (techdaan): Does this map correctly?
         val entityRenderDispatcher = Minecraft.getInstance().entityRenderDispatcher
@@ -98,8 +123,8 @@ fun drawProfilePokemon(
         RenderSystem.setShaderLights(light1, light2)
         val packedLight = LightTexture.pack(11, 7)
 
-        model.withLayerContext(bufferSource, state, PokemonModelRepository.getLayers(species, aspects)) {
-            model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
+        val colour = toHex(r, g, b, a)model.withLayerContext(bufferSource, state, PokemonModelRepository.getLayers(species, aspects)) {
+            model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, colour)
             bufferSource.endBatch()
         }
         model.setDefault()

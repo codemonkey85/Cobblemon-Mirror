@@ -76,7 +76,7 @@ open class BattlePokemon(
      * The [HeldItemManager] backing this [BattlePokemon].
      */
     val heldItemManager: HeldItemManager by lazy { HeldItemProvider.provide(this) }
-
+    
     val contextManager = ContextManager()
 
     open fun getName(): MutableComponent {

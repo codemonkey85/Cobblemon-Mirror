@@ -71,6 +71,7 @@ object CobblemonPermissions {
 
     val CLEAR_PARTY = this.create("${COMMAND_PREFIX}clearparty", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
     val CLEAR_PC = this.create("${COMMAND_PREFIX}clearpc", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
+    val POKEDEX = this.create("${COMMAND_PREFIX}pokedex", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
 
     val NPC_EDIT = this.create("${COMMAND_PREFIX}npcedit", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
 

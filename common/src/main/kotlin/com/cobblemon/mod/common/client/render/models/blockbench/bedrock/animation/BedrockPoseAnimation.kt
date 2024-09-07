@@ -37,7 +37,7 @@ class BedrockPoseAnimation(val animation: BedrockAnimation) : PoseAnimation() {
         animation.run(context, model, state, state.animationSeconds, limbSwing, limbSwingAmount, ageInTicks, intensity)
     }
 
-    override fun applyEffects(entity: Entity, state: PosableState, previousSeconds: Float, newSeconds: Float) {
+    override fun applyEffects(entity: Entity?, state: PosableState, previousSeconds: Float, newSeconds: Float) {
         val effectiveAnimationLength = animation.animationLength.takeUnless { it <= 0 }?.toFloat() ?: animation.effects.maxOfOrNull { it.seconds }?.takeIf { it != 0F }
         val (loopedPreviousSeconds, loopedNewSeconds) = if (effectiveAnimationLength != null) {
             (previousSeconds % effectiveAnimationLength) to (newSeconds % effectiveAnimationLength)

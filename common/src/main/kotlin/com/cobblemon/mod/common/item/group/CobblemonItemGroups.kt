@@ -295,6 +295,9 @@ object CobblemonItemGroups {
         entries.accept(CobblemonItems.TUMBLESTONE_BRICK_SLAB)
         entries.accept(CobblemonItems.TUMBLESTONE_BRICK_WALL)
         entries.accept(CobblemonItems.CHISELED_TUMBLESTONE_BRICKS)
+        entries.accept(CobblemonItems.SMOOTH_TUMBLESTONE)
+        entries.accept(CobblemonItems.SMOOTH_TUMBLESTONE_STAIRS)
+        entries.accept(CobblemonItems.SMOOTH_TUMBLESTONE_SLAB)
         entries.accept(CobblemonItems.POLISHED_BLACK_TUMBLESTONE)
         entries.accept(CobblemonItems.POLISHED_BLACK_TUMBLESTONE_STAIRS)
         entries.accept(CobblemonItems.POLISHED_BLACK_TUMBLESTONE_SLAB)
@@ -305,6 +308,9 @@ object CobblemonItemGroups {
         entries.accept(CobblemonItems.BLACK_TUMBLESTONE_BRICK_SLAB)
         entries.accept(CobblemonItems.BLACK_TUMBLESTONE_BRICK_WALL)
         entries.accept(CobblemonItems.CHISELED_BLACK_TUMBLESTONE_BRICKS)
+        entries.accept(CobblemonItems.SMOOTH_BLACK_TUMBLESTONE)
+        entries.accept(CobblemonItems.SMOOTH_BLACK_TUMBLESTONE_STAIRS)
+        entries.accept(CobblemonItems.SMOOTH_BLACK_TUMBLESTONE_SLAB)
         entries.accept(CobblemonItems.POLISHED_SKY_TUMBLESTONE)
         entries.accept(CobblemonItems.POLISHED_SKY_TUMBLESTONE_STAIRS)
         entries.accept(CobblemonItems.POLISHED_SKY_TUMBLESTONE_SLAB)
@@ -315,6 +321,9 @@ object CobblemonItemGroups {
         entries.accept(CobblemonItems.SKY_TUMBLESTONE_BRICK_SLAB)
         entries.accept(CobblemonItems.SKY_TUMBLESTONE_BRICK_WALL)
         entries.accept(CobblemonItems.CHISELED_SKY_TUMBLESTONE_BRICKS)
+        entries.accept(CobblemonItems.SMOOTH_SKY_TUMBLESTONE)
+        entries.accept(CobblemonItems.SMOOTH_SKY_TUMBLESTONE_STAIRS)
+        entries.accept(CobblemonItems.SMOOTH_SKY_TUMBLESTONE_SLAB)
 
         entries.accept(CobblemonItems.DAWN_STONE_ORE)
         entries.accept(CobblemonItems.DEEPSLATE_DAWN_STONE_ORE)
@@ -339,6 +348,18 @@ object CobblemonItemGroups {
         entries.accept(CobblemonItems.DEEPSLATE_THUNDER_STONE_ORE)
         entries.accept(CobblemonItems.WATER_STONE_ORE)
         entries.accept(CobblemonItems.DEEPSLATE_WATER_STONE_ORE)
+
+        entries.accept(CobblemonItems.DAWN_STONE_BLOCK)
+        entries.accept(CobblemonItems.DUSK_STONE_BLOCK)
+        entries.accept(CobblemonItems.FIRE_STONE_BLOCK)
+        entries.accept(CobblemonItems.ICE_STONE_BLOCK)
+        entries.accept(CobblemonItems.LEAF_STONE_BLOCK)
+        entries.accept(CobblemonItems.MOON_STONE_BLOCK)
+        entries.accept(CobblemonItems.SHINY_STONE_BLOCK)
+        entries.accept(CobblemonItems.SUN_STONE_BLOCK)
+        entries.accept(CobblemonItems.THUNDER_STONE_BLOCK)
+        entries.accept(CobblemonItems.WATER_STONE_BLOCK)
+
     }
 
     private fun consumableEntries(displayContext: ItemDisplayParameters, entries: Output) {
@@ -626,6 +647,13 @@ object CobblemonItemGroups {
     private fun toolsAndUtilitiesInjections(injector: Injector) {
         injector.putAfter(CobblemonItems.APRICORN_BOAT, Items.BAMBOO_CHEST_RAFT)
         injector.putAfter(CobblemonItems.APRICORN_CHEST_BOAT, CobblemonItems.APRICORN_BOAT)
+        injector.putAfter(CobblemonItems.POKEDEX_BLACK, Items.WRITABLE_BOOK)
+        injector.putAfter(CobblemonItems.POKEDEX_BLUE, CobblemonItems.POKEDEX_BLACK)
+        injector.putAfter(CobblemonItems.POKEDEX_GREEN, CobblemonItems.POKEDEX_BLUE)
+        injector.putAfter(CobblemonItems.POKEDEX_PINK, CobblemonItems.POKEDEX_GREEN)
+        injector.putAfter(CobblemonItems.POKEDEX_RED, CobblemonItems.POKEDEX_PINK)
+        injector.putAfter(CobblemonItems.POKEDEX_YELLOW, CobblemonItems.POKEDEX_RED)
+        injector.putAfter(CobblemonItems.POKEDEX_WHITE, CobblemonItems.POKEDEX_YELLOW)
     }
 
     private fun ingredientsInjections(injector: Injector) {

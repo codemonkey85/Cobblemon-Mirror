@@ -141,7 +141,7 @@ abstract class BattleActor(
      * NPC and player actors expect to append their [getName] while wild Pokémon append nothing.
      *
      * @param name The name of an object being appended, typically a Pokémon nickname received from showdown.
-     * @return A [MutableText] of the [name] append with owner prefix.
+     * @return A [MutableComponent] of the [name] append with owner prefix.
      */
     abstract fun nameOwned(name: String): MutableComponent
 

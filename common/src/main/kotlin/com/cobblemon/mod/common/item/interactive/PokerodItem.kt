@@ -211,11 +211,11 @@ class PokerodItem(val pokeRodId: ResourceLocation, settings: Properties) : Fishi
             }
 
             // stop sound of casting when reeling in
-            //(MinecraftClient.getInstance().getSoundManager() as SoundManagerDuck).stopSounds(CobblemonSounds.FISHING_ROD_CAST.id, SoundCategory.PLAYERS)
+            //(Minecraft.getInstance().getSoundManager() as SoundManagerDuck).stopSounds(CobblemonSounds.FISHING_ROD_CAST.id, SoundCategory.PLAYERS)
 
 
 
-            //(MinecraftClient.getInstance().getSoundManager()).stop
+            //(Minecraft.getInstance().getSoundManager()).stop
 
             world.playSound(null as Player?, user.x, user.y, user.z, CobblemonSounds.FISHING_ROD_REEL_IN, SoundSource.PLAYERS, 1.0f, 1.0f / (world.getRandom().nextFloat() * 0.4f + 0.8f))
             user.gameEvent(GameEvent.ITEM_INTERACT_FINISH)
@@ -240,7 +240,7 @@ class PokerodItem(val pokeRodId: ResourceLocation, settings: Properties) : Fishi
                 val luckLevel = EnchantmentHelper.getItemEnchantmentLevel(world.enchantmentRegistry.getHolder(Enchantments.LUCK_OF_THE_SEA).get(), itemStack)
 
                 /*// play the Rod casting sound and set it
-                world.playSound(null as PlayerEntity?, user.x, user.y, user.z, CobblemonSounds.FISHING_ROD_CAST, SoundCategory.PLAYERS, 1.0f, 1.0f / (world.getRandom().nextFloat() * 0.4f + 0.8f))
+                world.playSound(null as Player?, user.x, user.y, user.z, CobblemonSounds.FISHING_ROD_CAST, SoundCategory.PLAYERS, 1.0f, 1.0f / (world.getRandom().nextFloat() * 0.4f + 0.8f))
 
                 // create a SoundInstance for the casting sound to be also sent to the bobber
                 val castingSoundInstance = CancellableSoundInstance(

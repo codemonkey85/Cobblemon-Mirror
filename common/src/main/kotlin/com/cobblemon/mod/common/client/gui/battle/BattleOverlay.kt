@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.client.gui.battle
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.gui.drawPosablePortrait
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.scheduling.Schedulable
 import com.cobblemon.mod.common.api.scheduling.SchedulingTracker
 import com.cobblemon.mod.common.api.text.bold
@@ -98,6 +99,8 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         val battleInfoRole = cobblemonResource("textures/gui/battle/battle_info_role.png")
         val battleInfoRoleFlipped = cobblemonResource("textures/gui/battle/battle_info_role_flipped.png")
         val battleInfoUnderlay = cobblemonResource("textures/gui/battle/battle_info_underlay.png")
+        val seenIndicator = cobblemonResource("textures/gui/battle/battle_seen_indicator.png")
+        val caughtIndicator = cobblemonResource("textures/gui/battle/battle_seen_indicator.png")
         val battleArrowLeft = cobblemonResource("textures/gui/battle/arrow_pointer_left.png")
         val battleArrowRight = cobblemonResource("textures/gui/battle/arrow_pointer_right.png")
 
@@ -127,11 +130,14 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
             min(opacity + tickDelta * OPACITY_CHANGE_PER_SECOND, MAX_OPACITY)
         }
         val currentScreen = Minecraft.getInstance().screen
-        if(!hidePortraits) {
+        if (!hidePortraits) {
             val playerUUID = Minecraft.getInstance().player?.uuid ?: return
             val side1 = if (battle.side1.actors.any { it.uuid == playerUUID }) battle.side1 else battle.side2
             val side2 = if (side1 == battle.side1) battle.side2 else battle.side1
 
+            side1.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, true, index, PokedexEntryProgress.NONE) }
+            side2.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, false, index, battle.knowledge) }
+            
             // Command highlight for Double and Triple Battles
             val isBattleGUIActive = currentScreen is BattleGUI && currentScreen.getCurrentActionSelection() != null
             val selectedPNX = if((battle.battleFormat.battleType.slotsPerActor > 1 || battle.battleFormat.battleType.actorsPerSide > 1) && isBattleGUIActive) battle.getFirstUnansweredRequest()?.activePokemon?.getPNX() else null
@@ -162,7 +168,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         }
     }
 
-    fun drawTile(context: GuiGraphics, tickDelta: Float, activeBattlePokemon: ActiveClientBattlePokemon, left: Boolean, rank: Int, hasCommand: Boolean = false, isHovered: Boolean = false, isCompact: Boolean = false) {
+    fun drawTile(context: GuiGraphics, tickDelta: Float, activeBattlePokemon: ActiveClientBattlePokemon, left: Boolean, rank: Int, dexState: PokedexEntryProgress, hasCommand: Boolean = false, isHovered: Boolean = false, isCompact: Boolean = false) {
         val mc = Minecraft.getInstance()
 
         val battlePokemon = activeBattlePokemon.battlePokemon ?: return
@@ -214,7 +220,9 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
             isSelected = hasCommand,
             isHovered = isHovered,
             isCompact = isCompact,
-            actorDisplayName = if (!battle.isPvW && ((left && activeBattlePokemon.actor.activePokemon.first() == activeBattlePokemon) || (!left && activeBattlePokemon.actor.activePokemon.last() == activeBattlePokemon))) activeBattlePokemon.actor.displayName else null
+            actorDisplayName = if (!battle.isPvW && ((left && activeBattlePokemon.actor.activePokemon.first() == activeBattlePokemon) || (!left && activeBattlePokemon.actor.activePokemon.last() == activeBattlePokemon))) activeBattlePokemon.actor.displayName else null,
+            isFlatHealth = battlePokemon.isHpFlat,
+            dexState = dexState
         )
     }
 
@@ -240,7 +248,9 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         isSelected: Boolean = false,
         isHovered: Boolean = false,
         isCompact: Boolean = false,
-        actorDisplayName: MutableComponent? = null
+        actorDisplayName: MutableComponent? = null,
+        isFlatHealth: Boolean,
+        dexState: PokedexEntryProgress
     ) {
         val tileWidth = if (isCompact) COMPACT_TILE_WIDTH else TILE_WIDTH
         val portraitOffsetX = if (isCompact) COMPACT_PORTRAIT_OFFSET_X else PORTRAIT_OFFSET_X
@@ -349,6 +359,32 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
                 green = g,
                 blue = b
             )
+            if (dexState == PokedexEntryProgress.ENCOUNTERED) {
+                blitk(
+                    matrixStack = matrixStack,
+                    texture = seenIndicator,
+                    x = x + 3,
+                    y = y + 21,
+                    height = 6,
+                    width = 6,
+                    alpha = opacity,
+                    red = 125F / 255F,
+                    green = 125F / 255F,
+                    blue = 125F / 255F
+                )
+            }
+            else if (dexState == PokedexEntryProgress.CAUGHT) {
+                blitk(
+                    matrixStack = matrixStack,
+                    texture = seenIndicator,
+                    x = x + 3,
+                    y = y + 21,
+                    height = 6,
+                    width = 6,
+                    alpha = opacity
+                )
+            }
+
         }
 
         // Draw labels

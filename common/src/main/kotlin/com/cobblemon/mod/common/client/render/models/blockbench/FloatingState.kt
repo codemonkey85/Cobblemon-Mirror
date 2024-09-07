@@ -27,6 +27,9 @@ class FloatingState : PosableState() {
     override fun getEntity() = null
     override val schedulingTracker = ClientTaskTracker
     override fun updatePartialTicks(partialTicks: Float) {
+        val previousSeconds = animationSeconds
         this.currentPartialTicks += partialTicks
+        val newSeconds = animationSeconds
+        runEffects(entity = null, previousSeconds, newSeconds)
     }
 }

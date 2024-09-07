@@ -21,11 +21,19 @@ import com.cobblemon.mod.common.battles.BattleSide
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.pokemon.status.PersistentStatus
-import com.cobblemon.mod.common.util.*
+import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.readIdentifier
+import com.cobblemon.mod.common.util.readMapK
+import com.cobblemon.mod.common.util.readSizedInt
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeMapK
+import com.cobblemon.mod.common.util.writeSizedInt
+import com.cobblemon.mod.common.util.writeString
+import java.util.UUID
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.network.chat.MutableComponent
-import java.util.*
+import kotlin.properties.Delegates
 
 /**
  * Initializes the client's understanding of a battle. This can be for a participant or for a spectator.
@@ -137,7 +145,7 @@ class BattleInitializePacket() : NetworkPacket<BattleInitializePacket> {
         val displayName: MutableComponent,
         val showdownId: String,
         val activePokemon: List<ActiveBattlePokemonDTO?>,
-        val type: ActorType
+        val type: ActorType,
     )
 
     data class ActiveBattlePokemonDTO(
@@ -161,7 +169,9 @@ class BattleInitializePacket() : NetworkPacket<BattleInitializePacket> {
                     displayName = exposed.getDisplayName(),
                     properties = exposed.createPokemonProperties(
                         PokemonPropertyExtractor.SPECIES,
-                        PokemonPropertyExtractor.GENDER
+                        PokemonPropertyExtractor.GENDER,
+                        PokemonPropertyExtractor.FORM,
+                        PokemonPropertyExtractor.SHINY
                     ).apply { level = pokemon.level },
                     aspects = exposed.aspects,
                     status = pokemon.status?.status,
