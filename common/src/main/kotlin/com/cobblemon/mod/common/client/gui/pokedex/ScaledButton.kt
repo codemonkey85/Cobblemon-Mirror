@@ -66,7 +66,7 @@ class ScaledButton(
         }
     }
 
-    private fun isButtonHovered(mouseX: Number, mouseY: Number): Boolean {
+    fun isButtonHovered(mouseX: Number, mouseY: Number): Boolean {
         return mouseX.toFloat() in (buttonX..(buttonX + (buttonWidth.toFloat() * scale)))
                 && mouseY.toFloat() in (buttonY..(buttonY + (buttonHeight.toFloat() * scale)))
     }

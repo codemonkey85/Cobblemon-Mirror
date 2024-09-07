@@ -17,6 +17,7 @@ import com.cobblemon.mod.common.api.pokedex.entry.PokedexCosmeticVariation
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexForm
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.text.bold
+import com.cobblemon.mod.common.api.text.italicise
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.client.ClientMoLangFunctions.setupClient
@@ -53,6 +54,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.util.FastColor
 import org.joml.Quaternionf
 import org.joml.Vector3f
 import java.io.FileNotFoundException
@@ -460,6 +462,13 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
                 width = HALF_OVERLAY_WIDTH,
                 height = 25
             )
+        }
+        variationButtons.forEach {
+            if(it.isVisible() && it.getWidget().isButtonHovered(mouseX, mouseY)) {
+                context.fill(pX + 26, pY + 81, pX + 113, pY + 91, FastColor.ARGB32.color(150, 58, 150, 182))
+                drawScaledText(context, CobblemonResources.DEFAULT_LARGE,
+                    it.variation.displayName.asTranslated().bold(), pX + 70, pY + 82, scale = 0.9F, centered = true, shadow = true)
+            }
         }
     }
 
