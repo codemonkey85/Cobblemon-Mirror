@@ -27,13 +27,8 @@ fabric-kotlin = "1.11.0+kotlin.2.0.0"
 fabric-permissions-api = "0.2-SNAPSHOT"
 lambDynamicLights = "2.3.4+1.20.4"
 
-# Forge
-forge = "1.20.1-47.1.0"
-kotlin-for-forge = "4.10.0"
-flywheel = "0.6.10-7"
-
 # NeoForge
-neoforge = "21.0.14-beta"
+neoforge = "21.0.167"
 neo-kotlin-for-forge = "5.4.0"
 
 # Data Storage
@@ -76,11 +71,6 @@ fabric-permissions = { group = "me.lucko", name = "fabric-permissions-api", vers
 adorn-fabric = { group = "maven.modrinth", name = "adorn", version = "5.3.0-neoforge"}
 lambDynamicLights = { group = "maven.modrinth", name = "lambdynamiclights", version.ref = "lambDynamicLights"}
 jei-fabric = { group = "mezz.jei", name = "jei-1.20.1-fabric", version.ref = "jei-api"}
-
-# Forge
-forge = { group = "net.minecraftforge", name = "forge", version.ref = "forge" }
-kotlin-forge = { group = "thedarkcolour", name = "kotlinforforge", version.ref = "kotlin-for-forge" }
-adorn-forge = { group = "maven.modrinth", name = "adorn", version = "5.3.0-forge"}
 
 # NeoForge
 neoforge = { group = "net.neoforged", name = "neoforge", version.ref = "neoforge" }
