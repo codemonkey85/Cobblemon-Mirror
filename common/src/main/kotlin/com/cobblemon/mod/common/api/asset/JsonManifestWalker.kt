@@ -33,6 +33,7 @@ import java.io.PrintWriter
  * @since April 1st, 2022.
  */
 object JsonManifestWalker {
+    // im walkin ere
     /**
      * Builds a manifest at [manifestPath] using the files inside the same folder.
      *
