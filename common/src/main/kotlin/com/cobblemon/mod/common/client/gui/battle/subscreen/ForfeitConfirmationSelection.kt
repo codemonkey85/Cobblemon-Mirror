@@ -9,6 +9,9 @@
 package com.cobblemon.mod.common.client.gui.battle.subscreen
 
 import com.cobblemon.mod.common.battles.ForfeitActionResponse
+import com.cobblemon.mod.common.battles.PassActionResponse
+import com.cobblemon.mod.common.client.CobblemonClient
+import com.cobblemon.mod.common.client.battle.ClientBattle
 import com.cobblemon.mod.common.client.battle.SingleActionRequest
 import com.cobblemon.mod.common.client.gui.battle.BattleGUI
 import com.cobblemon.mod.common.client.gui.battle.widgets.BattleOptionTile
@@ -38,6 +41,13 @@ class ForfeitConfirmationSelection(
 
         forfeitButton = BattleOptionTile(battleGUI, x, y, BattleGUI.runResource, battleLang("ui.forfeit")) {
             battleGUI.selectAction(request, ForfeitActionResponse())
+
+            // Need to fill out any other pending requests
+            var pendingRequest = CobblemonClient.battle?.getFirstUnansweredRequest()
+            while (pendingRequest != null) {
+                battleGUI.selectAction(pendingRequest, PassActionResponse)
+                pendingRequest = CobblemonClient.battle?.getFirstUnansweredRequest()
+            }
             playDownSound(Minecraft.getInstance().soundManager)
         }
     }
@@ -57,7 +67,7 @@ class ForfeitConfirmationSelection(
             return
         }
         forfeitButton.render(context, mouseX, mouseY, delta)
-        backButton.render(context.pose(), mouseX, mouseY, delta)
+        backButton.render(context, mouseX, mouseY, delta)
     }
 
 }

@@ -76,6 +76,7 @@ import com.cobblemon.mod.common.battles.BattleSide
 import com.cobblemon.mod.common.battles.ShowdownThread
 import com.cobblemon.mod.common.battles.actor.PokemonBattleActor
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
+import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.command.argument.DexArgumentType
 import com.cobblemon.mod.common.command.argument.DialogueArgumentType
 import com.cobblemon.mod.common.command.argument.FormArgumentType
@@ -214,7 +215,7 @@ object Cobblemon {
         }
         PlatformEvents.SERVER_PLAYER_LOGOUT.subscribe {
             PCLinkManager.removeLink(it.player.uuid)
-            BattleRegistry.getBattleByParticipatingPlayer(it.player)?.stop()
+            BattleRegistry.onPlayerDisconnect(it.player)
             storage.onPlayerDisconnect(it.player)
             playerDataManager.onPlayerDisconnect(it.player)
             TradeManager.onLogoff(it.player)

@@ -67,6 +67,7 @@ object CobblemonClient {
     /** If true then we won't bother them anymore about choosing a starter even if it's a thing they can do. */
     var checkedStarterScreen = false
     var requests = ClientPlayerActionRequests()
+    var teamData = ClientPlayerTeamData()
     var posableModelRepositories = listOf(
         PokemonModelRepository,
         PokeBallModelRepository,
@@ -84,6 +85,7 @@ object CobblemonClient {
     fun onLogin() {
         clientPlayerData = ClientGeneralPlayerData()
         requests = ClientPlayerActionRequests()
+        teamData = ClientPlayerTeamData()
         clientPokedexData = ClientPokedexManager(mutableMapOf())
         storage.onLogin()
         CobblemonDataProvider.canReload = false

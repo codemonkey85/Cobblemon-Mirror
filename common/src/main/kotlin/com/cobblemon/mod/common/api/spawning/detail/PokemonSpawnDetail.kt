@@ -109,7 +109,6 @@ class PokemonSpawnDetail : SpawnDetail() {
     }
 
     override fun doSpawn(ctx: SpawningContext): SingleEntitySpawnAction<PokemonEntity> {
-        // TODO should do more maybe
         return PokemonSpawnAction(ctx, this)
     }
 }

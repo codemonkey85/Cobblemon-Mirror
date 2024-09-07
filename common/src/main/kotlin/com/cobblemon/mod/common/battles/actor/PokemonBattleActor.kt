@@ -24,12 +24,17 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Component
 import net.minecraft.world.phys.Vec3
 
-open class PokemonBattleActor(
+class PokemonBattleActor(
     uuid: UUID,
     val pokemon: BattlePokemon,
     override val fleeDistance: Float,
     artificialDecider: BattleAI = RandomBattleAI()
 ) : AIBattleActor(uuid, listOf(pokemon), artificialDecider), EntityBackedBattleActor<PokemonEntity>, FleeableBattleActor {
+
+    override val initialPos: Vec3?
+    init {
+        initialPos = entity?.position()
+    }
     override fun getName() = pokemon.effectedPokemon.species.translatedName
     override fun nameOwned(name: String): MutableComponent = Component.literal(name)
     override fun getWorldAndPosition(): Pair<ServerLevel, Vec3>? {

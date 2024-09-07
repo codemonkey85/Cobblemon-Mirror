@@ -25,6 +25,7 @@ import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemNameBlockItem
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 
 class EnergyRootItem(block: EnergyRootBlock, settings: Properties) : ItemNameBlockItem(block, settings), PokemonSelectingItem {
@@ -33,6 +34,7 @@ class EnergyRootItem(block: EnergyRootBlock, settings: Properties) : ItemNameBlo
 
     override val bagItem = object : BagItem {
         override val itemName = "item.cobblemon.energy_root"
+        override val returnItem = Items.AIR
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) = target.health > 0 && target.health < target.maxHealth
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?): String {
             battlePokemon.effectedPokemon.decrementFriendship(CobblemonMechanics.remedies.getFriendshipDrop(runtime))

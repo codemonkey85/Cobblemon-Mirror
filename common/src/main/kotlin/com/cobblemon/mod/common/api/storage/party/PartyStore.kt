@@ -28,6 +28,7 @@ import com.google.gson.JsonObject
 import java.util.UUID
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerPlayer
+import java.util.Collections
 
 /**
  * A [PokemonStore] for a party of Pokémon. This is a simple structure that by default will hold 6 nullable slots of Pokémon.
@@ -255,15 +256,18 @@ open class PartyStore(override val uuid: UUID) : PokemonStore<PartyPosition>() {
         return totalPercent
     }
 
-    fun toBattleTeam(clone: Boolean = false, checkHealth: Boolean = true, leadingPokemon: UUID? = null) = mapNotNull {
-        // TODO Other 'able to battle' checks
-        return@mapNotNull if (clone) {
-            BattlePokemon.safeCopyOf(it)
-        } else {
-            BattlePokemon.playerOwned(it)
-        }
-    }.sortedBy { if (it.uuid == leadingPokemon) 0 else (indexOf(it.originalPokemon) + 1) }
 
+    fun toBattleTeam(clone: Boolean = false, checkHealth: Boolean = true, leadingPokemon: UUID? = null) : List<BattlePokemon> {
+        val result = this.mapNotNull {
+            return@mapNotNull if (clone) {
+                BattlePokemon.safeCopyOf(it)
+            } else {
+                BattlePokemon.playerOwned(it)
+            }
+        }.toMutableList()
+        Collections.rotate(result, result.size - this.indexOfFirst { it.uuid == leadingPokemon })
+        return result
+    }
     fun clearParty() {
         forEach {
             it.tryRecallWithAnimation()

@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.Vec3
+import net.minecraft.world.phys.HitResult
 import java.util.*
 import kotlin.math.min
 
@@ -119,16 +120,18 @@ class EntityTraceResult<T : Entity>(
 )
 
 fun <T : Entity> Player.traceFirstEntityCollision(
-    maxDistance: Float = 10F,
-    stepDistance: Float = 0.05F,
-    entityClass: Class<T>,
-    ignoreEntity: T? = null
+        maxDistance: Float = 10F,
+        stepDistance: Float = 0.05F,
+        entityClass: Class<T>,
+        ignoreEntity: T? = null,
+        collideBlock: ClipContext.Fluid? = null
 ): T? {
     return traceEntityCollision(
         maxDistance,
         stepDistance,
         entityClass,
-        ignoreEntity
+        ignoreEntity,
+        collideBlock
     )?.let { it.entities.minByOrNull { it.distanceTo(this) } }
 }
 
@@ -136,7 +139,8 @@ fun <T : Entity> Player.traceEntityCollision(
     maxDistance: Float = 10F,
     stepDistance: Float = 0.05F,
     entityClass: Class<T>,
-    ignoreEntity: T? = null
+    ignoreEntity: T? = null,
+    collideBlock: ClipContext.Fluid?
 ): EntityTraceResult<T>? {
     var step = stepDistance
     val startPos = eyePosition
@@ -148,7 +152,6 @@ fun <T : Entity> Player.traceEntityCollision(
         AABB(startPos.subtract(maxDistanceVector), startPos.add(maxDistanceVector)),
         { entityClass.isInstance(it) }
     )
-
     while (step <= maxDistance) {
         val location = startPos.add(direction.scale(step.toDouble()))
         step += stepDistance
@@ -156,6 +159,10 @@ fun <T : Entity> Player.traceEntityCollision(
         val collided = entities.filter { ignoreEntity != it && location in it.boundingBox }.filter { entityClass.isInstance(it) }
 
         if (collided.isNotEmpty()) {
+            if(collideBlock != null && level().clip(ClipContext(startPos, location, ClipContext.Block.COLLIDER, collideBlock, this)).type == HitResult.Type.BLOCK) {
+                // Collided with block on the way to the entity
+                return null
+            }
             return EntityTraceResult(location, collided.filterIsInstance(entityClass))
         }
     }
