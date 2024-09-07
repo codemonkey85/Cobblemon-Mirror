@@ -19,6 +19,7 @@ import com.cobblemon.mod.common.api.text.gray
 import com.cobblemon.mod.common.block.BerryBlock
 import com.cobblemon.mod.common.block.MintBlock
 import com.cobblemon.mod.common.block.MintBlock.MintType
+import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatType
 import com.cobblemon.mod.common.item.*
 import com.cobblemon.mod.common.item.armor.CobblemonArmorTrims
@@ -153,6 +154,21 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     val ANCIENT_ORIGIN_BALL = pokeBallItem(PokeBalls.ANCIENT_ORIGIN_BALL)
 
     @JvmField
+    val POKEDEX_BLACK = create("pokedex_black", PokedexItem(PokedexTypes.BLACK))
+    @JvmField
+    val POKEDEX_BLUE = create("pokedex_blue", PokedexItem(PokedexTypes.BLUE))
+    @JvmField
+    val POKEDEX_GREEN = create("pokedex_green", PokedexItem(PokedexTypes.GREEN))
+    @JvmField
+    val POKEDEX_PINK = create("pokedex_pink", PokedexItem(PokedexTypes.PINK))
+    @JvmField
+    val POKEDEX_RED = create("pokedex_red", PokedexItem(PokedexTypes.RED))
+    @JvmField
+    val POKEDEX_WHITE = create("pokedex_white", PokedexItem(PokedexTypes.WHITE))
+    @JvmField
+    val POKEDEX_YELLOW = create("pokedex_yellow", PokedexItem(PokedexTypes.YELLOW))
+
+    @JvmField
     val VIVICHOKE = compostableItem("vivichoke")
 
     @JvmField
@@ -256,6 +272,8 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     val PASTURE = blockItem("pasture", CobblemonBlocks.PASTURE)
     @JvmField
     val DISPLAY_CASE = blockItem("display_case", CobblemonBlocks.DISPLAY_CASE)
+    @JvmField
+    val LECTERN = blockItem("lectern", CobblemonBlocks.LECTERN)
 
     // Evolution items
     @JvmField val LINK_CABLE = create("link_cable", LinkCableItem())

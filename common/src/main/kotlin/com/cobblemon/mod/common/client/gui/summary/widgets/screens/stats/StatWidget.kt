@@ -409,7 +409,7 @@ class StatWidget(
 
             for (renderableFeature in renderableFeatures) {
                 val rendered = renderableFeature.render(
-                    drawContext = context,
+                    GuiGraphics = context,
                     x = x + 5F,
                     y = drawY.toFloat(),
                     pokemon = pokemon

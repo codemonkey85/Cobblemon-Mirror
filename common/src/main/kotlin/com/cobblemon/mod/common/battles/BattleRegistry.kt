@@ -227,8 +227,8 @@ object BattleRegistry {
         return battleMap[id]
     }
 
-    fun getBattleByParticipatingPlayer(serverPlayerEntity: ServerPlayer) : PokemonBattle? {
-        return battleMap.values.find { it.getActor(serverPlayerEntity) != null }
+    fun getBattleByParticipatingPlayer(serverPlayer: ServerPlayer) : PokemonBattle? {
+        return battleMap.values.find { it.getActor(serverPlayer) != null }
     }
 
     fun getBattleByParticipatingPlayerId(playerId: UUID): PokemonBattle? {

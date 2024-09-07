@@ -55,9 +55,9 @@ import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.api.types.tera.TeraType
 import com.cobblemon.mod.common.api.types.tera.TeraTypes
 import com.cobblemon.mod.common.config.CobblemonConfig
-import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.datafixer.CobblemonSchemas
 import com.cobblemon.mod.common.datafixer.CobblemonTypeReferences
+import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.entity.pokemon.effects.IllusionEffect
 import com.cobblemon.mod.common.net.messages.client.PokemonUpdatePacket
@@ -89,28 +89,6 @@ import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.JsonOps
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import io.netty.buffer.ByteBuf
-import net.minecraft.ResourceLocationException
-import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.ItemStack
-import net.minecraft.server.level.ServerPlayer
-import net.minecraft.server.level.ServerLevel
-import net.minecraft.network.chat.MutableComponent
-import net.minecraft.world.InteractionHand
-import net.minecraft.resources.ResourceLocation
-import net.minecraft.core.BlockPos
-import net.minecraft.nbt.*
-import net.minecraft.network.chat.contents.PlainTextContents
-import net.minecraft.network.codec.ByteBufCodecs
-import net.minecraft.network.codec.StreamCodec
-import net.minecraft.tags.FluidTags
-import net.minecraft.util.Mth.ceil
-import net.minecraft.util.Mth.clamp
-import net.minecraft.util.StringRepresentable
-import net.minecraft.world.entity.vehicle.Boat
-import net.minecraft.world.phys.Vec3
-import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.*
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import kotlin.math.absoluteValue
@@ -118,6 +96,26 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.random.Random
+import net.minecraft.core.BlockPos
+import net.minecraft.nbt.*
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.network.chat.contents.PlainTextContents
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.tags.FluidTags
+import net.minecraft.util.Mth.ceil
+import net.minecraft.util.Mth.clamp
+import net.minecraft.util.StringRepresentable
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.vehicle.Boat
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.*
+import net.minecraft.world.phys.Vec3
 
 enum class OriginalTrainerType : StringRepresentable {
     NONE, PLAYER, NPC;
@@ -504,6 +502,11 @@ open class Pokemon : ShowdownIdentifiable {
 
     init {
         storeCoordinates.subscribe { if (it != null && it.store !is PCStore && this.tetheringId != null) afterOnServer(ticks = 1) { this.tetheringId = null } }
+        storeCoordinates.subscribe {
+            it?.store?.getObservingPlayers()?.forEach {
+                CobblemonEvents.POKEMON_GAINED.post(PokemonGainedEvent(it.uuid, this))
+            }
+        }
     }
 
     open fun getStat(stat: Stat) = Cobblemon.statProvider.getStatForPokemon(this, stat)

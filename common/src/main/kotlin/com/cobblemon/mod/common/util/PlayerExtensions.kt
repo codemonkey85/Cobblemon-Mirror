@@ -43,6 +43,7 @@ import kotlin.math.min
 // Stuff like getting their party
 fun ServerPlayer.party() = Cobblemon.storage.getParty(this)
 fun ServerPlayer.pc() = Cobblemon.storage.getPC(this.uuid)
+fun ServerPlayer.pokedex() = Cobblemon.playerDataManager.getPokedexData(this)
 val ServerPlayer.activeDialogue: ActiveDialogue?
     get() = DialogueManager.activeDialogues[uuid]
 val ServerPlayer.isInDialogue: Boolean
@@ -56,8 +57,8 @@ fun ServerPlayer.openDialogue(dialogue: Dialogue) {
 fun ServerPlayer.openDialogue(activeDialogue: ActiveDialogue) {
     DialogueManager.startDialogue(activeDialogue)
 }
-fun ServerPlayer.extraData(key: String) = Cobblemon.playerData.get(this).extraData[key]
-fun ServerPlayer.hasKeyItem(key: ResourceLocation) = Cobblemon.playerData.get(this).keyItems.contains(key)
+fun ServerPlayer.extraData(key: String) = Cobblemon.playerDataManager.getGenericData(this).extraData[key]
+fun ServerPlayer.hasKeyItem(key: ResourceLocation) = Cobblemon.playerDataManager.getGenericData(this).keyItems.contains(key)
 fun UUID.getPlayer() = server()?.playerList?.getPlayer(this)
 
 fun ServerPlayer.onLogout(handler: () -> Unit) {
@@ -381,4 +382,4 @@ fun Player.giveOrDropItemStack(stack: ItemStack, playSound: Boolean = true) {
 }
 
 /** Retrieves the battle theme associated with this player, or the default PVP theme if null. */
-fun ServerPlayer.getBattleTheme() = Cobblemon.playerData.get(this).battleTheme?.let { BuiltInRegistries.SOUND_EVENT.get(it) } ?: CobblemonSounds.PVP_BATTLE
+fun ServerPlayer.getBattleTheme() = Cobblemon.playerDataManager.getGenericData(this).battleTheme?.let { BuiltInRegistries.SOUND_EVENT.get(it) } ?: CobblemonSounds.PVP_BATTLE

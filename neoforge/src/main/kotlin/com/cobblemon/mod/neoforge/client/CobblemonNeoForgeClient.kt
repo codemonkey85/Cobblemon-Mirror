@@ -13,11 +13,13 @@ import com.cobblemon.mod.common.CobblemonClientImplementation
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.client.render.atlas.CobblemonAtlases
 import com.cobblemon.mod.common.client.CobblemonClient
+import com.cobblemon.mod.common.client.CobblemonClient.pokedexUsageContext
 import com.cobblemon.mod.common.client.CobblemonClient.reloadCodedAssets
 import com.cobblemon.mod.common.client.keybind.CobblemonKeyBinds
 import com.cobblemon.mod.common.client.render.item.CobblemonModelPredicateRegistry
 import com.cobblemon.mod.common.compat.LambDynamicLightsCompat
 import com.cobblemon.mod.common.client.render.shader.CobblemonShaders
+import com.cobblemon.mod.common.item.PokedexItem
 import com.cobblemon.mod.common.item.group.CobblemonItemGroups
 import com.cobblemon.mod.common.particle.CobblemonParticles
 import com.cobblemon.mod.common.particle.SnowstormParticleType
@@ -65,6 +67,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.CreativeModeTab.TabVisibility
+import net.neoforged.neoforge.client.event.RenderGuiEvent
+import net.neoforged.neoforge.common.NeoForge.EVENT_BUS
 
 object CobblemonNeoForgeClient : CobblemonClientImplementation {
 
@@ -79,6 +83,7 @@ object CobblemonNeoForgeClient : CobblemonClientImplementation {
             addListener(::onShaderRegistration)
         }
         NeoForge.EVENT_BUS.addListener(this::onRenderGuiOverlayEvent)
+        NeoForge.EVENT_BUS.addListener(this::afterRenderGuiOverlayEvent)
     }
 
     private fun onClientSetup(event: FMLClientSetupEvent) {
@@ -185,6 +190,17 @@ object CobblemonNeoForgeClient : CobblemonClientImplementation {
                 CobblemonClient.beforeChatRender(event.guiGraphics, (System.currentTimeMillis() - lastUpdateTime) / 1000F * 20F)
             }
             this.lastUpdateTime = System.currentTimeMillis()
+        }
+    }
+
+    private fun afterRenderGuiOverlayEvent(event: RenderGuiEvent.Post) {
+        val client = Minecraft.getInstance()
+        val player = client.player
+        if (player != null) {
+            val itemStack = player.mainHandItem
+            if (itemStack.item is PokedexItem) {
+                pokedexUsageContext.tryRenderOverlay(event.guiGraphics, event.partialTick)
+            }
         }
     }
 

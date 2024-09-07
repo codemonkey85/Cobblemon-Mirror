@@ -71,6 +71,50 @@
   "item.use": {
     "sounds": [ "cobblemon:use_item" ]
   },
+  "item.pokedex.open": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_open" ]
+  },
+  "item.pokedex.close": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_close" ]
+  },
+  "item.pokedex.click": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_click" ]
+  },
+  "item.pokedex.click_short": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_click_short" ]
+  },
+  "item.pokedex.scan": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_scan" ]
+  },
+  "item.pokedex.scan_open": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_open", "volume": 0.6 }]
+  },
+  "item.pokedex.scan_close": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_close", "volume": 0.6 }]
+  },
+  "item.pokedex.scan_loop": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_loop", "volume": 0.3 }]
+  },
+  "item.pokedex.scan_detail": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_detail", "volume": 0.4 }]
+  },
+  "item.pokedex.zoom_increment": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_zoom_increment" ]
+  },
+  "item.pokedex.snap": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_snap_picture_1" },
+      { "name": "cobblemon:item/pokedex/pokedex_snap_picture_2" },
+      { "name": "cobblemon:item/pokedex/pokedex_snap_picture_3" }
+    ]
+  },
+  "pokemon.can_evolve": {
+    "sounds": [ "cobblemon:pokemon/evolution_notification"]
+  },
   "evolution.notification": {
     "sounds": [ { "name": "cobblemon:evolution/evolution_notification", "volume": 0.7 } ]
   },

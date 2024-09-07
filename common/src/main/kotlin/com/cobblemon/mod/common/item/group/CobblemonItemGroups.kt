@@ -647,6 +647,13 @@ object CobblemonItemGroups {
     private fun toolsAndUtilitiesInjections(injector: Injector) {
         injector.putAfter(CobblemonItems.APRICORN_BOAT, Items.BAMBOO_CHEST_RAFT)
         injector.putAfter(CobblemonItems.APRICORN_CHEST_BOAT, CobblemonItems.APRICORN_BOAT)
+        injector.putAfter(CobblemonItems.POKEDEX_BLACK, Items.WRITABLE_BOOK)
+        injector.putAfter(CobblemonItems.POKEDEX_BLUE, CobblemonItems.POKEDEX_BLACK)
+        injector.putAfter(CobblemonItems.POKEDEX_GREEN, CobblemonItems.POKEDEX_BLUE)
+        injector.putAfter(CobblemonItems.POKEDEX_PINK, CobblemonItems.POKEDEX_GREEN)
+        injector.putAfter(CobblemonItems.POKEDEX_RED, CobblemonItems.POKEDEX_PINK)
+        injector.putAfter(CobblemonItems.POKEDEX_YELLOW, CobblemonItems.POKEDEX_RED)
+        injector.putAfter(CobblemonItems.POKEDEX_WHITE, CobblemonItems.POKEDEX_YELLOW)
     }
 
     private fun ingredientsInjections(injector: Injector) {

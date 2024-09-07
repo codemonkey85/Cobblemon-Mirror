@@ -62,6 +62,35 @@ object CobblemonSounds : PlatformRegistry<Registry<SoundEvent>, ResourceKey<Regi
     val POKE_BALL_TRAIL = this.create("poke_ball.trail")
 
     @JvmField
+    val POKEDEX_OPEN = this.create("item.pokedex.open")
+    @JvmField
+    val POKEDEX_CLOSE = this.create("item.pokedex.close")
+    @JvmField
+    val POKEDEX_SCAN_OPEN = this.create("item.pokedex.scan_open")
+    @JvmField
+    val POKEDEX_SCAN_CLOSE = this.create("item.pokedex.scan_close")
+    @JvmField
+    val POKEDEX_SCAN = this.create("item.pokedex.scan")
+    @JvmField
+    val POKEDEX_SCAN_LOOP = this.create("item.pokedex.scan_loop")
+    @JvmField
+    val POKEDEX_SCAN_DETAIL = this.create("item.pokedex.scan_detail")
+    @JvmField
+    val POKEDEX_CLICK = this.create("item.pokedex.click")
+    @JvmField
+    val POKEDEX_CLICK_SHORT = this.create("item.pokedex.click_short")
+    @JvmField
+    val POKEDEX_SNAP_PICTURE = this.create("item.pokedex.snap")
+    @JvmField
+    val POKEDEX_ZOOM_IN = this.create("item.pokedex.zoom_in")
+    @JvmField
+    val POKEDEX_ZOOM_OUT = this.create("item.pokedex.zoom_out")
+    @JvmField
+    val POKEDEX_ZOOM_INCREMENT = this.create("item.pokedex.zoom_increment")
+
+
+
+    @JvmField
     val ITEM_USE = this.create("item.use")
     @JvmField
     val EVOLUTION_NOTIFICATION = this.create("evolution.notification")

@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.gui.battle.subscreen
 
 import com.cobblemon.mod.common.CobblemonSounds
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.battles.ShowdownPokemon
 import com.cobblemon.mod.common.battles.SwitchActionResponse
 import com.cobblemon.mod.common.client.CobblemonClient
@@ -83,7 +84,8 @@ class BattleSwitchPokemonSelection(
                     state = state,
                     colour = null,
                     opacity = selection.opacity,
-                    partialTicks = deltaTicks
+                    partialTicks = deltaTicks,
+                    dexState = PokedexEntryProgress.NONE
                 )
             } catch (exception: Exception) {
                 throw exception

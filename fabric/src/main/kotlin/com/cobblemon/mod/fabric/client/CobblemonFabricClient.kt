@@ -11,10 +11,12 @@ package com.cobblemon.mod.fabric.client
 import com.cobblemon.mod.common.CobblemonClientImplementation
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.client.CobblemonClient
+import com.cobblemon.mod.common.client.CobblemonClient.pokedexUsageContext
 import com.cobblemon.mod.common.client.CobblemonClient.reloadCodedAssets
 import com.cobblemon.mod.common.client.keybind.CobblemonKeyBinds
 import com.cobblemon.mod.common.client.render.atlas.CobblemonAtlases
 import com.cobblemon.mod.common.client.render.item.CobblemonModelPredicateRegistry
+import com.cobblemon.mod.common.item.PokedexItem
 import com.cobblemon.mod.common.particle.CobblemonParticles
 import com.cobblemon.mod.common.particle.SnowstormParticleType
 import com.cobblemon.mod.common.platform.events.ClientPlayerEvent
@@ -34,8 +36,10 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
+import net.minecraft.client.Minecraft
 import net.minecraft.client.color.block.BlockColor
 import net.minecraft.client.color.item.ItemColor
 import net.minecraft.client.model.geom.builders.LayerDefinition
@@ -70,8 +74,6 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
             PokeBalls.all().forEach { ball ->
                 it.addModels(ball.model3d)
             }
-//            it.addModels()
-//            it.modifyModelBeforeBake().register(ModelModifier.BeforeBake { model, context ->  })
         }
 
         CobblemonFabric.networkManager.registerClientHandlers()
@@ -99,6 +101,17 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
 
         })
 
+        // Register the HUD render callback for pokedex
+        HudRenderCallback.EVENT.register { graphics, tickDelta ->
+            val client = Minecraft.getInstance()
+            val player = client.player
+            if (player != null) {
+                val itemStack = player.mainHandItem
+                if (itemStack.item is PokedexItem) {
+                    pokedexUsageContext.tryRenderOverlay(graphics, tickDelta)
+                }
+            }
+        }
 
         CobblemonKeyBinds.register(KeyBindingHelper::registerKeyBinding)
 

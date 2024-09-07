@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.client.gui.battle
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.gui.drawPosablePortrait
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.scheduling.Schedulable
 import com.cobblemon.mod.common.api.scheduling.SchedulingTracker
 import com.cobblemon.mod.common.api.text.bold
@@ -80,6 +81,8 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         val battleInfoRole = cobblemonResource("textures/gui/battle/battle_info_role.png")
         val battleInfoRoleFlipped = cobblemonResource("textures/gui/battle/battle_info_role_flipped.png")
         val battleInfoUnderlay = cobblemonResource("textures/gui/battle/battle_info_underlay.png")
+        val seenIndicator = cobblemonResource("textures/gui/battle/battle_seen_indicator.png")
+        val caughtIndicator = cobblemonResource("textures/gui/battle/battle_seen_indicator.png")
     }
 
     var opacity = MIN_OPACITY
@@ -110,8 +113,8 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         val side1 = if (battle.side1.actors.any { it.uuid == playerUUID }) battle.side1 else battle.side2
         val side2 = if (side1 == battle.side1) battle.side2 else battle.side1
 
-        side1.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, true, index) }
-        side2.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, false, index) }
+        side1.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, true, index, PokedexEntryProgress.NONE) }
+        side2.activeClientBattlePokemon.forEachIndexed { index, activeClientBattlePokemon -> drawTile(context, tickDelta, activeClientBattlePokemon, false, index, battle.knowledge) }
 
         if (Minecraft.getInstance().screen !is BattleGUI && battle.mustChoose) {
             val textOpacity = PROMPT_TEXT_OPACITY_CURVE(passedSeconds)
@@ -137,7 +140,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         }
     }
 
-    fun drawTile(context: GuiGraphics, tickDelta: Float, activeBattlePokemon: ActiveClientBattlePokemon, left: Boolean, rank: Int) {
+    fun drawTile(context: GuiGraphics, tickDelta: Float, activeBattlePokemon: ActiveClientBattlePokemon, left: Boolean, rank: Int, dexState: PokedexEntryProgress) {
         val mc = Minecraft.getInstance()
 
         val battlePokemon = activeBattlePokemon.battlePokemon ?: return
@@ -183,7 +186,8 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
             ballState = activeBattlePokemon.ballCapturing,
             maxHealth = battlePokemon.maxHp.toInt(),
             health = battlePokemon.hpValue,
-            isFlatHealth = battlePokemon.isHpFlat
+            isFlatHealth = battlePokemon.isHpFlat,
+            dexState = dexState
         )
     }
 
@@ -205,7 +209,8 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         ballState: ClientBallDisplay? = null,
         maxHealth: Int,
         health: Float,
-        isFlatHealth: Boolean
+        isFlatHealth: Boolean,
+        dexState: PokedexEntryProgress
     ) {
         val portraitStartX = x + if (!reversed) PORTRAIT_OFFSET_X else { TILE_WIDTH - PORTRAIT_DIAMETER - PORTRAIT_OFFSET_X }
         val matrixStack = context.pose()
@@ -279,6 +284,32 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
                 green = g,
                 blue = b
             )
+            if (dexState == PokedexEntryProgress.ENCOUNTERED) {
+                blitk(
+                    matrixStack = matrixStack,
+                    texture = seenIndicator,
+                    x = x + 3,
+                    y = y + 21,
+                    height = 6,
+                    width = 6,
+                    alpha = opacity,
+                    red = 125F / 255F,
+                    green = 125F / 255F,
+                    blue = 125F / 255F
+                )
+            }
+            else if (dexState == PokedexEntryProgress.CAUGHT) {
+                blitk(
+                    matrixStack = matrixStack,
+                    texture = seenIndicator,
+                    x = x + 3,
+                    y = y + 21,
+                    height = 6,
+                    width = 6,
+                    alpha = opacity
+                )
+            }
+
         }
 
         if (status != null) {
