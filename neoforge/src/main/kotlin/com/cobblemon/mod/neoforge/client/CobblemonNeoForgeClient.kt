@@ -53,7 +53,6 @@ import net.neoforged.neoforge.client.event.RegisterShadersEvent
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers
 import net.neoforged.neoforge.common.NeoForge
-import net.neoforged.neoforge.common.util.MutableHashedLinkedMap
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 import java.util.concurrent.CompletableFuture
@@ -123,7 +122,6 @@ object CobblemonNeoForgeClient : CobblemonClientImplementation {
         }
     }
 
-    @Suppress("UnstableApiUsage")
     override fun registerLayer(modelLayer: ModelLayerLocation, supplier: Supplier<LayerDefinition>) {
         ClientHooks.registerLayerDefinition(modelLayer, supplier)
     }
@@ -195,7 +193,7 @@ object CobblemonNeoForgeClient : CobblemonClientImplementation {
     }
 
     private fun onBuildContents(e: BuildCreativeModeTabContentsEvent) {
-        val forgeInject = ForgeItemGroupInject(e.entries)
+        val forgeInject = ForgeItemGroupInject(e)
         CobblemonItemGroups.inject(e.tabKey, forgeInject)
     }
 
@@ -208,27 +206,27 @@ object CobblemonNeoForgeClient : CobblemonClientImplementation {
         }
     }
 
-    private class ForgeItemGroupInject(private val entries: MutableHashedLinkedMap<ItemStack, TabVisibility>) : CobblemonItemGroups.Injector {
+    private class ForgeItemGroupInject(private val entries: BuildCreativeModeTabContentsEvent) : CobblemonItemGroups.Injector {
 
         override fun putFirst(item: ItemLike) {
-            this.entries.putFirst(ItemStack(item), TabVisibility.PARENT_AND_SEARCH_TABS)
+            this.entries.insertFirst(ItemStack(item), TabVisibility.PARENT_AND_SEARCH_TABS)
         }
 
         override fun putBefore(item: ItemLike, target: ItemLike) {
-            this.entries.putBefore(
+            this.entries.insertBefore(
                 ItemStack(target),
                 ItemStack(item), TabVisibility.PARENT_AND_SEARCH_TABS
             )
         }
 
         override fun putAfter(item: ItemLike, target: ItemLike) {
-            this.entries.putAfter(
+            this.entries.insertAfter(
                 ItemStack(target),
                 ItemStack(item), TabVisibility.PARENT_AND_SEARCH_TABS)
         }
 
         override fun putLast(item: ItemLike) {
-            this.entries.put(ItemStack(item), TabVisibility.PARENT_AND_SEARCH_TABS)
+            this.entries.accept(ItemStack(item), TabVisibility.PARENT_AND_SEARCH_TABS)
         }
     }
 }
