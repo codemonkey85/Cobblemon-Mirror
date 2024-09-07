@@ -98,8 +98,6 @@ fun drawRectangle(
     bufferbuilder.addVertex(matrix, endX, endY, blitOffset).setUv(maxU, maxV)
     bufferbuilder.addVertex(matrix, endX, y, blitOffset).setUv(maxU, minV)
     bufferbuilder.addVertex(matrix, x, y, blitOffset).setUv(minU, minV)
-    // TODO: Figure out if this is correct replacement.
-    // OLD: BufferRenderer.draw(bufferbuilder)
     BufferUploader.drawWithShader(bufferbuilder.buildOrThrow())
 }
 
@@ -263,7 +261,7 @@ fun drawPosablePortrait(
             model.portraitTranslation.z - 4
         )
         matrixStack.scale(model.portraitScale, model.portraitScale, 1 / model.portraitScale)
-        matrixStack.mulPose(quaternion1) // TODO (techdaan): correct?
+        matrixStack.mulPose(quaternion1)
         matrixStack.mulPose(quaternion2)
 
         val light1 = Vector3f(0.2F, 1.0F, -1.0F)
@@ -333,7 +331,7 @@ fun drawProfile(
         val quaternion2 = Axis.XP.rotationDegrees(5F)
         matrixStack.mulPose(quaternion1)
         matrixStack.mulPose(quaternion2)
-        Lighting.setupForEntityInInventory() // TODO (techdaan): Does this map correctly?
+        Lighting.setupForEntityInInventory()
         val entityRenderDispatcher = Minecraft.getInstance().entityRenderDispatcher
         entityRenderDispatcher.setRenderShadow(true)
 

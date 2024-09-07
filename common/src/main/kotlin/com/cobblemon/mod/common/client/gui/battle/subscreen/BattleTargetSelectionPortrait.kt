@@ -86,7 +86,7 @@ class BattleTargetSelectionPortrait(
                 activeClientBattlePokemon,
                 isAlly,
                 index,
-                PokedexEntryProgress.NONE, // TODO did this work properly
+                PokedexEntryProgress.NONE,
                 activeClientBattlePokemon.getPNX() == selectedPNX,
                 selectable && isHovered(mouseX.toDouble(), mouseY.toDouble()),
                 true

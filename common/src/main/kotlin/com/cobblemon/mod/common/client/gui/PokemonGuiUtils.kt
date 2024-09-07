@@ -113,7 +113,7 @@ fun drawProfilePokemon(
             }
         }
         matrixStack.mulPose(rotation)
-        Lighting.setupForEntityInInventory() // TODO (techdaan): Does this map correctly?
+        Lighting.setupForEntityInInventory()
         val entityRenderDispatcher = Minecraft.getInstance().entityRenderDispatcher
         rotation.conjugate()
         entityRenderDispatcher.overrideCameraOrientation(rotation)
