@@ -20,21 +20,6 @@
 - Added a `mobTargetInBattle` gamerule to exclude players from being targeted by mobs during a battle
 - Added battle log messages for switching out Pokémon
 
-### Added cries to the following Pokémon
-- Timburr, Gurdurr, Conkeldurr
-- Golett, Golurk
-
-### Changes
-- Altered the item model for Medicinal Leeks and Roasted Leeks to be held like sticks and other rod items. 
-- Adjusted some berry balance values like yield and growth times
-- Changes to mulch buffs/durations
-- Weedle, Caterpie, Spearow, Smoochum, Mew, Murkrow, Larvitar, Taillow, Plusle, Minun, Beldum, Starly, Buneary, Combee, Pachirisu, Pidove, Petilil, Hisui Bias Petilil, Zorua, Hisuian Zorua, Elgyem, Fletchling, Skrelp, Klefki, Fomantis, Morelull, Dreepy, Shroodle, Tatsugiri, Glimmet, and Roaming Gimmighoul are now shoulder mountable
-- Chikorita's ability to look around removed due to the awkwardness of it.
-- Link Cable recipe has been redesigned
-- Updated potion sprites
-- Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users.
-- Updated Ice Stone sprite
-
 ### Pokémon Added
 #### Gen 2
 - Ledyba
