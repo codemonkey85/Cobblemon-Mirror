@@ -13,6 +13,16 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
+	"has_ball": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:nest_ball"
+            ]
+          }
+        ]
+      },
     "has_the_recipe": {
       "conditions": {
         "recipe": "cobblemon:nest_rod"
@@ -24,7 +34,11 @@
     [
       "has_smithing_trim_template",
       "has_the_recipe"
-    ]
+    ],
+	[
+	  "has_ball",
+	  "has_the_recipe"
+	]
   ],
   "rewards": {
     "recipes": [
