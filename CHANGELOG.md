@@ -50,6 +50,7 @@
 - Dreepy is now shoulder mountable
 - Link Cable recipe has been redesigned
 - Updated Protector recipe
+- Green Apricorns now smelt to Green Dye, rather than Lime Dye
 - Updated potion sprites
 - Weedle, Caterpie, Spearow, Smoochum, Mew, Murkrow, Larvitar, Taillow, Plusle, Minun, Beldum, Starly, Buneary, Combee, Pachirisu, Pidove, Petilil, Hisui Bias Petilil, Zorua, Hisuian Zorua, Elgyem, Fletchling, Skrelp, Klefki, Fomantis, Morelull, Dreepy, Shroodle, Tatsugiri, Glimmet, and Roaming Gimmighoul are now shoulder mountable
 - Chikorita's ability to look around removed due to the awkwardness of it.
