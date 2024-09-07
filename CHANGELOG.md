@@ -142,6 +142,7 @@
 - Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server
 - Fixed empty JsonPlayerData files resulting in players being unable to join server/world
 - Fixed crumbling_arch_ruins from generating a giant cube of air and removed the chest
+- Fixed possible crash on large population servers due to concurrent access of data.
 
 ### Developer
 - SpawnCause is now an implementation of SpawningInfluence.
