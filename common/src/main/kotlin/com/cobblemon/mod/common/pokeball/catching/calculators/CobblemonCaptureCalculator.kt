@@ -57,7 +57,7 @@ object CobblemonCaptureCalculator: CaptureCalculator, CriticalCaptureProvider, P
             return CaptureContext.successful()
         }
         // We don't have dark grass so we're just gonna pretend everything is that. Scratch that, without the pokedex it has issues.
-        val darkGrass = 1F //if (thrower is ServerPlayerEntity) this.caughtMultiplierFor(thrower).roundToInt() else 1
+        val darkGrass = 1F //if (thrower is ServerPlayer) this.caughtMultiplierFor(thrower).roundToInt() else 1
         val inBattleModifier = if (target.battleId != null) 1F else 0.5F
         val catchRate = getCatchRate(thrower, pokeBallEntity, target, pokemon.form.catchRate.toFloat())
         val validModifier = pokeBall.catchRateModifier.isValid(thrower, pokemon)

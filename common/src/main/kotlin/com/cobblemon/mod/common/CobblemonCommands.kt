@@ -39,6 +39,7 @@ object CobblemonCommands {
         PcCommand.register(dispatcher)
         SpawnPokemonFromPool.register(dispatcher)
         PokeboxCommand.register(dispatcher)
+        PokedexCommand.register(dispatcher)
         TestStoreCommand.register(dispatcher)
         QueryLearnsetCommand.register(dispatcher)
         TestPcSlotCommand.register(dispatcher)
@@ -49,6 +50,7 @@ object CobblemonCommands {
         BedrockParticleCommand.register(dispatcher)
         OpenDialogueCommand.register(dispatcher)
         NPCEditCommand.register(dispatcher)
+        AbandonMultiTeam.register(dispatcher)
 
         // Possibly lock down registration if and only if under dev environment or running in an environment
         // with a certain system environment variable set

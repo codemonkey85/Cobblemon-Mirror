@@ -10,5 +10,5 @@ package com.cobblemon.mod.common.api.events.pokemon
 
 //data class HatchEggEvent (
 //    val pokemon: Pokemon,
-//    val player: ServerPlayerEntity
+//    val player: ServerPlayer
 //)

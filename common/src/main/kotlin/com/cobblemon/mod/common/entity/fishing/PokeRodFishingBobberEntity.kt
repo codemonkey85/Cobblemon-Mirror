@@ -426,7 +426,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
 
     fun stopCastingAudio () {
         // stop audio for the rod casting
-        //(MinecraftClient.getInstance().getSoundManager() as SoundManagerDuck).stopSounds(CobblemonSounds.FISHING_ROD_CAST.id, SoundCategory.PLAYERS)
+        //(Minecraft.getInstance().getSoundManager() as SoundManagerDuck).stopSounds(CobblemonSounds.FISHING_ROD_CAST.id, SoundCategory.PLAYERS)
 
         if (castingSound != null) {
             (Minecraft.getInstance().soundManager).stop(castingSound)

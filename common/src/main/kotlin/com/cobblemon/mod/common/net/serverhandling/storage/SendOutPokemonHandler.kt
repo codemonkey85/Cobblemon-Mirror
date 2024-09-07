@@ -21,6 +21,8 @@ import net.minecraft.world.level.ClipContext
 object SendOutPokemonHandler : ServerNetworkPacketHandler<SendOutPokemonPacket> {
 
     const val SEND_OUT_DURATION = 1.5F
+    const val SEND_OUT_STAGGER_BASE_DURATION = 0.35F
+    const val SEND_OUT_STAGGER_RANDOM_MAX_DURATION = 0.15F
 
     override fun handle(packet: SendOutPokemonPacket, server: MinecraftServer, player: ServerPlayer) {
         val slot = packet.slot.takeIf { it >= 0 } ?: return

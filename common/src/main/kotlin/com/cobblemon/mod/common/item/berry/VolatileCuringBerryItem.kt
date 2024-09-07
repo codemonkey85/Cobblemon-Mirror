@@ -19,6 +19,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import net.minecraft.world.item.ItemStack
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.item.Items
 
 /**
  * A type of berry that cures a volatile status.
@@ -29,6 +30,7 @@ import net.minecraft.world.InteractionResultHolder
 class VolatileCuringBerryItem(block: BerryBlock, val volatileStatus: String): BerryItem(block), PokemonSelectingItem {
     override val bagItem = object : BagItem {
         override val itemName: String get() = "item.cobblemon.${berry()!!.identifier.path}"
+        override val returnItem = Items.AIR
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) = true // When we track volatiles, can check for confusion
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "cure_volatile $volatileStatus"
     }

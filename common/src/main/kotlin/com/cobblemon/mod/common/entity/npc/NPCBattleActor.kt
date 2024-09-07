@@ -20,6 +20,7 @@ import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.chainFutures
 import com.cobblemon.mod.common.util.effectiveName
 import com.cobblemon.mod.common.util.update
+import net.minecraft.world.phys.Vec3
 import java.util.concurrent.CompletableFuture
 
 class NPCBattleActor(
@@ -34,6 +35,7 @@ class NPCBattleActor(
     override val type = ActorType.NPC
     override fun getName() = npc.effectiveName().copy()
     override fun nameOwned(name: String) = battleLang("owned_pokemon", this.getName(), name)
+    override val initialPos = entity.position()
 
     override fun sendUpdate(packet: NetworkPacket<*>) {
         super.sendUpdate(packet)
