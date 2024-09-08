@@ -184,7 +184,6 @@ context: EntityRendererProvider.Context
         val angle = Mth.atan2(dir.z, dir.x) - PI / 2
         poseMatrix.mulPose(Axis.YP.rotation(-angle.toFloat() + (180 * Math.PI / 180).toFloat()))
 
-        // TODO: if you want to remove the open ball, add `!clientDelegate.ballDone` to the if statement
         if (beamMode == 1 && !clientDelegate.ballDone){
             if(entity.pokemon.caughtBall.name.toString().contains("beast")){
                 // get rotation angle on x-axis for facingDir
