@@ -85,6 +85,9 @@
 #### Gen 3
 - Wynaut
 
+#### Gen 8
+- Cramorant
+
 #### Gen 9
 - Farigiraf
 
@@ -107,7 +110,7 @@
 - Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs
 - Updated UI sounds for clicking and evolving Pokémon
 - Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users.
-- Kakuna, Beedrill, Snorlax, Munchlax, and Lurantis received model updates
+- Kakuna, Beedrill, Snorlax, Munchlax, Krabby, Kingler, and Lurantis received model updates
 - Vivillon wings will stop being clear when you remove any Vivillon related resourcepacks. The default pattern will be the meadow wings. 
 
 ### Fixes
