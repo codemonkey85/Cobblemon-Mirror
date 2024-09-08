@@ -1,8 +1,8 @@
 {
-  "portraitScale": 2.02,
-  "portraitTranslation": [0.03, 0.5, 0],
-  "profileScale": 0.95,
-  "profileTranslation": [-0.03, 0.35, 0],
+  "portraitScale": 1.88,
+  "portraitTranslation": [-0.51, 0.83, 0],
+  "profileScale": 0.72,
+  "profileTranslation": [-0.04, 0.71, 0],
   "poses": {
     "standing": {
       "poseName": "standing",
@@ -12,7 +12,7 @@
         "q.bedrock('cramorant', 'ground_idle')"
       ],
       "quirks": [
-        "q.bedrock_quirk('cramorant', q.array('blink', 'blink_unsynced'), 5, 30, 1)"
+        "q.bedrock_quirk('cramorant', 'blink', 5, 30, 1)"
       ]
     },
     "walking": {
@@ -24,7 +24,7 @@
         "q.biped_walk(1, 1, 'leg_left', 'leg_right')"
       ],
       "quirks": [
-        "q.bedrock_quirk('cramorant', q.array('blink', 'blink_unsynced'), 5, 30, 1)"
+        "q.bedrock_quirk('cramorant', 'blink', 5, 30, 1)"
       ]
     }
   }
