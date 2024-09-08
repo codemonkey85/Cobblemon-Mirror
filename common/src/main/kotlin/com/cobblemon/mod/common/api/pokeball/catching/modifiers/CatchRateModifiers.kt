@@ -102,8 +102,8 @@ object CatchRateModifiers {
      */
     val LIGHT_LEVEL = WorldStateModifier { _, entity ->
         when (entity.level().getMaxLocalRawBrightness(entity.blockPosition())) {
-            0 -> 3F
-            in 1..7 -> 1.5F
+            0 -> 3.5F
+            in 1..7 -> 3F
             else -> 1F
         }
     }
@@ -162,7 +162,7 @@ object CatchRateModifiers {
         val speciesId = pokemon.pokemon.species.resourceIdentifier
         val knowledge = playerDexData.getKnowledgeForSpecies(speciesId)
         when (knowledge) {
-            PokedexEntryProgress.CAUGHT -> 2.5F
+            PokedexEntryProgress.CAUGHT -> 3.5F
             else -> 1F
         }
     }
