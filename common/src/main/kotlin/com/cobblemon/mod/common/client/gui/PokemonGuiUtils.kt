@@ -80,7 +80,7 @@ fun drawProfilePokemon(
 
     val sprite = PokemonModelRepository.getSprite(species, aspects, SpriteType.PROFILE);
 
-    if(sprite == null) {
+    if (sprite == null) {
 
         val model = PokemonModelRepository.getPoser(species, aspects)
         val texture = PokemonModelRepository.getTexture(species, aspects, state.animationSeconds)
@@ -90,7 +90,7 @@ fun drawProfilePokemon(
         PokemonModelRepository.getTextureNoSubstitute(species, aspects, 0f)
             .let { context.put(RenderContext.TEXTURE, it) }
         val baseScale = PokemonSpecies.getByIdentifier(species)!!.getForm(aspects).baseScale
-    context.put(RenderContext.SCALE, baseScale)
+        context.put(RenderContext.SCALE, baseScale)
         context.put(RenderContext.SPECIES, species)
         context.put(RenderContext.ASPECTS, aspects)
         context.put(RenderContext.RENDER_STATE, RenderContext.RenderState.PROFILE)
@@ -104,16 +104,16 @@ fun drawProfilePokemon(
         state.setPoseToFirstSuitable(poseType)
         state.updatePartialTicks(partialTicks)
         model.applyAnimations(null, state, 0F, 0F, 0F, 0F, 0F)
-
-    if (applyProfileTransform) {
-        matrixStack.translate(model.profileTranslation.x, model.profileTranslation.y, model.profileTranslation.z - 4.0)
-        matrixStack.scale(model.profileScale, model.profileScale, 1 / model.profileScale)
-    } else {
-        matrixStack.translate(0F, 0F, -4.0F)
-        if (applyBaseScale) matrixStack.scale(baseScale, baseScale, 1 / baseScale)
-    }
+        if (applyProfileTransform) {
+            matrixStack.translate(model.profileTranslation.x, model.profileTranslation.y, model.profileTranslation.z - 4.0)
+            matrixStack.scale(model.profileScale, model.profileScale, 1 / model.profileScale)} else {
+            matrixStack.translate(0F, 0F, -4.0F)
+            if (applyBaseScale) {
+                matrixStack.scale(baseScale, baseScale, 1 / baseScale)
+            }
+        }
         matrixStack.mulPose(rotation)
-        Lighting.setupForEntityInInventory() // TODO (techdaan): Does this map correctly?
+        Lighting.setupForEntityInInventory()
         val entityRenderDispatcher = Minecraft.getInstance().entityRenderDispatcher
         rotation.conjugate()
         entityRenderDispatcher.overrideCameraOrientation(rotation)
@@ -127,8 +127,8 @@ fun drawProfilePokemon(
         val packedLight = LightTexture.pack(11, 7)
 
         val colour = toHex(r, g, b, a)
-    model.withLayerContext(bufferSource, state, PokemonModelRepository.getLayers(species, aspects)) {
-        model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, colour)
+        model.withLayerContext(bufferSource, state, PokemonModelRepository.getLayers(species, aspects)) {
+            model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, colour)
             bufferSource.endBatch()
         }
         model.setDefault()

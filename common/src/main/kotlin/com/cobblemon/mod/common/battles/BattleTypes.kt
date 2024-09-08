@@ -21,6 +21,7 @@ object BattleTypes {
     val DOUBLES = makeBattleType("doubles", actorsPerSide = 1, slotsPerActor = 2)
     val TRIPLES = makeBattleType("triples", actorsPerSide = 1, slotsPerActor = 3)
     val MULTI = makeBattleType("multi", actorsPerSide = 2, slotsPerActor = 1)
+    val ROYAL = makeBattleType("freeforall", actorsPerSide = 1, slotsPerActor = 1)
     // maybe one day we can add MULTI-3 for triple battles with 6 fuckers in it, that'd be sick. We could game it with partial actors though
 
     fun makeBattleType(

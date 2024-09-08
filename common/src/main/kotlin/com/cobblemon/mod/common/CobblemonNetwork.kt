@@ -109,12 +109,7 @@ import com.cobblemon.mod.common.net.messages.client.trade.TradeUpdatedPacket
 import com.cobblemon.mod.common.net.messages.client.ui.InteractPokemonUIPacket
 import com.cobblemon.mod.common.net.messages.client.ui.PokedexUIPacket
 import com.cobblemon.mod.common.net.messages.client.ui.SummaryUIPacket
-import com.cobblemon.mod.common.net.messages.server.BattleChallengePacket
-import com.cobblemon.mod.common.net.messages.server.BenchMovePacket
-import com.cobblemon.mod.common.net.messages.server.RequestMoveSwapPacket
-import com.cobblemon.mod.common.net.messages.server.RequestPlayerInteractionsPacket
-import com.cobblemon.mod.common.net.messages.server.SelectStarterPacket
-import com.cobblemon.mod.common.net.messages.server.SendOutPokemonPacket
+import com.cobblemon.mod.common.net.messages.server.*
 import com.cobblemon.mod.common.net.messages.server.battle.BattleSelectActionsPacket
 import com.cobblemon.mod.common.net.messages.server.battle.RemoveSpectatorPacket
 import com.cobblemon.mod.common.net.messages.server.battle.SpectateBattlePacket
@@ -150,8 +145,7 @@ import com.cobblemon.mod.common.net.messages.server.trade.CancelTradePacket
 import com.cobblemon.mod.common.net.messages.server.trade.ChangeTradeAcceptancePacket
 import com.cobblemon.mod.common.net.messages.server.trade.OfferTradePacket
 import com.cobblemon.mod.common.net.messages.server.trade.UpdateTradeOfferPacket
-import com.cobblemon.mod.common.net.serverhandling.ChallengeHandler
-import com.cobblemon.mod.common.net.serverhandling.RequestInteractionsHandler
+import com.cobblemon.mod.common.net.serverhandling.*
 import com.cobblemon.mod.common.net.serverhandling.battle.BattleSelectActionsHandler
 import com.cobblemon.mod.common.net.serverhandling.battle.RemoveSpectatorHandler
 import com.cobblemon.mod.common.net.serverhandling.battle.SpectateBattleHandler
@@ -288,6 +282,7 @@ object CobblemonNetwork {
         list.add(PacketRegisterInfo(BattleHealthChangePacket.ID, BattleHealthChangePacket::decode, BattleHealthChangeHandler))
         list.add(PacketRegisterInfo(BattleSetTeamPokemonPacket.ID, BattleSetTeamPokemonPacket::decode, BattleSetTeamPokemonHandler))
         list.add(PacketRegisterInfo(BattleSwitchPokemonPacket.ID, BattleSwitchPokemonPacket::decode, BattleSwitchPokemonHandler))
+        list.add(PacketRegisterInfo(BattleSwapPokemonPacket.ID, BattleSwapPokemonPacket::decode, BattleSwapPokemonHandler))
         list.add(PacketRegisterInfo(BattleMessagePacket.ID, BattleMessagePacket::decode, BattleMessageHandler))
         list.add(PacketRegisterInfo(BattleCaptureStartPacket.ID, BattleCaptureStartPacket::decode, BattleCaptureStartHandler))
         list.add(PacketRegisterInfo(BattleCaptureEndPacket.ID, BattleCaptureEndPacket::decode, BattleCaptureEndHandler))
@@ -301,6 +296,12 @@ object CobblemonNetwork {
         list.add(PacketRegisterInfo(BattleChallengeExpiredPacket.ID, BattleChallengeExpiredPacket::decode, BattleChallengeExpiredHandler))
         list.add(PacketRegisterInfo(BattleReplacePokemonPacket.ID, BattleReplacePokemonPacket::decode, BattleReplacePokemonHandler))
         list.add(PacketRegisterInfo(BattleTransformPokemonPacket.ID, BattleTransformPokemonPacket::decode, BattleTransformPokemonHandler))
+
+        // MultiBattleTeam Packets
+        list.add(PacketRegisterInfo(TeamRequestNotificationPacket.ID, TeamRequestNotificationPacket::decode, TeamRequestNotificationHandler))
+        list.add(PacketRegisterInfo(TeamRequestExpiredPacket.ID, TeamRequestExpiredPacket::decode, TeamRequestExpiredHandler))
+        list.add(PacketRegisterInfo(TeamMemberRemoveNotificationPacket.ID, TeamMemberRemoveNotificationPacket::decode, TeamMemberRemoveNotificationHandler))
+        list.add(PacketRegisterInfo(TeamJoinNotificationPacket.ID, TeamJoinNotificationPacket::decode, TeamJoinNotificationHandler))
 
         // Settings packets
         list.add(PacketRegisterInfo(ServerSettingsPacket.ID, ServerSettingsPacket::decode, ServerSettingsPacketHandler))
@@ -392,6 +393,10 @@ object CobblemonNetwork {
         list.add(PacketRegisterInfo(RequestMoveSwapPacket.ID, RequestMoveSwapPacket::decode, RequestMoveSwapHandler))
         list.add(PacketRegisterInfo(BenchMovePacket.ID, BenchMovePacket::decode, BenchMoveHandler))
         list.add(PacketRegisterInfo(BattleChallengePacket.ID, BattleChallengePacket::decode, ChallengeHandler))
+        list.add(PacketRegisterInfo(BattleChallengeResponsePacket.ID, BattleChallengeResponsePacket::decode, ChallengeResponseHandler))
+        list.add(PacketRegisterInfo(BattleTeamRequestPacket.ID, BattleTeamRequestPacket::decode, TeamRequestHandler))
+        list.add(PacketRegisterInfo(BattleTeamResponsePacket.ID, BattleTeamResponsePacket::decode, TeamRequestResponseHandler))
+        list.add(PacketRegisterInfo(BattleTeamLeavePacket.ID, BattleTeamLeavePacket::decode, TeamLeaveHandler))
 
         list.add(PacketRegisterInfo(MovePCPokemonToPartyPacket.ID, MovePCPokemonToPartyPacket::decode, MovePCPokemonToPartyHandler))
         list.add(PacketRegisterInfo(MovePartyPokemonToPCPacket.ID, MovePartyPokemonToPCPacket::decode, MovePartyPokemonToPCHandler))

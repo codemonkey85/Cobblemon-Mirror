@@ -35,6 +35,7 @@ import net.minecraft.world.level.Level
 class StatusCureItem(val itemName: String, vararg val status: Status) : CobblemonItem(Properties()), PokemonSelectingItem {
     override val bagItem = object : BagItem {
         override val itemName = this@StatusCureItem.itemName
+        override val returnItem = Items.AIR
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) = canUseOnPokemon(target.effectedPokemon)
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "cure_status${status.takeIf { it.isNotEmpty() }?.let { " ${it.joinToString(separator = " ") { it.showdownName } }" } ?: "" }"
     }
@@ -51,7 +52,7 @@ class StatusCureItem(val itemName: String, vararg val status: Status) : Cobblemo
             player.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
             if (!player.isCreative)  {
                 stack.shrink(1)
-                player.giveOrDropItemStack(ItemStack(Items.GLASS_BOTTLE))
+                player.giveOrDropItemStack(ItemStack(bagItem.returnItem))
             }
             InteractionResultHolder.success(stack)
         } else {

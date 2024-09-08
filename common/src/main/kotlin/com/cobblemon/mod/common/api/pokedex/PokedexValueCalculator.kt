@@ -19,13 +19,21 @@ interface GlobalPokedexValueCalculator<T> {
     fun calculate(dexManager: AbstractPokedexManager): T
 }
 
-object CaughtCount : PokedexValueCalculator<Int> {
+object CaughtCount : PokedexValueCalculator<Int>, GlobalPokedexValueCalculator<Int> {
+    override fun calculate(dexManager: AbstractPokedexManager): Int {
+        return dexManager.speciesRecords.values.count { it.getKnowledge() == PokedexEntryProgress.CAUGHT }
+    }
+
     override fun calculate(dexManager: AbstractPokedexManager, dex: Map<ResourceLocation, PokedexEntry>): Int {
         return dex.entries.map { it.value }.count { dexManager.getKnowledgeForSpecies(it.speciesId) == PokedexEntryProgress.CAUGHT }
     }
 }
 
-object SeenCount : PokedexValueCalculator<Int> {
+object SeenCount : PokedexValueCalculator<Int>, GlobalPokedexValueCalculator<Int> {
+    override fun calculate(dexManager: AbstractPokedexManager): Int {
+        return dexManager.speciesRecords.values.count { it.getKnowledge() != PokedexEntryProgress.NONE }
+    }
+
     override fun calculate(dexManager: AbstractPokedexManager, dex: Map<ResourceLocation, PokedexEntry>): Int {
         return dex.entries.map { it.value }.count { dexManager.getKnowledgeForSpecies(it.speciesId) != PokedexEntryProgress.NONE }
     }

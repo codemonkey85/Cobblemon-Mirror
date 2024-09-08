@@ -99,7 +99,6 @@ object ClientMoLangFunctions {
         },
         "bedrock_stateful" to Function {
             model -> Function { params ->
-                println("It's running")
                 val group = params.getString(0)
                 val animation = params.getString(1)
                 val anim = model.bedrockStateful(group, animation)

@@ -12,6 +12,8 @@ import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.battles.BagItems
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.Items
 import net.minecraft.world.item.ItemStack
 import net.minecraft.server.level.ServerPlayer
 
@@ -26,6 +28,7 @@ interface BagItem {
     companion object {
         val EMPTY: BagItem = object : BagItem {
             override val itemName = "name"
+            override val returnItem: Item = Items.AIR
             override fun canUse(battle: PokemonBattle, target: BattlePokemon) = true
             override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "none"
         }
@@ -33,6 +36,10 @@ interface BagItem {
 
     /** The name provided to Showdown so that battle messages include the name of the effect for lang. */
     val itemName: String
+
+    /** The return item given when the item is consumed. */
+    val returnItem: Item
+
     /** Whether or not the item can probably be used right now, based on the mod-side version of battle state. */
     fun canUse(battle: PokemonBattle, target: BattlePokemon): Boolean
     /** Gets the itemId and data for inputting to Showdown. Hyper potion is `potion 200` for example. */
