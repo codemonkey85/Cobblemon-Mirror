@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.api.pokeball.catching.calculators
 
+import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.pokedex.CaughtCount
 import net.minecraft.server.level.ServerPlayer
 
 /**
@@ -25,8 +27,7 @@ interface PokedexProgressCaptureMultiplierProvider {
      * @return The multiplier based on the caught count.
      */
     fun caughtMultiplierFor(player: ServerPlayer): Float {
-        // ToDo once pokedex is implemented change number here
-        val caughtCount = 0
+        val caughtCount = Cobblemon.playerDataManager.getPokedexData(player).getGlobalCalculatedValue(CaughtCount)
         return when {
             caughtCount < 30 -> 1229F / 4096F
             // This one is exact

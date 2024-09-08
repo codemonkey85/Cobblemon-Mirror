@@ -63,7 +63,7 @@ internal data class PokemonP3(
                 OriginalTrainerType.CODEC.optionalFieldOf(DataKeys.POKEMON_ORIGINAL_TRAINER_TYPE, OriginalTrainerType.NONE).forGetter(PokemonP3::originalTrainerType),
                 Codec.STRING.optionalFieldOf(DataKeys.POKEMON_ORIGINAL_TRAINER).forGetter(PokemonP3::originalTrainer),
                 Codec.list(Codec.STRING).optionalFieldOf(DataKeys.POKEMON_FORCED_ASPECTS, emptyList()).forGetter { it.forcedAspects.toMutableList() },
-                Codec.list(CompoundTag.CODEC).fieldOf(FEATURES).forGetter(PokemonP3::features)
+                Codec.list(CompoundTag.CODEC).optionalFieldOf(FEATURES, emptyList()).forGetter(PokemonP3::features)
             ).apply(instance) { originalTrainerType, originalTrainer, forcedAspects, features -> PokemonP3(originalTrainerType, originalTrainer, forcedAspects.toSet(), features) }
         }
 
