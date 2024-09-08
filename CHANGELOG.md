@@ -7,6 +7,7 @@
 - Fixed PokemonProperty argument suggestions for ``tera`` and ``tera_type`` not suggesting ``stellar``.
 - Fixed being able to stack Relic Coin Pouches on top of each other.
 - Bag Items used during a turn will now be refunded if the battle ends before the next turn begins.
+- Pokemon which the current owner is not its Original Trainer now gains the extra EXP
 
 ### Additions
 - Added Pokémon (and item) fishing using modified fishing rods - Poké Rods! You'll need a Poké Rod smithing template, a fishing rod, and some type of Poké Ball. Each Poké Ball makes a differently themed rod. Why not?
@@ -20,6 +21,7 @@
 - Player trade range increased to 12 blocks (from 10 blocks)
 - PvP battle range increased to 32 blocks (from 10 blocks)
 - Spectate range increased to 64 blocks (from 10 blocks)
+- CriticalCaptures and Pokedex progress capture multiplier now work with dex
 
 ### Developer
 - SpawnCause is now an implementation of SpawningInfluence.
