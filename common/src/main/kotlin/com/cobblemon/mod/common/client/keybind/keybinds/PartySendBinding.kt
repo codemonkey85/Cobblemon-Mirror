@@ -40,7 +40,6 @@ object PartySendBinding : CobblemonBlockingKeyBinding(
     fun actioned() {
         canApplyChange = false
         secondsSinceActioned = 0F
-        wasDown = false
     }
 
     fun canAction() = canApplyChange
