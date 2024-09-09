@@ -26,11 +26,13 @@ import com.cobblemon.mod.common.battles.actor.PlayerBattleActor
 import com.cobblemon.mod.common.battles.actor.PokemonBattleActor
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.entity.npc.NPCEntity
+import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormParticlePacket
 import com.cobblemon.mod.common.net.messages.client.trade.TradeStartedPacket
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.trade.ActiveTrade
 import com.cobblemon.mod.common.trade.DummyTradeParticipant
 import com.cobblemon.mod.common.trade.PlayerTradeParticipant
+import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.party
 import com.cobblemon.mod.common.util.toPokemon
 import com.google.gson.GsonBuilder
@@ -66,9 +68,7 @@ object TestCommand {
         try {
             //this.testCodecOutput(context)
             val player = context.source.entity as ServerPlayer
-            val npc = NPCEntity(player.level())
-            npc.setPos(player.x, player.y, player.z)
-            player.level().addFreshEntity(npc)
+            SpawnSnowstormParticlePacket(cobblemonResource("conduit_particle"), player.position()).sendToPlayer(player)
 //            val evolutionEntity = GenericBedrockEntity(world = player.level())
 //            evolutionEntity.apply {
 //                category = cobblemonResource("evolution")

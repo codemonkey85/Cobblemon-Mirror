@@ -75,17 +75,25 @@ class ParametricParticleMotion(
 
     override val type = ParticleMotionType.PARAMETRIC
 
+    fun getStartingOffset(runtime: MoLangRuntime, particlePos: Vec3, emitterPos: Vec3): Vec3 {
+        val offset = runtime.resolveVec3d(this.offset)
+        val particlePosition = Vec3(particlePos.x, particlePos.y, particlePos.z)
+        val desiredPosition = emitterPos.add(offset)
+        return desiredPosition.subtract(particlePosition)
+    }
+
     override fun getInitialVelocity(runtime: MoLangRuntime, storm: ParticleStorm, particlePos: Vec3, emitterPos: Vec3) = Vec3.ZERO
     override fun getVelocity(runtime: MoLangRuntime, particle: SnowstormParticle, velocity: Vec3): Vec3 {
+        println("We are at ${particle.getX()}, ${particle.getY()}, ${particle.getZ()}")
         val stormPosition = Vec3(
             particle.storm.getX(),
             particle.storm.getY(),
             particle.storm.getZ()
         )
         val offset = runtime.resolveVec3d(this.offset)
-        val particlePosition =
-            Vec3(particle.getX(), particle.getY(), particle.getZ())
+        val particlePosition = Vec3(particle.getX(), particle.getY(), particle.getZ())
         val desiredPosition = stormPosition.add(offset)
+        println("Desired position is $desiredPosition")
         return desiredPosition.subtract(particlePosition)
     }
 

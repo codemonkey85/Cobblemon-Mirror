@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.client.render
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.ModAPI
+import com.cobblemon.mod.common.api.snowstorm.ParametricParticleMotion
 import com.cobblemon.mod.common.api.snowstorm.ParticleMaterial
 import com.cobblemon.mod.common.api.snowstorm.UVDetails
 import com.cobblemon.mod.common.client.particle.ParticleStorm
@@ -123,6 +124,17 @@ class SnowstormParticle(
         gravity = 0F
         particleTextureSheet = if (invisible) NO_RENDER else PARTICLE_SHEET_TRANSLUCENT
         storm.effect.particle.creationEvents.forEach { it.trigger(storm, this) }
+
+        println("Particle created at $x, $y, $z")
+        if (storm.effect.particle.motion is ParametricParticleMotion) {
+            applyRandoms()
+            setParticleAgeInRuntime()
+            var newPosition = Vec3(x, y, z)
+            newPosition = newPosition.add((storm.effect.particle.motion as ParametricParticleMotion).getStartingOffset(storm.runtime, particlePos = newPosition, emitterPos = storm.let { Vec3(it.getX(), it.getY(), it.getZ()) }))
+            setPos(newPosition.x, newPosition.y, newPosition.z)
+            println("Particle moved to $x, $y, $z")
+            println("Init velo $initialVelocity")
+        }
 //            when (storm.effect.particle.material) {
 //            ParticleMaterial.ALPHA -> ParticleMaterials.ALPHA
 //            ParticleMaterial.OPAQUE -> ParticleMaterials.OPAQUE
@@ -254,9 +266,8 @@ class SnowstormParticle(
             remove()
             return
         } else {
-            val velocity = storm.effect.particle.motion.getVelocity(storm.runtime, this,
-                Vec3(xd, yd, zd)
-            )
+            val velocity = storm.effect.particle.motion.getVelocity(storm.runtime, this, Vec3(xd, yd, zd))
+            println("Velocity: $velocity")
             xd = velocity.x
             yd = velocity.y
             zd = velocity.z

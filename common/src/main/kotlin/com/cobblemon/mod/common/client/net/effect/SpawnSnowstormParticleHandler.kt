@@ -21,8 +21,6 @@ object SpawnSnowstormParticleHandler : ClientNetworkPacketHandler<SpawnSnowstorm
         val wrapper = MatrixWrapper()
         val matrix = PoseStack()
         matrix.translate(packet.position.x, packet.position.y, packet.position.z)
-//        matrix.multiply(YP.rotationDegrees(packet.yawDegrees))
-//        matrix.multiply(NEGATIVE_X.rotationDegrees(packet.pitchDegrees))
         wrapper.updateMatrix(matrix.last().pose())
         val world = Minecraft.getInstance().level ?: return
         val effect = BedrockParticleOptionsRepository.getEffect(packet.effectId) ?: return
