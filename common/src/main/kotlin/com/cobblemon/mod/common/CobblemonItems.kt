@@ -19,6 +19,7 @@ import com.cobblemon.mod.common.api.text.gray
 import com.cobblemon.mod.common.block.BerryBlock
 import com.cobblemon.mod.common.block.MintBlock
 import com.cobblemon.mod.common.block.MintBlock.MintType
+import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatType
 import com.cobblemon.mod.common.item.*
 import com.cobblemon.mod.common.item.armor.CobblemonArmorTrims
@@ -153,6 +154,21 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     val ANCIENT_ORIGIN_BALL = pokeBallItem(PokeBalls.ANCIENT_ORIGIN_BALL)
 
     @JvmField
+    val POKEDEX_BLACK = create("pokedex_black", PokedexItem(PokedexTypes.BLACK))
+    @JvmField
+    val POKEDEX_BLUE = create("pokedex_blue", PokedexItem(PokedexTypes.BLUE))
+    @JvmField
+    val POKEDEX_GREEN = create("pokedex_green", PokedexItem(PokedexTypes.GREEN))
+    @JvmField
+    val POKEDEX_PINK = create("pokedex_pink", PokedexItem(PokedexTypes.PINK))
+    @JvmField
+    val POKEDEX_RED = create("pokedex_red", PokedexItem(PokedexTypes.RED))
+    @JvmField
+    val POKEDEX_WHITE = create("pokedex_white", PokedexItem(PokedexTypes.WHITE))
+    @JvmField
+    val POKEDEX_YELLOW = create("pokedex_yellow", PokedexItem(PokedexTypes.YELLOW))
+
+    @JvmField
     val VIVICHOKE = compostableItem("vivichoke")
 
     @JvmField
@@ -256,6 +272,8 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     val PASTURE = blockItem("pasture", CobblemonBlocks.PASTURE)
     @JvmField
     val DISPLAY_CASE = blockItem("display_case", CobblemonBlocks.DISPLAY_CASE)
+    @JvmField
+    val LECTERN = blockItem("lectern", CobblemonBlocks.LECTERN)
 
     // Evolution items
     @JvmField val LINK_CABLE = create("link_cable", LinkCableItem())
@@ -962,6 +980,12 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     @JvmField
     val CHISELED_POLISHED_TUMBLESTONE = blockItem("chiseled_polished_tumblestone", CobblemonBlocks.CHISELED_POLISHED_TUMBLESTONE)
     @JvmField
+    val SMOOTH_TUMBLESTONE = blockItem("smooth_tumblestone", CobblemonBlocks.SMOOTH_TUMBLESTONE)
+    @JvmField
+    val SMOOTH_TUMBLESTONE_STAIRS = blockItem("smooth_tumblestone_stairs", CobblemonBlocks.SMOOTH_TUMBLESTONE_STAIRS)
+    @JvmField
+    val SMOOTH_TUMBLESTONE_SLAB = blockItem("smooth_tumblestone_slab", CobblemonBlocks.SMOOTH_TUMBLESTONE_SLAB)
+    @JvmField
     val TUMBLESTONE_BRICKS = blockItem("tumblestone_bricks", CobblemonBlocks.TUMBLESTONE_BRICKS)
     @JvmField
     val TUMBLESTONE_BRICK_STAIRS = blockItem("tumblestone_brick_stairs", CobblemonBlocks.TUMBLESTONE_BRICK_STAIRS)
@@ -981,6 +1005,12 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     val POLISHED_SKY_TUMBLESTONE_WALL = blockItem("polished_sky_tumblestone_wall", CobblemonBlocks.POLISHED_SKY_TUMBLESTONE_WALL)
     @JvmField
     val CHISELED_POLISHED_SKY_TUMBLESTONE = blockItem("chiseled_polished_sky_tumblestone", CobblemonBlocks.CHISELED_POLISHED_SKY_TUMBLESTONE)
+    @JvmField
+    val SMOOTH_SKY_TUMBLESTONE = blockItem("smooth_sky_tumblestone", CobblemonBlocks.SMOOTH_SKY_TUMBLESTONE)
+    @JvmField
+    val SMOOTH_SKY_TUMBLESTONE_STAIRS = blockItem("smooth_sky_tumblestone_stairs", CobblemonBlocks.SMOOTH_SKY_TUMBLESTONE_STAIRS)
+    @JvmField
+    val SMOOTH_SKY_TUMBLESTONE_SLAB = blockItem("smooth_sky_tumblestone_slab", CobblemonBlocks.SMOOTH_SKY_TUMBLESTONE_SLAB)
     @JvmField
     val SKY_TUMBLESTONE_BRICKS = blockItem("sky_tumblestone_bricks", CobblemonBlocks.SKY_TUMBLESTONE_BRICKS)
     @JvmField
@@ -1002,6 +1032,12 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     @JvmField
     val CHISELED_POLISHED_BLACK_TUMBLESTONE = blockItem("chiseled_polished_black_tumblestone", CobblemonBlocks.CHISELED_POLISHED_BLACK_TUMBLESTONE)
     @JvmField
+    val SMOOTH_BLACK_TUMBLESTONE = blockItem("smooth_black_tumblestone", CobblemonBlocks.SMOOTH_BLACK_TUMBLESTONE)
+    @JvmField
+    val SMOOTH_BLACK_TUMBLESTONE_STAIRS = blockItem("smooth_black_tumblestone_stairs", CobblemonBlocks.SMOOTH_BLACK_TUMBLESTONE_STAIRS)
+    @JvmField
+    val SMOOTH_BLACK_TUMBLESTONE_SLAB = blockItem("smooth_black_tumblestone_slab", CobblemonBlocks.SMOOTH_BLACK_TUMBLESTONE_SLAB)
+    @JvmField
     val BLACK_TUMBLESTONE_BRICKS = blockItem("black_tumblestone_bricks", CobblemonBlocks.BLACK_TUMBLESTONE_BRICKS)
     @JvmField
     val BLACK_TUMBLESTONE_BRICK_STAIRS = blockItem("black_tumblestone_brick_stairs", CobblemonBlocks.BLACK_TUMBLESTONE_BRICK_STAIRS)
@@ -1011,6 +1047,27 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     val BLACK_TUMBLESTONE_BRICK_WALL = blockItem("black_tumblestone_brick_wall", CobblemonBlocks.BLACK_TUMBLESTONE_BRICK_WALL)
     @JvmField
     val CHISELED_BLACK_TUMBLESTONE_BRICKS = blockItem("chiseled_black_tumblestone_bricks", CobblemonBlocks.CHISELED_BLACK_TUMBLESTONE_BRICKS)
+
+    @JvmField
+    val FIRE_STONE_BLOCK = blockItem("fire_stone_block", CobblemonBlocks.FIRE_STONE_BLOCK)
+    @JvmField
+    val WATER_STONE_BLOCK = blockItem("water_stone_block", CobblemonBlocks.WATER_STONE_BLOCK)
+    @JvmField
+    val THUNDER_STONE_BLOCK = blockItem("thunder_stone_block", CobblemonBlocks.THUNDER_STONE_BLOCK)
+    @JvmField
+    val LEAF_STONE_BLOCK = blockItem("leaf_stone_block", CobblemonBlocks.LEAF_STONE_BLOCK)
+    @JvmField
+    val ICE_STONE_BLOCK = blockItem("ice_stone_block", CobblemonBlocks.ICE_STONE_BLOCK)
+    @JvmField
+    val SUN_STONE_BLOCK = blockItem("sun_stone_block", CobblemonBlocks.SUN_STONE_BLOCK)
+    @JvmField
+    val MOON_STONE_BLOCK = blockItem("moon_stone_block", CobblemonBlocks.MOON_STONE_BLOCK)
+    @JvmField
+    val SHINY_STONE_BLOCK = blockItem("shiny_stone_block", CobblemonBlocks.SHINY_STONE_BLOCK)
+    @JvmField
+    val DAWN_STONE_BLOCK = blockItem("dawn_stone_block", CobblemonBlocks.DAWN_STONE_BLOCK)
+    @JvmField
+    val DUSK_STONE_BLOCK = blockItem("dusk_stone_block", CobblemonBlocks.DUSK_STONE_BLOCK)
 
     @JvmField
     val AUTOMATON_ARMOR_TRIM_SMITHING_TEMPLATE: SmithingTemplateItem = this.create(

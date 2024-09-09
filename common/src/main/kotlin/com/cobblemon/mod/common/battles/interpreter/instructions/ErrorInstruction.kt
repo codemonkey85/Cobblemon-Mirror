@@ -33,6 +33,7 @@ class ErrorInstruction(val battleActor: BattleActor, val message: BattleMessage)
             val lang = when(message.rawMessage) {
                 "|error|[Unavailable choice] Can't switch: The active Pokémon is trapped" -> battleLang("error.pokemon_is_trapped").red()
                 "|error|[Invalid choice] Can't choose for Team Preview: You're not in a Team Preview phase" -> return@dispatchGo
+                "|error|[Invalid choice] Can't do anything: It's not your turn" -> return@dispatchGo
                 else -> battle.createUnimplemented(message)
             }
             battleActor.sendMessage(lang)

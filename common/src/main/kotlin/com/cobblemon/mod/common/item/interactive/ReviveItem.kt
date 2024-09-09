@@ -32,6 +32,7 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import kotlin.math.ceil
 
@@ -44,6 +45,7 @@ import kotlin.math.ceil
 class ReviveItem(val max: Boolean): CobblemonItem(Properties()) {
     val bagItem = object : BagItem {
         override val itemName = "item.cobblemon.${ if (max) "max_revive" else "revive" }"
+        override val returnItem = Items.AIR
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) = target.health <= 0
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "revive ${ if (max) "1" else "0.5" }"
     }
@@ -74,7 +76,7 @@ class ReviveItem(val max: Boolean): CobblemonItem(Properties()) {
                             if (!player.isCreative) {
                                 stack.shrink(1)
                             }
-                            CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(bp.entity?.pokemon?.species!!.resourceIdentifier, BuiltInRegistries.ITEM.getKey(stack.item)))
+                            CobblemonCriteria.POKEMON_INTERACT.trigger(player, PokemonInteractContext(bp.effectedPokemon.species.resourceIdentifier, BuiltInRegistries.ITEM.getKey(stack.item)))
                         }
                     }
                 }

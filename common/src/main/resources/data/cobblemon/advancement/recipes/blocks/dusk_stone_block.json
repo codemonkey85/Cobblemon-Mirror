@@ -1,0 +1,34 @@
+{
+  "parent": "cobblemon:recipes/root",
+  "rewards": {
+    "recipes": [
+      "cobblemon:dusk_stone_block"
+    ]
+  },
+  "criteria": {
+    "has_dusk_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:dusk_stone"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "cobblemon:dusk_stone_block"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_dusk_stone",
+      "has_the_recipe"
+    ]
+  ]
+}

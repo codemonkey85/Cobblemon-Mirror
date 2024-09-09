@@ -208,10 +208,10 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
         dialogueDTO.currentPageDTO.clientActions.flatMap(String::asExpressions).resolve(runtime)
     }
 
-    override fun render(drawContext: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(GuiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         remainingSeconds -= delta / 20F
         dialogueTimerWidget.ratio = if (remainingSeconds <= 0) -1F else remainingSeconds / dialogueDTO.dialogueInput.deadline
-        super.render(drawContext, mouseX, mouseY, delta)
+        super.render(GuiGraphics, mouseX, mouseY, delta)
     }
 
     override fun isPauseScreen() = false

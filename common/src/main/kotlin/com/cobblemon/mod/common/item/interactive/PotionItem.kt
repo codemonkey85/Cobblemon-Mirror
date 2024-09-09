@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.item.interactive
 
+import com.bedrockk.molang.Expression
+import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
@@ -71,26 +73,31 @@ class PotionItem(val type: PotionType) : CobblemonItem(Properties()), PokemonSel
 enum class PotionType(val amountToHeal: () -> ExpressionLike, val curesStatus: Boolean) : BagItem {
     POTION({ com.cobblemon.mod.common.CobblemonMechanics.potions.potionRestoreAmount }, false) {
         override val itemName = "item.cobblemon.potion"
+        override val returnItem = Items.GLASS_BOTTLE
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "potion ${genericRuntime.resolveInt(amountToHeal(), battlePokemon)}"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) =  target.health < target.maxHealth && target.health > 0
     },
     SUPER_POTION({ com.cobblemon.mod.common.CobblemonMechanics.potions.superPotionRestoreAmount }, false) {
         override val itemName = "item.cobblemon.super_potion"
+        override val returnItem = Items.GLASS_BOTTLE
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "potion ${genericRuntime.resolveInt(amountToHeal(), battlePokemon)}"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) =  target.health < target.maxHealth && target.health > 0
     },
     HYPER_POTION({ com.cobblemon.mod.common.CobblemonMechanics.potions.hyperPotionRestoreAmount }, false) {
         override val itemName = "item.cobblemon.hyper_potion"
+        override val returnItem = Items.GLASS_BOTTLE
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "potion ${genericRuntime.resolveInt(amountToHeal(), battlePokemon)}"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) =  target.health < target.maxHealth && target.health > 0
     },
     MAX_POTION({ 999999.0.asExpressionLike() }, false) {
         override val itemName = "item.cobblemon.max_potion"
+        override val returnItem = Items.GLASS_BOTTLE
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "potion ${battlePokemon.maxHealth - battlePokemon.health}"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) =  target.health < target.maxHealth && target.health > 0
     },
     FULL_RESTORE({ 999999.0.asExpressionLike() }, true) {
         override val itemName = "item.cobblemon.full_restore"
+        override val returnItem = Items.GLASS_BOTTLE
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "full_restore"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) =  target.health < target.maxHealth && target.health > 0
     }

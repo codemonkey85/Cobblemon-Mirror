@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.client.entity
 
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
+import com.bedrockk.molang.runtime.value.MoValue
 import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.entity.PokemonSideDelegate
@@ -291,7 +292,7 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
             },
             "friendship" to java.util.function.Function {
                 return@Function DoubleValue(currentEntity.pokemon.friendship.toDouble())
-            }
+            },
         ))
     }
 

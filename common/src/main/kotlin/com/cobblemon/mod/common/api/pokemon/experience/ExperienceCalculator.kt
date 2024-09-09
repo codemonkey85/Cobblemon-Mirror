@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.api.pokemon.experience
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
+import com.cobblemon.mod.common.pokemon.OriginalTrainerType
 import com.cobblemon.mod.common.pokemon.evolution.requirements.LevelRequirement
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -29,8 +30,9 @@ object StandardExperienceCalculator : ExperienceCalculator {
         val victorPokemon = battlePokemon.effectedPokemon
         val victorLevel = victorPokemon.level
         val term3 = (((2.0 * opponentLevel) + 10) / (opponentLevel + victorLevel + 10)).pow(2.5)
-        // ToDo when OT is implemented 1.5 if traded with someone from the same locale, 1.7 otherwise, 1.0 if OT
-        val nonOtBonus = 1.0
+        // ToDo 1.7 if pokemon was traded with someone of different locale/language
+        val nonOtBonus = if (battlePokemon.effectedPokemon.originalTrainerType == OriginalTrainerType.PLAYER &&
+                battlePokemon.effectedPokemon.originalTrainer.equals(battlePokemon.actor.uuid.toString())) 1.0 else 1.5
         val luckyEggMultiplier = if (battlePokemon.effectedPokemon.heldItemNoCopy().`is`(CobblemonItemTags.LUCKY_EGG)) Cobblemon.config.luckyEggMultiplier else 1.0
         val evolutionMultiplier = if (battlePokemon.effectedPokemon.evolutionProxy.server().any { evolution ->
             val requirements = evolution.requirements.asSequence()

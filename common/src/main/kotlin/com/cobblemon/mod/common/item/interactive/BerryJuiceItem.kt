@@ -27,6 +27,7 @@ import net.minecraft.world.item.Items
 class BerryJuiceItem : CobblemonItem(Properties()), PokemonSelectingItem {
     override val bagItem = object : BagItem {
         override val itemName = "item.cobblemon.berry_juice"
+        override val returnItem = Items.BOWL
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "potion 20"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) =  target.health < target.maxHealth && target.health > 0
     }

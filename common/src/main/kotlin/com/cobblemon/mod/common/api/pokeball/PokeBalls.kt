@@ -163,7 +163,6 @@ object PokeBalls : JsonDataRegistry<PokeBall> {
         createDefault("safari_ball", CatchRateModifiers.SAFARI)
         createDefault("fast_ball", BaseStatModifier(Stats.SPEED, { it >= 100 }, 4F))
         createDefault("level_ball", CatchRateModifiers.LEVEL)
-        // ToDo we will need fishing context here once fishing is implemented for a multiplier
         createDefault("lure_ball", CatchRateModifiers.LURE)
         createDefault("heavy_ball", CatchRateModifiers.WEIGHT_BASED)
         createDefault("love_ball", CatchRateModifiers.LOVE)
@@ -173,8 +172,7 @@ object PokeBalls : JsonDataRegistry<PokeBall> {
         createDefault("net_ball", CatchRateModifiers.typeBoosting(3F, ElementalTypes.BUG, ElementalTypes.WATER))
         createDefault("dive_ball", CatchRateModifiers.SUBMERGED_IN_WATER, waterDragValue = 0.99F)
         createDefault("nest_ball", CatchRateModifiers.NEST)
-        // ToDo implement effect once pokedex is implemented, we have a custom multiplier of 2.5 instead of the official pokeball
-        createDefault("repeat_ball")
+        createDefault("repeat_ball", CatchRateModifiers.REPEAT)
         createDefault("timer_ball", CatchRateModifiers.turnBased { turn -> (1F * turn * (1229F / 4096F)).coerceAtMost(4F) })
         createDefault("luxury_ball", effects = listOf(FriendshipEarningBoostEffect(2F)))
         createDefault("premier_ball")

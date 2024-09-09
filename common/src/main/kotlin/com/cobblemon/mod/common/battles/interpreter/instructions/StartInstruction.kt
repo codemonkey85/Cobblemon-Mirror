@@ -50,7 +50,7 @@ class StartInstruction(val message: BattleMessage): InterpreterInstruction {
                     battleLang("start.reflecttype", pokemon.getName(), optionalPokemonName)
                 else
                     when (effectID) {
-                        "confusion", "perish3" -> return@dispatch GO // Skip
+                        "perish3" -> return@dispatch GO // Skip
                         "perish2", "perish1", "perish0",
                         "stockpile1", "stockpile2", "stockpile3" -> battleLang("start.${effectID.dropLast(1)}", pokemon.getName(), effectID.last().digitToInt())
                         "dynamax" -> battleLang("start.${message.effectAt(2)?.id ?: effectID}", pokemon.getName()).yellow()

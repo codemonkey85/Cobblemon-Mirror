@@ -11,29 +11,24 @@ blossom = "2.1.0"
 idea-ext = "1.1.7"
 
 # Loom
-loom = "1.6-SNAPSHOT"
+loom = "1.7-SNAPSHOT"
 architectury-plugin = "3.4-SNAPSHOT"
 
 # Common
 molang = "1.1.15"
 graal = "22.3.0"
 icu4j = "71.1"
-jei-api = "15.2.0.25"
+jei-api = "19.8.2.99"
 
 # Fabric
 fabric-loader = "0.15.11"
-fabric-api = "0.100.1+1.21"
+fabric-api = "0.100.8+1.21"
 fabric-kotlin = "1.11.0+kotlin.2.0.0"
 fabric-permissions-api = "0.2-SNAPSHOT"
 lambDynamicLights = "2.3.4+1.20.4"
 
-# Forge
-forge = "1.20.1-47.1.0"
-kotlin-for-forge = "4.10.0"
-flywheel = "0.6.10-7"
-
 # NeoForge
-neoforge = "21.0.14-beta"
+neoforge = "21.0.167"
 neo-kotlin-for-forge = "5.4.0"
 
 # Data Storage
@@ -63,7 +58,7 @@ serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serializ
 serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json-jvm", version.ref = "serialization" }
 
 # Common
-jei-api = { group = "local.mezz.jei", name = "common-api", version.ref = "jei-api"}
+jei-api = { group = "mezz.jei", name = "jei-1.21-common-api", version.ref = "jei-api"}
 molang = { group = "local.com.bedrockk", name = "molang", version.ref = "molang" }
 graal = { group = "org.graalvm.js", name = "js", version.ref = "graal" }
 icu4j = { group = "com.ibm.icu", name = "icu4j", version.ref = "icu4j" }
@@ -75,12 +70,8 @@ fabric-kotlin = { group = "net.fabricmc", name = "fabric-language-kotlin", versi
 fabric-permissions = { group = "me.lucko", name = "fabric-permissions-api", version.ref = "fabric-permissions-api" }
 adorn-fabric = { group = "maven.modrinth", name = "adorn", version = "5.3.0-neoforge"}
 lambDynamicLights = { group = "maven.modrinth", name = "lambdynamiclights", version.ref = "lambDynamicLights"}
-jei-fabric = { group = "mezz.jei", name = "jei-1.20.1-fabric", version.ref = "jei-api"}
-
-# Forge
-forge = { group = "net.minecraftforge", name = "forge", version.ref = "forge" }
-kotlin-forge = { group = "thedarkcolour", name = "kotlinforforge", version.ref = "kotlin-for-forge" }
-adorn-forge = { group = "maven.modrinth", name = "adorn", version = "5.3.0-forge"}
+jei-api-fabric = { group = "mezz.jei", name = "jei-1.21-fabric-api", version.ref = "jei-api" }
+jei-fabric = { group = "mezz.jei", name = "jei-1.21-fabric", version.ref = "jei-api"}
 
 # NeoForge
 neoforge = { group = "net.neoforged", name = "neoforge", version.ref = "neoforge" }
@@ -101,7 +92,7 @@ classgraph = { group = "io.github.classgraph", name = "classgraph", version.ref 
 kotlin = [ "kotlin-stdlib", "kotlin-reflect" ]
 fabric = [ "fabric-kotlin", "fabric-permissions" ]
 fabric-kotlin-deps = [ "jetbrains-annotations", "serialization-core", "serialization-json" ]
-fabric-integrations-compileOnly = [ "adorn-fabric", "lambDynamicLights" ]
+fabric-integrations-compileOnly = [ "adorn-fabric", "lambDynamicLights", "jei-api-fabric" ]
 fabric-integrations-runtimeOnly = [ "jei-fabric" ]
 mongo = [ "mongo-driver-core", "mongo-driver-sync" ]
 unitTesting = [ "junit-fabric", "junit-params", "mockito-core", "mock-kotlin", "classgraph" ]

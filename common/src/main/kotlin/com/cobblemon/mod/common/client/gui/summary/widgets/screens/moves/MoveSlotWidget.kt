@@ -30,10 +30,10 @@ import net.minecraft.util.Mth
 
 class MoveSlotWidget(
     pX: Int, pY: Int,
-    val move: Move,
+    val move: Move?,
     private val movesWidget: MovesWidget,
         private val pokemon: Pokemon,
-): SoundlessWidget(pX, pY, MOVE_WIDTH, MOVE_HEIGHT, Component.literal(move.name)) {
+): SoundlessWidget(pX, pY, MOVE_WIDTH, MOVE_HEIGHT, Component.literal(move?.name ?: "")) {
 
     companion object {
         private val moveResource = cobblemonResource("textures/gui/summary/summary_move.png")
@@ -57,7 +57,7 @@ class MoveSlotWidget(
         addWidget(this)
     }
 
-    private val switchMoveButton = SwapMoveButton(x, y, move.template, movesWidget) {
+    private val switchMoveButton = SwapMoveButton(x, y, move?.template, movesWidget) {
         movesWidget.selectMove(null)
         if (movesWidget.summary.sideScreenIndex == Summary.MOVE_SWAP) {
             movesWidget.summary.displaySideScreen(Summary.PARTY)
@@ -67,90 +67,91 @@ class MoveSlotWidget(
     }.apply {
         addWidget(this)
     }
-    val elementalType:ElementalType = Moves.getByNameOrDummy(move.name).getEffectiveElementalType(pokemon)
+    val elementalType:ElementalType = Moves.getByNameOrDummy(move?.name ?: "").getEffectiveElementalType(pokemon)
     override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         val matrices = context.pose()
         isHovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height
+        if (move != null) {
+            val moveTemplate = Moves.getByNameOrDummy(move.name)
+            val rgb = elementalType.hue.toRGB()
 
-        val moveTemplate = Moves.getByNameOrDummy(move.name)
-        val rgb = elementalType.hue.toRGB()
+            if (movesWidget.selectedMove == move) {
+                blitk(
+                        matrixStack = matrices,
+                        texture = moveSelectedOverlayResource,
+                        x = x - 1,
+                        y = y - 1,
+                        width = MOVE_WIDTH + 2,
+                        height = MOVE_HEIGHT + 2
+                )
+            }
 
-        if (movesWidget.selectedMove == move) {
             blitk(
-                matrixStack = matrices,
-                texture = moveSelectedOverlayResource,
-                x = x - 1,
-                y = y - 1,
-                width = MOVE_WIDTH + 2,
-                height = MOVE_HEIGHT + 2
+                    matrixStack = matrices,
+                    texture = moveResource,
+                    x = x,
+                    y = y,
+                    width = MOVE_WIDTH,
+                    height = MOVE_HEIGHT,
+                    vOffset = if (isHovered) MOVE_HEIGHT else 0,
+                    textureHeight = MOVE_HEIGHT * 2,
+                    red = rgb.first,
+                    green = rgb.second,
+                    blue = rgb.third
             )
-        }
 
-        blitk(
-            matrixStack = matrices,
-            texture = moveResource,
-            x = x,
-            y = y,
-            width = MOVE_WIDTH,
-            height = MOVE_HEIGHT,
-            vOffset = if (isHovered) MOVE_HEIGHT else 0,
-            textureHeight = MOVE_HEIGHT * 2,
-            red = rgb.first,
-            green = rgb.second,
-            blue = rgb.third
-        )
+            blitk(
+                    matrixStack = matrices,
+                    texture = moveOverlayResource,
+                    x = x,
+                    y = y,
+                    width = MOVE_WIDTH,
+                    height = MOVE_HEIGHT
+            )
 
-        blitk(
-            matrixStack = matrices,
-            texture = moveOverlayResource,
-            x = x,
-            y = y,
-            width = MOVE_WIDTH,
-            height = MOVE_HEIGHT
-        )
-
-        var movePPText = Component.literal("${move.currentPp}/${move.maxPp}").bold()
+            var movePPText = Component.literal("${move.currentPp}/${move.maxPp}").bold()
 
         if (move.currentPp <= Mth.floor(move.maxPp / 2F)) {
             movePPText = if (move.currentPp == 0) movePPText.red() else movePPText.gold()
         }
 
-        drawScaledText(
-            context = context,
-            font = CobblemonResources.DEFAULT_LARGE,
-            text = movePPText,
-            x = x + 93,
-            y = y + 13,
-            centered = true
-        )
+            drawScaledText(
+                    context = context,
+                    font = CobblemonResources.DEFAULT_LARGE,
+                    text = movePPText,
+                    x = x + 93,
+                    y = y + 13,
+                    centered = true
+            )
 
-        // Type Icon
-        TypeIcon(
-            x = x + 2,
-            y = y + 2,
-            type = elementalType
-        ).render(context)
+            // Type Icon
+            TypeIcon(
+                x = x + 2,
+                y = y + 2,
+                type = elementalType
+            ).render(context)
 
-        // Move Category
-        MoveCategoryIcon(
-            x = x + 66,
-            y = y + 13.5,
-            category = move.damageCategory
-        ).render(context)
+            // Move Category
+            MoveCategoryIcon(
+                    x = x + 66,
+                    y = y + 13.5,
+                    category = move.damageCategory
+            ).render(context)
 
-        // Move Name
-        drawScaledText(
-            context = context,
-            font = CobblemonResources.DEFAULT_LARGE,
-            text = move.displayName.bold(),
-            x = x + 28,
-            y = y + 2,
-            shadow = true
-        )
+            // Move Name
+            drawScaledText(
+                    context = context,
+                    font = CobblemonResources.DEFAULT_LARGE,
+                    text = move.displayName.bold(),
+                    x = x + 28,
+                    y = y + 2,
+                    shadow = true
+            )
 
-        // Reorder Buttons
-        moveUpButton.render(context, pMouseX, pMouseY, pPartialTicks)
-        moveDownButton.render(context, pMouseX, pMouseY, pPartialTicks)
+            // Reorder Buttons
+            moveUpButton.render(context, pMouseX, pMouseY, pPartialTicks)
+            moveDownButton.render(context, pMouseX, pMouseY, pPartialTicks)
+        }
 
         // Switch Move Button
         switchMoveButton.render(context, pMouseX, pMouseY, pPartialTicks)

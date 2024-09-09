@@ -8,11 +8,11 @@
 
 package com.cobblemon.mod.common.client.battle
 
+import com.cobblemon.mod.common.battles.BattleFormat
 import java.util.UUID
 
 class ClientBattleChallenge(
     val challengeId: UUID,
-    val challengerId: UUID
-) {
-    // Some data about the rules that were proposed, probably.
-}
+    val challengerIds: List<UUID>,
+    val battleFormat: BattleFormat? = null
+)

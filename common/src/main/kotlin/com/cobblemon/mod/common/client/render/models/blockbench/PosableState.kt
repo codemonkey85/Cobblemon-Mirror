@@ -66,13 +66,14 @@ abstract class PosableState : Schedulable {
             val changed = field != value
             field = value
             if (value != null && changed) {
+                runtime.environment.query.addFunctions(value.functions.functions)
+
                 val entity = getEntity() as? PosableEntity ?: return
                 entity.struct.addFunctions(value.functions.functions)
-                runtime.environment.query.addFunctions(value.functions.functions)
                 // Locators need to be initialized asap, even if they aren't in perfect positions. The reason for this
                 // is that the locators might be called upon by frame 0 particle effects and if they aren't defined
                 // it'll crash. For non-entity states we don't give a shit though.
-                value.updateLocators(getEntity() ?: return, this)
+                value.updateLocators(entity as Entity, this)
             }
         }
     /** The name of the current pose. */
@@ -224,7 +225,7 @@ abstract class PosableState : Schedulable {
             updateLocatorPosition(entity.position())
             it.validatePose(entity as? PosableEntity, this)
         }
-        runEffects(entity, previousAge, age)
+        tickEffects(entity, previousAge, age)
         val primaryAnimation = primaryAnimation ?: return
         if (primaryAnimation.started + primaryAnimation.duration <= animationSeconds) {
             this.primaryAnimation = null
@@ -296,7 +297,11 @@ abstract class PosableState : Schedulable {
         val model = currentModel
         if (model != null) {
             val poseImpl = model.poses[pose] ?: return
-            poseParticles.removeIf { particle -> poseImpl.animations.filterIsInstance<BedrockPoseAnimation>().flatMap { it.particleKeyFrames }.none(particle::isSameAs) }
+            poseParticles.removeIf { particle ->
+                poseImpl.animations.filterIsInstance<BedrockPoseAnimation>().flatMap { it.particleKeyFrames }.none(particle::isSameAs)
+                        && activeAnimations.filterIsInstance<BedrockActiveAnimation>().flatMap { it.animation.effects.filterIsInstance<BedrockParticleKeyframe>() }.none(particle::isSameAs)
+            }
+
             poseImpl.onTransitionedInto(this)
             val entity = getEntity()
             if (entity != null) {
@@ -343,20 +348,27 @@ abstract class PosableState : Schedulable {
     }
 
     /**
+     * Runs [runEffects] with the ages converted to seconds.
+     */
+    fun tickEffects(entity: Entity?, previousAge: Int, newAge: Int) {
+        val previousSeconds = previousAge / 20F
+        val newSeconds = newAge / 20F
+        runEffects(entity, previousSeconds, newSeconds)
+    }
+
+    /**
      * Runs any effects that are associated with the current state of the entity. This includes running effects for
      * all active animations, the primary animation, and any pose animations that are relevant.
      */
-    fun runEffects(entity: Entity, previousAge: Int, newAge: Int) {
-        val previousSeconds = previousAge / 20F
-        val currentSeconds = newAge / 20F
-        allActiveAnimations.forEach { it.applyEffects(entity, this, previousSeconds, currentSeconds) }
-        primaryAnimation?.animation?.applyEffects(entity, this, previousSeconds, currentSeconds)
+    fun runEffects(entity: Entity?, previousSeconds: Float, newSeconds: Float) {
+        allActiveAnimations.forEach { it.applyEffects(entity, this, previousSeconds, newSeconds) }
+        primaryAnimation?.animation?.applyEffects(entity, this, previousSeconds, newSeconds)
         currentModel?.let { model ->
             val pose = currentPose?.let { model.poses[it] }
             // Effects start playing from pose animations as long as the intensity is above 0.5. Pretty sloppy honestly.
             pose?.animations
                 ?.filter { shouldIdleRun(it, 0.5F) && it.condition(this) }
-                ?.forEach { it.applyEffects(entity, this, previousSeconds, currentSeconds) }
+                ?.forEach { it.applyEffects(entity, this, previousSeconds, newSeconds) }
         }
     }
 

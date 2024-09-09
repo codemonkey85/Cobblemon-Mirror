@@ -57,7 +57,7 @@ class PlantTumblestoneCriterion(
 //     * @param context The context of the criterion
 //     * @return True if the tumblestone block can grow at the given position, false otherwise
 //     */
-//    override fun matches(player: ServerPlayerEntity, context: PlantTumblestoneContext): Boolean {
+//    override fun matches(player: ServerPlayer, context: PlantTumblestoneContext): Boolean {
 //        return context.tumbleStoneBlock.canGrow(context.pos, player.level())
 //    }
 //}

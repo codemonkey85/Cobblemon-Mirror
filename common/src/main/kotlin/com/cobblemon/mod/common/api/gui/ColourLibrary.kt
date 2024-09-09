@@ -17,4 +17,6 @@ object ColourLibrary {
     const val SIDE_1_ALLY_BATTLE_COLOUR = 0x34C2AC
     const val SIDE_2_BATTLE_COLOUR = 0xE43838
     const val SIDE_2_ALLY_BATTLE_COLOUR = 0xD55ABA
+
+    const val BATTLE_COMMAND_COLOUR = 0xEBBA15
 }

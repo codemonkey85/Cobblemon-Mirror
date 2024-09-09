@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.api.battles.model.actor
 
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.phys.Vec3
 
 /**
  * Allows a [BattleActor] to attach a [LivingEntity] to itself.
@@ -21,5 +22,6 @@ interface EntityBackedBattleActor<T : LivingEntity> {
      * The [LivingEntity] attached to the [BattleActor].
      */
     val entity: T?
+    val initialPos: Vec3?
 
 }

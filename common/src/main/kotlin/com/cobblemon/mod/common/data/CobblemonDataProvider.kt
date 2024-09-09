@@ -15,6 +15,7 @@ import com.cobblemon.mod.common.api.abilities.Abilities
 import com.cobblemon.mod.common.api.berry.Berries
 import com.cobblemon.mod.common.api.data.DataProvider
 import com.cobblemon.mod.common.api.data.DataRegistry
+import com.cobblemon.mod.common.api.pokedex.Dexes
 import com.cobblemon.mod.common.api.dialogue.Dialogues
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.fishing.FishingBaits
@@ -25,6 +26,9 @@ import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.moves.animations.ActionEffects
 import com.cobblemon.mod.common.api.npc.NPCClasses
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
+import com.cobblemon.mod.common.api.pokedex.DexAdditions
+import com.cobblemon.mod.common.api.pokedex.entry.DexEntries
+import com.cobblemon.mod.common.api.pokedex.entry.DexEntryAdditions
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.feature.GlobalSpeciesFeatures
 import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatureAssignments
@@ -78,6 +82,10 @@ object CobblemonDataProvider : DataProvider {
         this.register(NaturalMaterials)
         this.register(Fossils)
         this.register(NPCClasses)
+        this.register(DexEntries)
+        this.register(DexEntryAdditions)
+        this.register(Dexes)
+        this.register(DexAdditions)
 
         CobblemonSpawnPools.load()
         this.register(PokeRods)
@@ -110,7 +118,9 @@ object CobblemonDataProvider : DataProvider {
 
     override fun sync(player: ServerPlayer) {
         if (!player.connection.connection.isMemoryConnection) {
-            this.registries.forEach { registry -> registry.sync(player) }
+            this.registries.forEach { registry ->
+                registry.sync(player)
+            }
         }
 
         CobblemonEvents.DATA_SYNCHRONIZED.emit(player)
