@@ -89,6 +89,9 @@
 #### Gen 3
 - Wynaut
 
+#### Gen 8
+- Cramorant
+
 #### Gen 9
 - Farigiraf
 
@@ -111,7 +114,8 @@
 - Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs
 - Updated UI sounds for clicking and evolving Pokémon
 - Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users.
-- Kakuna, Beedrill, Snorlax, Munchlax, and Lurantis received model updates
+- Kakuna, Beedrill, Snorlax, Munchlax, Krabby, Kingler, and Lurantis received model updates
+- Vivillon wings will stop being clear when you remove any Vivillon related resourcepacks. The default pattern will be the meadow wings. 
 
 ### Fixes
 - Fixed trading Pokémon setting their friendsip to 0 instead of the base value.
@@ -134,6 +138,9 @@
 - Fixed Hisuian Zoroark using base Zoroark stats.
 - Fixed Bellossom clipping into the player head when shoulder mounted.
 - Fixed Shroomish's look range to prevent it from looking higher than it should.
+- Fixed Maushold's faint animations not playing. It's sadder than Tandemaus! 
+- Fixed Slowking's battle idle. 
+- Fixed Grafaiai's walk speed to prevent model sliding. 
 - Fixed Crumbling Arch not blending in with the world.
 - Fixed Energy Root applying being usable on a fainted Pokemon.
 - Fixed Pokémon entity not spawning when starting a battle while recalling said Pokémon
