@@ -97,7 +97,7 @@ object CobblemonSounds : PlatformRegistry<Registry<SoundEvent>, ResourceKey<Regi
     @JvmField
     val EVOLUTION_UI = this.create("evolution.ui")
     @JvmField
-    val EVOLUTION = this.create("evolution")
+    val EVOLUTION = this.create("evolution.full")
 
     @JvmField
     val PVN_BATTLE = this.create("battle.pvn.default")
