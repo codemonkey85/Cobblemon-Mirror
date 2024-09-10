@@ -1,11 +1,13 @@
 {
-  "parent": "cobblemon:recipes/root",
+  "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_scute": {
+    "has_pokerod_smithing_template": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:armadillo_scute"
+            "items": [
+              "cobblemon:pokerod_smithing_template"
+            ]
           }
         ]
       },
@@ -13,20 +15,21 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "cobblemon:protector"
+        "recipe": "cobblemon:pokerod_smithing_template"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_scute",
+      "has_pokerod_smithing_template",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "cobblemon:protector"
+      "cobblemon:pokerod_smithing_template"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }
