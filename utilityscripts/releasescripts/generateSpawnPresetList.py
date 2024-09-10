@@ -57,7 +57,15 @@ def generate_markdown(json_directory, output_markdown_file):
         output_file.write(markdown_content)
 
 
-# Example usage
-json_directory = '../../common/src/main/resources/data/cobblemon/spawn_detail_presets'
-output_markdown_file = '../../docs/cobblemon-tags/spawnPresetList.md'
-generate_markdown(json_directory, output_markdown_file)
+
+
+def main():
+    # Example usage
+    json_directory = '../../common/src/main/resources/data/cobblemon/spawn_detail_presets'
+    output_markdown_file = '../../docs/cobblemon-tags/spawnPresetList.md'
+    generate_markdown(json_directory, output_markdown_file)
+    print("Spawn preset list successfully generated.")
+
+
+if __name__ == "__main__":
+    main()

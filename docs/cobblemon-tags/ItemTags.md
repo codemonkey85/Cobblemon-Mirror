@@ -287,8 +287,8 @@ This file contains tags related to items in cobblemon.
 - cobblemon:flower_sweet
 - cobblemon:star_sweet
 - cobblemon:ribbon_sweet
-- cobblemon:chipped_pot
-- cobblemon:cracked_pot
+- #cobblemon:teapots
+- #cobblemon:teacups
 - cobblemon:sweet_apple
 - cobblemon:tart_apple
 - cobblemon:galarica_cuff
@@ -355,20 +355,21 @@ This file contains tags related to items in cobblemon.
 <details>
 <summary><b>Tag:</b> #items:fossils</summary>
 
-- cobblemon:armor_fossil
-- cobblemon:fossilized_bird
-- cobblemon:claw_fossil
-- cobblemon:cover_fossil
-- cobblemon:fossilized_dino
-- cobblemon:dome_fossil
-- cobblemon:fossilized_fish
 - cobblemon:helix_fossil
-- cobblemon:jaw_fossil
+- cobblemon:dome_fossil
 - cobblemon:old_amber_fossil
-- cobblemon:plume_fossil
 - cobblemon:root_fossil
-- cobblemon:sail_fossil
+- cobblemon:claw_fossil
 - cobblemon:skull_fossil
+- cobblemon:armor_fossil
+- cobblemon:cover_fossil
+- cobblemon:plume_fossil
+- cobblemon:jaw_fossil
+- cobblemon:sail_fossil
+- cobblemon:fossilized_bird
+- cobblemon:fossilized_fish
+- cobblemon:fossilized_drake
+- cobblemon:fossilized_dino
 
 </details>
 
@@ -727,6 +728,14 @@ This file contains tags related to items in cobblemon.
 </details>
 
 <details>
+<summary><b>Tag:</b> #items:teacups</summary>
+
+- cobblemon:masterpiece_teacup
+- cobblemon:unremarkable_teacup
+
+</details>
+
+<details>
 <summary><b>Tag:</b> #items:teapots</summary>
 
 - cobblemon:cracked_pot
@@ -968,58 +977,100 @@ This file contains tags related to items in cobblemon.
 </details>
 
 <details>
+<summary><b>Tag:</b> #held:is_friendship_booster</summary>
+
+- cobblemon:soothe_bell
+
+</details>
+
+<details>
 <summary><b>Tag:</b> #held:is_held_item</summary>
 
+- cobblemon:ability_shield
+- cobblemon:absorb_bulb
+- cobblemon:air_balloon
 - cobblemon:assault_vest
 - cobblemon:big_root
+- cobblemon:binding_band
 - cobblemon:black_belt
 - cobblemon:black_glasses
 - cobblemon:black_sludge
+- cobblemon:blunder_policy
+- cobblemon:cell_battery
 - cobblemon:charcoal_stick
 - cobblemon:choice_band
 - cobblemon:choice_scarf
 - cobblemon:choice_specs
 - cobblemon:cleanse_tag
-- cobblemon:exp_share
+- cobblemon:covert_cloak
+- cobblemon:destiny_knot
+- cobblemon:deep_sea_scale
+- cobblemon:deep_sea_tooth
 - cobblemon:dragon_fang
+- cobblemon:eject_button
+- cobblemon:eject_pack
+- cobblemon:everstone
+- cobblemon:eviolite
+- cobblemon:exp_share
+- cobblemon:expert_belt
 - cobblemon:fairy_feather
+- cobblemon:flame_orb
+- cobblemon:float_stone
 - cobblemon:focus_band
+- cobblemon:focus_sash
 - cobblemon:hard_stone
 - cobblemon:heavy_duty_boots
+- cobblemon:iron_ball
+- cobblemon:kings_rock
 - cobblemon:leftovers
+- cobblemon:life_orb
+- cobblemon:light_ball
 - cobblemon:light_clay
+- cobblemon:loaded_dice
+- cobblemon:lucky_egg
 - cobblemon:magnet
+- cobblemon:metal_coat
 - cobblemon:miracle_seed
 - cobblemon:muscle_band
 - cobblemon:mystic_water
 - cobblemon:never_melt_ice
 - cobblemon:poison_barb
-- cobblemon:quick_claw
-- cobblemon:razor_claw
-- cobblemon:razor_fang
-- cobblemon:rocky_helmet
-- cobblemon:safety_goggles
-- cobblemon:sharp_beak
-- cobblemon:silk_scarf
-- cobblemon:silver_powder
-- cobblemon:soft_sand
-- cobblemon:spell_tag
-- cobblemon:twisted_spoon
-- cobblemon:wise_glasses
-- cobblemon:bright_powder
-- cobblemon:metal_powder
-- cobblemon:quick_powder
-- cobblemon:destiny_knot
-- cobblemon:everstone
 - cobblemon:power_anklet
 - cobblemon:power_band
 - cobblemon:power_belt
 - cobblemon:power_bracer
 - cobblemon:power_lens
 - cobblemon:power_weight
+- cobblemon:quick_claw
+- cobblemon:razor_claw
+- cobblemon:razor_fang
+- cobblemon:red_card
+- cobblemon:ring_target
+- cobblemon:rocky_helmet
+- cobblemon:safety_goggles
+- cobblemon:sharp_beak
+- cobblemon:shell_bell
+- cobblemon:silk_scarf
+- cobblemon:silver_powder
+- cobblemon:smoke_ball
+- cobblemon:soft_sand
+- cobblemon:spell_tag
+- cobblemon:sticky_barb
+- cobblemon:toxic_orb
+- cobblemon:twisted_spoon
+- cobblemon:weakness_policy
+- cobblemon:wise_glasses
+- cobblemon:bright_powder
+- cobblemon:metal_powder
+- cobblemon:quick_powder
 - cobblemon:mental_herb
 - cobblemon:mirror_herb
 - cobblemon:power_herb
+- cobblemon:white_herb
+- cobblemon:damp_rock
+- cobblemon:heat_rock
+- cobblemon:smooth_rock
+- cobblemon:icy_rock
 - cobblemon:life_orb
 - cobblemon:toxic_orb
 - cobblemon:flame_orb
@@ -1030,6 +1081,9 @@ This file contains tags related to items in cobblemon.
 - cobblemon:deep_sea_scale
 - cobblemon:deep_sea_tooth
 - cobblemon:metal_coat
+- cobblemon:medicinal_leek
+- minecraft:bone
+- minecraft:snowball
 - #cobblemon:type_gems
 
 </details>

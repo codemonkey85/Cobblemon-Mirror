@@ -174,6 +174,7 @@ This file contains tags related to blocks in cobblemon.
 
 - #minecraft:dirt
 - #minecraft:sand
+- #minecraft:terracotta
 - #cobblemon:snow_block
 
 </details>
