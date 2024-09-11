@@ -450,14 +450,13 @@ class PCGUI(
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        this.minecraft?.options?.keyInventory?.let {
-            if (it.matches(keyCode, scanCode)) {
-                playSound(CobblemonSounds.PC_OFF)
-                UnlinkPlayerFromPCPacket().sendToServer()
-                Minecraft.getInstance().setScreen(null)
-                return true
-            }
+        if (minecraft?.options?.keyInventory?.matches(keyCode, scanCode) == true) {
+            playSound(CobblemonSounds.PC_OFF)
+            UnlinkPlayerFromPCPacket().sendToServer()
+            Minecraft.getInstance().setScreen(null)
+            return true
         }
+
 
         when (keyCode) {
             InputConstants.KEY_ESCAPE -> {

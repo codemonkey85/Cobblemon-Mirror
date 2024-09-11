@@ -613,11 +613,9 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        this.minecraft?.options?.keyInventory?.let {
-            if (it.matches(keyCode, scanCode)) {
-                Minecraft.getInstance().setScreen(null)
-                return true
-            }
+        if (minecraft?.options?.keyInventory?.matches(keyCode, scanCode) == true) {
+            Minecraft.getInstance().setScreen(null)
+            return true
         }
 
         if ((keyCode == InputConstants.KEY_RETURN || keyCode == InputConstants.KEY_NUMPADENTER)

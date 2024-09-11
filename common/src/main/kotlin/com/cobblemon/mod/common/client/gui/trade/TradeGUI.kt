@@ -357,12 +357,10 @@ class TradeGUI(
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        this.minecraft?.options?.keyInventory?.let {
-            if (it.matches(keyCode, scanCode)) {
-                CancelTradePacket().sendToServer()
-                Minecraft.getInstance().setScreen(null)
-                return true
-            }
+        if (minecraft?.options?.keyInventory?.matches(keyCode, scanCode) == true) {
+            CancelTradePacket().sendToServer()
+            Minecraft.getInstance().setScreen(null)
+            return true
         }
 
         when (keyCode) {
