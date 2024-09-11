@@ -240,8 +240,6 @@ object CobblemonItemGroups {
         entries.accept(CobblemonItems.DARK_GEM)
         entries.accept(CobblemonItems.STEEL_GEM)
         entries.accept(CobblemonItems.FAIRY_GEM)
-
-        entries.accept(CobblemonItems.POKEROD_SMITHING_TEMPLATE)
     }
 
     private fun blockEntries(displayContext: ItemDisplayParameters, entries: Output) {

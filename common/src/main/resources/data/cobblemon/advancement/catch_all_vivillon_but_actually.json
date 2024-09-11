@@ -2,7 +2,9 @@
   "display": {
     "icon": {
       "id": "cobblemon:pokemon_model",
-      "nbt": "{\"species\":\"cobblemon:vivillon\",\"aspects\":[\"vivillon-wings-poke-ball\"]}"
+	"components": {
+        "minecraft:custom_data": {"species":"cobblemon:vivillon","aspects":["vivillon-wings-poke-ball"]}
+      }
     },
     "title": {
       "translate": "advancements.cobblemon.catch_all_vivillon_but_actually"
