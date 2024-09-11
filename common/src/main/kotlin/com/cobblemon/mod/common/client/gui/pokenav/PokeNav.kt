@@ -9,14 +9,13 @@
 package com.cobblemon.mod.common.client.gui.pokenav
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.summary.Summary
 import com.cobblemon.mod.common.client.keybind.boundKey
 import com.cobblemon.mod.common.client.keybind.keybinds.PokeNavigatorBinding
-import com.cobblemon.mod.common.net.messages.server.storage.pc.UnlinkPlayerFromPCPacket
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.isInventoryKeyPressed
 import com.cobblemon.mod.common.util.lang
 import com.google.common.collect.HashBasedTable
 import com.google.common.collect.Table
@@ -84,7 +83,7 @@ class PokeNav : Screen(Component.translatable("cobblemon.ui.pokenav.title")) {
      * Cleaned up the original code see [moveSelected] for how the selection moves around.
      */
     override fun keyPressed(pKeyCode: Int, pScanCode: Int, pModifiers: Int): Boolean {
-        if (minecraft?.options?.keyInventory?.matches(pKeyCode, pScanCode) == true) {
+        if (isInventoryKeyPressed(minecraft, pKeyCode, pScanCode)) {
             Minecraft.getInstance().setScreen(null)
             return true
         }
