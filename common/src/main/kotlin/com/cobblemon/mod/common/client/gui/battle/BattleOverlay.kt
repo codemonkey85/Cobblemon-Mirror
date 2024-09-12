@@ -88,7 +88,6 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         const val COMPACT_PORTRAIT_OFFSET_Y = 7
 
         const val ROLE_CYCLE_SECONDS = 5.0
-        const val TARGET_SELECT_CYCLE_SECONDS = 4.0
 
         private val PROMPT_TEXT_OPACITY_CURVE = sineFunction(period = 4F, verticalShift = 0.5F, amplitude = 0.5F)
 
@@ -101,8 +100,6 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         val battleInfoUnderlay = cobblemonResource("textures/gui/battle/battle_info_underlay.png")
         val seenIndicator = cobblemonResource("textures/gui/battle/battle_seen_indicator.png")
         val caughtIndicator = cobblemonResource("textures/gui/battle/battle_seen_indicator.png")
-        val battleArrowLeft = cobblemonResource("textures/gui/battle/arrow_pointer_left.png")
-        val battleArrowRight = cobblemonResource("textures/gui/battle/arrow_pointer_right.png")
 
     }
 
@@ -460,20 +457,6 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
             centered = true,
             shadow = true
         )
-
-        // Target Selection Arrows
-        if (isCompact && isHovered) {
-            val offset = sin((passedSeconds / TARGET_SELECT_CYCLE_SECONDS % 1 * 2 * Math.PI)) * 1.5 + 1.5
-            blitk(
-                    matrixStack = matrixStack,
-                    texture = if (reversed) battleArrowRight else battleArrowLeft,
-                    x = (x + if (reversed) - (6 + offset) else (COMPACT_TILE_WIDTH + 1 + offset)) * 2,
-                    y = (y + 6 ) * 2,
-                    scale = 0.5F,
-                    height = 17,
-                    width = 10,
-            )
-        }
 
         // Actor Display Name
         if(actorDisplayName != null) {
