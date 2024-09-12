@@ -31,7 +31,8 @@ object RequestInteractionsHandler : ServerNetworkPacketHandler<RequestPlayerInte
     ) {
         val world = player.level()
         val targetPlayerEntity = world.getPlayerByUUID(packet.targetId)
-        val options : MutableMap<PlayerInteractOptionsPacket.Options, PlayerInteractOptionsPacket.OptionStatus> = emptyMap<PlayerInteractOptionsPacket.Options, PlayerInteractOptionsPacket.OptionStatus>().toMutableMap()
+        val options : EnumMap<PlayerInteractOptionsPacket.Options, PlayerInteractOptionsPacket.OptionStatus> = EnumMap<PlayerInteractOptionsPacket.Options, PlayerInteractOptionsPacket.OptionStatus>(PlayerInteractOptionsPacket.Options::class.java)
+//        val options : MutableMap<PlayerInteractOptionsPacket.Options, PlayerInteractOptionsPacket.OptionStatus> = emptyMap<PlayerInteractOptionsPacket.Options, PlayerInteractOptionsPacket.OptionStatus>().toMutableMap()
         if (targetPlayerEntity != null && player.traceFirstEntityCollision(
             entityClass = LivingEntity::class.java,
             ignoreEntity = player,

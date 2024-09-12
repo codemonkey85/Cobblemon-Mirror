@@ -23,7 +23,7 @@ import java.util.EnumMap
  * @since November 5th, 2023
  */
 class PlayerInteractOptionsPacket(
-    val options: Map<Options, OptionStatus>,
+    val options: EnumMap<Options, OptionStatus>,
     val targetId: UUID,
     val numericTargetId: Int,
     val selectedPokemonId: UUID,
@@ -31,16 +31,31 @@ class PlayerInteractOptionsPacket(
     companion object {
         val ID = cobblemonResource("player_interactions")
         fun decode(buffer: RegistryFriendlyByteBuf) = PlayerInteractOptionsPacket(
-            buffer.readMap({ reader -> reader.readEnum(Options::class.java) }, { reader -> reader.readEnum(OptionStatus::class.java) }),
+            readOptionsMap(buffer),
             buffer.readUUID(),
             buffer.readInt(),
             buffer.readUUID()
         )
+
+        private fun readOptionsMap(buffer: RegistryFriendlyByteBuf) : EnumMap<Options, OptionStatus> {
+            val size = buffer.readInt()
+            val options : EnumMap<Options, OptionStatus> = EnumMap<Options, OptionStatus>(Options::class.java)
+            repeat(size) {
+                val key = buffer.readEnum(Options::class.java)
+                val value = buffer.readEnum(OptionStatus::class.java)
+                options[key] = value
+            }
+            return options
+        }
     }
 
     override val id = ID
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeMap(options, { writer, key -> writer.writeEnum(key) }, { writer, value -> writer.writeEnum(value) })
+        buffer.writeInt(options.size)
+        for ((key, value) in options) {
+            buffer.writeEnum(key)
+            buffer.writeEnum(value)
+        }
         buffer.writeUUID(targetId)
         buffer.writeInt(numericTargetId)
         buffer.writeUUID(selectedPokemonId)
