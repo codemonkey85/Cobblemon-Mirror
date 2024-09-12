@@ -93,6 +93,11 @@
 - Fixed Tumbling Down advancement not being granted by tumblestone variants.
 - Improve error handling when loading spawn sets to ensure invalid configurations don't crash the server
 - Fixed empty JsonPlayerData files resulting in players being unable to join server/world
+- Evolution notification and UI sound is now correctly playing (again)
+- Fix Starter prompt not showing up
+- Fix evolution now granting pokedex entries
+- Fix pokedex crash when a form is looked up without ever seeing the "normal" form
+- Fixed owned pokeballs floating upwards if pausing mid transition
 
 ### Additions
 - Added extra visuals to early berry growth stages
