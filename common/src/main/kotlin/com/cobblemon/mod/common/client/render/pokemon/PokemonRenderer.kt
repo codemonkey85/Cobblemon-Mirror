@@ -99,7 +99,7 @@ context: EntityRendererProvider.Context
         val modelNow = model.posableModel
         clientDelegate.updatePartialTicks(partialTicks)
 
-        if (entity.beamMode != 0) {
+        if (entity.beamMode != 0 && !Minecraft.getInstance().isPaused) {
             renderTransition(
                 modelNow,
                 entity.beamMode,
