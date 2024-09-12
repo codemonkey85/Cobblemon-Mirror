@@ -2,17 +2,42 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1.0,
-      "bonus_rolls": 0.0,
+      "rolls": 1,
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "cobblemon:relic_coin_sack"
-        }
-      ],
-      "conditions": [
+          "name": "cobblemon:relic_coin",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 20,
+                "max": 64
+              }
+            }
+          ],
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "cobblemon:relic_coin_sack",
+              "properties": {
+                "natural": "true"
+              }
+            }
+          ]
+        },
         {
-          "condition": "minecraft:survives_explosion"
+          "type": "minecraft:item",
+          "name": "cobblemon:relic_coin_sack",
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "cobblemon:relic_coin_sack",
+              "properties": {
+                "natural": "false"
+              }
+            }
+          ]
         }
       ]
     }
