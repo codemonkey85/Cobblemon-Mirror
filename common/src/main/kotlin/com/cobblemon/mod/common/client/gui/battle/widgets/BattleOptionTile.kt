@@ -65,7 +65,7 @@ class BattleOptionTile(
         )
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    fun mousePrimaryClicked(mouseX: Double, mouseY: Double): Boolean {
         if (mouseX < x || mouseY < y || mouseX > x + OPTION_WIDTH || mouseY > y + OPTION_HEIGHT) {
             return false
         }
