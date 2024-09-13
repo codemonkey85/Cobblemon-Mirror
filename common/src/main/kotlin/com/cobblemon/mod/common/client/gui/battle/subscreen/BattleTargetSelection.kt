@@ -149,7 +149,7 @@ class BattleTargetSelection(
         backButton.render(context, mouseX, mouseY, delta)
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mousePrimaryClicked(mouseX: Double, mouseY: Double): Boolean {
         val target = targetTiles.find { it.isHovered(mouseX, mouseY) }
         if (target != null) {
             target.onClick()

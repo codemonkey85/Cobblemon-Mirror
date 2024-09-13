@@ -93,6 +93,7 @@
 - Fixed Tumbling Down advancement not being granted by tumblestone variants.
 - Improve error handling when loading spawn sets to ensure invalid configurations don't crash the server
 - Fixed empty JsonPlayerData files resulting in players being unable to join server/world
+- Fixed all mouse buttons working for Battle UI navigation (now it's only primary/left click)
 
 ### Additions
 - Added extra visuals to early berry growth stages
