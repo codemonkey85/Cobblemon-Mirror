@@ -137,7 +137,7 @@ class BattleSwitchPokemonSelection(
         }
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mousePrimaryClicked(mouseX: Double, mouseY: Double): Boolean {
         if (backButton.isHovered(mouseX, mouseY)) {
             battleGUI.changeActionSelection(null)
             playDownSound(Minecraft.getInstance().soundManager)

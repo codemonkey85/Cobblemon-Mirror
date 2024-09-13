@@ -100,6 +100,7 @@
 - Fix evolution now granting pokedex entries
 - Fix pokedex crash when a form is looked up without ever seeing the "normal" form
 - Fixed owned pokeballs floating upwards if pausing mid transition
+- Fixed all mouse buttons working for Battle UI navigation (now it's only primary/left click)
 
 ### Additions
 - Added extra visuals to early berry growth stages
