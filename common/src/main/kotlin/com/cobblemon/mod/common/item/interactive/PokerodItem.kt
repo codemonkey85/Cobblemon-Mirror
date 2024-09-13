@@ -15,17 +15,14 @@ import com.cobblemon.mod.common.api.fishing.FishingBait
 import com.cobblemon.mod.common.api.fishing.FishingBaits
 import com.cobblemon.mod.common.entity.fishing.PokeRodFishingBobberEntity
 import com.cobblemon.mod.common.item.RodBaitComponent
-import com.cobblemon.mod.common.item.berry.BerryItem
 import com.cobblemon.mod.common.util.enchantmentRegistry
 import com.cobblemon.mod.common.util.itemRegistry
 import com.cobblemon.mod.common.util.toEquipmentSlot
-import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
 import net.minecraft.stats.Stats
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResult
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.SlotAccess
@@ -142,12 +139,6 @@ class PokerodItem(val pokeRodId: ResourceLocation, settings: Properties) : Fishi
     }
 
     override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
-        // if item in mainhand is berry item then don't do anything
-//        if (user.getItemInHand(InteractionHand.MAIN_HAND).item is BerryItem)
-//            return InteractionResultHolder(
-//                InteractionResult.FAIL,
-//                user.getItemInHand(hand)
-//            )
 
         val itemStack = user.getItemInHand(hand)
         val offHandItem = user.getItemInHand(InteractionHand.OFF_HAND)
@@ -155,46 +146,6 @@ class PokerodItem(val pokeRodId: ResourceLocation, settings: Properties) : Fishi
 
         // if there already is bait on the bobber then drop it on the ground
         var baitOnRod = getBaitOnRod(itemStack)
-
-        // if the item in the offhand is a bait item and the mainhand item is a pokerod then apply the bait
-//        if (!world.isClientSide && user.fishing == null && offHandBait != null && offHandBait != baitOnRod && !user.isShiftKeyDown) {
-//
-//            if (baitOnRod != null) {
-//                val item = world.itemRegistry.get(baitOnRod.item)
-//                if (item != null) {
-//                    user.spawnAtLocation(ItemStack(item))
-//                }
-//            }
-//
-//            // set the bait and bait effects on the bobber
-//            setBait(itemStack, offHandItem.copyWithCount(1))
-//
-//            // remove 1 bait from the offhand
-//            offHandItem.shrink(1)
-//
-//            // remove old bait tooltip from rod
-////            removeBaitTooltip(itemStack, world)
-//
-//            // set new bait tooltip to rod
-////            setBaitTooltips(itemStack, world)
-//        }
-
-        // if the user is sneaking when casting then remove the bait from the bobber
-//        if (!world.isClientSide && user.fishing == null && user.isShiftKeyDown) {
-//            // If there is a bait on the bobber
-//            if (baitOnRod != null) {
-//                // drop the stack of bait
-//                val item = world.itemRegistry.get(baitOnRod.item)
-//                if (item != null) {
-//                    user.spawnAtLocation(ItemStack(item))
-//                }
-//                //set the bait and bait effects on the rod to be empty
-//                setBait(itemStack, ItemStack.EMPTY)
-//
-//                // remove old bait tooltip from rod
-//                removeBaitTooltip(itemStack, world)
-//            }
-//        }
 
         // If rod is empty and offhand has bait, add bait from offhand
         if (!world.isClientSide && user.fishing == null && offHandBait != null && baitOnRod == null) {
@@ -210,55 +161,18 @@ class PokerodItem(val pokeRodId: ResourceLocation, settings: Properties) : Fishi
                 itemStack.hurtAndBreak(i, user, hand.toEquipmentSlot())
             }
 
-            // stop sound of casting when reeling in
-            //(Minecraft.getInstance().getSoundManager() as SoundManagerDuck).stopSounds(CobblemonSounds.FISHING_ROD_CAST.id, SoundCategory.PLAYERS)
-
-
-
-            //(Minecraft.getInstance().getSoundManager()).stop
-
             world.playSound(null as Player?, user.x, user.y, user.z, CobblemonSounds.FISHING_ROD_REEL_IN, SoundSource.PLAYERS, 1.0f, 1.0f / (world.getRandom().nextFloat() * 0.4f + 0.8f))
             user.gameEvent(GameEvent.ITEM_INTERACT_FINISH)
         } else { // if the bobber is not out yet
             // play the Rod casting sound and set it
             world.playSound(null as Player?, user.x, user.y, user.z, CobblemonSounds.FISHING_ROD_CAST, SoundSource.PLAYERS, 1.0f, 1.0f / (world.getRandom().nextFloat() * 0.4f + 0.8f))
 
-            // create a SoundInstance for the casting sound to be also sent to the bobber
-            val castingSoundInstance = SimpleSoundInstance(
-                    CobblemonSounds.FISHING_ROD_CAST,
-                    SoundSource.PLAYERS,
-                    1.0f,
-                    1.0f / (world.getRandom().nextFloat() * 0.4f + 0.8f),
-                    world.random,
-                    user.x,
-                    user.y,
-                    user.z
-            )
-
             if (!world.isClientSide) {
                 val lureLevel = EnchantmentHelper.getItemEnchantmentLevel(world.enchantmentRegistry.getHolder(Enchantments.LURE).get(), itemStack)
                 val luckLevel = EnchantmentHelper.getItemEnchantmentLevel(world.enchantmentRegistry.getHolder(Enchantments.LUCK_OF_THE_SEA).get(), itemStack)
 
-                /*// play the Rod casting sound and set it
-                world.playSound(null as Player?, user.x, user.y, user.z, CobblemonSounds.FISHING_ROD_CAST, SoundCategory.PLAYERS, 1.0f, 1.0f / (world.getRandom().nextFloat() * 0.4f + 0.8f))
-
-                // create a SoundInstance for the casting sound to be also sent to the bobber
-                val castingSoundInstance = CancellableSoundInstance(
-                        CobblemonSounds.FISHING_ROD_CAST,
-                        SoundCategory.PLAYERS,
-                        1.0f,
-                        1.0f / (world.getRandom().nextFloat() * 0.4f + 0.8f),
-                        world.random,
-                        user.x,
-                        user.y,
-                        user.z
-                )*/
-
-
-                val bobberEntity = PokeRodFishingBobberEntity(user, pokeRodId, getBaitOnRod(itemStack)?.toItemStack(world.itemRegistry) ?: ItemStack.EMPTY, world, luckLevel, lureLevel, castingSoundInstance, itemStack)
-
-                // Set the casting sound to the bobber entity
-                //bobberEntity.castingSound = castingSoundInstance
+                val bobberEntity = PokeRodFishingBobberEntity(user, pokeRodId, getBaitOnRod(itemStack)?.toItemStack(world.itemRegistry) ?: ItemStack.EMPTY,
+                    world, luckLevel, lureLevel, itemStack)
 
                 world.addFreshEntity(bobberEntity)
                 CobblemonCriteria.CAST_POKE_ROD.trigger(user as ServerPlayer, baitOnRod != null)
