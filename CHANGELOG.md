@@ -24,6 +24,8 @@
 - Added a `mobTargetInBattle` gamerule to exclude players from being targeted by mobs during a battle
 - Added battle log messages for switching out Pokémon
 - Added Evolution particles and sounds for Pokemon that are sent out when evolution is started.
+- Added a Nurse profession that can be unlocked by having villagers claim a healing machine block.
+- Added a `natural` block state property for the healing machine block; when property is set to true, the block will have a different texture and drop an iron ingot instead of itself.
 
 ### Pokémon Added
 #### Gen 2

@@ -235,7 +235,7 @@ class HealingMachineBlockEntity(
 
     private fun updateBlockChargeLevel(level: Int? = null) {
         val world = this.level ?: return
-        if (true && !world.isClientSide) {
+        if (!world.isClientSide) {
             val chargeLevel = (level
                 ?: if (Cobblemon.config.infiniteHealerCharge || this.infinite) HealingMachineBlock.MAX_CHARGE_LEVEL
                 else floor((healingCharge / maxCharge) * HealingMachineBlock.MAX_CHARGE_LEVEL).toInt()
