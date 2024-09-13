@@ -101,6 +101,12 @@ interface CobblemonImplementation {
      * TODO
      *
      */
+    fun registerVillagers()
+
+    /**
+     * TODO
+     *
+     */
     fun registerWorldGenFeatures()
 
     fun registerParticles()

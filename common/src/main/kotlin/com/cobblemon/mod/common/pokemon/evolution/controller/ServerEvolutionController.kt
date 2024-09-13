@@ -8,7 +8,6 @@
 
 package com.cobblemon.mod.common.pokemon.evolution.controller
 
-import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionAcceptedEvent
 import com.cobblemon.mod.common.api.pokemon.evolution.Evolution
@@ -16,13 +15,10 @@ import com.cobblemon.mod.common.api.pokemon.evolution.EvolutionController
 import com.cobblemon.mod.common.api.pokemon.evolution.PreProcessor
 import com.cobblemon.mod.common.api.pokemon.evolution.progress.EvolutionProgress
 import com.cobblemon.mod.common.api.pokemon.evolution.progress.EvolutionProgressTypes
-import com.cobblemon.mod.common.api.text.green
 import com.cobblemon.mod.common.net.messages.client.pokemon.update.evolution.AddEvolutionPacket
 import com.cobblemon.mod.common.net.messages.client.pokemon.update.evolution.ClearEvolutionsPacket
 import com.cobblemon.mod.common.net.messages.client.pokemon.update.evolution.RemoveEvolutionPacket
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.util.asTranslated
-import net.minecraft.nbt.*
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 
@@ -77,9 +73,7 @@ class ServerEvolutionController(
 
     override fun add(element: Evolution): Boolean {
         if (this.evolutions.add(element)) {
-            this.pokemon.getOwnerPlayer()?.sendSystemMessage("cobblemon.ui.evolve.hint".asTranslated(pokemon.getDisplayName()).green())
             this.pokemon.notify(AddEvolutionPacket(this.pokemon, element))
-            this.pokemon.getOwnerPlayer()?.playSound(CobblemonSounds.EVOLUTION_NOTIFICATION, 1F, 1F)
             return true
         }
         return false

@@ -98,6 +98,10 @@ abstract class AbstractPokedexManager {
 
     open fun onSpeciesRecordUpdated(speciesDexRecord: SpeciesDexRecord) {
         // Save stuff and packet updates
+        clearCalculatedValues()
+    }
+
+    fun clearCalculatedValues() {
         dexCalculatedValues.clear()
         globalCalculatedValues.clear()
     }
