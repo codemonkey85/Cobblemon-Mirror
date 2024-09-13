@@ -74,7 +74,7 @@ class BattleMoveSelection(
         BattleGimmickButton.create(gimmick, this, backButton.x + xOff, backButton.y)
     }
 
-    val shiftButton = BattleShiftButton(x + 40F, Minecraft.getInstance().window.guiScaledHeight - 22F, request.activePokemon.getPNX()[2] != 'a' )
+    val shiftButton = BattleShiftButton(x + 22.5F, Minecraft.getInstance().window.guiScaledHeight - 22F )
 
     open class MoveTile(
         val moveSelection: BattleMoveSelection,
