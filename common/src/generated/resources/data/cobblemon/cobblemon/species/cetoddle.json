@@ -49,6 +49,19 @@
   "evYield": {
     "cobblemon:hp": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:item_interact",
+      "consumeHeldItem": false,
+      "id": "cetoddle_cetitan",
+      "learnableMoves": [],
+      "requiredContext": {
+        "item": "cobblemon:ice_stone"
+      },
+      "requirements": [],
+      "result": "cetitan"
+    }
+  ],
   "experienceGroup": "cobblemon:medium_slow",
   "height": 1.2,
   "hitbox": {
@@ -61,12 +74,12 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:tackle"
+      "move": "cobblemon:powdersnow"
     },
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:powdersnow"
+      "move": "cobblemon:tackle"
     },
     {
       "type": "cobblemon:level",
@@ -135,7 +148,43 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
+      "move": "cobblemon:raindance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:charm"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:takedown"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:doubleedge"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:entrainment"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bodypress"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:iciclespear"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:yawn"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:icespinner"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bodyslam"
     },
     {
       "type": "cobblemon:tm",
@@ -143,7 +192,19 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:takedown"
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:earthquake"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hypervoice"
     },
     {
       "type": "cobblemon:tm",
@@ -155,43 +216,43 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:knockoff"
+      "move": "cobblemon:bulldoze"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:liquidation"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:raindance"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:superpower"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hypervoice"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:snowscape"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:heavyslam"
+      "move": "cobblemon:avalanche"
     },
     {
       "type": "cobblemon:tm",
       "move": "cobblemon:amnesia"
     },
     {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:entrainment"
+      "type": "cobblemon:tm",
+      "move": "cobblemon:icywind"
     },
     {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:iciclecrash"
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:helpinghand"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:knockoff"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:stompingtantrum"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
     },
     {
       "type": "cobblemon:tm",
@@ -202,92 +263,8 @@
       "move": "cobblemon:bellydrum"
     },
     {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:yawn"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:icespinner"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:iciclespear"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:icefang"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:stompingtantrum"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:icywind"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:curse"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:charm"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bodypress"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bodyslam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bulldoze"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:helpinghand"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:playrough"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:avalanche"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:earthquake"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
-    },
-    {
       "type": "cobblemon:tm",
       "move": "cobblemon:terablast"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:chillingwater"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:doubleedge"
     },
     {
       "type": "cobblemon:tm",
@@ -295,7 +272,43 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
+      "move": "cobblemon:chillingwater"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:liquidation"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:playrough"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:superpower"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:iciclecrash"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:snowscape"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:curse"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:icefang"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:heavyslam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
     }
   ],
   "nationalPokedexNumber": 974,

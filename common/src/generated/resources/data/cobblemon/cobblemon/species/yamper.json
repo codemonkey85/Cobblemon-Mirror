@@ -45,6 +45,23 @@
   "evYield": {
     "cobblemon:hp": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "yamper_boltund",
+      "learnableMoves": [],
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 25,
+          "minLevel": 25
+        }
+      ],
+      "result": "boltund"
+    }
+  ],
   "experienceGroup": "cobblemon:fast",
   "height": 0.3,
   "hitbox": {
@@ -57,12 +74,12 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:tackle"
+      "move": "cobblemon:tailwhip"
     },
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:tailwhip"
+      "move": "cobblemon:tackle"
     },
     {
       "type": "cobblemon:level",
@@ -111,35 +128,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:thunder"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:attract"
-    },
-    {
-      "type": "cobblemon:tm",
       "move": "cobblemon:playrough"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:sandattack"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:thunderbolt"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:swift"
     },
     {
       "type": "cobblemon:tm",
@@ -147,39 +136,23 @@
     },
     {
       "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
       "move": "cobblemon:firefang"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:thunderfang"
+      "move": "cobblemon:swift"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:thunderwave"
+      "move": "cobblemon:uproar"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:wildcharge"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:doubleedge"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:crunch"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:discharge"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:flamecharge"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
+      "move": "cobblemon:attract"
     },
     {
       "type": "cobblemon:tm",
@@ -191,6 +164,34 @@
     },
     {
       "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:voltswitch"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:helpinghand"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thunderwave"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:discharge"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:howl"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tm",
       "move": "cobblemon:round"
     },
     {
@@ -199,39 +200,55 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
+      "move": "cobblemon:electroball"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thunderbolt"
     },
     {
       "type": "cobblemon:egg",
-      "move": "cobblemon:howl"
+      "move": "cobblemon:sandattack"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:helpinghand"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:voltswitch"
+      "move": "cobblemon:thunder"
     },
     {
       "type": "cobblemon:tm",
       "move": "cobblemon:dig"
     },
     {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:electroball"
+      "type": "cobblemon:egg",
+      "move": "cobblemon:flamecharge"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:snore"
+      "move": "cobblemon:thunderfang"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:uproar"
+      "move": "cobblemon:crunch"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:wildcharge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:doubleedge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
     }
   ],
   "nationalPokedexNumber": 835,

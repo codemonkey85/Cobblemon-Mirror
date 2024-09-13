@@ -49,6 +49,22 @@
   "evYield": {
     "cobblemon:speed": 2
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "steenee_tsareena",
+      "learnableMoves": "cobblemon:tropkick",
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:has_move",
+          "move": "cobblemon:stomp"
+        }
+      ],
+      "result": "tsareena"
+    }
+  ],
   "experienceGroup": "cobblemon:medium_slow",
   "height": 0.7,
   "hitbox": {
@@ -61,12 +77,7 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:playnice"
-    },
-    {
-      "type": "cobblemon:level",
-      "level": 1,
-      "move": "cobblemon:splash"
+      "move": "cobblemon:doubleslap"
     },
     {
       "type": "cobblemon:level",
@@ -81,12 +92,17 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:doubleslap"
+      "move": "cobblemon:flail"
     },
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:flail"
+      "move": "cobblemon:playnice"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:splash"
     },
     {
       "type": "cobblemon:level",
@@ -130,119 +146,11 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:zenheadbutt"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:frustration"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:lowsweep"
+      "move": "cobblemon:attract"
     },
     {
       "type": "cobblemon:tm",
       "move": "cobblemon:fling"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:snore"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bulletseed"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:helpinghand"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:endeavor"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:magicalleaf"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:zenheadbutt"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:helpinghand"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:lowsweep"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:leafstorm"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:solarbeam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:payback"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:seedbomb"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:endeavor"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sunnyday"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:leafstorm"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:naturepower"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:doubleteam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:fling"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sunnyday"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:helpinghand"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:solarbeam"
     },
     {
       "type": "cobblemon:tm",
@@ -250,15 +158,35 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:round"
+      "move": "cobblemon:frustration"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:snore"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:reflect"
+      "move": "cobblemon:endeavor"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:lightscreen"
+      "move": "cobblemon:seedbomb"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dazzlinggleam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lowsweep"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:trailblaze"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:charm"
     },
     {
       "type": "cobblemon:tm",
@@ -266,15 +194,63 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:swagger"
+      "move": "cobblemon:magicalleaf"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:magicalleaf"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:tripleaxel"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:lightscreen"
+      "move": "cobblemon:reflect"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:drainingkiss"
+      "move": "cobblemon:lowsweep"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dazzlinggleam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:payback"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:round"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:seedbomb"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sunnyday"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:helpinghand"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bulletseed"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:fling"
     },
     {
       "type": "cobblemon:tm",
@@ -282,67 +258,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:sunnyday"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:confide"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:magicalleaf"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:gigadrain"
-    },
-    {
-      "type": "cobblemon:tm",
       "move": "cobblemon:energyball"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:safeguard"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:seedbomb"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:terablast"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:reflect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:fling"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:dazzlinggleam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:gigadrain"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:tripleaxel"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:snore"
     },
     {
       "type": "cobblemon:tutor",
@@ -350,75 +266,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:round"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:covet"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:sweetscent"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:lowsweep"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:energyball"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:seedbomb"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:attract"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:toxic"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:dazzlinggleam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:trailblaze"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:tripleaxel"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:playrough"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:safeguard"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:charm"
+      "move": "cobblemon:takedown"
     },
     {
       "type": "cobblemon:tm",
@@ -426,19 +274,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:attract"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bounce"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:grassyglide"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:takedown"
+      "move": "cobblemon:gigadrain"
     },
     {
       "type": "cobblemon:tutor",
@@ -446,15 +282,23 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:petalblizzard"
+      "move": "cobblemon:drainingkiss"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:grassyterrain"
+      "move": "cobblemon:rest"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:magicalleaf"
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:grassyglide"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lightscreen"
     },
     {
       "type": "cobblemon:tm",
@@ -462,7 +306,15 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:charm"
+      "move": "cobblemon:leafstorm"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:doubleteam"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:zenheadbutt"
     },
     {
       "type": "cobblemon:tm",
@@ -470,31 +322,35 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:grassknot"
+      "move": "cobblemon:naturepower"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:return"
+      "move": "cobblemon:grassknot"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:seedbomb"
     },
     {
       "type": "cobblemon:tm",
       "move": "cobblemon:zenheadbutt"
     },
     {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:gigadrain"
+      "move": "cobblemon:helpinghand"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:reflect"
+      "move": "cobblemon:terablast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:drainingkiss"
     },
     {
       "type": "cobblemon:tutor",
@@ -502,11 +358,11 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:drainingkiss"
+      "move": "cobblemon:zenheadbutt"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
+      "move": "cobblemon:fling"
     },
     {
       "type": "cobblemon:tm",
@@ -517,8 +373,96 @@
       "move": "cobblemon:playrough"
     },
     {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:endeavor"
+    },
+    {
       "type": "cobblemon:tm",
-      "move": "cobblemon:grassknot"
+      "move": "cobblemon:reflect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:leafstorm"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:swagger"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:solarbeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lightscreen"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:sweetscent"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:energyball"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:toxic"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lowsweep"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:magicalleaf"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:playrough"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:covet"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:charm"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:reflect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sunnyday"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:grassyterrain"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:snore"
     },
     {
       "type": "cobblemon:tm",
@@ -526,15 +470,15 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:solarbeam"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:bounce"
+      "move": "cobblemon:petalblizzard"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:return"
     },
     {
       "type": "cobblemon:tm",
@@ -546,11 +490,83 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
+      "move": "cobblemon:tripleaxel"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:safeguard"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:helpinghand"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:grassknot"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:attract"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:gigadrain"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:round"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:safeguard"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:gigadrain"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:solarbeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:solarbeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sunnyday"
     },
     {
       "type": "cobblemon:tutor",
       "move": "cobblemon:synthesis"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:confide"
     }
   ],
   "nationalPokedexNumber": 762,

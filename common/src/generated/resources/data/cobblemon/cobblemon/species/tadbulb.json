@@ -49,6 +49,19 @@
   "evYield": {
     "cobblemon:hp": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:item_interact",
+      "consumeHeldItem": false,
+      "id": "tadbulb_bellibolt",
+      "learnableMoves": [],
+      "requiredContext": {
+        "item": "cobblemon:thunder_stone"
+      },
+      "requirements": [],
+      "result": "bellibolt"
+    }
+  ],
   "experienceGroup": "cobblemon:medium_fast",
   "height": 0.3,
   "hitbox": {
@@ -61,12 +74,12 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:tackle"
+      "move": "cobblemon:mudslap"
     },
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:mudslap"
+      "move": "cobblemon:tackle"
     },
     {
       "type": "cobblemon:level",
@@ -125,47 +138,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hypervoice"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:reflect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:mudslap"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:muddywater"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:electroball"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:thunder"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:wildcharge"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:acidspray"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:thunderbolt"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:electricterrain"
+      "move": "cobblemon:eerieimpulse"
     },
     {
       "type": "cobblemon:tm",
@@ -173,11 +146,35 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:chargebeam"
+      "move": "cobblemon:substitute"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:waterpulse"
+      "move": "cobblemon:acidspray"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:reflect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thunder"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:terablast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:swift"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:weatherball"
     },
     {
       "type": "cobblemon:tm",
@@ -185,7 +182,39 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:weatherball"
+      "move": "cobblemon:thunderwave"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:electroball"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:mudshot"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:paraboliccharge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:confuseray"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:chillingwater"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:muddywater"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:raindance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
     },
     {
       "type": "cobblemon:tm",
@@ -197,7 +226,11 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:chillingwater"
+      "move": "cobblemon:wildcharge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:chargebeam"
     },
     {
       "type": "cobblemon:egg",
@@ -205,11 +238,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:confuseray"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:eerieimpulse"
+      "move": "cobblemon:electricterrain"
     },
     {
       "type": "cobblemon:tm",
@@ -217,43 +246,27 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:swift"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:muddywater"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:thunderwave"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:paraboliccharge"
-    },
-    {
-      "type": "cobblemon:tm",
       "move": "cobblemon:charge"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:raindance"
+      "move": "cobblemon:thunderbolt"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:terablast"
+      "move": "cobblemon:hypervoice"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:muddywater"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:mudshot"
+      "move": "cobblemon:waterpulse"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:mudslap"
     }
   ],
   "nationalPokedexNumber": 938,

@@ -45,6 +45,30 @@
   "evYield": {
     "cobblemon:special_attack": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:item_interact",
+      "consumeHeldItem": false,
+      "id": "charcadet_armarouge",
+      "learnableMoves": "cobblemon:psyshock",
+      "requiredContext": {
+        "item": "cobblemon:auspicious_armor"
+      },
+      "requirements": [],
+      "result": "armarouge"
+    },
+    {
+      "type": "cobblemon:item_interact",
+      "consumeHeldItem": false,
+      "id": "charcadet_ceruledge",
+      "learnableMoves": "cobblemon:shadowclaw",
+      "requiredContext": {
+        "item": "cobblemon:malicious_armor"
+      },
+      "requirements": [],
+      "result": "ceruledge"
+    }
+  ],
   "experienceGroup": "cobblemon:slow",
   "height": 0.6,
   "hitbox": {
@@ -57,7 +81,7 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:leer"
+      "move": "cobblemon:astonish"
     },
     {
       "type": "cobblemon:level",
@@ -67,7 +91,7 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:astonish"
+      "move": "cobblemon:leer"
     },
     {
       "type": "cobblemon:level",
@@ -105,92 +129,8 @@
       "move": "cobblemon:lavaplume"
     },
     {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:terablast"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:astonish"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:nightshade"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:takedown"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:fireblast"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:spite"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sunnyday"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:flamecharge"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:flamethrower"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:helpinghand"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:heatwave"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:celebrate"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:flareblitz"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:terablast"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:spite"
-    },
-    {
       "type": "cobblemon:egg",
       "move": "cobblemon:disable"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:overheat"
     },
     {
       "type": "cobblemon:egg",
@@ -198,7 +138,23 @@
     },
     {
       "type": "cobblemon:tm",
+      "move": "cobblemon:heatwave"
+    },
+    {
+      "type": "cobblemon:tm",
       "move": "cobblemon:firespin"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:astonish"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:celebrate"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
     },
     {
       "type": "cobblemon:tm",
@@ -206,7 +162,47 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:willowisp"
+      "move": "cobblemon:sunnyday"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:flareblitz"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:nightshade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:flamethrower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:terablast"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:spite"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:takedown"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:terablast"
     },
     {
       "type": "cobblemon:tutor",
@@ -214,7 +210,35 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:willowisp"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:helpinghand"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:fireblast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:overheat"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:flamecharge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:spite"
     }
   ],
   "nationalPokedexNumber": 935,

@@ -49,6 +49,23 @@
   "evYield": {
     "cobblemon:special_defence": 2
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "dottler_orbeetle",
+      "learnableMoves": [],
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 30,
+          "minLevel": 30
+        }
+      ],
+      "result": "orbeetle"
+    }
+  ],
   "experienceGroup": "cobblemon:medium_fast",
   "height": 0.4,
   "hitbox": {
@@ -60,107 +77,8 @@
   "moves": [
     {
       "type": "cobblemon:level",
-      "level": 0,
-      "move": "cobblemon:lightscreen"
-    },
-    {
-      "type": "cobblemon:level",
-      "level": 0,
-      "move": "cobblemon:reflect"
-    },
-    {
-      "type": "cobblemon:level",
-      "level": 0,
-      "move": "cobblemon:confusion"
-    },
-    {
-      "type": "cobblemon:level",
       "level": 1,
       "move": "cobblemon:strugglebug"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:safeguard"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:solarbeam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:zenheadbutt"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:guardswap"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:payback"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:energyball"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:reflect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:irondefense"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:trick"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:helpinghand"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:wonderroom"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:attract"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:calmmind"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bugbuzz"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:leechlife"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:psychicterrain"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:trickroom"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:lightscreen"
     },
     {
       "type": "cobblemon:tm",
@@ -168,23 +86,19 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:allyswitch"
+      "move": "cobblemon:helpinghand"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
+      "move": "cobblemon:lightscreen"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:powerswap"
+      "move": "cobblemon:shadowball"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:skillswap"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bodypress"
+      "move": "cobblemon:facade"
     },
     {
       "type": "cobblemon:tm",
@@ -192,27 +106,35 @@
     },
     {
       "type": "cobblemon:tm",
+      "move": "cobblemon:irondefense"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:skillswap"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bugbuzz"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:safeguard"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:reflect"
+    },
+    {
+      "type": "cobblemon:tm",
       "move": "cobblemon:substitute"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:shadowball"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:expandingforce"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:round"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:psychic"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:storedpower"
+      "move": "cobblemon:trick"
     },
     {
       "type": "cobblemon:tm",
@@ -224,11 +146,91 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:snore"
+      "move": "cobblemon:trickroom"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:attract"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:solarbeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:payback"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychic"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:round"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:guardswap"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:expandingforce"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:calmmind"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:wonderroom"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:energyball"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychicterrain"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:powerswap"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bodypress"
     },
     {
       "type": "cobblemon:tm",
       "move": "cobblemon:imprison"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:allyswitch"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:storedpower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:leechlife"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:zenheadbutt"
     }
   ],
   "nationalPokedexNumber": 825,

@@ -8,8 +8,12 @@
 
 package com.cobblemon.mod.common.pokemon.evolution.requirements
 
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.requirements.template.EntityQueryRequirement
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.resources.ResourceKey
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.Level
@@ -21,10 +25,19 @@ import net.minecraft.world.level.Level
  * @author Licious
  * @since March 21st, 2022
  */
-class WorldRequirement : EntityQueryRequirement {
+class WorldRequirement(val identifier: ResourceKey<Level>) : EntityQueryRequirement {
+
+    override fun check(pokemon: Pokemon, queriedEntity: LivingEntity) = queriedEntity.level().dimension().registryKey() == this.identifier
+
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.WORLD
+
     companion object {
-        const val ADAPTER_VARIANT = "world"
+        @JvmStatic
+        val CODEC: MapCodec<WorldRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                Level.RESOURCE_KEY_CODEC.fieldOf("identifier").forGetter(WorldRequirement::identifier),
+            ).apply(instance, ::WorldRequirement)
+        }
     }
-    val identifier: ResourceLocation = ResourceLocation.parse("minecraft:the_overworld")
-    override fun check(pokemon: Pokemon, queriedEntity: LivingEntity) = queriedEntity.level().dimension().location() == this.identifier
+
 }

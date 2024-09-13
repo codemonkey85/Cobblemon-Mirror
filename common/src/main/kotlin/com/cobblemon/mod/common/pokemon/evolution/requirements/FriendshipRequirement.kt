@@ -9,7 +9,11 @@
 package com.cobblemon.mod.common.pokemon.evolution.requirements
 
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.util.ExtraCodecs
 
 /**
  * An [EvolutionRequirement] for when a certain amount of [Pokemon.friendship] is expected.
@@ -18,11 +22,18 @@ import com.cobblemon.mod.common.pokemon.Pokemon
  * @author Licious
  * @since March 21st, 2022
  */
-class FriendshipRequirement : EvolutionRequirement {
-    val amount = 0
+class FriendshipRequirement(val amount: Int) : EvolutionRequirement {
+
     override fun check(pokemon: Pokemon) = pokemon.friendship >= this.amount
 
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.FRIENDSHIP
+
     companion object {
-        const val ADAPTER_VARIANT = "friendship"
+        @JvmStatic
+        val CODEC: MapCodec<FriendshipRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                ExtraCodecs.POSITIVE_INT.fieldOf("amount").forGetter(FriendshipRequirement::amount)
+            ).apply(instance, ::FriendshipRequirement)
+        }
     }
 }

@@ -10,7 +10,10 @@ package com.cobblemon.mod.common.pokemon.evolution.requirements
 
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 
 /**
  * An [EvolutionRequirement] for when the [Pokemon] must match [PokemonProperties.matches].
@@ -19,11 +22,18 @@ import com.cobblemon.mod.common.pokemon.Pokemon
  * @author Licious
  * @since March 26th, 2022
  */
-class PokemonPropertiesRequirement : EvolutionRequirement {
-    val target = PokemonProperties()
+class PokemonPropertiesRequirement(val target: PokemonProperties) : EvolutionRequirement {
+
     override fun check(pokemon: Pokemon) = this.target.matches(pokemon)
 
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.PROPERTIES
+
     companion object {
-        const val ADAPTER_VARIANT = "properties"
+        @JvmStatic
+        val CODEC: MapCodec<PokemonPropertiesRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                PokemonProperties.CODEC.fieldOf("target").forGetter(PokemonPropertiesRequirement::target),
+            ).apply(instance, ::PokemonPropertiesRequirement)
+        }
     }
 }

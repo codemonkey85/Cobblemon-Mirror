@@ -50,7 +50,7 @@ class DamageTakenEvolutionProgress : EvolutionProgress<DamageTakenEvolutionProgr
 
     companion object {
 
-        val ID = cobblemonResource(DamageTakenRequirement.ADAPTER_VARIANT)
+        val ID = cobblemonResource("damage_taken")
         private const val AMOUNT = "amount"
 
         @JvmStatic

@@ -49,6 +49,7 @@
   "evYield": {
     "cobblemon:special_defence": 2
   },
+  "evolutions": [],
   "experienceGroup": "cobblemon:fast",
   "height": 1.2,
   "hitbox": {
@@ -58,11 +59,6 @@
   },
   "maleRatio": 0.5,
   "moves": [
-    {
-      "type": "cobblemon:level",
-      "level": 0,
-      "move": "cobblemon:thief"
-    },
     {
       "type": "cobblemon:level",
       "level": 1,
@@ -125,7 +121,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:thief"
+      "move": "cobblemon:snarl"
     },
     {
       "type": "cobblemon:tm",
@@ -133,51 +129,15 @@
     },
     {
       "type": "cobblemon:tm",
+      "move": "cobblemon:crunch"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:playrough"
+    },
+    {
+      "type": "cobblemon:tm",
       "move": "cobblemon:dig"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:tailslap"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:shadowclaw"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:assurance"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:hyperbeam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:thunderfang"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:faketears"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:batonpass"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:firefang"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:snarl"
     },
     {
       "type": "cobblemon:tm",
@@ -185,31 +145,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:swift"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:icefang"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:foulplay"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:gigaimpact"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:burningjealousy"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:darkpulse"
+      "move": "cobblemon:rest"
     },
     {
       "type": "cobblemon:tm",
@@ -217,7 +153,23 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:snore"
+      "move": "cobblemon:beatup"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:darkpulse"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:faketears"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hyperbeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:batonpass"
     },
     {
       "type": "cobblemon:tm",
@@ -225,7 +177,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:acrobatics"
+      "move": "cobblemon:taunt"
     },
     {
       "type": "cobblemon:tm",
@@ -233,23 +185,31 @@
     },
     {
       "type": "cobblemon:tm",
+      "move": "cobblemon:tailslap"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:screech"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:assurance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thief"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:swift"
+    },
+    {
+      "type": "cobblemon:tm",
       "move": "cobblemon:shadowball"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:agility"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:round"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:taunt"
+      "move": "cobblemon:icefang"
     },
     {
       "type": "cobblemon:tutor",
@@ -257,11 +217,55 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:beatup"
+      "move": "cobblemon:substitute"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:screech"
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thunderfang"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:round"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:burningjealousy"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:firefang"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:acrobatics"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:uturn"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:shadowclaw"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:gigaimpact"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:foulplay"
     },
     {
       "type": "cobblemon:tm",
@@ -273,15 +277,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:playrough"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:uturn"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:crunch"
+      "move": "cobblemon:agility"
     }
   ],
   "nationalPokedexNumber": 828,

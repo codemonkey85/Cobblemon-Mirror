@@ -45,6 +45,7 @@
   "evYield": {
     "cobblemon:special_defence": 2
   },
+  "evolutions": [],
   "experienceGroup": "cobblemon:fast",
   "height": 0.3,
   "hitbox": {
@@ -57,7 +58,7 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:mudsport"
+      "move": "cobblemon:harden"
     },
     {
       "type": "cobblemon:level",
@@ -67,17 +68,17 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:batonpass"
-    },
-    {
-      "type": "cobblemon:level",
-      "level": 1,
-      "move": "cobblemon:harden"
-    },
-    {
-      "type": "cobblemon:level",
-      "level": 1,
       "move": "cobblemon:watersport"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:mudsport"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:batonpass"
     },
     {
       "type": "cobblemon:level",
@@ -140,36 +141,8 @@
       "move": "cobblemon:memento"
     },
     {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:painsplit"
-    },
-    {
       "type": "cobblemon:tm",
-      "move": "cobblemon:batonpass"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:raindance"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:recycle"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:psychup"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:reflect"
+      "move": "cobblemon:confide"
     },
     {
       "type": "cobblemon:egg",
@@ -177,35 +150,35 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:attract"
+      "move": "cobblemon:reflect"
     },
     {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:raindance"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:bestow"
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:spite"
     },
     {
       "type": "cobblemon:tm",
       "move": "cobblemon:swagger"
     },
     {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:helpinghand"
+      "type": "cobblemon:egg",
+      "move": "cobblemon:endure"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:safeguard"
+      "move": "cobblemon:attract"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lightscreen"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:attract"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:toxic"
     },
     {
       "type": "cobblemon:tm",
@@ -216,48 +189,20 @@
       "move": "cobblemon:block"
     },
     {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:confide"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:safeguard"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:helpinghand"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:reflect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:taunt"
+      "type": "cobblemon:egg",
+      "move": "cobblemon:mirrorcoat"
     },
     {
       "type": "cobblemon:tm",
       "move": "cobblemon:lightscreen"
     },
     {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:venomdrench"
+      "type": "cobblemon:tm",
+      "move": "cobblemon:batonpass"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:doubleteam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:spite"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
+      "move": "cobblemon:reflect"
     },
     {
       "type": "cobblemon:tutor",
@@ -268,8 +213,60 @@
       "move": "cobblemon:hail"
     },
     {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:spite"
+    },
+    {
       "type": "cobblemon:tm",
-      "move": "cobblemon:attract"
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:helpinghand"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:substitute"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:psychup"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:raindance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:doubleteam"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:helpinghand"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:spite"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:bestow"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:tickle"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:raindance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:safeguard"
     },
     {
       "type": "cobblemon:tm",
@@ -281,31 +278,15 @@
     },
     {
       "type": "cobblemon:egg",
-      "move": "cobblemon:endure"
+      "move": "cobblemon:venomdrench"
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:spite"
+      "move": "cobblemon:recycle"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:hail"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:taunt"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:screech"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:tickle"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:mirrorcoat"
+      "move": "cobblemon:substitute"
     },
     {
       "type": "cobblemon:tm",
@@ -317,19 +298,39 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:toxic"
+      "move": "cobblemon:taunt"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:painsplit"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:hail"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:safeguard"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:taunt"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:screech"
     },
     {
       "type": "cobblemon:egg",
       "move": "cobblemon:swagger"
     },
     {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:spite"
-    },
-    {
       "type": "cobblemon:tm",
-      "move": "cobblemon:lightscreen"
+      "move": "cobblemon:rest"
     }
   ],
   "nationalPokedexNumber": 771,

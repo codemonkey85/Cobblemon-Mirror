@@ -9,9 +9,16 @@
 package com.cobblemon.mod.common.pokemon.evolution.requirements
 
 import com.cobblemon.mod.common.api.moves.MoveTemplate
+import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.progress.UseMoveEvolutionProgress
+import com.mojang.serialization.Codec
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.Holder
+import java.util.function.Function
 
 /**
  * An [EvolutionRequirement] meant to require a move to have been used a specific amount of times.
@@ -22,18 +29,28 @@ import com.cobblemon.mod.common.pokemon.evolution.progress.UseMoveEvolutionProgr
  * @author Licious
  * @since January 25th, 2023
  */
-class UseMoveRequirement(move: MoveTemplate, amount: Int) : EvolutionRequirement {
+class UseMoveRequirement(val move: Holder<MoveTemplate>, val amount: Int) : EvolutionRequirement {
 
-    val move: MoveTemplate = move
-    val amount: Int = amount
+    override fun check(pokemon: Pokemon): Boolean {
+        val moveInstance = move.unwrap().map(Moves::get) { it } ?: return false
+        return pokemon.evolutionProxy.current()
+            .progress()
+            .filterIsInstance<UseMoveEvolutionProgress>()
+            .any { progress -> progress.currentProgress().move == moveInstance && progress.currentProgress().amount >= this.amount }
+    }
 
-    override fun check(pokemon: Pokemon): Boolean = pokemon.evolutionProxy.current()
-        .progress()
-        .filterIsInstance<UseMoveEvolutionProgress>()
-        .any { progress -> progress.currentProgress().move == this.move && progress.currentProgress().amount >= this.amount }
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.USE_MOVE
 
     companion object {
-        const val ADAPTER_VARIANT = "use_move"
+
+        @JvmStatic
+        val CODEC: MapCodec<UseMoveRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                MoveTemplate.CODEC.fieldOf("move").forGetter(UseMoveRequirement::move),
+                Codec.INT.fieldOf("amount").forGetter(UseMoveRequirement::amount),
+            ).apply(instance, ::UseMoveRequirement)
+        }
+
     }
 
 }

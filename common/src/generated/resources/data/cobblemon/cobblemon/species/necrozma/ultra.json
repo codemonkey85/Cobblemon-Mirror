@@ -43,6 +43,7 @@
     "cobblemon:special_attack": 1,
     "cobblemon:speed": 1
   },
+  "evolutions": [],
   "experienceGroup": "cobblemon:slow",
   "height": 7.5,
   "hitbox": {
@@ -58,6 +59,10 @@
     },
     {
       "type": "cobblemon:form_change",
+      "move": "cobblemon:sunsteelstrike"
+    },
+    {
+      "type": "cobblemon:form_change",
       "move": "cobblemon:moongeistbeam"
     },
     {
@@ -71,10 +76,6 @@
     {
       "type": "cobblemon:form_change",
       "move": "cobblemon:moongeistbeam"
-    },
-    {
-      "type": "cobblemon:form_change",
-      "move": "cobblemon:sunsteelstrike"
     }
   ],
   "nationalPokedexNumber": 800,

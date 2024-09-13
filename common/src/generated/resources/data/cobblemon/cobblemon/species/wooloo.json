@@ -49,6 +49,23 @@
   "evYield": {
     "cobblemon:defence": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "wooloo_dubwool",
+      "learnableMoves": [],
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 24,
+          "minLevel": 24
+        }
+      ],
+      "result": "dubwool"
+    }
+  ],
   "experienceGroup": "cobblemon:medium_fast",
   "height": 0.6,
   "hitbox": {
@@ -119,8 +136,56 @@
       "move": "cobblemon:doubleedge"
     },
     {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:stomp"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:swagger"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:counter"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:endure"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:payback"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:reversal"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:grassyglide"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:electroball"
+    },
+    {
       "type": "cobblemon:tm",
       "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:guardswap"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
     },
     {
       "type": "cobblemon:tm",
@@ -132,27 +197,11 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:payback"
+      "move": "cobblemon:agility"
     },
     {
       "type": "cobblemon:tm",
       "move": "cobblemon:thunderwave"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:stomp"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:reversal"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:agility"
     },
     {
       "type": "cobblemon:tm",
@@ -160,43 +209,11 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:wildcharge"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:electroball"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:counter"
-    },
-    {
-      "type": "cobblemon:tm",
       "move": "cobblemon:sleeptalk"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:guardswap"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:swagger"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:grassyglide"
+      "move": "cobblemon:wildcharge"
     }
   ],
   "nationalPokedexNumber": 831,

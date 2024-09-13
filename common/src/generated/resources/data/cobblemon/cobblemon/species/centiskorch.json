@@ -49,6 +49,7 @@
   "evYield": {
     "cobblemon:attack": 2
   },
+  "evolutions": [],
   "experienceGroup": "cobblemon:medium_fast",
   "height": 3.0,
   "hitbox": {
@@ -58,6 +59,16 @@
   },
   "maleRatio": 0.5,
   "moves": [
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:inferno"
+    },
+    {
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:smokescreen"
+    },
     {
       "type": "cobblemon:level",
       "level": 1,
@@ -72,16 +83,6 @@
       "type": "cobblemon:level",
       "level": 1,
       "move": "cobblemon:wrap"
-    },
-    {
-      "type": "cobblemon:level",
-      "level": 1,
-      "move": "cobblemon:inferno"
-    },
-    {
-      "type": "cobblemon:level",
-      "level": 1,
-      "move": "cobblemon:smokescreen"
     },
     {
       "type": "cobblemon:level",
@@ -130,19 +131,11 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
+      "move": "cobblemon:hyperbeam"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:solarbeam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:round"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:snore"
+      "move": "cobblemon:willowisp"
     },
     {
       "type": "cobblemon:tm",
@@ -150,7 +143,55 @@
     },
     {
       "type": "cobblemon:tm",
+      "move": "cobblemon:scald"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:flamethrower"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thunderfang"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:gigaimpact"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:leechlife"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:tm",
       "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:powerwhip"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bugbuzz"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:brutalswing"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sunnyday"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:attract"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
     },
     {
       "type": "cobblemon:tutor",
@@ -162,11 +203,23 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:willowisp"
+      "move": "cobblemon:firefang"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:fireblast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:flareblitz"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:round"
     },
     {
       "type": "cobblemon:tutor",
@@ -178,59 +231,15 @@
     },
     {
       "type": "cobblemon:tm",
+      "move": "cobblemon:crunch"
+    },
+    {
+      "type": "cobblemon:tm",
       "move": "cobblemon:mysticalfire"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:heatcrash"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:leechlife"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:overheat"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:powerwhip"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:flareblitz"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:heatwave"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:scald"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bugbuzz"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sunnyday"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:gigaimpact"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:firefang"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:fireblast"
+      "move": "cobblemon:substitute"
     },
     {
       "type": "cobblemon:tm",
@@ -238,27 +247,19 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:hyperbeam"
+      "move": "cobblemon:heatcrash"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:thunderfang"
+      "move": "cobblemon:solarbeam"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:flamethrower"
+      "move": "cobblemon:overheat"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:attract"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:crunch"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:brutalswing"
+      "move": "cobblemon:heatwave"
     },
     {
       "type": "cobblemon:tm",

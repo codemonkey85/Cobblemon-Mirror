@@ -32,6 +32,8 @@ import com.cobblemon.mod.common.pokemon.evolution.variants.TradeEvolution
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.party
+import com.mojang.serialization.Codec
+import net.minecraft.core.HolderSet
 import net.minecraft.world.item.ItemStack
 
 /**
@@ -68,12 +70,17 @@ interface Evolution : EvolutionLike {
     /**
      * The [EvolutionRequirement]s behind this evolution.
      */
-    val requirements: MutableSet<EvolutionRequirement>
+    val requirements: Set<EvolutionRequirement>
 
     /**
      * The [MoveTemplate]s that will be offered to be learnt upon evolving.
      */
-    val learnableMoves: MutableSet<MoveTemplate>
+    val learnableMoves: HolderSet<MoveTemplate>
+
+    /**
+     * The associated [EvolutionType].
+     */
+    val type: EvolutionType<*>
 
     /**
      * Checks if the given [Pokemon] passes all the conditions and is ready to evolve.
@@ -187,7 +194,8 @@ interface Evolution : EvolutionLike {
 
     fun evolutionMethod(pokemon: Pokemon) {
         this.result.apply(pokemon)
-        this.learnableMoves.forEach { move ->
+        this.learnableMoves.forEach { holder ->
+            val move = holder.value()
             if (pokemon.moveSet.hasSpace()) {
                 pokemon.moveSet.add(move.create())
             } else {
@@ -204,5 +212,14 @@ interface Evolution : EvolutionLike {
 
     fun applyTo(pokemon: Pokemon) {
         result.apply(pokemon)
+    }
+
+    companion object {
+
+        @JvmStatic
+        val CODEC: Codec<Evolution> = EvolutionType.REGISTRY
+            .byNameCodec()
+            .dispatch(Evolution::type) { it.codec() }
+
     }
 }

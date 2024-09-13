@@ -41,6 +41,23 @@
   "evYield": {
     "cobblemon:defence": 2
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "cascoon_dustox",
+      "learnableMoves": [],
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 10,
+          "minLevel": 10
+        }
+      ],
+      "result": "dustox"
+    }
+  ],
   "experienceGroup": "cobblemon:medium_fast",
   "height": 0.7,
   "hitbox": {
@@ -61,7 +78,7 @@
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:bugbite"
+      "move": "cobblemon:electroweb"
     },
     {
       "type": "cobblemon:tutor",
@@ -73,11 +90,11 @@
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:electroweb"
+      "move": "cobblemon:bugbite"
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:electroweb"
+      "move": "cobblemon:irondefense"
     },
     {
       "type": "cobblemon:tutor",
@@ -93,7 +110,7 @@
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:irondefense"
+      "move": "cobblemon:electroweb"
     },
     {
       "type": "cobblemon:tutor",

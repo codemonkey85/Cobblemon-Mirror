@@ -49,6 +49,23 @@
   "evYield": {
     "cobblemon:attack": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "sizzlipede_centiskorch",
+      "learnableMoves": [],
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 28,
+          "minLevel": 28
+        }
+      ],
+      "result": "centiskorch"
+    }
+  ],
   "experienceGroup": "cobblemon:medium_fast",
   "height": 0.7,
   "hitbox": {
@@ -61,12 +78,12 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:ember"
+      "move": "cobblemon:smokescreen"
     },
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:smokescreen"
+      "move": "cobblemon:ember"
     },
     {
       "type": "cobblemon:level",
@@ -124,40 +141,16 @@
       "move": "cobblemon:burnup"
     },
     {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:scorchingsands"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:skittersmack"
+      "type": "cobblemon:tm",
+      "move": "cobblemon:brutalswing"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
+      "move": "cobblemon:scald"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:crunch"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:leechlife"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bugbuzz"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:round"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:defensecurl"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:snore"
+      "move": "cobblemon:substitute"
     },
     {
       "type": "cobblemon:tm",
@@ -169,19 +162,39 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:brutalswing"
-    },
-    {
-      "type": "cobblemon:tm",
       "move": "cobblemon:sunnyday"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
+      "move": "cobblemon:bugbuzz"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:scald"
+      "move": "cobblemon:venoshock"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:skittersmack"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:scorchingsands"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:leechlife"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:snore"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:strugglebug"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:round"
     },
     {
       "type": "cobblemon:tm",
@@ -193,23 +206,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:firespin"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:rollout"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:venoshock"
+      "move": "cobblemon:endure"
     },
     {
       "type": "cobblemon:tm",
@@ -224,8 +221,28 @@
       "move": "cobblemon:knockoff"
     },
     {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:crunch"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:firespin"
+    },
+    {
       "type": "cobblemon:egg",
-      "move": "cobblemon:strugglebug"
+      "move": "cobblemon:defensecurl"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:rollout"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
     }
   ],
   "nationalPokedexNumber": 850,

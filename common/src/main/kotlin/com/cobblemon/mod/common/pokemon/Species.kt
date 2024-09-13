@@ -78,6 +78,7 @@ class Species(
     internal val preEvolutionKey: Optional<ResourceKey<Species>>,
     battleTheme: ResourceLocation,
     lightingData: Optional<LightingData>,
+    evolutions: Set<Evolution>,
 ) : RegistryElement<Species>, ShowdownIdentifiable {
 
     val translatedName: MutableComponent
@@ -151,7 +152,7 @@ class Species(
      * Do not access this property immediately after a species is loaded, it requires all species in the game to be loaded.
      * To be aware of this gamestage subscribe to [PokemonSpecies.observable].
      */
-    var evolutions: MutableSet<Evolution> = hashSetOf()
+    var evolutions: Set<Evolution> = evolutions
         private set
 
     val preEvolution: Species? get() = this.preEvolutionKey.map { PokemonSpecies.get(it) }.orElse(null)
@@ -164,6 +165,21 @@ class Species(
     var lightingData: LightingData? = lightingData.getOrNull()
         private set
 
+    /**
+     * The base form of this [Species], present for forms.
+     *
+     * For a way to determine if this [Species] is the base form see [isBaseForm].
+     */
+    val baseForm: Optional<Species> = Optional.empty()
+
+    /**
+     * Other forms of this [Species].
+     * This will always contain the other forms regardless if base or not.
+     *
+     * For a way to determine if this [Species] is the base form see [isBaseForm].
+     */
+    val otherForms: Set<Species> = emptySet()
+
     fun initialize() {
         Cobblemon.statProvider.provide(this)
         this.lightingData?.let { this.lightingData = it.copy(lightLevel = it.lightLevel.coerceIn(0, 15)) }
@@ -173,12 +189,7 @@ class Species(
 
     // Ran after initialize due to us creating a Pokémon here which requires all the properties in #initialize to be present for both this and the results, this is the easiest way to quickly resolve species
     internal fun resolveEvolutionMoves() {
-        this.evolutions.forEach { evolution ->
-            if (evolution.learnableMoves.isNotEmpty() && evolution.result.species != null) {
-                val pokemon = evolution.result.create()
-                pokemon.species.moves.evolutionMoves += evolution.learnableMoves
-            }
-        }
+        // TODO: fix me
     }
 
     fun create(level: Int = 10) = PokemonProperties.parse("species=\"${this.resourceLocation()}\" level=${level}").create()
@@ -209,6 +220,40 @@ class Species(
         .getHolder(this.resourceKey())
         .orElseThrow { IllegalStateException("Unregistered Species") }
         .`is`(tag)
+
+    // making this a data class makes the code uglier than maintaining a copy method...
+    internal fun copy(
+        nationalPokedexNumber: Int = this.nationalPokedexNumber,
+        baseStats: Map<Stat, Int> = this.baseStats,
+        maleRatio: Float = this.maleRatio,
+        catchRate: Int = this.catchRate,
+        baseScale: Float = this.baseScale,
+        baseExperienceYield: Int = this.baseExperienceYield,
+        baseFriendship: Int = this.baseFriendship,
+        evYield: Map<Stat, Int> = this.evYield,
+        experienceGroup: ExperienceGroup = this.experienceGroup,
+        hitbox: EntityDimensions = this.hitbox,
+        primaryTypeHolder: Holder<ElementalType> = this.primaryTypeHolder,
+        secondaryTypeHolder: Optional<Holder<ElementalType>> = this.secondaryTypeHolder,
+        abilityPool: AbilityPool = this.abilities,
+        shoulderMountable: Boolean = this.shoulderMountable,
+        shoulderEffects: Set<ShoulderEffect> = this.shoulderEffects,
+        learnset: Learnset = this.moves,
+        standingEyeHeight: Optional<Float> = Optional.ofNullable(this.standingEyeHeight),
+        swimmingEyeHeight: Optional<Float> = Optional.ofNullable(this.swimmingEyeHeight),
+        flyingEyeHeight: Optional<Float> = Optional.ofNullable(this.flyingEyeHeight),
+        behaviour: PokemonBehaviour = this.behaviour,
+        eggCycles: Int = this.eggCycles,
+        eggGroups: Set<EggGroup> = this.eggGroups,
+        dynamaxBlocked: Boolean = this.dynamaxBlocked,
+        implemented: Boolean = this.implemented,
+        height: Float = this.height,
+        weight: Float = this.weight,
+        preEvolutionKey: Optional<ResourceKey<Species>> = this.preEvolutionKey,
+        battleTheme: ResourceLocation = this.battleTheme,
+        lightingData: Optional<LightingData> = Optional.ofNullable(this.lightingData),
+        evolutions: Set<Evolution> = this.evolutions
+    ): Species = Species(nationalPokedexNumber, baseStats, maleRatio, catchRate, baseScale, baseExperienceYield, baseFriendship, evYield, experienceGroup, hitbox, primaryTypeHolder, secondaryTypeHolder, abilityPool, shoulderMountable, shoulderEffects, learnset, standingEyeHeight, swimmingEyeHeight, flyingEyeHeight, behaviour, eggCycles, eggGroups, dynamaxBlocked, implemented, height, weight, preEvolutionKey, battleTheme, lightingData, evolutions)
 
     companion object {
         private const val VANILLA_DEFAULT_EYE_HEIGHT = .85F
@@ -263,6 +308,7 @@ class Species(
             p2.preEvolution,
             p2.battleTheme,
             p2.lightingData,
+            p2.evolutions,
         )
 
         private fun fromClientPartials(p1: ClientSpeciesP1): Species = Species(
@@ -295,6 +341,7 @@ class Species(
             Optional.empty(),
             p1.battleTheme,
             p1.lightingData,
+            emptySet()
         )
     }
 }

@@ -170,7 +170,6 @@ object PokeBalls : JsonDataRegistry<PokeBall> {
         createDefault("friend_ball", effects = listOf(CaptureEffects.friendshipSetter(150)))
         createDefault("moon_ball", CatchRateModifiers.MOON_PHASES)
         createDefault("sport_ball", MultiplierModifier(1.5F))
-        // FIXME: I need access to the elemental types
         createDefault("net_ball", CatchRateModifiers.typeBoosting(3F, ElementalTypes.BUG, ElementalTypes.WATER))
         createDefault("dive_ball", CatchRateModifiers.SUBMERGED_IN_WATER, waterDragValue = 0.99F)
         createDefault("nest_ball", CatchRateModifiers.NEST)

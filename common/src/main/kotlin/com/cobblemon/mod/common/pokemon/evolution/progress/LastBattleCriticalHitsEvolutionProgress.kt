@@ -14,8 +14,6 @@ import com.cobblemon.mod.common.api.pokemon.evolution.progress.EvolutionProgress
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.requirements.BattleCriticalHitsRequirement
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.google.gson.JsonObject
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceLocation
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
@@ -45,7 +43,7 @@ class LastBattleCriticalHitsEvolutionProgress : EvolutionProgress<LastBattleCrit
 
     companion object {
 
-        val ID = cobblemonResource(BattleCriticalHitsRequirement.ADAPTER_VARIANT)
+        val ID = cobblemonResource("battle_critical_hits")
         private const val AMOUNT = "amount"
 
         @JvmStatic

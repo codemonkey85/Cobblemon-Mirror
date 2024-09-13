@@ -45,6 +45,26 @@
   "evYield": {
     "cobblemon:special_attack": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "snom_frosmoth",
+      "learnableMoves": "cobblemon:icywind",
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:friendship",
+          "amount": 160
+        },
+        {
+          "type": "cobblemon:time_range",
+          "range": "night"
+        }
+      ],
+      "result": "frosmoth"
+    }
+  ],
   "experienceGroup": "cobblemon:medium_fast",
   "height": 0.3,
   "hitbox": {
@@ -66,11 +86,47 @@
     },
     {
       "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:skittersmack"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:fairywind"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:round"
+    },
+    {
+      "type": "cobblemon:tm",
       "move": "cobblemon:substitute"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:terablast"
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:iciclespear"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bugbuzz"
     },
     {
       "type": "cobblemon:tm",
@@ -78,11 +134,23 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:attract"
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:facade"
     },
     {
       "type": "cobblemon:egg",
       "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:mirrorcoat"
     },
     {
       "type": "cobblemon:tm",
@@ -94,15 +162,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:fairywind"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:iciclespear"
+      "move": "cobblemon:endure"
     },
     {
       "type": "cobblemon:tm",
@@ -110,19 +170,15 @@
     },
     {
       "type": "cobblemon:egg",
+      "move": "cobblemon:mirrorcoat"
+    },
+    {
+      "type": "cobblemon:egg",
       "move": "cobblemon:bugbite"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
+      "move": "cobblemon:bugbuzz"
     },
     {
       "type": "cobblemon:egg",
@@ -130,19 +186,11 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:bugbuzz"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:round"
-    },
-    {
-      "type": "cobblemon:tm",
       "move": "cobblemon:iciclespear"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lunge"
     },
     {
       "type": "cobblemon:tutor",
@@ -150,23 +198,15 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tm",
       "move": "cobblemon:snore"
     },
     {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:mirrorcoat"
+      "type": "cobblemon:tm",
+      "move": "cobblemon:terablast"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:lunge"
+      "move": "cobblemon:substitute"
     },
     {
       "type": "cobblemon:tm",
@@ -174,27 +214,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:bugbuzz"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bugbite"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:mirrorcoat"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:skittersmack"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
+      "move": "cobblemon:attract"
     }
   ],
   "nationalPokedexNumber": 872,

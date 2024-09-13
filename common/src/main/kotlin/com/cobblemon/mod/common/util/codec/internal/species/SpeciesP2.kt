@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.util.codec.internal.species
 
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.pokemon.egg.EggGroup
+import com.cobblemon.mod.common.api.pokemon.evolution.Evolution
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.pokemon.ai.PokemonBehaviour
 import com.cobblemon.mod.common.pokemon.lighthing.LightingData
@@ -38,6 +39,7 @@ internal data class SpeciesP2(
     val preEvolution: Optional<ResourceKey<Species>>,
     val battleTheme: ResourceLocation,
     val lightingData: Optional<LightingData>,
+    val evolutions: Set<Evolution>,
 ) {
     companion object {
         @JvmStatic
@@ -56,6 +58,7 @@ internal data class SpeciesP2(
                 ResourceKey.codec(CobblemonRegistries.SPECIES_KEY).optionalFieldOf("preEvolution").forGetter(SpeciesP2::preEvolution),
                 ResourceLocation.CODEC.optionalFieldOf("battleTheme", CobblemonSounds.PVW_BATTLE.location).forGetter(SpeciesP2::battleTheme),
                 LightingData.CODEC.optionalFieldOf("lightingData").forGetter(SpeciesP2::lightingData),
+                CodecUtils.setOf(Evolution.CODEC).fieldOf("evolutions").forGetter(SpeciesP2::evolutions),
             ).apply(instance, ::SpeciesP2)
         }
 
@@ -73,6 +76,7 @@ internal data class SpeciesP2(
             species.preEvolutionKey,
             species.battleTheme,
             Optional.ofNullable(species.lightingData),
+            species.evolutions
         )
     }
 }

@@ -8,31 +8,51 @@
 
 package com.cobblemon.mod.common.pokemon.evolution.requirements
 
-import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
+import com.cobblemon.mod.common.api.tags.RegistryBasedCondition
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.requirements.template.EntityQueryRequirement
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.core.registries.Registries
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.level.levelgen.structure.Structure
+import java.util.Optional
 
 /**
  * A [EntityQueryRequirement] for when a [Pokemon] is expected to be in a certain structure.
  *
- * @property structureCondition The [Identifier] of the structure the queried entity is expected to be in.
+ * @property structureCondition An optional [RegistryBasedCondition] if present must match.
+ * @property structureAnticondition An optional [RegistryBasedCondition] if present must not match.
  * @author whatsy
  * @since December 5th, 2023
  */
-class StructureRequirement : EntityQueryRequirement {
-    val structureCondition: RegistryLikeCondition<Structure>? = null
-    val structureAnticondition: RegistryLikeCondition<Structure>? = null
+class StructureRequirement(
+    val structureCondition: Optional<RegistryBasedCondition<Structure>>,
+    val structureAnticondition: Optional<RegistryBasedCondition<Structure>>,
+) : EntityQueryRequirement {
+
     override fun check(pokemon: Pokemon, queriedEntity: LivingEntity): Boolean {
         val structures = queriedEntity.level().getChunk(queriedEntity.blockPosition()).allReferences
         val registry = queriedEntity.level().registryAccess().registryOrThrow(Registries.STRUCTURE)
-        return (structureCondition == null || structures.any { structureCondition.fits(it.key, registry) }) && (structureAnticondition == null || !structures.any { structureAnticondition.fits(it.key, registry) })
+        return structureCondition.map { condition -> structures.any { condition.fits(it.key, registry) }  }.orElse(true)
+                && structureAnticondition.map { condition -> structures.none { condition.fits(it.key, registry) }  }.orElse(true)
     }
 
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.STRUCTURE
+
     companion object {
-        const val ADAPTER_VARIANT = "structure"
+
+        @JvmStatic
+        val CODEC: MapCodec<StructureRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                RegistryBasedCondition.codec(Registries.STRUCTURE).optionalFieldOf("structureCondition")
+                    .forGetter(StructureRequirement::structureCondition),
+                RegistryBasedCondition.codec(Registries.STRUCTURE).optionalFieldOf("structureAnticondition")
+                    .forGetter(StructureRequirement::structureAnticondition),
+            ).apply(instance, ::StructureRequirement)
+        }
+
     }
 
 }

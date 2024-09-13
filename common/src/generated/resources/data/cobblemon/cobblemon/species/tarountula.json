@@ -45,6 +45,23 @@
   "evYield": {
     "cobblemon:defence": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "tarountula_spidops",
+      "learnableMoves": "cobblemon:silktrap",
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 15,
+          "minLevel": 15
+        }
+      ],
+      "result": "spidops"
+    }
+  ],
   "experienceGroup": "cobblemon:erratic",
   "height": 0.3,
   "hitbox": {
@@ -57,12 +74,12 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:tackle"
+      "move": "cobblemon:stringshot"
     },
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:stringshot"
+      "move": "cobblemon:tackle"
     },
     {
       "type": "cobblemon:level",
@@ -126,19 +143,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:falseswipe"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:skittersmack"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:lunge"
+      "move": "cobblemon:bugbite"
     },
     {
       "type": "cobblemon:egg",
@@ -146,15 +151,59 @@
     },
     {
       "type": "cobblemon:tm",
+      "move": "cobblemon:knockoff"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:trailblaze"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sunnyday"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
+    },
+    {
+      "type": "cobblemon:tm",
       "move": "cobblemon:strugglebug"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:bugbite"
+      "move": "cobblemon:throatchop"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:xscissor"
+      "move": "cobblemon:grassknot"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:sleeptalk"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bulletseed"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:suckerpunch"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:memento"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:raindance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:lunge"
     },
     {
       "type": "cobblemon:tm",
@@ -165,60 +214,12 @@
       "move": "cobblemon:leechlife"
     },
     {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:suckerpunch"
+      "type": "cobblemon:tm",
+      "move": "cobblemon:skittersmack"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:grassknot"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:knockoff"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:terablast"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:lunge"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:gigadrain"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:shadowclaw"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:trailblaze"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:poisonjab"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:pounce"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bodyslam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bulletseed"
+      "move": "cobblemon:toxicspikes"
     },
     {
       "type": "cobblemon:tm",
@@ -226,15 +227,19 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
+      "move": "cobblemon:gigadrain"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:endure"
+      "move": "cobblemon:bodyslam"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:raindance"
+      "move": "cobblemon:falseswipe"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:poisonjab"
     },
     {
       "type": "cobblemon:tm",
@@ -242,7 +247,11 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:throatchop"
+      "move": "cobblemon:terablast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:xscissor"
     },
     {
       "type": "cobblemon:tm",
@@ -254,15 +263,23 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:toxicspikes"
+      "move": "cobblemon:facade"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:sunnyday"
+      "move": "cobblemon:endure"
     },
     {
       "type": "cobblemon:egg",
-      "move": "cobblemon:memento"
+      "move": "cobblemon:lunge"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:pounce"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:shadowclaw"
     }
   ],
   "nationalPokedexNumber": 917,

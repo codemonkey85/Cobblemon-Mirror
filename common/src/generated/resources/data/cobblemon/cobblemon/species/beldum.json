@@ -45,6 +45,26 @@
   "evYield": {
     "cobblemon:defence": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "beldum_metang",
+      "learnableMoves": [
+        "cobblemon:confusion",
+        "cobblemon:metalclaw"
+      ],
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 20,
+          "minLevel": 20
+        }
+      ],
+      "result": "metang"
+    }
+  ],
   "experienceGroup": "cobblemon:slow",
   "height": 0.6,
   "hitbox": {
@@ -57,20 +77,20 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:tackle"
+      "move": "cobblemon:takedown"
     },
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:takedown"
+      "move": "cobblemon:tackle"
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:ironhead"
+      "move": "cobblemon:zenheadbutt"
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:takedown"
+      "move": "cobblemon:zenheadbutt"
     },
     {
       "type": "cobblemon:tm",
@@ -78,15 +98,15 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:ironhead"
+      "move": "cobblemon:terablast"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:irondefense"
+      "move": "cobblemon:zenheadbutt"
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:irondefense"
+      "move": "cobblemon:zenheadbutt"
     },
     {
       "type": "cobblemon:tutor",
@@ -98,26 +118,10 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:zenheadbutt"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:ironhead"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:zenheadbutt"
-    },
-    {
-      "type": "cobblemon:tutor",
       "move": "cobblemon:ironhead"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:terablast"
-    },
-    {
-      "type": "cobblemon:tutor",
       "move": "cobblemon:zenheadbutt"
     },
     {
@@ -126,35 +130,31 @@
     },
     {
       "type": "cobblemon:tutor",
+      "move": "cobblemon:irondefense"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:irondefense"
+    },
+    {
+      "type": "cobblemon:tutor",
       "move": "cobblemon:zenheadbutt"
     },
     {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:headbutt"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:irondefense"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:irondefense"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:irondefense"
-    },
-    {
-      "type": "cobblemon:tutor",
+      "type": "cobblemon:tm",
       "move": "cobblemon:steelbeam"
     },
     {
-      "type": "cobblemon:tm",
+      "type": "cobblemon:tutor",
       "move": "cobblemon:zenheadbutt"
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:zenheadbutt"
+      "move": "cobblemon:ironhead"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:irondefense"
     },
     {
       "type": "cobblemon:tutor",
@@ -166,6 +166,22 @@
     },
     {
       "type": "cobblemon:tutor",
+      "move": "cobblemon:takedown"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:ironhead"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:irondefense"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:headbutt"
+    },
+    {
+      "type": "cobblemon:tutor",
       "move": "cobblemon:ironhead"
     },
     {
@@ -174,11 +190,15 @@
     },
     {
       "type": "cobblemon:tm",
+      "move": "cobblemon:ironhead"
+    },
+    {
+      "type": "cobblemon:tutor",
       "move": "cobblemon:steelbeam"
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:zenheadbutt"
+      "move": "cobblemon:irondefense"
     },
     {
       "type": "cobblemon:tutor",

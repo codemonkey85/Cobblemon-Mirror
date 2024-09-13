@@ -209,6 +209,12 @@ object CobblemonSpeciesTags {
     val GENERATION_9 = this.create("gen9")
 
     /**
+     * Unofficial Pokémon created by the Cobblemon team, there is no guarantee datapack authors will respect our exclusivity.
+     */
+    @JvmStatic
+    val ORIGINALS = this.create("originals")
+
+    /**
      * Unofficial Pokémon created by a data pack, there is no guarantee authors will adhere to this principle
      */
     @JvmStatic

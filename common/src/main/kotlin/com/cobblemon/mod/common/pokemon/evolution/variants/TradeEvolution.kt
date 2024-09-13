@@ -11,8 +11,14 @@ package com.cobblemon.mod.common.pokemon.evolution.variants
 import com.cobblemon.mod.common.api.moves.MoveTemplate
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.evolution.ContextEvolution
+import com.cobblemon.mod.common.api.pokemon.evolution.EvolutionType
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.codec.CodecUtils
+import com.mojang.serialization.Codec
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.HolderSet
 
 /**
  * Represents a [ContextEvolution] with [Pokemon] context.
@@ -30,31 +36,29 @@ open class TradeEvolution(
     override val requiredContext: PokemonProperties,
     override var optional: Boolean,
     override var consumeHeldItem: Boolean,
-    override val requirements: MutableSet<EvolutionRequirement>,
-    override val learnableMoves: MutableSet<MoveTemplate>
+    override val requirements: Set<EvolutionRequirement>,
+    override val learnableMoves: HolderSet<MoveTemplate>
 ) : ContextEvolution<Pokemon, PokemonProperties> {
-    constructor(): this(
-        id = "id",
-        result = PokemonProperties(),
-        shedder = null,
-        requiredContext = PokemonProperties(),
-        optional = true,
-        consumeHeldItem = true,
-        requirements = mutableSetOf(),
-        learnableMoves = mutableSetOf()
-    )
 
     override fun testContext(pokemon: Pokemon, context: Pokemon) = this.requiredContext.matches(context)
 
-    override fun equals(other: Any?) = other is TradeEvolution && other.id.equals(this.id, true)
-
-    override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + ADAPTER_VARIANT.hashCode()
-        return result
-    }
+    override val type: EvolutionType<*> = EvolutionType.TRADE
 
     companion object {
-        const val ADAPTER_VARIANT = "trade"
+
+        @JvmStatic
+        val CODEC: MapCodec<TradeEvolution> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                Codec.STRING.fieldOf("id").forGetter(TradeEvolution::id),
+                PokemonProperties.CODEC.fieldOf("result").forGetter(TradeEvolution::result),
+                PokemonProperties.CODEC.optionalFieldOf("result", null).forGetter(TradeEvolution::shedder),
+                PokemonProperties.CODEC.fieldOf("requiredContext").forGetter(TradeEvolution::requiredContext),
+                Codec.BOOL.optionalFieldOf("optional", true).forGetter(TradeEvolution::optional),
+                Codec.BOOL.optionalFieldOf("consumeHeldItem", true).forGetter(TradeEvolution::consumeHeldItem),
+                CodecUtils.setOf(EvolutionRequirement.CODEC).fieldOf("requirements").forGetter(TradeEvolution::requirements),
+                MoveTemplate.LIST_CODEC.fieldOf("learnableMoves").forGetter(TradeEvolution::learnableMoves),
+            ).apply(instance, ::TradeEvolution)
+        }
+
     }
 }

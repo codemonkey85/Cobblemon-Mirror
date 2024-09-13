@@ -72,8 +72,8 @@ class Learnset(
         @JvmStatic
         val CLIENT_CODEC: Codec<Learnset> = CodecUtils.setOf(LearnsetEntry.CODEC)
             .xmap(
-                { set -> Learnset(set) },
-                { learnset -> learnset.holders.filterIsInstance<LevelUpLearnsetEntry>().toSet() }
+                ::Learnset,
+                { learnset -> learnset.holders.filter { it.syncToClient }.toSet() }
             )
 
     }

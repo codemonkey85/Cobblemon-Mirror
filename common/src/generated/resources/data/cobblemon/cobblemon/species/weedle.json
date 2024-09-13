@@ -45,6 +45,23 @@
   "evYield": {
     "cobblemon:speed": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "weedle_kakuna",
+      "learnableMoves": [],
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 7,
+          "minLevel": 7
+        }
+      ],
+      "result": "kakuna"
+    }
+  ],
   "experienceGroup": "cobblemon:medium_fast",
   "height": 0.3,
   "hitbox": {
@@ -57,12 +74,12 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:stringshot"
+      "move": "cobblemon:poisonsting"
     },
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:poisonsting"
+      "move": "cobblemon:stringshot"
     },
     {
       "type": "cobblemon:level",
@@ -79,23 +96,11 @@
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:electroweb"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:electroweb"
+      "move": "cobblemon:poisonsting"
     },
     {
       "type": "cobblemon:tutor",
       "move": "cobblemon:stringshot"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:poisonsting"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:poisonsting"
     },
     {
       "type": "cobblemon:tutor",
@@ -107,15 +112,27 @@
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:stringshot"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:stringshot"
+      "move": "cobblemon:electroweb"
     },
     {
       "type": "cobblemon:tutor",
       "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:poisonsting"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:stringshot"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:electroweb"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:stringshot"
     }
   ],
   "nationalPokedexNumber": 13,

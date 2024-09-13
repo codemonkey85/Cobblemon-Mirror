@@ -42,6 +42,38 @@
     "cobblemon:defence": 1,
     "cobblemon:special_defence": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "cosmoem_solgaleo",
+      "learnableMoves": "cobblemon:sunsteelstrike",
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 53,
+          "minLevel": 53
+        }
+      ],
+      "result": "solgaleo"
+    },
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "cosmoem_lunala",
+      "learnableMoves": "cobblemon:moongeistbeam",
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 53,
+          "minLevel": 53
+        }
+      ],
+      "result": "lunala"
+    }
+  ],
   "experienceGroup": "cobblemon:slow",
   "height": 0.1,
   "hitbox": {
@@ -53,7 +85,7 @@
   "moves": [
     {
       "type": "cobblemon:level",
-      "level": 0,
+      "level": 1,
       "move": "cobblemon:cosmicpower"
     },
     {

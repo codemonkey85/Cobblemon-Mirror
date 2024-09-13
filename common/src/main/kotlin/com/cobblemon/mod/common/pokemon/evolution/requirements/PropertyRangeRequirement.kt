@@ -9,19 +9,30 @@
 package com.cobblemon.mod.common.pokemon.evolution.requirements
 
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
 import com.cobblemon.mod.common.api.pokemon.feature.IntSpeciesFeature
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.codec.CodecUtils
+import com.mojang.serialization.Codec
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 
-class PropertyRangeRequirement : EvolutionRequirement {
-    val range = IntRange(0, 256)
-    val feature: String = ""
+class PropertyRangeRequirement(val range: IntRange, val featureKey: String) : EvolutionRequirement {
 
     override fun check(pokemon: Pokemon): Boolean {
-        val feature: IntSpeciesFeature = pokemon.getFeature(feature) ?: return false
+        val feature: IntSpeciesFeature = pokemon.getFeature(featureKey) ?: return false
         return this.range.contains(feature.value)
     }
 
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.PROPERTY_RANGE
+
     companion object {
-        const val ADAPTER_VARIANT = "property_range"
+        @JvmStatic
+        val CODEC: MapCodec<PropertyRangeRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                CodecUtils.intRange(Codec.INT).fieldOf("range").forGetter(PropertyRangeRequirement::range),
+                Codec.STRING.fieldOf("feature").forGetter(PropertyRangeRequirement::featureKey),
+            ).apply(instance, ::PropertyRangeRequirement)
+        }
     }
 }

@@ -10,8 +10,12 @@ package com.cobblemon.mod.common.pokemon.evolution.requirements
 
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
 import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.mojang.serialization.Codec
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 
 /**
  * An [EvolutionRequirement] for when the party needs to either contain or not a specific match for [target] based on the [contains] property.
@@ -21,16 +25,24 @@ import com.cobblemon.mod.common.pokemon.Pokemon
  * @author Licious
  * @since March 21st, 2022
  */
-class PartyMemberRequirement : EvolutionRequirement {
-    companion object {
-        const val ADAPTER_VARIANT = "party_member"
-    }
+class PartyMemberRequirement(val target: PokemonProperties, val contains: Boolean) : EvolutionRequirement {
 
-    val target = PokemonProperties()
-    val contains = true
     override fun check(pokemon: Pokemon): Boolean {
         val party = pokemon.storeCoordinates.get()?.store as? PartyStore ?: return false
         val has = party.any { member -> member.uuid != pokemon.uuid && this.target.matches(member) }
         return this.contains == has
     }
+
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.PARTY_MEMBER
+
+    companion object {
+        @JvmStatic
+        val CODEC: MapCodec<PartyMemberRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                PokemonProperties.CODEC.fieldOf("target").forGetter(PartyMemberRequirement::target),
+                Codec.BOOL.fieldOf("contains").forGetter(PartyMemberRequirement::contains),
+            ).apply(instance, ::PartyMemberRequirement)
+        }
+    }
+
 }

@@ -46,6 +46,23 @@
   "evYield": {
     "cobblemon:attack": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "frigibax_arctibax",
+      "learnableMoves": [],
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 35,
+          "minLevel": 35
+        }
+      ],
+      "result": "arctibax"
+    }
+  ],
   "experienceGroup": "cobblemon:slow",
   "height": 0.5,
   "hitbox": {
@@ -122,11 +139,15 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:icefang"
+      "move": "cobblemon:icebeam"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:raindance"
+      "move": "cobblemon:terablast"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:snowscape"
     },
     {
       "type": "cobblemon:tm",
@@ -134,7 +155,15 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:outrage"
+      "move": "cobblemon:swordsdance"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bodyslam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:protect"
     },
     {
       "type": "cobblemon:tm",
@@ -142,11 +171,27 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:snowscape"
+      "move": "cobblemon:facade"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:icefang"
     },
     {
       "type": "cobblemon:egg",
-      "move": "cobblemon:aquatail"
+      "move": "cobblemon:freezedry"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:blizzard"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:outrage"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:dragonclaw"
     },
     {
       "type": "cobblemon:tm",
@@ -157,32 +202,8 @@
       "move": "cobblemon:takedown"
     },
     {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bodyslam"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:swordsdance"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:crunch"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:dragonclaw"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:facade"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:substitute"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:dragontail"
+      "type": "cobblemon:egg",
+      "move": "cobblemon:dragonrush"
     },
     {
       "type": "cobblemon:tm",
@@ -190,19 +211,11 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:rest"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:iciclespear"
+      "move": "cobblemon:avalanche"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:iciclespear"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:freezedry"
+      "move": "cobblemon:sleeptalk"
     },
     {
       "type": "cobblemon:tm",
@@ -210,35 +223,39 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:icebeam"
+      "move": "cobblemon:raindance"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:avalanche"
+      "move": "cobblemon:substitute"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:blizzard"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:sleeptalk"
+      "move": "cobblemon:iciclespear"
     },
     {
       "type": "cobblemon:egg",
-      "move": "cobblemon:dragonrush"
+      "move": "cobblemon:iciclespear"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:protect"
+      "move": "cobblemon:crunch"
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:terablast"
+      "move": "cobblemon:dragontail"
     },
     {
       "type": "cobblemon:tm",
       "move": "cobblemon:helpinghand"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:aquatail"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:rest"
     }
   ],
   "nationalPokedexNumber": 996,

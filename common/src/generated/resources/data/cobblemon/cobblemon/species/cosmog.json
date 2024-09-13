@@ -41,6 +41,23 @@
   "evYield": {
     "cobblemon:hp": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "cosmog_cosmoem",
+      "learnableMoves": "cobblemon:cosmicpower",
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 43,
+          "minLevel": 43
+        }
+      ],
+      "result": "cosmoem"
+    }
+  ],
   "experienceGroup": "cobblemon:slow",
   "height": 0.2,
   "hitbox": {
@@ -53,11 +70,15 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:splash"
+      "move": "cobblemon:teleport"
     },
     {
       "type": "cobblemon:level",
       "level": 1,
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
       "move": "cobblemon:teleport"
     },
     {
@@ -67,10 +88,6 @@
     {
       "type": "cobblemon:tutor",
       "move": "cobblemon:splash"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:teleport"
     }
   ],
   "nationalPokedexNumber": 789,

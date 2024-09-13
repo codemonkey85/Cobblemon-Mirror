@@ -41,6 +41,23 @@
   "evYield": {
     "cobblemon:speed": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "tynamo_eelektrik",
+      "learnableMoves": "cobblemon:crunch",
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 39,
+          "minLevel": 39
+        }
+      ],
+      "result": "eelektrik"
+    }
+  ],
   "experienceGroup": "cobblemon:slow",
   "height": 0.2,
   "hitbox": {
@@ -53,17 +70,12 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:tackle"
+      "move": "cobblemon:thunderwave"
     },
     {
       "type": "cobblemon:level",
       "level": 1,
       "move": "cobblemon:chargebeam"
-    },
-    {
-      "type": "cobblemon:level",
-      "level": 1,
-      "move": "cobblemon:thunderwave"
     },
     {
       "type": "cobblemon:level",
@@ -71,12 +83,13 @@
       "move": "cobblemon:spark"
     },
     {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:magnetrise"
+      "type": "cobblemon:level",
+      "level": 1,
+      "move": "cobblemon:tackle"
     },
     {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:magnetrise"
+      "type": "cobblemon:tm",
+      "move": "cobblemon:thunderwave"
     },
     {
       "type": "cobblemon:tm",
@@ -87,8 +100,28 @@
       "move": "cobblemon:chargebeam"
     },
     {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:charge"
+    },
+    {
       "type": "cobblemon:tutor",
       "move": "cobblemon:magnetrise"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:magnetrise"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:magnetrise"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:chargebeam"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:chargebeam"
     },
     {
       "type": "cobblemon:tm",
@@ -96,23 +129,7 @@
     },
     {
       "type": "cobblemon:tm",
-      "move": "cobblemon:chargebeam"
-    },
-    {
-      "type": "cobblemon:tm",
       "move": "cobblemon:thunderwave"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:thunderwave"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:charge"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:chargebeam"
     },
     {
       "type": "cobblemon:tm",

@@ -59,6 +59,7 @@ class SpeciesTagProvider(
             this.checkIfPseudoLegendary(jObject, id, showdownEntriesByName)
             this.checkIfRegional(jObject, id)
         }
+        this.resolveBiasFakemon()
     }
 
     private fun resolveGenerationTag(jObject: JsonObject, id: ResourceLocation) {
@@ -188,6 +189,37 @@ class SpeciesTagProvider(
             this.tag(CobblemonSpeciesTags.REGIONAL)
                 .addOptional(id)
         }
+    }
+
+    private fun resolveBiasFakemon() {
+        this.tag(CobblemonSpeciesTags.REGIONAL_OF_ALOLA)
+            .addOptional(SpeciesProvider.ALOLAN_PIKACHU)
+            .addOptional(SpeciesProvider.ALOLAN_EXEGGCUTE)
+
+        this.tag(CobblemonSpeciesTags.REGIONAL_OF_HISUI)
+            .addOptional(SpeciesProvider.HISUIAN_CYNDAQUIL)
+            .addOptional(SpeciesProvider.HISUIAN_QUILAVA)
+            .addOptional(SpeciesProvider.HISUIAN_OSHAWOTT)
+            .addOptional(SpeciesProvider.HISUIAN_DEWOTT)
+            .addOptional(SpeciesProvider.HISUIAN_PETILIL)
+            .addOptional(SpeciesProvider.HISUIAN_GOOMY)
+            .addOptional(SpeciesProvider.HISUIAN_ROWLET)
+            .addOptional(SpeciesProvider.HISUIAN_DARTRIX)
+
+        this.tag(CobblemonSpeciesTags.ORIGINALS)
+            .addOptional(SpeciesProvider.ALOLAN_PIKACHU)
+            .addOptional(SpeciesProvider.ALOLAN_EXEGGCUTE)
+            .addOptional(SpeciesProvider.HISUIAN_CYNDAQUIL)
+            .addOptional(SpeciesProvider.HISUIAN_QUILAVA)
+            .addOptional(SpeciesProvider.HISUIAN_OSHAWOTT)
+            .addOptional(SpeciesProvider.HISUIAN_DEWOTT)
+            .addOptional(SpeciesProvider.HISUIAN_PETILIL)
+            .addOptional(SpeciesProvider.HISUIAN_GOOMY)
+            .addOptional(SpeciesProvider.HISUIAN_ROWLET)
+            .addOptional(SpeciesProvider.HISUIAN_DARTRIX)
+
+        this.tag(CobblemonSpeciesTags.FAKEMON)
+            .addOptionalTag(CobblemonSpeciesTags.ORIGINALS.location)
     }
 
     companion object {

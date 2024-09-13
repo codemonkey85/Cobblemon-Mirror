@@ -20,10 +20,13 @@
 - Made the Pokemon.aspects setter private. This could technically break sidemods but if you are affected by this then you were using it wrong! Use Pokemon.forcedAspects to fix it.
 - Many types related to ``Pokemon`` including itself now have dedicated ``Codec``, please migrate to them from the NBT/JSON/PacketBuffer write/read methods.
 - Added ``CobblemonRegistries`` for all the new proper registry implementations, these will be done in waves and introduced gradually.
-- Added ``CobblemonElementalTypeTags``, contains all our default tags for the ``cobblemon:elemental_type`` registry.
 - The following built-in registries have been added: ``cobblemon:ability``, ``cobblemon:move``.
-- The following dynamic registries have been added and you can use datagenerators on them: ``cobblemon:elemental_type``. ``cobblemon:species``.
+- The following dynamic registries have been added: ``cobblemon:elemental_type``. ``cobblemon:species``.
+- Added ``CobblemonElementalTypeTags``, contains all our default tags for the ``cobblemon:elemental_type`` registry.
+- Added ``CobblemonSpeciesTags``, contains all our default tags for the ``cobblemon:species`` registry.
+- ``CobblemonPokemonLabels`` is now deprecated migrate to the tags mentioned above.
 - Added ``HiddenPowerCalculator``, this can be used or swapped by ``Cobblemon.hiddenPowerCalculator``, the default implementation is ``OfficialHiddenPowerCalculator``.
+- ``PokemonProperty`` & ``CustomPokemonProperty`` related operations now require a ``HolderProvider.Lookup`` instance, this can mean breaking changes for your custom property implementations, update method signatures as needed. 
 
 ### Data Pack & Resource Pack Creators
 - You can now add custom Pokemon elemental types. The registry key is ``cobblemon:elemental_type``. Example datapack path: ``my_pack/cobblemon/elemental_type/my_type.json``. For the file structure see the wiki or the default Cobblemon assets.
@@ -33,6 +36,8 @@
 - Any usage of elemental types in data files such as species need to be updated to use the Cobblemon namespace instead, for example ``fire`` became ``cobblemon:fire``.
 - Any usage of abilities in data files such as species need to be updated to use the Cobblemon namespace instead, for example ``blaze`` became ``cobblemon:blaze``.
 - Species ``weight`` and ``height`` now use kilograms and meters as the unit respectively.
+- Removed the evolution requirement types of ``attack_defence_ratio``, ``stat_compare`` and ``stat_equal`` these have been replaced with the new ``cobblemon:stat_ratio``. See the wiki for more information.
+- Reworked the ``cobblemon:weather`` evolution requirement property structure now it only needs the ``state`` property expecting ``CLEAR``, ``RAINING`` or ``THUNDERING`` as a value.
 
 ## [1.5.3](#1-5-3)
 ### Fixes

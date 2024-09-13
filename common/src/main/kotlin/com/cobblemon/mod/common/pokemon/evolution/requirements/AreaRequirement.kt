@@ -8,24 +8,35 @@
 
 package com.cobblemon.mod.common.pokemon.evolution.requirements
 
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.requirements.template.EntityQueryRequirement
+import com.cobblemon.mod.common.util.codec.CodecUtils
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.phys.AABB
-import net.minecraft.world.phys.Vec3
 
 /**
  * A [EntityQueryRequirement] for when a [Pokemon] is expected to be in a certain area.
  *
- * @property box The [Box] expected to be in.
+ * @property box The [AABB] expected to be in.
  * @author Licious
  * @since March 21st, 2022
  */
-class AreaRequirement : EntityQueryRequirement {
+class AreaRequirement(val box: AABB) : EntityQueryRequirement {
+
+    override fun check(pokemon: Pokemon, queriedEntity: LivingEntity) = this.box.contains(queriedEntity.position())
+
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.AREA
+
     companion object {
-        const val ADAPTER_VARIANT = "area"
+        @JvmStatic
+        val CODEC: MapCodec<AreaRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                CodecUtils.BOX.fieldOf("box").forGetter(AreaRequirement::box)
+            ).apply(instance, ::AreaRequirement)
+        }
     }
 
-    val box: AABB = AABB.unitCubeFromLowerCorner(Vec3.ZERO)
-    override fun check(pokemon: Pokemon, queriedEntity: LivingEntity) = box.contains(queriedEntity.position())
 }

@@ -17,6 +17,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.world.entity.EntityDimensions
+import net.minecraft.world.phys.AABB
 
 object CodecUtils {
 
@@ -86,6 +87,18 @@ object CodecUtils {
             { list -> IntRange(list[0], list[1]) },
             { range -> listOf(range.first, range.last) }
         )
+
+    @JvmStatic
+    val BOX: Codec<AABB> = RecordCodecBuilder.create { instance ->
+        instance.group(
+            Codec.DOUBLE.fieldOf("minX").forGetter(AABB::minX),
+            Codec.DOUBLE.fieldOf("minY").forGetter(AABB::minY),
+            Codec.DOUBLE.fieldOf("minZ").forGetter(AABB::minZ),
+            Codec.DOUBLE.fieldOf("maxX").forGetter(AABB::maxX),
+            Codec.DOUBLE.fieldOf("maxY").forGetter(AABB::maxY),
+            Codec.DOUBLE.fieldOf("maxZ").forGetter(AABB::maxZ),
+        ).apply(instance, ::AABB)
+    }
 
     private fun dynamicRangeChecker(min: () -> Int, max: () -> Int): (Int) -> DataResult<Int> = { number ->
         val minAsNum = min()

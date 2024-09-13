@@ -9,8 +9,12 @@
 package com.cobblemon.mod.common.pokemon.evolution.requirements
 
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.progress.LastBattleCriticalHitsEvolutionProgress
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.util.ExtraCodecs
 
 /**
  * An [EvolutionRequirement] for a certain amount of critical hits in a single battle.
@@ -20,23 +24,22 @@ import com.cobblemon.mod.common.pokemon.evolution.progress.LastBattleCriticalHit
  * @author Licious
  * @since October 2nd, 2022
  */
-@Suppress("unused", "CanBePrimaryConstructorProperty")
-class BattleCriticalHitsRequirement(amount: Int) : EvolutionRequirement {
-
-    constructor() : this(0)
-
-    /**
-     * The amount of critical hits required.
-     */
-    val amount = amount
+class BattleCriticalHitsRequirement(val amount: Int) : EvolutionRequirement {
 
     override fun check(pokemon: Pokemon): Boolean = pokemon.evolutionProxy.current()
         .progress()
         .filterIsInstance<LastBattleCriticalHitsEvolutionProgress>()
         .any { progress -> progress.currentProgress().amount >= this.amount }
 
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.BATTLE_CRITICAL_HITS
+
     companion object {
-        const val ADAPTER_VARIANT = "battle_critical_hits"
+        @JvmStatic
+        val CODEC: MapCodec<BattleCriticalHitsRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                ExtraCodecs.POSITIVE_INT.fieldOf("amount").forGetter(BattleCriticalHitsRequirement::amount)
+            ).apply(instance, ::BattleCriticalHitsRequirement)
+        }
     }
 
 }

@@ -10,9 +10,15 @@ package com.cobblemon.mod.common.pokemon.evolution.variants
 
 import com.cobblemon.mod.common.api.moves.MoveTemplate
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
+import com.cobblemon.mod.common.api.pokemon.evolution.EvolutionType
 import com.cobblemon.mod.common.api.pokemon.evolution.PassiveEvolution
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.codec.CodecUtils
+import com.mojang.serialization.Codec
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.HolderSet
 
 /**
  * Represents a [PassiveEvolution].
@@ -28,34 +34,27 @@ open class LevelUpEvolution(
     override val shedder: PokemonProperties?,
     override var optional: Boolean,
     override var consumeHeldItem: Boolean,
-    override val requirements: MutableSet<EvolutionRequirement>,
-    override val learnableMoves: MutableSet<MoveTemplate>,
+    override val requirements: Set<EvolutionRequirement>,
+    override val learnableMoves: HolderSet<MoveTemplate>,
     override val permanent: Boolean
 ) : PassiveEvolution {
 
-    /* Needed for old Gson versions that MC ships with */
-    constructor(): this(
-        id = "id",
-        result = PokemonProperties(),
-        shedder = null,
-        optional = true,
-        consumeHeldItem = true,
-        requirements = mutableSetOf(),
-        learnableMoves = mutableSetOf(),
-        permanent = false
-    )
-
-    override fun equals(other: Any?) = other is LevelUpEvolution && other.id.equals(this.id, true)
-
-    override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + ADAPTER_VARIANT.hashCode()
-        return result
-    }
+    override val type: EvolutionType<*> = EvolutionType.LEVEL_UP
 
     companion object {
-        const val ADAPTER_VARIANT = "level_up"
-        // Just for user convenience sake as we may have passive evolutions not backed by level ups
-        const val ALTERNATIVE_ADAPTER_VARIANT = "passive"
+        @JvmStatic
+        val CODEC: MapCodec<LevelUpEvolution> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                Codec.STRING.fieldOf("id").forGetter(LevelUpEvolution::id),
+                PokemonProperties.CODEC.fieldOf("result").forGetter(LevelUpEvolution::result),
+                PokemonProperties.CODEC.optionalFieldOf("result", null).forGetter(LevelUpEvolution::shedder),
+                Codec.BOOL.optionalFieldOf("optional", true).forGetter(LevelUpEvolution::optional),
+                Codec.BOOL.optionalFieldOf("consumeHeldItem", true).forGetter(LevelUpEvolution::consumeHeldItem),
+                CodecUtils.setOf(EvolutionRequirement.CODEC).fieldOf("requirements").forGetter(LevelUpEvolution::requirements),
+                MoveTemplate.LIST_CODEC.fieldOf("learnableMoves").forGetter(LevelUpEvolution::learnableMoves),
+                Codec.BOOL.optionalFieldOf("permanent", false).forGetter(LevelUpEvolution::permanent),
+            ).apply(instance, ::LevelUpEvolution)
+        }
+
     }
 }

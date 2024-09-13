@@ -25,7 +25,7 @@ object NbtItemPredicateAdapter : JsonDeserializer<NbtItemPredicate>, JsonSeriali
 
     override fun deserialize(jElement: JsonElement, type: Type, context: JsonDeserializationContext): NbtItemPredicate {
         if (jElement.isJsonPrimitive) {
-            return NbtItemPredicate(context.deserialize(jElement, CONDITION_TYPE))
+            return NbtItemPredicate(context.deserialize(jElement, CONDITION_TYPE), null)
         }
         val jObject = jElement.asJsonObject
         val itemCondition = context.deserialize<RegistryLikeCondition<Item>>(jObject.get(ITEM), CONDITION_TYPE)
@@ -35,12 +35,12 @@ object NbtItemPredicateAdapter : JsonDeserializer<NbtItemPredicate>, JsonSeriali
 
     override fun serialize(predicate: NbtItemPredicate, type: Type, context: JsonSerializationContext): JsonElement {
         val serializedItemCondition = context.serialize(predicate.item, CONDITION_TYPE)
-        if (predicate.nbt == null) {
+        if (predicate.nbt.isEmpty) {
             return serializedItemCondition
         }
         return JsonObject().apply {
             add(ITEM, serializedItemCondition)
-            add(NBT, NbtPredicate.CODEC.encode(predicate.nbt, JsonOps.INSTANCE, JsonOps.INSTANCE.empty()).result().get())
+            add(NBT, NbtPredicate.CODEC.encode(predicate.nbt.get(), JsonOps.INSTANCE, JsonOps.INSTANCE.empty()).result().get())
         }
     }
 

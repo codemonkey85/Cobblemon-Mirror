@@ -51,7 +51,7 @@ class RecoilEvolutionProgress : EvolutionProgress<RecoilEvolutionProgress.Progre
 
     companion object {
 
-        val ID = cobblemonResource(RecoilRequirement.ADAPTER_VARIANT)
+        val ID = cobblemonResource("recoil")
         private const val RECOIL = "recoil"
 
         @JvmStatic

@@ -11,12 +11,16 @@ package com.cobblemon.mod.common.pokemon.evolution.variants
 import com.cobblemon.mod.common.api.moves.MoveTemplate
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.evolution.ContextEvolution
+import com.cobblemon.mod.common.api.pokemon.evolution.EvolutionType
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.predicate.NbtItemPredicate
-import com.cobblemon.mod.common.registry.ItemIdentifierCondition
+import com.cobblemon.mod.common.util.codec.CodecUtils
+import com.mojang.serialization.Codec
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.HolderSet
 import net.minecraft.core.registries.Registries
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
@@ -35,31 +39,15 @@ open class ItemInteractionEvolution(
     override val requiredContext: NbtItemPredicate,
     override var optional: Boolean,
     override var consumeHeldItem: Boolean,
-    override val requirements: MutableSet<EvolutionRequirement>,
-    override val learnableMoves: MutableSet<MoveTemplate>,
+    override val requirements: Set<EvolutionRequirement>,
+    override val learnableMoves: HolderSet<MoveTemplate>,
 ) : ContextEvolution<ItemInteractionEvolution.ItemInteractionContext, NbtItemPredicate> {
-    constructor(): this(
-        id = "id",
-        result = PokemonProperties(),
-        shedder = null,
-        requiredContext = NbtItemPredicate(ItemIdentifierCondition(ResourceLocation.fromNamespaceAndPath("minecraft", "fish")), null),
-        optional = true,
-        consumeHeldItem = true,
-        requirements = mutableSetOf(),
-        learnableMoves = mutableSetOf()
-    )
 
     override fun testContext(pokemon: Pokemon, context: ItemInteractionContext): Boolean =
         this.requiredContext.item.fits(context.stack.item, context.world.registryAccess().registryOrThrow(Registries.ITEM))
-        && this.requiredContext.nbt?.matches(context.stack) ?: true
+        && this.requiredContext.nbt.map { it.matches(context.stack) }.orElse(true)
 
-    override fun equals(other: Any?) = other is ItemInteractionEvolution && other.id.equals(this.id, true)
-
-    override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + ADAPTER_VARIANT.hashCode()
-        return result
-    }
+    override val type: EvolutionType<*> = EvolutionType.ITEM_INTERACTION
 
     data class ItemInteractionContext(
         val stack: ItemStack,
@@ -67,6 +55,20 @@ open class ItemInteractionEvolution(
     )
 
     companion object {
-        const val ADAPTER_VARIANT = "item_interact"
+
+        @JvmStatic
+        val CODEC: MapCodec<ItemInteractionEvolution> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                Codec.STRING.fieldOf("id").forGetter(ItemInteractionEvolution::id),
+                PokemonProperties.CODEC.fieldOf("result").forGetter(ItemInteractionEvolution::result),
+                PokemonProperties.CODEC.optionalFieldOf("result", null).forGetter(ItemInteractionEvolution::shedder),
+                NbtItemPredicate.CODEC.fieldOf("requiredContext").forGetter(ItemInteractionEvolution::requiredContext),
+                Codec.BOOL.optionalFieldOf("optional", true).forGetter(ItemInteractionEvolution::optional),
+                Codec.BOOL.optionalFieldOf("consumeHeldItem", true).forGetter(ItemInteractionEvolution::consumeHeldItem),
+                CodecUtils.setOf(EvolutionRequirement.CODEC).fieldOf("requirements").forGetter(ItemInteractionEvolution::requirements),
+                MoveTemplate.LIST_CODEC.fieldOf("learnableMoves").forGetter(ItemInteractionEvolution::learnableMoves),
+            ).apply(instance, ::ItemInteractionEvolution)
+        }
+
     }
 }

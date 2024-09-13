@@ -30,6 +30,7 @@ import com.google.gson.JsonObject
 import com.mojang.serialization.Codec
 import net.minecraft.ResourceLocationException
 import net.minecraft.core.HolderLookup
+import net.minecraft.core.Registry
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.StringTag
@@ -110,13 +111,13 @@ open class PokemonProperties {
             props.shiny = parseBooleanProperty(keyPairs, listOf("shiny", "s"))
             props.species = parseSpeciesIdentifier(keyPairs)
             props.friendship = parseIntProperty(keyPairs, listOf("friendship"))?.coerceIn(0, Cobblemon.config.maxPokemonFriendship)
-            props.pokeball = parseIdentifierOfRegistry(keyPairs, listOf("pokeball")) { identifier -> PokeBalls.getPokeBall(identifier)?.name?.toString() }
-            props.nature = parseIdentifierOfRegistry(keyPairs, listOf("nature")) { identifier -> Natures.getNature(identifier)?.name?.toString() }
-            props.ability = parseIdentifierOfRegistry(keyPairs, listOf("ability")) { if (CobblemonRegistries.ABILITY.containsKey(it)) it.simplify() else null }
-            props.status = parseStringOfRegistry(keyPairs, listOf("status")) { (Statuses.getStatus(it) ?: Statuses.getStatus(it.asIdentifierDefaultingNamespace()))?.showdownName }
+            props.pokeball = parseIdentifierOfLegacyRegistry(keyPairs, listOf("pokeball"), PokeBalls::getPokeBall)
+            props.nature = parseIdentifierOfLegacyRegistry(keyPairs, listOf("nature"), Natures::getNature)
+            props.ability = parseIdentifierOfRegistry(keyPairs, listOf("ability"), CobblemonRegistries.ABILITY)
+            props.status = parseStringOfLegacyRegistry(keyPairs, listOf("status")) { (Statuses.getStatus(it) ?: Statuses.getStatus(it.asIdentifierDefaultingNamespace()))?.showdownName }
             props.nickname = parseText(keyPairs, listOf("nickname", "nick"))
-            props.type = parseIdentifierOfRegistry(keyPairs, listOf("type", "elemental_type")) { if (CobblemonRegistries.ELEMENTAL_TYPE.containsKey(it)) it.simplify() else null }
-            props.teraType = parseIdentifierOfRegistry(keyPairs, listOf("tera_type", "tera")) { if (CobblemonRegistries.ELEMENTAL_TYPE.containsKey(it)) it.simplify() else null }
+            props.type = parseIdentifierOfRegistry(keyPairs, listOf("type", "elemental_type"), CobblemonRegistries.ELEMENTAL_TYPE)
+            props.teraType = parseIdentifierOfRegistry(keyPairs, listOf("tera_type", "tera"), CobblemonRegistries.ELEMENTAL_TYPE)
             props.dmaxLevel = parseIntProperty(keyPairs, listOf("dmax_level", "dmax"))?.coerceIn(0, Cobblemon.config.maxDynamaxLevel)
             props.gmaxFactor = parseBooleanProperty(keyPairs, listOf("gmax_factor", "gmax"))
             props.tradeable = parseBooleanProperty(keyPairs, listOf("tradeable", "tradable"))
@@ -161,18 +162,37 @@ open class PokemonProperties {
             }
         }
 
-        private fun parseIdentifierOfRegistry(keyPairs: MutableList<Pair<String, String?>>, validKeys: List<String>, valueFetcher: (ResourceLocation) -> String?): String? {
+        private fun <T> parseIdentifierOfRegistry(
+            keyPairs: MutableList<Pair<String, String?>>,
+            validKeys: List<String>,
+            registry: Registry<T>,
+        ): String? {
             val matched = getMatchedKeyPair(keyPairs, validKeys) ?: return null
             val value = matched.second?.lowercase() ?: return null
             return try {
-                val identifier = value.asIdentifierDefaultingNamespace()
-                valueFetcher(identifier)
+                val id = value.asIdentifierDefaultingNamespace()
+                registry[id]?.let { id.simplify() }
             } catch (_: ResourceLocationException) {
                 null
             }
         }
 
-        private fun parseStringOfRegistry(keyPairs: MutableList<Pair<String, String?>>, validKeys: List<String>, valueFetcher: (String) -> String?): String? {
+        private fun <T> parseIdentifierOfLegacyRegistry(
+            keyPairs: MutableList<Pair<String, String?>>,
+            validKeys: List<String>,
+            valueFetcher: (ResourceLocation) -> T?,
+        ): String? {
+            val matched = getMatchedKeyPair(keyPairs, validKeys) ?: return null
+            val value = matched.second?.lowercase() ?: return null
+            return try {
+                val id = value.asIdentifierDefaultingNamespace()
+                valueFetcher(id)?.let { id.simplify() }
+            } catch (_: ResourceLocationException) {
+                null
+            }
+        }
+
+        private fun parseStringOfLegacyRegistry(keyPairs: MutableList<Pair<String, String?>>, validKeys: List<String>, valueFetcher: (String) -> String?): String? {
             val matched = getMatchedKeyPair(keyPairs, validKeys) ?: return null
             val value = matched.second?.lowercase() ?: return null
             return try {
@@ -190,36 +210,38 @@ open class PokemonProperties {
                 return if (value.lowercase() == "random") {
                     "random"
                 } else {
-                    try {
-                        val species = PokemonSpecies.get(value.asIdentifierDefaultingNamespace()) ?: return null
-                        species.resourceLocation().simplify()
-                    } catch (e: ResourceLocationException) {
-                        return null
-                    }
+                    this.extractSpeciesAsString(value)
                 }
             } else {
                 var species: String? = null
-
                 val keyPair = keyPairs.find { pair ->
                     species = if (pair.second == null && pair.first.lowercase() == "random") {
                         "random"
                     } else {
-                        try {
-                            val identifier = cleanSpeciesName(pair.first).asIdentifierDefaultingNamespace()
-                            val found = PokemonSpecies.get(identifier) ?: return@find false
-                            found.resourceLocation().simplify()
-                        } catch (e: ResourceLocationException) {
-                            return@find false
-                        }
+                        this.extractSpeciesAsString(cleanSpeciesName(pair.first))
                     }
                     return@find species != null
                 }
-
                 if (keyPair != null) {
                     keyPairs.remove(keyPair)
                 }
-
                 return species
+            }
+        }
+
+        /**
+         * Attempts to resolve a species from a given string.
+         *
+         * @param value The string being used as the ID.
+         * @return The [Species.resourceLocation] to string with [ResourceLocation.simplify].
+         */
+        private fun extractSpeciesAsString(value: String): String? {
+            return try {
+                val id = value.asIdentifierDefaultingNamespace()
+                // Don't catch, this is the kind of stuff that is actually broken :)
+                return PokemonSpecies.get(id)?.resourceLocation()?.simplify()
+            } catch (ignored: ResourceLocationException) {
+                null
             }
         }
 
@@ -682,7 +704,7 @@ open class PokemonProperties {
      *
      * @param id The literal ID of the [Ability] being mapped.
      * @param species The [Species] whose [Species.abilities] is queried for legality.
-     * @return The [Ability] with the [Ability.forced] state necessary for the given [form].
+     * @return The [Ability] with the [Ability.forced] state necessary.
      */
     private fun createAbility(id: String, species: Species): Ability? {
         val ability = Abilities.get(id.asIdentifierDefaultingNamespace()) ?: return null

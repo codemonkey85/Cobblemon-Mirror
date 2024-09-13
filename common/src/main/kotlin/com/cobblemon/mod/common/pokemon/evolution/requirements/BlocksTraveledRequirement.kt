@@ -9,8 +9,12 @@
 package com.cobblemon.mod.common.pokemon.evolution.requirements
 
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.util.ExtraCodecs
 
 /**
  * An [EvolutionRequirement] that requires a specific [amount] of [PokemonEntity.blocksTraveled] to pass.
@@ -20,19 +24,22 @@ import com.cobblemon.mod.common.pokemon.Pokemon
  * @author Licious
  * @since January 28th, 2023
  */
-class BlocksTraveledRequirement(amount: Int) : EvolutionRequirement {
-
-    constructor() : this(0)
-
-    val amount: Int = amount
+class BlocksTraveledRequirement(val amount: Int) : EvolutionRequirement {
 
     override fun check(pokemon: Pokemon): Boolean {
         val pokemonEntity = pokemon.entity ?: return false
         return pokemonEntity.blocksTraveled >= this.amount
     }
 
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.BLOCKS_TRAVELED
+
     companion object {
-        const val ADAPTER_VARIANT = "blocks_traveled"
+        @JvmStatic
+        val CODEC: MapCodec<BlocksTraveledRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                ExtraCodecs.POSITIVE_INT.fieldOf("amount").forGetter(BlocksTraveledRequirement::amount)
+            ).apply(instance, ::BlocksTraveledRequirement)
+        }
     }
 
 }

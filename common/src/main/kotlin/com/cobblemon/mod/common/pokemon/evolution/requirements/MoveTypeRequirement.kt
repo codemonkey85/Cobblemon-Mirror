@@ -9,15 +9,29 @@
 package com.cobblemon.mod.common.pokemon.evolution.requirements
 
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
 import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.registry.CobblemonRegistries
-import net.minecraft.util.RandomSource
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.Holder
 
-class MoveTypeRequirement : EvolutionRequirement {
-    val type: ElementalType = CobblemonRegistries.ELEMENTAL_TYPE.getRandom(RandomSource.create()).get().value()
-    override fun check(pokemon: Pokemon) = pokemon.moveSet.getMoves().any { move -> move.type == type }
+class MoveTypeRequirement(val elementalType: Holder<ElementalType>) : EvolutionRequirement {
+
+    override fun check(pokemon: Pokemon): Boolean = this.elementalType.unwrap().map(
+        { id -> pokemon.moveSet.getMoves().any { move -> move.template.type.resourceKey() == id } },
+        { type -> pokemon.moveSet.getMoves().any { move -> move.template.type == type } },
+    )
+
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.HAS_MOVE_TYPE
+
     companion object {
-        const val ADAPTER_VARIANT = "has_move_type"
+        @JvmStatic
+        val CODEC: MapCodec<MoveTypeRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                ElementalType.CODEC.fieldOf("elementalType").forGetter(MoveTypeRequirement::elementalType),
+            ).apply(instance, ::MoveTypeRequirement)
+        }
     }
+
 }

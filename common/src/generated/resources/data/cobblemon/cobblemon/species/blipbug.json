@@ -49,6 +49,27 @@
   "evYield": {
     "cobblemon:special_defence": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "blipbug_dottler",
+      "learnableMoves": [
+        "cobblemon:confusion",
+        "cobblemon:reflect",
+        "cobblemon:lightscreen"
+      ],
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 10,
+          "minLevel": 10
+        }
+      ],
+      "result": "dottler"
+    }
+  ],
   "experienceGroup": "cobblemon:medium_fast",
   "height": 0.4,
   "hitbox": {
@@ -65,19 +86,19 @@
     },
     {
       "type": "cobblemon:egg",
-      "move": "cobblemon:recover"
-    },
-    {
-      "type": "cobblemon:egg",
       "move": "cobblemon:infestation"
     },
     {
       "type": "cobblemon:egg",
-      "move": "cobblemon:stickyweb"
+      "move": "cobblemon:supersonic"
     },
     {
       "type": "cobblemon:egg",
-      "move": "cobblemon:supersonic"
+      "move": "cobblemon:recover"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:stickyweb"
     }
   ],
   "nationalPokedexNumber": 824,

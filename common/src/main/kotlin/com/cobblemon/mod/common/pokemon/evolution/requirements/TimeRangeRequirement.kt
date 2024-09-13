@@ -9,9 +9,12 @@
 package com.cobblemon.mod.common.pokemon.evolution.requirements
 
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
 import com.cobblemon.mod.common.api.spawning.TimeRange
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.requirements.template.EntityQueryRequirement
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.world.entity.LivingEntity
 
 /**
@@ -21,11 +24,23 @@ import net.minecraft.world.entity.LivingEntity
  * @author Licious
  * @since March 26th, 2022
  */
-class TimeRangeRequirement : EntityQueryRequirement {
-    val range = TimeRange(0..23999)
+class TimeRangeRequirement(val range: TimeRange) : EntityQueryRequirement {
+
     override fun check(pokemon: Pokemon, queriedEntity: LivingEntity) = this.range.contains((queriedEntity.level().dayTime() % DAY_DURATION).toInt())
+
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.TIME_RANGE
+
     companion object {
-        const val ADAPTER_VARIANT = "time_range"
+
         private const val DAY_DURATION = 24000
+
+        @JvmStatic
+        val CODEC: MapCodec<TimeRangeRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                TimeRange.CODEC.fieldOf("range").forGetter(TimeRangeRequirement::range),
+            ).apply(instance, ::TimeRangeRequirement)
+        }
+
     }
+
 }

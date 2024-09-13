@@ -46,6 +46,23 @@
   "evYield": {
     "cobblemon:speed": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "magikarp_gyarados",
+      "learnableMoves": "cobblemon:bite",
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 20,
+          "minLevel": 20
+        }
+      ],
+      "result": "gyarados"
+    }
+  ],
   "experienceGroup": "cobblemon:slow",
   "height": 0.9,
   "hitbox": {
@@ -72,34 +89,6 @@
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:bounce"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:bounce"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:splash"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:bounce"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:flail"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:splash"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:tackle"
-    },
-    {
-      "type": "cobblemon:tutor",
       "move": "cobblemon:hydropump"
     },
     {
@@ -108,7 +97,15 @@
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:splash"
+      "move": "cobblemon:tackle"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:flail"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bounce"
     },
     {
       "type": "cobblemon:tutor",
@@ -120,7 +117,11 @@
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:celebrate"
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
     },
     {
       "type": "cobblemon:tutor",
@@ -136,6 +137,22 @@
     },
     {
       "type": "cobblemon:tutor",
+      "move": "cobblemon:tackle"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:flail"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tm",
       "move": "cobblemon:bounce"
     },
     {
@@ -144,11 +161,19 @@
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:tackle"
+      "move": "cobblemon:bounce"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:celebrate"
     },
     {
       "type": "cobblemon:tutor",
       "move": "cobblemon:splash"
+    },
+    {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bounce"
     },
     {
       "type": "cobblemon:tutor",
@@ -164,15 +189,7 @@
     },
     {
       "type": "cobblemon:tutor",
-      "move": "cobblemon:flail"
-    },
-    {
-      "type": "cobblemon:tutor",
       "move": "cobblemon:splash"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:bounce"
     },
     {
       "type": "cobblemon:tutor",

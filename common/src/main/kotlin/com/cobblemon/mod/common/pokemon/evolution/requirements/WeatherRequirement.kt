@@ -8,26 +8,52 @@
 
 package com.cobblemon.mod.common.pokemon.evolution.requirements
 
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.requirements.template.EntityQueryRequirement
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.util.StringRepresentable
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.level.Level
+import java.util.Optional
 
-class WeatherRequirement : EntityQueryRequirement {
-    companion object {
-        const val ADAPTER_VARIANT = "weather"
-    }
+class WeatherRequirement(
+    val state: WeatherState
+) : EntityQueryRequirement {
 
-    val isRaining: Boolean? = null
-    val isThundering: Boolean? = null
+    enum class WeatherState(private val checker: (level: Level) -> Boolean) : StringRepresentable {
 
-    override fun check(pokemon: Pokemon, queriedEntity: LivingEntity): Boolean {
-        val world = queriedEntity.level()
-        return when {
-            isRaining == true && !world.isRaining -> false
-            isRaining == false && world.isRaining -> false
-            isThundering == true && !world.isThundering -> false
-            isThundering == false && world.isThundering -> false
-            else -> true
+        CLEAR({ level -> !level.isRaining && !level.isThundering }),
+        RAINING({ level -> level.isRaining }),
+        THUNDERING({ level -> level.isThundering });
+
+        override fun getSerializedName(): String = this.name
+
+        fun fits(level: Level): Boolean = this.checker(level)
+
+        companion object {
+
+            @JvmStatic
+            val CODEC = StringRepresentable.fromEnum(WeatherState::values)
+
         }
+
     }
+
+    override fun check(pokemon: Pokemon, queriedEntity: LivingEntity): Boolean = this.state.fits(queriedEntity.level())
+
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.WEATHER
+
+    companion object {
+
+        @JvmStatic
+        val CODEC: MapCodec<WeatherRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                WeatherState.CODEC.fieldOf("state").forGetter(WeatherRequirement::state),
+            ).apply(instance, ::WeatherRequirement)
+        }
+
+    }
+
 }

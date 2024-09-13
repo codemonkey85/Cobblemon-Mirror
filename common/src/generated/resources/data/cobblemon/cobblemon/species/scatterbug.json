@@ -49,6 +49,23 @@
   "evYield": {
     "cobblemon:defence": 1
   },
+  "evolutions": [
+    {
+      "type": "cobblemon:level_up",
+      "consumeHeldItem": false,
+      "id": "scatterbug_spewpa",
+      "learnableMoves": "cobblemon:protect",
+      "permanent": true,
+      "requirements": [
+        {
+          "type": "cobblemon:level",
+          "maxLevel": 9,
+          "minLevel": 9
+        }
+      ],
+      "result": "spewpa"
+    }
+  ],
   "experienceGroup": "cobblemon:medium_fast",
   "height": 0.3,
   "hitbox": {
@@ -61,12 +78,12 @@
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:tackle"
+      "move": "cobblemon:stringshot"
     },
     {
       "type": "cobblemon:level",
       "level": 1,
-      "move": "cobblemon:stringshot"
+      "move": "cobblemon:tackle"
     },
     {
       "type": "cobblemon:level",
@@ -79,6 +96,26 @@
       "move": "cobblemon:bugbite"
     },
     {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:poisonpowder"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:stunspore"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:poisonpowder"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:ragepowder"
+    },
+    {
+      "type": "cobblemon:tm",
+      "move": "cobblemon:bugbite"
+    },
+    {
       "type": "cobblemon:tm",
       "move": "cobblemon:strugglebug"
     },
@@ -87,7 +124,19 @@
       "move": "cobblemon:stunspore"
     },
     {
+      "type": "cobblemon:tutor",
+      "move": "cobblemon:bugbite"
+    },
+    {
+      "type": "cobblemon:egg",
+      "move": "cobblemon:poisonpowder"
+    },
+    {
       "type": "cobblemon:tm",
+      "move": "cobblemon:pounce"
+    },
+    {
+      "type": "cobblemon:tutor",
       "move": "cobblemon:bugbite"
     },
     {
@@ -95,44 +144,12 @@
       "move": "cobblemon:terablast"
     },
     {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:bugbite"
-    },
-    {
-      "type": "cobblemon:tm",
-      "move": "cobblemon:pounce"
-    },
-    {
       "type": "cobblemon:egg",
       "move": "cobblemon:ragepowder"
     },
     {
       "type": "cobblemon:egg",
       "move": "cobblemon:ragepowder"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:ragepowder"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:stunspore"
-    },
-    {
-      "type": "cobblemon:tutor",
-      "move": "cobblemon:bugbite"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:poisonpowder"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:poisonpowder"
-    },
-    {
-      "type": "cobblemon:egg",
-      "move": "cobblemon:poisonpowder"
     }
   ],
   "nationalPokedexNumber": 664,

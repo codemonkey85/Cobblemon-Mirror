@@ -8,9 +8,12 @@
 
 package com.cobblemon.mod.common.pokemon.evolution.requirements
 
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
 import com.cobblemon.mod.common.api.spawning.condition.MoonPhase
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.requirements.template.EntityQueryRequirement
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.world.entity.LivingEntity
 
 /**
@@ -22,11 +25,7 @@ import net.minecraft.world.entity.LivingEntity
  * @author Licious
  * @since January 25th, 2023
  */
-class MoonPhaseRequirement(moonPhase: MoonPhase) : EntityQueryRequirement {
-
-    constructor() : this(MoonPhase.FULL_MOON)
-
-    val moonPhase: MoonPhase = moonPhase
+class MoonPhaseRequirement(val moonPhase: MoonPhase) : EntityQueryRequirement {
 
     override fun check(pokemon: Pokemon, queriedEntity: LivingEntity): Boolean {
         return try {
@@ -37,8 +36,15 @@ class MoonPhaseRequirement(moonPhase: MoonPhase) : EntityQueryRequirement {
         }
     }
 
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.MOON_PHASE
+
     companion object {
-        const val ADAPTER_VARIANT = "moon_phase"
+        @JvmStatic
+        val CODEC: MapCodec<MoonPhaseRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                MoonPhase.CODEC.fieldOf("moonPhase").forGetter(MoonPhaseRequirement::moonPhase),
+            ).apply(instance, ::MoonPhaseRequirement)
+        }
     }
 
 }

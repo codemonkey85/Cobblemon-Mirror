@@ -9,10 +9,11 @@
 package com.cobblemon.mod.common.pokemon.evolution.requirements
 
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
+import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirementType
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.predicate.NbtItemPredicate
-import com.cobblemon.mod.common.registry.ItemIdentifierCondition
-import net.minecraft.resources.ResourceLocation
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 
 /**
  * An [EvolutionRequirement] for a [Pokemon.heldItem].
@@ -23,11 +24,16 @@ import net.minecraft.resources.ResourceLocation
  */
 class HeldItemRequirement(val itemCondition: NbtItemPredicate) : EvolutionRequirement {
 
-    constructor() : this(NbtItemPredicate(ItemIdentifierCondition(ResourceLocation.parse("air"))))
-
     override fun check(pokemon: Pokemon): Boolean = this.itemCondition.test(pokemon.heldItemNoCopy())
 
+    override val type: EvolutionRequirementType<*> = EvolutionRequirementType.HELD_ITEM
+
     companion object {
-        const val ADAPTER_VARIANT = "held_item"
+        @JvmStatic
+        val CODEC: MapCodec<HeldItemRequirement> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                NbtItemPredicate.CODEC.fieldOf("itemCondition").forGetter(HeldItemRequirement::itemCondition),
+            ).apply(instance, ::HeldItemRequirement)
+        }
     }
 }

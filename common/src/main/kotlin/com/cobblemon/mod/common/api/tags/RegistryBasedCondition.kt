@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.api.tags
 
+import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
+import com.cobblemon.mod.common.api.conditional.RegistryLikeIdentifierCondition
+import com.cobblemon.mod.common.api.conditional.RegistryLikeTagCondition
 import com.mojang.serialization.Codec
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
@@ -15,6 +18,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.util.ExtraCodecs.TagOrElementLocation
+import net.minecraft.world.item.Item
 
 sealed class RegistryBasedCondition<T> {
 
@@ -27,6 +31,13 @@ sealed class RegistryBasedCondition<T> {
         override fun fits(element: T, registry: Registry<T>): Boolean = registry.getKey(element) == this.resourceLocation
 
         override fun asTagOrElement(): TagOrElementLocation = TagOrElementLocation(this.resourceLocation, false)
+
+        companion object {
+
+            @JvmStatic
+            fun fromItem(item: Item) = ResourceLocationCondition<Item>(item.builtInRegistryHolder().key().location())
+
+        }
 
     }
 
@@ -47,6 +58,16 @@ sealed class RegistryBasedCondition<T> {
             { base -> if (base.tag) TagCondition(TagKey.create(registryKey, base.id)) else ResourceLocationCondition(base.id) },
             { condition -> condition.asTagOrElement() }
         )
+
+        @JvmStatic
+        fun <T : Any> fromLegacy(old: RegistryLikeCondition<T>): RegistryBasedCondition<T> {
+            return when (old) {
+                is RegistryLikeIdentifierCondition<T> -> ResourceLocationCondition(old.identifier)
+                is RegistryLikeTagCondition<T> -> TagCondition(old.tag)
+                else -> throw UnsupportedOperationException("Cannot resolve old implementation of ${old::class.qualifiedName} to modern equivalent")
+            }
+        }
+
     }
 
 }

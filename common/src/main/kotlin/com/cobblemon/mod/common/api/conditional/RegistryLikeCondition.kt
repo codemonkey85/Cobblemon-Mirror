@@ -16,6 +16,7 @@ import net.minecraft.core.Registry
  * @author Hiroku
  * @since July 16th, 2022
  */
+@Deprecated("Migrate as needed to work with Codec", ReplaceWith("RegistryBasedCondition<T>", "com.cobblemon.mod.common.api.tags.RegistryBasedCondition"))
 interface RegistryLikeCondition<T> {
     fun fits(t: T, registry: Registry<T>): Boolean
 }

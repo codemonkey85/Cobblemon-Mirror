@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.spawning.condition
 
+import net.minecraft.util.StringRepresentable
 import net.minecraft.world.level.Level
 
 /**
@@ -17,7 +18,7 @@ import net.minecraft.world.level.Level
  * @author Licious
  * @since January 25th, 2023
  */
-enum class MoonPhase {
+enum class MoonPhase : StringRepresentable {
 
     FULL_MOON,
     WANING_GIBBOUS,
@@ -28,8 +29,13 @@ enum class MoonPhase {
     FIRST_QUARTER,
     WAXING_GIBBOUS;
 
+    override fun getSerializedName(): String = this.name
+
     companion object {
-        private val VALUES = values()
+        private val VALUES = entries.toTypedArray()
+
+        @JvmStatic
+        val CODEC = StringRepresentable.fromEnum(MoonPhase::values)
 
         /**
          * Finds the moon phase of the given [world].
