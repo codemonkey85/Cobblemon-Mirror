@@ -37,8 +37,8 @@ object CobblemonSherds {
 
     fun addSherd(patternId: ResourceLocation, item: Item): CobblemonSherd {
         val sherd = CobblemonSherd(patternId, item)
-        val ResourceKey = ResourceKey.create(Registries.DECORATED_POT_PATTERN, patternId)
-        sherdToPattern[item] = ResourceKey
+        val resourceKey = ResourceKey.create(Registries.DECORATED_POT_PATTERN, patternId)
+        sherdToPattern[item] = resourceKey
         allSherds.add(sherd)
         return sherd
     }
@@ -49,7 +49,7 @@ object CobblemonSherds {
             Registry.register(
                 registry,
                 regKey,
-                DecoratedPotPattern(sherd.item.builtInRegistryHolder().key().location()) // TODO check me
+                DecoratedPotPattern(sherd.patternId) // TODO check me
             )
         }
     }

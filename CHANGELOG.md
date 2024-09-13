@@ -93,6 +93,67 @@
 - Fixed Tumbling Down advancement not being granted by tumblestone variants.
 - Improve error handling when loading spawn sets to ensure invalid configurations don't crash the server
 - Fixed empty JsonPlayerData files resulting in players being unable to join server/world
+- Evolution notification and UI sound is now correctly playing (again)
+- Fix Starter prompt not showing up
+- Fix evolution now granting pokedex entries
+- Fix pokedex crash when a form is looked up without ever seeing the "normal" form
+- Fixed owned pokeballs floating upwards if pausing mid transition
+
+### Additions
+- Added extra visuals to early berry growth stages
+- Hidden Power now displays its effective typing.
+- Moves impacted by the abilities Pixelate, Refrigerate, Aerilate, Galvanize, and Normalize now display as their altered typing.
+- Added Polished Tumblestone and Tumblestone Brick block sets from Tumblestone, Black Tumblestone, and Sky Tumblestone.
+- Added Fire, Water, Thunder, Leaf, Ice, Sun, Moon, Shiny, Dawn, and Dusk Stone Storage Blocks.
+- Added Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
+- Moves can now be benched without specifying a replacement move, allowing for empty move slots.
+- Moves learned via Sketch now persist after battle.
+- Added ston_henge_ruins, luna_henge_ruins, and sol_henge_ruins structures.
+- Added Eject Pack, Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
+- Added a `battleInvulnerability` gamerule to make players invulnerable to any damage during a battle
+- Added a `mobTargetInBattle` gamerule to exclude players from being targeted by mobs during a battle
+- Added battle log messages for switching out Pokémon
+- Added Evolution particles and sounds for Pokemon that are sent out when evolution is started.
+
+### Pokémon Added
+#### Gen 2
+- Ledyba
+- Ledian
+- Sunkern
+- Sunflora
+- Wobbuffet
+- Girafarig
+
+#### Gen 3
+- Wynaut
+
+#### Gen 9
+- Farigiraf
+
+### Added cries to the following Pokémon
+- Timburr, Gurdurr, Conkeldurr
+- Golett, Golurk
+
+### Changes
+- Altered the item model for Medicinal Leeks and Roasted Leeks to be held like sticks and other rod items.
+- Adjusted some berry balance values like yield and growth times
+- Adjusted volumes of sounds made by Display Cases, Berry Bushes, Energy Root, Medicinal Leek, Vivichoke, Mints, Revival Herbs and Gilded Chests.
+- Changes to mulch buffs/durations
+- Dreepy is now shoulder mountable
+- Link Cable recipe has been redesigned
+- Updated Protector recipe
+- Green Apricorns now smelt to Green Dye, rather than Lime Dye
+- Updated potion sprites
+- Weedle, Caterpie, Spearow, Smoochum, Mew, Murkrow, Larvitar, Taillow, Plusle, Minun, Beldum, Starly, Buneary, Combee, Pachirisu, Pidove, Petilil, Hisui Bias Petilil, Zorua, Hisuian Zorua, Elgyem, Fletchling, Skrelp, Klefki, Fomantis, Morelull, Dreepy, Shroodle, Tatsugiri, Glimmet, and Roaming Gimmighoul are now shoulder mountable
+- Chikorita's ability to look around removed due to the awkwardness of it.
+- Link Cable recipe has been redesigned
+- Updated potion sprites
+- Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs
+- Updated UI sounds for clicking and evolving Pokémon
+- Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users.
+- Kakuna, Beedrill, Snorlax, Munchlax, and Lurantis received model updates
+
+### Fixes
 - Fixed trading Pokémon setting their friendsip to 0 instead of the base value.
 - Fixed a scenario where a Pokémon that rolled to spawn with a special Tera type sometimes has a Tera type that is already a part of their natural typing.
 - Fixed PokemonProperty argument suggestions for ``tera`` and ``tera_type`` not suggesting ``stellar``.

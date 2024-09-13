@@ -145,14 +145,8 @@ class GildedChestBlock(settings: Properties, val type: Type = Type.RED) : BaseEn
             if (isFake() && (player is ServerPlayer)) {
                 spawnPokemon(world, pos, state, player)
             }
-            val bEntity = world.getBlockEntity(pos) as? GildedChestBlockEntity
-            bEntity?.setRemoved()
-            val resultState =
-                if (state.fluidState.`is`(Fluids.WATER)) Blocks.WATER.defaultBlockState() else Blocks.AIR.defaultBlockState()
-            world.setBlockAndUpdate(pos, resultState)
-            return resultState
         }
-        return Blocks.AIR.defaultBlockState()
+        return super.playerWillDestroy(world, pos, state, player)
     }
 
     private fun spawnPokemon(world: Level, pos: BlockPos, state: BlockState, player: ServerPlayer): InteractionResult {
@@ -214,12 +208,8 @@ class GildedChestBlock(settings: Properties, val type: Type = Type.RED) : BaseEn
         newState: BlockState,
         moved: Boolean
     ) {
-        if (!state.`is`(newState.block) && !world.isClientSide) {
-            val chest = world.getBlockEntity(pos) as? GildedChestBlockEntity
-            chest?.let {
-                Containers.dropContents(world, pos, chest.inventoryContents)
-            }
-        }
+        Containers.dropContentsOnDestroy(state, newState, world, pos)
+        super.onRemove(state, world, pos, newState, moved)
     }
 
     override fun getRenderShape(state: BlockState) = RenderShape.ENTITYBLOCK_ANIMATED
