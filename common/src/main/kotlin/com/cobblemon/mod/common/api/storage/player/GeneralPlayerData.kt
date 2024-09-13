@@ -39,9 +39,9 @@ data class GeneralPlayerData(
     override fun toClientData(): ClientInstancedPlayerData {
         return ClientGeneralPlayerData(
             false,
-            starterPrompted || !Cobblemon.starterConfig.promptStarterOnceOnly,
-            starterPrompted,
+            if(Cobblemon.starterConfig.promptStarterOnceOnly) !starterPrompted else true,
             starterLocked,
+            starterSelected,
             starterUUID,
             battleTheme
         )

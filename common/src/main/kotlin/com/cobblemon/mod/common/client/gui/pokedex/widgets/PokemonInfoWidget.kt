@@ -17,7 +17,6 @@ import com.cobblemon.mod.common.api.pokedex.entry.PokedexCosmeticVariation
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexForm
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.text.bold
-import com.cobblemon.mod.common.api.text.italicise
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.client.ClientMoLangFunctions.setupClient
@@ -58,7 +57,6 @@ import net.minecraft.util.FastColor
 import org.joml.Quaternionf
 import org.joml.Vector3f
 import java.io.FileNotFoundException
-import net.minecraft.client.gui.components.Tooltip
 
 class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) -> (Unit)) : SoundlessWidget(
     pX,
@@ -536,7 +534,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
         }
 
         val seenShinyStates = CobblemonClient.clientPokedexData.getSeenShinyStates(pokedexEntry, pokedexForm)
-        shiny = seenShinyStates.first() == "shiny"
+        shiny = seenShinyStates.contains("shiny")
         shinyButton.resource = if (shiny) buttonShiny else buttonNone
         shinyButton.active = seenShinyStates.size > 1
     }
