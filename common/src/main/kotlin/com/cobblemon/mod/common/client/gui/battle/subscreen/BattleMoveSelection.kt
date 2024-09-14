@@ -74,7 +74,7 @@ class BattleMoveSelection(
         BattleGimmickButton.create(gimmick, this, backButton.x + xOff, backButton.y)
     }
 
-    val shiftButton = BattleShiftButton(x + 40F, Minecraft.getInstance().window.guiScaledHeight - 22F)
+    val shiftButton = BattleShiftButton(x + 22.5F, Minecraft.getInstance().window.guiScaledHeight - 22F )
 
     open class MoveTile(
         val moveSelection: BattleMoveSelection,
@@ -204,7 +204,7 @@ class BattleMoveSelection(
             if(this.request.activePokemon.getFormat().battleType.pokemonPerSide == 1) {
                 move.onClick()
             } else {
-                battleGUI.changeActionSelection(BattleTargetSelectionPortrait(battleGUI, request, move.move))
+                battleGUI.changeActionSelection(BattleTargetSelection(battleGUI, request, move.move))
                 playDownSound(Minecraft.getInstance().soundManager)
             }
             return true

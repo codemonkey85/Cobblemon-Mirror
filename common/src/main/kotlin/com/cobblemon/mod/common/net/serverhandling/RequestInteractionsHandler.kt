@@ -31,14 +31,13 @@ object RequestInteractionsHandler : ServerNetworkPacketHandler<RequestPlayerInte
     ) {
         val world = player.level()
         val targetPlayerEntity = world.getPlayerByUUID(packet.targetId)
-        val options : MutableMap<PlayerInteractOptionsPacket.Options, PlayerInteractOptionsPacket.OptionStatus> = emptyMap<PlayerInteractOptionsPacket.Options, PlayerInteractOptionsPacket.OptionStatus>().toMutableMap()
+        val options : EnumMap<PlayerInteractOptionsPacket.Options, PlayerInteractOptionsPacket.OptionStatus> = EnumMap<PlayerInteractOptionsPacket.Options, PlayerInteractOptionsPacket.OptionStatus>(PlayerInteractOptionsPacket.Options::class.java)
         if (targetPlayerEntity != null && player.traceFirstEntityCollision(
             entityClass = LivingEntity::class.java,
             ignoreEntity = player,
             maxDistance = Cobblemon.config.battleSpectateMaxDistance,
             collideBlock = ClipContext.Fluid.NONE
         ) == targetPlayerEntity) {
-            //We could potentially check if the targeted player has pokemon here
             val squaredDistance = targetPlayerEntity.position().distanceToSqr(player.position())
             if (squaredDistance <= Cobblemon.config.tradeMaxDistance.pow(2)) {
                 options[PlayerInteractOptionsPacket.Options.TRADE] = PlayerInteractOptionsPacket.OptionStatus.AVAILABLE
