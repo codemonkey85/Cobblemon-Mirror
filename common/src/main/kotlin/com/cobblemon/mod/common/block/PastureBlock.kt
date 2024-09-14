@@ -54,6 +54,7 @@ import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 import java.util.*
 import net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED
+import net.minecraft.world.level.gameevent.GameEvent
 
 @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
 class PastureBlock(settings: Properties): BaseEntityBlock(settings), SimpleWaterloggedBlock, PreEmptsExplosion {
@@ -280,7 +281,7 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), SimpleWater
                 volume = 0.5F,
                 pitch = 1F
             )
-
+            world.gameEvent(player, GameEvent.BLOCK_OPEN, pos)
             return InteractionResult.SUCCESS
         }
 

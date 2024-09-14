@@ -17,6 +17,7 @@ object ServerSettingsPacketHandler : ClientNetworkPacketHandler<ServerSettingsPa
     override fun handle(packet: ServerSettingsPacket, client: Minecraft) {
         ServerSettings.preventCompletePartyDeposit = packet.preventCompletePartyDeposit
         ServerSettings.displayEntityLevelLabel = packet.displayEntityLevelLabel
+        ServerSettings.displayEntityNameLabel = packet.displayEntityNameLabel
     }
 
 }

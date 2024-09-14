@@ -12,6 +12,8 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screens.Screen
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.math.min
@@ -118,6 +120,10 @@ val PosableState.isInWater: Boolean
     get() = getEntity()?.isInWater == true
 val PosableState.isInWaterOrRain: Boolean
     get() = getEntity()?.isInWaterOrRain == true
+
+fun Screen.isInventoryKeyPressed(client: Minecraft?, keyCode: Int, scanCode: Int): Boolean {
+    return client?.options?.keyInventory?.matches(keyCode, scanCode) == true
+}
 
 fun InteractionHand.toEquipmentSlot(): EquipmentSlot {
     return when (this) {
