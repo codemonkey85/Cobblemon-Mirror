@@ -8,8 +8,8 @@
 
 package com.cobblemon.mod.common.mixin;
 
-import com.cobblemon.mod.common.client.sound.battle.BattleMusicController;
-import com.cobblemon.mod.common.duck.SoundSystemDuck;
+import com.cobblemon.mod.common.client.sound.BattleMusicController;
+import com.cobblemon.mod.common.duck.SoundEngineDuck;
 import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.audio.Channel;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Map;
 
 @Mixin(SoundEngine.class)
-public abstract class SoundSystemMixin implements SoundSystemDuck {
+public abstract class SoundEngineMixin implements SoundEngineDuck {
 
     @Shadow
     private boolean loaded;
@@ -91,7 +91,7 @@ public abstract class SoundSystemMixin implements SoundSystemDuck {
 
     /** Allows stopping all SoundInstances that belong to a queried category. */
     @Inject(method = "stop(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/sounds/SoundSource;)V", at = @At("HEAD"), cancellable = true)
-    public void stopSoustopnds(@Nullable ResourceLocation id, @Nullable SoundSource category, CallbackInfo cb) {
+    public void stopSounds(@Nullable ResourceLocation id, @Nullable SoundSource category, CallbackInfo cb) {
         if (id == null && category != null) {
             this.instanceBySource.get(category).forEach(this::stop);
             cb.cancel();

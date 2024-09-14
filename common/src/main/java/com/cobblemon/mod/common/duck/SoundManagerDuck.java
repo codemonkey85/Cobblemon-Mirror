@@ -17,6 +17,4 @@ public interface SoundManagerDuck {
     void pauseSounds(@Nullable ResourceLocation id, @Nullable SoundSource category);
 
     void resumeSounds(@Nullable ResourceLocation id, @Nullable SoundSource category);
-
-    void stopSounds(@Nullable ResourceLocation id, @Nullable SoundSource category);
 }
