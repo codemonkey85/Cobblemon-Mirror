@@ -129,13 +129,7 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
         if (!state.`is`(newState.block)) super.onRemove(state, world, pos, newState, moved)
     }
 
-    override fun useWithoutItem(
-        blockState: BlockState,
-        world: Level,
-        blockPos: BlockPos,
-        player: Player,
-        hit: BlockHitResult
-    ): InteractionResult {
+    override fun useWithoutItem(blockState: BlockState, world: Level, blockPos: BlockPos, player: Player, hit: BlockHitResult): InteractionResult {
         if (world.isClientSide) {
             return InteractionResult.SUCCESS
         }

@@ -320,6 +320,20 @@ class CobblemonNeoForge : CobblemonImplementation {
         }
     }
 
+    override fun registerVillagers() {
+        MOD_BUS.addListener<RegisterEvent> { event ->
+            event.register(CobblemonVillagerPoiTypes.resourceKey) { helper ->
+                CobblemonVillagerPoiTypes.register { identifier, type -> helper.register(identifier, type) }
+            }
+        }
+
+        MOD_BUS.addListener<RegisterEvent> { event ->
+            event.register(CobblemonVillagerProfessions.resourceKey) { helper ->
+                CobblemonVillagerProfessions.register { identifier, profession -> helper.register(identifier, profession) }
+            }
+        }
+    }
+
     override fun registerWorldGenFeatures() {
         MOD_BUS.addListener<RegisterEvent> { event ->
             event.register(CobblemonFeatures.resourceKey) { helper ->

@@ -24,6 +24,8 @@
 - Added a `mobTargetInBattle` gamerule to exclude players from being targeted by mobs during a battle
 - Added battle log messages for switching out Pokémon
 - Added Evolution particles and sounds for Pokemon that are sent out when evolution is started.
+- Added a Nurse profession that can be unlocked by having villagers claim a healing machine block.
+- Added a `natural` block state property for the healing machine block; when property is set to true, the block will have a different texture and drop an iron ingot instead of itself.
 
 ### Pokémon Added
 #### Gen 2
@@ -98,6 +100,7 @@
 - Fix evolution now granting pokedex entries
 - Fix pokedex crash when a form is looked up without ever seeing the "normal" form
 - Fixed owned pokeballs floating upwards if pausing mid transition
+- Fixed all mouse buttons working for Battle UI navigation (now it's only primary/left click)
 
 ### Additions
 - Added extra visuals to early berry growth stages

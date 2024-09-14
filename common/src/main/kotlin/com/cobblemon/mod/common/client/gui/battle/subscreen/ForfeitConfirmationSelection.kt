@@ -11,7 +11,6 @@ package com.cobblemon.mod.common.client.gui.battle.subscreen
 import com.cobblemon.mod.common.battles.ForfeitActionResponse
 import com.cobblemon.mod.common.battles.PassActionResponse
 import com.cobblemon.mod.common.client.CobblemonClient
-import com.cobblemon.mod.common.client.battle.ClientBattle
 import com.cobblemon.mod.common.client.battle.SingleActionRequest
 import com.cobblemon.mod.common.client.gui.battle.BattleGUI
 import com.cobblemon.mod.common.client.gui.battle.widgets.BattleOptionTile
@@ -52,14 +51,14 @@ class ForfeitConfirmationSelection(
         }
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mousePrimaryClicked(mouseX: Double, mouseY: Double): Boolean {
         if (backButton.isHovered(mouseX, mouseY)) {
             battleGUI.changeActionSelection(null)
             playDownSound(Minecraft.getInstance().soundManager)
             return true
         }
 
-        return forfeitButton.mouseClicked(mouseX, mouseY, button)
+        return forfeitButton.mousePrimaryClicked(mouseX, mouseY)
     }
 
     override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
