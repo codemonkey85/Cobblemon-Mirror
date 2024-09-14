@@ -42,7 +42,7 @@ import com.mojang.math.Axis
 import kotlin.math.*
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.Font
+import net.minecraft.client.gui.Font.DisplayMode
 import net.minecraft.client.renderer.*
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.ItemRenderer
@@ -308,7 +308,7 @@ context: EntityRendererProvider.Context
         }
         val player = Minecraft.getInstance().player ?: return false
         val delegate = entity.delegate as? PokemonClientDelegate ?: return false
-        return player.isLookingAt(entity) && delegate.phaseTarget == null
+        return player.isLookingAt(entity) && delegate.phaseTarget == null && !CobblemonClient.pokedexUsageContext.scanningGuiOpen
     }
 
     override fun renderNameTag(
@@ -331,31 +331,33 @@ context: EntityRendererProvider.Context
             val entityHeight = entity.boundingBox.ysize + 0.5f
             matrices.pushPose()
             matrices.translate(0.0, entityHeight, 0.0)
-            matrices.mulPose(entityRenderDispatcher.cameraOrientation())
-            matrices.translate(0.0,0.0+(offsetScale/2),-(scale+offsetScale))
-            matrices.scale((-0.025*sizeScale).toFloat(), (-0.025*sizeScale).toFloat(), 1 * sizeScale.toFloat())
+            matrices.mulPose(this.entityRenderDispatcher.cameraOrientation())
+            matrices.translate(0.0, 0.0 + (offsetScale / 2), -(scale + offsetScale))
+            matrices.scale((0.025 * sizeScale).toFloat(), (-0.025 * sizeScale).toFloat(), (1 * sizeScale).toFloat())
             val matrix4f = matrices.last().pose()
-            val opacity = (Minecraft.getInstance().options.getBackgroundOpacity(0.25f) * 255.0f).toInt() shl 24
-            var label = entity.name.copy()
+            val opacity = (Minecraft.getInstance().options.getBackgroundOpacity(0.25F) * 255.0F).toInt() shl 24
+            var label = if(ServerSettings.displayEntityNameLabel) entity.name.copy() else Component.empty()
+            if(ServerSettings.displayEntityNameLabel && ServerSettings.displayEntityLevelLabel && entity.labelLevel() > 0) {
+                label.append(Component.literal(" "))
+            }
             if (ServerSettings.displayEntityLevelLabel && entity.labelLevel() > 0) {
                 // This a Style.EMPTY with a lot of effects set to false and color set to white, renderer inherits these from nick otherwise
-                val levelLabel = Component.literal(" ")
-                    .append(lang("label.lv", entity.labelLevel()))
+                val levelLabel = lang("label.lv", entity.labelLevel())
                     .setStyle(LEVEL_LABEL_STYLE)
                 label = label.append(levelLabel)
             }
-            var h = (-font.width(label) / 2).toFloat()
+            var h = (-this.font.width(label) / 2).toFloat()
             val y = 0F
             val packedLight = LightTexture.pack(15, 15)
-            font.drawInBatch(label, h, y, 0x20FFFFFF, false, matrix4f, vertexConsumers, Font.DisplayMode.SEE_THROUGH, opacity, packedLight)
-            font.drawInBatch(label, h, y, -1, false, matrix4f, vertexConsumers, Font.DisplayMode.NORMAL, 0, packedLight)
+            this.font.drawInBatch(label, h, y, 0x20FFFFFF, false, matrix4f, vertexConsumers, DisplayMode.SEE_THROUGH, opacity, packedLight)
+            this.font.drawInBatch(label, h, y, -1, false, matrix4f, vertexConsumers, DisplayMode.NORMAL, 0, packedLight)
 
             if (entity.canBattle(player)) {
                 val sendOutBinding = PartySendBinding.boundKey().displayName
                 val battlePrompt = lang("challenge_label", sendOutBinding)
-                h = (-font.width(battlePrompt) / 2).toFloat()
-                font.drawInBatch(battlePrompt, h, y + 10, 0x20FFFFFF, false, matrix4f, vertexConsumers, Font.DisplayMode.SEE_THROUGH, opacity, packedLight)
-                font.drawInBatch(battlePrompt, h, y + 10, -1, false, matrix4f, vertexConsumers, Font.DisplayMode.NORMAL, 0, packedLight)
+                h = (-this.font.width(battlePrompt) / 2).toFloat()
+                this.font.drawInBatch(battlePrompt, h, y + 10, 0x20FFFFFF, false, matrix4f, vertexConsumers, DisplayMode.SEE_THROUGH, opacity, packedLight)
+                this.font.drawInBatch(battlePrompt, h, y + 10, -1, false, matrix4f, vertexConsumers, DisplayMode.NORMAL, 0, packedLight)
             }
             matrices.popPose()
         }
