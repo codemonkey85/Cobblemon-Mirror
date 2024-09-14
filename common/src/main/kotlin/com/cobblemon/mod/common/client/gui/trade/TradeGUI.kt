@@ -357,6 +357,12 @@ class TradeGUI(
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+        if (minecraft?.options?.keyInventory?.matches(keyCode, scanCode) == true) {
+            CancelTradePacket().sendToServer()
+            Minecraft.getInstance().setScreen(null)
+            return true
+        }
+
         when (keyCode) {
             InputConstants.KEY_ESCAPE -> {
 //                playSound(CobblemonSounds.PC_OFF)
