@@ -19,14 +19,15 @@ import net.minecraft.network.RegistryFriendlyByteBuf
  * @author Licious
  * @since September 25th, 2022
  */
-class ServerSettingsPacket internal constructor(val preventCompletePartyDeposit: Boolean, val displayEntityLevelLabel: Boolean) : NetworkPacket<ServerSettingsPacket> {
+class ServerSettingsPacket internal constructor(val preventCompletePartyDeposit: Boolean, val displayEntityLevelLabel: Boolean, val displayEntityNameLabel: Boolean) : NetworkPacket<ServerSettingsPacket> {
     override val id = ID
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(Cobblemon.config.preventCompletePartyDeposit)
         buffer.writeBoolean(Cobblemon.config.displayEntityLevelLabel)
+        buffer.writeBoolean(Cobblemon.config.displayEntityNameLabel)
     }
     companion object {
         val ID = cobblemonResource("server_settings")
-        fun decode(buffer: RegistryFriendlyByteBuf) = ServerSettingsPacket(buffer.readBoolean(), buffer.readBoolean())
+        fun decode(buffer: RegistryFriendlyByteBuf) = ServerSettingsPacket(buffer.readBoolean(), buffer.readBoolean(), buffer.readBoolean())
     }
 }

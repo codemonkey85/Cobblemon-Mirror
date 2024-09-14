@@ -24,6 +24,7 @@
 - Added a `mobTargetInBattle` gamerule to exclude players from being targeted by mobs during a battle
 - Added battle log messages for switching out Pokémon
 - Added Evolution particles and sounds for Pokemon that are sent out when evolution is started.
+- New config setting `displayEntityNameLabel` to show the pokemons name when looking at them
 
 ### Pokémon Added
 #### Gen 2
