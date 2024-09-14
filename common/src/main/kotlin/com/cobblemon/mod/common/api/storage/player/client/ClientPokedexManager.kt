@@ -47,6 +47,7 @@ class ClientPokedexManager(
         fun runIncremental(data: ClientInstancedPlayerData) {
             if (data !is ClientPokedexManager) return
             CobblemonClient.clientPokedexData.speciesRecords.putAll(data.speciesRecords)
+            CobblemonClient.clientPokedexData.clearCalculatedValues()
         }
     }
 }

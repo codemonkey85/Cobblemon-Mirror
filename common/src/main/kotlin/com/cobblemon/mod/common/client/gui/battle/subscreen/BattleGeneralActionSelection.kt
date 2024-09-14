@@ -102,14 +102,14 @@ class BattleGeneralActionSelection(
         }
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mousePrimaryClicked(mouseX: Double, mouseY: Double): Boolean {
         if (lastAnwseredRequest != null && backButton.isHovered(mouseX, mouseY)) {
             playDownSound(Minecraft.getInstance().soundManager)
             CobblemonClient.battle?.cancelLastAnsweredRequest()
             battleGUI.selectAction(request, null)
             battleGUI.changeActionSelection(null)
         }
-        return tiles.any { it.mouseClicked(mouseX, mouseY, button) }
+        return tiles.any { it.mousePrimaryClicked(mouseX, mouseY) }
     }
 
     override fun defaultButtonNarrationText(builder: NarrationElementOutput) {
