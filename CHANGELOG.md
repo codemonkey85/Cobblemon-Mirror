@@ -126,6 +126,7 @@
 - Fixed battle log GUI flashing when Battle GUI is opened.
 - Bag Items used during a turn will now be refunded if the battle ends before the next turn begins.
 - Pokémon which the current owner is not its Original Trainer now gains the extra EXP
+- Fixed Fossil Resurrection advancement not being granted
 
 ### Developer
 - SpawnCause is now an implementation of SpawningInfluence.

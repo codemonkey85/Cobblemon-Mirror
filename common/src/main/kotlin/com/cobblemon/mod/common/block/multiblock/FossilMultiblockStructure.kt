@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.block.multiblock
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonSounds
+import com.cobblemon.mod.common.advancement.CobblemonCriteria
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.pokemon.FossilRevivedEvent
 import com.cobblemon.mod.common.api.fossil.Fossil
@@ -133,6 +134,7 @@ class FossilMultiblockStructure (
                     this.fossilState.growthState = "Taken"
                     player.playSound(CobblemonSounds.FOSSIL_MACHINE_RETRIEVE_POKEMON, 1.0F, 1.0F)
                     CobblemonEvents.FOSSIL_REVIVED.post(FossilRevivedEvent(pokemon, player))
+                    CobblemonCriteria.RESURRECT_POKEMON.trigger(player, pokemon)
                 }
 
                 // Turn the monitor off
