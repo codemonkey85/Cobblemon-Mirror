@@ -288,7 +288,7 @@ object CobblemonFabric : CobblemonImplementation {
 
     override fun registerCriteria() {
         CobblemonCriteria.register { id, obj ->
-            Registry.register(BuiltInRegistries.TRIGGER_TYPES, id, obj)
+            Registry.register(CobblemonCriteria.registry, id, obj)
         }
     }
 

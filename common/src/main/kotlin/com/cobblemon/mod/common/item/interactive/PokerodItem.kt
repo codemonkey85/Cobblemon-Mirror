@@ -164,16 +164,11 @@ class PokerodItem(val pokeRodId: ResourceLocation, settings: Properties) : Fishi
             world.playSound(null as Player?, user.x, user.y, user.z, CobblemonSounds.FISHING_ROD_REEL_IN, SoundSource.PLAYERS, 1.0f, 1.0f / (world.getRandom().nextFloat() * 0.4f + 0.8f))
             user.gameEvent(GameEvent.ITEM_INTERACT_FINISH)
         } else { // if the bobber is not out yet
-            // play the Rod casting sound and set it
-            world.playSound(null as Player?, user.x, user.y, user.z, CobblemonSounds.FISHING_ROD_CAST, SoundSource.PLAYERS, 1.0f, 1.0f / (world.getRandom().nextFloat() * 0.4f + 0.8f))
-
             if (!world.isClientSide) {
                 val lureLevel = EnchantmentHelper.getItemEnchantmentLevel(world.enchantmentRegistry.getHolder(Enchantments.LURE).get(), itemStack)
                 val luckLevel = EnchantmentHelper.getItemEnchantmentLevel(world.enchantmentRegistry.getHolder(Enchantments.LUCK_OF_THE_SEA).get(), itemStack)
 
-                val bobberEntity = PokeRodFishingBobberEntity(user, pokeRodId, getBaitOnRod(itemStack)?.toItemStack(world.itemRegistry) ?: ItemStack.EMPTY,
-                    world, luckLevel, lureLevel, itemStack)
-
+                val bobberEntity = PokeRodFishingBobberEntity(user, pokeRodId, getBaitOnRod(itemStack)?.toItemStack(world.itemRegistry) ?: ItemStack.EMPTY, world, luckLevel, lureLevel, itemStack)
                 world.addFreshEntity(bobberEntity)
                 CobblemonCriteria.CAST_POKE_ROD.trigger(user as ServerPlayer, baitOnRod != null)
             }

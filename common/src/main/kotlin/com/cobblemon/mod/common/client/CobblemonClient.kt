@@ -30,7 +30,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.repository.*
 import com.cobblemon.mod.common.client.render.npc.NPCRenderer
 import com.cobblemon.mod.common.client.render.pokeball.PokeBallRenderer
 import com.cobblemon.mod.common.client.render.pokemon.PokemonRenderer
-import com.cobblemon.mod.common.client.sound.battle.BattleMusicController
+import com.cobblemon.mod.common.client.sound.BattleMusicController
+import com.cobblemon.mod.common.client.sound.EntitySoundTracker
 import com.cobblemon.mod.common.client.storage.ClientStorageManager
 import com.cobblemon.mod.common.client.tooltips.CobblemonTooltipGenerator
 import com.cobblemon.mod.common.client.tooltips.FishingBaitTooltipGenerator
@@ -125,6 +126,8 @@ object CobblemonClient {
             val lines = event.lines
             TooltipManager.generateTooltips(stack, lines, Screen.hasShiftDown())
         }
+
+        PlatformEvents.CLIENT_ENTITY_UNLOAD.subscribe { event -> EntitySoundTracker.clear(event.entity.id) }
     }
 
     private fun registerTooltipManagers() {

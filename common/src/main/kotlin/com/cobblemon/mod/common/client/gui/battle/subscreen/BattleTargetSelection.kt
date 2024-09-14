@@ -12,19 +12,32 @@ import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.moves.MoveTemplate
 import com.cobblemon.mod.common.api.text.bold
+import com.cobblemon.mod.common.api.text.font
+import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.battles.InBattleMove
 import com.cobblemon.mod.common.battles.MoveActionResponse
+import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.battle.ActiveClientBattlePokemon
 import com.cobblemon.mod.common.client.battle.SingleActionRequest
 import com.cobblemon.mod.common.client.gui.battle.BattleGUI
+import com.cobblemon.mod.common.client.gui.battle.BattleOverlay
+import com.cobblemon.mod.common.client.gui.drawProfilePokemon
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
+import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.lang
+import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.sounds.SoundManager
+import org.joml.Quaternionf
+import org.joml.Vector3f
+import kotlin.math.floor
+import kotlin.math.sin
 
 class BattleTargetSelection(
         battleGUI: BattleGUI,
@@ -33,25 +46,41 @@ class BattleTargetSelection(
 ) : BattleActionSelection(
     battleGUI = battleGUI,
     request = request,
-    x = 20,
-    y = Minecraft.getInstance().window.guiScaledHeight - 84,
+    x = 0,
+    y = if (Minecraft.getInstance().window.guiScaledHeight > 630) Minecraft.getInstance().window.guiScaledHeight / 2 - 148 / 2
+        else Minecraft.getInstance().window.guiScaledHeight - 226,
     width = 100,
     height = 100,
     battleLang("ui.select_move")
 ) {
     companion object {
-        const val TARGET_WIDTH = 92
-        const val TARGET_HEIGHT = 24
-        const val MOVE_VERTICAL_SPACING = 5F
-        const val MOVE_HORIZONTAL_SPACING = 13F
+        const val TARGET_WIDTH = 93
+        const val TARGET_HEIGHT = 33
+        const val MOVE_VERTICAL_SPACING = 1F
+        const val MOVE_HORIZONTAL_SPACING = 2F
+        const val BACKGROUND_HEIGHT = 148
 
-        val targetTexture = cobblemonResource("textures/gui/battle/battle_move.png")
-        val moveOverlayTexture = cobblemonResource("textures/gui/battle/battle_move_overlay.png")
+        val underlayTexture = cobblemonResource("textures/gui/battle/selection_underlay.png")
+        val targetTileTexture = cobblemonResource("textures/gui/battle/target_select.png")
+        val targetTileTextureDisabled = cobblemonResource("textures/gui/battle/target_select_disabled.png")
+        val battleRoleUpper = cobblemonResource("textures/gui/battle/battle_info_role.png")
+        val battleRoleLower = cobblemonResource("textures/gui/battle/target_select_role.png")
+        val battleArrowUp = cobblemonResource("textures/gui/battle/arrow_pointer_up.png")
+        val battleArrowDown = cobblemonResource("textures/gui/battle/arrow_pointer_down.png")
+        val battleArrowLeft = cobblemonResource("textures/gui/battle/arrow_pointer_left.png")
+        val battleArrowRight = cobblemonResource("textures/gui/battle/arrow_pointer_right.png")
+
+        enum class ArrowDirection {
+            UP,
+            DOWN,
+            LEFT,
+            RIGHT,
+        }
     }
 
     val targets = request.activePokemon.getAllActivePokemon()
 
-    val backButton = BattleBackButton(x - 3F, Minecraft.getInstance().window.guiScaledHeight - 22F)
+    val backButton = BattleBackButton(x + 9F, Minecraft.getInstance().window.guiScaledHeight - 22F)
     val selectableTargetList = move.target.targetList(request.activePokemon)
     val multiTargetList = if(selectableTargetList == null) request.activePokemon.getMultiTargetList(move.target) else null
 
@@ -59,9 +88,24 @@ class BattleTargetSelection(
         val isAlly = target.isAllied(request.activePokemon)
         val teamSize = request.activePokemon.getSidePokemon().count()
         val fieldPos = if(isAlly) index % teamSize else teamSize - 1 - (index % teamSize)
-        val x = this.x + MOVE_HORIZONTAL_SPACING + fieldPos * TARGET_WIDTH
-        val y = if (isAlly) this.y + TARGET_HEIGHT + MOVE_VERTICAL_SPACING else this.y.toFloat()
-        TargetTile(this, target, x, y)
+        val verticalAligned = true
+        val x: Float
+        val y: Float
+        val arrowDirection: ArrowDirection
+        if (verticalAligned) {
+            x = this.x + (Minecraft.getInstance().window.guiScaledWidth / 2) + if (isAlly) - (TARGET_WIDTH + MOVE_HORIZONTAL_SPACING) else MOVE_HORIZONTAL_SPACING
+            y = this.y + (5 + BACKGROUND_HEIGHT - (TARGET_HEIGHT + MOVE_VERTICAL_SPACING) * teamSize) / 2 + (TARGET_HEIGHT + MOVE_VERTICAL_SPACING) * fieldPos
+            arrowDirection = if (isAlly) ArrowDirection.RIGHT else ArrowDirection.LEFT
+        } else {
+            x = this.x + Minecraft.getInstance().window.guiScaledWidth / 2 - (TARGET_WIDTH + MOVE_HORIZONTAL_SPACING) * teamSize / 2 + MOVE_HORIZONTAL_SPACING + fieldPos * TARGET_WIDTH
+            y = this.y + 44 + (if (isAlly) TARGET_HEIGHT + MOVE_VERTICAL_SPACING else 0F)
+            arrowDirection = when (fieldPos) {
+                0 -> ArrowDirection.RIGHT
+                teamSize - 1 -> ArrowDirection.LEFT
+                else -> if (isAlly) ArrowDirection.UP else ArrowDirection.DOWN
+            }
+        }
+        TargetTile(this, target, x, y, arrowDirection)
     }
     var targetTiles = baseTiles
 
@@ -71,11 +115,15 @@ class BattleTargetSelection(
             val target: ActiveClientBattlePokemon,
             val x: Float,
             val y: Float,
+            val arrowDirection: ArrowDirection
     ) {
-        var moveTemplate = MoveTemplate.dummy(target.battlePokemon?.displayName.toString()) // Moves.getByNameOrDummy(target.id)
+        var moveTemplate = MoveTemplate.dummy(target.battlePokemon?.displayName.toString())
         private val responseTarget = selectableTargetList?.firstOrNull { it.getPNX() == target.getPNX() }?.getPNX()
         private val isMultiTarget = multiTargetList?.firstOrNull { it.getPNX() == target.getPNX() } != null
+        private val isCurrentPokemon = request.activePokemon.battlePokemon?.uuid == target.battlePokemon!!.uuid
+
         open val response: MoveActionResponse get() = MoveActionResponse(targetSelection.move.id, responseTarget)
+        val state = FloatingState()
 
         open val selectable: Boolean get() = isMultiTarget || (responseTarget != null)
         val hue = target.getHue()
@@ -83,49 +131,167 @@ class BattleTargetSelection(
             Triple(((hue shr 16) and 0b11111111) / 255F, ((hue shr 8) and 0b11111111) / 255F, (hue and 0b11111111) / 255F)
             else Triple(0.5f, 0.5f, 0.5f)
 
+        val arrowTexture = when (arrowDirection) {
+            ArrowDirection.LEFT -> battleArrowLeft
+            ArrowDirection.RIGHT -> battleArrowRight
+            ArrowDirection.UP -> battleArrowUp
+            ArrowDirection.DOWN -> battleArrowDown
+        }
+
+        val arrowPosition = when (arrowDirection) {
+            ArrowDirection.LEFT -> Pair(this.x + TARGET_WIDTH + 3F, this.y + 13)
+            ArrowDirection.RIGHT -> Pair(this.x - 7F, this.y + 13F)
+            ArrowDirection.UP -> Pair(this.x + TARGET_WIDTH / 2 - 4F, this.y + TARGET_HEIGHT + 3)
+            ArrowDirection.DOWN -> Pair(this.x + TARGET_WIDTH / 2 - 4F, this.y - 7)
+        }
+
         fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-
+            val passedSeconds = CobblemonClient.battleOverlay.passedSeconds // This syncs the role throbbers
             val selectConditionOpacity = targetSelection.opacity * if (!selectable) 0.5F else 1F
+            val matrices = context.pose()
+            val battlePokemon = target.battlePokemon ?: return
+            val isHovered = isHovered(mouseX.toDouble(), mouseY.toDouble())
 
+            // Render Base tile texture
             blitk(
-                matrixStack = context.pose(),
-                texture = targetTexture,
+                matrixStack = matrices,
+                texture = if (selectable) targetTileTexture else targetTileTextureDisabled,
                 x = x,
                 y = y,
                 width = TARGET_WIDTH,
                 height = TARGET_HEIGHT,
-                vOffset = if (selectable && isHovered(mouseX.toDouble(), mouseY.toDouble())) TARGET_HEIGHT else 0,
-                textureHeight = TARGET_HEIGHT * 2,
-                red = rgb.first,
-                green = rgb.second,
-                blue = rgb.third,
-                alpha = selectConditionOpacity
+                vOffset = if (selectable && isHovered) TARGET_HEIGHT else 0,
+                textureHeight = if (selectable) TARGET_HEIGHT * 2 else TARGET_HEIGHT,
             )
 
-            blitk(
-                matrixStack = context.pose(),
-                texture = moveOverlayTexture,
-                x = x,
-                y = y,
-                width = TARGET_WIDTH,
-                height = TARGET_HEIGHT,
-                alpha = targetSelection.opacity
-            )
+            // Target Selection Arrows
+            if (selectable && isHovered) {
+                val offset = (sin(((passedSeconds / 2) % 1 * 2 * Math.PI)) * 1 + 1).toFloat()
+                val pos = when (arrowDirection) {
+                    ArrowDirection.LEFT -> Pair(arrowPosition.first - offset, arrowPosition.second)
+                    ArrowDirection.RIGHT -> Pair(arrowPosition.first + offset, arrowPosition.second)
+                    ArrowDirection.UP -> Pair(arrowPosition.first, arrowPosition.second - offset)
+                    ArrowDirection.DOWN -> Pair(arrowPosition.first, arrowPosition.second + offset)
+                }
+                blitk(
+                        matrixStack = matrices,
+                        texture = arrowTexture,
+                        x = pos.first * 2,
+                        y = pos.second * 2,
+                        scale = 0.5F,
+                        height = if (arrowDirection == ArrowDirection.LEFT || arrowDirection ==  ArrowDirection.RIGHT) 17 else 10,
+                        width = if (arrowDirection == ArrowDirection.LEFT || arrowDirection ==  ArrowDirection.RIGHT) 10 else 17,
+                )
+            }
 
-            if(target.battlePokemon?.hpValue!!  > 0) {
-                target.battlePokemon?.displayName?.bold()?.let {
+            // Target name
+            if(battlePokemon.hpValue > 0) {
+                // Render Pokémon
+                matrices.pushPose()
+                matrices.translate(x + TARGET_WIDTH - (25 / 2.0) - 2, y + 5.0, 0.0)
+                matrices.scale(2.5F, 2.5F, 1F)
+                drawProfilePokemon(
+                        species = battlePokemon.species.resourceIdentifier,
+                        aspects = battlePokemon.aspects.toSet(),
+                        matrixStack = matrices,
+                        rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),
+                        state = state,
+                        scale = 4.5F,
+                        partialTicks = delta
+                )
+                matrices.popPose()
+
+                // Battle Role Upper
+                val stage = floor((passedSeconds / BattleOverlay.ROLE_CYCLE_SECONDS % 1) * 5)
+                if (!isCurrentPokemon || stage != 4.0) {
+                    blitk(
+                            matrixStack = matrices,
+                            texture = battleRoleUpper,
+                            x = x + 6,
+                            y = y + 1,
+                            width = 27,
+                            height = 3,
+                            textureHeight = 12,
+                            vOffset = if (isCurrentPokemon) stage * 3 else  9,
+                            red = rgb.first,
+                            green = rgb.second,
+                            blue = rgb.third,
+                    )
+                }
+
+                // Target Level
+                drawScaledText(
+                        context = context,
+                        font = CobblemonResources.DEFAULT_LARGE,
+                        text = lang("ui.lv").bold(),
+                        x = x + 5,
+                        y = y + 8,
+                        opacity = selectConditionOpacity,
+                        shadow = true
+                )
+                drawScaledText(
+                        context = context,
+                        font = CobblemonResources.DEFAULT_LARGE,
+                        text = battlePokemon.level.toString().text().bold(),
+                        x = x + 5 + 13,
+                        y = y + 8,
+                        opacity = selectConditionOpacity,
+                        shadow = true
+                )
+
+                val displayText = battlePokemon.displayName.bold()
+                // Pokemon Display Name
+                drawScaledText(
+                        context = context,
+                        font = CobblemonResources.DEFAULT_LARGE,
+                        text = displayText,
+                        x = x + 5,
+                        y = y + 15,
+                        opacity = selectConditionOpacity,
+                        shadow = true
+                )
+                // Gender
+                val gender = battlePokemon.gender
+                val pokemonDisplayNameWidth = Minecraft.getInstance().font.width(displayText.font(CobblemonResources.DEFAULT_LARGE))
+                if (gender != Gender.GENDERLESS) {
+                    val isMale = gender == Gender.MALE
+                    val textSymbol = if (isMale) "♂".text().bold() else "♀".text().bold()
                     drawScaledText(
                             context = context,
                             font = CobblemonResources.DEFAULT_LARGE,
-                            text = it,
-                            x = x + 17,
-                            y = y + 2,
+                            text = textSymbol,
+                            x = x + 6 + pokemonDisplayNameWidth,
+                            y = y + 15,
+                            colour = if (isMale) 0x32CBFF else 0xFC5454,
                             opacity = selectConditionOpacity,
                             shadow = true
                     )
                 }
-            }
 
+                // Lower Battle Role
+                blitk(
+                        matrixStack = matrices,
+                        texture = battleRoleLower,
+                        x = x + 4,
+                        y = y + 29,
+                        width = 82,
+                        height = 3,
+                        red = rgb.first,
+                        green = rgb.second,
+                        blue = rgb.third,
+                )
+
+                // Actor Display Name
+                drawScaledText(
+                        context = context,
+                        text = target.actor.displayName,
+                        x = x + 3,
+                        y = y + 26,
+                        scale = 0.5F,
+                        shadow = true,
+                        opacity = selectConditionOpacity,
+                )
+            }
         }
 
         fun isHovered(mouseX: Double, mouseY: Double): Boolean {
@@ -143,6 +309,29 @@ class BattleTargetSelection(
     }
 
     override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+
+        // Draw Background
+        blitk(
+                matrixStack = context.pose(),
+                texture = underlayTexture,
+                x = x,
+                y = y,
+                width = Minecraft.getInstance().window.guiScaledWidth,
+                height = 148,
+        )
+
+        // Draw Title Text
+        val text = lang("battle.select_target")
+        val width = Minecraft.getInstance().font.width(text)
+        drawScaledText(
+                context = context,
+                text = text,
+                x = (Minecraft.getInstance().window.guiScaledWidth - width) / 2,
+                y = y + if (request.activePokemon.getSidePokemon().count() == 2) 25 else 16,
+                scale = 1F,
+                shadow = true,
+        )
+
         targetTiles.forEach {
             it.render(context, mouseX, mouseY, delta)
         }
@@ -156,7 +345,7 @@ class BattleTargetSelection(
             return true
         } else if (backButton.isHovered(mouseX, mouseY)) {
             playDownSound(Minecraft.getInstance().soundManager)
-            battleGUI.changeActionSelection(null)
+            battleGUI.changeActionSelection(BattleMoveSelection(battleGUI, request))
         }
         return false
     }
