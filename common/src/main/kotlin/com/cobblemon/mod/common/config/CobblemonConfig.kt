@@ -174,6 +174,9 @@ class CobblemonConfig {
     @NodeCategory(Category.Pokemon)
     var displayEntityLevelLabel = true
 
+    @NodeCategory(Category.Pokemon)
+    var displayEntityNameLabel = false
+
     @NodeCategory(Category.Spawning)
     var shinyRate = 8192F
 

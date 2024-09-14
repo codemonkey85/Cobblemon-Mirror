@@ -26,6 +26,7 @@
 - Added Evolution particles and sounds for Pokemon that are sent out when evolution is started.
 - Added a Nurse profession that can be unlocked by having villagers claim a healing machine block.
 - Added a `natural` block state property for the healing machine block; when property is set to true, the block will have a different texture and drop an iron ingot instead of itself.
+- New config setting `displayEntityNameLabel` to show the pokemons name when looking at them
 
 ### Pokémon Added
 #### Gen 2
@@ -69,6 +70,8 @@
 - Player trade range increased to 12 blocks (from 10 blocks)
 - PvP battle range increased to 32 blocks (from 10 blocks)
 - Spectate range increased to 64 blocks (from 10 blocks)
+- The inventory key now closes our GUIs if they are open, mirroring how Minecraft screens usually work.
+- The noise from the pasture and PC blocks being interacted with now activates Sculk sensors.
 
 ### Fixes
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating
@@ -162,6 +165,7 @@
 
 ### Fixes
 - Fixed trading Pokémon setting their friendsip to 0 instead of the base value.
+- Fixed trading Pokémon setting their friendship to 0 instead of the base value.
 - Fixed a scenario where a Pokémon that rolled to spawn with a special Tera type sometimes has a Tera type that is already a part of their natural typing.
 - Fixed PokemonProperty argument suggestions for ``tera`` and ``tera_type`` not suggesting ``stellar``.
 - Fixed being able to stack Relic Coin Pouches on top of each other.
