@@ -16,12 +16,21 @@
     "#minecraft:coral_blocks",
     "#minecraft:diamond_ores",
     "#minecraft:dirt",
-    "#minecraft:dirt_like",
+    {
+      "id": "#minecraft:dirt_like",
+      "required": false
+    },
     "#minecraft:emerald_ores",
     "#minecraft:sculk_replaceable",
     "#minecraft:gold_ores",
-    "#minecraft:grass",
-    "#minecraft:gravel",
+    {
+      "id": "#minecraft:grass",
+      "required": false
+    },
+    {
+      "id": "#minecraft:gravel",
+      "required": false
+    },
     "#minecraft:ice",
     "#minecraft:iron_ores",
     "#minecraft:lapis_ores",
@@ -31,99 +40,381 @@
     "#minecraft:snow",
     "#minecraft:terracotta",
     "#minecraft:valid_spawn",
-    "#c:adamantite_ores",
-    "#c:aetherium_ores",
-    "#c:aluminum_ores",
-    "#c:amethyst_blocks",
-    "#c:amethyst_ores",
-    "#c:ancient_debris",
-    "#c:antimony_ores",
-    "#c:aquarium_ores",
-    "#c:asterite_ores",
-    "#c:asteroid_asterite_ores",
-    "#c:banglum_ores",
-    "#c:basalt",
-    "#c:bauxite_ores",
-    "#c:bone_blocks",
-    "#c:carmot_ores",
-    "#c:certus_quartz_ores",
-    "#c:cinnabar_ores",
-    "#c:cobalt_ores",
-    "#c:coral_blocks",
-    "#c:dirt",
-    "#c:end_stones",
-    "#c:galaxium_ores",
-    "#c:galena_ores",
-    "#c:gravel",
-    "#c:galena_ores",
-    "#c:kyber_ores",
-    "#c:lead_ores",
-    "#c:lignite_coal_ores",
-    "#c:lunum_ores",
-    "#c:lutetium_ores",
-    "#c:manganese_ores",
-    "#c:meteor_metite_ores",
-    "#c:metite_ores",
-    "#c:midas_gold_ores",
-    "#c:moon_lunum_ores",
-    "#c:mozanite_ores",
-    "#c:mythril_ores",
-    "#c:natural_stones",
-    "#c:netherrack",
-    "#c:nether_mycelium",
-    "#c:nickel_ores",
-    "#c:nikolite_ores",
-    "#c:ores",
-    "#c:orichalcum_ores",
-    "#c:osmium_ores",
-    "#c:palladium_ores",
-    "#c:peridot_ores",
-    "#c:platinum_ores",
-    "#c:prometheum_ores",
-    "#c:pyrite_ores",
-    "#c:quadrillum_ores",
-    "#c:quartz_ores",
-    "#c:raw_antimony_ores",
-    "#c:raw_copper_ores",
-    "#c:raw_gold_ores",
-    "#c:raw_iridium_ores",
-    "#c:raw_iron_ores",
-    "#c:raw_lead_ores",
-    "#c:raw_nickel_ores",
-    "#c:raw_platinum_ores",
-    "#c:raw_silver_ores",
-    "#c:raw_tin_ores",
-    "#c:raw_titanium_ores",
-    "#c:raw_tungsten_ores",
-    "#c:raw_uranium_ores",
-    "#c:red_sandstones",
-    "#c:ruby_ores",
-    "#c:runite_ores",
-    "#c:salt_ores",
-    "#c:sand",
-    "#c:sandstone",
-    "#c:sandstones",
-    "#c:sapphire_ores",
-    "#c:sheldonite_ores",
-    "#c:silver_ores",
-    "#c:sodalite_ores",
-    "#c:sphalerite_ores",
-    "#c:starrite_ores",
-    "#c:stellum_ores",
-    "#c:stone",
-    "#c:stormyx_ores",
-    "#c:sulfur_ores",
-    "#c:tantalite_ores",
-    "#c:terracotta_blocks",
-    "#c:tin_ores",
-    "#c:titanium_ores",
-    "#c:topaz_ores",
-    "#c:truesilver_ores",
-    "#c:tungsten_ores",
-    "#c:unobtainium_ores",
-    "#c:ur_ores",
-    "#c:uranium_ores",
-    "#c:vermiculite_ores",
-    "#c:zinc_ores"
+    {
+      "id": "#c:adamantite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:aetherium_ores",
+      "required": false
+    },
+    {
+      "id": "#c:aluminum_ores",
+      "required": false
+    },
+    {
+      "id": "#c:amethyst_blocks",
+      "required": false
+    },
+    {
+      "id": "#c:amethyst_ores",
+      "required": false
+    },
+    {
+      "id": "#c:ancient_debris",
+      "required": false
+    },
+    {
+      "id": "#c:antimony_ores",
+      "required": false
+    },
+    {
+      "id": "#c:aquarium_ores",
+      "required": false
+    },
+    {
+      "id": "#c:asterite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:asteroid_asterite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:banglum_ores",
+      "required": false
+    },
+    {
+      "id": "#c:basalt",
+      "required": false
+    },
+    {
+      "id": "#c:bauxite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:bone_blocks",
+      "required": false
+    },
+    {
+      "id": "#c:carmot_ores",
+      "required": false
+    },
+    {
+      "id": "#c:certus_quartz_ores",
+      "required": false
+    },
+    {
+      "id": "#c:cinnabar_ores",
+      "required": false
+    },
+    {
+      "id": "#c:cobalt_ores",
+      "required": false
+    },
+    {
+      "id": "#c:coral_blocks",
+      "required": false
+    },
+    {
+      "id": "#c:dirt",
+      "required": false
+    },
+    {
+      "id": "#c:end_stones",
+      "required": false
+    },
+    {
+      "id": "#c:galaxium_ores",
+      "required": false
+    },
+    {
+      "id": "#c:galena_ores",
+      "required": false
+    },
+    {
+      "id": "#c:gravel",
+      "required": false
+    },
+    {
+      "id": "#c:galena_ores",
+      "required": false
+    },
+    {
+      "id": "#c:kyber_ores",
+      "required": false
+    },
+    {
+      "id": "#c:lead_ores",
+      "required": false
+    },
+    {
+      "id": "#c:lignite_coal_ores",
+      "required": false
+    },
+    {
+      "id": "#c:lunum_ores",
+      "required": false
+    },
+    {
+      "id": "#c:lutetium_ores",
+      "required": false
+    },
+    {
+      "id": "#c:manganese_ores",
+      "required": false
+    },
+    {
+      "id": "#c:meteor_metite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:metite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:midas_gold_ores",
+      "required": false
+    },
+    {
+      "id": "#c:moon_lunum_ores",
+      "required": false
+    },
+    {
+      "id": "#c:mozanite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:mythril_ores",
+      "required": false
+    },
+    {
+      "id": "#c:natural_stones",
+      "required": false
+    },
+    {
+      "id": "#c:netherrack",
+      "required": false
+    },
+    {
+      "id": "#c:nether_mycelium",
+      "required": false
+    },
+    {
+      "id": "#c:nickel_ores",
+      "required": false
+    },
+    {
+      "id": "#c:nikolite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:ores",
+      "required": false
+    },
+    {
+      "id": "#c:orichalcum_ores",
+      "required": false
+    },
+    {
+      "id": "#c:osmium_ores",
+      "required": false
+    },
+    {
+      "id": "#c:palladium_ores",
+      "required": false
+    },
+    {
+      "id": "#c:peridot_ores",
+      "required": false
+    },
+    {
+      "id": "#c:platinum_ores",
+      "required": false
+    },
+    {
+      "id": "#c:prometheum_ores",
+      "required": false
+    },
+    {
+      "id": "#c:pyrite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:quadrillum_ores",
+      "required": false
+    },
+    {
+      "id": "#c:quartz_ores",
+      "required": false
+    },
+    {
+      "id": "#c:raw_antimony_ores",
+      "required": false
+    },
+    {
+      "id": "#c:raw_copper_ores",
+      "required": false
+    },
+    {
+      "id": "#c:raw_gold_ores",
+      "required": false
+    },
+    {
+      "id": "#c:raw_iridium_ores",
+      "required": false
+    },
+    {
+      "id": "#c:raw_iron_ores",
+      "required": false
+    },
+    {
+      "id": "#c:raw_lead_ores",
+      "required": false
+    },
+    {
+      "id": "#c:raw_nickel_ores",
+      "required": false
+    },
+    {
+      "id": "#c:raw_platinum_ores",
+      "required": false
+    },
+    {
+      "id": "#c:raw_silver_ores",
+      "required": false
+    },
+    {
+      "id": "#c:raw_tin_ores",
+      "required": false
+    },
+    {
+      "id": "#c:raw_titanium_ores",
+      "required": false
+    },
+    {
+      "id": "#c:raw_tungsten_ores",
+      "required": false
+    },
+    {
+      "id": "#c:raw_uranium_ores",
+      "required": false
+    },
+    {
+      "id": "#c:red_sandstones",
+      "required": false
+    },
+    {
+      "id": "#c:ruby_ores",
+      "required": false
+    },
+    {
+      "id": "#c:runite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:salt_ores",
+      "required": false
+    },
+    {
+      "id": "#c:sand",
+      "required": false
+    },
+    {
+      "id": "#c:sandstone",
+      "required": false
+    },
+    {
+      "id": "#c:sandstones",
+      "required": false
+    },
+    {
+      "id": "#c:sapphire_ores",
+      "required": false
+    },
+    {
+      "id": "#c:sheldonite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:silver_ores",
+      "required": false
+    },
+    {
+      "id": "#c:sodalite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:sphalerite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:starrite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:stellum_ores",
+      "required": false
+    },
+    {
+      "id": "#c:stone",
+      "required": false
+    },
+    {
+      "id": "#c:stormyx_ores",
+      "required": false
+    },
+    {
+      "id": "#c:sulfur_ores",
+      "required": false
+    },
+    {
+      "id": "#c:tantalite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:terracotta_blocks",
+      "required": false
+    },
+    {
+      "id": "#c:tin_ores",
+      "required": false
+    },
+    {
+      "id": "#c:titanium_ores",
+      "required": false
+    },
+    {
+      "id": "#c:topaz_ores",
+      "required": false
+    },
+    {
+      "id": "#c:truesilver_ores",
+      "required": false
+    },
+    {
+      "id": "#c:tungsten_ores",
+      "required": false
+    },
+    {
+      "id": "#c:unobtainium_ores",
+      "required": false
+    },
+    {
+      "id": "#c:ur_ores",
+      "required": false
+    },
+    {
+      "id": "#c:uranium_ores",
+      "required": false
+    },
+    {
+      "id": "#c:vermiculite_ores",
+      "required": false
+    },
+    {
+      "id": "#c:zinc_ores",
+      "required": false
+    }
   ]
 }
