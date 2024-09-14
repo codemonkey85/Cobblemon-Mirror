@@ -26,6 +26,7 @@
 - Added Evolution particles and sounds for Pokemon that are sent out when evolution is started.
 - Added a Nurse profession that can be unlocked by having villagers claim a healing machine block.
 - Added a `natural` block state property for the healing machine block; when property is set to true, the block will have a different texture and drop an iron ingot instead of itself.
+- New config setting `displayEntityNameLabel` to show the pokemons name when looking at them
 
 ### Pokémon Added
 #### Gen 2

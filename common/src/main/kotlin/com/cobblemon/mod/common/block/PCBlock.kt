@@ -41,6 +41,7 @@ import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.EnumProperty
+import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.pathfinder.PathComputationType
@@ -292,6 +293,7 @@ class PCBlock(properties: Properties): BaseEntityBlock(properties), SimpleWaterl
             volume = 0.5F,
             pitch = 1F
         )
+        world.gameEvent(player, GameEvent.BLOCK_OPEN, blockPos)
         return InteractionResult.SUCCESS
     }
 
