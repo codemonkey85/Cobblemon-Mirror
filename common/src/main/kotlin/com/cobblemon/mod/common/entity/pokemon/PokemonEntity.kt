@@ -646,16 +646,12 @@ open class PokemonEntity(
         goalSelector.addGoal(0, PokemonInBattleMovementGoal(this, 10))
         goalSelector.addGoal(0, object : Goal() {
             override fun canUse() =
-                isNoAi ||
                         this@PokemonEntity.entityData.get(PHASING_TARGET_ID) != -1 ||
                         pokemon.status?.status == Statuses.SLEEP ||
                         entityData.get(DYING_EFFECTS_STARTED) ||
                         evolutionEntity != null
 
             override fun canContinueToUse(): Boolean {
-                if (isNoAi) {
-                    return true
-                }
                 if (pokemon.status?.status == Statuses.SLEEP && !canSleep() && !isBusy) {
                     return false
                 } else if (pokemon.status?.status == Statuses.SLEEP || isBusy) {
