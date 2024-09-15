@@ -104,6 +104,13 @@
 - Fix pokedex crash when a form is looked up without ever seeing the "normal" form
 - Fixed owned pokeballs floating upwards if pausing mid transition
 - Fixed all mouse buttons working for Battle UI navigation (now it's only primary/left click)
+- Fixed trading Pokémon setting their friendship to 0 instead of the base value.
+- Fixed a scenario where a Pokémon that rolled to spawn with a special Tera type sometimes has a Tera type that is already a part of their natural typing.
+- Fixed PokemonProperty argument suggestions for ``tera`` and ``tera_type`` not suggesting ``stellar``.
+- Fixed being able to stack Relic Coin Pouches on top of each other.
+- Fixed Model loader generating misleading crash-reports when client is crashing
+- Big Roots and Energy Roots now share the same sounds as intented.
+- Fixed sounds made by blocks playing at a lower pitch than intended.
 - Fixed Chimchar and Monferno T posing whenever they sleep.
 - Fixed the Magby line not having any placeholder walk animations.
 - Fixed Duskull and Dusclops using skylight levels for their nether spawn data. There is no sun in the Nether!
@@ -113,6 +120,18 @@
 - Fixed Maushold's faint animations not playing. It's sadder than Tandemaus! 
 - Fixed Slowking's battle idle. 
 - Fixed Grafaiai's walk speed to prevent model sliding. 
+- Fixed reviving items throwing an exception when used in battle
+- Fixed messages for Focus Sash, Confusion, Mummy, Ice Face, Own Tempo, and Revive
+- Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server
+- Fixed crumbling_arch_ruins from generating a giant cube of air and removed the chest
+- Fixed possible crash on large population servers due to concurrent access of data.
+- Quickly sending out and recalling Pokémon now looks smoother and can no longer be spammed to cause desync issues.
+- Pokémon are now invulnerable during sendout animation and intangible during recall animation.
+- Pokémon are now invincible during sendout animation and intangible during recall animation.
+- Scrolling with party keybinding now behaves properly when using high scroll speed or scroll sensitivity.
+- Fixed battle log GUI flashing when Battle GUI is opened.
+- Bag Items used during a turn will now be refunded if the battle ends before the next turn begins.
+- Pokémon which the current owner is not its Original Trainer now gains the extra EXP
 
 ### Developer
 - SpawnCause is now an implementation of SpawningInfluence.
