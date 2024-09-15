@@ -8,10 +8,8 @@
 
 package com.cobblemon.mod.common
 
-import com.cobblemon.mod.common.CobblemonBuildDetails.smallCommitHash
 //import com.cobblemon.mod.common.api.storage.player.factory.MongoPlayerDataStoreFactory
-import com.cobblemon.mod.common.advancement.CobblemonCriteria
-import com.cobblemon.mod.common.advancement.criterion.EvolvePokemonContext
+import com.cobblemon.mod.common.CobblemonBuildDetails.smallCommitHash
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.SeasonResolver
 import com.cobblemon.mod.common.api.data.DataProvider
@@ -19,15 +17,7 @@ import com.cobblemon.mod.common.api.drop.CommandDropEntry
 import com.cobblemon.mod.common.api.drop.DropEntry
 import com.cobblemon.mod.common.api.drop.ItemDropEntry
 import com.cobblemon.mod.common.api.events.CobblemonEvents
-import com.cobblemon.mod.common.api.events.CobblemonEvents.BATTLE_STARTED_POST
-import com.cobblemon.mod.common.api.events.CobblemonEvents.BATTLE_VICTORY
 import com.cobblemon.mod.common.api.events.CobblemonEvents.DATA_SYNCHRONIZED
-import com.cobblemon.mod.common.api.events.CobblemonEvents.EVOLUTION_COMPLETE
-import com.cobblemon.mod.common.api.events.CobblemonEvents.LEVEL_UP_EVENT
-import com.cobblemon.mod.common.api.events.CobblemonEvents.POKEMON_CAPTURED
-import com.cobblemon.mod.common.api.events.CobblemonEvents.POKEMON_SCANNED
-import com.cobblemon.mod.common.api.events.CobblemonEvents.STARTER_CHOSEN
-import com.cobblemon.mod.common.api.events.CobblemonEvents.TRADE_COMPLETED
 import com.cobblemon.mod.common.api.permission.PermissionValidator
 import com.cobblemon.mod.common.api.pokeball.catching.calculators.CaptureCalculator
 import com.cobblemon.mod.common.api.pokeball.catching.calculators.CaptureCalculators
@@ -54,7 +44,6 @@ import com.cobblemon.mod.common.api.spawning.prospecting.SpawningProspector
 import com.cobblemon.mod.common.api.starter.StarterHandler
 import com.cobblemon.mod.common.api.storage.PokemonStoreManager
 import com.cobblemon.mod.common.api.storage.adapter.conversions.ReforgedConversion
-import com.cobblemon.mod.common.api.storage.adapter.database.MongoDBStoreAdapter
 import com.cobblemon.mod.common.api.storage.adapter.flatfile.FileStoreAdapter
 import com.cobblemon.mod.common.api.storage.adapter.flatfile.JSONStoreAdapter
 import com.cobblemon.mod.common.api.storage.adapter.flatfile.NBTStoreAdapter
@@ -76,16 +65,15 @@ import com.cobblemon.mod.common.battles.BattleSide
 import com.cobblemon.mod.common.battles.ShowdownThread
 import com.cobblemon.mod.common.battles.actor.PokemonBattleActor
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
-import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.command.argument.DexArgumentType
 import com.cobblemon.mod.common.command.argument.DialogueArgumentType
 import com.cobblemon.mod.common.command.argument.FormArgumentType
 import com.cobblemon.mod.common.command.argument.MoveArgumentType
 import com.cobblemon.mod.common.command.argument.PartySlotArgumentType
-import com.cobblemon.mod.common.command.argument.SpeciesArgumentType
 import com.cobblemon.mod.common.command.argument.PokemonPropertiesArgumentType
 import com.cobblemon.mod.common.command.argument.PokemonStoreArgumentType
 import com.cobblemon.mod.common.command.argument.SpawnBucketArgumentType
+import com.cobblemon.mod.common.command.argument.SpeciesArgumentType
 import com.cobblemon.mod.common.config.CobblemonConfig
 import com.cobblemon.mod.common.config.LastChangedVersion
 import com.cobblemon.mod.common.config.constraint.IntConstraint
@@ -104,7 +92,9 @@ import com.cobblemon.mod.common.pokemon.evolution.variants.BlockClickEvolution
 import com.cobblemon.mod.common.pokemon.feature.TagSeasonResolver
 import com.cobblemon.mod.common.pokemon.helditem.CobblemonHeldItemManager
 import com.cobblemon.mod.common.pokemon.properties.AspectPropertyType
+import com.cobblemon.mod.common.pokemon.properties.FreezeFrameProperty
 import com.cobblemon.mod.common.pokemon.properties.HiddenAbilityPropertyType
+import com.cobblemon.mod.common.pokemon.properties.NoAIProperty
 import com.cobblemon.mod.common.pokemon.properties.UnaspectPropertyType
 import com.cobblemon.mod.common.pokemon.properties.UncatchableProperty
 import com.cobblemon.mod.common.pokemon.properties.tags.PokemonFlagProperty
@@ -116,7 +106,6 @@ import com.cobblemon.mod.common.world.feature.CobblemonPlacedFeatures
 import com.cobblemon.mod.common.world.feature.ore.CobblemonOrePlacedFeatures
 import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules
 import com.mongodb.client.MongoClient
-import com.mongodb.client.MongoClients
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
@@ -287,6 +276,8 @@ object Cobblemon {
         CustomPokemonProperty.register(HiddenAbilityPropertyType)
         CustomPokemonProperty.register(AspectPropertyType)
         CustomPokemonProperty.register(UnaspectPropertyType)
+        CustomPokemonProperty.register(FreezeFrameProperty)
+        CustomPokemonProperty.register(NoAIProperty)
 
         ifDedicatedServer {
             isDedicatedServer = true

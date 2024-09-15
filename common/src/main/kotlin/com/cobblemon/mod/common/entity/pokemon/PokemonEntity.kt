@@ -145,6 +145,7 @@ open class PokemonEntity(
         @JvmStatic val COUNTS_TOWARDS_SPAWN_CAP = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.BOOLEAN)
         @JvmStatic val SPAWN_DIRECTION = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.FLOAT)
         @JvmStatic val FRIENDSHIP = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.INT)
+        @JvmStatic val FREEZE_FRAME = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.FLOAT)
 
         const val BATTLE_LOCK = "battle"
 
@@ -291,6 +292,7 @@ open class PokemonEntity(
         builder.define(SPAWN_DIRECTION, level().random.nextFloat() * 360F)
         builder.define(COUNTS_TOWARDS_SPAWN_CAP, true)
         builder.define(FRIENDSHIP, 0)
+        builder.define(FREEZE_FRAME, -1F)
     }
 
     override fun onSyncedDataUpdated(data: EntityDataAccessor<*>) {
@@ -524,6 +526,9 @@ open class PokemonEntity(
         if (!countsTowardsSpawnCap) {
             nbt.putBoolean(DataKeys.POKEMON_COUNTS_TOWARDS_SPAWN_CAP, false)
         }
+        if (entityData.get(FREEZE_FRAME) != -1F) {
+            nbt.putFloat(DataKeys.POKEMON_FREEZE_FRAME, entityData.get(FREEZE_FRAME))
+        }
 
         // save active effects
         nbt.put(DataKeys.ENTITY_EFFECTS, effects.saveToNbt(this.level().registryAccess()))
@@ -592,6 +597,9 @@ open class PokemonEntity(
         entityData.set(LABEL_LEVEL, pokemon.level)
         entityData.set(POSE_TYPE, PoseType.valueOf(nbt.getString(DataKeys.POKEMON_POSE_TYPE)))
         entityData.set(BEHAVIOUR_FLAGS, nbt.getByte(DataKeys.POKEMON_BEHAVIOUR_FLAGS))
+        if (nbt.contains(DataKeys.POKEMON_FREEZE_FRAME)) {
+            entityData.set(FREEZE_FRAME, nbt.getFloat(DataKeys.POKEMON_FREEZE_FRAME))
+        }
 
         if (nbt.contains(DataKeys.POKEMON_HIDE_LABEL)) {
             entityData.set(HIDE_LABEL, nbt.getBoolean(DataKeys.POKEMON_HIDE_LABEL))
@@ -638,11 +646,16 @@ open class PokemonEntity(
         goalSelector.addGoal(0, PokemonInBattleMovementGoal(this, 10))
         goalSelector.addGoal(0, object : Goal() {
             override fun canUse() =
-                this@PokemonEntity.entityData.get(PHASING_TARGET_ID) != -1 || pokemon.status?.status == Statuses.SLEEP || entityData.get(
-                    DYING_EFFECTS_STARTED
-                ) || evolutionEntity != null
+                isNoAi ||
+                        this@PokemonEntity.entityData.get(PHASING_TARGET_ID) != -1 ||
+                        pokemon.status?.status == Statuses.SLEEP ||
+                        entityData.get(DYING_EFFECTS_STARTED) ||
+                        evolutionEntity != null
 
             override fun canContinueToUse(): Boolean {
+                if (isNoAi) {
+                    return true
+                }
                 if (pokemon.status?.status == Statuses.SLEEP && !canSleep() && !isBusy) {
                     return false
                 } else if (pokemon.status?.status == Statuses.SLEEP || isBusy) {
