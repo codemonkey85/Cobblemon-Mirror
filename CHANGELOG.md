@@ -111,6 +111,12 @@
 - Fixed Model loader generating misleading crash-reports when client is crashing
 - Big Roots and Energy Roots now share the same sounds as intented.
 - Fixed sounds made by blocks playing at a lower pitch than intended.
+- Fixed Chimchar and Monferno T posing whenever they sleep.
+- Fixed the Magby line not having any placeholder walk animations.
+- Fixed Duskull and Dusclops using skylight levels for their nether spawn data. There is no sun in the Nether!
+- Fixed Hisuian Zoroark using base Zoroark stats.
+- Fixed Bellossom clipping into the player head when shoulder mounted.
+- Fixed Shroomish's look range to prevent it from looking higher than it should.
 - Fixed Maushold's faint animations not playing. It's sadder than Tandemaus! 
 - Fixed Slowking's battle idle. 
 - Fixed Grafaiai's walk speed to prevent model sliding. 
