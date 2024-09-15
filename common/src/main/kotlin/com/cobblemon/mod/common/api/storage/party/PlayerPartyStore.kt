@@ -28,6 +28,7 @@ import java.util.*
 import kotlin.math.ceil
 import kotlin.math.round
 import kotlin.random.Random
+import net.minecraft.core.RegistryAccess
 
 /**
  * A [PartyStore] used for a single player. This uses the player's UUID as the store's UUID, and is declared as its own
@@ -53,8 +54,8 @@ open class PlayerPartyStore(
         observerUUIDs.add(playerUUID)
     }
 
-    open fun getOverflowPC(): PCStore? {
-        return Cobblemon.storage.getPC(playerUUID)
+    open fun getOverflowPC(registryAccess: RegistryAccess): PCStore? {
+        return Cobblemon.storage.getPC(playerUUID, registryAccess)
     }
 
     override fun add(pokemon: Pokemon): Boolean {
@@ -68,7 +69,7 @@ open class PlayerPartyStore(
             true
         } else {
             val player = playerUUID.getPlayer()
-            val pc = getOverflowPC()
+            val pc = getOverflowPC(player?.server?.registryAccess() ?: server()!!.registryAccess())
 
             if (pc == null || !pc.add(pokemon)) {
                 if (pc == null) {

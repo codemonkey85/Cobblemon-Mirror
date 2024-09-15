@@ -376,9 +376,10 @@ open class PokemonEntity(
         //Before, pokemon entities in pastures would hold an old ref to a pokemon obj and changes to that would not appear to the underlying file
         if (this.tethering != null) {
             //Only for online players
-            if (level().getPlayerByUUID(ownerUUID) != null) {
+            val player = level().getPlayerByUUID(ownerUUID) as? ServerPlayer
+            if (player != null) {
                 this.ownerUUID?.let {
-                    val actualPokemon = Cobblemon.storage.getPC(it)[this.pokemon.uuid]
+                    val actualPokemon = Cobblemon.storage.getPC(player)[this.pokemon.uuid]
                     actualPokemon?.let {
                         if (it !== pokemon) {
                             pokemon = it
@@ -505,7 +506,7 @@ open class PokemonEntity(
             tetheringNbt.put(DataKeys.TETHER_MAX_ROAM_POS, NbtUtils.writeBlockPos(tethering.maxRoamPos))
             nbt.put(DataKeys.TETHERING, tetheringNbt)
         } else {
-            nbt.put(DataKeys.POKEMON, pokemon.saveToNBT())
+            nbt.put(DataKeys.POKEMON, pokemon.saveToNBT(registryAccess()))
         }
         val battleIdToSave = battleId
         if (battleIdToSave != null) {
@@ -543,7 +544,7 @@ open class PokemonEntity(
             val minRoamPos = NbtUtils.readBlockPos(tetheringNBT, DataKeys.TETHER_MIN_ROAM_POS).get()
             val maxRoamPos = NbtUtils.readBlockPos(tetheringNBT, DataKeys.TETHER_MAX_ROAM_POS).get()
 
-            val loadedPokemon = Cobblemon.storage.getPC(pcId)[pokemonId]
+            val loadedPokemon = Cobblemon.storage.getPC(pcId, registryAccess())[pokemonId]
             if (loadedPokemon != null && loadedPokemon.tetheringId == tetheringId) {
                 pokemon = loadedPokemon
                 tethering = PokemonPastureBlockEntity.Tethering(
@@ -561,8 +562,9 @@ open class PokemonEntity(
                 health = 0F
             }
         } else {
+            val ops = registryAccess().createSerializationContext(NbtOps.INSTANCE)
             pokemon = try {
-                this.sidedCodec().decode(NbtOps.INSTANCE, nbt.getCompound(DataKeys.POKEMON)).orThrow.first
+                this.sidedCodec().decode(ops, nbt.getCompound(DataKeys.POKEMON)).orThrow.first
             } catch (_: IllegalStateException) {
                 health = 0F
                 this.createSidedPokemon()

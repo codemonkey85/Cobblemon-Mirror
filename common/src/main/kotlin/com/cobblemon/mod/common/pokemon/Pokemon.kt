@@ -98,7 +98,9 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.random.Random
 import net.minecraft.core.BlockPos
+import net.minecraft.core.RegistryAccess
 import net.minecraft.nbt.*
+import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.contents.PlainTextContents
 import net.minecraft.network.codec.ByteBufCodecs
@@ -882,21 +884,23 @@ open class Pokemon : ShowdownIdentifiable {
      */
     fun removeHeldItem(): ItemStack = this.swapHeldItem(ItemStack.EMPTY)
 
-    fun saveToNBT(nbt: CompoundTag = CompoundTag()): CompoundTag {
-        return this.saveTo(NbtOps.INSTANCE, nbt).orThrow as CompoundTag
+    fun saveToNBT(registryAccess: RegistryAccess, nbt: CompoundTag = CompoundTag()): CompoundTag {
+        return this.saveTo(registryAccess.createSerializationContext(NbtOps.INSTANCE), nbt).orThrow as CompoundTag
     }
 
-    fun loadFromNBT(nbt: CompoundTag): Pokemon {
-        this.loadFrom(NbtOps.INSTANCE, nbt)
+    fun loadFromNBT(registryAccess: RegistryAccess, nbt: CompoundTag): Pokemon {
+        this.loadFrom(registryAccess.createSerializationContext(NbtOps.INSTANCE), nbt)
         return this
     }
 
-    fun saveToJSON(json: JsonObject = JsonObject()): JsonObject {
-        return this.saveTo(JsonOps.INSTANCE, json).orThrow as JsonObject
+    fun saveToJSON(registryAccess: RegistryAccess, json: JsonObject = JsonObject()): JsonObject {
+        val ops = registryAccess.createSerializationContext(JsonOps.INSTANCE)
+        return this.saveTo(ops, json).orThrow as JsonObject
     }
 
-    fun loadFromJSON(json: JsonObject): Pokemon {
-        this.loadFrom(JsonOps.INSTANCE, json)
+    fun loadFromJSON(registryAccess: RegistryAccess, json: JsonObject): Pokemon {
+        val ops = registryAccess.createSerializationContext(JsonOps.INSTANCE)
+        this.loadFrom(ops, json)
         return this
     }
 
@@ -1581,12 +1585,12 @@ open class Pokemon : ShowdownIdentifiable {
         var LEVEL_UP_FRIENDSHIP_CALCULATOR = FriendshipMutationCalculator.SWORD_AND_SHIELD_LEVEL_UP
         internal val SHEDINJA = cobblemonResource("shedinja")
 
-        fun loadFromNBT(compound: CompoundTag): Pokemon {
-            return this.loadFrom(NbtOps.INSTANCE, compound).orThrow.first
+        fun loadFromNBT(registryAccess: RegistryAccess, compound: CompoundTag): Pokemon {
+            return this.loadFrom(registryAccess.createSerializationContext(NbtOps.INSTANCE), compound).orThrow.first
         }
 
-        fun loadFromJSON(json: JsonObject): Pokemon {
-            return this.loadFrom(JsonOps.INSTANCE, json).orThrow.first
+        fun loadFromJSON(registryAccess: RegistryAccess, json: JsonObject): Pokemon {
+            return this.loadFrom(registryAccess.createSerializationContext(JsonOps.INSTANCE), json).orThrow.first
         }
 
         private fun <T> loadFrom(ops: DynamicOps<T>, data: T): DataResult<Pair<Pokemon, T>> {
@@ -1637,7 +1641,7 @@ open class Pokemon : ShowdownIdentifiable {
          * A [Codec] for [Pokemon] intended for S2C use.
          */
         @JvmStatic
-        val S2C_CODEC: StreamCodec<ByteBuf, Pokemon> = ByteBufCodecs.fromCodecTrusted(CLIENT_CODEC)
+        val S2C_CODEC: StreamCodec<RegistryFriendlyByteBuf, Pokemon> = ByteBufCodecs.fromCodecWithRegistries(CLIENT_CODEC)
 
     }
 }

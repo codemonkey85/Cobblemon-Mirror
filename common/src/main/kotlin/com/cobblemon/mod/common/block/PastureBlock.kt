@@ -255,10 +255,11 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), SimpleWater
             world.getBlockEntity(basePos.above())?.setRemoved()
 
             val baseEntity = world.getBlockEntity(basePos)
-            if (baseEntity !is PokemonPastureBlockEntity) return InteractionResult.SUCCESS
+            if (baseEntity !is PokemonPastureBlockEntity) {
+                return InteractionResult.SUCCESS
+            }
 
-
-            val pcId = Cobblemon.storage.getPC(player.uuid).uuid
+            val pcId = Cobblemon.storage.getPC(player).uuid
             val linkId = UUID.randomUUID()
 
             val perms = PasturePermissionControllers.permit(player, baseEntity)
