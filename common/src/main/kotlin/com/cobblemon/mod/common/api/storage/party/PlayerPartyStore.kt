@@ -104,17 +104,17 @@ open class PlayerPartyStore(
                 if (pokemon.isFainted()) {
                     pokemon.faintedTimer -= 1
                     if (pokemon.faintedTimer <= -1) {
-                        val php = ceil(pokemon.hp * Cobblemon.config.faintAwakenHealthPercent)
+                        val php = ceil(pokemon.maxHealth * Cobblemon.config.faintAwakenHealthPercent)
                         pokemon.currentHealth = php.toInt()
                         player.sendSystemMessage(Component.translatable("cobblemon.party.faintRecover", pokemon.getDisplayName()))
                     }
                 }
                 // Passive healing while less than full health
-                else if (pokemon.currentHealth < pokemon.hp) {
+                else if (pokemon.currentHealth < pokemon.maxHealth) {
                     pokemon.healTimer--
                     if (pokemon.healTimer <= -1) {
                         pokemon.healTimer = Cobblemon.config.healTimer
-                        val healAmount = 1.0.coerceAtLeast(pokemon.hp.toDouble() * Cobblemon.config.healPercent)
+                        val healAmount = 1.0.coerceAtLeast(pokemon.maxHealth.toDouble() * Cobblemon.config.healPercent)
                         pokemon.currentHealth = pokemon.currentHealth + round(healAmount).toInt()
                     }
                 }

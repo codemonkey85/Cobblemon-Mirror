@@ -52,7 +52,7 @@ class HealingBerryItem(block: BerryBlock, val amount: () -> ExpressionLike): Ber
             return InteractionResultHolder.fail(stack)
         }
 
-        pokemon.currentHealth = Integer.min(pokemon.currentHealth + genericRuntime.resolveInt(amount(), pokemon), pokemon.hp)
+        pokemon.currentHealth = Integer.min(pokemon.currentHealth + genericRuntime.resolveInt(amount(), pokemon), pokemon.maxHealth)
         player.playSound(CobblemonSounds.BERRY_EAT, 1F, 1F)
         if (!player.isCreative) {
             stack.shrink(1)

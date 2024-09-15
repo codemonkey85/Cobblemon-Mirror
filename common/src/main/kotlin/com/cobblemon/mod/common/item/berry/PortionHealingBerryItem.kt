@@ -54,7 +54,7 @@ class PortionHealingBerryItem(block: BerryBlock, val canCauseConfusion: Boolean,
             return InteractionResultHolder.fail(stack)
         }
 
-        pokemon.currentHealth = Integer.min(pokemon.currentHealth + (genericRuntime.resolveFloat(portion(), pokemon) * pokemon.hp).toInt(), pokemon.hp)
+        pokemon.currentHealth = Integer.min(pokemon.currentHealth + (genericRuntime.resolveFloat(portion(), pokemon) * pokemon.maxHealth).toInt(), pokemon.maxHealth)
         player.playSound(CobblemonSounds.BERRY_EAT, 1F, 1F)
         if (!player.isCreative) {
             stack.shrink(1)

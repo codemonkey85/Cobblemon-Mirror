@@ -10,7 +10,6 @@ package com.cobblemon.mod.common.item
 
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.CobblemonMechanics
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
@@ -69,7 +68,7 @@ class RevivalHerbItem(block: RevivalHerbBlock) : ItemNameBlockItem(block, Proper
     ): InteractionResultHolder<ItemStack>? {
         return if (pokemon.isFainted()) {
             player.playSound(CobblemonSounds.MEDICINE_HERB_USE, 1F, 1F)
-            pokemon.currentHealth = ceil(pokemon.hp / 4F).toInt()
+            pokemon.currentHealth = ceil(pokemon.maxHealth / 4F).toInt()
             pokemon.decrementFriendship(CobblemonMechanics.remedies.getFriendshipDrop(runtime))
             if (!player.isCreative) {
                 stack.shrink(1)

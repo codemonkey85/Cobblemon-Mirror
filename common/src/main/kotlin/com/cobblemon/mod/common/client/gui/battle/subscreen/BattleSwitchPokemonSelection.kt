@@ -66,7 +66,7 @@ class BattleSwitchPokemonSelection(
                 val (hp, maxHp) = if (healthRatioSplits.size == 1) {
                     0 to 0
                 } else {
-                    healthRatioSplits[0].toInt() to pokemon.hp
+                    healthRatioSplits[0].toInt() to pokemon.maxHealth
                 }
                 CobblemonClient.battleOverlay.drawBattleTile(
                     context = context,

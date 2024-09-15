@@ -8,8 +8,6 @@
 
 package com.cobblemon.mod.common.item.interactive
 
-import com.bedrockk.molang.Expression
-import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
@@ -52,7 +50,7 @@ class PotionItem(val type: PotionType) : CobblemonItem(Properties()), PokemonSel
         }
 
         val healthToRestore = genericRuntime.resolveInt(type.amountToHeal())
-        pokemon.currentHealth = min(pokemon.currentHealth + healthToRestore, pokemon.hp)
+        pokemon.currentHealth = min(pokemon.currentHealth + healthToRestore, pokemon.maxHealth)
         if (type.curesStatus) {
             pokemon.status = null
         }

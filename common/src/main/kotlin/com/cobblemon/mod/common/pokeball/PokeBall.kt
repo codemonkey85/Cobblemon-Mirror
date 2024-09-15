@@ -49,7 +49,7 @@ open class PokeBall(
         ItemStack(this.item(), count)
 
     @Deprecated("This is a temporary solution for the safari ball dilemma", ReplaceWith("target.currentHealth"))
-    internal fun hpForCalculation(target: Pokemon): Int = if (this.name == PokeBalls.SAFARI_BALL.name) target.hp else target.currentHealth
+    internal fun hpForCalculation(target: Pokemon): Int = if (this.name == PokeBalls.SAFARI_BALL.name) target.maxHealth else target.currentHealth
 
     companion object {
 

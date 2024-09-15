@@ -130,7 +130,9 @@
 
 ### Developer
 - SpawnCause is now an implementation of SpawningInfluence.
+- Renamed Pokemon.hp to Pokemon.maxHealth to make it clearer. Backwards compatibility is provided but it is an active deprecation, please migrate away from it.
 - Many types related to ``Pokemon`` including itself now have dedicated ``Codec``, please migrate to them from the NBT/JSON/PacketBuffer write/read methods.
+- Serialization of PokemonStores and Pokemon themselves now require registry access, which will break some sidemods. This sucked for us more than it will suck for you! If you have a world or player instance, you can get it from there.
 - ``TeraTypes`` now implements ``Iterable``.
 - PokemonBattle now starts on turn 0.
 - All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.

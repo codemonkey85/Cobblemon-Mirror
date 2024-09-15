@@ -89,7 +89,6 @@ import com.mojang.serialization.DataResult
 import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.JsonOps
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import io.netty.buffer.ByteBuf
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import kotlin.math.absoluteValue
@@ -137,7 +136,7 @@ open class Pokemon : ShowdownIdentifiable {
             if (PokemonSpecies.getByIdentifier(value.resourceIdentifier) == null) {
                 throw IllegalArgumentException("Cannot set a species that isn't registered")
             }
-            val quotient = clamp(currentHealth / hp.toFloat(), 0F, 1F)
+            val quotient = clamp(currentHealth / maxHealth.toFloat(), 0F, 1F)
             field = value
             if (!isClient) {
                 val newFeatures = SpeciesFeatures.getFeaturesFor(species).mapNotNull { it.invoke(this) }
@@ -158,7 +157,7 @@ open class Pokemon : ShowdownIdentifiable {
             val old = field
             // Species updates already update HP but just a form change may require it
             // Moved to before the field was set else it won't actually do the hp calc proper <3
-            val quotient = clamp(currentHealth / hp.toFloat(), 0F, 1F)
+            val quotient = clamp(currentHealth / maxHealth.toFloat(), 0F, 1F)
             field = value
             this.sanitizeFormChangeMoves(old)
             // Evo proxy is already cleared on species update but the form may be changed by itself, this is fine and no unnecessary packets will be sent out
@@ -180,7 +179,7 @@ open class Pokemon : ShowdownIdentifiable {
         internal set
 
     fun setIV(stat : Stat, value : Int) {
-        val quotient = clamp(currentHealth / hp.toFloat(), 0F, 1F)
+        val quotient = clamp(currentHealth / maxHealth.toFloat(), 0F, 1F)
         ivs[stat] = value
         if(stat == Stats.HP) {
             updateHP(quotient)
@@ -189,7 +188,7 @@ open class Pokemon : ShowdownIdentifiable {
     }
 
     fun setEV(stat: Stat, value : Int) {
-        val quotient = clamp(currentHealth / hp.toFloat(), 0F, 1F)
+        val quotient = clamp(currentHealth / maxHealth.toFloat(), 0F, 1F)
         evs[stat] = value
         if(stat == Stats.HP) {
             updateHP(quotient)
@@ -208,7 +207,7 @@ open class Pokemon : ShowdownIdentifiable {
     var level = 1
         set(value) {
             val boundedValue = clamp(value, 1, Cobblemon.config.maxPokemonLevel)
-            val hpRatio = (currentHealth / hp.toFloat()).coerceIn(0F, 1F)
+            val hpRatio = (currentHealth / maxHealth.toFloat()).coerceIn(0F, 1F)
             /*
              * When people set the level programmatically the experience value will become incorrect.
              * Specifically check for when there's a mismatch and update the experience.
@@ -219,10 +218,10 @@ open class Pokemon : ShowdownIdentifiable {
             }
 //            _level.emit(value)
 
-            currentHealth = ceil(hpRatio * hp).coerceIn(0..hp)
+            currentHealth = ceil(hpRatio * maxHealth).coerceIn(0..maxHealth)
         }
 
-    var currentHealth = this.hp
+    var currentHealth = this.maxHealth
         set(value) {
             if (value == field) {
                 return
@@ -232,7 +231,7 @@ open class Pokemon : ShowdownIdentifiable {
                 entity?.health = 0F
                 status = null
             }
-            field = max(min(hp, value), 0)
+            field = max(min(maxHealth, value), 0)
             _currentHealth.emit(field)
 
             // If the Pokémon is fainted, give it a timer for it to wake back up
@@ -417,8 +416,11 @@ open class Pokemon : ShowdownIdentifiable {
             field = value
         }
 
-    val hp: Int
+    val maxHealth: Int
         get() = getStat(Stats.HP)
+    @Deprecated("Use maxHealth instead", ReplaceWith("maxHealth"), level = DeprecationLevel.WARNING)
+    val hp: Int
+        get() = maxHealth
     val attack: Int
         get() = getStat(Stats.ATTACK)
     val defence: Int
@@ -702,7 +704,7 @@ open class Pokemon : ShowdownIdentifiable {
     }
 
     fun heal() {
-        this.currentHealth = hp
+        this.currentHealth = maxHealth
         this.moveSet.heal()
         this.status = null
         this.faintedTimer = -1
@@ -711,10 +713,10 @@ open class Pokemon : ShowdownIdentifiable {
         entity?.heal(entity.maxHealth - entity.health)
     }
 
-    fun isFullHealth() = this.currentHealth == this.hp
+    fun isFullHealth() = this.currentHealth == this.maxHealth
 
     fun didSleep() {
-        this.currentHealth = min((currentHealth + (hp / 2)), hp)
+        this.currentHealth = min((currentHealth + (maxHealth / 2)), maxHealth)
         this.status = null
         this.faintedTimer = -1
         this.healTimer = -1
@@ -729,12 +731,12 @@ open class Pokemon : ShowdownIdentifiable {
      *
      * @return If this Pokémon can be healed.
      */
-    fun canBeHealed() = this.hp != this.currentHealth || this.status != null || this.moveSet.any { move -> move.currentPp != move.maxPp }
+    fun canBeHealed() = this.maxHealth != this.currentHealth || this.status != null || this.moveSet.any { move -> move.currentPp != move.maxPp }
 
     fun isFainted() = currentHealth <= 0
 
     private fun updateHP(quotient: Float) {
-        currentHealth = (hp * quotient).roundToInt()
+        currentHealth = (maxHealth * quotient).roundToInt()
     }
 
     fun applyStatus(status: PersistentStatus) {
@@ -1492,7 +1494,7 @@ open class Pokemon : ShowdownIdentifiable {
 
     fun writeVariables(struct: VariableStruct) {
         struct.setDirectly("level", DoubleValue(level.toDouble()))
-        struct.setDirectly("max_hp", DoubleValue(hp.toDouble()))
+        struct.setDirectly("max_hp", DoubleValue(maxHealth.toDouble()))
         struct.setDirectly("current_hp", DoubleValue(currentHealth.toDouble()))
         struct.setDirectly("friendship", DoubleValue(friendship.toDouble()))
         struct.setDirectly("shiny", DoubleValue(shiny))
