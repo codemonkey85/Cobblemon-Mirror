@@ -366,7 +366,7 @@ object Cobblemon {
         }
 
         PlatformEvents.SERVER_STOPPED.subscribe {
-            storage.unregisterAll()
+            storage.unregisterAll(it.server.registryAccess())
             playerDataManager.saveAllStores()
         }
         PlatformEvents.SERVER_STARTED.subscribe {

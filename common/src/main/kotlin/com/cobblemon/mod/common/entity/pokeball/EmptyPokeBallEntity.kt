@@ -334,7 +334,7 @@ class EmptyPokeBallEntity : ThrowableItemProjectile, PosableEntity, WaterDragMod
                         pokemon.discard()
                         discard()
                         captureFuture.complete(true)
-                        val party = Cobblemon.storage.getParty(player.uuid)
+                        val party = player.party()
                         pokemon.pokemon.caughtBall = pokeBall
                         pokeBall.effects.forEach { effect -> effect.apply(player, pokemon.pokemon) }
                         party.add(pokemon.pokemon)

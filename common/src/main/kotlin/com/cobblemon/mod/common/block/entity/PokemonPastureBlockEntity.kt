@@ -25,7 +25,10 @@ import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.DataKeys
 import com.cobblemon.mod.common.util.lang
+import com.cobblemon.mod.common.util.server
 import com.cobblemon.mod.common.util.toVec3d
+import java.util.*
+import kotlin.math.ceil
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.HolderLookup
@@ -47,8 +50,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.phys.AABB
-import java.util.*
-import kotlin.math.ceil
 
 class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
     BlockEntity(CobblemonBlockEntities.PASTURE, pos, state) {
@@ -62,7 +63,7 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
         val pcId: UUID,
         val entityId: Int
     ) {
-        fun getPokemon() = Cobblemon.storage.getPC(pcId)[pokemonId]
+        fun getPokemon() = Cobblemon.storage.getPC(pcId, server()!!.registryAccess())[pokemonId]
         val box = AABB(minRoamPos.toVec3d(), maxRoamPos.toVec3d())
         open fun canRoamTo(pos: BlockPos) = box.contains(pos.center)
 
@@ -149,7 +150,7 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
             val fixedPosition = makeSuitableY(world, idealPlace.offset(directionToBehind.normal.multiply(i + 1)), entity, box)
             if (fixedPosition != null) {
                 entity.setPos(fixedPosition.center.subtract(0.0, 0.5, 0.0))
-                val pc = Cobblemon.storage.getPC(player.uuid)
+                val pc = Cobblemon.storage.getPC(player)
                 entity.beamMode = 2
                 afterOnServer(seconds = SendOutPokemonHandler.SEND_OUT_DURATION) {
                     entity.beamMode = 0

@@ -25,7 +25,7 @@ object PasturePokemonHandler : ServerNetworkPacketHandler<PasturePokemonPacket> 
         if (pastureLink.linkId != packet.pastureId) {
             return player.sendPacket(ClosePasturePacket())
         }
-        val pc = Cobblemon.storage.getPC(pastureLink.pcId)
+        val pc = Cobblemon.storage.getPC(pastureLink.pcId, player.registryAccess())
         val pokemon = pc[packet.pokemonId] ?: return
 
         val pastureBlockEntity = player.level().getBlockEntity(pastureLink.pos) as? PokemonPastureBlockEntity ?: return
