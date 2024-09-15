@@ -29,6 +29,8 @@ object CobblemonItemTags {
     val APRICORN_SPROUTS = create("apricorn_sprouts")
     @JvmField
     val APRICORNS = create("apricorns")
+    @JvmField
+    val POKEDEX = create("pokedex")
     /**
      * This tag is only used for a Torterra aspect based easter egg evolution at the moment.
      * It simply includes the 'minecraft:azalea' and 'minecraft:flowering_azalea' items by default.
