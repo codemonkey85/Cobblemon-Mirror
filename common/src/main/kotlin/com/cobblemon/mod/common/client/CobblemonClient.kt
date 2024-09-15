@@ -14,6 +14,7 @@ import com.cobblemon.mod.common.api.berry.Berries
 import com.cobblemon.mod.common.api.scheduling.ClientTaskTracker
 import com.cobblemon.mod.common.api.storage.player.client.ClientPokedexManager
 import com.cobblemon.mod.common.api.storage.player.client.ClientGeneralPlayerData
+import com.cobblemon.mod.common.api.tags.CobblemonItemTags
 import com.cobblemon.mod.common.client.battle.ClientBattle
 import com.cobblemon.mod.common.client.gui.PartyOverlay
 import com.cobblemon.mod.common.client.gui.battle.BattleOverlay
@@ -128,6 +129,14 @@ object CobblemonClient {
         }
 
         PlatformEvents.CLIENT_ENTITY_UNLOAD.subscribe { event -> EntitySoundTracker.clear(event.entity.id) }
+        PlatformEvents.CLIENT_TICK_POST.subscribe { event ->
+            if (pokedexUsageContext.scanningGuiOpen &&
+                event.client.player?.inventory?.getItem(event.client.player!!.inventory.selected)?.`is`(CobblemonItemTags.POKEDEX) != true
+            ) {
+                //dont open scanner if player switches off the dex via hotbar
+                pokedexUsageContext.stopUsing(event.client.player!!, PokedexUsageContext.TIME_TO_OPEN_SCANNER + 1)
+            }
+        }
     }
 
     private fun registerTooltipManagers() {
