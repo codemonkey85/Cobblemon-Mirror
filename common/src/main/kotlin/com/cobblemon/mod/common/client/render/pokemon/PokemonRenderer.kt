@@ -97,7 +97,14 @@ context: EntityRendererProvider.Context
         model.setupEntityTypeContext(entity)
         val clientDelegate = entity.delegate as PokemonClientDelegate
         val modelNow = model.posableModel
-        clientDelegate.updatePartialTicks(partialTicks)
+
+        val freezeFrame = entity.entityData.get(PokemonEntity.FREEZE_FRAME)
+        if (freezeFrame != -1F) {
+            clientDelegate.updateAge(0)
+            clientDelegate.updatePartialTicks(freezeFrame * 20F)
+        } else {
+            clientDelegate.updatePartialTicks(partialTicks)
+        }
 
         if (entity.beamMode != 0 && !Minecraft.getInstance().isPaused) {
             renderTransition(

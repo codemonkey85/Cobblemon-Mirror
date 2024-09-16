@@ -27,6 +27,8 @@
 - Added a Nurse profession that can be unlocked by having villagers claim a healing machine block.
 - Added a `natural` block state property for the healing machine block; when property is set to true, the block will have a different texture and drop an iron ingot instead of itself.
 - New config setting `displayEntityNameLabel` to show the pokemons name when looking at them
+- /freezepokemon command to pause a Pokémon's animation at a specific point in time.
+- Added no_ai and freeze_frame options to the /spawnpokemon command.
 
 ### Pokémon Added
 #### Gen 2
