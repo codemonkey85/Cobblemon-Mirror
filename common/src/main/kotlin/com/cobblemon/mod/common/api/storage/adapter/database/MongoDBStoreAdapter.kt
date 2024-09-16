@@ -22,9 +22,10 @@ import com.google.gson.JsonObject
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.ReplaceOptions
+import java.util.*
+import net.minecraft.core.RegistryAccess
 import net.minecraft.world.level.storage.LevelResource
 import org.bson.Document
-import java.util.*
 
 /**
  * A [FileStoreAdapter] for MongoDB. This allows a [PokemonStore] to be serialized to a MongoDB database.
@@ -40,7 +41,7 @@ open class MongoDBStoreAdapter(
 
     protected val gson: Gson = this.createGson()
 
-    override fun <E : StorePosition, T : PokemonStore<E>> serialize(store: T): JsonObject = store.saveToJSON(JsonObject())
+    override fun <E : StorePosition, T : PokemonStore<E>> serialize(store: T, registryAccess: RegistryAccess): JsonObject = store.saveToJSON(JsonObject(), registryAccess)
 
     override fun save(storeClass: Class<out PokemonStore<*>>, uuid: UUID, serialized: JsonObject) {
         val document = Document.parse(this.gson.toJson(serialized))
@@ -51,7 +52,7 @@ open class MongoDBStoreAdapter(
         collection.replaceOne(filter, document, ReplaceOptions().upsert(true))
     }
 
-    override fun <E : StorePosition, T : PokemonStore<E>> provide(storeClass: Class<T>, uuid: UUID): T? {
+    override fun <E : StorePosition, T : PokemonStore<E>> provide(storeClass: Class<T>, uuid: UUID, registryAccess: RegistryAccess): T? {
         val server = server()!!
         val pokemonStoreRoot = server.getWorldPath(LevelResource.ROOT).resolve("pokemon").toFile()
         val jsonAdapter = JSONStoreAdapter(
@@ -73,20 +74,20 @@ open class MongoDBStoreAdapter(
             } catch (exception: NoSuchMethodException) {
                 storeClass.getConstructor(UUID::class.java).newInstance(uuid)
             }
-            store.loadFromJSON(json)
+            store.loadFromJSON(json, registryAccess)
             return store
         }
 
         // 2. Fallback to checking JSON and NBT
-        val nbtStore = nbtAdapter.provide(storeClass, uuid)
+        val nbtStore = nbtAdapter.provide(storeClass, uuid, registryAccess)
         if (nbtStore != null) {
-            save(storeClass, uuid, serialize(nbtStore))
+            save(storeClass, uuid, serialize(nbtStore, registryAccess))
             return nbtStore
         }
 
-        val jsonStore = jsonAdapter.provide(storeClass, uuid)
+        val jsonStore = jsonAdapter.provide(storeClass, uuid, registryAccess)
         if (jsonStore != null) {
-            save(storeClass, uuid, serialize(jsonStore))
+            save(storeClass, uuid, serialize(jsonStore, registryAccess))
             return jsonStore
         }
 

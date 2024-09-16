@@ -26,6 +26,7 @@ import com.cobblemon.mod.common.pokemon.IVs
 import com.cobblemon.mod.common.pokemon.Pokemon
 import java.nio.file.Path
 import java.util.UUID
+import net.minecraft.core.RegistryAccess
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtIo
 import net.minecraft.resources.ResourceLocation
@@ -38,8 +39,8 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<CompoundTag> {
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <E : StorePosition, T : PokemonStore<E>> load(storeClass: Class<T>, uuid: UUID): T? {
-        val extension = if (storeClass.simpleName.lowercase() == "playerpartystore") "pk" else ("comp")
+    override fun <E : StorePosition, T : PokemonStore<E>> load(storeClass: Class<T>, uuid: UUID, registryAccess: RegistryAccess): T? {
+        val extension = if (storeClass.simpleName.lowercase() == "playerpartystore") "pk" else "comp"
         val target = this.root().resolve("$uuid.$extension")
 
         if (!this.exists(target)) {

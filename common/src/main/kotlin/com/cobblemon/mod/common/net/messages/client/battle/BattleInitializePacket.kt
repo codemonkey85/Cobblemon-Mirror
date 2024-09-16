@@ -33,7 +33,6 @@ import java.util.UUID
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.network.chat.MutableComponent
-import kotlin.properties.Delegates
 
 /**
  * Initializes the client's understanding of a battle. This can be for a participant or for a spectator.
@@ -163,7 +162,7 @@ class BattleInitializePacket() : NetworkPacket<BattleInitializePacket> {
             fun fromPokemon(battlePokemon: BattlePokemon, isAlly: Boolean, illusion: BattlePokemon? = null): ActiveBattlePokemonDTO {
                 val pokemon = battlePokemon.effectedPokemon
                 val exposed = if (isAlly) pokemon else illusion?.effectedPokemon ?: pokemon
-                val hpValue = if (isAlly) pokemon.currentHealth.toFloat() else pokemon.currentHealth.toFloat() / pokemon.hp
+                val hpValue = if (isAlly) pokemon.currentHealth.toFloat() else pokemon.currentHealth.toFloat() / pokemon.maxHealth
                 return ActiveBattlePokemonDTO(
                     uuid = exposed.uuid,
                     displayName = exposed.getDisplayName(),
@@ -176,7 +175,7 @@ class BattleInitializePacket() : NetworkPacket<BattleInitializePacket> {
                     aspects = exposed.aspects,
                     status = pokemon.status?.status,
                     hpValue = hpValue,
-                    maxHp = pokemon.hp.toFloat(),
+                    maxHp = pokemon.maxHealth.toFloat(),
                     isFlatHp = isAlly,
                     statChanges = battlePokemon.statChanges
                 )
@@ -184,7 +183,7 @@ class BattleInitializePacket() : NetworkPacket<BattleInitializePacket> {
 
             fun fromMock(battlePokemon: BattlePokemon, isAlly: Boolean, mock: PokemonProperties): ActiveBattlePokemonDTO {
                 val pokemon = battlePokemon.effectedPokemon
-                val hpValue = if (isAlly) pokemon.currentHealth.toFloat() else pokemon.currentHealth.toFloat() / pokemon.hp
+                val hpValue = if (isAlly) pokemon.currentHealth.toFloat() else pokemon.currentHealth.toFloat() / pokemon.maxHealth
                 return ActiveBattlePokemonDTO(
                     uuid = battlePokemon.uuid,
                     displayName = pokemon.getDisplayName(),
@@ -192,7 +191,7 @@ class BattleInitializePacket() : NetworkPacket<BattleInitializePacket> {
                     aspects = mock.aspects,
                     status = pokemon.status?.status,
                     hpValue = hpValue,
-                    maxHp = pokemon.hp.toFloat(),
+                    maxHp = pokemon.maxHealth.toFloat(),
                     isFlatHp = isAlly,
                     statChanges = battlePokemon.statChanges
                 )

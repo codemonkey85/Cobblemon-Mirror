@@ -129,7 +129,7 @@ class PartySlotWidget(
                 )
             }
 
-            val hpRatio = slotPokemon.currentHealth / slotPokemon.hp.toFloat()
+            val hpRatio = slotPokemon.currentHealth / slotPokemon.maxHealth.toFloat()
             val barWidthMax = 37
             val barWidth = hpRatio * barWidthMax
             val (red, green) = getDepletableRedGreen(hpRatio)

@@ -35,7 +35,7 @@ publish:
       - neoforge/build/libs/*.jar
       - fabric/build/libs/*.jar
   rules:
-    - if: '$CI_COMMIT_BRANCH == "sega_bass_pro_fishing_2"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
   script:
     - export GRADLE_OPTS="-Xmx4G -Xms4G"
     - chmod +x ./gradlew

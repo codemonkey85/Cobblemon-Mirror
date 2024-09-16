@@ -68,7 +68,7 @@ object Gen3And4CaptureCalculator : CaptureCalculator {
             if (validModifier) pokeBall.catchRateModifier.value(thrower, pokemon) else 1F
         }
 
-        val modifiedCatchRate = (pokeBall.catchRateModifier.behavior(thrower, pokemon).mutator((3F * pokemon.hp - 2F * pokemon.currentHealth) * rate, ballBonus) / (3F * pokemon.hp)) * bonusStatus
+        val modifiedCatchRate = (pokeBall.catchRateModifier.behavior(thrower, pokemon).mutator((3F * pokemon.maxHealth - 2F * pokemon.currentHealth) * rate, ballBonus) / (3F * pokemon.maxHealth)) * bonusStatus
         val shakeProbability = (1048560F / sqrt(sqrt((16711680F / modifiedCatchRate).roundToInt().toDouble())).roundToInt()).roundToInt()
         var shakes = 0
         repeat(4) {

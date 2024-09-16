@@ -19,6 +19,7 @@ import java.io.File
 import java.io.FileReader
 import java.io.PrintWriter
 import java.util.UUID
+import net.minecraft.core.RegistryAccess
 
 /**
  * A [FileStoreAdapter] for JSON files. This allows a [PokemonStore] to be serialized to a .json file. This is usually
@@ -33,7 +34,7 @@ open class JSONStoreAdapter(
     folderPerClass: Boolean,
     private val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
 ) : OneToOneFileStoreAdapter<JsonObject>(rootFolder, useNestedFolders, folderPerClass, "json") {
-    override fun <E : StorePosition, T : PokemonStore<E>> serialize(store: T) = store.saveToJSON(JsonObject())
+    override fun <E : StorePosition, T : PokemonStore<E>> serialize(store: T, registryAccess: RegistryAccess) = store.saveToJSON(JsonObject(), registryAccess)
 
     override fun save(file: File, serialized: JsonObject) {
         val pw = PrintWriter(file)
@@ -43,7 +44,7 @@ open class JSONStoreAdapter(
         pw.close()
     }
 
-    override fun <E, T : PokemonStore<E>> load(file: File, storeClass: Class<out T>, uuid: UUID): T? {
+    override fun <E, T : PokemonStore<E>> load(file: File, storeClass: Class<out T>, uuid: UUID, registryAccess: RegistryAccess): T? {
         return try {
             val br = BufferedReader(FileReader(file))
             val json = gson.fromJson<JsonObject>(br)
@@ -53,7 +54,7 @@ open class JSONStoreAdapter(
             } catch (exception: NoSuchMethodException) {
                 storeClass.getConstructor(UUID::class.java).newInstance(uuid)
             }
-            store.loadFromJSON(json)
+            store.loadFromJSON(json, registryAccess)
             store
         } catch (e: Exception) {
             null

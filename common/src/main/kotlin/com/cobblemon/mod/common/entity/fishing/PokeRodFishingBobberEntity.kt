@@ -20,6 +20,7 @@ import com.cobblemon.mod.common.api.spawning.detail.EntitySpawnResult
 import com.cobblemon.mod.common.api.spawning.fishing.FishingSpawnCause
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.battles.BattleBuilder
+import com.cobblemon.mod.common.client.sound.EntitySoundTracker
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.item.interactive.PokerodItem
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormParticlePacket
@@ -27,10 +28,12 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.toBlockPos
 import kotlin.math.sqrt
 import net.minecraft.advancements.CriteriaTriggers
+import net.minecraft.client.resources.sounds.EntityBoundSoundInstance
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
@@ -80,6 +83,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
     private var typeCaught = TypeCaught.ITEM
     private var chosenBucket = Cobblemon.bestSpawner.config.buckets[0] // default to first rarity bucket
     private val pokemonSpawnChance = 85 // chance a Pokemon will be fished up % out of 100
+    private val castingSound = CobblemonSounds.FISHING_ROD_CAST
     var pokeRodId: ResourceLocation? = null
     var lineColor: String = "000000" // default line color is black
     var usedRod: ResourceLocation? = null
@@ -385,6 +389,28 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
         }
     }
 
+    fun stopCastingAudio () {
+        if (!this.level().isClientSide) return
+        owner?.let { EntitySoundTracker.stop(it.id, this.castingSound.location) }
+    }
+
+    // client instantiation
+    override fun recreateFromPacket(clientboundAddEntityPacket: ClientboundAddEntityPacket) {
+        super.recreateFromPacket(clientboundAddEntityPacket)
+        val owner = this.owner
+        if (this.state == State.FLYING && owner != null) {  // starts casting sound when instantiated on client
+            val rand = this.level().random
+            val toPlay = EntityBoundSoundInstance(this.castingSound, SoundSource.PLAYERS, 1.0F, 1.0f / (rand.nextFloat() * 0.4f + 0.8f), owner, rand.nextLong())
+            EntitySoundTracker.play(owner.id, toPlay)
+        }
+    }
+
+    // client destruction
+    override fun onClientRemoval() {
+        stopCastingAudio()
+        super.onClientRemoval()
+    }
+
     private fun removeIfInvalid(player: Player): Boolean {
         val itemStack = player.mainHandItem
         val itemStack2 = player.offhandItem
@@ -437,6 +463,12 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
                 f = fluidState.getHeight(level(), blockPos)
             }
             val bl = f > 0.0f
+
+            // pause audio if the bobber is not moving anymore
+            if (lastBobberPos == position()) {
+                // stop audio for the rod casting if the position has not changed
+                stopCastingAudio()
+            }
             lastBobberPos = position()
 
             if (state == State.FLYING) {
@@ -464,6 +496,9 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
                     return
                 }
                 if (state == State.BOBBING) {
+                    // stop casting audio once it lands in water
+                    stopCastingAudio()
+
                     val vec3d = deltaMovement
                     var d = this.y + vec3d.y - blockPos.y.toDouble() - f.toDouble()
                     if (Math.abs(d) < 0.01) {
@@ -502,6 +537,9 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
     }
 
     override fun retrieve(usedItem: ItemStack): Int {
+        // when reelimg in prematurely stop casting audio if it is playing
+        stopCastingAudio()
+
         val playerEntity = this.playerOwner
         isCast = false
 

@@ -20,11 +20,11 @@ class SummaryUIPacket internal constructor(val pokemon: List<Pokemon>, val edita
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(editable)
-        buffer.writeCollection(this.pokemon, Pokemon.S2C_CODEC::encode)
+        buffer.writeCollection(this.pokemon) { _, pokemon -> Pokemon.S2C_CODEC.encode(buffer, pokemon) }
     }
 
     companion object {
         val ID = cobblemonResource("summary_ui")
-        fun decode(buffer: RegistryFriendlyByteBuf) = SummaryUIPacket(buffer.readList(Pokemon.S2C_CODEC::decode), buffer.readBoolean())
+        fun decode(buffer: RegistryFriendlyByteBuf) = SummaryUIPacket(buffer.readList { _ -> Pokemon.S2C_CODEC.decode(buffer) }, buffer.readBoolean())
     }
 }

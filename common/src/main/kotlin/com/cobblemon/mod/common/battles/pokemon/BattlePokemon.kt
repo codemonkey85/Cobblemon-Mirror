@@ -53,7 +53,7 @@ open class BattlePokemon(
     val health: Int
         get() = effectedPokemon.currentHealth
     val maxHealth: Int
-        get() = effectedPokemon.hp
+        get() = effectedPokemon.maxHealth
     val ivs: IVs
         get() = effectedPokemon.ivs
     val nature: Nature

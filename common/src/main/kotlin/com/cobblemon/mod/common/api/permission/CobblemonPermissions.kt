@@ -74,6 +74,7 @@ object CobblemonPermissions {
     val POKEDEX = this.create("${COMMAND_PREFIX}pokedex", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
 
     val NPC_EDIT = this.create("${COMMAND_PREFIX}npcedit", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
+    val FREEZE_POKEMON = this.create("${COMMAND_PREFIX}freezepokemon", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
 
     val ABANDON_MULTITEAM = this.create("${COMMAND_PREFIX}abandonmultiteam", PermissionLevel.NONE)
 

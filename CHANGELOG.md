@@ -27,6 +27,8 @@
 - Added a Nurse profession that can be unlocked by having villagers claim a healing machine block.
 - Added a `natural` block state property for the healing machine block; when property is set to true, the block will have a different texture and drop an iron ingot instead of itself.
 - New config setting `displayEntityNameLabel` to show the pokemons name when looking at them
+- /freezepokemon command to pause a Pokémon's animation at a specific point in time.
+- Added no_ai and freeze_frame options to the /spawnpokemon command.
 
 ### Pokémon Added
 #### Gen 2
@@ -132,10 +134,13 @@
 - Fixed battle log GUI flashing when Battle GUI is opened.
 - Bag Items used during a turn will now be refunded if the battle ends before the next turn begins.
 - Pokémon which the current owner is not its Original Trainer now gains the extra EXP
+- Fixed Fossil Resurrection advancement not being granted
 
 ### Developer
 - SpawnCause is now an implementation of SpawningInfluence.
+- Renamed Pokemon.hp to Pokemon.maxHealth to make it clearer. Backwards compatibility is provided but it is an active deprecation, please migrate away from it.
 - Many types related to ``Pokemon`` including itself now have dedicated ``Codec``, please migrate to them from the NBT/JSON/PacketBuffer write/read methods.
+- Serialization of PokemonStores and Pokemon themselves now require registry access, which will break some sidemods. This sucked for us more than it will suck for you! If you have a world or player instance, you can get it from there.
 - ``TeraTypes`` now implements ``Iterable``.
 - PokemonBattle now starts on turn 0.
 - All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.

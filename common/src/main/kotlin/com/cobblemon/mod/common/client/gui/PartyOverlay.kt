@@ -241,7 +241,7 @@ class PartyOverlay : Gui(Minecraft.getInstance()) {
                     )
                 }
 
-                val hpRatio = pokemon.currentHealth / pokemon.hp.toFloat()
+                val hpRatio = pokemon.currentHealth / pokemon.maxHealth.toFloat()
                 val barHeightMax = 18
                 val hpBarWidth = 2
                 val hpBarHeight = hpRatio * barHeightMax

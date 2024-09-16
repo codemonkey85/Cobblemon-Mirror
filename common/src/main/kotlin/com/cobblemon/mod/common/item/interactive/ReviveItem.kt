@@ -88,7 +88,7 @@ class ReviveItem(val max: Boolean): CobblemonItem(Properties()) {
                     canSelect = Pokemon::isFainted
                 ) { pk ->
                     if (pk.isFainted() && !player.isInBattle() && stack.isHeld(player)) {
-                        pk.currentHealth = if (max) pk.hp else ceil(pk.hp / 2F).toInt()
+                        pk.currentHealth = if (max) pk.maxHealth else ceil(pk.maxHealth / 2F).toInt()
                         if (!player.isCreative) {
                             stack.shrink(1)
                         }
