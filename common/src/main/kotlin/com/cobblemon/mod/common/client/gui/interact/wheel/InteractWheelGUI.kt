@@ -22,8 +22,8 @@ import kotlin.math.max
 
 class InteractWheelGUI(private val options: Multimap<Orientation, InteractWheelOption>, title: Component) : Screen(title) {
     companion object {
-        const val SIZE = 138
-        const val OPTION_SIZE = 69
+        const val SIZE = 140
+        const val OPTION_SIZE = 71
         private val backgroundResource = cobblemonResource("textures/gui/interact/interact_base.png")
         private val buttonResources = mutableMapOf(
             Orientation.TOP_LEFT to cobblemonResource("textures/gui/interact/button_left_top.png"),
