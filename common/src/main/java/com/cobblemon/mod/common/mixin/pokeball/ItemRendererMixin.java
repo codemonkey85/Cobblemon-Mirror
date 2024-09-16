@@ -59,7 +59,7 @@ public abstract class ItemRendererMixin {
         boolean shouldBe2d = renderMode == ItemDisplayContext.GUI || renderMode == ItemDisplayContext.FIXED;
         if (shouldBe2d && stack.getItem() instanceof PokeBallItem pokeBallItem) {
             BakedModel replacementModel = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation(pokeBallItem.getPokeBall().getModel2d(), "inventory"));
-            if (!model.equals(replacementModel)) {
+            if (!model.getParticleIcon().contents().name().equals(replacementModel.getParticleIcon().contents().name())) {
                 ci.cancel();
                 render(stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, replacementModel);
             }
