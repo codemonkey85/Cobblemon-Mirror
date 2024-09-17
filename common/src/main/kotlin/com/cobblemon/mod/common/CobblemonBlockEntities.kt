@@ -64,7 +64,7 @@ object CobblemonBlockEntities : PlatformRegistry<Registry<BlockEntityType<*>>, R
     @JvmField
     val FOSSIL_MULTIBLOCK: BlockEntityType<FossilMultiblockEntity> = this.create("fossil_multiblock",
         BlockEntityType.Builder.of({ pos, state -> FossilMultiblockEntity(pos, state, FossilMultiblockBuilder(pos)) },
-            CobblemonBlocks.MONITOR, CobblemonBlocks.RESTORATION_TANK, CobblemonBlocks.FOSSIL_ANALYZER
+            CobblemonBlocks.MONITOR
         ).build(null)
     )
 
