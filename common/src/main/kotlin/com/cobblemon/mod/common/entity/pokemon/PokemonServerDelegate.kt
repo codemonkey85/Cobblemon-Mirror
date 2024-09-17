@@ -245,7 +245,7 @@ class PokemonServerDelegate : PokemonSideDelegate {
         }
 
         if (entity.deathTime == 60) {
-            if (entity.owner == null) {
+            if (entity.ownerUUID == null) {
                 entity.level().broadcastEntityEvent(entity, 60.toByte()) // Sends smoke effect
                 if(entity.level().gameRules.getBoolean(CobblemonGameRules.DO_POKEMON_LOOT)) {
                     (entity.drops ?: entity.pokemon.form.drops).drop(entity, entity.level() as ServerLevel, entity.position(), entity.killer)
