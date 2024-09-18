@@ -34,7 +34,6 @@ import com.cobblemon.mod.common.util.DataKeys
 import com.cobblemon.mod.common.util.giveOrDropItemStack
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.party
-import com.cobblemon.mod.common.util.readBlockPosWithFallback
 import com.cobblemon.mod.common.util.server
 import java.util.UUID
 import kotlin.math.ceil
@@ -639,9 +638,9 @@ class FossilMultiblockStructure (
         const val PROTECTION_TIME = TICKS_PER_MINUTE * 5
 
         fun fromNbt(nbt: CompoundTag, registryLookup: HolderLookup.Provider, animAge: Int = -1, partialTicks: Float = 0f): FossilMultiblockStructure {
-            val monitorPos = nbt.readBlockPosWithFallback(DataKeys.MONITOR_POS)
-            val compartmentPos = nbt.readBlockPosWithFallback(DataKeys.ANALYZER_POS)
-            val tankBasePos = nbt.readBlockPosWithFallback(DataKeys.TANK_BASE_POS)
+            val monitorPos =  NbtUtils.readBlockPos(nbt, DataKeys.MONITOR_POS).get()
+            val compartmentPos = NbtUtils.readBlockPos(nbt, DataKeys.ANALYZER_POS).get()
+            val tankBasePos = NbtUtils.readBlockPos(nbt, DataKeys.TANK_BASE_POS).get()
 
             val result = FossilMultiblockStructure(monitorPos, compartmentPos, tankBasePos, animAge, partialTicks)
             result.organicMaterialInside = nbt.getInt(DataKeys.ORGANIC_MATERIAL)

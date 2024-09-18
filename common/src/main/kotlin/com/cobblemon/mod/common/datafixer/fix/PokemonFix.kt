@@ -14,16 +14,12 @@ import com.mojang.datafixers.DataFix
 import com.mojang.datafixers.TypeRewriteRule
 import com.mojang.datafixers.schemas.Schema
 import com.mojang.serialization.Dynamic
-import java.util.function.Function
 
 abstract class PokemonFix(outputSchema: Schema) : DataFix(outputSchema, false) {
     override fun makeRule(): TypeRewriteRule {
-        val type = DSL.named(CobblemonTypeReferences.POKEMON.typeName(), DSL.remainderType())
-        val schemaType = this.inputSchema.getType(CobblemonTypeReferences.POKEMON)
-        require(type == schemaType)
-        { "${CobblemonTypeReferences.POKEMON.typeName()} is not what was expected" }
-        return this.fixTypeEverywhere(this::class.simpleName, type) {
-            Function { pair -> pair.mapSecond(this::fixPokemonData) }
+        val oldPokemonType = inputSchema.getType(CobblemonTypeReferences.POKEMON)
+        return this.fixTypeEverywhereTyped(this::class.simpleName, oldPokemonType) { pokemon ->
+            pokemon.update(DSL.remainderFinder(), ::fixPokemonData)
         }
     }
 
