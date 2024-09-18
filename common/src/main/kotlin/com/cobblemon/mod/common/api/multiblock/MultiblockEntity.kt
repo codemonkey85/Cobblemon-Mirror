@@ -59,6 +59,8 @@ abstract class MultiblockEntity(
         }
     }
 
+    override fun isValidBlockState(blockState: BlockState) = blockState.block is MultiblockBlock
+
     abstract override fun loadAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider)
 
 }
