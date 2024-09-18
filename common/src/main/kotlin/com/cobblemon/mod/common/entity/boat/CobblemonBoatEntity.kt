@@ -90,7 +90,7 @@ open class CobblemonBoatEntity(entityType: EntityType<out Boat>, world: Level) :
     }
 
     override fun getVariant(): Type {
-        return Type.SPRUCE //have to return something here as otherwise it breaks vanilla interactions (e.g. player getting into boat)
+        return Type.BAMBOO //have to return something here as otherwise it breaks vanilla interactions (e.g. player getting into boat)
     }
 
     override fun getSinglePassengerXOffset(): Float = this.boatType.mountedOffset

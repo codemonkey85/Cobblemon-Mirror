@@ -567,7 +567,7 @@ open class Pokemon : ShowdownIdentifiable {
                         position.z.toInt()
                     )
                 ) && this.species.types.all { it != ElementalTypes.WATER && it != ElementalTypes.FLYING }) {
-                val boatType = Boat.Type.byName("bamboo")
+
                 // Create a new boat entity with the generic EntityType.BOAT
                 val raftEntity = Boat(level, position.x, position.y, position.z)
 
