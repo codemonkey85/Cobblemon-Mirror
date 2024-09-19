@@ -57,7 +57,10 @@ fun createPokemonInteractGui(pokemonID: UUID, canMountShoulder: Boolean): Intera
 fun createPlayerInteractGui(optionsPacket: PlayerInteractOptionsPacket): InteractWheelGUI {
     val trade = InteractWheelOption(
         iconResource = cobblemonResource("textures/gui/interact/icon_trade.png"),
-        colour = { if (CobblemonClient.requests.tradeOffers.any { it.traderId == optionsPacket.targetId }) Vector3f(0F, 0.6F, 0F) else null },
+        secondaryIconResource =  if (CobblemonClient.requests.tradeOffers.any { it.traderId == optionsPacket.targetId })
+            cobblemonResource("textures/gui/interact/icon_exclamation.png")
+        else null,
+        colour = { null },
         tooltipText = "cobblemon.ui.interact.trade",
         onPress = {
             val tradeOffer = CobblemonClient.requests.tradeOffers.find { it.traderId == optionsPacket.targetId }

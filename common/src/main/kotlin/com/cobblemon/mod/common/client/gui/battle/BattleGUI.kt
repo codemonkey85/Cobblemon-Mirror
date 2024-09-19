@@ -40,6 +40,7 @@ class BattleGUI : Screen(battleLang("gui.title")) {
         val bagResource = cobblemonResource("textures/gui/battle/battle_menu_bag.png")
         val switchResource = cobblemonResource("textures/gui/battle/battle_menu_switch.png")
         val runResource = cobblemonResource("textures/gui/battle/battle_menu_run.png")
+        val forfeitResource = cobblemonResource("textures/gui/battle/battle_menu_forfeit.png")
     }
 
     private lateinit var messagePane: BattleMessagePane

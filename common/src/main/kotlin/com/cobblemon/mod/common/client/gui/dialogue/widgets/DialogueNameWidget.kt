@@ -31,9 +31,7 @@ class DialogueNameWidget(
     override fun setFocused(focused: Boolean) {}
 
     override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        if (text == null || text.string.isEmpty()) {
-            return
-        }
+        if (text == null || text.string.isEmpty()) return
 
         blitk(
             texture = nameResource,
@@ -41,20 +39,16 @@ class DialogueNameWidget(
             x = x,
             y = y,
             width = width,
-            height = height,
-            uOffset = 0,
-            vOffset = 0,
-            scale = 1F,
-            alpha = 1F,
-            blend = false
+            height = height
         )
 
         drawScaledText(
             context = context,
             text = text.visualOrderText,
-            x = x + 6,
-            y = y + 4,
-            shadow = false
+            x = x + (width / 2),
+            y = y + 5,
+            centered = true,
+            shadow = true
         )
     }
 }

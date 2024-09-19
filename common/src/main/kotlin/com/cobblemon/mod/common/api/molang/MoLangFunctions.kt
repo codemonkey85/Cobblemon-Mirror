@@ -34,7 +34,6 @@ import com.cobblemon.mod.common.util.isInt
 import com.cobblemon.mod.common.util.itemRegistry
 import com.cobblemon.mod.common.util.worldRegistry
 import com.mojang.datafixers.util.Either
-import net.minecraft.client.gui.components.tabs.Tab
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
@@ -44,10 +43,9 @@ import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.StringTag
 import net.minecraft.nbt.Tag
 import net.minecraft.resources.ResourceKey
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.server.commands.TagCommand
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.tags.TagKey
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
@@ -116,7 +114,7 @@ object MoLangFunctions {
             map.put("save_data") { _ -> if (player is ServerPlayer) Cobblemon.molangData.save(player.uuid) else DoubleValue(0) }
             map.put("main_held_item") { _ -> player.level().itemRegistry.wrapAsHolder(player.mainHandItem.item).asMoLangValue(Registries.ITEM) }
             map.put("off_held_item") { _ -> player.level().itemRegistry.wrapAsHolder(player.offhandItem.item).asMoLangValue(Registries.ITEM) }
-            map.put("face") { _ -> ObjectValue(PlayerDialogueFaceProvider(player.uuid)) }
+            map.put("face") { params -> ObjectValue(PlayerDialogueFaceProvider(player.uuid, params.getBooleanOrNull(0) != false)) }
             map.put("swing_hand") { _ -> player.swing(player.usedItemHand) }
             map.put("food_level") { _ -> DoubleValue(player.foodData.foodLevel) }
             map.put("saturation_level") { _ -> DoubleValue(player.foodData.saturationLevel) }
@@ -186,7 +184,7 @@ object MoLangFunctions {
             val map = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
             map.put("class") { StringValue(npc.npc.resourceIdentifier.toString()) }
             map.put("name") { StringValue(npc.name.string) }
-            map.put("face") { ObjectValue(ReferenceDialogueFaceProvider(npc.id)) }
+            map.put("face") { params -> ObjectValue(ReferenceDialogueFaceProvider(npc.id, params.getBooleanOrNull(0) != false)) }
             map.put("in_battle") { DoubleValue(npc.isInBattle()) }
             map.put("run_script_on_client") { params ->
                 val world = npc.level()

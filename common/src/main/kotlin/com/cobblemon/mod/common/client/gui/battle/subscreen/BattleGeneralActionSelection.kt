@@ -69,7 +69,7 @@ class BattleGeneralActionSelection(
                     playDownSound(Minecraft.getInstance().soundManager)
                 }
             } else {
-                addOption(rank++, battleLang("ui.forfeit"), BattleGUI.runResource) {
+                addOption(rank++, battleLang("ui.forfeit"), BattleGUI.forfeitResource) {
                     battleGUI.changeActionSelection(ForfeitConfirmationSelection(battleGUI, request))
                     playDownSound(Minecraft.getInstance().soundManager)
                 }

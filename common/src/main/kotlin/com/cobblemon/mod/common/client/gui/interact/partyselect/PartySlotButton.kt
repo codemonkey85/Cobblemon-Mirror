@@ -59,8 +59,30 @@ class PartySlotButton(
 
     override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         isHovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height && enabled
-        val alpha = if (enabled) 1.0 else 0.5
+        val alpha = if (enabled) 1.0 else 0.7
         val matrices = context.pose()
+
+        val hpRatio = currentHealth / maxHealth.toFloat()
+        val status = pokemon.status
+        if (hpRatio > 0F && status != null) {
+            blitk(
+                matrixStack = matrices,
+                texture = cobblemonResource("textures/gui/interact/party_select_status_$status.png"),
+                x = x + 27,
+                y = y + 22,
+                height = 5,
+                width = 37
+            )
+
+            drawScaledText(
+                context = context,
+                text = lang("ui.status.$status").bold(),
+                x = x + 32.5,
+                y = y + 22.5,
+                shadow = true,
+                scale = SCALE
+            )
+        }
 
         blitk(
             matrixStack = matrices,
@@ -69,17 +91,12 @@ class PartySlotButton(
             y = y,
             width = width,
             height = height,
-            vOffset = if (isHovered) height else 0,
-            textureHeight = height * 2,
-            alpha = alpha
+            vOffset = if (!enabled) (height * 2) else (if (isHovered) height else 0),
+            textureHeight = height * 3
         )
 
         context.pose().pushPose()
         context.pose().translate(x.toDouble() + 13, y.toDouble() - 2, 0.0)
-
-//        if (!hovered) {
-//            state.reset()
-//        }
 
         drawProfilePokemon(
             renderablePokemon = renderablePokemon,
@@ -104,13 +121,17 @@ class PartySlotButton(
             scale = SCALE
         )
 
+        // Ensure elements are not hidden behind Pokémon render
+        matrices.pushPose()
+        matrices.translate(0.0, 0.0, 100.0)
         drawScaledText(
             context = context,
             text = lang("ui.lv.number", pokemon.level!!),
             x = x + 24,
             y = y + 6.5,
             shadow = true,
-            scale = SCALE
+            scale = SCALE,
+            opacity = alpha
         )
 
         // Pokémon Name
@@ -120,7 +141,9 @@ class PartySlotButton(
             text = displayName.copy(),
             x = x + 24,
             y = y + 12.5,
-            scale = SCALE
+            scale = SCALE,
+            shadow = true,
+            opacity = alpha
         )
 
         if ("male" in pokemon.aspects || "female" in pokemon.aspects) {
@@ -131,12 +154,12 @@ class PartySlotButton(
                 y = (y + 12.5) / SCALE,
                 height = 7,
                 width = 5,
-                scale = SCALE
+                scale = SCALE,
+                alpha = alpha
             )
         }
 
         // HP
-        val hpRatio = currentHealth / maxHealth.toFloat()
         val barWidthMax = 65
         val barWidth = hpRatio * barWidthMax
         val (red, green) = getDepletableRedGreen(hpRatio)
@@ -164,27 +187,6 @@ class PartySlotButton(
             centered = true
         )
 
-        val status = pokemon.status
-        if (hpRatio > 0F && status != null) {
-            blitk(
-                matrixStack = matrices,
-                texture = cobblemonResource("textures/gui/interact/party_select_status_$status.png"),
-                x = x + 27,
-                y = y + 22,
-                height = 5,
-                width = 37
-            )
-
-            drawScaledText(
-                context = context,
-                text = lang("ui.status.$status").bold(),
-                x = x + 32.5,
-                y = y + 22.5,
-                shadow = true,
-                scale = SCALE
-            )
-        }
-
         // Held Item
         if (!heldItem.isEmpty) {
             renderScaledGuiItemIcon(
@@ -195,6 +197,7 @@ class PartySlotButton(
                 matrixStack = matrices
             )
         }
+        matrices.popPose()
     }
 
     override fun playDownSound(soundManager: SoundManager) {}
