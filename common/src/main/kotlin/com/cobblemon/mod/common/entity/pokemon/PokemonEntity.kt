@@ -1378,9 +1378,13 @@ open class PokemonEntity(
     }
 
     override fun canBeLeashed() = true
-//    override fun canBeLeashedBy(player: PlayerEntity): Boolean {
-//        return this.ownerUuid == null || this.ownerUuid == player.uuid
-//    }
+
+    override fun setLeashedTo(entity: Entity, bl: Boolean) {
+        super.setLeashedTo(entity, bl)
+        if (this.ownerUUID != null && this.ownerUUID != entity.uuid ) {
+            dropLeash(true, true)
+        }
+    }
 
     /** Retrieves the battle theme associated with this Pokemon's Species/Form, or the default PVW theme if not found. */
     fun getBattleTheme() = BuiltInRegistries.SOUND_EVENT.get(this.form.battleTheme) ?: CobblemonSounds.PVW_BATTLE

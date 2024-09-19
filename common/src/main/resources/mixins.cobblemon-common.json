@@ -22,8 +22,7 @@
     "client.AbstractClientPlayerMixin",
     "client.EntryListWidgetMixin",
     "client.GuiMixin",
-    "invoker.ClientPlayNetworkHandlerInvoker",
-    "pokeball.ItemRendererMixin"
+    "invoker.ClientPlayNetworkHandlerInvoker"
   ],
   "mixins": [
     "ChunkStorageMixin",
@@ -32,6 +31,7 @@
     "EntityStorageMixin",
     "EntityVillagerMixin",
     "ExplosionMixin",
+    "ItemStackComponentizationFixMixin",
     "LivingEntityMixin",
     "MinecraftDedicatedServerMixin",
     "PiglinBarterMixin",
