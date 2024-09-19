@@ -92,6 +92,9 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
         }
         else {
             battle.dispatchInsert {
+                val newHealth = privateMessage.argumentAt(2)!!.split(" ")[0]
+                val remainingHealth = newHealth.split("/")[0].toInt()
+                pokemon.effectedPokemon.currentHealth = remainingHealth
                 pokemon.sendUpdate()
 
                 if (activePokemon.battlePokemon == pokemon) {
