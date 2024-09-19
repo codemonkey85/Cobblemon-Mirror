@@ -24,6 +24,7 @@ import com.cobblemon.mod.common.api.events.battles.BattleFledEvent
 import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.asMoLangValue
 import com.cobblemon.mod.common.api.net.NetworkPacket
+import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.api.text.yellow
@@ -79,6 +80,8 @@ open class PokemonBattle(
     val runtime = MoLangRuntime().also { it.environment.query = struct }
 
     val onEndHandlers: MutableList<(PokemonBattle) -> Unit> = mutableListOf()
+
+    val battlePartyStores = emptyList<PlayerPartyStore>().toMutableList()
 
     init {
         side1.battle = this
@@ -360,6 +363,13 @@ open class PokemonBattle(
     fun dispatchToFront(dispatcher: () -> DispatchResult) {
         dispatches.addFirst(BattleDispatch { dispatcher() })
 
+    }
+
+    fun dispatchWaitingToFront(delaySeconds: Float = 1F, dispatcher: () -> Unit) {
+        dispatches.addFirst(BattleDispatch {
+            dispatcher()
+            WaitDispatch(delaySeconds)
+        })
     }
 
     fun dispatchGo(dispatcher: () -> Unit) {

@@ -22,6 +22,8 @@ import com.cobblemon.mod.common.net.messages.client.battle.BattleUpdateTeamPokem
 import com.cobblemon.mod.common.pokemon.IVs
 import com.cobblemon.mod.common.pokemon.Nature
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.pokemon.properties.BattleCloneProperty
+import com.cobblemon.mod.common.pokemon.properties.UncatchableProperty
 import com.cobblemon.mod.common.util.battleLang
 import java.util.UUID
 import net.minecraft.network.chat.MutableComponent
@@ -33,11 +35,16 @@ open class BattlePokemon(
 ) {
     lateinit var actor: BattleActor
     companion object {
-        fun safeCopyOf(pokemon: Pokemon): BattlePokemon = BattlePokemon(
-            originalPokemon = pokemon,
-            effectedPokemon = pokemon.clone(),
-            postBattleEntityOperation = { entity -> entity.discard() }
-        )
+        fun safeCopyOf(pokemon: Pokemon): BattlePokemon {
+            val effectedPokemon = pokemon.clone()
+            BattleCloneProperty.isBattleClone().apply(effectedPokemon)
+            UncatchableProperty.uncatchable().apply(effectedPokemon)
+            return BattlePokemon(
+                    originalPokemon = pokemon,
+                    effectedPokemon = effectedPokemon,
+                    postBattleEntityOperation = { it.recallWithAnimation() }
+            )
+        }
 
         fun playerOwned(pokemon: Pokemon): BattlePokemon = BattlePokemon(
             originalPokemon = pokemon,

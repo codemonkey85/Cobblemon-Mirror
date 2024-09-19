@@ -9,7 +9,8 @@
 - Added property chaining support for duplicate CustomPokemonPropertyType elements.
 - Added ``aspect`` and ``unaspect`` PokemonProperty arguments (which also includes commands such as /pokemonedit, /spawnpokemon, and /givepokemon) to allow forcing or un-forcing an aspect on a Pokémon.
 - Added ``type`` alternatively ``elemental_type`` PokemonProperty argument, this is only used for filtering and is not applied to Pokémon. Example ``type=fire`` would be true for Charmander but false for Squirtle.
-- Added support for Double Battles, Triple Battles, and Multi-battles. 
+- Added support for Double Battles, Triple Battles, and Multi-battles.
+- Added flat level battling with options to set all Pokemon to level 50, 100, or 5 for the duration of a battle. No experience or EVs are granted for a flat battle.
 - CriticalCaptures and Pokedex progress capture multiplier now work with dex
 - Added extra visuals to early berry growth stages
 - Hidden Power now displays its effective typing.

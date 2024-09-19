@@ -22,10 +22,10 @@ import net.minecraft.network.RegistryFriendlyByteBuf
  * @since March 9th, 2022
  */
 data class BattleFormat(
-    val mod: String = "cobblemon",
-    val battleType: BattleType = BattleTypes.SINGLES,
-    val ruleSet: Set<String> = setOf(),
-    val gen: Int = 9
+        val mod: String = "cobblemon",
+        val battleType: BattleType = BattleTypes.SINGLES,
+        var ruleSet: Set<String> = setOf(),
+        val gen: Int = 9
 ) {
     companion object {
         val GEN_9_SINGLES = BattleFormat(
@@ -64,6 +64,12 @@ data class BattleFormat(
                 ruleSet = ruleSet
             )
         }
+    }
+
+    fun getAdjustLevelRule(): Int? {
+        val levelRulesetOptionString = this.ruleSet.firstOrNull { it.startsWith("Adjust Level = ") } ?: ""
+        val regex = "\\d+$".toRegex()
+        return regex.find(levelRulesetOptionString)?.value?.toIntOrNull()
     }
 
     fun saveToBuffer(buffer: RegistryFriendlyByteBuf): RegistryFriendlyByteBuf {

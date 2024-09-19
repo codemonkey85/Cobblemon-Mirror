@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.api.storage.party.PartyStore
+import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore
 import com.cobblemon.mod.common.battles.actor.PlayerBattleActor
 import com.cobblemon.mod.common.battles.actor.PokemonBattleActor
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
@@ -61,8 +62,29 @@ object BattleBuilder {
         healFirst: Boolean = false,
         partyAccessor: (ServerPlayer) -> PartyStore = { it.party() }
     ): BattleStartResult {
-        val team1 = partyAccessor(player1).toBattleTeam(clone = cloneParties, checkHealth = !healFirst, leadingPokemonPlayer1).sortedBy { it.health <= 0 }
-        val team2 = partyAccessor(player2).toBattleTeam(clone = cloneParties, checkHealth = !healFirst, leadingPokemonPlayer2).sortedBy { it.health <= 0 }
+
+        val autoLevel = battleFormat.getAdjustLevelRule()
+        val team1 = partyAccessor(player1).toBattleTeam(clone = cloneParties || autoLevel != null, checkHealth = !healFirst, leadingPokemonPlayer1).sortedBy { it.health <= 0 }
+        val team2 = partyAccessor(player2).toBattleTeam(clone = cloneParties || autoLevel != null, checkHealth = !healFirst, leadingPokemonPlayer2).sortedBy { it.health <= 0 }
+
+        val battlePartyStores = emptyList<PlayerPartyStore>().toMutableList()
+
+        if (autoLevel != null && autoLevel > 0) {
+            team1.forEach {
+                it.effectedPokemon.level = autoLevel
+                it.effectedPokemon.heal()
+            }
+            team2.forEach {
+                it.effectedPokemon.level = autoLevel
+                it.effectedPokemon.heal()
+            }
+            val tempStoreP1 = PlayerPartyStore(player1.uuid)
+            team1.forEachIndexed { index, it -> tempStoreP1.set(index, it.effectedPokemon) }
+            battlePartyStores.add(tempStoreP1)
+            val tempStoreP2 = PlayerPartyStore(player2.uuid)
+            team2.forEachIndexed { index, it -> tempStoreP2.set(index, it.effectedPokemon) }
+            battlePartyStores.add(tempStoreP2)
+        }
 
         val player1Actor = PlayerBattleActor(player1.uuid, team1)
         val player2Actor = PlayerBattleActor(player2.uuid, team2)
@@ -92,6 +114,7 @@ object BattleBuilder {
             ).ifSuccessful {
                 player1Actor.battleTheme = player2.getBattleTheme()
                 player2Actor.battleTheme = player1.getBattleTheme()
+                it.battlePartyStores.addAll(battlePartyStores)
                 result = SuccessfulBattleStart(it)
             }
             result
@@ -111,6 +134,20 @@ object BattleBuilder {
     ): BattleStartResult {
         val teams = players.mapIndexed { index, it -> partyAccessor(it).toBattleTeam(clone = cloneParties, checkHealth = !healFirst, leadingPokemon[index]) }
         val playerActors = teams.mapIndexed { index, team -> PlayerBattleActor(players[index].uuid, team)}.toMutableList()
+
+        val autoLevel = battleFormat.getAdjustLevelRule()
+        val battlePartyStores = emptyList<PlayerPartyStore>().toMutableList()
+
+        if (autoLevel != null && autoLevel > 0) {
+            teams.forEachIndexed() { index, battleTeam ->
+                battleTeam.forEach { battlePokemon ->
+                    battlePokemon.effectedPokemon.level = autoLevel
+                    battlePokemon.effectedPokemon.heal()
+                    val tempStore = PlayerPartyStore(players[index].uuid)
+                    battlePartyStores.add(tempStore)
+                }
+            }
+        }
 
         val errors = ErroredBattleStart()
 
@@ -164,6 +201,8 @@ object BattleBuilder {
 
                 playerActors[2].battleTheme = players[0].getBattleTheme()
                 playerActors[3].battleTheme = players[0].getBattleTheme()
+
+                it.battlePartyStores.addAll(battlePartyStores)
             }
             errors
         } else {

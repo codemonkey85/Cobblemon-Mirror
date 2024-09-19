@@ -36,6 +36,8 @@ class BattleConfigureGUI(
         private val backgroundResource = cobblemonResource("textures/gui/interact/request/battle_request.png")
         private val battleArrowsResource = cobblemonResource("textures/gui/interact/request/battle_request_arrows.png")
         private var requestButton: BattleRequestButton? = null
+        var autoLevelNavButtonLeft: BattleRequestNavigationButton? = null
+        var autoLevelNavButtonRight: BattleRequestNavigationButton? = null
 
         val battleRequestMap = mutableMapOf(
                 Pair(
@@ -140,6 +142,8 @@ class BattleConfigureGUI(
                 ),
         )
 
+        val levelRulesetOption = mutableListOf(-1, 50, 100, 5)
+
         fun sendBattleRequest(battleFormat: BattleFormat, packet: PlayerInteractOptionsPacket) {
             BattleChallengePacket(packet.numericTargetId, packet.selectedPokemonId, battleFormat).sendToServer()
         }
@@ -173,6 +177,16 @@ class BattleConfigureGUI(
             else 0
         }
 
+    private var levelRulesetOptionIndex = 0
+        set(value) {
+            // If value is within min and max
+            field = if (value > 0 && value < levelRulesetOption.count()) value
+            // If value is less than zero, wrap around to end
+            else if (value < 0) levelRulesetOption.count() - 1
+            // Else it's greater than max, wrap around to start
+            else 0
+        }
+
     private var targetName = Component.literal("Target Name").bold()
     private var hasRequest = false
     private var ticksPassed = 0F
@@ -182,13 +196,16 @@ class BattleConfigureGUI(
 
 
     override fun init() {
+
         val challenge = activeRequest
         targetName = Minecraft.getInstance().player?.level()?.getPlayerByUUID(packet.targetId)?.name?.plainCopy()?.bold() ?: targetName
         hasRequest = challenge != null || activeTeamRequest != null
         if (activeTeamRequest != null) {
             options = listOf(PlayerInteractOptionsPacket.Options.TEAM_REQUEST)
         } else if (challenge != null) {
-            options =  packet.options.keys.filter { packet.options[it] === PlayerInteractOptionsPacket.OptionStatus.AVAILABLE && battleRequestMap[it]?.battleFormat?.battleType?.name == challenge.battleFormat?.battleType?.name }
+            options = packet.options.keys.filter { packet.options[it] === PlayerInteractOptionsPacket.OptionStatus.AVAILABLE && battleRequestMap[it]?.battleFormat?.battleType?.name == challenge.battleFormat?.battleType?.name }
+            val level = challenge.battleFormat?.getAdjustLevelRule() ?: -1
+            levelRulesetOptionIndex = maxOf(0, levelRulesetOption.indexOf(level))
         } else {
             options = packet.options.keys.filter { packet.options[it] === PlayerInteractOptionsPacket.OptionStatus.AVAILABLE && battleRequestMap.containsKey(it) }.toList()
         }
@@ -228,21 +245,26 @@ class BattleConfigureGUI(
             ) {
                 //TODO: add additional battle rules, otherwise this call feels pretty silly
                 battleRequestMap[options[currentPage]]?.onRequest?.let { it1 ->
-                    it1(packet, battleRequestMap[options[currentPage]]?.battleFormat ?: BattleFormat.GEN_9_SINGLES)  }
+                    val battleFormat = battleRequestMap[options[currentPage]]?.battleFormat ?: BattleFormat.GEN_9_SINGLES
+                    val level = levelRulesetOption[levelRulesetOptionIndex]
+                    if (level > 0) {
+                        battleFormat.ruleSet += "Adjust Level = $level"
+                    }
+                    it1(packet, battleFormat)
+                }
                 closeGUI()
             }
             requestButton?.let {
-                this.addRenderableWidget(
-                        it
-                )
+                this.addRenderableWidget(it)
             }
 
-            // Selection buttons
+            // BattleFormat Selection buttons
             this.addRenderableWidget(
                     BattleRequestNavigationButton(
-                            pX = x + 2,
-                            pY = y + 30,
-                            forward = false
+                    pX = x + 2,
+                    pY = y + 30,
+                    clickHeight = BattleRequestNavigationButton.HEIGHT * 6,
+                    forward = false
                     ) { currentPage = (currentPage - 1) % options.count()
                         updateRequestButtonText()
                     }
@@ -250,13 +272,33 @@ class BattleConfigureGUI(
 
             this.addRenderableWidget(
                     BattleRequestNavigationButton(
-                            pX = x + 106,
-                            pY = y + 30,
-                            forward = true
+                    pX = x + 106,
+                    pY = y + 30,
+                    clickHeight = BattleRequestNavigationButton.HEIGHT * 6,
+                    forward = true
                     ) { currentPage = (currentPage + 1) % options.count()
                         updateRequestButtonText()
                     }
             )
+
+
+            if (battleRequestMap[options[currentPage]]?.option != PlayerInteractOptionsPacket.Options.TEAM_REQUEST) {
+
+                // Level Selection buttons
+                autoLevelNavButtonLeft = BattleRequestNavigationButton(
+                        pX = x + 15,
+                        pY = y + 75,
+                        forward = false
+                ) { levelRulesetOptionIndex -= 1 }
+                this.addRenderableWidget(autoLevelNavButtonLeft)
+
+                autoLevelNavButtonRight = BattleRequestNavigationButton(
+                        pX = x + 93,
+                        pY = y + 75,
+                        forward = true
+                ) {levelRulesetOptionIndex += 1 }
+                this.addRenderableWidget(autoLevelNavButtonRight)
+            }
         }
     }
 
@@ -327,6 +369,42 @@ class BattleConfigureGUI(
             centered = true,
             shadow = true
         )
+
+        if (battleRequestMap[options[currentPage]]?.option != PlayerInteractOptionsPacket.Options.TEAM_REQUEST) {
+            // Level Rule Display Text
+            drawScaledText(
+                    context = context,
+                    font = CobblemonResources.DEFAULT_LARGE,
+                    text = if (levelRulesetOption[levelRulesetOptionIndex] < 0) lang("challenge.rule.anything_goes").bold()
+                    else lang("challenge.rule.level", levelRulesetOption[levelRulesetOptionIndex]).bold(),
+                    x = x + 55,
+                    y = y + 75,
+                    centered = true,
+                    shadow = true
+            )
+
+            autoLevelNavButtonLeft.let {
+                if (it != null) {
+                    it.active = true
+                }
+            }
+            autoLevelNavButtonRight.let {
+                if (it != null) {
+                    it.active = true
+                }
+            }
+        } else {
+            autoLevelNavButtonLeft.let {
+                if (it != null) {
+                    it.active = false
+                }
+            }
+            autoLevelNavButtonRight.let {
+                if (it != null) {
+                    it.active = false
+                }
+            }
+        }
 
         // Opponent display name
         drawScaledText(

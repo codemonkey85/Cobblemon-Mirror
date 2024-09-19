@@ -348,6 +348,12 @@ open class PokemonEntity(
 
     override fun tick() {
         super.tick()
+
+        if (!this.isBattling && this.beamMode == 0 && this.isBattleClone()) {
+            discard()
+            return
+        }
+
         // We will be handling idle logic ourselves thank you
         this.setNoActionTime(0)
         if (queuedToDespawn) {
@@ -452,6 +458,13 @@ open class PokemonEntity(
      * @return If the Pokémon is uncatchable.
      */
     fun isUncatchable() = pokemon.isUncatchable()
+
+    /**
+     * A utility method that checks if this Pokémon has the [UncatchableProperty.uncatchable] property.
+     *
+     * @return If the Pokémon is uncatchable.
+     */
+    fun isBattleClone() = pokemon.isBattleClone()
 
     fun recallWithAnimation(): CompletableFuture<Pokemon> {
         val owner = owner
@@ -711,6 +724,9 @@ open class PokemonEntity(
     }
 
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
+        if (!this.isBattling && this.isBattleClone()) {
+            return InteractionResult.FAIL
+        }
         val itemStack = player.getItemInHand(hand)
         val colorFeatureType = SpeciesFeatures.getFeaturesFor(pokemon.species)
             .find { it is ChoiceSpeciesFeatureProvider && DataKeys.CAN_BE_COLORED in it.keys }
