@@ -70,19 +70,20 @@ object BattleBuilder {
         val battlePartyStores = emptyList<PlayerPartyStore>().toMutableList()
 
         if (autoLevel != null && autoLevel > 0) {
-            team1.forEach {
-                it.effectedPokemon.level = autoLevel
-                it.effectedPokemon.heal()
-            }
-            team2.forEach {
-                it.effectedPokemon.level = autoLevel
-                it.effectedPokemon.heal()
-            }
             val tempStoreP1 = PlayerPartyStore(player1.uuid)
-            team1.forEachIndexed { index, it -> tempStoreP1.set(index, it.effectedPokemon) }
+            team1.forEachIndexed { index, it ->
+                it.effectedPokemon.level = autoLevel
+                it.effectedPokemon.heal()
+                tempStoreP1.set(index, it.effectedPokemon)
+            }
             battlePartyStores.add(tempStoreP1)
+
             val tempStoreP2 = PlayerPartyStore(player2.uuid)
-            team2.forEachIndexed { index, it -> tempStoreP2.set(index, it.effectedPokemon) }
+            team2.forEachIndexed { index, it ->
+                it.effectedPokemon.level = autoLevel
+                it.effectedPokemon.heal()
+                tempStoreP2.set(index, it.effectedPokemon)
+            }
             battlePartyStores.add(tempStoreP2)
         }
 
@@ -139,7 +140,7 @@ object BattleBuilder {
         val battlePartyStores = emptyList<PlayerPartyStore>().toMutableList()
 
         if (autoLevel != null && autoLevel > 0) {
-            teams.forEachIndexed() { index, battleTeam ->
+            teams.forEachIndexed { index, battleTeam ->
                 battleTeam.forEach { battlePokemon ->
                     battlePokemon.effectedPokemon.level = autoLevel
                     battlePokemon.effectedPokemon.heal()

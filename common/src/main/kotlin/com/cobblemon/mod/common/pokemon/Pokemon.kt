@@ -836,7 +836,7 @@ open class Pokemon : ShowdownIdentifiable {
     /**
      * A utility method that checks if this Pokémon has the [BattleCloneProperty.isBattleClone] property.
      *
-     * @return If the Pokémon is uncatchable.
+     * @return If the Pokémon is a battle clone.
      */
     fun isBattleClone() = BattleCloneProperty.isBattleClone().matches(this)
 
