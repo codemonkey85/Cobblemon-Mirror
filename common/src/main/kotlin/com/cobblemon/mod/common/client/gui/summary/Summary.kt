@@ -529,13 +529,13 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         // Shiny Icon
         if (selectedPokemon.shiny) {
             blitk(
-                    matrixStack = matrices,
-                    texture = iconShinyResource,
-                    x = (x + 62.5) / SCALE,
-                    y = (y + 33.5) / SCALE,
-                    width = 16,
-                    height = 16,
-                    scale = SCALE
+                matrixStack = matrices,
+                texture = iconShinyResource,
+                x = (x + 62.5) / SCALE,
+                y = (y + 33.5) / SCALE,
+                width = 16,
+                height = 16,
+                scale = SCALE
             )
         }
 
