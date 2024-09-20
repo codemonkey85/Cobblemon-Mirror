@@ -119,14 +119,12 @@ public abstract class PlayerMixin extends LivingEntity {
 
     private void recallPokemon(UUID uuid) {
         // We need to do this cause the Entity doesn't store a reference to its storage
-        try {
-            final PartyStore party = Cobblemon.INSTANCE.getStorage().getParty(this.uuid);
-            for (Pokemon pokemon : party) {
-                if (pokemon.getUuid().equals(uuid)) {
-                    pokemon.recall();
-                }
+        final PartyStore party = Cobblemon.INSTANCE.getStorage().getParty(this.getUUID(), this.registryAccess());
+        for (Pokemon pokemon : party) {
+            if (pokemon.getUuid().equals(uuid)) {
+                pokemon.recall();
             }
-        } catch (NoPokemonStoreException ignored) {}
+        }
     }
 
     private boolean isShoulderPokemon(CompoundTag nbt) {

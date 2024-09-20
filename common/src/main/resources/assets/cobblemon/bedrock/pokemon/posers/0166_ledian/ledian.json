@@ -12,7 +12,7 @@
       "poseTypes": ["STAND"],
       "isBattle": true,
       "animations": [
-        "q.look('head_ai')",
+        "q.look('head', 1, 1, 10, -75)",
         "q.bedrock('ledian', 'battle_idle')"
       ]
     },
@@ -21,7 +21,7 @@
       "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE", "FLOAT"],
       "isBattle": false,
       "animations": [
-        "q.look('head_ai')",
+        "q.look('head', 1, 1, 10, -75)",
         "q.bedrock('ledian', 'ground_idle')"
       ]
     },
@@ -29,7 +29,7 @@
       "poseName": "walking",
       "poseTypes": ["WALK", "SWIM"],
       "animations": [
-        "q.look('head_ai')",
+        "q.look('head', 1, 1, 10, -75)",
         "q.bedrock('ledian', 'ground_walk')"
       ]
     },
@@ -37,7 +37,7 @@
       "poseName": "hover",
       "poseTypes": ["HOVER"],
       "animations": [
-        "q.look('head_ai')",
+        "q.look('head', 1, 1, 10, -75)",
         "q.bedrock('ledian', 'air_idle')"
       ]
     },
@@ -45,7 +45,7 @@
       "poseName": "fly",
       "poseTypes": ["FLY"],
       "animations": [
-        "q.look('head_ai')",
+        "q.look('head', 1, 1, 10, -75)",
         "q.bedrock('ledian', 'air_fly')"
       ]
     },

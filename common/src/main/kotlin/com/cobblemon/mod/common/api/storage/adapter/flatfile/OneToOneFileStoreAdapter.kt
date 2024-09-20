@@ -14,6 +14,7 @@ import com.cobblemon.mod.common.api.storage.StorePosition
 import com.cobblemon.mod.common.api.storage.adapter.CobblemonAdapterParent
 import java.io.File
 import java.util.UUID
+import net.minecraft.core.RegistryAccess
 
 /**
  * A subset of [FileStoreAdapter] that make predictable use of files based on the implementation of [rootFolder],
@@ -40,7 +41,7 @@ abstract class OneToOneFileStoreAdapter<S>(
     private val fileExtension: String
 ) : FileStoreAdapter<S>, CobblemonAdapterParent<S>() {
     abstract fun save(file: File, serialized: S)
-    abstract fun <E, T : PokemonStore<E>> load(file: File, storeClass: Class<out T>, uuid: UUID): T?
+    abstract fun <E, T : PokemonStore<E>> load(file: File, storeClass: Class<out T>, uuid: UUID, registryAccess: RegistryAccess): T?
     fun getFile(storeClass: Class<out PokemonStore<*>>, uuid: UUID): File {
         val className = storeClass.simpleName.lowercase()
         val subfolder1 = if (folderPerClass) "$className/" else ""
@@ -61,14 +62,14 @@ abstract class OneToOneFileStoreAdapter<S>(
         tempFile.delete()
     }
 
-    override fun <E : StorePosition, T : PokemonStore<E>> provide(storeClass: Class<T>, uuid: UUID): T? {
+    override fun <E : StorePosition, T : PokemonStore<E>> provide(storeClass: Class<T>, uuid: UUID, registryAccess: RegistryAccess): T? {
         val file = getFile(storeClass, uuid)
         val tempFile = File(file.absolutePath + ".temp")
         if (tempFile.exists()) {
             try {
-                val tempLoaded = load(tempFile, storeClass, uuid)
+                val tempLoaded = load(tempFile, storeClass, uuid, registryAccess)
                 if (tempLoaded != null) {
-                    save(file, serialize(tempLoaded))
+                    save(file, serialize(tempLoaded, registryAccess))
                     return tempLoaded
                 }
             } finally {
@@ -77,7 +78,7 @@ abstract class OneToOneFileStoreAdapter<S>(
         }
 
         return if (file.exists()) {
-            load(file, storeClass, uuid)
+            load(file, storeClass, uuid, registryAccess)
                 ?: let {
                     LOGGER.error("Pokémon save file for ${storeClass.simpleName} ($uuid) was corrupted. A fresh file will be created.")
                     storeClass.getConstructor(UUID::class.java).newInstance(uuid)

@@ -12,6 +12,7 @@
     {
       "type": "entity_molang",
       "expressions": ["q.play_animation(q.bedrock_stateful('particle_dummy', 'flamethrower_actor'))"],
+      "entityCondition": "q.entity.is_user == true",
       "delay": 0.6
     },
     {

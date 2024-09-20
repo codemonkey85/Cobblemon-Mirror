@@ -9,44 +9,44 @@
     "description": {
       "translate": "advancements.cobblemon.use_candy.description"
     },
-	"hidden": true
+	"hidden": false
   },
   "parent": "cobblemon:craft_poke_ball",
   "criteria": {
     "use_rare_candy": {
       "trigger": "cobblemon:pokemon_interact",
       "conditions": {
-        "id": "cobblemon:rare_candy"
+        "item": "cobblemon:rare_candy"
       }
     },
 	"use_xl_candy": {
       "trigger": "cobblemon:pokemon_interact",
       "conditions": {
-        "id": "cobblemon:exp_candy_xl"
+        "item": "cobblemon:exp_candy_xl"
       }
     },
 	"use_l_candy": {
       "trigger": "cobblemon:pokemon_interact",
       "conditions": {
-        "id": "cobblemon:exp_candy_l"
+        "item": "cobblemon:exp_candy_l"
       }
     },
 	"use_m_candy": {
       "trigger": "cobblemon:pokemon_interact",
       "conditions": {
-        "id": "cobblemon:exp_candy_m"
+        "item": "cobblemon:exp_candy_m"
       }
     },
 	"use_s_candy": {
       "trigger": "cobblemon:pokemon_interact",
       "conditions": {
-        "id": "cobblemon:exp_candy_s"
+        "item": "cobblemon:exp_candy_s"
       }
     },
 	"use_xs_candy": {
       "trigger": "cobblemon:pokemon_interact",
       "conditions": {
-        "id": "cobblemon:exp_candy_xs"
+        "item": "cobblemon:exp_candy_xs"
       }
     }
   },

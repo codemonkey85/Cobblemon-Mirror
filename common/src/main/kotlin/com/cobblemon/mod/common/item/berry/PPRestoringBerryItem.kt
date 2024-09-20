@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.item.berry
 
+import com.bedrockk.molang.Expression
+import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
@@ -27,6 +29,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 
 /**
@@ -38,6 +41,7 @@ import net.minecraft.world.level.Level
 class PPRestoringBerryItem(block: BerryBlock, val amount: () -> ExpressionLike): BerryItem(block), PokemonAndMoveSelectingItem {
     override val bagItem = object : BagItem {
         override val itemName: String get() = "item.cobblemon.${berry()!!.identifier.path}"
+        override val returnItem = Items.AIR
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) = target.health > 0 && target.moveSet.any { it.currentPp < it.maxPp }
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "ether $data ${ genericRuntime.resolveInt(amount(), battlePokemon) }"
     }

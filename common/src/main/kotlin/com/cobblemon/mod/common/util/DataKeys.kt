@@ -63,6 +63,7 @@ object DataKeys {
     const val POKEMON_HIDE_LABEL = "HideLabel"
     const val POKEMON_UNBATTLEABLE = "Unbattleable"
     const val POKEMON_COUNTS_TOWARDS_SPAWN_CAP = "CountsTowardsSpawnCap"
+    const val POKEMON_FREEZE_FRAME = "FreezeFrame"
 
     const val POKEMON_ORIGINAL_TRAINER = "PokemonOriginalTrainer"
     const val POKEMON_ORIGINAL_TRAINER_TYPE = "PokemonOriginalTrainerType"
@@ -87,6 +88,12 @@ object DataKeys {
     const val STORE_BOX_COUNT = "BoxCount"
     const val STORE_BOX_COUNT_LOCKED = "BoxCountLocked"
     const val STORE_BACKUP = "BackupStore"
+
+    // Pokedex Keys
+    const val POKEDEX_TYPE = "PokedexType"
+    const val NUM_ENCOUNTED_WILD = "NumberEncounteredWild"
+    const val NUM_ENCOUNTED_BATTLE = "NumberEncounteredBattle"
+    const val NUM_CAUGHT = "NumberCaught"
 
     const val TETHER_OWNER_ID = "TetherOwnerId"
     const val TETHER_OWNER_NAME = "TetherOwnerName"

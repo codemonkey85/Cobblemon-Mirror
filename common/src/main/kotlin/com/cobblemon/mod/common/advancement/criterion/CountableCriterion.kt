@@ -50,7 +50,7 @@ open class CountableCriterion<T : CountableContext>(
 //        json.addProperty("count", count)
 //    }
 //
-//    override fun matches(player: ServerPlayerEntity, context: T) = context.times >= count
+//    override fun matches(player: ServerPlayer, context: T) = context.times >= count
 //}
 //
 ///**
@@ -64,7 +64,7 @@ open class CountableCriterion<T : CountableContext>(
 // * @since November 4th, 2022
 // */
 //class SimpleCountableCriterionCondition(id: Identifier, predicate: LootContextPredicate) : CountableCriterionCondition<CountableContext>(id, predicate)
-//fun SimpleCriterionTrigger<CountableContext, SimpleCountableCriterionCondition>.trigger(player: ServerPlayerEntity, times: Int) = trigger(player, CountableContext(times))
+//fun SimpleCriterionTrigger<CountableContext, SimpleCountableCriterionCondition>.trigger(player: ServerPlayer, times: Int) = trigger(player, CountableContext(times))
 //
 ///**
 // * Some type of context that has a count associated with it, representing how many times the trigger has occurred.

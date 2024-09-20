@@ -2,7 +2,9 @@
 	"display": {
 		"icon": {
 			"id": "cobblemon:link_cable",
-			"nbt": "{CustomModelData:6}"
+			"components": {
+        "minecraft:custom_model_data": 6
+      }
 		},
 		"title": {
 			"translate": "advancements.cobblemon.first_shiny_catch"

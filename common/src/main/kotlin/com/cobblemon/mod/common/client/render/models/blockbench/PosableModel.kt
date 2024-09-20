@@ -9,14 +9,12 @@
 package com.cobblemon.mod.common.client.render.models.blockbench
 
 import com.bedrockk.molang.runtime.MoLangRuntime
-import com.bedrockk.molang.runtime.struct.ArrayStruct
 import com.bedrockk.molang.runtime.struct.QueryStruct
-import com.bedrockk.molang.runtime.value.MoValue
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunctions
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
-import com.cobblemon.mod.common.api.molang.ObjectValue
+import com.cobblemon.mod.common.client.ClientMoLangFunctions.animationFunctions
 import com.cobblemon.mod.common.client.ClientMoLangFunctions.setupClient
 import com.cobblemon.mod.common.client.entity.PokemonClientDelegate
 import com.cobblemon.mod.common.client.render.ModelLayer
@@ -33,7 +31,6 @@ import com.cobblemon.mod.common.client.render.models.blockbench.quirk.ModelQuirk
 import com.cobblemon.mod.common.client.render.models.blockbench.quirk.SimpleQuirk
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.WaveFunction
-import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.entity.PosableEntity
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.generic.GenericBedrockEntity
@@ -41,9 +38,8 @@ import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.asExpressionLike
-import com.cobblemon.mod.common.util.getDoubleOrNull
-import com.cobblemon.mod.common.util.getStringOrNull
 import com.cobblemon.mod.common.util.plus
+import com.cobblemon.mod.common.util.toRGBA
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
@@ -89,6 +85,24 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
     open var portraitTranslation = Vec3(0.0, 0.0, 0.0)
 
     open var profileScale = 1F
+
+    /*
+     * Hello future Hiro, this is past Hiro. You've gotten forgetful in your old age.
+     *
+     * The profile translation is not actually necessary. The reason why you thought it was necessary
+     * is that there is a 1.5 block offset applied by living-entity-renderer-intended models due to
+     * Mojang quirks, and you thought that the profile translation would be necessary to counteract that.
+     * Without it, applying different scales to a model appears to scale from a different source point
+     * instead of scaling it from the feet of the model. What a pain!
+     *
+     * You can weasel out of that by pre-emptively translating in the opposite direction. The Y value
+     * will be form.baseScale * {the scale you passed into drawProfilePokemon} * {profileScale} * 1.5.
+     * Minor refactoring will be necessary to get all the things you need in the same place.
+     *
+     * Doesn't apply to portraits because there is some artistic positioning going on there. You also can't nix
+     * the profileScale because we use that to fit the model into the GUI - to-scale Wailord in the GUI is not
+     * a good user experience.
+     */
     open var profileTranslation = Vec3(0.0, 0.0, 0.0)
 
     var red = 1F
@@ -131,208 +145,7 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
     var currentState: PosableState? = null
 
     @Transient
-    val functions = QueryStruct(hashMapOf())
-        .addFunction("exclude_labels") { params ->
-            val labels = params.params.map { it.asString() }
-            return@addFunction ObjectValue(ExcludedLabels(labels))
-        }
-        .addFunction("bedrock_primary") { params ->
-            val group = params.getString(0)
-            val animation = params.getString(1)
-            val anim = bedrockStateful(group, animation)
-            val excludedLabels = mutableSetOf<String>()
-            var curve: WaveFunction = { t ->
-                if (t < 0.1) {
-                    t * 10
-                } else if (t < 0.9) {
-                    1F
-                } else {
-                    1F
-                }
-            }
-            for (index in 2 until params.params.size) {
-                val param = params.get<MoValue>(index)
-                if (param is ObjectValue<*>) {
-                    val obj = param.obj
-                    if (obj is ExcludedLabels) {
-                        excludedLabels.addAll(obj.labels)
-                    } else {
-                        curve = param.obj as WaveFunction
-                    }
-                    continue
-                }
-
-                val label = params.getString(index) ?: continue
-                excludedLabels.add(label)
-            }
-
-            return@addFunction ObjectValue(
-                PrimaryAnimation(
-                    animation = anim,
-                    excludedLabels = excludedLabels,
-                    curve = curve
-                )
-            )
-        }
-        .addFunction("bedrock_stateful") { params ->
-            val group = params.getString(0)
-            val animation = params.getString(1)
-            val anim = bedrockStateful(group, animation)
-            return@addFunction ObjectValue(anim)
-        }
-        .addFunction("bedrock") { params ->
-            val group = params.getString(0)
-            val animation = params.getString(1)
-            val anim = bedrock(group, animation)
-            return@addFunction ObjectValue(anim)
-        }
-        .addFunction("look") { params ->
-            val boneName = params.getString(0)
-            val pitchMultiplier = params.getDoubleOrNull(1) ?: 1F
-            val yawMultiplier = params.getDoubleOrNull(2) ?: 1F
-            val maxPitch = params.getDoubleOrNull(3) ?: 70F
-            val minPitch = params.getDoubleOrNull(4) ?: -45F
-            val maxYaw = params.getDoubleOrNull(5) ?: 45F
-            ObjectValue(
-                SingleBoneLookAnimation(
-                    bone = getPart(boneName),
-                    pitchMultiplier = pitchMultiplier.toFloat(),
-                    yawMultiplier = yawMultiplier.toFloat(),
-                    maxPitch = maxPitch.toFloat(),
-                    minPitch = minPitch.toFloat(),
-                    maxYaw = maxYaw.toFloat()
-                )
-            )
-        }
-        .addFunction("quadruped_walk") { params ->
-            val periodMultiplier = params.getDoubleOrNull(0) ?: 0.6662F
-            val amplitudeMultiplier = params.getDoubleOrNull(1) ?: 1.4F
-            val leftFrontLeftName = params.getStringOrNull(2) ?: "leg_front_left"
-            val leftFrontRightName = params.getStringOrNull(3) ?: "leg_front_right"
-            val leftBackLeftName = params.getStringOrNull(4) ?: "leg_back_left"
-            val leftBackRightName = params.getStringOrNull(5) ?: "leg_back_right"
-
-            ObjectValue(
-                QuadrupedWalkAnimation(
-                    periodMultiplier = periodMultiplier.toFloat(),
-                    amplitudeMultiplier = amplitudeMultiplier.toFloat(),
-                    legFrontLeft = this.getPart(leftFrontLeftName),
-                    legFrontRight = this.getPart(leftFrontRightName),
-                    legBackLeft = this.getPart(leftBackLeftName),
-                    legBackRight = this.getPart(leftBackRightName)
-                )
-            )
-        }
-        .addFunction("biped_walk") { params ->
-            val periodMultiplier = params.getDoubleOrNull(0) ?: 0.6662F
-            val amplitudeMultiplier = params.getDoubleOrNull(1) ?: 1.4F
-            val leftLegName = params.getStringOrNull(2) ?: "leg_left"
-            val rightLegName = params.getStringOrNull(3) ?: "leg_right"
-
-            ObjectValue(
-                BipedWalkAnimation(
-                    periodMultiplier = periodMultiplier.toFloat(),
-                    amplitudeMultiplier = amplitudeMultiplier.toFloat(),
-                    leftLeg = this.getPart(leftLegName),
-                    rightLeg = this.getPart(rightLegName)
-                )
-            )
-        }
-        .addFunction("bimanual_swing") { params ->
-            val swingPeriodMultiplier = params.getDoubleOrNull(0) ?: 0.6662F
-            val amplitudeMultiplier = params.getDoubleOrNull(1) ?: 1F
-            val leftArmName = params.getStringOrNull(2) ?: "arm_left"
-            val rightArmName = params.getStringOrNull(3) ?: "arm_right"
-
-            ObjectValue(
-                BimanualSwingAnimation(
-                    swingPeriodMultiplier = swingPeriodMultiplier.toFloat(),
-                    amplitudeMultiplier = amplitudeMultiplier.toFloat(),
-                    leftArm = this.getPart(leftArmName),
-                    rightArm = this.getPart(rightArmName)
-                )
-            )
-        }
-        .addFunction("sine_wing_flap") { params ->
-            // verticalShift = -14F.toRadians(), period = 0.9F, amplitude = 0.9F
-            val amplitude = params.getDoubleOrNull(0) ?: 0.9F
-            val period = params.getDoubleOrNull(1) ?: 0.9F
-            val verticalShift = params.getDoubleOrNull(2) ?: 0F
-            val axis = params.getStringOrNull(3) ?: "y"
-            val axisIndex = when (axis) {
-                "x" -> ModelPartTransformation.X_AXIS
-                "y" -> ModelPartTransformation.Y_AXIS
-                "z" -> ModelPartTransformation.Z_AXIS
-                else -> ModelPartTransformation.Y_AXIS
-            }
-            val wingLeft = params.getStringOrNull(4) ?: "wing_left"
-            val wingRight = params.getStringOrNull(5) ?: "wing_right"
-
-            ObjectValue(
-                WingFlapIdleAnimation(
-                    rotation = sineFunction(
-                        verticalShift = verticalShift.toFloat(),
-                        period = period.toFloat(),
-                        amplitude = amplitude.toFloat()
-                    ),
-                    axis = axisIndex,
-                    leftWing = this.getPart(wingLeft),
-                    rightWing = this.getPart(wingRight)
-                )
-            )
-        }
-        .addFunction("bedrock_quirk") { params ->
-            val animationGroup = params.getString(0)
-            val animationNames = params.get<MoValue>(1)
-                ?.let { if (it is ArrayStruct) it.map.values.map { it.asString() } else listOf(it.asString()) }
-                ?: listOf()
-            val minSeconds = params.getDoubleOrNull(2) ?: 8F
-            val maxSeconds = params.getDoubleOrNull(3) ?: 30F
-            val loopTimes = params.getDoubleOrNull(4)?.toInt() ?: 1
-            ObjectValue(
-                quirk(
-                    secondsBetweenOccurrences = minSeconds.toFloat() to maxSeconds.toFloat(),
-                    condition = { true },
-                    loopTimes = 1..loopTimes,
-                    animation = { bedrockStateful(animationGroup, animationNames.random()) }
-                )
-            )
-        }
-        .addFunction("bedrock_primary_quirk") { params ->
-            val animationGroup = params.getString(0)
-            val animationNames = params.get<MoValue>(1)?.let { if (it is ArrayStruct) it.map.values.map { it.asString() } else listOf(it.asString()) } ?: listOf()
-            val minSeconds = params.getDoubleOrNull(2) ?: 8F
-            val maxSeconds = params.getDoubleOrNull(3) ?: 30F
-            val loopTimes = params.getDoubleOrNull(4)?.toInt() ?: 1
-            val excludedLabels = mutableSetOf<String>()
-            var curve: WaveFunction = { t ->
-                if (t < 0.1) {
-                    t * 10
-                } else if (t < 0.9) {
-                    1F
-                } else {
-                    1F
-                }
-            }
-            for (index in 5 until params.params.size) {
-                val param = params.get<MoValue>(index)
-                if (param is ObjectValue<*>) {
-                    curve = param.obj as WaveFunction
-                    continue
-                }
-
-                val label = params.getString(index) ?: continue
-                excludedLabels.add(label)
-            }
-            ObjectValue(
-                quirk(
-                    secondsBetweenOccurrences = minSeconds.toFloat() to maxSeconds.toFloat(),
-                    condition = { true },
-                    loopTimes = 1..loopTimes,
-                    animation = { PrimaryAnimation(bedrockStateful(animationGroup, animationNames.random()), excludedLabels = excludedLabels, curve = curve) }
-                )
-            )
-        }
+    val functions = QueryStruct(this.animationFunctions())
 
     @Transient
     val runtime = MoLangRuntime().setup().setupClient().also { it.environment.query.addFunctions(functions.functions) }
@@ -549,6 +362,11 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
         if (bone is ModelPart) loadAllNamedChildren(bone)
     }
 
+    fun registerPartAndAllNamedChildren(name: String, bone: Bone) {
+        if (bone is ModelPart) registerRelevantPart(name, bone)
+        loadAllNamedChildren(bone)
+    }
+
     fun loadAllNamedChildren(modelPart: ModelPart) {
         for ((name, child) in modelPart.children.entries) {
             val default = ModelPartTransformation.derive(child)
@@ -576,10 +394,11 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
         packedOverlay: Int,
         color: Int
     ) {
-        val r = (color shr 16 and 255) / 255F
-        val g = (color shr 8 and 255) / 255F
-        val b = (color and 255) / 255F
-        val a = (color shr 24 and 255) / 255F
+        val rgba = color.toRGBA()
+        val r = rgba.x
+        val g = rgba.y
+        val b = rgba.z
+        val a = rgba.w
 
         val r2 = r * red
         val g2 = g * green
@@ -604,10 +423,10 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
                 val renderLayer = getLayer(texture, layer.emissive, layer.translucent)
                 val consumer = provider.getBuffer(renderLayer)
                 val tint = layer.tint
-                val tintRed = (tint.x * 255).toInt()
-                val tintGreen = (tint.y * 255).toInt()
-                val tintBlue = (tint.z * 255).toInt()
-                val tintAlpha = (tint.w * 255).toInt()
+                val tintRed = (tint.x * r2 * 255).toInt()
+                val tintGreen = (tint.y * g2 * 255).toInt()
+                val tintBlue = (tint.z * b2 * 255).toInt()
+                val tintAlpha = (tint.w * a2 * 255).toInt()
                 val tintColor = tintAlpha shl 24 or (tintRed shl 16) or (tintGreen shl 8) or tintBlue
 
                 stack.pushPose()

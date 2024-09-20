@@ -63,6 +63,7 @@ import net.fabricmc.fabric.api.loot.v2.LootTableEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.fabricmc.fabric.api.`object`.builder.v1.trade.TradeOfferHelper
+import net.fabricmc.fabric.api.`object`.builder.v1.world.poi.PointOfInterestHelper
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
@@ -140,8 +141,8 @@ object CobblemonFabric : CobblemonImplementation {
         ServerLifecycleEvents.SERVER_STOPPED.register { server -> PlatformEvents.SERVER_STOPPED.post(ServerEvent.Stopped(server)) }
         ServerTickEvents.START_SERVER_TICK.register { server -> PlatformEvents.SERVER_TICK_PRE.post(ServerTickEvent.Pre(server)) }
         ServerTickEvents.END_SERVER_TICK.register { server -> PlatformEvents.SERVER_TICK_POST.post(ServerTickEvent.Post(server)) }
-        ServerPlayConnectionEvents.JOIN.register { handler, _, _ -> PlatformEvents.SERVER_PLAYER_LOGIN.post(ServerPlayerEvent.Login(handler.player)) }
-        ServerPlayConnectionEvents.DISCONNECT.register { handler, _ -> PlatformEvents.SERVER_PLAYER_LOGOUT.post(ServerPlayerEvent.Logout(handler.player)) }
+        ServerPlayConnectionEvents.JOIN.register { handler, _, server -> server.executeIfPossible { PlatformEvents.SERVER_PLAYER_LOGIN.post(ServerPlayerEvent.Login(handler.player)) } }
+        ServerPlayConnectionEvents.DISCONNECT.register { handler, server -> server.executeIfPossible { PlatformEvents.SERVER_PLAYER_LOGOUT.post(ServerPlayerEvent.Logout(handler.player)) } }
         ServerLivingEntityEvents.ALLOW_DEATH.register { entity, _, _ ->
             if (entity is ServerPlayer) {
                 PlatformEvents.PLAYER_DEATH.postThen(
@@ -238,9 +239,6 @@ object CobblemonFabric : CobblemonImplementation {
                 CobblemonItemGroups.inject(key, fabricInjector)
             }
         }
-        CobblemonTradeOffers.tradeOffersForAll().forEach { tradeOffer -> TradeOfferHelper.registerVillagerOffers(tradeOffer.profession, tradeOffer.requiredLevel) { factories -> factories.addAll(tradeOffer.tradeOffers) } }
-        // 1 = common trades, 2 = rare, it has no concept of levels
-        CobblemonTradeOffers.resolveWanderingTradeOffers().forEach { tradeOffer -> TradeOfferHelper.registerWanderingTraderOffers(if (tradeOffer.isRareTrade) 2 else 1) { factories -> factories.addAll(tradeOffer.tradeOffers) } }
     }
 
     override fun registerBlocks() {
@@ -258,6 +256,15 @@ object CobblemonFabric : CobblemonImplementation {
 
     override fun registerBlockEntityTypes() {
         CobblemonBlockEntities.register { identifier, type -> Registry.register(CobblemonBlockEntities.registry, identifier, type) }
+    }
+
+    override fun registerVillagers() {
+        CobblemonVillagerPoiTypes.register { identifier, type -> PointOfInterestHelper.register(identifier, type.maxTickets, type.validRange, type.matchingStates) }
+        CobblemonVillagerProfessions.register { identifier, profession -> Registry.register(CobblemonVillagerProfessions.registry, identifier, profession) }
+
+        CobblemonTradeOffers.tradeOffersForAll().forEach { tradeOffer -> TradeOfferHelper.registerVillagerOffers(tradeOffer.profession, tradeOffer.requiredLevel) { factories -> factories.addAll(tradeOffer.tradeOffers) } }
+        // 1 = common trades, 2 = rare, it has no concept of levels
+        CobblemonTradeOffers.resolveWanderingTradeOffers().forEach { tradeOffer -> TradeOfferHelper.registerWanderingTraderOffers(if (tradeOffer.isRareTrade) 2 else 1) { factories -> factories.addAll(tradeOffer.tradeOffers) } }
     }
 
     override fun registerWorldGenFeatures() {
@@ -281,7 +288,7 @@ object CobblemonFabric : CobblemonImplementation {
 
     override fun registerCriteria() {
         CobblemonCriteria.register { id, obj ->
-            Registry.register(BuiltInRegistries.TRIGGER_TYPES, id, obj)
+            Registry.register(CobblemonCriteria.registry, id, obj)
         }
     }
 

@@ -18,9 +18,12 @@ import com.cobblemon.mod.common.api.storage.adapter.flatfile.FileStoreAdapter
 import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore
 import com.cobblemon.mod.common.api.storage.pc.PCStore
 import com.cobblemon.mod.common.platform.events.PlatformEvents
+import com.cobblemon.mod.common.platform.events.ServerPlayerEvent
 import com.cobblemon.mod.common.util.subscribeOnServer
 import java.util.UUID
 import java.util.concurrent.Executors
+import net.minecraft.core.RegistryAccess
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * A [PokemonStoreFactory] that is backed by a file. This implementation will now handle persistence and scheduling
@@ -40,7 +43,7 @@ open class FileBackedPokemonStoreFactory<S>(
     protected val saveSubscription = PlatformEvents.SERVER_TICK_PRE.subscribe {
         passedTicks++
         if (passedTicks > 20 * Cobblemon.config.pokemonSaveIntervalSeconds) {
-            saveAll()
+            saveAll(it.server.registryAccess())
             passedTicks = 0
         }
     }
@@ -58,15 +61,15 @@ open class FileBackedPokemonStoreFactory<S>(
 
     private val dirtyStores = mutableSetOf<PokemonStore<*>>()
 
-    override fun getPlayerParty(playerID: UUID) = getStore(PlayerPartyStore::class.java, playerID, partyConstructor)
-    override fun getPC(playerID: UUID) = getStore(PCStore::class.java, playerID, pcConstructor)
+    override fun getPlayerParty(playerID: UUID, registryAccess: RegistryAccess) = getStore(PlayerPartyStore::class.java, playerID, registryAccess, partyConstructor)
+    override fun getPC(playerID: UUID, registryAccess: RegistryAccess) = getStore(PCStore::class.java, playerID, registryAccess, pcConstructor)
 
-
-    override fun <E : StorePosition, T : PokemonStore<E>> getCustomStore(storeClass: Class<T>, uuid: UUID) = getStore(storeClass, uuid)
+    override fun <E : StorePosition, T : PokemonStore<E>> getCustomStore(storeClass: Class<T>, uuid: UUID, registryAccess: RegistryAccess) = getStore(storeClass, uuid, registryAccess)
 
     fun <E : StorePosition, T : PokemonStore<E>> getStore(
         storeClass: Class<T>,
         uuid: UUID,
+        registryAccess: RegistryAccess,
         constructor: ((UUID) -> T) = { storeClass.getConstructor(UUID::class.java).newInstance(it) }
     ): T? {
         val cache = getStoreCache(storeClass).cacheMap
@@ -74,7 +77,7 @@ open class FileBackedPokemonStoreFactory<S>(
         if (cached != null) {
             return cached
         } else {
-            val loaded = adapter.load(storeClass, uuid)
+            val loaded = adapter.load(storeClass, uuid, registryAccess)
                 ?: run {
                     if (createIfMissing) {
                         return@run constructor(uuid)
@@ -91,15 +94,15 @@ open class FileBackedPokemonStoreFactory<S>(
         }
     }
 
-    fun save(store: PokemonStore<*>) {
-        val serialized = SerializedStore(store::class.java, store.uuid, adapter.serialize(store))
+    fun save(store: PokemonStore<*>, registryAccess: RegistryAccess) {
+        val serialized = SerializedStore(store::class.java, store.uuid, adapter.serialize(store, registryAccess))
         dirtyStores.remove(store)
         saveExecutor.submit { adapter.save(serialized.storeClass, serialized.uuid, serialized.serializedForm) }
     }
 
-    fun saveAll() {
+    fun saveAll(registryAccess: RegistryAccess) {
         LOGGER.debug("Serializing ${dirtyStores.size} Pokémon stores.")
-        val serializedStores = dirtyStores.map { SerializedStore(it::class.java, it.uuid, adapter.serialize(it)) }
+        val serializedStores = dirtyStores.map { SerializedStore(it::class.java, it.uuid, adapter.serialize(it, registryAccess)) }
         dirtyStores.clear()
         LOGGER.debug("Queueing save.")
         saveExecutor.submit {
@@ -116,15 +119,14 @@ open class FileBackedPokemonStoreFactory<S>(
             .subscribeOnServer { dirtyStores.add(store) }
     }
 
-    override fun shutdown() {
+    override fun shutdown(registryAccess: RegistryAccess) {
         saveSubscription.unsubscribe()
-        saveAll()
+        saveAll(registryAccess)
         saveExecutor.shutdown()
     }
 
-    override fun onPlayerDisconnect(playerID: UUID) {
-        dirtyStores.filter { it.uuid == playerID }.forEach(::save)
-        storeCaches.forEach { (_, cache) -> cache.cacheMap.remove(playerID) }
+    override fun onPlayerDisconnect(player: ServerPlayer) {
+        dirtyStores.filter { it.uuid == player.uuid }.forEach { save(it, player.registryAccess()) }
+        storeCaches.forEach { (_, cache) -> cache.cacheMap.remove(player.uuid) }
     }
-
 }

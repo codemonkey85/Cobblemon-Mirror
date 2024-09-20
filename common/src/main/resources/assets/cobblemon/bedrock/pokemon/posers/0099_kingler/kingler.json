@@ -1,0 +1,34 @@
+{
+  "portraitScale": 1.09,
+  "portraitTranslation": [-0.23, 0.33, 0],
+  "profileScale": 0.44,
+  "profileTranslation": [-0.06, 0.99, 0],
+  "animations": {
+    "cry": "q.bedrock_stateful('kingler', 'cry')"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('kingler', 'battle_idle')"
+      ]
+    },
+    "standing": {
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('kingler', 'ground_idle')"
+      ]
+    },
+    "walking": {
+      "poseTypes": ["WALK"],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('kingler', 'ground_walk')"
+      ]
+    }
+  }
+}

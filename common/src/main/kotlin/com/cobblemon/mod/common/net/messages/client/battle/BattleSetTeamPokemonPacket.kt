@@ -29,10 +29,10 @@ class BattleSetTeamPokemonPacket(val team: List<Pokemon>) : NetworkPacket<Battle
     override val id = ID
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeCollection(this.team, Pokemon.S2C_CODEC::encode)
+        buffer.writeCollection(this.team) { _, pokemon -> Pokemon.S2C_CODEC.encode(buffer, pokemon) }
     }
     companion object {
         val ID = cobblemonResource("battle_set_team")
-        fun decode(buffer: RegistryFriendlyByteBuf) = BattleSetTeamPokemonPacket(buffer.readList(Pokemon.S2C_CODEC::decode))
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleSetTeamPokemonPacket(buffer.readList { _ -> Pokemon.S2C_CODEC.decode(buffer) })
     }
 }

@@ -174,6 +174,9 @@ class CobblemonConfig {
     @NodeCategory(Category.Pokemon)
     var displayEntityLevelLabel = true
 
+    @NodeCategory(Category.Pokemon)
+    var displayEntityNameLabel = false
+
     @NodeCategory(Category.Spawning)
     var shinyRate = 8192F
 
@@ -219,6 +222,21 @@ class CobblemonConfig {
 
     @NodeCategory(Category.Battles)
     var walkingInBattleAnimations = false
+
+    @NodeCategory(Category.Battles)
+    var battleWildMaxDistance = 12F
+
+    @NodeCategory(Category.World)
+    var tradeMaxDistance = 12F
+
+    @NodeCategory(Category.Battles)
+    var BattlePvPMaxDistance = 32F
+
+    @NodeCategory(Category.Battles)
+    var battleSpectateMaxDistance = 64F
+
+    @NodeCategory(Category.World)
+    var entityInteractionMaxDistance  = 64F
 
     @NodeCategory(Category.Debug)
     var enableDebugKeys = false

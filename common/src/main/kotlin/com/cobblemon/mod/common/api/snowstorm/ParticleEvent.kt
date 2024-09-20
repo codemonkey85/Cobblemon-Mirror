@@ -78,8 +78,8 @@ class ParticleEvent(
         particleEffect?.let { effect ->
             val bedrockParticleOptions = BedrockParticleOptionsRepository.getEffect(effect.effect) ?: return@let
             val rootMatrix = when (effect.type) {
-                EventParticleOptions.EventParticleType.EMITTER,// -> MatrixWrapper().updatePosition(storm.matrixWrapper.getOrigin())
-                EventParticleOptions.EventParticleType.EMITTER_BOUND,// -> storm.matrixWrapper
+                EventParticleOptions.EventParticleType.EMITTER-> MatrixWrapper().updatePosition(storm.matrixWrapper.position).updateMatrix(storm.matrixWrapper.matrix)
+                EventParticleOptions.EventParticleType.EMITTER_BOUND -> storm.matrixWrapper
                 EventParticleOptions.EventParticleType.PARTICLE,
                 EventParticleOptions.EventParticleType.PARTICLE_WITH_VELOCITY -> (particle?.let {
                     Vec3(
@@ -91,8 +91,8 @@ class ParticleEvent(
             }
 
             val sourceVelocity = when (effect.type) {
-                EventParticleOptions.EventParticleType.EMITTER,// -> storm.sourceVelocity().let { { it } }
-                EventParticleOptions.EventParticleType.EMITTER_BOUND,// -> storm.sourceVelocity
+                EventParticleOptions.EventParticleType.EMITTER -> storm.sourceVelocity().let { { it } }
+                EventParticleOptions.EventParticleType.EMITTER_BOUND -> storm.sourceVelocity
                 EventParticleOptions.EventParticleType.PARTICLE -> { { Vec3.ZERO } }
                 EventParticleOptions.EventParticleType.PARTICLE_WITH_VELOCITY -> (particle?.let {
                     Vec3(

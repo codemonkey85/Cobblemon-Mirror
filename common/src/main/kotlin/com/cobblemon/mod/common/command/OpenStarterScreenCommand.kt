@@ -11,6 +11,8 @@ package com.cobblemon.mod.common.command
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.permission.CobblemonPermissions
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.net.messages.client.starter.OpenStarterUIPacket
 import com.cobblemon.mod.common.util.lang
@@ -38,7 +40,7 @@ object OpenStarterScreenCommand {
 
     private fun execute(context: CommandContext<CommandSourceStack>) : Int {
         val player = EntityArgument.getPlayer(context, "player")
-        val playerData = Cobblemon.playerData.get(player)
+        val playerData = Cobblemon.playerDataManager.getGenericData(player)
         if (playerData.starterSelected) {
             context.source.sendSuccess({ lang("ui.starter.hasalreadychosen", player.name).red() }, true)
             return 0
@@ -48,7 +50,7 @@ object OpenStarterScreenCommand {
             playerData.sendToPlayer(player)
         }
         playerData.starterPrompted = true
-        Cobblemon.playerData.saveSingle(playerData)
+        Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreTypes.GENERAL)
         player.sendPacket(OpenStarterUIPacket(Cobblemon.starterHandler.getStarterList(player)))
         return SINGLE_SUCCESS
     }

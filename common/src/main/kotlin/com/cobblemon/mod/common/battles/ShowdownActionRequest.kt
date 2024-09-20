@@ -92,6 +92,7 @@ enum class ShowdownActionResponseType(val loader: (RegistryFriendlyByteBuf) -> S
     DEFAULT({ DefaultActionResponse() }),
     FORCE_PASS({ ForcePassActionResponse() }),
     PASS({ PassActionResponse }),
+    SHIFT({ ShiftActionResponse()}),
     HEAL_ITEM({ HealItemActionResponse("potion") }),
     FORFEIT({ ForfeitActionResponse() });
 }
@@ -130,7 +131,7 @@ data class MoveActionResponse(var moveName: String, var targetPnx: String? = nul
 
         val pnx = targetPnx ?: return false // If the targets list is non-null then they need to have specified a target
         val (_, targetPokemon) = activeBattlePokemon.actor.battle.getActorAndActiveSlotFromPNX(pnx)
-        if (targetPokemon !in availableTargets || targetPokemon.battlePokemon == null || targetPokemon.battlePokemon!!.health <= 0) {
+        if (targetPokemon !in availableTargets) {
             return false // It's not a possible target.
         }
 
@@ -188,6 +189,16 @@ data class HealItemActionResponse(var item: String) : ShowdownActionResponse(Sho
     }
 }
 
+class ShiftActionResponse() : ShowdownActionResponse(ShowdownActionResponseType.SHIFT) {
+    override fun isValid(activeBattlePokemon: ActiveBattlePokemon, showdownMoveSet: ShowdownMoveset?, forceSwitch: Boolean): Boolean {
+        return !forceSwitch && activeBattlePokemon.getPNX()[1] != 'b' && activeBattlePokemon.battle.format.battleType.pokemonPerSide == 3
+    }
+
+    override fun toShowdownString(activeBattlePokemon: ActiveBattlePokemon, showdownMoveSet: ShowdownMoveset?): String {
+        return "shift"
+    }
+
+}
 data class SwitchActionResponse(var newPokemonId: UUID) : ShowdownActionResponse(ShowdownActionResponseType.SWITCH) {
     override fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
         super.saveToBuffer(buffer)
@@ -204,7 +215,7 @@ data class SwitchActionResponse(var newPokemonId: UUID) : ShowdownActionResponse
         val pokemon = activeBattlePokemon.actor.pokemonList.find { it.uuid == newPokemonId }
         return when {
             pokemon == null -> false // No such Pokémon
-            (!activeBattlePokemon.actor.request?.side?.pokemon?.get(0)?.reviving!! && pokemon.health <= 0) -> false // Checks if the active Pokémon is reviving, if so ignore this check. If not, return false if dead
+            (!activeBattlePokemon.actor.request?.side?.pokemon?.any{ it.uuid == activeBattlePokemon.battlePokemon?.uuid && it.reviving }!! && pokemon.health <= 0) -> false // Checks if the active Pokémon is reviving, if so ignore this check. If not, return false if dead
             showdownMoveSet != null && showdownMoveSet.trapped -> false // You're not allowed to switch
             activeBattlePokemon.actor.getSide().activePokemon.any { it.battlePokemon?.uuid == newPokemonId } -> false // Pokémon is already sent out
             else -> true

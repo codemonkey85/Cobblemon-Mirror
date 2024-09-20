@@ -333,6 +333,10 @@ open class PokemonProperties {
         this.commonApply(pokemonEntity.pokemon)
     }
 
+    fun applyCustomProperties(pokemonEntity: PokemonEntity) {
+        this.customProperties.forEach { it.apply(pokemonEntity) }
+    }
+
     private fun commonApply(pokemon: Pokemon) {
         species?.let {
             return@let try {
@@ -519,7 +523,7 @@ open class PokemonProperties {
     }
 
     fun createEntity(world: Level): PokemonEntity {
-        return PokemonEntity(world, create())
+        return PokemonEntity(world, create()).also { applyCustomProperties(it) }
     }
 
     // TODO Codecs at some point

@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.net.messages.client.battle
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
+import com.cobblemon.mod.common.battles.BattleFormat
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.ComponentSerialization
@@ -27,19 +28,23 @@ import java.util.*
  * @since August 5th, 2022
  */
 class BattleChallengeNotificationPacket(
-    val battleChallengeId: UUID,
-    val challengerId: UUID,
-    val challengerName: MutableComponent
+        val battleChallengeId: UUID,
+        val challengerIds: List<UUID>,
+        val challengerNames: List<MutableComponent>,
+        val battleFormat: BattleFormat
 ): NetworkPacket<BattleChallengeNotificationPacket> {
     override val id = ID
+
+    constructor(battleChallengeId: UUID, challengerId: UUID, challengerName: MutableComponent, battleFormat: BattleFormat) : this(battleChallengeId, listOf(challengerId), listOf(challengerName), battleFormat)
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeUUID(battleChallengeId)
-        buffer.writeUUID(challengerId)
-        ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.encode(buffer, challengerName)
+        buffer.writeCollection(challengerIds) { _, value -> buffer.writeUUID(value) }
+        buffer.writeCollection(challengerNames) { _, value -> ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.encode(buffer, value) }
+        battleFormat.saveToBuffer(buffer)
     }
 
     companion object {
         val ID = cobblemonResource("battle_challenge_notification")
-        fun decode(buffer: RegistryFriendlyByteBuf) = BattleChallengeNotificationPacket(buffer.readUUID(), buffer.readUUID(), ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buffer).copy())
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleChallengeNotificationPacket(buffer.readUUID(), buffer.readList { it.readUUID() }, buffer.readList { ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(it).copy() } , BattleFormat.loadFromBuffer(buffer))
     }
 }

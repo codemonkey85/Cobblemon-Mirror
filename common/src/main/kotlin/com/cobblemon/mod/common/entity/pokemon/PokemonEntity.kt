@@ -145,6 +145,7 @@ open class PokemonEntity(
         @JvmStatic val COUNTS_TOWARDS_SPAWN_CAP = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.BOOLEAN)
         @JvmStatic val SPAWN_DIRECTION = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.FLOAT)
         @JvmStatic val FRIENDSHIP = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.INT)
+        @JvmStatic val FREEZE_FRAME = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.FLOAT)
 
         const val BATTLE_LOCK = "battle"
 
@@ -212,7 +213,8 @@ open class PokemonEntity(
     /**
      * 0 is do nothing,
      * 1 is appearing from a pokeball so needs to be small then grows,
-     * 2 is being captured/recalling so starts large and shrinks.
+     * 2 is 1 without extra animations like ball throwing and particles, used for pastures and wild capture fails
+     * 3 is being captured/recalling so starts large and shrinks.
      */
     var beamMode: Int
         get() = entityData.get(BEAM_MODE).toInt()
@@ -290,6 +292,7 @@ open class PokemonEntity(
         builder.define(SPAWN_DIRECTION, level().random.nextFloat() * 360F)
         builder.define(COUNTS_TOWARDS_SPAWN_CAP, true)
         builder.define(FRIENDSHIP, 0)
+        builder.define(FREEZE_FRAME, -1F)
     }
 
     override fun onSyncedDataUpdated(data: EntityDataAccessor<*>) {
@@ -375,9 +378,10 @@ open class PokemonEntity(
         //Before, pokemon entities in pastures would hold an old ref to a pokemon obj and changes to that would not appear to the underlying file
         if (this.tethering != null) {
             //Only for online players
-            if (level().getPlayerByUUID(ownerUUID) != null) {
+            val player = level().getPlayerByUUID(ownerUUID) as? ServerPlayer
+            if (player != null) {
                 this.ownerUUID?.let {
-                    val actualPokemon = Cobblemon.storage.getPC(it)[this.pokemon.uuid]
+                    val actualPokemon = Cobblemon.storage.getPC(player)[this.pokemon.uuid]
                     actualPokemon?.let {
                         if (it !== pokemon) {
                             pokemon = it
@@ -425,6 +429,11 @@ open class PokemonEntity(
             return true
         }
 
+        // Don't let Pokémon be hurt during sendout and recall animations
+        if (beamMode != 0) {
+            return true
+        }
+
         // Owned Pokémon cannot be hurt by players or suffocation
         if (ownerUUID != null && (damageSource.entity is Player || damageSource.`is`(DamageTypes.IN_WALL))) {
             return true
@@ -459,6 +468,12 @@ open class PokemonEntity(
                 entityData.set(PHASING_TARGET_ID, owner.id)
                 entityData.set(BEAM_MODE, 3)
                 val state = pokemon.state
+
+                // Let the Pokémon be intangible during recall
+                noPhysics = true
+                // This doesn't appear to actually prevent a livingEntity from falling, but is here as a precaution
+                isNoGravity = true
+
                 afterOnServer(seconds = SEND_OUT_DURATION) {
                     // only recall if the Pokémon hasn't been recalled yet for this state
                     if (state == pokemon.state) {
@@ -493,7 +508,7 @@ open class PokemonEntity(
             tetheringNbt.put(DataKeys.TETHER_MAX_ROAM_POS, NbtUtils.writeBlockPos(tethering.maxRoamPos))
             nbt.put(DataKeys.TETHERING, tetheringNbt)
         } else {
-            nbt.put(DataKeys.POKEMON, pokemon.saveToNBT())
+            nbt.put(DataKeys.POKEMON, pokemon.saveToNBT(registryAccess()))
         }
         val battleIdToSave = battleId
         if (battleIdToSave != null) {
@@ -510,6 +525,9 @@ open class PokemonEntity(
         }
         if (!countsTowardsSpawnCap) {
             nbt.putBoolean(DataKeys.POKEMON_COUNTS_TOWARDS_SPAWN_CAP, false)
+        }
+        if (entityData.get(FREEZE_FRAME) != -1F) {
+            nbt.putFloat(DataKeys.POKEMON_FREEZE_FRAME, entityData.get(FREEZE_FRAME))
         }
 
         // save active effects
@@ -531,7 +549,7 @@ open class PokemonEntity(
             val minRoamPos = NbtUtils.readBlockPos(tetheringNBT, DataKeys.TETHER_MIN_ROAM_POS).get()
             val maxRoamPos = NbtUtils.readBlockPos(tetheringNBT, DataKeys.TETHER_MAX_ROAM_POS).get()
 
-            val loadedPokemon = Cobblemon.storage.getPC(pcId)[pokemonId]
+            val loadedPokemon = Cobblemon.storage.getPC(pcId, registryAccess())[pokemonId]
             if (loadedPokemon != null && loadedPokemon.tetheringId == tetheringId) {
                 pokemon = loadedPokemon
                 tethering = PokemonPastureBlockEntity.Tethering(
@@ -549,8 +567,9 @@ open class PokemonEntity(
                 health = 0F
             }
         } else {
+            val ops = registryAccess().createSerializationContext(NbtOps.INSTANCE)
             pokemon = try {
-                this.sidedCodec().decode(NbtOps.INSTANCE, nbt.getCompound(DataKeys.POKEMON)).orThrow.first
+                this.sidedCodec().decode(ops, nbt.getCompound(DataKeys.POKEMON)).orThrow.first
             } catch (_: IllegalStateException) {
                 health = 0F
                 this.createSidedPokemon()
@@ -578,6 +597,9 @@ open class PokemonEntity(
         entityData.set(LABEL_LEVEL, pokemon.level)
         entityData.set(POSE_TYPE, PoseType.valueOf(nbt.getString(DataKeys.POKEMON_POSE_TYPE)))
         entityData.set(BEHAVIOUR_FLAGS, nbt.getByte(DataKeys.POKEMON_BEHAVIOUR_FLAGS))
+        if (nbt.contains(DataKeys.POKEMON_FREEZE_FRAME)) {
+            entityData.set(FREEZE_FRAME, nbt.getFloat(DataKeys.POKEMON_FREEZE_FRAME))
+        }
 
         if (nbt.contains(DataKeys.POKEMON_HIDE_LABEL)) {
             entityData.set(HIDE_LABEL, nbt.getBoolean(DataKeys.POKEMON_HIDE_LABEL))
@@ -624,9 +646,10 @@ open class PokemonEntity(
         goalSelector.addGoal(0, PokemonInBattleMovementGoal(this, 10))
         goalSelector.addGoal(0, object : Goal() {
             override fun canUse() =
-                this@PokemonEntity.entityData.get(PHASING_TARGET_ID) != -1 || pokemon.status?.status == Statuses.SLEEP || entityData.get(
-                    DYING_EFFECTS_STARTED
-                ) || evolutionEntity != null
+                        this@PokemonEntity.entityData.get(PHASING_TARGET_ID) != -1 ||
+                        pokemon.status?.status == Statuses.SLEEP ||
+                        entityData.get(DYING_EFFECTS_STARTED) ||
+                        evolutionEntity != null
 
             override fun canContinueToUse(): Boolean {
                 if (pokemon.status?.status == Statuses.SLEEP && !canSleep() && !isBusy) {
@@ -1151,8 +1174,10 @@ open class PokemonEntity(
 
     override fun travel(movementInput: Vec3) {
         val prevBlockPos = this.blockPosition()
-        super.travel(movementInput)
-        this.updateBlocksTraveled(prevBlockPos)
+        if (beamMode != 3) { // Don't let Pokémon move during recall
+            super.travel(movementInput)
+            this.updateBlocksTraveled(prevBlockPos)
+        }
     }
 
     private fun updateBlocksTraveled(fromBp: BlockPos) {
@@ -1162,6 +1187,11 @@ open class PokemonEntity(
         }
         val blocksTaken = this.blockPosition().distSqr(fromBp)
         if (blocksTaken > 0) this.blocksTraveled += blocksTaken
+    }
+
+    override fun pushEntities() {
+        // Don't collide with other entities when being recalled
+        if (beamMode != 3) super.pushEntities()
     }
 
     /*
@@ -1348,9 +1378,13 @@ open class PokemonEntity(
     }
 
     override fun canBeLeashed() = true
-//    override fun canBeLeashedBy(player: PlayerEntity): Boolean {
-//        return this.ownerUuid == null || this.ownerUuid == player.uuid
-//    }
+
+    override fun setLeashedTo(entity: Entity, bl: Boolean) {
+        super.setLeashedTo(entity, bl)
+        if (this.ownerUUID != null && this.ownerUUID != entity.uuid ) {
+            dropLeash(true, true)
+        }
+    }
 
     /** Retrieves the battle theme associated with this Pokemon's Species/Form, or the default PVW theme if not found. */
     fun getBattleTheme() = BuiltInRegistries.SOUND_EVENT.get(this.form.battleTheme) ?: CobblemonSounds.PVW_BATTLE

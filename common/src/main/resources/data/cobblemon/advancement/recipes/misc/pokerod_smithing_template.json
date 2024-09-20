@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_pokerod_smithing_template": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:pokerod_smithing_template"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "cobblemon:pokerod_smithing_template"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_pokerod_smithing_template",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "cobblemon:pokerod_smithing_template"
+    ]
+  },
+  "sends_telemetry_event": false
+}

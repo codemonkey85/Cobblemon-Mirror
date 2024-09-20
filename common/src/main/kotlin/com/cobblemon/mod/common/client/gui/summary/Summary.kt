@@ -40,6 +40,7 @@ import com.cobblemon.mod.common.net.messages.server.storage.party.SwapPartyPokem
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.isInventoryKeyPressed
 import com.cobblemon.mod.common.util.lang
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.Minecraft
@@ -379,7 +380,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
 
             MOVE_SWAP -> {
                 val movesWidget = mainScreen
-                if (movesWidget is MovesWidget && move != null) {
+                if (movesWidget is MovesWidget) {
                     sideScreen = MoveSwapScreen(
                             x + 216,
                             y + 24,
@@ -387,14 +388,18 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
                             replacedMove = move
                     ).also { switchPane ->
                         val pokemon = selectedPokemon
-                        pokemon.allAccessibleMoves
+                        var moveSlotList = (pokemon.allAccessibleMoves
                                 .filter { template -> pokemon.moveSet.none { it.template == template } }
                                 .map { template ->
                                     val benched = pokemon.benchedMoves.find { it.moveTemplate == template }
                                     MoveSwapScreen.MoveSlot(switchPane, template, benched?.ppRaisedStages
                                             ?: 0, pokemon)
-                                }
-                                .forEach { switchPane.addEntry(it) }
+                                })
+                        if (pokemon.moveSet.getMoves().size > 1 && move != null) {
+                            // Adds the "Forget" slot
+                            moveSlotList += MoveSwapScreen.MoveSlot(switchPane, null, 0, pokemon)
+                        }
+                        moveSlotList.forEach { switchPane.addEntry(it) }
                     }
                 }
             }
@@ -524,13 +529,13 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         // Shiny Icon
         if (selectedPokemon.shiny) {
             blitk(
-                    matrixStack = matrices,
-                    texture = iconShinyResource,
-                    x = (x + 62.5) / SCALE,
-                    y = (y + 33.5) / SCALE,
-                    width = 16,
-                    height = 16,
-                    scale = SCALE
+                matrixStack = matrices,
+                texture = iconShinyResource,
+                x = (x + 62.5) / SCALE,
+                y = (y + 33.5) / SCALE,
+                width = 16,
+                height = 16,
+                scale = SCALE
             )
         }
 
@@ -611,6 +616,11 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+        if (isInventoryKeyPressed(minecraft, keyCode, scanCode)) {
+            Minecraft.getInstance().setScreen(null)
+            return true
+        }
+
         if ((keyCode == InputConstants.KEY_RETURN || keyCode == InputConstants.KEY_NUMPADENTER)
             && this::nicknameEntryWidget.isInitialized
             && this.nicknameEntryWidget.isFocused

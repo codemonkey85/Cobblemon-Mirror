@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.battles.interpreter.instructions
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
+import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
 import com.cobblemon.mod.common.api.moves.animations.UsersProvider
 import com.cobblemon.mod.common.api.pokemon.status.Statuses
@@ -78,6 +79,18 @@ class ActivateInstruction(val instructionSet: InstructionSet, val message: Battl
             val effect = message.effectAt(1) ?: return@dispatch GO
             val pokemonName = pokemon.getName()
             val sourceName = message.battlePokemonFromOptional(battle)?.getName() ?: Component.literal("UNKNOWN")
+
+            if (effect.id == "sketch" && pokemon.effectedPokemon.moveSet.any { it.name == "sketch" } && extraEffect is String) {
+                // Apply Sketch to the pokemon's current moveset if it was successfully used in battle
+                val moveTemplate = Moves.getByName(extraEffect.replace(" ", ""))
+                Moves.getByName("sketch")?.let {
+                    moveTemplate?.let { template ->
+                        pokemon.effectedPokemon.exchangeMove(oldMove = it, newMove = template)
+                    }
+                }
+
+            }
+
             val lang = when (effect.id) {
                 // Includes a 3rd argument being the magnitude level as a number
                 "magnitude" -> battleLang("activate.magnitude", message.argumentAt(2)?.toIntOrNull() ?: 1)

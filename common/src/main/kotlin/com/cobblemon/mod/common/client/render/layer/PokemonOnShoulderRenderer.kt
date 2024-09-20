@@ -212,6 +212,17 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
             return Pair(cache.lastKnownLeft, cache.lastKnownRight)
         }
 
+        /**
+         * Clears the cache for the respective player.
+         * This is required to be done whenever a Pokémon changes in any way (form, evolution, etc.)
+         *
+         * @param player The player whose cache to clear
+         */
+        @JvmStatic
+        fun clearCache(player: Player) {
+            playerCache.remove(player.uuid)
+        }
+
     }
 
 }

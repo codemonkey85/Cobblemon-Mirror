@@ -283,7 +283,7 @@ class StatWidget(
         when (statTabIndex) {
             STATS -> drawStatHexagon(
                 mapOf(
-                    Stats.HP to pokemon.hp,
+                    Stats.HP to pokemon.maxHealth,
                     Stats.ATTACK to pokemon.attack,
                     Stats.DEFENCE to pokemon.defence,
                     Stats.SPECIAL_ATTACK to pokemon.specialAttack,
@@ -409,7 +409,7 @@ class StatWidget(
 
             for (renderableFeature in renderableFeatures) {
                 val rendered = renderableFeature.render(
-                    drawContext = context,
+                    GuiGraphics = context,
                     x = x + 5F,
                     y = drawY.toFloat(),
                     pokemon = pokemon
@@ -439,7 +439,7 @@ class StatWidget(
 
     private fun getStatValueAsText(stat: Stat): MutableComponent {
         val value = when(statTabIndex) {
-            STATS -> if (stat == Stats.HP) "${pokemon.currentHealth} / ${pokemon.hp}" else pokemon.getStat(stat).toString()
+            STATS -> if (stat == Stats.HP) "${pokemon.currentHealth} / ${pokemon.maxHealth}" else pokemon.getStat(stat).toString()
             BASE -> pokemon.form.baseStats[stat].toString()
             IV -> pokemon.ivs.getOrDefault(stat).toString()
             EV -> pokemon.evs.getOrDefault(stat).toString()

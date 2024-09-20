@@ -15,6 +15,7 @@ import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore
 import com.cobblemon.mod.common.api.storage.pc.PCStore
 import com.cobblemon.mod.common.block.entity.PCBlockEntity
 import java.util.UUID
+import net.minecraft.core.RegistryAccess
 import net.minecraft.server.level.ServerPlayer
 
 /**
@@ -29,11 +30,11 @@ import net.minecraft.server.level.ServerPlayer
  * @since November 29th, 2021
  */
 interface PokemonStoreFactory {
-    fun getPlayerParty(playerID: UUID): PlayerPartyStore?
-    fun getPC(playerID: UUID): PCStore?
-    fun getPCForPlayer(player: ServerPlayer, pcBlockEntity: PCBlockEntity): PCStore? = getPC(player.uuid)
+    fun getPlayerParty(playerID: UUID, registryAccess: RegistryAccess): PlayerPartyStore?
+    fun getPC(playerID: UUID, registryAccess: RegistryAccess): PCStore?
+    fun getPCForPlayer(player: ServerPlayer, pcBlockEntity: PCBlockEntity): PCStore? = getPC(player.uuid, player.registryAccess())
 
-    fun <E : StorePosition, T : PokemonStore<E>> getCustomStore(storeClass: Class<T>, uuid: UUID): T?
-    fun shutdown()
-    fun onPlayerDisconnect(playerID: UUID)
+    fun <E : StorePosition, T : PokemonStore<E>> getCustomStore(storeClass: Class<T>, uuid: UUID, registryAccess: RegistryAccess): T?
+    fun shutdown(registryAccess: RegistryAccess)
+    fun onPlayerDisconnect(player: ServerPlayer)
 }

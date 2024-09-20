@@ -45,6 +45,7 @@ class MoveInstruction(
     val effect = message.effectAt(1) ?: Effect.pure("", "")
     val move = Moves.getByNameOrDummy(effect.id)
     val actionEffect = move.actionEffect
+    val spreadTargets = message.optionalArgument("spread")?.split(",") ?: emptyList()
 
     var future = CompletableFuture.completedFuture(Unit)
     var holds = mutableSetOf<String>()
@@ -65,6 +66,8 @@ class MoveInstruction(
         battle.dispatch {
             val pokemonName = userPokemon.getName()
             ShowdownInterpreter.lastCauser[battle.battleId] = message
+            // For Spread targets the message data only gives the pnx strings. So we can't know what pokemon are actually targeted until the previous messages have been interpreted
+            val spreadTargetPokemon = spreadTargets.map { battle.activePokemon.firstOrNull() { poke -> poke.getPNX() == it }?.battlePokemon }
 
             userPokemon.effectedPokemon.let { pokemon ->
                 if (UseMoveEvolutionProgress.supports(pokemon, move)) {
@@ -76,7 +79,7 @@ class MoveInstruction(
             val lang = when {
                 optionalEffect?.id == "magicbounce" ->
                     battleLang("ability.magicbounce", pokemonName, move.displayName)
-                move.name != "struggle" && targetPokemon != null && targetPokemon != userPokemon ->
+                move.name != "struggle" && spreadTargetPokemon.isEmpty() && targetPokemon != null && targetPokemon != userPokemon && targetPokemon.health > 0 ->
                     battleLang("used_move_on", pokemonName, move.displayName, targetPokemon.getName())
                 else ->
                     battleLang("used_move", pokemonName, move.displayName)
@@ -86,7 +89,11 @@ class MoveInstruction(
 
             val providers = mutableListOf<Any>(battle)
             userPokemon.effectedPokemon.entity?.let { UsersProvider(it) }?.let(providers::add)
-            targetPokemon?.effectedPokemon?.entity?.let { TargetsProvider(it) }?.let(providers::add)
+            if (spreadTargetPokemon.isNotEmpty()) {
+                providers.add(TargetsProvider( spreadTargetPokemon.filter { it?.effectedPokemon?.entity != null}.mapNotNull { spreadTarget -> spreadTarget?.effectedPokemon?.entity } ))
+            } else {
+                targetPokemon?.effectedPokemon?.entity?.let { TargetsProvider(it) }?.let(providers::add)
+            }
             val runtime = MoLangRuntime().also {
                 battle.addQueryFunctions(it.environment.query).addStandardFunctions()
             }

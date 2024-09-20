@@ -73,9 +73,9 @@ import net.neoforged.fml.common.Mod
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLDedicatedServerSetupEvent
 import net.neoforged.fml.loading.FMLEnvironment
+import net.neoforged.neoforge.common.ItemAbilities
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.common.NeoForgeMod
-import net.neoforged.neoforge.common.ToolActions
 import net.neoforged.neoforge.event.AddPackFindersEvent
 import net.neoforged.neoforge.event.AddReloadListenerEvent
 import net.neoforged.neoforge.event.LootTableLoadEvent
@@ -263,7 +263,7 @@ class CobblemonNeoForge : CobblemonImplementation {
     }
 
     private fun handleBlockStripping(e: BlockEvent.BlockToolModificationEvent) {
-        if (e.toolAction == ToolActions.AXE_STRIP) {
+        if (e.itemAbility == ItemAbilities.AXE_STRIP) {
             val start = e.state.block
             val result = CobblemonBlocks.strippedBlocks()[start] ?: return
             e.setFinalState(result.withPropertiesOf(e.state))
@@ -316,6 +316,20 @@ class CobblemonNeoForge : CobblemonImplementation {
         MOD_BUS.addListener<RegisterEvent> { event ->
             event.register(CobblemonBlockEntities.resourceKey) { helper ->
                 CobblemonBlockEntities.register { identifier, type -> helper.register(identifier, type) }
+            }
+        }
+    }
+
+    override fun registerVillagers() {
+        MOD_BUS.addListener<RegisterEvent> { event ->
+            event.register(CobblemonVillagerPoiTypes.resourceKey) { helper ->
+                CobblemonVillagerPoiTypes.register { identifier, type -> helper.register(identifier, type) }
+            }
+        }
+
+        MOD_BUS.addListener<RegisterEvent> { event ->
+            event.register(CobblemonVillagerProfessions.resourceKey) { helper ->
+                CobblemonVillagerProfessions.register { identifier, profession -> helper.register(identifier, profession) }
             }
         }
     }
