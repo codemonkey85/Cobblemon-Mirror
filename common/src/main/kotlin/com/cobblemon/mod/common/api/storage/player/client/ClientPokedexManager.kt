@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.api.storage.player.client
 import com.cobblemon.mod.common.api.pokedex.AbstractPokedexManager
 import com.cobblemon.mod.common.api.pokedex.SpeciesDexRecord
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
@@ -36,7 +37,7 @@ class ClientPokedexManager(
                 { buf.readString().asIdentifierDefaultingNamespace() },
                 { SpeciesDexRecord().also { it.decode(buf) } }
             )
-            return SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, ClientPokedexManager(map))
+            return SetClientPlayerDataPacket(PlayerInstancedDataStoreTypes.POKEDEX, ClientPokedexManager(map))
         }
 
         fun runAction(data: ClientInstancedPlayerData) {

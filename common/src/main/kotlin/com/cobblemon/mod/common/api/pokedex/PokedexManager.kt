@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.api.pokedex
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.api.storage.player.client.ClientPokedexManager
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.pokemon.FormData
@@ -50,7 +51,7 @@ class PokedexManager(
     override fun onSpeciesRecordUpdated(speciesDexRecord: SpeciesDexRecord) {
         uuid.getPlayer()?.sendPacket(
             SetClientPlayerDataPacket(
-                type = PlayerInstancedDataStoreType.POKEDEX,
+                type = PlayerInstancedDataStoreTypes.POKEDEX,
                 playerData = ClientPokedexManager(mutableMapOf(speciesDexRecord.id to speciesDexRecord)),
                 isIncremental = true
             )

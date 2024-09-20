@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.api.storage.player.adapter
 
 import com.cobblemon.mod.common.api.pokedex.PokedexManager
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -22,7 +23,7 @@ import java.util.UUID
  * @author Apion
  * @since February 22, 2024
  */
-class DexDataJsonBackend: JsonBackedPlayerDataStoreBackend<PokedexManager>("pokedex", PlayerInstancedDataStoreType.POKEDEX) {
+class DexDataJsonBackend: JsonBackedPlayerDataStoreBackend<PokedexManager>("pokedex", PlayerInstancedDataStoreTypes.POKEDEX) {
     override val gson = GsonBuilder()
         .setPrettyPrinting()
         .disableHtmlEscaping()

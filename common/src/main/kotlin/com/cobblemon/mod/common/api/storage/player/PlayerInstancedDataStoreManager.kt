@@ -40,16 +40,16 @@ class PlayerInstancedDataStoreManager {
             it.setup(server)
         }
         //Should put this somewhere else
-        saveTasks[PlayerInstancedDataStoreType.GENERAL] = ScheduledTask.Builder()
-            .execute { saveAllOfOneType(PlayerInstancedDataStoreType.GENERAL) }
+        saveTasks[PlayerInstancedDataStoreTypes.GENERAL] = ScheduledTask.Builder()
+            .execute { saveAllOfOneType(PlayerInstancedDataStoreTypes.GENERAL) }
             .delay(30f)
             .interval(120f)
             .infiniteIterations()
             .tracker(ServerTaskTracker)
             .build()
 
-        saveTasks[PlayerInstancedDataStoreType.POKEDEX] = ScheduledTask.Builder()
-            .execute { saveAllOfOneType(PlayerInstancedDataStoreType.POKEDEX) }
+        saveTasks[PlayerInstancedDataStoreTypes.POKEDEX] = ScheduledTask.Builder()
+            .execute { saveAllOfOneType(PlayerInstancedDataStoreTypes.POKEDEX) }
             .delay(30f)
             .interval(120f)
             .infiniteIterations()
@@ -105,7 +105,7 @@ class PlayerInstancedDataStoreManager {
     }
 
     fun getGenericData(playerId: UUID): GeneralPlayerData {
-        return get(playerId, PlayerInstancedDataStoreType.GENERAL) as GeneralPlayerData
+        return get(playerId, PlayerInstancedDataStoreTypes.GENERAL) as GeneralPlayerData
     }
 
     fun getPokedexData(player: ServerPlayer): PokedexManager {
@@ -113,6 +113,6 @@ class PlayerInstancedDataStoreManager {
     }
 
     fun getPokedexData(playerId: UUID): PokedexManager {
-        return get(playerId, PlayerInstancedDataStoreType.POKEDEX) as PokedexManager
+        return get(playerId, PlayerInstancedDataStoreTypes.POKEDEX) as PokedexManager
     }
 }
