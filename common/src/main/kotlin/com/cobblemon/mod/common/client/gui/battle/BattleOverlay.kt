@@ -298,9 +298,14 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         matrixStack.pushPose()
         matrixStack.translate(
             portraitStartX + portraitDiameter / 2.0,
-            y.toDouble() + portraitOffsetY - if(isCompact) 15.0 else 5.0,
+            y.toDouble() + portraitOffsetY - if (isCompact) 15.0 else 5.0,
             0.0
         )
+
+        if (ballState != null && ballState.currentPose != "shut")  {
+            ballState.currentPose = "shut"
+        }
+
         if (ballState != null && ballState.stateEmitter.get() == EmptyPokeBallEntity.CaptureState.SHAKE) {
             drawPokeBall(
                 state = ballState,
