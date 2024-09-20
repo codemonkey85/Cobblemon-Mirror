@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.permission.CobblemonPermissions
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.net.messages.client.storage.party.InitializePartyPacket
 import com.cobblemon.mod.common.net.messages.client.storage.pc.InitializePCPacket
@@ -90,6 +91,6 @@ object PokemonRestartCommand {
         playerData.starterPrompted = false
         playerData.starterLocked = false
         playerData.starterSelected = !resetStarters
-        player.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.GENERAL, playerData.toClientData()))
+        player.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreTypes.GENERAL, playerData.toClientData()))
     }
 }

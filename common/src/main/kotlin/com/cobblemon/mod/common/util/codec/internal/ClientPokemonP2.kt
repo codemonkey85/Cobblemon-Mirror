@@ -54,6 +54,7 @@ internal data class ClientPokemonP2(
         this.evolutionController.ifPresent {
             (other.evolutionProxy as? CobblemonEvolutionProxy)?.overrideController(it.create(other))
         }
+        other.shiny = this.shiny
         other.nature = this.nature
         this.mintedNature.ifPresent { other.mintedNature = it }
         other.heldItem = this.heldItem.copy()

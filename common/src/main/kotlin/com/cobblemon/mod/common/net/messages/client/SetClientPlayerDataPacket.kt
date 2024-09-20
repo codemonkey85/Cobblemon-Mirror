@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.net.messages.client
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readEnumConstant
@@ -32,7 +33,7 @@ class SetClientPlayerDataPacket(
     override val id = ID
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeEnumConstant(type)
+        buffer.writeResourceLocation(type.id)
         buffer.writeBoolean(isIncremental)
         playerData.encode(buffer)
     }
@@ -40,7 +41,8 @@ class SetClientPlayerDataPacket(
     companion object {
         val ID = cobblemonResource("set_client_playerdata")
         fun decode(buffer: RegistryFriendlyByteBuf): SetClientPlayerDataPacket {
-            val type = buffer.readEnumConstant(PlayerInstancedDataStoreType::class.java)
+            val typeId = buffer.readResourceLocation()
+            val type = PlayerInstancedDataStoreTypes.getTypeById(typeId) ?: throw IllegalArgumentException("Unknown player data type $typeId")
             val isIncremental = buffer.readBoolean()
             val result = type.decoder.invoke(buffer)
             result.isIncremental = isIncremental
