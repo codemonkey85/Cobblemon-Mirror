@@ -19,12 +19,13 @@
 - Added Eject Pack, Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
 - Moves can now be benched without specifying a replacement move, allowing for empty move slots.
 - Moves learned via Sketch now persist after battle.
-- Added `ston_henge_ruins`, `luna_henge_ruins`, and `sol_henge_ruins` structures.
+- Added `stonjourner_henge_ruins`, `luna_henge_ruins`, and `sol_henge_ruins` structures.
 - Added a `battleInvulnerability` gamerule to make players invulnerable to any damage during a battle.
 - Added a `mobTargetInBattle` gamerule to exclude players from being targeted by mobs during a battle.
 - Added battle log messages for switching out Pokémon.
 - Added Evolution particles and sounds for Pokémon that are sent out when evolution is started.
 - Added a Nurse profession that can be unlocked by having villagers claim a healing machine block.
+- Added pokecenters to all 5 village types.
 - Added a `natural` block state property for the healing machine block; when property is set to true, the block will have a different texture and drop an iron ingot instead of itself.
 - New config setting `displayEntityNameLabel` to show the Pokémon's name when looking at them.
 - `/freezepokemon` command to pause a Pokémon's animation at a specific point in time.
