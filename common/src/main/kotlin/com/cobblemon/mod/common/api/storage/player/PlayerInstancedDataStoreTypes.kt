@@ -14,6 +14,8 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.resources.ResourceLocation
 
 object PlayerInstancedDataStoreTypes {
+    val types = mutableMapOf<ResourceLocation, PlayerInstancedDataStoreType>()
+
     val GENERAL = register(PlayerInstancedDataStoreType(
         cobblemonResource("general"),
         ClientGeneralPlayerData::decode,
@@ -26,7 +28,6 @@ object PlayerInstancedDataStoreTypes {
         ClientPokedexManager::runIncremental
     ))
 
-    val types = mutableMapOf<ResourceLocation, PlayerInstancedDataStoreType>()
     fun register(type: PlayerInstancedDataStoreType): PlayerInstancedDataStoreType {
         types[type.id] = type
         return type
