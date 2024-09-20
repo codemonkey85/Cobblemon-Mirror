@@ -76,6 +76,7 @@
 - The noise from the pasture and PC blocks being interacted with now activates Sculk sensors.
 - Updated dialogue GUI assets with proper assets.
 - Updated party switching interface when in battle.
+- Relic coin pouches can now be waterlogged.
 
 ### Fixes
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating.
