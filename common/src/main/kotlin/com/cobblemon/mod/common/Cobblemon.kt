@@ -53,6 +53,7 @@ import com.cobblemon.mod.common.api.storage.pc.PCStore
 import com.cobblemon.mod.common.api.storage.pc.link.PCLinkManager
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreManager
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.api.storage.player.adapter.DexDataNbtBackend
 import com.cobblemon.mod.common.api.storage.player.adapter.PlayerDataJsonBackend
 import com.cobblemon.mod.common.api.storage.player.factory.CachedPlayerDataStoreFactory
@@ -305,8 +306,8 @@ object Cobblemon {
                     val pokedexNbtFactory = CachedPlayerDataStoreFactory(DexDataNbtBackend())
                     pokedexNbtFactory.setup(server)
 
-                    playerDataManager.setFactory(generalJsonFactory, PlayerInstancedDataStoreType.GENERAL)
-                    playerDataManager.setFactory(pokedexNbtFactory, PlayerInstancedDataStoreType.POKEDEX)
+                    playerDataManager.setFactory(generalJsonFactory, PlayerInstancedDataStoreTypes.GENERAL)
+                    playerDataManager.setFactory(pokedexNbtFactory, PlayerInstancedDataStoreTypes.POKEDEX)
 
                     if (config.storageFormat == "nbt") {
                         NBTStoreAdapter(pokemonStoreRoot.absolutePath, useNestedFolders = true, folderPerClass = true)
