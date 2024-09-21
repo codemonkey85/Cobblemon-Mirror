@@ -114,7 +114,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
     override val schedulingTracker = SchedulingTracker()
 
     override fun render(context: GuiGraphics, tickCounter: DeltaTracker) {
-        val tickDelta = tickCounter.getGameTimeDeltaPartialTick(false)
+        val tickDelta = tickCounter.realtimeDeltaTicks.takeIf { !Minecraft.getInstance()!!.isPaused } ?: 0F
         schedulingTracker.update(tickDelta / 20F)
         passedSeconds += tickDelta / 20
         if (passedSeconds > 100) {

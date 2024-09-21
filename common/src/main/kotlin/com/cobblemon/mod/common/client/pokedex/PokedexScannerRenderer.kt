@@ -216,7 +216,7 @@ class PokedexScannerRenderer {
 
     fun onRenderOverlay(graphics: GuiGraphics, tickCounter: DeltaTracker) {
         if (CobblemonClient.pokedexUsageContext.scanningGuiOpen) {
-            val tickDelta = tickCounter.getGameTimeDeltaPartialTick(false)
+            val tickDelta = tickCounter.realtimeDeltaTicks
             renderPhotodexOverlay(graphics, tickDelta, 1.0F)
             renderScanProgress(graphics, CobblemonClient.pokedexUsageContext.scanningProgress)
         }
