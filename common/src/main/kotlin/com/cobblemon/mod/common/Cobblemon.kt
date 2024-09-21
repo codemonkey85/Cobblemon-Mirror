@@ -52,7 +52,6 @@ import com.cobblemon.mod.common.api.storage.molang.NbtMoLangDataStoreFactory
 import com.cobblemon.mod.common.api.storage.pc.PCStore
 import com.cobblemon.mod.common.api.storage.pc.link.PCLinkManager
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreManager
-import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.api.storage.player.adapter.DexDataNbtBackend
 import com.cobblemon.mod.common.api.storage.player.adapter.PlayerDataJsonBackend
@@ -81,6 +80,7 @@ import com.cobblemon.mod.common.config.constraint.IntConstraint
 import com.cobblemon.mod.common.config.starter.StarterConfig
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.events.AdvancementHandler
+import com.cobblemon.mod.common.events.BattleHandler
 import com.cobblemon.mod.common.events.PokedexHandler
 import com.cobblemon.mod.common.events.ServerTickHandler
 import com.cobblemon.mod.common.net.messages.client.settings.ServerSettingsPacket
@@ -382,6 +382,7 @@ object Cobblemon {
 
     fun registerEventHandlers() {
         AdvancementHandler.registerListeners()
+        BattleHandler.registerListeners()
         PokedexHandler.registerListeners()
     }
 

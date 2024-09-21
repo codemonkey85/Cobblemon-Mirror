@@ -26,6 +26,7 @@ data class GeneralPlayerData(
     var starterLocked: Boolean,
     var starterSelected: Boolean,
     var starterUUID: UUID?,
+    var battlesFought: Int,
     var keyItems: MutableSet<ResourceLocation>,
     var battleTheme: ResourceLocation?,
     val extraData: MutableMap<String, PlayerDataExtension>,
@@ -43,6 +44,7 @@ data class GeneralPlayerData(
             starterLocked,
             starterSelected,
             starterUUID,
+            battlesFought == 0,
             battleTheme
         )
     }

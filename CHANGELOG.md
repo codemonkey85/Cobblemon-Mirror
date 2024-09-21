@@ -27,9 +27,10 @@
 - Added a Nurse profession that can be unlocked by having villagers claim a healing machine block.
 - Added pokecenters to all 5 village types.
 - Added a `natural` block state property for the healing machine block; when property is set to true, the block will have a different texture and drop an iron ingot instead of itself.
-- New config setting `displayEntityNameLabel` to show the Pokémon's name when looking at them.
+- New config setting `displayEntityNameLabel` and `displayEntityLabelsWhenCrouchingOnly` to control what and when is displayed for the pokemon label
 - `/freezepokemon` command to pause a Pokémon's animation at a specific point in time.
 - Added `no_ai` and `freeze_frame` options to the `/spawnpokemon` command.
+- Added `battlesFought` to the GeneralPlayerData for tracking
 
 ### Pokémon Added
 #### Gen 2
@@ -78,6 +79,8 @@
 - Updated dialogue GUI assets with proper assets.
 - Updated party switching interface when in battle.
 - Relic coin pouches can now be waterlogged.
+- Pokemon Name (and level) labels are now only visible when crouching by default, set the `displayEntityLabelsWhenCrouchingOnly` to `false` to always them even when not crouching
+- The "Press R to start battle prompt" will now disappear after a player's first battle has been fought
 
 ### Fixes
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating.
