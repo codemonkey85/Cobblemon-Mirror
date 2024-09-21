@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.client.render.pokemon
 
+import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.battle.ClientBallDisplay
 import com.cobblemon.mod.common.client.entity.NPCClientDelegate
@@ -315,7 +317,10 @@ context: EntityRendererProvider.Context
         }
         val player = Minecraft.getInstance().player ?: return false
         val delegate = entity.delegate as? PokemonClientDelegate ?: return false
-        return player.isLookingAt(entity) && delegate.phaseTarget == null && !CobblemonClient.pokedexUsageContext.scanningGuiOpen
+        return (!Cobblemon.config.displayEntityLabelsWhenCrouchingOnly || player.isCrouching) &&
+                player.isLookingAt(entity) &&
+                delegate.phaseTarget == null &&
+                !CobblemonClient.pokedexUsageContext.scanningGuiOpen
     }
 
     override fun renderNameTag(
@@ -343,7 +348,15 @@ context: EntityRendererProvider.Context
             matrices.scale((0.025 * sizeScale).toFloat(), (-0.025 * sizeScale).toFloat(), (1 * sizeScale).toFloat())
             val matrix4f = matrices.last().pose()
             val opacity = (Minecraft.getInstance().options.getBackgroundOpacity(0.25F) * 255.0F).toInt() shl 24
-            var label = if(ServerSettings.displayEntityNameLabel) entity.name.copy() else Component.empty()
+            var label = if (ServerSettings.displayEntityNameLabel &&
+                !Cobblemon.config.diplayNameForUnknownPokemon &&
+                CobblemonClient.clientPokedexData.getKnowledgeForSpecies(entity.pokemon.species.resourceIdentifier) == PokedexEntryProgress.NONE) {
+                Component.literal("???")
+            } else if (ServerSettings.displayEntityNameLabel) {
+                entity.name.copy()
+            } else {
+                Component.empty()
+            }
             if(ServerSettings.displayEntityNameLabel && ServerSettings.displayEntityLevelLabel && entity.labelLevel() > 0) {
                 label.append(Component.literal(" "))
             }
@@ -359,7 +372,7 @@ context: EntityRendererProvider.Context
             this.font.drawInBatch(label, h, y, 0x20FFFFFF, false, matrix4f, vertexConsumers, DisplayMode.SEE_THROUGH, opacity, packedLight)
             this.font.drawInBatch(label, h, y, -1, false, matrix4f, vertexConsumers, DisplayMode.NORMAL, 0, packedLight)
 
-            if (entity.canBattle(player)) {
+            if (CobblemonClient.clientPlayerData.showChallengeLabel && entity.canBattle(player)) {
                 val sendOutBinding = PartySendBinding.boundKey().displayName
                 val battlePrompt = lang("challenge_label", sendOutBinding)
                 h = (-this.font.width(battlePrompt) / 2).toFloat()

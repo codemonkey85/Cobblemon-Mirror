@@ -12,7 +12,6 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.storage.player.GeneralPlayerData
 import com.cobblemon.mod.common.api.storage.player.PlayerDataExtension
-import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.google.gson.GsonBuilder
@@ -35,6 +34,7 @@ class PlayerDataJsonBackend: JsonBackedPlayerDataStoreBackend<GeneralPlayerData>
         starterLocked = !Cobblemon.starterConfig.allowStarterOnJoin,
         starterSelected =  false,
         starterUUID =  null,
+        battlesFought = 0,
         keyItems = mutableSetOf(),
         extraData = mutableMapOf(),
         battleTheme = CobblemonSounds.PVP_BATTLE.location
