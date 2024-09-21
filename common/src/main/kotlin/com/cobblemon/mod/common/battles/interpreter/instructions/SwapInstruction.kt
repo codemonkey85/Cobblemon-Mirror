@@ -37,13 +37,13 @@ class SwapInstruction(val message: BattleMessage, val instructionSet: Instructio
             val battlePokemonA = message.battlePokemon(0, battle) ?: return@dispatchWaiting
             val pnxA = message.argumentAt(0)?.substring(0, 3)
             var posA: Vec3? = null
+            val (actor, activePokemonA) = battle.getActorAndActiveSlotFromPNX(pnxA!!)
             if (battlePokemonA.entity == null) {
-                posA = ShowdownInterpreter.getSendoutPosition(battle, pnxA!!, battlePokemonA.actor)
+                posA = ShowdownInterpreter.getSendoutPosition(battle, activePokemonA, battlePokemonA.actor)
             } else {
                 posA = battlePokemonA.entity?.position()
             }
 
-            val (actor, activePokemonA) = battle.getActorAndActiveSlotFromPNX(pnxA!!)
             val activeBattlePokemonB = activePokemonA.getAdjacentAllies().firstOrNull()
             if(activeBattlePokemonB != null) {
                 val pnxB = activeBattlePokemonB.getPNX()
@@ -53,7 +53,7 @@ class SwapInstruction(val message: BattleMessage, val instructionSet: Instructio
                 var posB: Vec3? = null
                 if (activePokemonB.battlePokemon?.entity == null) {
                     // target slot is likely fainted
-                    posB = ShowdownInterpreter.getSendoutPosition(battle, activePokemonB.getPNX(), actorB)
+                    posB = ShowdownInterpreter.getSendoutPosition(battle, activePokemonB, actorB)
                 } else {
                     posB = activePokemonB.battlePokemon?.entity?.position()
                 }
