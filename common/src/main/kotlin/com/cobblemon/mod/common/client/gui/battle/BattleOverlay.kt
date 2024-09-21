@@ -86,7 +86,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         const val PORTRAIT_OFFSET_Y = 8
         const val COMPACT_PORTRAIT_OFFSET_Y = 7
 
-        const val ROLE_CYCLE_SECONDS = 5.0
+        const val ROLE_CYCLE_SECONDS = 2.5
 
         const val SCALE = 0.5F
 
@@ -214,7 +214,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
             isSelected = hasCommand,
             isHovered = isHovered,
             isCompact = isCompact,
-            actorDisplayName = if (!battle.isPvW && ((left && activeBattlePokemon.actor.activePokemon.first() == activeBattlePokemon) || (!left && activeBattlePokemon.actor.activePokemon.last() == activeBattlePokemon))) activeBattlePokemon.actor.displayName else null,
+            actorDisplayName = if (!battle.isPvW && ((left && activeBattlePokemon.actor.activePokemon.firstOrNull { (it.battlePokemon?.hpValue ?: 0F) > 0F } == activeBattlePokemon) || (!left && activeBattlePokemon.actor.activePokemon.lastOrNull { (it.battlePokemon?.hpValue ?: 0F) > 0F } == activeBattlePokemon))) activeBattlePokemon.actor.displayName else null,
             dexState = dexState
         )
     }

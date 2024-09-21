@@ -109,7 +109,13 @@ object BattleBuilder {
             healFirst: Boolean = false,
             partyAccessor: (ServerPlayer) -> PartyStore = { it.party() }
     ): BattleStartResult {
-        val teams = players.mapIndexed { index, it -> partyAccessor(it).toBattleTeam(clone = cloneParties, checkHealth = !healFirst, leadingPokemon[index]) }
+        val teams = players.mapIndexed { index, it ->
+            partyAccessor(it).toBattleTeam(
+                    clone = cloneParties,
+                    checkHealth = !healFirst,
+                    leadingPokemon[index]
+            ).sortedBy { it.health <= 0 }
+        }
         val playerActors = teams.mapIndexed { index, team -> PlayerBattleActor(players[index].uuid, team)}.toMutableList()
 
         val errors = ErroredBattleStart()
