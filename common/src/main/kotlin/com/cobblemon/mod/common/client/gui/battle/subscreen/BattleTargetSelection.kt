@@ -166,7 +166,7 @@ class BattleTargetSelection(
 
             // Target Selection Arrows
             if (selectable && isHovered) {
-                val offset = (sin(((passedSeconds) % 1 * 2 * Math.PI)) * 1 + 1).toFloat()
+                val offset = (sin(passedSeconds * 2 * Math.PI) + 1).toFloat()
                 val pos = when (arrowDirection) {
                     ArrowDirection.LEFT -> Pair(arrowPosition.first - offset, arrowPosition.second)
                     ArrowDirection.RIGHT -> Pair(arrowPosition.first + offset, arrowPosition.second)
