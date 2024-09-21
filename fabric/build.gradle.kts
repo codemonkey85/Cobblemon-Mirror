@@ -59,13 +59,13 @@ dependencies {
     modCompileOnly(libs.bundles.fabric.integrations.compileOnly) {
         isTransitive = false
     }
-    modRuntimeOnly(libs.jei.fabric)
+    modRuntimeOnly(libs.bundles.fabric.integrations.runtimeOnly)
 //    modImplementation(libs.flywheelFabric)
 //    include(libs.flywheelFabric)
 
+    include(libs.fabric.kotlin)
+
     listOf(
-        libs.bundles.kotlin,
-        libs.bundles.fabric.kotlin.deps,
         libs.graal,
         libs.molang
     ).forEach {
