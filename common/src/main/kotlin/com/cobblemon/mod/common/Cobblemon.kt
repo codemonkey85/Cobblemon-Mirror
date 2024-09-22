@@ -80,7 +80,6 @@ import com.cobblemon.mod.common.config.constraint.IntConstraint
 import com.cobblemon.mod.common.config.starter.StarterConfig
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.events.AdvancementHandler
-import com.cobblemon.mod.common.events.BattleHandler
 import com.cobblemon.mod.common.events.PokedexHandler
 import com.cobblemon.mod.common.events.ServerTickHandler
 import com.cobblemon.mod.common.net.messages.client.settings.ServerSettingsPacket
@@ -382,7 +381,6 @@ object Cobblemon {
 
     fun registerEventHandlers() {
         AdvancementHandler.registerListeners()
-        BattleHandler.registerListeners()
         PokedexHandler.registerListeners()
     }
 
