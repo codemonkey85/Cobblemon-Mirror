@@ -24,16 +24,17 @@ import net.minecraft.network.chat.MutableComponent
  * @author Hiroku
  * @since March 6th, 2023
  */
-class TradeOfferNotificationPacket(val tradeOfferId: UUID, val traderId: UUID, val traderName: MutableComponent): NetworkPacket<TradeOfferNotificationPacket> {
+class TradeOfferNotificationPacket(val tradeOfferId: UUID, val traderId: UUID, val traderName: MutableComponent, val expiryTime: Int): NetworkPacket<TradeOfferNotificationPacket> {
     override val id = ID
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeUUID(tradeOfferId)
         buffer.writeUUID(traderId)
         buffer.writeText(traderName)
+        buffer.writeInt(expiryTime)
     }
 
     companion object {
         val ID = cobblemonResource("trade_offer_notification")
-        fun decode(buffer: RegistryFriendlyByteBuf) = TradeOfferNotificationPacket(buffer.readUUID(), buffer.readUUID(), buffer.readText().copy())
+        fun decode(buffer: RegistryFriendlyByteBuf) = TradeOfferNotificationPacket(buffer.readUUID(), buffer.readUUID(), buffer.readText().copy(), buffer.readInt())
     }
 }

@@ -23,7 +23,7 @@ object AcceptTradeRequestHandler : ServerNetworkPacketHandler<AcceptTradeRequest
     override fun handle(packet: AcceptTradeRequestPacket, server: MinecraftServer, player: ServerPlayer) {
         if (player.isSpectator) return
         // Check range and line of sight
-        val request = TradeManager.requests.find { it.tradeOfferId == packet.tradeOfferId }
+        val request = TradeManager.requests.find { it.requestID == packet.tradeOfferId }
         val otherPlayer = request?.senderId?.getPlayer() ?: return
         if (player.traceFirstEntityCollision(
             entityClass = LivingEntity::class.java,

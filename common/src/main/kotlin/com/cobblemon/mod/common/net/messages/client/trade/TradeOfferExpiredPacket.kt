@@ -10,8 +10,6 @@ package com.cobblemon.mod.common.net.messages.client.trade
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readUUID
-import com.cobblemon.mod.common.util.writeUUID
 import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 

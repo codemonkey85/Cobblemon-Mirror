@@ -14,6 +14,7 @@ import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.battles.BattleFormat
 import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.battle.ClientBattleChallenge
+import com.cobblemon.mod.common.client.battle.ClientTeamRequest
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.net.messages.client.PlayerInteractOptionsPacket
 import com.cobblemon.mod.common.net.messages.server.*
@@ -29,7 +30,7 @@ import net.minecraft.resources.ResourceLocation
 class BattleConfigureGUI(
         private val packet: PlayerInteractOptionsPacket,
         private val activeRequest: ClientBattleChallenge? = null,
-        private val activeTeamRequest: ClientBattleChallenge? = null
+        private val activeTeamRequest: ClientTeamRequest? = null
 ) : Screen(lang("challenge.request_battle_title")) {
     companion object {
         const val SIZE = 113

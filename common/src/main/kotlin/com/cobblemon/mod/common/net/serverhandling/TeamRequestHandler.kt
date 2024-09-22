@@ -71,9 +71,9 @@ object TeamRequestHandler : ServerNetworkPacketHandler<BattleTeamRequestPacket> 
                     val teamRequest = BattleRegistry.TeamRequest(requestId, targetedEntity.uuid)
                     BattleRegistry.multiBattleTeamRequests[player.uuid] = teamRequest
                     player.sendSystemMessage(lang("challenge.multi.team_request.sender", targetedEntity.name))
-                    targetedEntity.sendPacket(TeamRequestNotificationPacket(requestId, player.uuid, player.name.copy().aqua()))
+                    targetedEntity.sendPacket(TeamRequestNotificationPacket(requestId, player.uuid, player.name.copy().aqua(), teamRequest.expiryTime))
                     // Add timeout callback to cancel the request
-                    afterOnServer(seconds = teamRequest.expiryTimeSeconds.toFloat()) {
+                    afterOnServer(seconds = teamRequest.expiryTime.toFloat()) {
                         BattleRegistry.removeTeamUpRequest(player.uuid, requestId = teamRequest.requestID)
                     }
                 }

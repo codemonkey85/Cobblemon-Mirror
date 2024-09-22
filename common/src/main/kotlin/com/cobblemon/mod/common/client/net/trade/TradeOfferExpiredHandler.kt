@@ -10,11 +10,20 @@ package com.cobblemon.mod.common.client.net.trade
 
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
+import com.cobblemon.mod.common.client.render.ClientPlayerIcon
 import com.cobblemon.mod.common.net.messages.client.trade.TradeOfferExpiredPacket
 import net.minecraft.client.Minecraft
 
 object TradeOfferExpiredHandler : ClientNetworkPacketHandler<TradeOfferExpiredPacket> {
     override fun handle(packet: TradeOfferExpiredPacket, client: Minecraft) {
-        CobblemonClient.requests.onTradeOfferExpired(packet.tradeOfferId)
+        val iter = CobblemonClient.requests.tradeOffers.iterator()
+        while(iter.hasNext()) {
+            val entry = iter.next()
+            val player = entry.key
+            if (entry.value.requestID == packet.tradeOfferId) {
+                iter.remove()
+                ClientPlayerIcon.update(player)
+            }
+        }
     }
 }

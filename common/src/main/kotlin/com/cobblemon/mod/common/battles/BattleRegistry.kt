@@ -14,6 +14,7 @@ import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.battles.BattleStartedPostEvent
 import com.cobblemon.mod.common.api.events.battles.BattleStartedPreEvent
+import com.cobblemon.mod.common.api.interaction.PlayerActionRequest
 import com.cobblemon.mod.common.api.pokemon.helditem.HeldItemProvider
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.api.pokemon.status.Statuses
@@ -35,30 +36,33 @@ object BattleRegistry {
 
     const val MAX_TEAM_MEMBER_COUNT = 2
     const val MAX_BATTLE_RADIUS = 15.0
-    class BattleChallenge(
-            val challengeId: UUID,
-            val challengedPlayerUUID: UUID,
-            val selectedPokemonId: UUID,
-            val battleFormat: BattleFormat,
-            var expiryTimeSeconds: Int = 60
-    ) {
+
+    data class BattleChallenge(
+        override val requestID: UUID,
+        override val targetID: UUID,
+        val selectedPokemonId: UUID,
+        val battleFormat: BattleFormat,
+        override val expiryTime: Int = 60
+    ) : PlayerActionRequest
+    {
         val challengedTime = Instant.now()
-        fun isExpired() = Instant.now().isAfter(challengedTime.plusSeconds(expiryTimeSeconds.toLong()))
+        fun isExpired() = Instant.now().isAfter(challengedTime.plusSeconds(expiryTime.toLong()))
     }
 
+    data class TeamRequest(
+        override val requestID: UUID,
 
-
-    class TeamRequest(
-            val requestID: UUID,
-            val requestedPlayerUUID: UUID,
-            var expiryTimeSeconds: Int = 60
-    ) {
+        override val targetID: UUID,
+        override val expiryTime: Int = 60
+    ) : PlayerActionRequest
+    {
         val challengedTime = Instant.now()
-        fun isExpired() = Instant.now().isAfter(challengedTime.plusSeconds(expiryTimeSeconds.toLong()))
+        fun isExpired() = Instant.now().isAfter(challengedTime.plusSeconds(expiryTime.toLong()))
     }
+
     class MultiBattleTeam(
-            val teamID: UUID,
-            val teamPlayersUUID: MutableList<UUID>,
+        val teamID: UUID,
+        val teamPlayersUUID: MutableList<UUID>,
     )
 
     val gson = GsonBuilder()
@@ -82,16 +86,14 @@ object BattleRegistry {
 
     fun removeChallenge(challengerId: UUID, challengeId: UUID? = null, isMultiBattleTeam: Boolean = false) {
         val existing = pvpChallenges[challengerId] ?: return
-        if (existing.challengeId != challengeId) {
-            return
-        }
+        if (existing.requestID != challengeId) return
         pvpChallenges.remove(challengerId)
         if (isMultiBattleTeam) {
-            multiBattleTeams[existing.challengedPlayerUUID]?.teamPlayersUUID?.let {
-                CobblemonNetwork.sendPacketToPlayers(it.mapNotNull { serverPlayer -> serverPlayer.getPlayer() }, BattleChallengeExpiredPacket(existing.challengeId))
+            multiBattleTeams[existing.targetID]?.teamPlayersUUID?.let {
+                CobblemonNetwork.sendPacketToPlayers(it.mapNotNull { serverPlayer -> serverPlayer.getPlayer() }, BattleChallengeExpiredPacket(existing.requestID))
             }
         } else {
-            existing.challengedPlayerUUID.getPlayer()?.sendPacket(BattleChallengeExpiredPacket(existing.challengeId))
+            existing.targetID.getPlayer()?.sendPacket(BattleChallengeExpiredPacket(existing.requestID))
         }
     }
 
@@ -101,7 +103,7 @@ object BattleRegistry {
             return
         }
         multiBattleTeamRequests.remove(requesterId)
-        existing.requestedPlayerUUID.getPlayer()?.sendPacket(TeamRequestExpiredPacket(existing.requestID))
+        existing.targetID.getPlayer()?.sendPacket(TeamRequestExpiredPacket(existing.requestID))
     }
 
     fun onPlayerDisconnect(player: ServerPlayer) {
@@ -131,10 +133,10 @@ object BattleRegistry {
 
                 // Remove any outstanding battle requests for the team
                 // TODO: Find a way to not do a reverse map look up
-                val battleChallengeEntry = pvpChallenges.entries.firstOrNull { it -> it.value.challengedPlayerUUID == teamEntry.teamID }
+                val battleChallengeEntry = pvpChallenges.entries.firstOrNull { it -> it.value.targetID == teamEntry.teamID }
                 if (battleChallengeEntry != null) {
                     val battleChallenge = battleChallengeEntry.value
-                    removeChallenge(battleChallengeEntry.key, battleChallenge.challengeId, true)
+                    removeChallenge(battleChallengeEntry.key, battleChallenge.requestID, true)
 
                     // Notify opposing team that the challenge was cancelled
                     val opposingTeam = multiBattleTeams[battleChallengeEntry.key]

@@ -28,14 +28,17 @@ import java.util.*
  * @since August 5th, 2022
  */
 class BattleChallengeNotificationPacket(
-        val battleChallengeId: UUID,
-        val challengerIds: List<UUID>,
-        val challengerNames: List<MutableComponent>,
-        val battleFormat: BattleFormat
+    val battleChallengeId: UUID,
+    val challengerIds: List<UUID>,
+    val challengerNames: List<MutableComponent>,
+    val battleFormat: BattleFormat,
+    val expiryTime: Int
 ): NetworkPacket<BattleChallengeNotificationPacket> {
     override val id = ID
 
-    constructor(battleChallengeId: UUID, challengerId: UUID, challengerName: MutableComponent, battleFormat: BattleFormat) : this(battleChallengeId, listOf(challengerId), listOf(challengerName), battleFormat)
+    constructor(battleChallengeId: UUID, challengerId: UUID, challengerName: MutableComponent, battleFormat: BattleFormat, expiryTime: Int) :
+        this(battleChallengeId, listOf(challengerId), listOf(challengerName), battleFormat, expiryTime)
+
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeUUID(battleChallengeId)
         buffer.writeCollection(challengerIds) { _, value -> buffer.writeUUID(value) }
@@ -45,6 +48,12 @@ class BattleChallengeNotificationPacket(
 
     companion object {
         val ID = cobblemonResource("battle_challenge_notification")
-        fun decode(buffer: RegistryFriendlyByteBuf) = BattleChallengeNotificationPacket(buffer.readUUID(), buffer.readList { it.readUUID() }, buffer.readList { ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(it).copy() } , BattleFormat.loadFromBuffer(buffer))
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleChallengeNotificationPacket(
+            buffer.readUUID(),
+            buffer.readList { it.readUUID() },
+            buffer.readList { ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(it).copy() },
+            BattleFormat.loadFromBuffer(buffer),
+            buffer.readInt()
+        )
     }
 }

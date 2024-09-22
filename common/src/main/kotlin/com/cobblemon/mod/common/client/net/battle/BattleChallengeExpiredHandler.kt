@@ -15,6 +15,10 @@ import net.minecraft.client.Minecraft
 
 object BattleChallengeExpiredHandler : ClientNetworkPacketHandler<BattleChallengeExpiredPacket> {
     override fun handle(packet: BattleChallengeExpiredPacket, client: Minecraft) {
-        CobblemonClient.requests.onChallengeExpired(packet.battleChallengeId)
+        val iter = CobblemonClient.requests.battleChallenges.iterator()
+        while(iter.hasNext()) {
+            val entry = iter.next()
+            if (entry.value.requestID == packet.battleChallengeId) iter.remove()
+        }
     }
 }

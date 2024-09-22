@@ -57,24 +57,24 @@ fun createPokemonInteractGui(pokemonID: UUID, canMountShoulder: Boolean): Intera
 fun createPlayerInteractGui(optionsPacket: PlayerInteractOptionsPacket): InteractWheelGUI {
     val trade = InteractWheelOption(
         iconResource = cobblemonResource("textures/gui/interact/icon_trade.png"),
-        secondaryIconResource =  if (CobblemonClient.requests.tradeOffers.any { it.traderId == optionsPacket.targetId })
+        secondaryIconResource =  if (CobblemonClient.requests.tradeOffers[optionsPacket.targetId] != null)
             cobblemonResource("textures/gui/interact/icon_exclamation.png")
         else null,
         colour = { null },
         tooltipText = "cobblemon.ui.interact.trade",
         onPress = {
-            val tradeOffer = CobblemonClient.requests.tradeOffers.find { it.traderId == optionsPacket.targetId }
+            val tradeOffer = CobblemonClient.requests.tradeOffers[optionsPacket.targetId]
             if (tradeOffer == null) {
                 CobblemonNetwork.sendToServer(OfferTradePacket(optionsPacket.targetId))
             } else {
-                CobblemonClient.requests.tradeOffers -= tradeOffer
-                CobblemonNetwork.sendToServer(AcceptTradeRequestPacket(tradeOffer.tradeOfferId))
+                CobblemonClient.requests.tradeOffers.remove(optionsPacket.targetId)
+                CobblemonNetwork.sendToServer(AcceptTradeRequestPacket(tradeOffer.requestID))
             }
             closeGUI()
         }
     )
-    val activeBattleRequest = CobblemonClient.requests.battleChallenges.firstOrNull { it.challengerIds.contains(optionsPacket.targetId) }
-    val activeTeamRequest = CobblemonClient.requests.multiBattleTeamRequests.firstOrNull { it.challengerIds.contains(optionsPacket.targetId) }
+    val activeBattleRequest = CobblemonClient.requests.battleChallenges[optionsPacket.targetId]
+    val activeTeamRequest = CobblemonClient.requests.multiBattleTeamRequests[optionsPacket.targetId]
     val battle = InteractWheelOption(
         iconResource = cobblemonResource("textures/gui/interact/icon_battle.png"),
         secondaryIconResource =  if(activeBattleRequest != null|| activeTeamRequest != null)
@@ -89,7 +89,7 @@ fun createPlayerInteractGui(optionsPacket: PlayerInteractOptionsPacket): Interac
 
     val spectate = InteractWheelOption(
         iconResource = cobblemonResource("textures/gui/interact/icon_spectate_battle.png"),
-        colour = { if (CobblemonClient.requests.battleChallenges.any { it.challengerIds.contains(optionsPacket.targetId) }) Vector3f(0F, 0.6F, 0F) else null },
+        colour = { if (CobblemonClient.requests.battleChallenges[optionsPacket.targetId] != null) Vector3f(0F, 0.6F, 0F) else null },
         onPress = {
             SpectateBattlePacket(optionsPacket.targetId).sendToServer()
             closeGUI()
@@ -98,8 +98,8 @@ fun createPlayerInteractGui(optionsPacket: PlayerInteractOptionsPacket): Interac
     )
     val options: Multimap<Orientation, InteractWheelOption> = ArrayListMultimap.create()
     //TODO: hasChallenge and hasTeamRequest get calculated a bunch of times. Might consider having the server just passing it over.
-    val hasChallenge = CobblemonClient.requests.battleChallenges.any { it.challengerIds.contains(optionsPacket.targetId) }
-    val hasTeamRequest = CobblemonClient.requests.multiBattleTeamRequests.any { it.challengerIds.contains(optionsPacket.targetId) }
+    val hasChallenge = CobblemonClient.requests.battleChallenges[optionsPacket.targetId] != null
+    val hasTeamRequest = CobblemonClient.requests.multiBattleTeamRequests[optionsPacket.targetId] != null
     //The way things are positioned should probably be more thought out if more options are added
     var addBattleOption = false
     optionsPacket.options.forEach {

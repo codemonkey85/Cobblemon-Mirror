@@ -9,10 +9,17 @@
 package com.cobblemon.mod.common.client.battle
 
 import com.cobblemon.mod.common.battles.BattleFormat
-import java.util.UUID
+import com.cobblemon.mod.common.client.render.ClientPlayerIcon
+import com.cobblemon.mod.common.client.requests.ClientPlayerActionRequest
+import java.util.*
 
-class ClientBattleChallenge(
-    val challengeId: UUID,
-    val challengerIds: List<UUID>,
-    val battleFormat: BattleFormat? = null
-)
+data class ClientBattleChallenge(
+    override val requestID: UUID,
+    override val expiryTime: Int,
+    val battleFormat: BattleFormat
+) : ClientPlayerActionRequest, ClientPlayerIcon(expiryTime)
+
+data class ClientTeamRequest(
+    override val requestID: UUID,
+    override val expiryTime: Int
+) : ClientPlayerActionRequest, ClientPlayerIcon(expiryTime)

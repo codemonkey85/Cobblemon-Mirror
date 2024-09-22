@@ -49,7 +49,7 @@ object TeamRequestResponseHandler : ServerNetworkPacketHandler<BattleTeamRespons
                 }
                 // Check in on team requests, if the other player has requested me, this complete the team up
                 val existingRequest = BattleRegistry.multiBattleTeamRequests[targetedEntity.uuid]
-                if (existingRequest != null && !existingRequest.isExpired() && existingRequest.requestedPlayerUUID == player.uuid) {
+                if (existingRequest != null && !existingRequest.isExpired() && existingRequest.targetID == player.uuid) {
 
                     if(packet.accept) {
                         if (targetedEntity.party().none()) {

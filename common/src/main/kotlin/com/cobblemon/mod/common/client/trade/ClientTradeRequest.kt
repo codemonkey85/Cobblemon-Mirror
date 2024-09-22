@@ -8,6 +8,11 @@
 
 package com.cobblemon.mod.common.client.trade
 
+import com.cobblemon.mod.common.client.requests.ClientPlayerActionRequest
+import com.cobblemon.mod.common.client.render.ClientPlayerIcon
 import java.util.UUID
 
-class ClientTradeOffer(val tradeOfferId: UUID, val traderId: UUID)
+data class ClientTradeRequest(
+    override val requestID: UUID,
+    override val expiryTime: Int
+) : ClientPlayerActionRequest, ClientPlayerIcon(expiryTime)

@@ -72,7 +72,7 @@ object ChallengeResponseHandler : ServerNetworkPacketHandler<BattleChallengeResp
                 // Check in on battle requests, if the other player has challenged me, this starts the battle
                 val existingChallenge = BattleRegistry.pvpChallenges[targetedEntity.uuid] ?: BattleRegistry.pvpChallenges[BattleRegistry.playerToTeam[targetedEntity.uuid]?.teamID]
                 var existingChallengePokemon = existingChallenge?.selectedPokemonId
-                if (existingChallenge != null && !existingChallenge.isExpired() && (existingChallenge.challengedPlayerUUID == player.uuid || existingChallenge.challengedPlayerUUID == BattleRegistry.playerToTeam[player.uuid]?.teamID)) {
+                if (existingChallenge != null && !existingChallenge.isExpired() && (existingChallenge.targetID == player.uuid || existingChallenge.targetID == BattleRegistry.playerToTeam[player.uuid]?.teamID)) {
 
                     val battleFormat = existingChallenge.battleFormat
 
@@ -91,7 +91,7 @@ object ChallengeResponseHandler : ServerNetworkPacketHandler<BattleChallengeResp
 
                             if(players.count() != BattleRegistry.MAX_TEAM_MEMBER_COUNT * 2) {
                                 // TODO: handle larger teams
-                                BattleRegistry.removeChallenge(targetTeamUUID, existingChallenge.challengeId, true)
+                                BattleRegistry.removeChallenge(targetTeamUUID, existingChallenge.requestID, true)
                                 // Send error message that we don't have the correct number of players
                                 players.forEach {
                                     it.sendSystemMessage(battleLang( "error.incorrect_player_count", players.count(), BattleRegistry.MAX_TEAM_MEMBER_COUNT).red())
@@ -105,7 +105,7 @@ object ChallengeResponseHandler : ServerNetworkPacketHandler<BattleChallengeResp
 
                             if(leadPokemon.count() != players.count()) {
                                 // TODO: Error Message, missing team leads
-                                BattleRegistry.removeChallenge(targetTeamUUID, existingChallenge.challengeId, true)
+                                BattleRegistry.removeChallenge(targetTeamUUID, existingChallenge.requestID, true)
                                 return
                             }
 
@@ -117,7 +117,7 @@ object ChallengeResponseHandler : ServerNetworkPacketHandler<BattleChallengeResp
                                 players.forEach {
                                     it.sendSystemMessage(battleLang("error.player_different_dimension"))
                                 }
-                                BattleRegistry.removeChallenge(targetTeamUUID, existingChallenge.challengeId, true)
+                                BattleRegistry.removeChallenge(targetTeamUUID, existingChallenge.requestID, true)
                                 return
                             }
 
@@ -133,12 +133,12 @@ object ChallengeResponseHandler : ServerNetworkPacketHandler<BattleChallengeResp
                                     val langKey = if(it.uuid == farAwayPlayer.uuid) "error.player_distance.personal" else "error.player_distance"
                                     it.sendSystemMessage(battleLang(langKey, farAwayPlayer.name))
                                 }
-                                BattleRegistry.removeChallenge(targetTeamUUID, existingChallenge.challengeId, true)
+                                BattleRegistry.removeChallenge(targetTeamUUID, existingChallenge.requestID, true)
                                 return
                             }
 
                             BattleBuilder.pvp2v2(players, leadPokemon, battleFormat)
-                            BattleRegistry.removeChallenge(targetTeamUUID, existingChallenge.challengeId, true)
+                            BattleRegistry.removeChallenge(targetTeamUUID, existingChallenge.requestID, true)
                         } else {
                             if (targetedEntity.party()[existingChallengePokemon!!] == null) {
                                 if (targetedEntity.party().none()) {
@@ -150,7 +150,7 @@ object ChallengeResponseHandler : ServerNetworkPacketHandler<BattleChallengeResp
                                 existingChallengePokemon = targetedEntity.party().first().uuid
                             }
                             BattleBuilder.pvp1v1(targetedEntity, player, existingChallengePokemon, leadingPokemon, battleFormat).ifErrored { it.sendTo(player) { it.red() }; it.sendTo(targetedEntity) { it.red() } }
-                            BattleRegistry.removeChallenge(targetedEntity.uuid, existingChallenge.challengeId)
+                            BattleRegistry.removeChallenge(targetedEntity.uuid, existingChallenge.requestID)
                         }
 
                     } else {
@@ -161,7 +161,7 @@ object ChallengeResponseHandler : ServerNetworkPacketHandler<BattleChallengeResp
                             if (targetedTeam != null) {
                                 // Inform everyone involved that the battle was declined
                                 val playerTeam = BattleRegistry.playerToTeam[player.uuid]
-                                BattleRegistry.removeChallenge(targetedTeam.teamID, existingChallenge.challengeId, true)
+                                BattleRegistry.removeChallenge(targetedTeam.teamID, existingChallenge.requestID, true)
 
                                 // Send messages to player team
                                 playerTeam?.teamPlayersUUID?.forEach { uuid ->
@@ -180,7 +180,7 @@ object ChallengeResponseHandler : ServerNetworkPacketHandler<BattleChallengeResp
                         } else {
                             targetedEntity.sendSystemMessage(lang("challenge.decline.receiver", player.name).yellow())
                             player.sendSystemMessage(lang("challenge.decline.sender", targetedEntity.name).yellow())
-                            BattleRegistry.removeChallenge(targetedEntity.uuid, existingChallenge.challengeId)
+                            BattleRegistry.removeChallenge(targetedEntity.uuid, existingChallenge.requestID)
                         }
 
                     }

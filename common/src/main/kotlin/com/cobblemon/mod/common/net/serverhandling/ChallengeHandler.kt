@@ -80,7 +80,7 @@ object ChallengeHandler : ServerNetworkPacketHandler<BattleChallengePacket> {
                     return
                 }
                 val existingChallenge = BattleRegistry.pvpChallenges[player.uuid]
-                if (existingChallenge != null && !existingChallenge.isExpired() && existingChallenge.challengedPlayerUUID == targetedEntity.uuid) {
+                if (existingChallenge != null && !existingChallenge.isExpired() && existingChallenge.targetID == targetedEntity.uuid) {
                     // Overwrite the challenge or do nothing.
                     // send a message about there being an existing challenge
                     player.sendSystemMessage(lang("challenge.pending", targetedEntity.name).yellow())
@@ -93,8 +93,8 @@ object ChallengeHandler : ServerNetworkPacketHandler<BattleChallengePacket> {
                             // Send a request to start a battle
                             val challenge = BattleRegistry.BattleChallenge(UUID.randomUUID(), existingTargetTeam.teamID, leadingPokemon, packet.battleFormat)
                             BattleRegistry.pvpChallenges[existingPlayerTeam.teamID] = challenge
-                            afterOnServer(seconds = challenge.expiryTimeSeconds.toFloat()) {
-                                BattleRegistry.removeChallenge(existingPlayerTeam.teamID, challengeId = challenge.challengeId)
+                            afterOnServer(seconds = challenge.expiryTime.toFloat()) {
+                                BattleRegistry.removeChallenge(existingPlayerTeam.teamID, challengeId = challenge.requestID)
                             }
                             // Notify everyone of the challenge
 
@@ -106,14 +106,20 @@ object ChallengeHandler : ServerNetworkPacketHandler<BattleChallengePacket> {
                             // Notify challenged tam
                             CobblemonNetwork.sendPacketToPlayers(
                                 existingTargetTeam.teamPlayersUUID.map { it.getPlayer() }.mapNotNull { it },
-                                BattleChallengeNotificationPacket(challenge.challengeId, existingPlayerTeam.teamPlayersUUID, existingPlayerTeam.teamPlayersUUID.mapNotNull { it.getPlayer()?.name?.copy()?.aqua() }, BattleFormat.GEN_9_MULTI)
+                                BattleChallengeNotificationPacket(
+                                    challenge.requestID,
+                                    existingPlayerTeam.teamPlayersUUID,
+                                    existingPlayerTeam.teamPlayersUUID.mapNotNull { it.getPlayer()?.name?.copy()?.aqua() },
+                                    BattleFormat.GEN_9_MULTI,
+                                    challenge.expiryTime
+                                )
                             )
                         }
                     } else {
                         val challenge = BattleRegistry.BattleChallenge(UUID.randomUUID(), targetedEntity.uuid, leadingPokemon, packet.battleFormat)
                         BattleRegistry.pvpChallenges[player.uuid] = challenge
-                        afterOnServer(seconds = challenge.expiryTimeSeconds.toFloat()) {
-                            BattleRegistry.removeChallenge(player.uuid, challengeId = challenge.challengeId)
+                        afterOnServer(seconds = challenge.expiryTime.toFloat()) {
+                            BattleRegistry.removeChallenge(player.uuid, challengeId = challenge.requestID)
                         }
 
                         val battleFormatLang = when (packet.battleFormat.battleType.name) {
@@ -124,7 +130,13 @@ object ChallengeHandler : ServerNetworkPacketHandler<BattleChallengePacket> {
                             else -> "battle.types.singles"
                         }
 
-                        targetedEntity.sendPacket(BattleChallengeNotificationPacket(challenge.challengeId, player.uuid, player.name.copy().aqua(), packet.battleFormat))
+                        targetedEntity.sendPacket(BattleChallengeNotificationPacket(
+                            challenge.requestID,
+                            player.uuid,
+                            player.name.copy().aqua(),
+                            packet.battleFormat,
+                            challenge.expiryTime
+                        ))
                         player.sendSystemMessage(lang("challenge.sender", targetedEntity.name, lang(battleFormatLang)).yellow())
                     }
                 }

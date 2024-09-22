@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client
 
+import com.cobblemon.mod.common.client.render.ClientPlayerIcon
 import net.minecraft.network.chat.MutableComponent
 import java.util.UUID
 
@@ -15,5 +16,4 @@ class ClientPlayerTeamData {
     var multiBattleTeamMembers = mutableListOf<ClientMultiBattleTeamMember>()
 }
 
-class ClientMultiBattleTeamMember(val uuid: UUID, val name: MutableComponent) {
-}
+class ClientMultiBattleTeamMember(val uuid: UUID, val name: MutableComponent) : ClientPlayerIcon(null)

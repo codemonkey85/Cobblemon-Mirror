@@ -19,6 +19,8 @@ import com.cobblemon.mod.common.client.battle.ClientBattle
 import com.cobblemon.mod.common.client.gui.PartyOverlay
 import com.cobblemon.mod.common.client.gui.battle.BattleOverlay
 import com.cobblemon.mod.common.client.particle.BedrockParticleOptionsRepository
+import com.cobblemon.mod.common.client.render.ClientPlayerIcon
+import com.cobblemon.mod.common.client.render.DeferredRenderer
 import com.cobblemon.mod.common.client.render.block.*
 import com.cobblemon.mod.common.client.render.boat.CobblemonBoatRenderer
 import com.cobblemon.mod.common.client.render.entity.PokeBobberEntityRenderer
@@ -31,6 +33,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.repository.*
 import com.cobblemon.mod.common.client.render.npc.NPCRenderer
 import com.cobblemon.mod.common.client.render.pokeball.PokeBallRenderer
 import com.cobblemon.mod.common.client.render.pokemon.PokemonRenderer
+import com.cobblemon.mod.common.client.requests.ClientPlayerActionRequests
 import com.cobblemon.mod.common.client.sound.BattleMusicController
 import com.cobblemon.mod.common.client.sound.EntitySoundTracker
 import com.cobblemon.mod.common.client.storage.ClientStorageManager
@@ -100,6 +103,7 @@ object CobblemonClient {
         ClientTaskTracker.clear()
         checkedStarterScreen = false
         CobblemonDataProvider.canReload = true
+        DeferredRenderer.clearAll()
     }
 
     fun initialize(implementation: CobblemonClientImplementation) {
@@ -136,6 +140,7 @@ object CobblemonClient {
                 //dont open scanner if player switches off the dex via hotbar
                 pokedexUsageContext.stopUsing(event.client.player!!, PokedexUsageContext.TIME_TO_OPEN_SCANNER + 1)
             }
+            ClientPlayerIcon.onTick()
         }
     }
 
