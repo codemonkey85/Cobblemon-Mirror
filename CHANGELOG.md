@@ -30,7 +30,6 @@
 - New config setting `displayEntityNameLabel` and `displayEntityLabelsWhenCrouchingOnly` to control what and when is displayed for the pokemon label
 - `/freezepokemon` command to pause a Pokémon's animation at a specific point in time.
 - Added `no_ai` and `freeze_frame` options to the `/spawnpokemon` command.
-- Added `battlesFought` to the GeneralPlayerData for tracking
 
 ### Pokémon Added
 #### Gen 2
@@ -80,7 +79,7 @@
 - Updated party switching interface when in battle.
 - Relic coin pouches can now be waterlogged.
 - Pokemon Name (and level) labels are now only visible when crouching by default, set the `displayEntityLabelsWhenCrouchingOnly` to `false` to always them even when not crouching
-- The "Press R to start battle prompt" will now disappear after a player's first battle has been fought
+- The "Press R to start battle prompt" will now disappear after a player's first battle has been won
 
 ### Fixes
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating.
