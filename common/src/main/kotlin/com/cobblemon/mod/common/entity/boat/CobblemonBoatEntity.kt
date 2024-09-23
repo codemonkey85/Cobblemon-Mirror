@@ -86,11 +86,11 @@ open class CobblemonBoatEntity(entityType: EntityType<out Boat>, world: Level) :
     }
 
     override fun setVariant(type: Type) {
-        throw UnsupportedOperationException("The vanilla boat type is not present in the Cobblemon implementation use the type property")
+        throw UnsupportedOperationException("The vanilla boat type is not present in the Cobblemon implementation use the boatType property")
     }
 
     override fun getVariant(): Type {
-        throw UnsupportedOperationException("The vanilla boat type is not present in the Cobblemon implementation use the type property")
+        return Type.BAMBOO //have to return something here as otherwise it breaks vanilla interactions (e.g. player getting into boat)
     }
 
     override fun getSinglePassengerXOffset(): Float = this.boatType.mountedOffset

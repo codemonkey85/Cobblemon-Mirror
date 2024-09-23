@@ -391,6 +391,10 @@ class TradeGUI(
         super.onClose()
     }
 
+    override fun renderBlurredBackground(delta: Float) {}
+
+    override fun renderMenuBackground(context: GuiGraphics) {}
+
     private fun setOfferedPokemon(pokemon: Pokemon?, isOpposing: Boolean = false) {
         protectiveTicks = 20
         val x = (width - BASE_WIDTH) / 2
@@ -504,8 +508,8 @@ class TradeGUI(
                     texture = Summary.iconShinyResource,
                     x = (x + (if (isOpposing) 214.5 else 71.5)) / SCALE,
                     y = (y + 33.5) / SCALE,
-                    width = 14,
-                    height = 14,
+                    width = 16,
+                    height = 16,
                     scale = SCALE
                 )
             }

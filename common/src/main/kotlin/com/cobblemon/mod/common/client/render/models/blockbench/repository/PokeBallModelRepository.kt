@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.client.render.models.blockbench.repository
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pokeball.AncientPokeBallModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokeball.BeastBallModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pokeball.PokeBallModel
 
 object PokeBallModelRepository : VaryingModelRepository<PosableModel>() {
@@ -27,7 +28,7 @@ object PokeBallModelRepository : VaryingModelRepository<PosableModel>() {
 
     override fun registerInBuiltPosers() {
         inbuilt("azure_ball", ::PokeBallModel)
-        inbuilt("beast_ball", ::PokeBallModel)
+        inbuilt("beast_ball", ::BeastBallModel)
         inbuilt("cherish_ball", ::PokeBallModel)
         inbuilt("citrine_ball", ::PokeBallModel)
         inbuilt("dive_ball", ::PokeBallModel)

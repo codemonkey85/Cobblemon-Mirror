@@ -15,6 +15,7 @@ import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokedex.def.PokedexDef
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies.species
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.command.argument.DexArgumentType
 import com.cobblemon.mod.common.command.argument.FormArgumentType
@@ -83,7 +84,7 @@ object PokedexCommand {
             val dex = Cobblemon.playerDataManager.getPokedexData(it)
 
             //dex.grantedWithCommand(species, form)
-            it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
+            it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreTypes.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"
         context.source.sendSystemMessage(
@@ -99,7 +100,7 @@ object PokedexCommand {
         players.forEach {
             val dex = Cobblemon.playerDataManager.getPokedexData(it)
             //dex.removedWithCommand(species, form)
-            it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
+            it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreTypes.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"
         context.source.sendSystemMessage(
@@ -123,7 +124,7 @@ object PokedexCommand {
                 }
                 speciesRecord.addAspects(dexEntry.variations.flatMap { it.aspects }.toSet())
             }
-            player.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
+            player.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreTypes.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"
         context.source.sendSystemMessage(
@@ -138,7 +139,7 @@ object PokedexCommand {
             val dex = Cobblemon.playerDataManager.getPokedexData(it)
             //FIXME
             //dex.removedByCommand(null, null)
-            it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreType.POKEDEX, dex.toClientData()))
+            it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreTypes.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"
         context.source.sendSystemMessage(

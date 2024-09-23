@@ -84,7 +84,7 @@ class PartyOverlay : Gui(Minecraft.getInstance()) {
     }
 
     override fun render(context: GuiGraphics, tickCounter: DeltaTracker) {
-        val partialDeltaTicks = tickCounter.getGameTimeDeltaPartialTick(false)
+        val partialDeltaTicks = tickCounter.realtimeDeltaTicks
         val minecraft = Minecraft.getInstance()
 
         // Hiding if a Screen is open and not exempt

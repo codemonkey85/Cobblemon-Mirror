@@ -9,22 +9,26 @@
 package com.cobblemon.mod.common.mixin;
 
 import com.cobblemon.mod.common.world.CobblemonStructureIDs;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
-import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
-import net.minecraft.world.level.levelgen.structure.pools.LegacySinglePoolElement;
-import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
-import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
-import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.pools.*;
+import net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup;
+import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.*;
 
@@ -39,11 +43,11 @@ public abstract class StructurePoolGeneratorMixin {
         String pokecenter = "pokecenter";
         String berry = "berry_farm";
 
-        structureGroups.put(CobblemonStructureIDs.PLAINS_POKECENTER, Set.of(pokecenter));
-        structureGroups.put(CobblemonStructureIDs.DESERT_POKECENTER, Set.of(pokecenter));
-        structureGroups.put(CobblemonStructureIDs.SAVANNA_POKECENTER, Set.of(pokecenter));
-        structureGroups.put(CobblemonStructureIDs.SNOWY_POKECENTER, Set.of(pokecenter));
-        structureGroups.put(CobblemonStructureIDs.TAIGA_POKECENTER, Set.of(pokecenter));
+        structureGroups.put(CobblemonStructureIDs.VILLAGE_PLAINS_POKECENTER, Set.of(pokecenter));
+        structureGroups.put(CobblemonStructureIDs.VILLAGE_DESERT_POKECENTER, Set.of(pokecenter));
+        structureGroups.put(CobblemonStructureIDs.VILLAGE_SAVANNA_POKECENTER, Set.of(pokecenter));
+        structureGroups.put(CobblemonStructureIDs.VILLAGE_SNOWY_POKECENTER, Set.of(pokecenter));
+        structureGroups.put(CobblemonStructureIDs.VILLAGE_TAIGA_POKECENTER, Set.of(pokecenter));
 
         structureGroups.put(CobblemonStructureIDs.SAVANNA_BERRY_SMALL, Set.of(berry));
         structureGroups.put(CobblemonStructureIDs.SAVANNA_BERRY_LARGE, Set.of(berry));
@@ -117,52 +121,24 @@ public abstract class StructurePoolGeneratorMixin {
         return reducedList.iterator();
     }
 
-    @ModifyVariable(method = "tryPlacingChildren", at = @At("HEAD"), ordinal = 0, argsOnly = true)
-    private PoolElementStructurePiece injected(PoolElementStructurePiece poolStructurePiece) {
-        ResourceLocation structureLocationKey = getCobblemonOnlyLocation(poolStructurePiece.getElement());
+    @Inject(method = "tryPlacingChildren", at = @At(value = "NEW", target = "net/minecraft/world/level/levelgen/structure/PoolElementStructurePiece", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void afterTryPlacingChildren(
+        PoolElementStructurePiece poolElementStructurePiece,
+        MutableObject<VoxelShape> mutableObject,
+        int i,
+        boolean bl,
+        LevelHeightAccessor levelHeightAccessor,
+        RandomState randomState,
+        PoolAliasLookup poolAliasLookup,
+        LiquidSettings liquidSettings,
+        CallbackInfo ci,
+        @Local(ordinal = 1) StructurePoolElement structurePoolElement
+    ) {
+        ResourceLocation structureLocationKey = getCobblemonOnlyLocation(structurePoolElement);
         if (structureLocationKey != null) {
             incrementStructureCount(structureLocationKey);
         }
-        return poolStructurePiece;
     }
-
-    // This doesn't SEEM necessary? It appears to work without.
-//    @Inject(method = "generatePiece", at = @At("HEAD"))
-//    private void beforeGeneratePiece(PoolStructurePiece piece, MutableObject<VoxelShape> pieceShape, int minY, boolean modifyBoundingBox, HeightLimitView world, NoiseConfig noiseConfig, CallbackInfo ci) {
-////        Identifier structureLocationKey = getCobblemonOnlyLocation(piece.getPoolElement());
-////
-////        if (structureLocationKey != null) {
-////            Integer currentlyGenerated = generatedStructureCounts.get(structureLocationKey);
-////            if (currentlyGenerated == null) currentlyGenerated = 0;
-////            generatedStructureCounts.put(structureLocationKey, currentlyGenerated + 1);
-////        }
-////
-////        List<StructurePoolBasedGenerator.ShapedPoolStructurePiece> reducedStructurePiecesList = structurePieces.stream().toList();
-////
-////        for (Identifier maxStructureLocationKey : structureMaxes.keySet()) {
-////            Integer maxAllowed = structureMaxes.get(maxStructureLocationKey);
-////
-////            Integer currentlyGenerated = generatedStructureCounts.get(maxStructureLocationKey);
-////            if (currentlyGenerated == null) currentlyGenerated = 0;
-////            if (currentlyGenerated < maxAllowed) {
-////                continue;
-////            }
-////
-////            //Already have max so need to remove
-////            reducedStructurePiecesList = reducedStructurePiecesList.stream()
-////                    .filter(shapedStructurePiece -> {
-////                        Identifier locationKey = getCobblemonOnlyLocation(shapedStructurePiece.piece.getPoolElement());
-////                        if (locationKey == null) {
-////                            return true;
-////                        }
-////
-////                        return !locationKey.equals(maxStructureLocationKey);
-////                    })
-////                    .collect(Collectors.toList());
-////        }
-////
-////        structurePieces = new ArrayDeque<>(reducedStructurePiecesList);
-//    }
 
     private static ResourceLocation getCobblemonOnlyLocation(StructurePoolElement structurePoolElement) {
         ResourceLocation location = getLocationIfAvailable(structurePoolElement);
@@ -186,26 +162,4 @@ public abstract class StructurePoolGeneratorMixin {
             return null;
         }
     }
-
-//    private List<StructurePoolElement> removeInstanceOfLocationKeyFrom(List<StructurePoolElement> structureList, Integer allowedNumberOfInstances, Identifier locationKey) {
-//        List<StructurePoolElement> reducedList = new ArrayList<>();
-//        int instancesFound = 0;
-//
-//        for (StructurePoolElement structurePoolElement: structureList) {
-//            Identifier structureKey = getCobblemonOnlyLocation(structurePoolElement);
-//            if (structureKey == null || !structureKey.equals(locationKey)) {
-//                reducedList.add(structurePoolElement);
-//                continue;
-//            }
-//
-//            if (instancesFound >= allowedNumberOfInstances) {
-//                continue;
-//            }
-//
-//            reducedList.add(structurePoolElement);
-//            instancesFound++;
-//        }
-//
-//        return  reducedList;
-//    }
 }

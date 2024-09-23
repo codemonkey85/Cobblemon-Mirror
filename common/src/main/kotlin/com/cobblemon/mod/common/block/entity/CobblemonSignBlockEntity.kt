@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.entity.SignBlockEntity
 import net.minecraft.core.BlockPos
 
-class CobblemonSignBlockEntity(pos: BlockPos, state: BlockState) : SignBlockEntity(pos, state) {
+class CobblemonSignBlockEntity(pos: BlockPos, state: BlockState) : SignBlockEntity(CobblemonBlockEntities.SIGN, pos, state) {
 
     override fun getType(): BlockEntityType<*> = CobblemonBlockEntities.SIGN
 

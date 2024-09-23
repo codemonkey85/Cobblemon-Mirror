@@ -50,20 +50,20 @@ class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
     override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
 
-//        drawScaledText(
+//        drawScaledTextJustifiedRight(
 //            context = context,
 //            font = CobblemonResources.DEFAULT_LARGE,
 //            text = Component.translatable("cobblemon.ui.pokedex.height", (pokemonHeight / 10).toString()).bold(),
-//            x = pX + 9,
+//            x = pX + HALF_OVERLAY_WIDTH - 9,
 //            y = pY - 10,
 //            shadow = true
 //        )
 
-        drawScaledTextJustifiedRight(
+        drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
             text = Component.translatable("cobblemon.ui.pokedex.weight", (weight / 10).toString()).bold(),
-            x = pX + HALF_OVERLAY_WIDTH - 9,
+            x = pX + 9,
             y = pY - 10,
             shadow = true
         )

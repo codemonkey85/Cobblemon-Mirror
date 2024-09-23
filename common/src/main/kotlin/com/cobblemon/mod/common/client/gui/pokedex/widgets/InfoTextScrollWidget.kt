@@ -73,21 +73,25 @@ abstract class InfoTextScrollWidget(val pX: Int, val pY: Int): ScrollingWidget<I
     override fun renderScrollbar(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val xLeft = this.scrollbarPosition
         val xRight = xLeft + 3
+        val yStart = y + 1
 
-        val barHeight = this.bottom - this.y
+        val barHeight = this.bottom - yStart
 
         var yBottom = ((barHeight * barHeight).toFloat() / this.maxPosition.toFloat()).toInt()
         yBottom = Mth.clamp(yBottom, 32, barHeight - 8)
-        var yTop = scrollAmount.toInt() * (barHeight - yBottom) / this.maxScroll + this.y
-        if (yTop < this.y) {
-            yTop = this.y
-        }
+        var yTop = scrollAmount.toInt() * (barHeight - yBottom) / this.maxScroll + yStart
+        if (yTop < yStart) yTop = yStart
 
-        context.fill(xLeft + 1, this.y + 1, xRight - 1, this.bottom - 1, FastColor.ARGB32.color(255, 126, 231, 229)) // background
-        context.fill(xLeft,yTop + 1, xRight, yTop + yBottom - 1, FastColor.ARGB32.color(255, 58, 150, 182)) // base
+        context.fill(xLeft + 1, yStart, xRight - 1, this.bottom, FastColor.ARGB32.color(255, 126, 231, 229)) // track
+        context.fill(xLeft, yTop, xRight, yTop + yBottom, FastColor.ARGB32.color(255, 58, 150, 182)) // bar
     }
+
     override fun getScrollbarPosition(): Int {
         return left + width - scrollBarWidth
+    }
+
+    override fun getBottom(): Int {
+        return this.y + this.height - 1
     }
 
     class TextSlot(val text : String) : Slot<TextSlot>() {

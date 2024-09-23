@@ -49,8 +49,20 @@ abstract class PlatformRegistry<R : Registry<T>, K : ResourceKey<R>, T> {
      * @return The entry created.
      */
     open fun <E : T> create(name: String, entry: E): E {
-        val identifier = cobblemonResource(name)
-        this.queue[identifier] = entry
+        val resourceLocation = cobblemonResource(name)
+        return this.create(resourceLocation, entry)
+    }
+
+    /**
+     * Creates a new entry in this registry. Introduced for sidemod usage
+     *
+     * @param E The type of the entry.
+     * @param name The name of the entry, this will be an [ResourceLocation.path].
+     * @param entry The entry being added.
+     * @return The entry created.
+     */
+    open fun <E : T> create(resourceLocation: ResourceLocation, entry: E): E {
+        this.queue[resourceLocation] = entry
         if (entry is BagItemLike) {
             BagItems.bagItems.add(
                 priority = Priority.NORMAL,

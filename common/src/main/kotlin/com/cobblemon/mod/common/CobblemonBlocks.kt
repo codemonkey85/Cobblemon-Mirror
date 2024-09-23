@@ -661,7 +661,6 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
             BlockBehaviour.Properties.of()
                 .sound(CobblemonSounds.RELIC_COIN_POUCH_SOUNDS)
                 .pushReaction(PushReaction.DESTROY)
-                .strength(0.4f)
                 .noOcclusion(), true
         )
     )

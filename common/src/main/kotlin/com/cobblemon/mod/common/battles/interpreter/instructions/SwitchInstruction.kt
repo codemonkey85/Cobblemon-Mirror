@@ -66,7 +66,7 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
                 else if (pokemonEntity == null && entity != null) {
                     activePokemon.battlePokemon = pokemon
                     activePokemon.illusion = illusion
-                    val targetPos = ShowdownInterpreter.getSendoutPosition(battle, pnx, battleActor)
+                    val targetPos = ShowdownInterpreter.getSendoutPosition(battle, activePokemon, battleActor)
                     if (targetPos != null) {
                         val battleSendoutCount = activePokemon.getActorShowdownId()[1].digitToInt() - 1 + actor.stillSendingOutCount
                         actor.stillSendingOutCount++
@@ -92,6 +92,9 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
         }
         else {
             battle.dispatchInsert {
+                val newHealth = privateMessage.argumentAt(2)!!.split(" ")[0]
+                val remainingHealth = newHealth.split("/")[0].toInt()
+                pokemon.effectedPokemon.currentHealth = remainingHealth
                 pokemon.sendUpdate()
 
                 if (activePokemon.battlePokemon == pokemon) {
@@ -149,12 +152,12 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
                         if (!imposter) newPokemon.entity?.cry()
                         sendOutFuture.complete(Unit)
                     }
-                }
-                else {
-                    val lastPosition = activePokemon.position
+                } else {
+                    // For Singles, we modify the sendout position based on the pokemon's hitbox size
+                    val pos = (if (battle.format.battleType.pokemonPerSide == 1) ShowdownInterpreter.getSendoutPosition(battle, activePokemon, actor)
+                        else  activePokemon.position?.second) ?: entity.position()
                     // Send out at previous Pokémon's location if it is known, otherwise actor location
-                    val world = lastPosition?.first ?: entity.level() as ServerLevel
-                    val pos = lastPosition?.second ?: entity.position()
+                    val world = entity.level() as ServerLevel
                     newPokemon.effectedPokemon.sendOutWithAnimation(
                         source = entity,
                         battleId = battle.battleId,

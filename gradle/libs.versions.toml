@@ -1,8 +1,6 @@
 [versions]
 # Kotlin
 kotlin = "2.0.0"
-annotations = "24.1.0"
-serialization = "1.7.1"
 
 # Plugins
 licenser = "0.6.1"
@@ -53,9 +51,6 @@ licenser = { group = "gradle.plugin.org.cadixdev.gradle", name = "licenser", ver
 # Kotlin
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
-jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core-jvm", version.ref = "serialization" }
-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json-jvm", version.ref = "serialization" }
 
 # Common
 jei-api = { group = "mezz.jei", name = "jei-1.21-common-api", version.ref = "jei-api"}
@@ -91,7 +86,6 @@ classgraph = { group = "io.github.classgraph", name = "classgraph", version.ref 
 [bundles]
 kotlin = [ "kotlin-stdlib", "kotlin-reflect" ]
 fabric = [ "fabric-kotlin", "fabric-permissions" ]
-fabric-kotlin-deps = [ "jetbrains-annotations", "serialization-core", "serialization-json" ]
 fabric-integrations-compileOnly = [ "adorn-fabric", "lambDynamicLights", "jei-api-fabric" ]
 fabric-integrations-runtimeOnly = [ "jei-fabric" ]
 mongo = [ "mongo-driver-core", "mongo-driver-sync" ]

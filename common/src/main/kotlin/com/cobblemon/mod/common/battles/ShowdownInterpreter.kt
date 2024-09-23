@@ -144,7 +144,8 @@ object ShowdownInterpreter {
      * 
      *
      */
-     fun getSendoutPosition(battle: PokemonBattle, pnx:String, battleActor: BattleActor): Vec3? {
+     fun getSendoutPosition(battle: PokemonBattle, activePokemon: ActiveBattlePokemon, battleActor: BattleActor): Vec3? {
+        val pnx = activePokemon.getPNX()
         val entityPosList = battleActor.getSide().actors.mapNotNull { if (it is EntityBackedBattleActor<*>) it.initialPos else null }
         var entityPos = if (entityPosList.size == 1)
             entityPosList[0]
@@ -173,7 +174,14 @@ object ShowdownInterpreter {
             vector = vector.cross(Vec3(0.0, 1.0, 0.0))
 
             if (battle.format.battleType.pokemonPerSide == 1) { // Singles
-                entityPos = entityPos?.add(baseOffset.scale(if (battle.isPvW) 0.4 else 0.3))?.add(vector.scale(-2.0))
+                entityPos = entityPos?.add(baseOffset.scale(if (battle.isPvW) 0.4 else 0.3))
+                activePokemon.battlePokemon?.let { battlePokemon ->
+                    val hitbox = battlePokemon.originalPokemon.form.hitbox
+                    val scale = battlePokemon.originalPokemon.form.baseScale
+                    if (hitbox.height * scale > 1.1) {
+                        entityPos = entityPos?.add(vector.scale(-1.5 - hitbox.width * scale / 2))
+                    }
+                }
             } else if (battle.format.battleType.pokemonPerSide == 2) { // Doubles
                 if (battle.actors.first() !== battle.actors.last()) {
                     val offsetB = if (pnx[2] == 'a') vector.scale(-1.0) else vector
