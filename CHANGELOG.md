@@ -141,6 +141,7 @@
 - Bag Items used during a turn will now be refunded if the battle ends before the next turn begins.
 - Pokémon whose current owner is not its Original Trainer now gains extra experience.
 - Fixed Fossil Resurrection advancement not being granted.
+- Fixed village generation caps not applying for berry farms. You were not meant to see more than two berry farms per village!
 
 ### Developer
 - `SpawnCause` is now an implementation of `SpawningInfluence`.
@@ -156,6 +157,7 @@
 - All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.
 - Added `forcedAspects` to Pokémon to make it easier to easily add basic aspects to a Pokémon in a way that persists. We already know that everyone is going to overuse this.
 - Made the `Pokemon.aspects` setter private. This could technically break side-mods but if you are affected by this then you were using it wrong! Use `Pokemon.forcedAspects` to fix it.
+- Cobblemon's main logger is properly static now.
 
 ### Data Pack & Resource Pack Creators
 - Added support for "shedders" similar to Shedinja's evolution logic.
