@@ -1401,7 +1401,7 @@ open class PokemonEntity(
         lastHeadpat = currentTime
         cry()
         player.swing(InteractionHand.MAIN_HAND, true)
-        if(pokemon.headpatTime == 0L || lastHeadpat > (pokemon.headpatTime + SharedConstants.TICKS_PER_GAME_DAY)){
+        if(pokemon.headpatTime == 0L || lastHeadpat > (pokemon.headpatTime + (SharedConstants.TICKS_PER_MINUTE * 15))){
             pokemon.headpatTime = currentTime
             pokemon.incrementFriendship(2)
             val eyePos = pokemon.entity?.eyePosition
