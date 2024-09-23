@@ -609,7 +609,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
     fun recalculatePoses(renderablePokemon: RenderablePokemon) {
         val state = FloatingState()
         state.currentAspects = renderablePokemon.aspects
-        val poser = PokemonModelRepository.getPoser(renderablePokemon.species.resourceIdentifier, renderablePokemon.aspects)
+        val poser = PokemonModelRepository.getPoser(renderablePokemon.species.resourceIdentifier, state)
         state.currentModel = poser
         this.poseList = poser.poses
             .map { it.value.poseTypes.first() }

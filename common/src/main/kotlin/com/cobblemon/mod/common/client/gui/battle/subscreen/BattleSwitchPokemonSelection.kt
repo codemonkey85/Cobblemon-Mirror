@@ -187,6 +187,7 @@ class BattleSwitchPokemonSelection(
         fun isHovered(mouseX: Double, mouseY: Double) = mouseX in x..(x + SELECT_WIDTH) && mouseY in (y..(y + SELECT_HEIGHT))
 
         fun render(context: GuiGraphics, mouseX: Double, mouseY: Double, deltaTicks: Float) {
+            state.currentAspects = pokemon.aspects
             val matrixStack = context.pose()
             val healthRatioSplits = showdownPokemon.condition.split(" ")[0].split("/")
             try {
@@ -246,7 +247,6 @@ class BattleSwitchPokemonSelection(
                 matrixStack.scale(2.5F, 2.5F, 1F)
                 drawProfilePokemon(
                     species = pokemon.species.resourceIdentifier,
-                    aspects = pokemon.aspects.toSet(),
                     matrixStack = matrixStack,
                     rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),
                     state = state,

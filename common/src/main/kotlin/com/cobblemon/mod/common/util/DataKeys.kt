@@ -68,6 +68,9 @@ object DataKeys {
     const val POKEMON_ORIGINAL_TRAINER = "PokemonOriginalTrainer"
     const val POKEMON_ORIGINAL_TRAINER_TYPE = "PokemonOriginalTrainerType"
 
+    const val POKEMON_PROPERTIES_MOVES = "Moves"
+    const val POKEMON_PROPERTIES_HELDITEM = "HeldItem"
+
     // Entity effects
     const val ENTITY_EFFECTS = "EntityEffects"
     const val ENTITY_EFFECT_MOCK = "EntityEffectMock"
@@ -194,15 +197,20 @@ object DataKeys {
     const val NPC_SIMULTANEOUS_BATTLES = "SimultaneousBattles"
     const val NPC_HEAL_AFTERWARDS = "HealAfterwards"
     const val NPC_PARTY = "Party"
+    const val NPC_PARTY_IS_STATIC = "IsStatic"
     const val NPC_PARTY_TYPE = "PartyType"
     const val NPC_PARTY_POKEMON = "Pokemon"
     const val NPC_ASPECTS = "AppliedAspects"
     const val NPC_DATA = "Data"
+    const val NPC_CONFIG = "Config"
     const val NPC_INTERACTION = "Interaction"
     const val NPC_INTERACT_TYPE = "Type"
     const val NPC_INTERACT_SCRIPT = "Script"
     const val NPC_INTERACT_CUSTOM_SCRIPT = "CustomScript"
     const val NPC_INTERACT_DIALOGUE = "Dialogue"
+    const val NPC_PLAYER_TEXTURE = "NPCPlayerTexture"
+    const val NPC_PLAYER_TEXTURE_MODEL = "Model"
+    const val NPC_PLAYER_TEXTURE_TEXTURE = "Texture"
 
     // PokemonProperties
     const val ELEMENTAL_TYPE = "ElementalType"

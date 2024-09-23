@@ -10,6 +10,8 @@ package com.cobblemon.mod.common.api.spawning.detail
 
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.cobblemon.mod.common.entity.npc.NPCEntity
+import com.cobblemon.mod.common.util.party
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * A [SpawnAction] for creating [NPCEntity]s.
@@ -22,6 +24,8 @@ class NPCSpawnAction(ctx: SpawningContext, override val detail: NPCSpawnDetail) 
         val npc = NPCEntity(ctx.world)
         npc.npc = detail.npcClass
         npc.appliedAspects.addAll(detail.aspects)
+        val seedLevel = (ctx.cause.entity as? ServerPlayer)?.let { it.party().maxOfOrNull { it.level } } ?: 10
+        npc.initialize(seedLevel)
         return EntitySpawnResult(listOf(npc))
     }
 }

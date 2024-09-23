@@ -8,8 +8,13 @@
 
 package com.cobblemon.mod.common.util
 
+import com.google.common.collect.ImmutableMap
+import com.mojang.serialization.Dynamic
+import com.mojang.serialization.DynamicOps
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.nbt.NbtOps
+import net.minecraft.nbt.Tag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.entity.Entity
@@ -18,6 +23,11 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.Shapes
+
+fun Entity.makeEmptyBrainDynamic() = Dynamic(
+    NbtOps.INSTANCE,
+    NbtOps.INSTANCE.createMap(ImmutableMap.of(NbtOps.INSTANCE.createString("memories"), NbtOps.INSTANCE.emptyMap() as Tag)) as Tag
+)
 
 fun Entity.effectiveName() = this.displayName ?: this.name
 

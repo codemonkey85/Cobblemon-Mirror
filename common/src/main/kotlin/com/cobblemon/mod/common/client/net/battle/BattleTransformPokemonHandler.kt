@@ -29,7 +29,7 @@ object BattleTransformPokemonHandler : ClientNetworkPacketHandler<BattleTransfor
         activeBattlePokemon.battlePokemon?.apply {
             displayName = update.displayName
             properties = update.properties
-            aspects = update.aspects
+            updateAspects(update.aspects)
             hpValue = update.hpValue
             maxHp = update.maxHp
             isHpFlat = update.isFlatHp

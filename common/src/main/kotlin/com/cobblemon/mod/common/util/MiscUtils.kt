@@ -14,6 +14,7 @@ import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
+import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.math.min
@@ -139,6 +140,13 @@ fun EquipmentSlot.toHand(): InteractionHand {
         else -> throw IllegalArgumentException("Invalid equipment slot: $this")
     }
 }
+
+val String.asUUID: UUID?
+    get() = try {
+        UUID.fromString(this)
+    } catch (e: Exception) {
+        null
+    }
 
 fun toHex(red: Float, green: Float, blue: Float, alpha: Float): Int {
     return ((alpha * 255).toInt() shl 24) or ((red * 255).toInt() shl 16) or ((green * 255).toInt() shl 8) or (blue * 255).toInt()
