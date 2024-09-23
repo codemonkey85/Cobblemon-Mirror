@@ -22,7 +22,8 @@ class Dialogue(
     val pages: List<DialoguePage> = mutableListOf(),
     val background: ResourceLocation = DEFAULT_BACKGROUND,
     val escapeAction: DialogueAction = FunctionDialogueAction { dialogue, _ -> dialogue.close() },
-    val speakers: Map<String, DialogueSpeaker> = emptyMap()
+    val speakers: Map<String, DialogueSpeaker> = emptyMap(),
+    val initializationAction: DialogueAction = FunctionDialogueAction { _, _ -> }
 ) {
     companion object {
         val DEFAULT_BACKGROUND = cobblemonResource("textures/gui/dialogue/dialogue_box.png")

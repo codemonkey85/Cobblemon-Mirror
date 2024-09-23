@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon
 
+import com.cobblemon.mod.common.client.entity.PokemonClientDelegate
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableEntityModel
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
@@ -21,8 +22,8 @@ class PosablePokemonEntityModel : PosableEntityModel<PokemonEntity>() {
             context.put(RenderContext.SCALE, it.pokemon.form.baseScale)
             context.put(RenderContext.SPECIES, it.pokemon.species.resourceIdentifier)
             context.put(RenderContext.ASPECTS, it.pokemon.aspects)
-            PokemonModelRepository.getTexture(it.pokemon.species.resourceIdentifier, it.pokemon.aspects, 0f).let { texture -> context.put(
-                RenderContext.TEXTURE, texture) }
+            PokemonModelRepository.getTexture(it.pokemon.species.resourceIdentifier, it.delegate as PokemonClientDelegate)
+                .let { texture -> context.put(RenderContext.TEXTURE, texture) }
         }
     }
 }

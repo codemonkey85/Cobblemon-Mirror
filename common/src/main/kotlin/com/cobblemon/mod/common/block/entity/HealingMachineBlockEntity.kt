@@ -12,8 +12,10 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
+import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.api.text.green
 import com.cobblemon.mod.common.block.HealingMachineBlock
+import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.pokeball.PokeBall
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.*
@@ -24,14 +26,12 @@ import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.state.BlockState
 import java.util.*
 import kotlin.collections.Map
-import kotlin.collections.MutableList
 import kotlin.collections.MutableMap
 import kotlin.collections.component1
 import kotlin.collections.component2
@@ -41,8 +41,8 @@ import kotlin.collections.hashMapOf
 import kotlin.collections.hashSetOf
 import kotlin.collections.isNotEmpty
 import kotlin.collections.set
-import kotlin.collections.toMutableList
 import kotlin.math.floor
+import net.minecraft.world.phys.AABB
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 class HealingMachineBlockEntity(
@@ -52,9 +52,6 @@ class HealingMachineBlockEntity(
     var currentUser: UUID? = null
         private set
 
-    @Deprecated("This property will be removed in the future", ReplaceWith("pokeBalls()"))
-    val pokeBalls: MutableList<PokeBall>
-        get() = this.pokeBalls().values.toMutableList()
     var healTimeLeft: Int = 0
     var healingCharge: Float = 0.0F
     val isInUse: Boolean
@@ -67,12 +64,11 @@ class HealingMachineBlockEntity(
     var maxCharge: Float = 6F
 
     private var dataSnapshot: DataSnapshot? = null
-    // TODO: Rename me when the deprecated field is removed
     /**
      * Represents the PokéBalls occupying this entity.
      * The key is the equivalent party slot in index form.
      */
-    private val pokeBallMap: MutableMap<Int, PokeBall> = hashMapOf()
+    private val pokeBalls: MutableMap<Int, PokeBall> = hashMapOf()
 
     init {
         maxCharge = (Cobblemon.config.maxHealerCharge).coerceAtLeast(6F)
@@ -87,18 +83,15 @@ class HealingMachineBlockEntity(
      *
      * @return The PokéBalls in this healing machine.
      */
-    fun pokeBalls(): Map<Int, PokeBall> = this.pokeBallMap
+    fun pokeBalls(): Map<Int, PokeBall> = this.pokeBalls
 
-    fun setUser(user: UUID) {
+    fun setUser(user: UUID, party: PartyStore) {
         this.clearData()
 
-        val player = user.getPlayer() ?: return
-        val party = player.party()
-
-        this.pokeBallMap.clear()
+        this.pokeBalls.clear()
         party.toGappyList().forEachIndexed { index, pokemon ->
             if (pokemon != null) {
-                this.pokeBallMap[index] = pokemon.caughtBall
+                this.pokeBalls[index] = pokemon.caughtBall
             }
         }
         this.currentUser = user
@@ -107,22 +100,22 @@ class HealingMachineBlockEntity(
         markUpdated()
     }
 
-    fun canHeal(player: ServerPlayer): Boolean {
+    fun canHeal(party: PartyStore): Boolean {
         if (Cobblemon.config.infiniteHealerCharge || this.infinite) {
             return true
         }
-        val neededHealthPercent = player.party().getHealingRemainderPercent()
+        val neededHealthPercent = party.getHealingRemainderPercent()
         return this.healingCharge >= neededHealthPercent
     }
 
-    fun activate(player: ServerPlayer) {
+    fun activate(user: UUID, party: PartyStore) {
         if (!Cobblemon.config.infiniteHealerCharge && this.healingCharge != maxCharge) {
-            val neededHealthPercent = player.party().getHealingRemainderPercent()
+            val neededHealthPercent = party.getHealingRemainderPercent()
             this.healingCharge = (healingCharge - neededHealthPercent).coerceIn(0F..maxCharge)
             this.updateRedstoneSignal()
         }
-        this.setUser(player.uuid)
-        alreadyHealing.add(player.uuid)
+        this.setUser(user, party)
+        alreadyHealing.add(user)
         updateBlockChargeLevel(HealingMachineBlock.MAX_CHARGE_LEVEL + 1)
         val world = level ?: return
         if (!world.isClientSide) world.playSoundServer(
@@ -134,11 +127,22 @@ class HealingMachineBlockEntity(
     }
 
     fun completeHealing() {
-        val player = this.currentUser?.getPlayer() ?: return clearData()
-        val party = player.party()
-
-        party.heal()
-        player.sendSystemMessage(lang("healingmachine.healed").green(), true)
+        val currentUser = currentUser ?: return clearData()
+        val player = currentUser.getPlayer()
+        if (player != null) {
+            val party = player.party()
+            party.heal()
+            player.sendSystemMessage(lang("healingmachine.healed").green(), true)
+        } else {
+            val npc = level
+                ?.getEntities(null, AABB.ofSize(blockPos.toVec3d(), 10.0, 10.0, 10.0)) { it.uuid == currentUser && it is NPCEntity }
+                ?.firstOrNull() as? NPCEntity
+            val party = npc?.staticParty
+            if (party != null) {
+                party.heal()
+                npc.sendSystemMessage(lang("healingmachine.healed").green()) // An NPC can read text, right?
+            }
+        }
         updateBlockChargeLevel()
         clearData()
     }
@@ -149,7 +153,7 @@ class HealingMachineBlockEntity(
     ) {
         super.loadAdditional(compoundTag, registryLookup)
 
-        this.pokeBallMap.clear()
+        this.pokeBalls.clear()
 
         if (compoundTag.hasUUID(DataKeys.HEALER_MACHINE_USER)) {
             this.currentUser = compoundTag.getUUID(DataKeys.HEALER_MACHINE_USER)
@@ -166,7 +170,7 @@ class HealingMachineBlockEntity(
                 val actualIndex = key.toIntOrNull() ?: index
                 val pokeBall = PokeBalls.getPokeBall(ResourceLocation.parse(pokeBallId))
                 if (pokeBall != null) {
-                    this.pokeBallMap[actualIndex] = pokeBall
+                    this.pokeBalls[actualIndex] = pokeBall
                 }
                 index++
             }
@@ -267,16 +271,16 @@ class HealingMachineBlockEntity(
     private fun clearData() {
         this.currentUser?.let(alreadyHealing::remove)
         this.currentUser = null
-        this.pokeBallMap.clear()
+        this.pokeBalls.clear()
         this.healTimeLeft = 0
         markUpdated()
     }
 
     private fun restoreSnapshot() {
         this.dataSnapshot?.let {
-            pokeBallMap.clear()
+            pokeBalls.clear()
             currentUser = it.currentUser
-            pokeBallMap.putAll(it.pokeBalls)
+            pokeBalls.putAll(it.pokeBalls)
             healTimeLeft = it.healTimeLeft
         }
     }

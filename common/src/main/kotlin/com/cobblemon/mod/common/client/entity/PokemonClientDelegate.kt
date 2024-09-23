@@ -29,6 +29,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.animation.Active
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.PrimaryAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.client.render.pokemon.PokemonRenderer.Companion.ease
+import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.MovingSoundInstance
@@ -91,7 +92,7 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
                 currentPose = null
                 currentEntity.pokemon.species = PokemonSpecies.getByIdentifier(identifier)!! // TODO exception handling
                 // force a model update - handles edge case where the PosableState's tracked PosableModel isn't updated until the LivingEntityRenderer render is run
-                currentModel = PokemonModelRepository.getPoser(identifier, currentEntity.aspects)
+                currentModel = PokemonModelRepository.getPoser(identifier, this)
             } else if (data == PokemonEntity.ASPECTS) {
                 currentAspects = currentEntity.entityData.get(PokemonEntity.ASPECTS)
             } else if (data == PokemonEntity.DYING_EFFECTS_STARTED) {
@@ -112,6 +113,7 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
                 // If you make adjustments to this code, make sure to Find Usages for both PokemonEntity.beamMode and PokemonEntity.BEAM_MODE
                 // TODO: change beamMode to an enum, or a set of booleans (send-out vs recall, delay vs delay)
                 val beamMode = currentEntity.beamMode
+
                 when (beamMode) {
                     0 -> { /* Do nothing */ }
                     1 -> {

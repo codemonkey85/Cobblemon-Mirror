@@ -50,7 +50,7 @@ val ServerPlayer.activeDialogue: ActiveDialogue?
 val ServerPlayer.isInDialogue: Boolean
     get() = DialogueManager.activeDialogues.containsKey(uuid)
 fun ServerPlayer.closeDialogue() {
-    DialogueManager.stopDialogue(this)
+    activeDialogue?.close()
 }
 fun ServerPlayer.openDialogue(dialogue: Dialogue) {
     DialogueManager.startDialogue(this, dialogue)

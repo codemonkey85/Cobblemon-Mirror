@@ -204,7 +204,6 @@ fun drawString(
 @JvmOverloads
 fun drawPosablePortrait(
     identifier: ResourceLocation,
-    aspects: Set<String>,
     matrixStack: PoseStack,
     scale: Float = 13F,
     contextScale: Float = 1F,
@@ -228,20 +227,19 @@ fun drawPosablePortrait(
     matrixStack.scale(scale, scale, -scale)
     matrixStack.translate(0.0, -PORTRAIT_DIAMETER / 18.0, 0.0)
 
-    val sprite = repository.getSprite(identifier, aspects, SpriteType.PORTRAIT);
+    val sprite = repository.getSprite(identifier, state, SpriteType.PORTRAIT);
 
     if (sprite == null) {
-        val model = repository.getPoser(identifier, aspects)
-        state.currentAspects = aspects
+        val model = repository.getPoser(identifier, state)
         state.currentModel = model
-        val texture = repository.getTexture(identifier, aspects, state.animationSeconds)
+        val texture = repository.getTexture(identifier, state)
 
         val context = RenderContext()
         model.context = context
-        repository.getTextureNoSubstitute(identifier, aspects, 0f).let { context.put(RenderContext.TEXTURE, it) }
+        repository.getTextureNoSubstitute(identifier, state).let { context.put(RenderContext.TEXTURE, it) }
         context.put(RenderContext.SCALE, contextScale)
         context.put(RenderContext.SPECIES, identifier)
-        context.put(RenderContext.ASPECTS, aspects)
+        context.put(RenderContext.ASPECTS, state.currentAspects)
         context.put(RenderContext.POSABLE_STATE, state)
 
         val renderType = RenderType.entityCutout(texture)
@@ -274,7 +272,7 @@ fun drawPosablePortrait(
         val packedLight = LightTexture.pack(11, 7)
 
         val colour = toHex(r, g, b, a)
-        model.withLayerContext(immediate, state, repository.getLayers(identifier, aspects)) {
+        model.withLayerContext(immediate, state, repository.getLayers(identifier, state)) {
             model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, colour)
             immediate.endBatch()
         }
@@ -292,7 +290,6 @@ fun drawPosablePortrait(
 fun drawProfile(
     repository: VaryingModelRepository<*>,
     resourceIdentifier: ResourceLocation,
-    aspects: Set<String>,
     matrixStack: PoseStack,
     state: PosableState,
     partialTicks: Float,
@@ -301,22 +298,20 @@ fun drawProfile(
     RenderSystem.applyModelViewMatrix()
     matrixStack.scale(scale, scale, -scale)
 
-    val sprite = repository.getSprite(resourceIdentifier, aspects, SpriteType.PROFILE);
+    val sprite = repository.getSprite(resourceIdentifier, state, SpriteType.PROFILE)
 
-    if(sprite == null) {
+    if (sprite == null) {
 
-        val model = repository.getPoser(resourceIdentifier, aspects)
-        val texture = repository.getTexture(resourceIdentifier, aspects, state.animationSeconds)
+        val model = repository.getPoser(resourceIdentifier, state)
+        val texture = repository.getTexture(resourceIdentifier, state)
 
         val context = RenderContext()
         model.context = context
-        repository.getTextureNoSubstitute(resourceIdentifier, aspects, 0f)
-            .let { context.put(RenderContext.TEXTURE, it) }
+        repository.getTextureNoSubstitute(resourceIdentifier, state).let { context.put(RenderContext.TEXTURE, it) }
         context.put(RenderContext.SCALE, 1F)
         context.put(RenderContext.SPECIES, resourceIdentifier)
-        context.put(RenderContext.ASPECTS, aspects)
+        context.put(RenderContext.ASPECTS, state.currentAspects)
         context.put(RenderContext.POSABLE_STATE, state)
-        state.currentAspects = aspects
         state.currentModel = model
 
         val renderType = RenderType.entityCutout(texture)//model.getLayer(texture)
@@ -342,7 +337,7 @@ fun drawProfile(
         RenderSystem.setShaderLights(light1, light2)
         val packedLight = LightTexture.pack(11, 7)
 
-        model.withLayerContext(bufferSource, state, repository.getLayers(resourceIdentifier, aspects)) {
+        model.withLayerContext(bufferSource, state, repository.getLayers(resourceIdentifier, state)) {
             model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
             bufferSource.endBatch()
         }

@@ -1,0 +1,3 @@
+(v.battle != 0) ? {
+  t.actor = v.battle.get_actor(v.npc.uuid);
+}

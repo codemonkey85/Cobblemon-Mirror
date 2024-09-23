@@ -7,7 +7,9 @@
     "win": "q.bedrock_primary('trainer_generic', 'win', q.curve('symmetrical_wide'))",
     "lose": "q.bedrock_primary('trainer_generic', 'lose', q.curve('symmetrical_wide'))",
     "send_out": "q.bedrock_primary('trainer_generic', 'send_out', q.curve('symmetrical'), q.exclude_labels('look'))",
-    "recall": "q.bedrock_primary('trainer_generic', 'send_out', q.curve('symmetrical_wide'), q.exclude_labels('look'))"
+    "recall": "q.bedrock_primary('trainer_generic', 'send_out', q.curve('symmetrical_wide'), q.exclude_labels('look'))",
+    "punch_left": "q.primary_animation(q.punch('head', 'body', 'arm_left', 'arm_right', false), q.curve('symmetrical_wide'), q.exclude_labels('look'))",
+    "punch_right": "q.primary_animation(q.punch('head', 'body', 'arm_right', 'arm_left', true), q.curve('symmetrical_wide'), q.exclude_labels('look'))"
   },
   "poses": {
     "battle-standing": {

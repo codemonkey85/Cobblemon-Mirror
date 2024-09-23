@@ -22,11 +22,14 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.tags.FluidTags
 import net.minecraft.util.Mth.ceil
 import net.minecraft.util.Mth.floor
+import net.minecraft.world.entity.schedule.Activity
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 
@@ -76,13 +79,13 @@ fun AABB.getRanges(): Triple<IntRange, IntRange, IntRange> {
     return Triple(floor(minX)..ceil(maxX), minY.toInt()..ceil(maxY), minZ.toInt()..ceil(maxZ))
 }
 
-fun BlockGetter.doForAllBlocksIn(box: AABB, useMutablePos: Boolean, action: (BlockState, BlockPos) -> Unit) {
+fun BlockGetter.doForAllBlocksIn(box: AABB, action: (BlockState, BlockPos) -> Unit) {
     val mutable = BlockPos.MutableBlockPos()
     val (xRange, yRange, zRange) = box.getRanges()
     for (x in xRange) {
         for (y in yRange) {
             for (z in zRange) {
-                val pos = if (useMutablePos) mutable.set(x, y, z) else BlockPos(x, y, z)
+                val pos = mutable.set(x, y, z)
                 val state = getBlockState(pos)
                 action(state, pos)
             }
@@ -90,15 +93,30 @@ fun BlockGetter.doForAllBlocksIn(box: AABB, useMutablePos: Boolean, action: (Blo
     }
 }
 
+fun <T : BlockEntity> BlockGetter.getNearbyBlockEntities(box: AABB, blockEntityType: BlockEntityType<T>): List<Pair<BlockPos, T>> {
+    val entities = mutableListOf<Pair<BlockPos, T>>()
+    val mutable = BlockPos.MutableBlockPos()
+    val (xRange, yRange, zRange) = box.getRanges()
+    for (x in xRange) {
+        for (y in yRange) {
+            for (z in zRange) {
+                val pos = mutable.set(x, y, z)
+                getBlockEntity(pos, blockEntityType).ifPresent { entities.add(pos.immutable() to it) }
+            }
+        }
+    }
+    return entities
+}
+
 fun BlockGetter.getBlockStates(box: AABB): Iterable<BlockState> {
     val states = mutableListOf<BlockState>()
-    doForAllBlocksIn(box, useMutablePos = true) { state, _ -> states.add(state) }
+    doForAllBlocksIn(box) { state, _ -> states.add(state) }
     return states
 }
 
 fun BlockGetter.getBlockStatesWithPos(box: AABB): Iterable<Pair<BlockState, BlockPos>> {
     val states = mutableListOf<Pair<BlockState, BlockPos>>()
-    doForAllBlocksIn(box, useMutablePos = true) { state, pos -> states.add(state to pos) }
+    doForAllBlocksIn(box) { state, pos -> states.add(state to pos.immutable()) }
     return states
 }
 
@@ -106,7 +124,7 @@ fun BlockGetter.getWaterAndLavaIn(box: AABB): Pair<Boolean, Boolean> {
     var hasWater = false
     var hasLava = false
 
-    doForAllBlocksIn(box, useMutablePos = true) { state, _ ->
+    doForAllBlocksIn(box) { state, _ ->
         if (!hasWater && state.fluidState.`is`(FluidTags.WATER)) {
             hasWater = true
         }
@@ -133,7 +151,8 @@ val Level.worldRegistry: Registry<Level>
     get() = registryAccess().registryOrThrow(Registries.DIMENSION)
 val Level.enchantmentRegistry: Registry<Enchantment>
     get() = registryAccess().registryOrThrow(Registries.ENCHANTMENT)
-
+val Level.activityRegistry: Registry<Activity>
+    get() = registryAccess().registryOrThrow(Registries.ACTIVITY)
 
 fun Vec3.traceDownwards(
     world: Level,

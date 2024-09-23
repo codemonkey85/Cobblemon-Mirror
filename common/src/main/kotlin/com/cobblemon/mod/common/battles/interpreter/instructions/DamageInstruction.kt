@@ -128,7 +128,7 @@ class DamageInstruction(
             val pokemonEntity = battlePokemon.entity
             //Play recoil animation if the pokemon recoiling isnt dead
             if (!causedFaint && pokemonEntity != null) {
-                val pkt = PlayPosableAnimationPacket(pokemonEntity.id, setOf("recoil"), emptySet())
+                val pkt = PlayPosableAnimationPacket(pokemonEntity.id, setOf("recoil"), emptyList())
                 pkt.sendToPlayersAround(
                     x = pokemonEntity.x,
                     y = pokemonEntity.y,

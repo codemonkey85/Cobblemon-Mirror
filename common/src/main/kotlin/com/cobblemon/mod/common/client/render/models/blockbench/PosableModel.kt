@@ -419,7 +419,7 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
         val provider = bufferProvider
         if (provider != null) {
             for (layer in currentLayers) {
-                val texture = layer.texture?.invoke(currentState?.animationSeconds ?: 0F) ?: continue
+                val texture = layer.texture?.invoke(currentState ?: FloatingState()) ?: continue
                 val renderLayer = getLayer(texture, layer.emissive, layer.translucent)
                 val consumer = provider.getBuffer(renderLayer)
                 val tint = layer.tint

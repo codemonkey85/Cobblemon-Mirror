@@ -24,7 +24,7 @@ class GenericBedrockClientDelegate : EntitySideDelegate<GenericBedrockEntity>, P
         super.initialize(entity)
         this.currentEntity = entity
         this.age = entity.tickCount
-        this.currentModel = GenericBedrockEntityModelRepository.getPoser(entity.category, entity.aspects)
+        this.currentModel = GenericBedrockEntityModelRepository.getPoser(entity.category, entity.delegate as GenericBedrockClientDelegate)
         currentModel!!.updateLocators(entity, this)
         updateLocatorPosition(entity.position())
 
