@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.npc.configuration.interaction
 
+import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.api.dialogue.ActiveDialogue
 import com.cobblemon.mod.common.api.dialogue.DialogueManager
 import com.cobblemon.mod.common.api.dialogue.Dialogues
@@ -31,8 +32,22 @@ class DialogueNPCInteractionConfiguration : NPCInteractConfiguration {
 
     override fun interact(npc: NPCEntity, player: ServerPlayer): Boolean {
         val dialogue = Dialogues.dialogues[this.dialogue] ?: return false
-        DialogueManager.startDialogue(ActiveDialogue(player, dialogue))
+        val currentDialogues = npc.brain.getMemory(CobblemonMemories.DIALOGUES).orElse(mutableListOf())
+        val activeDialogue = DialogueManager.startDialogue(player, npc, dialogue)
+        val newDialogues = currentDialogues + activeDialogue
+        npc.brain.setMemory(CobblemonMemories.DIALOGUES, newDialogues)
+        activeDialogue.completion.thenRun { onDialogueStopped(npc, activeDialogue) }
         return true
+    }
+
+    fun onDialogueStopped(npc: NPCEntity, activeDialogue: ActiveDialogue) {
+        val currentDialogues = npc.brain.getMemory(CobblemonMemories.DIALOGUES).orElse(mutableListOf())
+        val newDialogues = currentDialogues - activeDialogue
+        if (newDialogues.isEmpty()) {
+            npc.brain.eraseMemory(CobblemonMemories.DIALOGUES)
+        } else {
+            npc.brain.setMemory(CobblemonMemories.DIALOGUES, newDialogues)
+        }
     }
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {

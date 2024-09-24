@@ -62,7 +62,7 @@ import org.joml.Vector3f
 import org.joml.Vector4f
 
 class PokemonRenderer(
-context: EntityRendererProvider.Context
+    context: EntityRendererProvider.Context
 ) : MobRenderer<PokemonEntity, PosablePokemonEntityModel>(context, PosablePokemonEntityModel(), 0.5f) {
     companion object {
         val recallBeamColour = Vector4f(1F, 0.1F, 0.1F, 1F)
@@ -82,7 +82,7 @@ context: EntityRendererProvider.Context
     }
 
     override fun getTextureLocation(entity: PokemonEntity): ResourceLocation {
-        return PokemonModelRepository.getTexture(entity.pokemon.species.resourceIdentifier, entity.aspects, (entity.delegate as PokemonClientDelegate).animationSeconds)
+        return PokemonModelRepository.getTexture(entity.pokemon.species.resourceIdentifier, entity.delegate as PokemonClientDelegate)
     }
 
     override fun render(
@@ -93,11 +93,11 @@ context: EntityRendererProvider.Context
         buffer: MultiBufferSource,
         packedLight: Int
     ) {
+        val clientDelegate = entity.delegate as PokemonClientDelegate
         shadowRadius = min((entity.boundingBox.maxX - entity.boundingBox.minX), (entity.boundingBox.maxZ) - (entity.boundingBox.minZ)).toFloat() / 1.5F * (entity.delegate as PokemonClientDelegate).entityScaleModifier
-        model.posableModel = PokemonModelRepository.getPoser(entity.pokemon.species.resourceIdentifier, entity.aspects)
+        model.posableModel = PokemonModelRepository.getPoser(entity.pokemon.species.resourceIdentifier, clientDelegate)
         model.posableModel.context = model.context
         model.setupEntityTypeContext(entity)
-        val clientDelegate = entity.delegate as PokemonClientDelegate
         val modelNow = model.posableModel
 
         val freezeFrame = entity.entityData.get(PokemonEntity.FREEZE_FRAME)
@@ -121,7 +121,7 @@ context: EntityRendererProvider.Context
             )
         }
 
-        modelNow.setLayerContext(buffer, clientDelegate, PokemonModelRepository.getLayers(entity.pokemon.species.resourceIdentifier, entity.aspects))
+        modelNow.setLayerContext(buffer, clientDelegate, PokemonModelRepository.getLayers(entity.pokemon.species.resourceIdentifier, clientDelegate))
 
         if (entity.ticksLived < 10) {
             entity.yBodyRot = entity.entityData.get(SPAWN_DIRECTION)
@@ -383,7 +383,6 @@ context: EntityRendererProvider.Context
         }
     }
 
-
     private fun drawPokeBall(
         state: ClientBallDisplay,
         matrixStack: PoseStack,
@@ -397,8 +396,8 @@ context: EntityRendererProvider.Context
     ) {
         matrixStack.pushPose()
         matrixStack.scale(0.7F, -0.7F, -0.7F)
-        val model = PokeBallModelRepository.getPoser(ball.name, state.aspects)
-        val texture = PokeBallModelRepository.getTexture(ball.name, state.aspects, state.animationSeconds)
+        val model = PokeBallModelRepository.getPoser(ball.name, state)
+        val texture = PokeBallModelRepository.getTexture(ball.name, state)
         if (scale == 1.0f) {
             model.moveToPose(state, model.poses["open"]!!)
         } else {

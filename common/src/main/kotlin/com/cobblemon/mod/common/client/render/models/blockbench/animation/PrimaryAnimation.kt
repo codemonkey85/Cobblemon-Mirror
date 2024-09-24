@@ -63,6 +63,12 @@ class PrimaryAnimation(
     var afterAction: Consumer<Unit> = Consumer { }
     override val enduresPrimaryAnimations = false
 
+    override fun start(state: PosableState) {
+        super.start(state)
+        started = state.animationSeconds
+        animation.start(state)
+    }
+
     override fun run(
         context: RenderContext,
         model: PosableModel,

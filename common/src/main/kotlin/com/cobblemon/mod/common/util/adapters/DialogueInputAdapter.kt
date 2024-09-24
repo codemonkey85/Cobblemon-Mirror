@@ -32,6 +32,7 @@ object DialogueInputAdapter : JsonDeserializer<DialogueInput> {
             "text" -> context.deserialize(obj, DialogueTextInput::class.java)
             "auto-continue" -> context.deserialize(obj, DialogueAutoContinueInput::class.java)
             "option" -> context.deserialize(obj, DialogueOptionSetInput::class.java)
+            "none" -> context.deserialize(obj, DialogueNoInput::class.java)
             else -> throw JsonParseException("Unknown dialogue input type $typeId")
         }
     }

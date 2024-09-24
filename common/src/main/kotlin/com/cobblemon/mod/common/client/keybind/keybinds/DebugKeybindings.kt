@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.keybind.CobblemonKeyBinding
 import com.cobblemon.mod.common.client.keybind.KeybindCategories
+import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.Minecraft
@@ -36,7 +37,8 @@ object DebugKeybindings {
         override fun onPress() {
             val currentlySelectedPokemon = CobblemonClient.storage.myParty.get(CobblemonClient.storage.selectedSlot)
             if (currentlySelectedPokemon != null) {
-                val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, currentlySelectedPokemon.aspects)
+                val state = FloatingState().also { it.currentAspects = currentlySelectedPokemon.aspects }
+                val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, state)
                 model.portraitScale += 0.01F
             }
 
@@ -51,7 +53,8 @@ object DebugKeybindings {
         override fun onPress() {
             val currentlySelectedPokemon = CobblemonClient.storage.myParty.get(CobblemonClient.storage.selectedSlot)
             if (currentlySelectedPokemon != null) {
-                val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, currentlySelectedPokemon.aspects)
+                val state = FloatingState().also { it.currentAspects = currentlySelectedPokemon.aspects }
+                val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, state)
                 model.portraitScale -= 0.01F
             }
 
@@ -67,7 +70,8 @@ object DebugKeybindings {
         override fun onPress() {
             val currentlySelectedPokemon = CobblemonClient.storage.myParty.get(CobblemonClient.storage.selectedSlot)
             if (currentlySelectedPokemon != null) {
-                val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, currentlySelectedPokemon.aspects)
+                val state = FloatingState().also { it.currentAspects = currentlySelectedPokemon.aspects }
+                val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, state)
                 model.portraitTranslation = model.portraitTranslation.add(0.0, -0.01, 0.0)
             }
 
@@ -82,7 +86,8 @@ object DebugKeybindings {
         override fun onPress() {
             val currentlySelectedPokemon = CobblemonClient.storage.myParty.get(CobblemonClient.storage.selectedSlot)
             if (currentlySelectedPokemon != null) {
-                val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, currentlySelectedPokemon.aspects)
+                val state = FloatingState().also { it.currentAspects = currentlySelectedPokemon.aspects }
+                val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, state)
                 model.portraitTranslation = model.portraitTranslation.add(0.0, 0.01, 0.0)
             }
 
@@ -98,7 +103,8 @@ object DebugKeybindings {
         override fun onPress() {
             val currentlySelectedPokemon = CobblemonClient.storage.myParty.get(CobblemonClient.storage.selectedSlot)
             if (currentlySelectedPokemon != null) {
-                val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, currentlySelectedPokemon.aspects)
+                val state = FloatingState().also { it.currentAspects = currentlySelectedPokemon.aspects }
+                val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, state)
                 model.portraitTranslation = model.portraitTranslation.add(-0.01, 0.0, 0.0)
             }
 
@@ -114,7 +120,8 @@ object DebugKeybindings {
         override fun onPress() {
             val currentlySelectedPokemon = CobblemonClient.storage.myParty.get(CobblemonClient.storage.selectedSlot)
             if (currentlySelectedPokemon != null) {
-                val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, currentlySelectedPokemon.aspects)
+                val state = FloatingState().also { it.currentAspects = currentlySelectedPokemon.aspects }
+                val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, state)
                 model.portraitTranslation = model.portraitTranslation.add(0.01, 0.0, 0.0)
             }
         }
@@ -129,7 +136,8 @@ object DebugKeybindings {
         override fun onPress() {
             val currentlySelectedPokemon = CobblemonClient.storage.myParty.get(CobblemonClient.storage.selectedSlot)
             if (currentlySelectedPokemon != null) {
-                val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, currentlySelectedPokemon.aspects)
+                val state = FloatingState().also { it.currentAspects = currentlySelectedPokemon.aspects }
+                val model = PokemonModelRepository.getPoser(currentlySelectedPokemon.species.resourceIdentifier, state)
                 Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Portrait Translation: ${model.portraitTranslation}"))
                 Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Portrait Scale: ${model.portraitScale}"))
                 Cobblemon.LOGGER.info("override var portraitTranslation = Vec3d(${model.portraitTranslation.x}, ${model.portraitTranslation.y}, ${model.portraitTranslation.z})")

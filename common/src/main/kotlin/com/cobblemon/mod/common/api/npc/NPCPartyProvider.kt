@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.api.npc
 
+import com.cobblemon.mod.common.api.npc.partyproviders.DynamicPartyProvider
+import com.cobblemon.mod.common.api.npc.partyproviders.NPCParty
 import com.cobblemon.mod.common.api.npc.partyproviders.SimplePartyProvider
 import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.entity.npc.NPCEntity
@@ -26,16 +28,12 @@ import net.minecraft.server.level.ServerPlayer
 interface NPCPartyProvider {
     companion object {
         val types = mutableMapOf<String, (String) -> NPCPartyProvider>(
-            SimplePartyProvider.TYPE to { SimplePartyProvider() }
+            SimplePartyProvider.TYPE to { SimplePartyProvider() },
+            DynamicPartyProvider.TYPE to { DynamicPartyProvider() }
         )
     }
 
     val type: String
-    fun provide(npc: NPCEntity, challengers: List<ServerPlayer>): PartyStore
-    fun encode(buffer: RegistryFriendlyByteBuf)
-    fun decode(buffer: RegistryFriendlyByteBuf)
-    fun saveToNBT(nbt: CompoundTag)
-    fun loadFromNBT(nbt: CompoundTag)
-
+    fun provide(npc: NPCEntity, level: Int): NPCParty
     fun loadFromJSON(json: JsonElement)
 }

@@ -25,6 +25,7 @@ import com.cobblemon.mod.common.api.fossil.NaturalMaterials
 import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.moves.animations.ActionEffects
 import com.cobblemon.mod.common.api.npc.NPCClasses
+import com.cobblemon.mod.common.api.npc.NPCPresets
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.api.pokedex.DexAdditions
 import com.cobblemon.mod.common.api.pokedex.entry.DexEntries
@@ -81,6 +82,7 @@ object CobblemonDataProvider : DataProvider {
         this.register(Dialogues)
         this.register(NaturalMaterials)
         this.register(Fossils)
+        this.register(NPCPresets)
         this.register(NPCClasses)
         this.register(DexEntries)
         this.register(DexEntryAdditions)

@@ -76,6 +76,8 @@ class PartySlotWidget(
         val slotPokemon = if (isDraggedSlot) null else pokemon
         val isSelected = this.isClientPartyMember && this.summary.selectedPokemon.uuid == slotPokemon?.uuid
 
+        state.currentAspects = slotPokemon?.aspects ?: emptySet()
+
         blitk(
             matrixStack = matrices,
             texture = getSlotTexture(slotPokemon),
@@ -154,7 +156,6 @@ class PartySlotWidget(
             matrices.scale(2.5F, 2.5F, 1F)
             drawProfilePokemon(
                 species = slotPokemon.species.resourceIdentifier,
-                aspects = slotPokemon.aspects.toSet(),
                 matrixStack = matrices,
                 rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),
                 state = state,

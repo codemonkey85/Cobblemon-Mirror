@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.util.adapters
 import com.cobblemon.mod.common.client.render.AnimatedModelTextureSupplier
 import com.cobblemon.mod.common.client.render.ModelTextureSupplier
 import com.cobblemon.mod.common.client.render.StaticModelTextureSupplier
+import com.cobblemon.mod.common.client.render.VariableModelTextureSupplier
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -28,6 +29,10 @@ import net.minecraft.resources.ResourceLocation
 object ModelTextureSupplierAdapter : JsonDeserializer<ModelTextureSupplier> {
     override fun deserialize(json: JsonElement, type: Type, ctx: JsonDeserializationContext): ModelTextureSupplier {
         if (json.isJsonPrimitive) {
+            if (json.asString == "variable") {
+                return VariableModelTextureSupplier()
+            }
+
             return StaticModelTextureSupplier(ResourceLocation.parse(json.asString))
         } else if (json.isJsonObject) {
             val jsonObject = json as JsonObject

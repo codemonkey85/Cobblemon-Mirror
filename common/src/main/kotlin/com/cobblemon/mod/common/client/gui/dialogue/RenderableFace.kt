@@ -13,8 +13,8 @@ import com.cobblemon.mod.common.api.gui.drawPosablePortrait
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.client.entity.NPCClientDelegate
 import com.cobblemon.mod.common.client.entity.PokemonClientDelegate
-import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.NPCModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.entity.PosableEntity
@@ -82,7 +82,6 @@ class ReferenceRenderableFace(val entity: PosableEntity, override val isLeftSide
             state.currentAspects = state.currentEntity.pokemon.aspects
             drawPosablePortrait(
                 identifier = state.currentEntity.pokemon.species.resourceIdentifier,
-                aspects = state.currentEntity.pokemon.aspects,
                 repository = PokemonModelRepository,
                 contextScale = state.currentEntity.pokemon.form.baseScale,
                 matrixStack = GuiGraphics.pose(),
@@ -97,7 +96,6 @@ class ReferenceRenderableFace(val entity: PosableEntity, override val isLeftSide
             val limbSwingAmount = entity.walkAnimation.speed(partialTicks)
             drawPosablePortrait(
                 identifier = state.npcEntity.npc.resourceIdentifier,
-                aspects = state.npcEntity.aspects,
                 repository = NPCModelRepository,
                 matrixStack = GuiGraphics.pose(),
                 state = state,
@@ -129,7 +127,6 @@ class ArtificialRenderableFace(
             }
             drawPosablePortrait(
                 identifier = species.resourceIdentifier,
-                aspects = aspects,
                 matrixStack = GuiGraphics.pose(),
                 contextScale = species.getForm(aspects).baseScale,
                 state = state,
@@ -140,7 +137,6 @@ class ArtificialRenderableFace(
         } else if (modelType == "npc") {
             drawPosablePortrait(
                 identifier = identifier,
-                aspects = aspects,
                 matrixStack = GuiGraphics.pose(),
                 state = state,
                 reversed = !isLeftSide,
