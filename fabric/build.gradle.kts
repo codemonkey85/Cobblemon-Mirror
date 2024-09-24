@@ -51,7 +51,7 @@ dependencies {
     bundle(project(path = ":common", configuration = "transformProductionFabric")) {
         isTransitive = false
     }
-
+    modLocalRuntime(libs.fabric.debugutils)
     modImplementation(libs.fabric.loader)
     modApi(libs.fabric.api)
     modApi(libs.bundles.fabric)

@@ -88,6 +88,7 @@ import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import com.mojang.serialization.Codec
 import net.minecraft.nbt.NbtOps
+import net.minecraft.network.protocol.game.DebugPackets
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import net.minecraft.resources.ResourceLocation
@@ -347,6 +348,13 @@ open class PokemonEntity(
     override fun handleEntityEvent(status: Byte) {
         delegate.handleStatus(status)
         super.handleEntityEvent(status)
+    }
+
+    override fun sendDebugPackets() {
+        super.sendDebugPackets()
+        DebugPackets.sendEntityBrain(this)
+        DebugPackets.sendGoalSelector(level(), this, this.goalSelector)
+        DebugPackets.sendPathFindingPacket(level(), this, this.navigation.path, this.navigation.path?.distToTarget ?: 0F)
     }
 
     override fun tick() {
