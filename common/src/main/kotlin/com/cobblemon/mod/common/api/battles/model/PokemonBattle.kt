@@ -74,7 +74,7 @@ open class PokemonBattle(
     val side2: BattleSide
 ) {
     /** Whether logging will be silenced for this battle. */
-    var mute = true
+    var mute = false
     val struct = this.asMoLangValue()
     val runtime = MoLangRuntime().also { it.environment.query = struct }
 

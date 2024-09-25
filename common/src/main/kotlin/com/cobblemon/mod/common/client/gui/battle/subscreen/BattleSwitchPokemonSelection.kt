@@ -73,7 +73,7 @@ class BattleSwitchPokemonSelection(
                     ?.let { showdownPokemon to it }
             }.filter { it.second.uuid !in switchingInPokemon }
 
-        if (showdownPokemonToPokemon.isEmpty() && request.forceSwitch) {
+        if (request.forceSwitch && showdownPokemonToPokemon.all { (it.second.uuid in battleGUI.actor!!.activePokemon.map { it.battlePokemon?.uuid } || ("fnt" in it.first.condition)) && !(it.first.reviving && request.activePokemon.battlePokemon?.uuid == it.first.uuid) }) {
             // Occurs after a multi-knock out and the player doesn't have enough pokemon to fill every vacant slot
             battleGUI.selectAction(request, PassActionResponse)
         }
@@ -148,7 +148,8 @@ class BattleSwitchPokemonSelection(
             playDownSound(Minecraft.getInstance().soundManager)
             return true
         }
-        val clicked = tiles.find { it.isHovered(mouseX, mouseY) && !it.isFainted && !it.isCurrentlyInBattle } ?: return false
+        val isReviving = request.side?.pokemon?.any { it.reviving && it.uuid == request.activePokemon.battlePokemon?.uuid} ?: false
+        val clicked = tiles.find { it.isHovered(mouseX, mouseY) && if (isReviving) it.isFainted else (!it.isFainted && !it.isCurrentlyInBattle) } ?: return false
         val pokemon = clicked.pokemon
         playDownSound(Minecraft.getInstance().soundManager)
         battleGUI.selectAction(request, SwitchActionResponse(pokemon.uuid))

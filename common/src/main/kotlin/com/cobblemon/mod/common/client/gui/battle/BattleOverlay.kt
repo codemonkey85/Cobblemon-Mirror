@@ -214,7 +214,10 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
             isSelected = hasCommand,
             isHovered = isHovered,
             isCompact = isCompact,
-            actorDisplayName = if (!battle.isPvW && ((left && activeBattlePokemon.actor.activePokemon.firstOrNull { (it.battlePokemon?.hpValue ?: 0F) > 0F } == activeBattlePokemon) || (!left && activeBattlePokemon.actor.activePokemon.lastOrNull { (it.battlePokemon?.hpValue ?: 0F) > 0F } == activeBattlePokemon))) activeBattlePokemon.actor.displayName else null,
+            actorDisplayName = if (!battle.isPvW &&
+                    ((left && activeBattlePokemon.actor.activePokemon.firstOrNull { (it.battlePokemon?.hpValue ?: 0F) > 0F } == activeBattlePokemon)
+                    || (!left && activeBattlePokemon.actor.activePokemon.lastOrNull { (it.battlePokemon?.hpValue ?: 0F) > 0F } == activeBattlePokemon))) activeBattlePokemon.actor.displayName
+                    else null,
             dexState = dexState
         )
     }
