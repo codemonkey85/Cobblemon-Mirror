@@ -40,7 +40,7 @@ dependencies {
     //shadowCommon group: 'commons-io', name: 'commons-io', version: '2.6'
     //modImplementation(libs.flywheelForge)
     //include(libs.flywheelForge)
-
+    modLocalRuntime(libs.neoforge.debugutils)
     implementation(project(":common", configuration = "namedElements")) {
         isTransitive = false
     }

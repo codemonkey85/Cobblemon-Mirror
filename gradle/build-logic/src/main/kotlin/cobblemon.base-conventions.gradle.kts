@@ -35,6 +35,7 @@ repositories {
     mavenCentral()
     //JEI
     maven("https://maven.blamejared.com/")
+    maven("https://maven.parchmentmc.org")
 }
 
 license {

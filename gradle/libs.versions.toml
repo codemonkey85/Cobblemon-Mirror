@@ -24,10 +24,12 @@ fabric-api = "0.104.0+1.21.1"
 fabric-kotlin = "1.11.0+kotlin.2.0.0"
 fabric-permissions-api = "0.2-SNAPSHOT"
 lambDynamicLights = "2.3.4+1.20.4"
+debugutils-fabric = "1.21-1.0.6-fabric"
 
 # NeoForge
 neoforge = "21.1.51"
 neo-kotlin-for-forge = "5.4.0"
+debugutils-forge = "1.21-1.0.6-neoforge"
 
 # Data Storage
 mongo = "4.10.2"
@@ -67,10 +69,12 @@ adorn-fabric = { group = "maven.modrinth", name = "adorn", version = "5.3.0-neof
 lambDynamicLights = { group = "maven.modrinth", name = "lambdynamiclights", version.ref = "lambDynamicLights"}
 jei-api-fabric = { group = "mezz.jei", name = "jei-1.21-fabric-api", version.ref = "jei-api" }
 jei-fabric = { group = "mezz.jei", name = "jei-1.21-fabric", version.ref = "jei-api"}
+fabric-debugutils = { group = "maven.modrinth", name = "debugutils", version.ref = "debugutils-fabric"}
 
 # NeoForge
 neoforge = { group = "net.neoforged", name = "neoforge", version.ref = "neoforge" }
 neo-kotlin-forge = { group = "thedarkcolour", name = "kotlinforforge-neoforge", version.ref = "neo-kotlin-for-forge" }
+neoforge-debugutils = { group = "maven.modrinth", name = "debugutils", version.ref = "debugutils-forge"}
 
 # Data Storage
 mongo-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", version.ref = "mongo" }

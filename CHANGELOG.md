@@ -142,6 +142,7 @@
 - Pokémon whose current owner is not its Original Trainer now gains extra experience.
 - Fixed Fossil Resurrection advancement not being granted.
 - Fixed village generation caps not applying for berry farms. You were not meant to see more than two berry farms per village!
+- Fixed the Ice Face ability activation being displayed incorrectly in a battle
 
 ### Developer
 - `SpawnCause` is now an implementation of `SpawningInfluence`.
