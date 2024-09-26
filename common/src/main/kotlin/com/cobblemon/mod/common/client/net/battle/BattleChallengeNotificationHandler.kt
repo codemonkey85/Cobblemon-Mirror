@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.api.text.yellow
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.battle.ClientBattleChallenge
+import com.cobblemon.mod.common.client.render.ClientPlayerIcon
 import com.cobblemon.mod.common.net.messages.client.battle.BattleChallengeNotificationPacket
 import com.cobblemon.mod.common.util.lang
 import net.minecraft.client.Minecraft
@@ -21,6 +22,7 @@ object BattleChallengeNotificationHandler : ClientNetworkPacketHandler<BattleCha
         val clientBattleChallenge = ClientBattleChallenge(packet.battleChallengeId, packet.expiryTime, packet.battleFormat)
         packet.challengerIds.forEach {
             CobblemonClient.requests.battleChallenges[it] = clientBattleChallenge
+            ClientPlayerIcon.update(it)
         }
         client.player?.sendSystemMessage(
             lang(

@@ -44,6 +44,7 @@ class BattleChallengeNotificationPacket(
         buffer.writeCollection(challengerIds) { _, value -> buffer.writeUUID(value) }
         buffer.writeCollection(challengerNames) { _, value -> ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.encode(buffer, value) }
         battleFormat.saveToBuffer(buffer)
+        buffer.writeInt(expiryTime)
     }
 
     companion object {

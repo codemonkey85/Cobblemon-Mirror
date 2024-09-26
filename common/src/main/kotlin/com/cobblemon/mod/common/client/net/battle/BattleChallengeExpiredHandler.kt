@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.client.net.battle
 
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
+import com.cobblemon.mod.common.client.render.ClientPlayerIcon
 import com.cobblemon.mod.common.net.messages.client.battle.BattleChallengeExpiredPacket
 import net.minecraft.client.Minecraft
 
@@ -18,7 +19,11 @@ object BattleChallengeExpiredHandler : ClientNetworkPacketHandler<BattleChalleng
         val iter = CobblemonClient.requests.battleChallenges.iterator()
         while(iter.hasNext()) {
             val entry = iter.next()
-            if (entry.value.requestID == packet.battleChallengeId) iter.remove()
+            val player = entry.key
+            if (entry.value.requestID == packet.battleChallengeId) {
+                iter.remove()
+                ClientPlayerIcon.update(player)
+            }
         }
     }
 }

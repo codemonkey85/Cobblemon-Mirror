@@ -18,8 +18,3 @@ data class ClientBattleChallenge(
     override val expiryTime: Int,
     val battleFormat: BattleFormat
 ) : ClientPlayerActionRequest, ClientPlayerIcon(expiryTime)
-
-data class ClientTeamRequest(
-    override val requestID: UUID,
-    override val expiryTime: Int
-) : ClientPlayerActionRequest, ClientPlayerIcon(expiryTime)

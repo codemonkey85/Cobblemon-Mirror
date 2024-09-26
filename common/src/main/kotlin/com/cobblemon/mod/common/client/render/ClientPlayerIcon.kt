@@ -31,7 +31,7 @@ abstract class ClientPlayerIcon(expiryTime: Int? = null) {
     // lifetime
     open val fadeTime = 0 //100
     private var tickCount = 0
-    private val expiryTicks = expiryTime?.let { it % 20 }
+    private val expiryTicks = expiryTime?.let { it * 20 }
     private val tickRateManager by lazy { Minecraft.getInstance().level!!.tickRateManager() }
     private val startTick = Minecraft.getInstance().player!!.tickCount
 
