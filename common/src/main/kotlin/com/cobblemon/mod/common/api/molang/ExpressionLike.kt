@@ -23,7 +23,7 @@ import com.mojang.serialization.Codec
 interface ExpressionLike {
     override fun toString(): String
     /** Produces a [MoValue] for a [MoLangRuntime] to supply an environment. */
-    fun resolve(runtime: MoLangRuntime, context: Map<String, MoValue> = emptyMap()): MoValue
+    fun resolve(runtime: MoLangRuntime, context: Map<String, MoValue> = runtime.environment.context?.map ?: hashMapOf()): MoValue
     fun getString(): String = toString()
 
     fun resolveDouble(runtime: MoLangRuntime) = resolve(runtime).asDouble()

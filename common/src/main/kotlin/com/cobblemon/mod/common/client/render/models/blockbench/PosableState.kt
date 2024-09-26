@@ -317,6 +317,7 @@ abstract class PosableState : Schedulable {
     fun setActiveAnimations(vararg animations: ActiveAnimation) {
         activeAnimations.clear()
         activeAnimations.addAll(animations)
+        animations.forEach { it.start(this) }
     }
 
     /**
@@ -329,6 +330,7 @@ abstract class PosableState : Schedulable {
     fun addActiveAnimation(animation: ActiveAnimation, whenComplete: (state: PosableState) -> Unit = {}) {
         this.activeAnimations.add(animation)
         val duration = animation.duration
+        animation.start(this)
         if (duration > 0F) {
             after(seconds = (duration * 20F).toInt() / 20F) {
                 whenComplete(this)
@@ -341,10 +343,10 @@ abstract class PosableState : Schedulable {
      */
     fun addPrimaryAnimation(primaryAnimation: PrimaryAnimation) {
         this.primaryAnimation = primaryAnimation
+        primaryAnimation.start(this)
         this.activeAnimations.clear()
         this.quirks.clear()
         this.poseIntensity = 1F
-        primaryAnimation.started = animationSeconds
     }
 
     /**

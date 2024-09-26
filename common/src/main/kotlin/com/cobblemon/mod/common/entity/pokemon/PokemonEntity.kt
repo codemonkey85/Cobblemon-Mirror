@@ -66,6 +66,8 @@ import com.cobblemon.mod.common.pokemon.activestate.InactivePokemonState
 import com.cobblemon.mod.common.pokemon.activestate.ShoulderedState
 import com.cobblemon.mod.common.pokemon.ai.FormPokemonBehaviour
 import com.cobblemon.mod.common.pokemon.evolution.variants.ItemInteractionEvolution
+import com.cobblemon.mod.common.pokemon.misc.GimmighoulStashHandler
+import com.cobblemon.mod.common.pokemon.properties.UncatchableProperty
 import com.cobblemon.mod.common.pokemon.feature.StashHandler
 import com.cobblemon.mod.common.util.*
 import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules
@@ -86,6 +88,7 @@ import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import com.mojang.serialization.Codec
 import net.minecraft.nbt.NbtOps
+import net.minecraft.network.protocol.game.DebugPackets
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import net.minecraft.resources.ResourceLocation
@@ -246,6 +249,7 @@ open class PokemonEntity(
 
     override val struct: QueryStruct = QueryStruct(hashMapOf())
         .addStandardFunctions()
+        .addFunction("uuid") { StringValue(uuid.toString()) }
         .addFunction("in_battle") { DoubleValue(isBattling) }
         .addFunction("is_wild") { DoubleValue(pokemon.isWild()) }
         .addFunction("is_shiny") { DoubleValue(pokemon.shiny) }
@@ -344,6 +348,13 @@ open class PokemonEntity(
     override fun handleEntityEvent(status: Byte) {
         delegate.handleStatus(status)
         super.handleEntityEvent(status)
+    }
+
+    override fun sendDebugPackets() {
+        super.sendDebugPackets()
+        DebugPackets.sendEntityBrain(this)
+        DebugPackets.sendGoalSelector(level(), this, this.goalSelector)
+        DebugPackets.sendPathFindingPacket(level(), this, this.navigation.path, this.navigation.path?.distToTarget ?: 0F)
     }
 
     override fun tick() {
@@ -454,7 +465,7 @@ open class PokemonEntity(
     fun isUncatchable() = pokemon.isUncatchable()
 
     fun recallWithAnimation(): CompletableFuture<Pokemon> {
-        val owner = owner
+        val owner = owner ?: pokemon.getOwnerEntity()
         val future = CompletableFuture<Pokemon>()
         if (entityData.get(PHASING_TARGET_ID) == -1 && owner != null) {
             val preamble = if (owner is PokemonSender) {
@@ -1128,7 +1139,7 @@ open class PokemonEntity(
 
     fun cry() {
         if (this.isSilent) return
-        val pkt = PlayPosableAnimationPacket(id, setOf("cry"), emptySet())
+        val pkt = PlayPosableAnimationPacket(id, setOf("cry"), emptyList())
         level().getEntitiesOfClass(ServerPlayer::class.java, AABB.ofSize(position(), 64.0, 64.0, 64.0)) { true }.forEach {
             it.sendPacket(pkt)
         }

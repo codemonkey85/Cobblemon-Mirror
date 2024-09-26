@@ -13,24 +13,26 @@ import com.cobblemon.mod.common.client.render.models.blockbench.generic.PosableG
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.GenericBedrockEntityModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.entity.generic.GenericBedrockEntity
-import net.minecraft.client.renderer.texture.OverlayTexture
-import net.minecraft.client.renderer.RenderType
-import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.entity.EntityRenderer
-import net.minecraft.client.renderer.entity.EntityRendererProvider
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
+import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.entity.EntityRenderer
+import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.resources.ResourceLocation
 
 class GenericBedrockRenderer(context: EntityRendererProvider.Context) : EntityRenderer<GenericBedrockEntity>(context) {
     val model = PosableGenericEntityModel()
-    override fun getTextureLocation(entity: GenericBedrockEntity) = GenericBedrockEntityModelRepository.getTexture(entity.category, entity.aspects, (entity.delegate as GenericBedrockClientDelegate).animationSeconds)
-
+    override fun getTextureLocation(entity: GenericBedrockEntity) = GenericBedrockEntityModelRepository.getTexture(entity.category, (entity.delegate as GenericBedrockClientDelegate))
     override fun render(entity: GenericBedrockEntity, yaw: Float, partialTicks: Float, poseStack: PoseStack, buffer: MultiBufferSource, packedLight: Int) {
         if (entity.isInvisible) {
             return
         }
 
-        val model = GenericBedrockEntityModelRepository.getPoser(entity.category, entity.aspects)
+        val state = entity.delegate as GenericBedrockClientDelegate
+        state.currentAspects = entity.aspects
+        val model = GenericBedrockEntityModelRepository.getPoser(entity.category, state)
         this.model.posableModel = model
         model.context = this.model.context
         this.model.setupEntityTypeContext(entity)
@@ -40,9 +42,8 @@ class GenericBedrockRenderer(context: EntityRendererProvider.Context) : EntityRe
         poseStack.mulPose(Axis.YP.rotationDegrees(yaw))
         val vertexConsumer = buffer.getBuffer(RenderType.entityCutout(getTextureLocation(entity)))
 
-        val state = entity.delegate as GenericBedrockClientDelegate
         state.updatePartialTicks(partialTicks)
-        model.setLayerContext(buffer, state, PokemonModelRepository.getLayers(entity.category, entity.aspects))
+        model.setLayerContext(buffer, state, PokemonModelRepository.getLayers(entity.category, state))
         this.model.setupAnim(entity, 0f, 0f, entity.tickCount + partialTicks, 0F, 0F)
         this.model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
 

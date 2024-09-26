@@ -40,21 +40,22 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.mojang.blaze3d.platform.Lighting
 import com.mojang.blaze3d.systems.RenderSystem
+import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.math.Axis
 import java.lang.Double.max
 import java.lang.Double.min
 import java.util.UUID
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.renderer.texture.OverlayTexture
-import net.minecraft.client.renderer.RenderType
-import com.mojang.blaze3d.vertex.PoseStack
-import net.minecraft.network.chat.MutableComponent
-import net.minecraft.util.Mth.ceil
-import com.mojang.math.Axis
+import kotlin.math.floor
 import net.minecraft.client.DeltaTracker
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.client.renderer.LightTexture
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.util.Mth.ceil
 import org.joml.Vector3f
 import kotlin.math.floor
 
@@ -200,7 +201,6 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
             reversed = !left,
             species = battlePokemon.species,
             level = battlePokemon.level,
-            aspects = battlePokemon.aspects,
             displayName = battlePokemon.displayName,
             gender = battlePokemon.gender,
             status = battlePokemon.status,
@@ -230,7 +230,6 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         reversed: Boolean,
         species: Species,
         level: Int,
-        aspects: Set<String>,
         displayName: MutableComponent,
         gender: Gender,
         status: PersistentStatus?,
@@ -318,10 +317,9 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         } else {
             drawPosablePortrait(
                 identifier = species.resourceIdentifier,
-                aspects = aspects,
                 matrixStack = matrixStack,
                 scale = 18F * (ballState?.scale ?: 1F) * if (isCompact) 0.65F else 1.0f,
-                contextScale = species.getForm(aspects).baseScale,
+                contextScale = species.getForm(state.currentAspects).baseScale,
                 repository = PokemonModelRepository,
                 reversed = reversed,
                 state = state,
@@ -491,8 +489,8 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         reversed: Boolean = false
     ) {
         val context = RenderContext()
-        val model = PokeBallModelRepository.getPoser(state.pokeBall.name, state.aspects)
-        val texture = PokeBallModelRepository.getTexture(state.pokeBall.name, state.aspects, state.animationSeconds)
+        val model = PokeBallModelRepository.getPoser(state.pokeBall.name, state)
+        val texture = PokeBallModelRepository.getTexture(state.pokeBall.name, state)
         val renderType = RenderType.entityCutout(texture)//model.getLayer(texture)
 
         RenderSystem.applyModelViewMatrix()

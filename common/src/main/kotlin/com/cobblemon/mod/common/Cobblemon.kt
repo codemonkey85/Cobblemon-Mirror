@@ -8,7 +8,6 @@
 
 package com.cobblemon.mod.common
 
-//import com.cobblemon.mod.common.api.storage.player.factory.MongoPlayerDataStoreFactory
 import com.cobblemon.mod.common.CobblemonBuildDetails.smallCommitHash
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.SeasonResolver
@@ -80,7 +79,6 @@ import com.cobblemon.mod.common.config.constraint.IntConstraint
 import com.cobblemon.mod.common.config.starter.StarterConfig
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.events.AdvancementHandler
-import com.cobblemon.mod.common.events.BattleHandler
 import com.cobblemon.mod.common.events.PokedexHandler
 import com.cobblemon.mod.common.events.ServerTickHandler
 import com.cobblemon.mod.common.net.messages.client.settings.ServerSettingsPacket
@@ -130,6 +128,7 @@ object Cobblemon {
     const val MODID = CobblemonBuildDetails.MOD_ID
     const val VERSION = CobblemonBuildDetails.VERSION
     const val CONFIG_PATH = "config/$MODID/main.json"
+    @JvmField
     val LOGGER: Logger = LogManager.getLogger()
 
     lateinit var implementation: CobblemonImplementation
@@ -162,7 +161,7 @@ object Cobblemon {
         this.implementation = implementation
 
         this.LOGGER.info("Launching Cobblemon ${CobblemonBuildDetails.VERSION}${if(CobblemonBuildDetails.SNAPSHOT) "-SNAPSHOT" else ""} ")
-        if(CobblemonBuildDetails.SNAPSHOT) {
+        if (CobblemonBuildDetails.SNAPSHOT) {
             this.LOGGER.info("  - Git Commit: ${smallCommitHash()} (https://gitlab.com/cable-mc/cobblemon/-/commit/${CobblemonBuildDetails.GIT_COMMIT})")
             this.LOGGER.info("  - Branch: ${CobblemonBuildDetails.BRANCH}")
         }
@@ -382,7 +381,6 @@ object Cobblemon {
 
     fun registerEventHandlers() {
         AdvancementHandler.registerListeners()
-        BattleHandler.registerListeners()
         PokedexHandler.registerListeners()
     }
 

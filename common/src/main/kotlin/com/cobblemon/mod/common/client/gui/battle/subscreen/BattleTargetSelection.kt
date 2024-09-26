@@ -185,14 +185,13 @@ class BattleTargetSelection(
             }
 
             // Target name
-            if(battlePokemon.hpValue > 0) {
+            if (battlePokemon.hpValue > 0) {
                 // Render Pokémon
                 matrices.pushPose()
                 matrices.translate(x + TARGET_WIDTH - (25 / 2.0) - 2, y + 5.0, 0.0)
                 matrices.scale(2.5F, 2.5F, 1F)
                 drawProfilePokemon(
                     species = battlePokemon.species.resourceIdentifier,
-                    aspects = battlePokemon.aspects.toSet(),
                     matrixStack = matrices,
                     rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),
                     state = state,
