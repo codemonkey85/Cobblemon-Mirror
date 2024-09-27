@@ -249,6 +249,8 @@ open class PokemonEntity(
     /** The form exposed to the client and used for calculating hitbox and height. */
     val exposedForm: FormData get() = this.effects.mockEffect?.exposedForm ?: this.pokemon.form
 
+    var platform : Boolean = false
+
     override val struct: QueryStruct = QueryStruct(hashMapOf())
         .addStandardFunctions()
         .addFunction("uuid") { StringValue(uuid.toString()) }
@@ -336,9 +338,9 @@ open class PokemonEntity(
 //        val targetPos = node?.blockPos
 //        if (targetPos == null || world.getBlockState(targetPos.up()).isAir) {
         return if (state.`is`(FluidTags.WATER) && !isEyeInFluid(FluidTags.WATER)) {
-            behaviour.moving.swim.canWalkOnWater
+            behaviour.moving.swim.canWalkOnWater || platform
         } else if (state.`is`(FluidTags.LAVA) && !isEyeInFluid(FluidTags.LAVA)) {
-            behaviour.moving.swim.canWalkOnLava
+            behaviour.moving.swim.canWalkOnLava || platform
         } else {
             super.canStandOnFluid(state)
         }
@@ -1193,7 +1195,7 @@ open class PokemonEntity(
 
     override fun travel(movementInput: Vec3) {
         val prevBlockPos = this.blockPosition()
-        if (beamMode != 3) { // Don't let Pokémon move during recall
+        if (beamMode != 3 && !platform) { // Don't let Pokémon move during recall
             super.travel(movementInput)
             this.updateBlocksTraveled(prevBlockPos)
         }

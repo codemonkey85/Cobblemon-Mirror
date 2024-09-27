@@ -557,6 +557,7 @@ open class Pokemon : ShowdownIdentifiable {
     ): CompletableFuture<PokemonEntity> {
 
         // send out raft if over water
+        var platform = false
         if (position != null) {
             // todo if send out position is over water then add a raft entity to stand on
             if (level.isWaterAt(
@@ -567,17 +568,18 @@ open class Pokemon : ShowdownIdentifiable {
                     )
                 ) && this.species.types.all { it != ElementalTypes.WATER && it != ElementalTypes.FLYING }) {
 
-                // Create a new boat entity with the generic EntityType.BOAT
-                val raftEntity = Boat(level, position.x, position.y, position.z)
-
-                raftEntity.variant = Boat.Type.BAMBOO
-
-                raftEntity.setPos(position.x, position.y, position.z) // Set the position of the boat
-
-                // Spawn the boat entity in the world
-                level.addFreshEntity(raftEntity)
-
-                this.battleSurface = raftEntity
+//                // Create a new boat entity with the generic EntityType.BOAT
+//                val raftEntity = Boat(level, position.x, position.y, position.z)
+//
+//                raftEntity.variant = Boat.Type.BAMBOO
+//
+//                raftEntity.setPos(position.x, position.y, position.z) // Set the position of the boat
+//
+//                // Spawn the boat entity in the world
+//                level.addFreshEntity(raftEntity)
+//
+//                this.battleSurface = raftEntity
+                platform = true
             }
         }
 
@@ -607,6 +609,7 @@ open class Pokemon : ShowdownIdentifiable {
                 it.phasingTargetId = source.id
                 it.beamMode = 1
                 it.battleId = battleId
+                it.platform = platform
 
                 it.after(seconds = THROW_DURATION) {
                     it.phasingTargetId = -1

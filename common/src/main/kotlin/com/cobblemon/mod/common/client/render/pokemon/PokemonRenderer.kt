@@ -21,6 +21,7 @@ import com.cobblemon.mod.common.client.keybind.keybinds.PartySendBinding
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PosablePokemonEntityModel
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.PlatformModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokeBallModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
@@ -33,9 +34,7 @@ import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity.Companion.SPAWN_DIRECTION
 import com.cobblemon.mod.common.pokeball.PokeBall
-import com.cobblemon.mod.common.util.effectiveName
-import com.cobblemon.mod.common.util.isLookingAt
-import com.cobblemon.mod.common.util.lang
+import com.cobblemon.mod.common.util.*
 import com.cobblemon.mod.common.util.math.DoubleRange
 import com.cobblemon.mod.common.util.math.geometry.toRadians
 import com.cobblemon.mod.common.util.math.remap
@@ -119,6 +118,17 @@ class PokemonRenderer(
                 packedLight,
                 clientDelegate
             )
+        }
+        if(true || entity.platform) {
+            drawPlatform(
+                    poseMatrix,
+                    1.0F,
+                    partialTicks,
+                    buffer,
+                    packedLight,
+                    clientDelegate
+            )
+            poseMatrix.translate(0.0, 0.25, 0.0)
         }
 
         modelNow.setLayerContext(buffer, clientDelegate, PokemonModelRepository.getLayers(entity.pokemon.species.resourceIdentifier, clientDelegate))
@@ -423,6 +433,27 @@ class PokemonRenderer(
         model.blue = 1f
         model.red = 1f
         model.resetLayerContext()
+        matrixStack.popPose()
+    }
+
+    private fun drawPlatform(
+            matrixStack: PoseStack,
+            scale: Float = 5F,
+            partialTicks: Float,
+            buff: MultiBufferSource,
+            packedLight: Int,
+            state: PosableState,
+            ) {
+        matrixStack.pushPose()
+        matrixStack.mulPose(Axis.ZP.rotationDegrees(180f))
+        val aspects = emptySet<String>()
+        val model = PlatformModelRepository.getPoser(cobblemonResource("water_platform_m"), state)
+        val texture = cobblemonResource("textures/platforms/water_platform_m.png")
+        val buffer = ItemRenderer.getFoilBufferDirect(buff, RenderType.entityCutout(texture), false, false)
+
+
+        model.render(ballContext, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
+
         matrixStack.popPose()
     }
 }

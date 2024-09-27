@@ -1,0 +1,64 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 256,
+				"texture_height": 256,
+				"visible_bounds_width": 8,
+				"visible_bounds_height": 1.5,
+				"visible_bounds_offset": [0, 0.25, 0]
+			},
+			"bones": [
+				{
+					"name": "water_platform_xl",
+					"pivot": [0, 0, -23],
+					"cubes": [
+						{"origin": [-18, 4, -18], "size": [36, 1, 36], "uv": [0, 96]},
+						{"origin": [-3, 0, 25], "size": [6, 2, 8], "uv": [0, 221]},
+						{"origin": [-3, 0, -33], "size": [6, 2, 8], "uv": [0, 221]},
+						{"origin": [-43, 3, -49], "size": [7, 2, 98], "uv": [0, 133]},
+						{"origin": [36, 3, -49], "size": [7, 2, 98], "uv": [0, 133]}
+					]
+				},
+				{
+					"name": "water_platform1",
+					"parent": "water_platform_xl",
+					"pivot": [-24, 0, -24],
+					"cubes": [
+						{"origin": [-46, 0, -46], "size": [44, 4, 44], "uv": [0, 0]},
+						{"origin": [-44, -4, -46], "size": [40, 4, 44], "uv": [0, 48]}
+					]
+				},
+				{
+					"name": "water_platform2",
+					"parent": "water_platform_xl",
+					"pivot": [24, 0, -24],
+					"cubes": [
+						{"origin": [2, 0, -46], "size": [44, 4, 44], "uv": [0, 0]},
+						{"origin": [4, -4, -46], "size": [40, 4, 44], "uv": [0, 48]}
+					]
+				},
+				{
+					"name": "water_platform3",
+					"parent": "water_platform_xl",
+					"pivot": [24, 0, 24],
+					"cubes": [
+						{"origin": [2, 0, 2], "size": [44, 4, 44], "uv": [0, 0]},
+						{"origin": [4, -4, 2], "size": [40, 4, 44], "uv": [0, 48]}
+					]
+				},
+				{
+					"name": "water_platform4",
+					"parent": "water_platform_xl",
+					"pivot": [-24, 0, 24],
+					"cubes": [
+						{"origin": [-46, 0, 2], "size": [44, 4, 44], "uv": [0, 0]},
+						{"origin": [-44, -4, 2], "size": [40, 4, 44], "uv": [0, 48]}
+					]
+				}
+			]
+		}
+	]
+}
