@@ -19,7 +19,7 @@ import java.util.UUID
  * @author Hiroku
  * @since March 11th, 2023
  */
-class TradeOfferExpiredPacket(val tradeOfferId: UUID) : NetworkPacket<TradeOfferExpiredPacket> {
+class TradeOfferExpiredPacket(val traderId: UUID) : NetworkPacket<TradeOfferExpiredPacket> {
     companion object {
         val ID = cobblemonResource("trade_offer_expired")
         fun decode(buffer: RegistryFriendlyByteBuf) = TradeOfferExpiredPacket(buffer.readUUID())
@@ -27,6 +27,6 @@ class TradeOfferExpiredPacket(val tradeOfferId: UUID) : NetworkPacket<TradeOffer
 
     override val id = ID
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeUUID(tradeOfferId)
+        buffer.writeUUID(traderId)
     }
 }

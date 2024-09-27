@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.client.net.trade
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.trade.TradeGUI
+import com.cobblemon.mod.common.client.render.ClientPlayerIcon
 import com.cobblemon.mod.common.client.trade.ClientTrade
 import com.cobblemon.mod.common.net.messages.client.trade.TradeStartedPacket
 import com.cobblemon.mod.common.net.messages.client.trade.TradeStartedPacket.TradeablePokemon
@@ -29,5 +30,7 @@ object TradeStartedHandler : ClientNetworkPacketHandler<TradeStartedPacket> {
                 CobblemonClient.storage.myParty.map { it?.let(::TradeablePokemon) }.toMutableList()
             )
         )
+        CobblemonClient.requests.tradeOffers.remove(packet.traderId)
+        ClientPlayerIcon.update(packet.traderId)
     }
 }

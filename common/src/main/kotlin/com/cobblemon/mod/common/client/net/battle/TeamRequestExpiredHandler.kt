@@ -16,14 +16,7 @@ import net.minecraft.client.Minecraft
 
 object TeamRequestExpiredHandler : ClientNetworkPacketHandler<TeamRequestExpiredPacket> {
     override fun handle(packet: TeamRequestExpiredPacket, client: Minecraft) {
-        val iter = CobblemonClient.requests.multiBattleTeamRequests.iterator()
-        while(iter.hasNext()) {
-            val entry = iter.next()
-            val player = entry.key
-            if (entry.value.requestID == packet.teamRequestId) {
-                iter.remove()
-                ClientPlayerIcon.update(player)
-            }
-        }
+        CobblemonClient.requests.tradeOffers.remove(packet.requesterId)
+        ClientPlayerIcon.update(packet.requesterId)
     }
 }

@@ -17,15 +17,7 @@ import net.minecraft.client.Minecraft
 
 object TradeOfferExpiredHandler : ClientNetworkPacketHandler<TradeOfferExpiredPacket> {
     override fun handle(packet: TradeOfferExpiredPacket, client: Minecraft) {
-        Cobblemon.LOGGER.error("EXPIRED")
-        val iter = CobblemonClient.requests.tradeOffers.iterator()
-        while(iter.hasNext()) {
-            val entry = iter.next()
-            val player = entry.key
-            if (entry.value.requestID == packet.tradeOfferId) {
-                iter.remove()
-                ClientPlayerIcon.update(player)
-            }
-        }
+        CobblemonClient.requests.tradeOffers.remove(packet.traderId)?.let { Cobblemon.LOGGER.error("Missing trade offer from ${packet.traderId}") }
+        ClientPlayerIcon.update(packet.traderId)
     }
 }

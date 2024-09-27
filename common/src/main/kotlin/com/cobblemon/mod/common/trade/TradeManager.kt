@@ -52,7 +52,7 @@ object TradeManager {
             afterOnServer(seconds = request.expiryTime.toFloat()) {
                 if (requests.remove(request)) {
                     player.sendSystemMessage(lang("trade.request_expired", otherPlayerEntity.name), true)
-                    otherPlayerEntity.sendPacket(TradeOfferExpiredPacket(request.requestID))
+                    otherPlayerEntity.sendPacket(TradeOfferExpiredPacket(player.uuid))
                 }
             }
 

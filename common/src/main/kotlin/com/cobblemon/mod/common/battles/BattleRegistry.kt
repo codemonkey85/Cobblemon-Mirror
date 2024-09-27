@@ -103,7 +103,7 @@ object BattleRegistry {
             return
         }
         multiBattleTeamRequests.remove(requesterId)
-        existing.targetID.getPlayer()?.sendPacket(TeamRequestExpiredPacket(existing.requestID))
+        existing.targetID.getPlayer()?.sendPacket(TeamRequestExpiredPacket(requesterId))
     }
 
     fun onPlayerDisconnect(player: ServerPlayer) {
