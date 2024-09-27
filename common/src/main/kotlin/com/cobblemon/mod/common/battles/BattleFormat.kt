@@ -22,10 +22,10 @@ import net.minecraft.network.RegistryFriendlyByteBuf
  * @since March 9th, 2022
  */
 data class BattleFormat(
-        val mod: String = "cobblemon",
-        val battleType: BattleType = BattleTypes.SINGLES,
-        var ruleSet: Set<String> = setOf(),
-        val gen: Int = 9
+    val mod: String = "cobblemon",
+    val battleType: BattleType = BattleTypes.SINGLES,
+    var ruleSet: Set<String> = setOf(),
+    val gen: Int = 9
 ) {
     companion object {
         val GEN_9_SINGLES = BattleFormat(
@@ -49,8 +49,8 @@ data class BattleFormat(
         )
 
         val GEN_9_ROYAL = BattleFormat(
-                battleType = BattleTypes.ROYAL,
-                ruleSet = mutableSetOf(BattleRules.OBTAINABLE, BattleRules.PAST, BattleRules.UNOBTAINABLE)
+            battleType = BattleTypes.ROYAL,
+            ruleSet = mutableSetOf(BattleRules.OBTAINABLE, BattleRules.PAST, BattleRules.UNOBTAINABLE)
         )
 
         fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): BattleFormat {

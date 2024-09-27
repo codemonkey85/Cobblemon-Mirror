@@ -84,7 +84,7 @@ open class PokemonBattle(
 
     val onEndHandlers: MutableList<(PokemonBattle) -> Unit> = mutableListOf()
 
-    val battlePartyStores = emptyList<PlayerPartyStore>().toMutableList()
+    val battlePartyStores = mutableListOf<PlayerPartyStore>()
 
     init {
         side1.battle = this

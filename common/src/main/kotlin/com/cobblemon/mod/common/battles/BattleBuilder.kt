@@ -66,7 +66,7 @@ object BattleBuilder {
         val team1 = partyAccessor(player1).toBattleTeam(clone = cloneParties || autoLevel != null,  healPokemon = healFirst, leadingPokemonPlayer1).sortedBy { it.health <= 0 }
         val team2 = partyAccessor(player2).toBattleTeam(clone = cloneParties || autoLevel != null,  healPokemon = healFirst, leadingPokemonPlayer2).sortedBy { it.health <= 0 }
 
-        val battlePartyStores = emptyList<PlayerPartyStore>().toMutableList()
+        val battlePartyStores = mutableListOf<PlayerPartyStore>()
 
         if (autoLevel != null && autoLevel > 0) {
             val tempStoreP1 = PlayerPartyStore(player1.uuid)
@@ -142,7 +142,7 @@ object BattleBuilder {
         val playerActors = teams.mapIndexed { index, team -> PlayerBattleActor(players[index].uuid, team)}.toMutableList()
 
         val autoLevel = battleFormat.getAdjustLevelRule()
-        val battlePartyStores = emptyList<PlayerPartyStore>().toMutableList()
+        val battlePartyStores = mutableListOf<PlayerPartyStore>()
 
         if (autoLevel != null && autoLevel > 0) {
             teams.forEachIndexed { index, battleTeam ->

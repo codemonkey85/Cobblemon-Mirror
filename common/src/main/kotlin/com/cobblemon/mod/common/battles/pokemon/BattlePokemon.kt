@@ -40,9 +40,9 @@ open class BattlePokemon(
             BattleCloneProperty.isBattleClone().apply(effectedPokemon)
             UncatchableProperty.uncatchable().apply(effectedPokemon)
             return BattlePokemon(
-                    originalPokemon = pokemon,
-                    effectedPokemon = effectedPokemon,
-                    postBattleEntityOperation = { it.recallWithAnimation() }
+                originalPokemon = pokemon,
+                effectedPokemon = effectedPokemon,
+                postBattleEntityOperation = { it.recallWithAnimation() }
             )
         }
 
