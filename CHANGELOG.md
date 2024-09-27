@@ -165,6 +165,7 @@
 - Added `forcedAspects` to Pokémon to make it easier to easily add basic aspects to a Pokémon in a way that persists. We already know that everyone is going to overuse this.
 - Made the `Pokemon.aspects` setter private. This could technically break side-mods but if you are affected by this then you were using it wrong! Use `Pokemon.forcedAspects` to fix it.
 - Cobblemon's main logger is properly static now.
+- PokemonEntity.enablePoseTypeRecalculation can be used to disable automatic pose type recalculation.
 
 ### Data Pack & Resource Pack Creators
 - Added support for "shedders" similar to Shedinja's evolution logic.
