@@ -599,7 +599,9 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        if (isInventoryKeyPressed(minecraft, keyCode, scanCode)) {
+        val nicknameSelected = this::nicknameEntryWidget.isInitialized && nicknameEntryWidget.isFocused
+
+        if (isInventoryKeyPressed(minecraft, keyCode, scanCode) && !nicknameSelected) {
             Minecraft.getInstance().setScreen(null)
             return true
         }
