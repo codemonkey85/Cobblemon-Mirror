@@ -32,7 +32,7 @@ object BattleSwapPokemonHandler : ClientNetworkPacketHandler<BattleSwapPokemonPa
                 )
             )
         } else {
-            activeBattlePokemon.animations.add(MoveTileOffscreenAnimation())
+            activeBattlePokemon.animations.add(MoveTileOffscreenAnimation(swappedPokemon = swapPokemon.battlePokemon))
         }
 
         swapPokemon.animations.add(
@@ -40,6 +40,5 @@ object BattleSwapPokemonHandler : ClientNetworkPacketHandler<BattleSwapPokemonPa
                     activeBattlePokemon.battlePokemon as ClientBattlePokemon
             )
         )
-
     }
 }

@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.api.molang
 
 import com.bedrockk.molang.runtime.struct.QueryStruct
+import com.bedrockk.molang.runtime.value.DoubleValue
 import com.bedrockk.molang.runtime.value.MoValue
 
 /**
@@ -20,7 +21,7 @@ import com.bedrockk.molang.runtime.value.MoValue
 class ObjectValue<T>(
     var obj: T,
     val stringify: (T) -> String = { it.toString() },
-    val doublify: (T) -> Double = { throw NotImplementedError("Doublify not implemented for this object value, are you doing weird molang") }
+    val doublify: (T) -> Double = { DoubleValue.ONE.value }
 ) : QueryStruct(hashMapOf()) {
     override fun value() = this
     override fun asDouble() = doublify(obj)

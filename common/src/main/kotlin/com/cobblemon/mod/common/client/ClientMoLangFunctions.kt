@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.client
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.MoParams
 import com.bedrockk.molang.runtime.struct.ArrayStruct
+import com.bedrockk.molang.runtime.value.DoubleValue
 import com.bedrockk.molang.runtime.value.MoValue
 import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunctions
@@ -23,13 +24,14 @@ import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTr
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.WaveFunction
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.sineFunction
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
+import com.cobblemon.mod.common.util.getBooleanOrNull
 import com.cobblemon.mod.common.util.getDoubleOrNull
 import com.cobblemon.mod.common.util.getStringOrNull
-import com.cobblemon.mod.common.util.math.geometry.toRadians
+import java.util.function.Function
 import net.minecraft.client.Minecraft
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.sounds.SoundEvent
-import java.util.function.Function
+
 object ClientMoLangFunctions {
     val clientFunctions = hashMapOf<String, Function<MoParams, Any>>(
         "sound" to java.util.function.Function { params ->
@@ -238,6 +240,59 @@ object ClientMoLangFunctions {
                         animation = { model.bedrockStateful(animationGroup, animationNames.random()) }
                     )
                 )
+            }
+        },
+        "primary_animation" to Function { model ->
+            Function { params ->
+                val animation = params.get<ObjectValue<ActiveAnimation>>(0)?.obj ?: return@Function DoubleValue.ZERO
+                val excludedLabels = mutableSetOf<String>()
+                var curve: WaveFunction = { t ->
+                    if (t < 0.1) {
+                        t * 10
+                    } else if (t < 0.9) {
+                        1F
+                    } else {
+                        1F
+                    }
+                }
+                for (index in 1 until params.params.size) {
+                    val param = params.get<MoValue>(index)
+                    if (param is ObjectValue<*>) {
+                        val obj = param.obj
+                        if (obj is ExcludedLabels) {
+                            excludedLabels.addAll(obj.labels)
+                        } else {
+                            curve = param.obj as WaveFunction
+                        }
+                        continue
+                    }
+
+                    val label = params.getString(index) ?: continue
+                    excludedLabels.add(label)
+                }
+                return@Function ObjectValue(
+                    PrimaryAnimation(
+                        animation = animation,
+                        excludedLabels = excludedLabels,
+                        curve = curve
+                    )
+                )
+            }
+        },
+        "punch" to Function { model ->
+            Function { params ->
+                val headName = params.getStringOrNull(0) ?: "head"
+                val bodyName = params.getStringOrNull(1) ?: "body"
+                val leftArmName = params.getStringOrNull(2) ?: "arm_left"
+                val rightArmName = params.getStringOrNull(3) ?: "arm_right"
+                val swingRight = params.getBooleanOrNull(4) ?: true
+                return@Function ObjectValue(PunchAnimation(
+                    head = model.getPart(headName),
+                    body = model.getPart(bodyName),
+                    leftArm = model.getPart(leftArmName),
+                    rightArm = model.getPart(rightArmName),
+                    swingRight = swingRight
+                ))
             }
         },
         "bedrock_primary_quirk" to Function { model ->

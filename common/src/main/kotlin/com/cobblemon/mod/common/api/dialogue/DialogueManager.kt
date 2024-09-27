@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.net.messages.client.dialogue.DialogueClosedPacket
 import com.cobblemon.mod.common.net.messages.client.dialogue.DialogueOpenedPacket
 import com.cobblemon.mod.common.util.activeDialogue
-import com.cobblemon.mod.common.util.withQueryValue
+import com.cobblemon.mod.common.util.withNPCValue
 import java.util.UUID
 import net.minecraft.server.level.ServerPlayer
 
@@ -28,20 +28,25 @@ import net.minecraft.server.level.ServerPlayer
 object DialogueManager {
     val activeDialogues = mutableMapOf<UUID, ActiveDialogue>()
 
-    fun startDialogue(playerEntity: ServerPlayer, dialogue: Dialogue) {
-        startDialogue(ActiveDialogue(playerEntity, dialogue))
+    fun startDialogue(playerEntity: ServerPlayer, dialogue: Dialogue): ActiveDialogue {
+        val activeDialogue = ActiveDialogue(playerEntity, dialogue)
+        startDialogue(activeDialogue)
+        return activeDialogue
     }
 
-    fun startDialogue(playerEntity: ServerPlayer, npcEntity: NPCEntity, dialogue: Dialogue) {
+    fun startDialogue(playerEntity: ServerPlayer, npcEntity: NPCEntity, dialogue: Dialogue): ActiveDialogue {
         val activeDialogue = ActiveDialogue(playerEntity, dialogue)
-        activeDialogue.runtime.withQueryValue("npc") { npcEntity.struct }
+        activeDialogue.runtime.withNPCValue("npc", npcEntity)
+        activeDialogue.npc = npcEntity
         startDialogue(activeDialogue)
+        return activeDialogue
     }
 
     fun startDialogue(activeDialogue: ActiveDialogue) {
-        activeDialogues[activeDialogue.playerEntity.uuid] = activeDialogue
-        val packet = DialogueOpenedPacket(activeDialogue, true)
-        activeDialogue.playerEntity.sendPacket(packet)
+        activeDialogue.initialize()
+        if (!activeDialogue.completion.isDone) {
+            activeDialogues[activeDialogue.playerEntity.uuid] = activeDialogue
+        }
     }
 
     fun stopDialogue(playerEntity: ServerPlayer) {

@@ -37,6 +37,10 @@ class DragInstruction(val instructionSet: InstructionSet, val battleActor: Battl
             val illusion = publicMessage.battlePokemonFromOptional(battle , "is")
             val pokemon = publicMessage.battlePokemon(0, battle) ?: return@dispatchInsert emptySet()
 
+            val newHealth = privateMessage.argumentAt(2)!!.split(" ")[0]
+            val remainingHealth = newHealth.split("/")[0].toInt()
+            pokemon.effectedPokemon.currentHealth = remainingHealth
+
             battle.broadcastChatMessage(battleLang("dragged_out", pokemon.getName()))
             activePokemon.battlePokemon?.let { oldPokemon ->
                 oldPokemon.contextManager.clear(BattleContext.Type.VOLATILE, BattleContext.Type.BOOST, BattleContext.Type.UNBOOST)

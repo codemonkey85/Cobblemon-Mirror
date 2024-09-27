@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.api.battles.model
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
+import com.bedrockk.molang.runtime.value.MoValue
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.Cobblemon.LOGGER
 import com.cobblemon.mod.common.CobblemonNetwork
@@ -42,6 +43,8 @@ import com.cobblemon.mod.common.battles.dispatch.WaitDispatch
 import com.cobblemon.mod.common.battles.interpreter.ContextManager
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.battles.runner.ShowdownService
+import com.cobblemon.mod.common.entity.npc.NPCBattleActor
+import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.net.messages.client.battle.BattleEndPacket
 import com.cobblemon.mod.common.net.messages.client.battle.BattleMessagePacket
@@ -75,7 +78,7 @@ open class PokemonBattle(
     val side2: BattleSide
 ) {
     /** Whether logging will be silenced for this battle. */
-    var mute = true
+    var mute = false
     val struct = this.asMoLangValue()
     val runtime = MoLangRuntime().also { it.environment.query = struct }
 
@@ -93,6 +96,7 @@ open class PokemonBattle(
                     .filterIsInstance<LastBattleCriticalHitsEvolutionProgress>()
                     .forEach { it.reset() }
             }
+            actor.setupStruct()
         }
     }
 
@@ -183,6 +187,11 @@ open class PokemonBattle(
      * Gets the first battle actor whom the given player controls, or null if there is no such actor.
      */
     fun getActor(player: ServerPlayer) = actors.firstOrNull { it.isForPlayer(player) }
+
+    /**
+     * Gets the first battle actor whom the given NPC controls, or null if there is no such actor.
+     */
+    fun getActor(npc: NPCEntity) = actors.firstOrNull { it is NPCBattleActor && it.npc == npc }
 
     /**
      * Gets a [BattleActor] and an [ActiveBattlePokemon] from a pnx key, e.g. p2a

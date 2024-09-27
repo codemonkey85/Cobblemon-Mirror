@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.storage.player.GeneralPlayerData
 import com.cobblemon.mod.common.api.storage.player.PlayerDataExtension
-import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -26,7 +26,7 @@ import java.util.UUID
  * @since February 21, 2024
  */
 class PlayerDataJsonBackend: JsonBackedPlayerDataStoreBackend<GeneralPlayerData>(
-    "cobblemonplayerdata", PlayerInstancedDataStoreType.GENERAL
+    "cobblemonplayerdata", PlayerInstancedDataStoreTypes.GENERAL
 ){
     override val defaultData = { forPlayer: UUID -> GeneralPlayerData(
         uuid = forPlayer,

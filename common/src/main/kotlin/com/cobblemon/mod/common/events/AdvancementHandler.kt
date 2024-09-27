@@ -28,6 +28,7 @@ import com.cobblemon.mod.common.block.TumblestoneBlock
 import com.cobblemon.mod.common.item.TumblestoneItem
 import com.cobblemon.mod.common.platform.events.ServerPlayerEvent
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.cobblemon.mod.common.util.effectiveName
 import com.cobblemon.mod.common.util.getPlayer
@@ -58,7 +59,7 @@ object AdvancementHandler : EventHandler {
             CobblemonCriteria.CATCH_SHINY_POKEMON.trigger(event.player, CountableContext(advancementData.totalShinyCaptureCount))
         }
         CobblemonCriteria.COLLECT_ASPECT.trigger(event.player, advancementData.aspectsCollected)
-        Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreType.GENERAL)
+        Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreTypes.GENERAL)
     }
 
 //    fun onHatch(event: HatchEggEvent) {
@@ -77,7 +78,7 @@ object AdvancementHandler : EventHandler {
                 val advancementData = playerData.advancementData
                 advancementData.updateTotalEvolvedCount()
                 advancementData.updateAspectsCollected(player, event.pokemon)
-                Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreType.GENERAL)
+                Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreTypes.GENERAL)
                 CobblemonCriteria.EVOLVE_POKEMON.trigger(
                     player, EvolvePokemonContext(
                         event.pokemon.preEvolution!!.species.resourceIdentifier,
@@ -108,7 +109,7 @@ object AdvancementHandler : EventHandler {
                                 }
                             }
                         }
-                        Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreType.GENERAL)
+                        Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreTypes.GENERAL)
                         CobblemonCriteria.DEFEAT_POKEMON.trigger(player, CountableContext(advancementData.totalBattleVictoryCount))
                     }
             }
@@ -125,7 +126,7 @@ object AdvancementHandler : EventHandler {
                     advancementData.updateTotalPvPBattleVictoryCount()
                 if (event.battle.isPvN)
                     advancementData.updateTotalPvNBattleVictoryCount()
-                Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreType.GENERAL)
+                Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreTypes.GENERAL)
                 CobblemonCriteria.WIN_BATTLE.trigger(player, BattleCountableContext(event.battle, advancementData.totalBattleVictoryCount))
             }
 
@@ -145,7 +146,7 @@ object AdvancementHandler : EventHandler {
             advancementData.updateTotalTradedCount()
             advancementData.updateAspectsCollected(player1, event.tradeParticipant2Pokemon)
             CobblemonCriteria.COLLECT_ASPECT.trigger(player1, advancementData.aspectsCollected)
-            Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreType.GENERAL)
+            Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreTypes.GENERAL)
         }
         if (player2 != null) {
             CobblemonCriteria.TRADE_POKEMON.trigger(player2, TradePokemonContext(event.tradeParticipant2Pokemon, event.tradeParticipant1Pokemon))
@@ -154,7 +155,7 @@ object AdvancementHandler : EventHandler {
             advancementData.updateTotalTradedCount()
             advancementData.updateAspectsCollected(player2, event.tradeParticipant1Pokemon)
             CobblemonCriteria.COLLECT_ASPECT.trigger(player2, advancementData.aspectsCollected)
-            Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreType.GENERAL)
+            Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreTypes.GENERAL)
         }
     }
 

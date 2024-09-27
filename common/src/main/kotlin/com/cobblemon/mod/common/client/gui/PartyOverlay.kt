@@ -84,7 +84,7 @@ class PartyOverlay : Gui(Minecraft.getInstance()) {
     }
 
     override fun render(context: GuiGraphics, tickCounter: DeltaTracker) {
-        val partialDeltaTicks = tickCounter.getGameTimeDeltaPartialTick(false)
+        val partialDeltaTicks = tickCounter.realtimeDeltaTicks
         val minecraft = Minecraft.getInstance()
 
         // Hiding if a Screen is open and not exempt
@@ -154,9 +154,10 @@ class PartyOverlay : Gui(Minecraft.getInstance()) {
                     0.0
                 )
 
+                state.currentAspects = pokemon.aspects
+
                 drawPosablePortrait(
                     identifier = pokemon.species.resourceIdentifier,
-                    aspects = pokemon.aspects,
                     matrixStack = matrices,
                     partialTicks = 0F, // partialDeltaTicks, //Before you get any funny ideas about party animated pokemon, make sure they each get their own state instead of sharing.
                     contextScale = pokemon.form.baseScale,

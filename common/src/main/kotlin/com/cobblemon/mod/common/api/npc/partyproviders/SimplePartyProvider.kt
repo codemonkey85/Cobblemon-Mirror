@@ -11,16 +11,16 @@ package com.cobblemon.mod.common.api.npc.partyproviders
 import com.cobblemon.mod.common.api.npc.NPCPartyProvider
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.storage.party.NPCPartyStore
-import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.entity.npc.NPCEntity
-import com.cobblemon.mod.common.net.IntSize
-import com.cobblemon.mod.common.util.*
+import com.cobblemon.mod.common.util.toProperties
 import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.server.level.ServerPlayer
 
+/**
+ * A basic party provider that just produces a [StaticNPCParty] based on a list of [PokemonProperties].
+ *
+ * @author Hiroku
+ * @since August 19th, 2023
+ */
 class SimplePartyProvider : NPCPartyProvider {
     companion object {
         const val TYPE = "simple"
@@ -31,45 +31,26 @@ class SimplePartyProvider : NPCPartyProvider {
 
     val pokemon = mutableListOf<PokemonProperties>()
 
-    override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeSizedInt(IntSize.U_BYTE, pokemon.size)
-        for (pokemon in this.pokemon) {
-            buffer.writeString(pokemon.originalString)
-        }
-    }
-
-    override fun decode(buffer: RegistryFriendlyByteBuf) {
-        repeat(times = buffer.readSizedInt(IntSize.U_BYTE)) {
-            pokemon.add(PokemonProperties.parse(buffer.readString()))
-        }
-    }
-
-    override fun saveToNBT(nbt: CompoundTag) {
-        for ((index, pokemon) in this.pokemon.withIndex()) {
-            nbt.putString(DataKeys.NPC_PARTY_POKEMON + index, pokemon.originalString)
-        }
-    }
-
-    override fun loadFromNBT(nbt: CompoundTag) {
-        var index = 0
-        while (nbt.contains(DataKeys.NPC_PARTY_POKEMON + index)) {
-            this.pokemon.add(PokemonProperties.parse(nbt.getString(DataKeys.POKEMON_PROPERTIES + index)))
-            index++
-        }
-    }
-
     override fun loadFromJSON(json: JsonElement) {
-        json as JsonObject
-        if (json.has(DataKeys.NPC_PARTY_POKEMON.lowercase())) {
-            json.get(DataKeys.NPC_PARTY_POKEMON.lowercase()).asJsonArray.forEach { pokemon.add(PokemonProperties.parse(it.asString)) }
+        val pokemonList = json.asJsonObject.getAsJsonArray("pokemon")
+        pokemonList.forEach {
+            val pokemon = if (it.isJsonPrimitive) {
+                it.asString.toProperties()
+            } else {
+                val obj = it.asJsonObject
+                val props = PokemonProperties()
+                props.loadFromJSON(obj)
+                props
+            }
+
+            this.pokemon.add(pokemon)
         }
     }
 
-    override fun provide(npc: NPCEntity, challengers: List<ServerPlayer>): PartyStore {
-        return NPCPartyStore(npc).apply {
-            for (properties in pokemon) {
-                add(properties.create())
-            }
-        }
+    override fun provide(npc: NPCEntity, level: Int): NPCParty {
+        val pokemon = pokemon.map { it.copy().also { it.level = it.level ?: level }.create() }
+        val party = NPCPartyStore(npc)
+        pokemon.forEach(party::add)
+        return StaticNPCParty(party)
     }
 }

@@ -161,12 +161,12 @@ class BattleTargetSelection(
                 width = TARGET_WIDTH,
                 height = TARGET_HEIGHT,
                 vOffset = if (selectable && isHovered) TARGET_HEIGHT else 0,
-                textureHeight = if (selectable) TARGET_HEIGHT * 2 else TARGET_HEIGHT,
+                textureHeight = if (selectable) TARGET_HEIGHT * 2 else TARGET_HEIGHT
             )
 
             // Target Selection Arrows
             if (selectable && isHovered) {
-                val offset = (sin(((passedSeconds / 2) % 1 * 2 * Math.PI)) * 1 + 1).toFloat()
+                val offset = (sin(passedSeconds * 2 * Math.PI) + 1).toFloat()
                 val pos = when (arrowDirection) {
                     ArrowDirection.LEFT -> Pair(arrowPosition.first - offset, arrowPosition.second)
                     ArrowDirection.RIGHT -> Pair(arrowPosition.first + offset, arrowPosition.second)
@@ -174,30 +174,29 @@ class BattleTargetSelection(
                     ArrowDirection.DOWN -> Pair(arrowPosition.first, arrowPosition.second + offset)
                 }
                 blitk(
-                        matrixStack = matrices,
-                        texture = arrowTexture,
-                        x = pos.first * 2,
-                        y = pos.second * 2,
-                        scale = 0.5F,
-                        height = if (arrowDirection == ArrowDirection.LEFT || arrowDirection ==  ArrowDirection.RIGHT) 17 else 10,
-                        width = if (arrowDirection == ArrowDirection.LEFT || arrowDirection ==  ArrowDirection.RIGHT) 10 else 17,
+                    matrixStack = matrices,
+                    texture = arrowTexture,
+                    x = pos.first * 2,
+                    y = pos.second * 2,
+                    scale = 0.5F,
+                    height = if (arrowDirection == ArrowDirection.LEFT || arrowDirection ==  ArrowDirection.RIGHT) 17 else 10,
+                    width = if (arrowDirection == ArrowDirection.LEFT || arrowDirection ==  ArrowDirection.RIGHT) 10 else 17
                 )
             }
 
             // Target name
-            if(battlePokemon.hpValue > 0) {
+            if (battlePokemon.hpValue > 0) {
                 // Render Pokémon
                 matrices.pushPose()
                 matrices.translate(x + TARGET_WIDTH - (25 / 2.0) - 2, y + 5.0, 0.0)
                 matrices.scale(2.5F, 2.5F, 1F)
                 drawProfilePokemon(
-                        species = battlePokemon.species.resourceIdentifier,
-                        aspects = battlePokemon.aspects.toSet(),
-                        matrixStack = matrices,
-                        rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),
-                        state = state,
-                        scale = 4.5F,
-                        partialTicks = delta
+                    species = battlePokemon.species.resourceIdentifier,
+                    matrixStack = matrices,
+                    rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),
+                    state = state,
+                    scale = 4.5F,
+                    partialTicks = delta
                 )
                 matrices.popPose()
 
@@ -205,50 +204,51 @@ class BattleTargetSelection(
                 val stage = floor((passedSeconds / BattleOverlay.ROLE_CYCLE_SECONDS % 1) * 5)
                 if (!isCurrentPokemon || stage != 4.0) {
                     blitk(
-                            matrixStack = matrices,
-                            texture = battleRoleUpper,
-                            x = x + 6,
-                            y = y + 1,
-                            width = 27,
-                            height = 3,
-                            textureHeight = 12,
-                            vOffset = if (isCurrentPokemon) stage * 3 else  9,
-                            red = rgb.first,
-                            green = rgb.second,
-                            blue = rgb.third,
+                        matrixStack = matrices,
+                        texture = battleRoleUpper,
+                        x = x + 6,
+                        y = y + 1,
+                        width = 27,
+                        height = 3,
+                        textureHeight = 12,
+                        vOffset = if (isCurrentPokemon) stage * 3 else  9,
+                        red = rgb.first,
+                        green = rgb.second,
+                        blue = rgb.third
                     )
                 }
 
                 // Target Level
                 drawScaledText(
-                        context = context,
-                        font = CobblemonResources.DEFAULT_LARGE,
-                        text = lang("ui.lv").bold(),
-                        x = x + 5,
-                        y = y + 8,
-                        opacity = selectConditionOpacity,
-                        shadow = true
+                    context = context,
+                    font = CobblemonResources.DEFAULT_LARGE,
+                    text = lang("ui.lv").bold(),
+                    x = x + 5,
+                    y = y + 8,
+                    opacity = selectConditionOpacity,
+                    shadow = true
                 )
+
                 drawScaledText(
-                        context = context,
-                        font = CobblemonResources.DEFAULT_LARGE,
-                        text = battlePokemon.level.toString().text().bold(),
-                        x = x + 5 + 13,
-                        y = y + 8,
-                        opacity = selectConditionOpacity,
-                        shadow = true
+                    context = context,
+                    font = CobblemonResources.DEFAULT_LARGE,
+                    text = battlePokemon.level.toString().text().bold(),
+                    x = x + 5 + 13,
+                    y = y + 8,
+                    opacity = selectConditionOpacity,
+                    shadow = true
                 )
 
                 val displayText = battlePokemon.displayName.bold()
-                // Pokemon Display Name
+                // Pokémon Display Name
                 drawScaledText(
-                        context = context,
-                        font = CobblemonResources.DEFAULT_LARGE,
-                        text = displayText,
-                        x = x + 5,
-                        y = y + 15,
-                        opacity = selectConditionOpacity,
-                        shadow = true
+                    context = context,
+                    font = CobblemonResources.DEFAULT_LARGE,
+                    text = displayText,
+                    x = x + 5,
+                    y = y + 15,
+                    opacity = selectConditionOpacity,
+                    shadow = true
                 )
                 // Gender
                 val gender = battlePokemon.gender
@@ -257,39 +257,39 @@ class BattleTargetSelection(
                     val isMale = gender == Gender.MALE
                     val textSymbol = if (isMale) "♂".text().bold() else "♀".text().bold()
                     drawScaledText(
-                            context = context,
-                            font = CobblemonResources.DEFAULT_LARGE,
-                            text = textSymbol,
-                            x = x + 6 + pokemonDisplayNameWidth,
-                            y = y + 15,
-                            colour = if (isMale) 0x32CBFF else 0xFC5454,
-                            opacity = selectConditionOpacity,
-                            shadow = true
+                        context = context,
+                        font = CobblemonResources.DEFAULT_LARGE,
+                        text = textSymbol,
+                        x = x + 6 + pokemonDisplayNameWidth,
+                        y = y + 15,
+                        colour = if (isMale) 0x32CBFF else 0xFC5454,
+                        opacity = selectConditionOpacity,
+                        shadow = true
                     )
                 }
 
                 // Lower Battle Role
                 blitk(
-                        matrixStack = matrices,
-                        texture = battleRoleLower,
-                        x = x + 4,
-                        y = y + 29,
-                        width = 82,
-                        height = 3,
-                        red = rgb.first,
-                        green = rgb.second,
-                        blue = rgb.third,
+                    matrixStack = matrices,
+                    texture = battleRoleLower,
+                    x = x + 4,
+                    y = y + 29,
+                    width = 82,
+                    height = 3,
+                    red = rgb.first,
+                    green = rgb.second,
+                    blue = rgb.third
                 )
 
                 // Actor Display Name
                 drawScaledText(
-                        context = context,
-                        text = target.actor.displayName,
-                        x = x + 3,
-                        y = y + 26,
-                        scale = 0.5F,
-                        shadow = true,
-                        opacity = selectConditionOpacity,
+                    context = context,
+                    text = target.actor.displayName,
+                    x = x + 3,
+                    y = y + 26,
+                    scale = 0.5F,
+                    shadow = true,
+                    opacity = selectConditionOpacity
                 )
             }
         }
@@ -312,24 +312,24 @@ class BattleTargetSelection(
 
         // Draw Background
         blitk(
-                matrixStack = context.pose(),
-                texture = underlayTexture,
-                x = x,
-                y = y,
-                width = Minecraft.getInstance().window.guiScaledWidth,
-                height = 148,
+            matrixStack = context.pose(),
+            texture = underlayTexture,
+            x = x,
+            y = y,
+            width = Minecraft.getInstance().window.guiScaledWidth,
+            height = BACKGROUND_HEIGHT
         )
 
         // Draw Title Text
         val text = lang("battle.select_target")
         val width = Minecraft.getInstance().font.width(text)
         drawScaledText(
-                context = context,
-                text = text,
-                x = (Minecraft.getInstance().window.guiScaledWidth - width) / 2,
-                y = y + if (request.activePokemon.getSidePokemon().count() == 2) 25 else 16,
-                scale = 1F,
-                shadow = true,
+            context = context,
+            text = text,
+            x = (Minecraft.getInstance().window.guiScaledWidth - width) / 2,
+            y = y + if (request.activePokemon.getSidePokemon().count() == 2) 25 else 16,
+            scale = 1F,
+            shadow = true
         )
 
         targetTiles.forEach {

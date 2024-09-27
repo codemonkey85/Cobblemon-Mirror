@@ -14,7 +14,10 @@ import com.cobblemon.mod.common.api.text.gray
 import com.cobblemon.mod.common.api.text.green
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.block.entity.HealingMachineBlockEntity
-import com.cobblemon.mod.common.util.*
+import com.cobblemon.mod.common.util.asTranslated
+import com.cobblemon.mod.common.util.isInBattle
+import com.cobblemon.mod.common.util.lang
+import com.cobblemon.mod.common.util.party
 import com.mojang.serialization.MapCodec
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -31,7 +34,12 @@ import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.*
+import net.minecraft.world.level.block.BaseEntityBlock
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.HorizontalDirectionalBlock
+import net.minecraft.world.level.block.Mirror
+import net.minecraft.world.level.block.RenderShape
+import net.minecraft.world.level.block.Rotation
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -166,8 +174,8 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
             return InteractionResult.SUCCESS
         }
 
-        if (blockEntity.canHeal(player)) {
-            blockEntity.activate(player)
+        if (blockEntity.canHeal(party)) {
+            blockEntity.activate(player.uuid, party)
             player.sendSystemMessage(lang("healingmachine.healing").green(), true)
         } else {
             val neededCharge = player.party().getHealingRemainderPercent() - blockEntity.healingCharge
@@ -220,5 +228,4 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
         tooltip.add("block.${Cobblemon.MODID}.healing_machine.tooltip1".asTranslated().gray())
         tooltip.add("block.${Cobblemon.MODID}.healing_machine.tooltip2".asTranslated().gray())
     }
-
 }

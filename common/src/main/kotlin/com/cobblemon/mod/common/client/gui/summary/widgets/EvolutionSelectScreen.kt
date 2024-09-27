@@ -100,6 +100,8 @@ class EvolutionSelectScreen(
             val y = rowTop
             val matrices = context.pose()
 
+            state.currentAspects = evolution.aspects
+
             blitk(
                 matrixStack = matrices,
                 texture = slotResource,
@@ -138,7 +140,6 @@ class EvolutionSelectScreen(
             matrices.scale(2.5F, 2.5F, 1F)
             drawProfilePokemon(
                 species = this.evolution.species.resourceIdentifier,
-                aspects = this.evolution.aspects,
                 matrixStack = matrices,
                 rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),
                 state = state,

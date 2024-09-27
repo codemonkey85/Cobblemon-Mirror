@@ -38,8 +38,7 @@ object CobblemonStructures {
         val templatePoolRegistry = server.registryAccess().registryOrThrow(Registries.TEMPLATE_POOL)
         val processorListRegistry = server.registryAccess().registryOrThrow(Registries.PROCESSOR_LIST)
 
-        //No pokecenters yet
-        //addPokecenters(templatePoolRegistry, processorListRegistry);
+        addPokecenters(templatePoolRegistry, processorListRegistry)
         //addLongPaths(templatePoolRegistry, processorListRegistry);
         addBerryFarms(templatePoolRegistry, processorListRegistry)
     }
@@ -159,7 +158,7 @@ object CobblemonStructures {
             templatePoolRegistry,
             processorListRegistry,
             plainsHousesPoolLocation,
-            CobblemonStructureIDs.PLAINS_POKECENTER,
+            CobblemonStructureIDs.VILLAGE_PLAINS_POKECENTER,
             pokecenterWeight,
             StructureTemplatePool.Projection.RIGID,
             EMPTY_PROCESSOR_LIST_KEY
@@ -168,7 +167,7 @@ object CobblemonStructures {
             templatePoolRegistry,
             processorListRegistry,
             desertHousesPoolLocation,
-            CobblemonStructureIDs.DESERT_POKECENTER,
+            CobblemonStructureIDs.VILLAGE_DESERT_POKECENTER,
             pokecenterWeight,
             StructureTemplatePool.Projection.RIGID,
             EMPTY_PROCESSOR_LIST_KEY
@@ -177,7 +176,7 @@ object CobblemonStructures {
             templatePoolRegistry,
             processorListRegistry,
             savannaHousesPoolLocation,
-            CobblemonStructureIDs.SAVANNA_POKECENTER,
+            CobblemonStructureIDs.VILLAGE_SAVANNA_POKECENTER,
             pokecenterWeight,
             StructureTemplatePool.Projection.RIGID,
             EMPTY_PROCESSOR_LIST_KEY
@@ -186,7 +185,7 @@ object CobblemonStructures {
             templatePoolRegistry,
             processorListRegistry,
             snowyHousesPoolLocation,
-            CobblemonStructureIDs.SNOWY_POKECENTER,
+            CobblemonStructureIDs.VILLAGE_SNOWY_POKECENTER,
             pokecenterWeight,
             StructureTemplatePool.Projection.RIGID,
             EMPTY_PROCESSOR_LIST_KEY
@@ -195,7 +194,7 @@ object CobblemonStructures {
             templatePoolRegistry,
             processorListRegistry,
             taigaHousesPoolLocation,
-            CobblemonStructureIDs.TAIGA_POKECENTER,
+            CobblemonStructureIDs.VILLAGE_TAIGA_POKECENTER,
             pokecenterWeight,
             StructureTemplatePool.Projection.RIGID,
             ProcessorLists.MOSSIFY_10_PERCENT

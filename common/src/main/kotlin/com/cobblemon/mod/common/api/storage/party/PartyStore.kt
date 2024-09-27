@@ -257,16 +257,18 @@ open class PartyStore(override val uuid: UUID) : PokemonStore<PartyPosition>() {
         return totalPercent
     }
 
-
-    fun toBattleTeam(clone: Boolean = false, checkHealth: Boolean = true, leadingPokemon: UUID? = null) : List<BattlePokemon> {
+    @JvmOverloads
+    fun toBattleTeam(clone: Boolean = false, healPokemon: Boolean = false, leadingPokemon: UUID? = null) : List<BattlePokemon> {
         val result = this.mapNotNull {
             return@mapNotNull if (clone) {
                 BattlePokemon.safeCopyOf(it)
             } else {
                 BattlePokemon.playerOwned(it)
-            }
+            }.also { if (healPokemon) it.effectedPokemon.heal() }
         }.toMutableList()
-        Collections.rotate(result, result.size - this.indexOfFirst { it.uuid == leadingPokemon })
+        if(leadingPokemon != null) {
+            Collections.rotate(result, result.size - this.indexOfFirst { it.uuid == leadingPokemon })
+        }
         return result
     }
     fun clearParty() {

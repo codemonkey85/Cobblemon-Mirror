@@ -18,7 +18,7 @@ public class LambDynamicLightsCompatEntrypoint implements DynamicLightsInitializ
     @Override
     public void onInitializeDynamicLights() {
         LambDynamicLightsCompat.hookCompat();
-        Cobblemon.INSTANCE.getLOGGER().info("Lamb Dynamic Lights compatibility enabled");
+        Cobblemon.LOGGER.info("Lamb Dynamic Lights compatibility enabled");
     }
 
 }

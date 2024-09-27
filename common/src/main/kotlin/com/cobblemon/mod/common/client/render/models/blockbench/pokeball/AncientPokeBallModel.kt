@@ -34,14 +34,14 @@ class AncientPokeBallModel(root: ModelPart) : PokeBallModel(root), PokeBallFrame
 
         shut = registerPose(
             poseName = "shut",
-            poseTypes = setOf(PoseType.NONE),
+            poseTypes = setOf(PoseType.NONE, PoseType.PORTRAIT),
             animations = arrayOf(bedrock("ancient_poke_ball", "shut_idle")),
             transformTicks = 0
         )
 
         open = registerPose(
             poseName = "open",
-            poseTypes = setOf(PoseType.NONE),
+            poseTypes = setOf(PoseType.NONE, PoseType.PORTRAIT),
             animations = arrayOf(bedrock("ancient_poke_ball", "open_idle")),
             transformTicks = 0
         )

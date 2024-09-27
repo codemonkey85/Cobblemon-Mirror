@@ -8,13 +8,13 @@
 
 package com.cobblemon.mod.common.api.storage.player.client
 
-import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.api.storage.player.GeneralPlayerData
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.readIdentifier
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeIdentifier
-import com.cobblemon.mod.common.util.writeNullable
 import com.cobblemon.mod.common.util.writeString
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
@@ -33,6 +33,7 @@ data class ClientGeneralPlayerData(
     var starterLocked: Boolean = true,
     var starterSelected: Boolean = false,
     var starterUUID: UUID? = null,
+    var showChallengeLabel: Boolean = true,
     val battleTheme: ResourceLocation? = null
 ) : ClientInstancedPlayerData {
 
@@ -40,6 +41,7 @@ data class ClientGeneralPlayerData(
         buf.writeBoolean(promptStarter)
         buf.writeBoolean(starterLocked)
         buf.writeBoolean(starterSelected)
+        buf.writeBoolean(showChallengeLabel)
         val starterUUID = starterUUID
         buf.writeNullable(starterUUID) { pb, value -> pb.writeString(value.toString()) }
         buf.writeNullable(resetStarters) { pb, value -> pb.writeBoolean(value) }
@@ -51,6 +53,7 @@ data class ClientGeneralPlayerData(
             val promptStarter = buffer.readBoolean()
             val starterLocked = buffer.readBoolean()
             val starterSelected = buffer.readBoolean()
+            val showChallengeLabel = buffer.readBoolean()
             val starterUUID = buffer.readNullable { it.readString() }?.let { UUID.fromString(it) }
             val resetStarterPrompt = buffer.readNullable { it.readBoolean() }
             val battleTheme = buffer.readNullable { it.readIdentifier() }
@@ -60,6 +63,7 @@ data class ClientGeneralPlayerData(
                 starterLocked,
                 starterSelected,
                 starterUUID,
+                showChallengeLabel,
                 battleTheme
             )
             //Weird to do this, but since the flag doesn't get passed to the decoded obj, do it here
@@ -68,7 +72,7 @@ data class ClientGeneralPlayerData(
                 CobblemonClient.checkedStarterScreen = false
                 CobblemonClient.overlay.resetAttachedToast()
             }
-            return SetClientPlayerDataPacket(PlayerInstancedDataStoreType.GENERAL, data)
+            return SetClientPlayerDataPacket(PlayerInstancedDataStoreTypes.GENERAL, data)
         }
 
         fun runAction(data: ClientInstancedPlayerData) {

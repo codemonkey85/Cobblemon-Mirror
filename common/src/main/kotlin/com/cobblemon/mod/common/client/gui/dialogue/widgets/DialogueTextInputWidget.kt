@@ -28,7 +28,7 @@ class DialogueTextInputWidget(
     y: Int,
     width: Int,
     height: Int,
-    maxLength: Int = 100
+    maxLength: Int = 30
 ) : EditBox(
     Minecraft.getInstance().font,
     x,
@@ -76,7 +76,7 @@ class DialogueTextInputWidget(
             context = context,
             text = (if (isFocused) "$value|" else value).text(),
             x = x + width / 2F,
-            y = y + height / 2 - 4,
+            y = y + (height / 2) - 3,
             shadow = true,
             colour = 0xFFFFFF
         )
