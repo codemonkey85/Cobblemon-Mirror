@@ -94,7 +94,8 @@
 - Fixed Duskull and Dusclops using skylight levels for their nether spawn data. There is no sun in the Nether!
 - Fixed Hisuian Zoroark using base Zoroark stats. 
 - Fixed Bellossom clipping into the player head when shoulder mounted.
-- Fixed Shroomish's look range to prevent it from looking higher than it should. 
+- Fixed Shroomish's look range to prevent it from looking higher than it should.
+- Fixed Cetitan's cry breaking its walk and sleep animations. 
 - Fixed Crumbling Arch not blending in with the world.
 - Fixed Energy Root applying being usable on a fainted Pokémon.
 - Fixed Pokémon entity not spawning when starting a battle while recalling said Pokémon.
