@@ -207,6 +207,8 @@ open class PokemonEntity(
 
     var queuedToDespawn = false
 
+    var enablePoseTypeRecalculation = true
+
     /**
      * The amount of steps this entity has traveled.
      */
@@ -540,6 +542,9 @@ open class PokemonEntity(
         if (entityData.get(FREEZE_FRAME) != -1F) {
             nbt.putFloat(DataKeys.POKEMON_FREEZE_FRAME, entityData.get(FREEZE_FRAME))
         }
+        if (!enablePoseTypeRecalculation) {
+            nbt.putBoolean(DataKeys.POKEMON_RECALCULATE_POSE, enablePoseTypeRecalculation)
+        }
 
         // save active effects
         nbt.put(DataKeys.ENTITY_EFFECTS, effects.saveToNbt(this.level().registryAccess()))
@@ -620,6 +625,9 @@ open class PokemonEntity(
         }
         if (nbt.contains(DataKeys.POKEMON_COUNTS_TOWARDS_SPAWN_CAP)) {
             countsTowardsSpawnCap = nbt.getBoolean(DataKeys.POKEMON_COUNTS_TOWARDS_SPAWN_CAP)
+        }
+        if (nbt.contains(DataKeys.POKEMON_RECALCULATE_POSE)) {
+            enablePoseTypeRecalculation = nbt.getBoolean(DataKeys.POKEMON_RECALCULATE_POSE)
         }
 
         CobblemonEvents.POKEMON_ENTITY_LOAD.postThen(
