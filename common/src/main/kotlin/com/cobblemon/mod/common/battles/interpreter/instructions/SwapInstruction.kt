@@ -87,16 +87,18 @@ class SwapInstruction(val message: BattleMessage, val instructionSet: Instructio
                 // Notify clients of the swap
                 battle.sendUpdate(BattleSwapPokemonPacket(pnxA))
 
-                // Send battle message
-                val lastCauser = instructionSet.getMostRecentCauser(comparedTo = this)
-                val lang = if (lastCauser is MoveInstruction && lastCauser.move.name == "allyswitch") {
-                    // Ally Switch
-                    battleLang("activate.allyswitch", battlePokemonA.getName(), activePokemonB.battlePokemon?.getName() ?: "")
-                } else {
-                    // Triple battle shift
-                    battleLang("shift", battlePokemonA.getName())
+                if (!message.hasOptionalArgument("silent")) {
+                    // Send battle message
+                    val lastCauser = instructionSet.getMostRecentCauser(comparedTo = this)
+                    val lang = if (lastCauser is MoveInstruction && lastCauser.move.name == "allyswitch") {
+                        // Ally Switch
+                        battleLang("activate.allyswitch", battlePokemonA.getName(), activePokemonB.battlePokemon?.getName() ?: "")
+                    } else {
+                        // Triple battle shift
+                        battleLang("shift", battlePokemonA.getName())
+                    }
+                    battle.broadcastChatMessage(lang)
                 }
-                battle.broadcastChatMessage(lang)
             }
         }
 
