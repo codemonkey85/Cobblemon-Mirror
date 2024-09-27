@@ -266,7 +266,9 @@ open class PartyStore(override val uuid: UUID) : PokemonStore<PartyPosition>() {
                 BattlePokemon.playerOwned(it)
             }.also { if (healPokemon) it.effectedPokemon.heal() }
         }.toMutableList()
-        Collections.rotate(result, result.size - this.indexOfFirst { it.uuid == leadingPokemon })
+        if(leadingPokemon != null) {
+            Collections.rotate(result, result.size - this.indexOfFirst { it.uuid == leadingPokemon })
+        }
         return result
     }
     fun clearParty() {
