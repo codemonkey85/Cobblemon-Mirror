@@ -27,8 +27,8 @@ class TexturedModel {
     @SerializedName("minecraft:geometry")
     val geometry: List<ModelGeometry>? = null
 
-    fun create(isForLivingEntityRenderer: Boolean) : LayerDefinition {
-        return createWithUvOverride(isForLivingEntityRenderer, 0, 0, null, null)
+    fun create() : LayerDefinition {
+        return createWithUvOverride(0, 0, null, null)
     }
 
     fun resolveParentsFromRoot(boneMap: MutableMap<String, ModelBone>, bone: ModelBone): Set<ModelBone> {
@@ -147,7 +147,7 @@ class TexturedModel {
 //        return modelBuilder.build()
 //    }
 
-    fun createWithUvOverride(isForLivingEntityRenderer: Boolean, u: Int, v: Int, textureWidth: Int?, textureHeight: Int?) : LayerDefinition {
+    fun createWithUvOverride(u: Int, v: Int, textureWidth: Int?, textureHeight: Int?) : LayerDefinition {
         val modelData = MeshDefinition()
         val parts = HashMap<String, PartDefinition>()
         val bones = HashMap<String, ModelBone>()
@@ -185,7 +185,7 @@ class TexturedModel {
                 when {
                     bone.parent == null -> {
                         // The root part always has a 24 Y offset. One of life's great mysteries.
-                        modelTransform = PartPose.offset(0F, if (isForLivingEntityRenderer) 24F else 0F, 0F)
+                        modelTransform = PartPose.offset(0F, /*if (isForLivingEntityRenderer) 24F else */0F, 0F)
                     }
                     boneRotation != null -> {
                         modelTransform = PartPose.offsetAndRotation(

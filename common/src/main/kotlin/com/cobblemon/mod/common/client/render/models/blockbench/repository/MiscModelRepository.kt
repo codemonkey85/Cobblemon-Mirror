@@ -38,7 +38,7 @@ object MiscModelRepository : JsonDataRegistry<TexturedModel> {
 
     override fun reload(data: Map<ResourceLocation, TexturedModel>) {
         data.forEach { (identifier, model) ->
-            this.models[identifier] = model.create(false).bakeRoot()
+            this.models[identifier] = model.create().bakeRoot()
         }
         observable.emit(this)
         Cobblemon.LOGGER.info("Loaded {} misc models",this.models.size)

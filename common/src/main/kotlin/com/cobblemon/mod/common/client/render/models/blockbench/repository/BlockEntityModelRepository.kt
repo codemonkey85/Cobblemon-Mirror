@@ -25,6 +25,5 @@ object BlockEntityModelRepository : VaryingModelRepository<BlockEntityModel>() {
     override val modelDirectories: List<String> = listOf("bedrock/$type/models")
     override val animationDirectories: List<String> = listOf("bedrock/$type/animations")
     override val fallback = cobblemonResource("substitute")
-    override val isForLivingEntityRenderer = false
     override fun registerInBuiltPosers() {}
 }

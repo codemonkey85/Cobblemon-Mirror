@@ -23,7 +23,6 @@ object FossilModelRepository : VaryingModelRepository<FossilModel>() {
     override val modelDirectories: List<String> = listOf("bedrock/$type/models")
     override val animationDirectories: List<String> = listOf("bedrock/$type/animations")
     override val fallback = cobblemonResource("substitute")
-    override val isForLivingEntityRenderer = false
 
 //    override fun loadJsonPoser(json: String): (Bone) -> FossilModel {
 //        val jsonObject = gson.fromJson<JsonObject>(json)

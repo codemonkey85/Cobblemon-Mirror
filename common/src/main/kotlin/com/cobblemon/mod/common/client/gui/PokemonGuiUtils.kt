@@ -101,7 +101,11 @@ fun drawProfilePokemon(
         state.updatePartialTicks(partialTicks)
         model.applyAnimations(null, state, 0F, 0F, 0F, 0F, 0F)
         if (applyProfileTransform) {
-            matrixStack.translate(model.profileTranslation.x, model.profileTranslation.y, model.profileTranslation.z - 4.0)
+            matrixStack.translate(
+                model.profileTranslation.x,
+                model.profileTranslation.y + 1.5 * model.profileScale,
+                model.profileTranslation.z - 4.0
+            )
             matrixStack.scale(model.profileScale, model.profileScale, 1 / model.profileScale)} else {
             matrixStack.translate(0F, 0F, -4.0F)
             if (applyBaseScale) {

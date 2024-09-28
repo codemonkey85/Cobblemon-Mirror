@@ -31,7 +31,6 @@ object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
     override val poserDirectories = listOf("bedrock/$type/posers", "bedrock/posers")
     override val modelDirectories = listOf("bedrock/$type/models", "bedrock/models")
     override val animationDirectories: List<String> = listOf("bedrock/animations", "bedrock/$type/animations")
-    override val isForLivingEntityRenderer = true
 
     override val fallback = cobblemonResource("substitute")
 

@@ -52,7 +52,7 @@ abstract class VaryingModelRepository<T : PosableModel> {
     abstract val poserClass: Class<T>
     val posers = mutableMapOf<ResourceLocation, (Bone) -> T>()
     val variations = mutableMapOf<ResourceLocation, VaryingRenderableResolver<T>>()
-    val texturedModels = mutableMapOf<ResourceLocation, (isForLivingEntityRenderer: Boolean) -> Bone>()
+    val texturedModels = mutableMapOf<ResourceLocation, Bone>()
 
     abstract val title: String
     abstract val type: String
@@ -61,8 +61,6 @@ abstract class VaryingModelRepository<T : PosableModel> {
     abstract val modelDirectories: List<String>
     abstract val animationDirectories: List<String>
     abstract val fallback: ResourceLocation
-    /** When using the living entity renderer in Java Edition, a root joint 24F (1.5) Y offset is necessary. I've no fucking idea why. */
-    abstract val isForLivingEntityRenderer: Boolean
 
     val gson: Gson by lazy {
         GsonBuilder()
@@ -172,7 +170,7 @@ abstract class VaryingModelRepository<T : PosableModel> {
                 resourceManager.listResources(directory) { path -> path.endsWith(key) }
                     .map { func.apply(it.key, it.value) }
                     .forEach {
-                        texturedModels[it.first] = { isForLivingEntityRenderer -> it.second.apply(isForLivingEntityRenderer) }
+                        texturedModels[it.first] = it.second
                         models++
                     }
             }
@@ -241,7 +239,7 @@ abstract class VaryingModelRepository<T : PosableModel> {
     }
 
     companion object {
-        fun registerFactory(id: String, factory: BiFunction<ResourceLocation, Resource, Pair<ResourceLocation, Function<Boolean, Bone>>>) {
+        fun registerFactory(id: String, factory: BiFunction<ResourceLocation, Resource, Pair<ResourceLocation, Bone>>) {
             MODEL_FACTORIES[id] = factory
         }
 
@@ -249,15 +247,14 @@ abstract class VaryingModelRepository<T : PosableModel> {
             Needs to be java function to work with non kotlin sidemods.
             - Waterpicker
          */
-        private var MODEL_FACTORIES = mutableMapOf<String, BiFunction<ResourceLocation, Resource, Pair<ResourceLocation, Function<Boolean, Bone>>>>().also {
-            it[".geo.json"] = BiFunction<ResourceLocation, Resource, Pair<ResourceLocation, Function<Boolean, Bone>>> { identifier: ResourceLocation, resource: Resource ->
+        private var MODEL_FACTORIES = mutableMapOf<String, BiFunction<ResourceLocation, Resource, Pair<ResourceLocation, Bone>>>().also {
+            it[".geo.json"] = BiFunction<ResourceLocation, Resource, Pair<ResourceLocation, Bone>> { identifier: ResourceLocation, resource: Resource ->
                 resource.open().use { stream ->
                     val json = String(stream.readAllBytes(), StandardCharsets.UTF_8)
                     val resolvedIdentifier = ResourceLocation.fromNamespaceAndPath(identifier.namespace, File(identifier.path).nameWithoutExtension)
 
                     val texturedModel = TexturedModel.from(json)
-                    val boneCreator: Function<Boolean, Bone> = Function { texturedModel.create(it).bakeRoot() }
-                    Pair(resolvedIdentifier, boneCreator)
+                    resolvedIdentifier to texturedModel.create().bakeRoot()
                 }
             }
         }

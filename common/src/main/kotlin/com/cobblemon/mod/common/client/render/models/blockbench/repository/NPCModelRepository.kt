@@ -21,6 +21,5 @@ object NPCModelRepository : VaryingModelRepository<PosableModel>() {
     override val animationDirectories: List<String> = listOf("bedrock/$type/animations")
 
     override val fallback = cobblemonResource("npc")
-    override val isForLivingEntityRenderer = true
     override fun registerInBuiltPosers() {}
 }

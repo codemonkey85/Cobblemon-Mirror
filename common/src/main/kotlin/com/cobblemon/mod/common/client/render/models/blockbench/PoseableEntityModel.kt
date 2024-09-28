@@ -8,8 +8,10 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench
 
+import com.cobblemon.mod.common.client.entity.PokemonClientDelegate
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.entity.PosableEntity
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.client.renderer.RenderType
 import com.mojang.blaze3d.vertex.VertexConsumer
@@ -46,6 +48,10 @@ abstract class PosableEntityModel<T : Entity>(
     ) {
         val entity = context.request(RenderContext.ENTITY)
         val overlay = getOverlayTexture(entity) ?: packedOverlay
+        if (entity is LivingEntity) {
+            // We're using the living entity renderer, ergo we need to apply a Y offset of 24 model units (1.5 blocks) for reasons only God can tell us.
+            stack.translate(0.0, 1.5, 0.0)
+        }
         posableModel.render(context, stack, buffer, packedLight, overlay, color)
     }
 

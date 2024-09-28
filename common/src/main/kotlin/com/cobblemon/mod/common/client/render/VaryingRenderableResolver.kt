@@ -103,7 +103,7 @@ class VaryingRenderableResolver<T : PosableModel>(
         posers.clear()
         getAllModels().forEach { identifier ->
             try {
-                models[identifier] = repository.texturedModels[identifier]!!.invoke(repository.isForLivingEntityRenderer)
+                models[identifier] = repository.texturedModels[identifier]!!
             } catch (e: Exception) {
                 throw IllegalStateException("Unable to load model $identifier for $name", e)
             }

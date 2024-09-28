@@ -58,14 +58,12 @@ object BerryModelRepository : JsonDataRegistry<TexturedModel> {
             val fruitTex = CobblemonAtlases.BERRY_SPRITE_ATLAS.getSprite(fruitTexId)
             val flowerTex = CobblemonAtlases.BERRY_SPRITE_ATLAS.getSprite(flowerTexId)
             processedModels[it.fruitModelIdentifier] = fruitModel?.createWithUvOverride(
-                false,
                 fruitTex.x,
                 fruitTex.y,
                 CobblemonAtlases.BERRY_SPRITE_ATLAS.textureAtlas.width,
                 CobblemonAtlases.BERRY_SPRITE_ATLAS.textureAtlas.height
             )?.bakeRoot()!!
             processedModels[it.flowerModelIdentifier] = flowerModel?.createWithUvOverride(
-                false,
                 flowerTex.x,
                 flowerTex.y,
                 CobblemonAtlases.BERRY_SPRITE_ATLAS.textureAtlas.width,

@@ -71,9 +71,6 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
     @Transient
     lateinit var context: RenderContext
 
-    /** Whether the renderer that will process this is going to do the weird -1.5 Y offset bullshit that the living entity renderer does. */
-    @Transient
-    open var isForLivingEntityRenderer = true
 
     var poses = mutableMapOf<String, Pose>()
 
@@ -695,11 +692,6 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
             matrixStack.mulPose(Axis.YP.rotationDegrees(180 - entity.yBodyRot))
             matrixStack.pushPose()
             matrixStack.scale(-1F, -1F, 1F)
-        }
-
-        if (isForLivingEntityRenderer) {
-            // Standard living entity offset, only God knows why Mojang did this.
-            matrixStack.translate(0.0, -1.5, 0.0)
         }
 
         locatorAccess.update(matrixStack, entity, scale, state.locatorStates, isRoot = true)

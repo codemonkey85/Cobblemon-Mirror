@@ -225,6 +225,7 @@ fun drawPosablePortrait(
     matrixStack.pushPose()
     matrixStack.translate(0.0, PORTRAIT_DIAMETER.toDouble() + 2.0, 0.0)
     matrixStack.scale(scale, scale, -scale)
+//    matrixStack.translate(0.0, 1.5 * contextScale , 0.0)
     matrixStack.translate(0.0, -PORTRAIT_DIAMETER / 18.0, 0.0)
 
     val sprite = repository.getSprite(identifier, state, SpriteType.PORTRAIT);
@@ -255,7 +256,7 @@ fun drawPosablePortrait(
 
         matrixStack.translate(
             model.portraitTranslation.x * if (reversed) -1F else 1F,
-            model.portraitTranslation.y,
+            model.portraitTranslation.y + 1.5 * model.portraitScale,
             model.portraitTranslation.z - 4
         )
         matrixStack.scale(model.portraitScale, model.portraitScale, 1 / model.portraitScale)
@@ -319,7 +320,11 @@ fun drawProfile(
         state.setPoseToFirstSuitable(PoseType.PORTRAIT)
         state.updatePartialTicks(partialTicks)
         model.applyAnimations(null, state, 0F, 0F, 0F, 0F, 0F)
-        matrixStack.translate(model.profileTranslation.x, model.profileTranslation.y, model.profileTranslation.z - 4.0)
+        matrixStack.translate(
+            model.profileTranslation.x,
+            model.profileTranslation.y + 1.5 * model.profileScale,
+            model.profileTranslation.z - 4.0
+        )
         matrixStack.scale(model.profileScale, model.profileScale, 1 / model.profileScale)
 //    matrixStack.multiply(rotation)
         val quaternion1 = Axis.YP.rotationDegrees(-32F * if (false) -1F else 1F)

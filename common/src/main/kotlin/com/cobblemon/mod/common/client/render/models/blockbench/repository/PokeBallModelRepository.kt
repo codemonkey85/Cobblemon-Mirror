@@ -22,7 +22,6 @@ object PokeBallModelRepository : VaryingModelRepository<PosableModel>() {
     override val poserDirectories: List<String> = listOf("bedrock/$type/posers")
     override val modelDirectories: List<String> = listOf("bedrock/$type/models")
     override val animationDirectories: List<String> = listOf("bedrock/$type/animations")
-    override val isForLivingEntityRenderer = false
 
     override val fallback = PokeBalls.POKE_BALL.name
 

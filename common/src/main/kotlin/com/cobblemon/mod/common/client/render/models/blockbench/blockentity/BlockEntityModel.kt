@@ -15,9 +15,6 @@ import net.minecraft.client.model.geom.ModelPart
 
 class BlockEntityModel(root: Bone) : PosableModel(root) {
     @Transient
-    @SerializedName("dummy")
-    override var isForLivingEntityRenderer = false
-    @Transient
     @SerializedName("Don't bloody deserialize this, Gson! I mean it!")
     override val rootPart = (root as ModelPart).children.entries.first().let { root.registerChildWithAllChildren(it.key) }
     var maxScale = 1F

@@ -80,7 +80,7 @@ class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         matrices.pushPose()
         matrices.translate(
             pX.toDouble() + 50,
-            pY.toDouble() + (POKEMON_DESCRIPTION_HEIGHT / 2) + 18.5 - baseScale * modelScale * 1.5,
+            pY.toDouble() + (POKEMON_DESCRIPTION_HEIGHT / 2) + 18.5,
             0.0
         )
         drawProfilePokemon(
