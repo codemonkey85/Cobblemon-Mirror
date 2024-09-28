@@ -122,13 +122,12 @@ class PokemonRenderer(
         if(true || entity.platform) {
             drawPlatform(
                     poseMatrix,
-                    1.0F,
+                    (entity.delegate as PokemonClientDelegate).entityScaleModifier,
                     partialTicks,
                     buffer,
                     packedLight,
-                    clientDelegate
             )
-            poseMatrix.translate(0.0, 0.25, 0.0)
+            poseMatrix.translate(0.0, 0.25 * (entity.delegate as PokemonClientDelegate).entityScaleModifier, 0.0)
         }
 
         modelNow.setLayerContext(buffer, clientDelegate, PokemonModelRepository.getLayers(entity.pokemon.species.resourceIdentifier, clientDelegate))
@@ -442,11 +441,11 @@ class PokemonRenderer(
             partialTicks: Float,
             buff: MultiBufferSource,
             packedLight: Int,
-            state: PosableState,
             ) {
         val model = MiscModelRepository.modelOf(cobblemonResource("water_platform_m.geo")) ?: return
         matrixStack.pushPose()
         matrixStack.mulPose(Axis.ZP.rotationDegrees(180f))
+        matrixStack.scale(scale, scale, scale)
         val texture = cobblemonResource("textures/platforms/water_platform_m.png")
         val buffer = ItemRenderer.getFoilBufferDirect(buff, RenderType.entityCutout(texture), false, false)
         model.render(matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
