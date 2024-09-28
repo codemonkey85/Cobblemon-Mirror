@@ -28,7 +28,7 @@ class PyukumukuModel(root: ModelPart) : PokemonPosableModel(root) {
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("pyukumuku", "sleep"))
+//            animations = arrayOf(bedrock("pyukumuku", "sleep"))
 //        )
 
         standing = registerPose(

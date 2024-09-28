@@ -1,0 +1,42 @@
+{
+  "timeline": [
+    {
+      "type": "add_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "animation",
+      "animation": ["q.move.name", "q.move.damage_category"],
+      "delay": 1.2
+    },
+    {
+      "type": "sequence",
+      "condition": "q.move.damage_category != 'status'",
+      "keyframes": [
+        {
+          "type": "entity_sound",
+          "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+          "sound": "'cobblemon:impact.normal"
+        },
+        {
+          "type": "entity_particles",
+          "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+          "effect": "cobblemon:impact_normal",
+          "locator": "target"
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "pause": 0.1
+    },
+    {
+      "type": "remove_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "pause",
+      "pause": 2
+    }
+  ]
+}

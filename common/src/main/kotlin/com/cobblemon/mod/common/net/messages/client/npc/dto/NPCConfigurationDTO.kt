@@ -9,7 +9,6 @@
 package com.cobblemon.mod.common.net.messages.client.npc.dto
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.net.Decodable
 import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.api.npc.NPCClasses
@@ -18,7 +17,6 @@ import com.cobblemon.mod.common.api.npc.configuration.NPCInteractConfiguration
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.util.*
-import com.mojang.datafixers.util.Either
 import io.netty.buffer.ByteBuf
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.MutableComponent
@@ -36,7 +34,7 @@ class NPCConfigurationDTO : Encodable, Decodable {
 
     constructor(npcEntity: NPCEntity) {
         npcName = npcEntity.name.copy()
-        npcClass = npcEntity.npc.resourceIdentifier
+        npcClass = npcEntity.npc.id
         battle = npcEntity.battle
         interactionInherited = npcEntity.interaction == null
         interaction = npcEntity.interaction ?: npcEntity.npc.interaction

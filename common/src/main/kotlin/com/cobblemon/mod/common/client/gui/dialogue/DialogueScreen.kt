@@ -18,7 +18,7 @@ import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.client.ClientMoLangFunctions.setupClient
 import com.cobblemon.mod.common.client.gui.dialogue.widgets.DialogueBox
-import com.cobblemon.mod.common.client.gui.dialogue.widgets.DialogueFaceWidget
+import com.cobblemon.mod.common.client.gui.dialogue.widgets.DialoguePortraitWidget
 import com.cobblemon.mod.common.client.gui.dialogue.widgets.DialogueNameWidget
 import com.cobblemon.mod.common.client.gui.dialogue.widgets.DialogueOptionWidget
 import com.cobblemon.mod.common.client.gui.dialogue.widgets.DialogueTextInputWidget
@@ -40,12 +40,12 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
     val speakers = dialogueDTO.speakers?.mapNotNull { (key, value) ->
         val name = value.name
         when (val face = value.face) {
-            is ArtificialDialogueFaceProvider -> key to DialogueRenderableSpeaker(name, ArtificialRenderableFace(face.modelType, face.identifier, face.aspects))
-            is PlayerDialogueFaceProvider -> key to DialogueRenderableSpeaker(name, PlayerRenderableFace(face.playerId))
+            is ArtificialDialogueFaceProvider -> key to DialogueRenderableSpeaker(name, ArtificialRenderableFace(face.modelType, face.identifier, face.aspects, face.isLeftSide))
+            is PlayerDialogueFaceProvider -> key to DialogueRenderableSpeaker(name, PlayerRenderableFace(face.playerId, face.isLeftSide))
             is ReferenceDialogueFaceProvider -> {
                 key to DialogueRenderableSpeaker(
                     name = name,
-                    face = ReferenceRenderableFace(Minecraft.getInstance().level?.getEntity(face.entityId) as? PosableEntity ?: return@mapNotNull null)
+                    face = ReferenceRenderableFace(Minecraft.getInstance().level?.getEntity(face.entityId) as? PosableEntity ?: return@mapNotNull null, face.isLeftSide)
                 )
             }
             else -> key to DialogueRenderableSpeaker(name, null)
@@ -63,7 +63,7 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
     lateinit var dialogueBox: DialogueBox
     lateinit var dialogueOptionWidgets: List<DialogueOptionWidget>
     lateinit var dialogueNameWidget: DialogueNameWidget
-    lateinit var dialogueFaceWidget: DialogueFaceWidget
+    lateinit var dialoguePortraitWidget: DialoguePortraitWidget
 
     val scaledWidth
         get() = this.minecraft!!.window.guiScaledWidth
@@ -71,27 +71,30 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
         get() = this.minecraft!!.window.guiScaledHeight
 
     companion object {
-        private const val BOX_WIDTH = 169
-        private const val BOX_HEIGHT = 47
+        const val BOX_WIDTH = 196
+        const val BOX_HEIGHT = 74
 
-        private const val BAR_WIDTH = 169
-        private const val BAR_HEIGHT = 13
+        const val PORTRAIT_WIDTH = 38
+        const val PORTRAIT_HEIGHT = 36
 
-        private const val OPTION_HEIGHT = 24
-        private const val OPTION_WIDTH_NARROW = 92
-        private const val OPTION_WIDTH_WIDE = 162
+        private const val BAR_WIDTH = 186
+        private const val BAR_HEIGHT = 4
 
-        private const val NAME_WIDTH = 120
-        private const val NAME_HEIGHT = 15
+        private const val OPTION_HEIGHT = 21
+        private const val OPTION_WIDTH_NARROW = 96
+        private const val OPTION_WIDTH_WIDE = 196
 
-        private const val TEXT_INPUT_WIDTH = 160
-        private const val TEXT_INPUT_HEIGHT = 16
+        private const val NAME_WIDTH = 196
+        private const val NAME_HEIGHT = 17
 
-        private const val OPTION_HORIZONTAL_SPACING = 12
-        private const val OPTION_VERTICAL_SPACING = 1
+        private const val TEXT_INPUT_WIDTH = 196
+        private const val TEXT_INPUT_HEIGHT = 21
 
-        private const val FACE_WIDTH = 38
-        private const val FACE_HEIGHT = 36
+        private const val OPTION_HORIZONTAL_SPACING = 4
+        private const val OPTION_VERTICAL_SPACING = 4
+
+        private val buttonResource = cobblemonResource("textures/gui/dialogue/dialogue_button.png")
+        private val buttonFullWidthResource = cobblemonResource("textures/gui/dialogue/dialogue_button_full.png")
 
         val dialogueMolangFunctions = mutableListOf<(DialogueScreen) -> HashMap<String, java.util.function.Function<MoParams, Any>>>(
             { dialogueScreen ->
@@ -110,32 +113,18 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
     override fun init() {
         super.init()
 
-        runtime.environment
-            .query
-            .addFunctions(
-                dialogueMolangFunctions
-                    .flatMap { it(this@DialogueScreen).entries }
-                    .associate { it.key to it.value }
-            )
+        runtime.environment.query
+        .addFunctions(
+            dialogueMolangFunctions
+                .flatMap { it(this@DialogueScreen).entries }
+                .associate { it.key to it.value }
+        )
 
         dialogueDTO.currentPageDTO.clientActions.forEach { runtime.resolve(it.asExpressionLike()) }
         val centerX = scaledWidth / 2F
-        val boxMinY = (scaledHeight / 2F - BOX_HEIGHT / 2F) - 10
+        val boxMinY = (scaledHeight / 2F) - (BOX_HEIGHT / 2F) - 30
         val boxMaxY = boxMinY + BOX_HEIGHT
-        dialogueTimerWidget = DialogueTimerWidget(
-            dialogueScreen = this,
-            x = (centerX - BAR_WIDTH / 2F).toInt(),
-            y = (boxMaxY + 4).toInt(),
-            width = BAR_WIDTH,
-            height = BAR_HEIGHT
-        )
-        dialogueTextInputWidget = DialogueTextInputWidget(
-            dialogueScreen = this,
-            x = (centerX - TEXT_INPUT_WIDTH / 2F).toInt(),
-            y = (boxMaxY + 16).toInt(),
-            width = TEXT_INPUT_WIDTH,
-            height = TEXT_INPUT_HEIGHT
-        )
+
         dialogueBox = DialogueBox(
             dialogueScreen = this,
             messages = dialogueDTO.currentPageDTO.lines,
@@ -144,29 +133,47 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
             frameWidth = BOX_WIDTH,
             height = BOX_HEIGHT
         )
+
         val name = speakers[dialogueDTO.currentPageDTO.speaker]?.name
         dialogueNameWidget = DialogueNameWidget(
             x = (centerX - BOX_WIDTH / 2F).toInt(),
-            y = (boxMinY - NAME_HEIGHT).toInt(),
+            y = (boxMinY - NAME_HEIGHT + 1).toInt(),
             width = NAME_WIDTH,
             height = NAME_HEIGHT,
             text = name
         )
-        dialogueFaceWidget = DialogueFaceWidget(
+
+        dialoguePortraitWidget = DialoguePortraitWidget(
             dialogueScreen = this,
-            x = (centerX - BOX_WIDTH / 2F - FACE_WIDTH).toInt(),
-            y = boxMinY.toInt(),
-            width = FACE_WIDTH,
-            height = FACE_HEIGHT
+            x = (centerX - BOX_WIDTH / 2F - PORTRAIT_WIDTH).toInt(),
+            y = (boxMinY - NAME_HEIGHT + 1).toInt(),
+            width = PORTRAIT_WIDTH,
+            height = PORTRAIT_HEIGHT
+        )
+
+        dialogueTimerWidget = DialogueTimerWidget(
+            dialogueScreen = this,
+            x = (centerX - BAR_WIDTH / 2F).toInt(),
+            y = (boxMaxY - 1).toInt(),
+            width = BAR_WIDTH,
+            height = BAR_HEIGHT
+        )
+
+        dialogueTextInputWidget = DialogueTextInputWidget(
+            dialogueScreen = this,
+            x = (centerX - BOX_WIDTH / 2F).toInt(),
+            y = (boxMaxY + 7).toInt(),
+            width = TEXT_INPUT_WIDTH,
+            height = TEXT_INPUT_HEIGHT
         )
 
         val optionCount = dialogueDTO.dialogueInput.options.size
-        val optionStartY = boxMaxY + 18
         val vertical = dialogueDTO.dialogueInput.vertical
-        val horizontalSpacing = if (vertical) 0 else (OPTION_HORIZONTAL_SPACING + OPTION_WIDTH_WIDE / 2)
+        val horizontalSpacing = if (vertical) 0 else (OPTION_HORIZONTAL_SPACING + OPTION_WIDTH_NARROW)
         val verticalSpacing = if (vertical) OPTION_VERTICAL_SPACING + OPTION_HEIGHT else 0
         val totalWidth = (optionCount - 1) * horizontalSpacing
-        val optionStartX = centerX - totalWidth / 2F
+        val optionStartX = centerX - (totalWidth / 2F)
+        val optionStartY = boxMaxY + 7
 
         dialogueOptionWidgets = dialogueDTO.dialogueInput.options.mapIndexed { index, option ->
             val x = optionStartX + (index * horizontalSpacing)
@@ -181,16 +188,7 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
                 y = y.toInt(),
                 width = if (vertical) OPTION_WIDTH_WIDE else OPTION_WIDTH_NARROW,
                 height = OPTION_HEIGHT,
-                texture = if (vertical) {
-                    cobblemonResource("textures/gui/dialogue/dialogue_button_wide.png")
-                } else {
-                    cobblemonResource("textures/gui/dialogue/dialogue_button_narrow.png")
-                },
-                overlayTexture = if (vertical) {
-                    cobblemonResource("textures/gui/dialogue/dialogue_button_wide_overlay.png")
-                } else {
-                    cobblemonResource("textures/gui/dialogue/dialogue_button_narrow_overlay.png")
-                }
+                texture = if (vertical) buttonFullWidthResource else buttonResource
             )
         }
 
@@ -199,7 +197,7 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
         addRenderableWidget(dialogueBox)
         dialogueOptionWidgets.forEach { addRenderableWidget(it) }
         addRenderableOnly(dialogueNameWidget)
-        addRenderableOnly(dialogueFaceWidget)
+        addRenderableOnly(dialoguePortraitWidget)
 
         if (dialogueDTO.dialogueInput.inputType == DialogueInputDTO.InputType.TEXT) {
             //focusOn(dialogueTextInputWidget)
@@ -208,10 +206,10 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
         dialogueDTO.currentPageDTO.clientActions.flatMap(String::asExpressions).resolve(runtime)
     }
 
-    override fun render(drawContext: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(GuiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         remainingSeconds -= delta / 20F
         dialogueTimerWidget.ratio = if (remainingSeconds <= 0) -1F else remainingSeconds / dialogueDTO.dialogueInput.deadline
-        super.render(drawContext, mouseX, mouseY, delta)
+        super.render(GuiGraphics, mouseX, mouseY, delta)
     }
 
     override fun isPauseScreen() = false

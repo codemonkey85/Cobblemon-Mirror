@@ -1,0 +1,51 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_smithing_trim_template": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:pokerod_smithing_template"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+	"has_ball": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:great_ball"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+	},
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "cobblemon:great_rod"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_smithing_trim_template",
+      "has_the_recipe"
+    ],
+	[
+	  "has_ball",
+	  "has_the_recipe"
+	]
+  ],
+  "rewards": {
+    "recipes": [
+      "cobblemon:great_rod"
+    ]
+  },
+  "sends_telemetry_event": false
+}

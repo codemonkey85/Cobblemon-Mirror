@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.api.entity
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.cobblemon.mod.common.pokemon.Pokemon
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -20,6 +21,6 @@ import java.util.concurrent.CompletableFuture
  *
  */
 interface PokemonSender {
-    fun sendingOut(): CompletableFuture<Unit>
+    fun sendingOut(pokemon: Pokemon): CompletableFuture<Unit>
     fun recalling(pokemonEntity: PokemonEntity): CompletableFuture<Unit>
 }

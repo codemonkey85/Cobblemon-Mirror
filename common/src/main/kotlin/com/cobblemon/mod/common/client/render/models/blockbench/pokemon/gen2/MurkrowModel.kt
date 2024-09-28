@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen2
 
+import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
@@ -33,6 +34,8 @@ class MurkrowModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
     lateinit var hover: Pose
     lateinit var fly: Pose
     lateinit var sleep: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("murkrow", "blink") }
         sleep = registerPose(
@@ -80,6 +83,24 @@ class MurkrowModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
                 singleBoneLook(),
                 bedrock("murkrow", "air_fly")
             )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                quirks = arrayOf(blink),
+                animations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("murkrow", "ground_idle")
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                quirks = arrayOf(blink),
+                animations = arrayOf(
+                        singleBoneLook(),
+                        bedrock("murkrow", "ground_idle")
+                )
         )
 
     }

@@ -40,6 +40,7 @@ class SpawnPokemonPacket(
     private val caughtBall: ResourceLocation,
     private val spawnYaw: Float,
     private val friendship: Int,
+    private val freezeFrame: Float,
     vanillaSpawnPacket: ClientboundAddEntityPacket
 ) : SpawnExtraDataEntityPacket<SpawnPokemonPacket, PokemonEntity>(vanillaSpawnPacket) {
 
@@ -62,6 +63,7 @@ class SpawnPokemonPacket(
         entity.pokemon.caughtBall.name,
         entity.entityData.get(PokemonEntity.SPAWN_DIRECTION),
         entity.entityData.get(PokemonEntity.FRIENDSHIP),
+        entity.entityData.get(PokemonEntity.FREEZE_FRAME),
         vanillaSpawnPacket
     )
 
@@ -82,6 +84,7 @@ class SpawnPokemonPacket(
         buffer.writeIdentifier(this.caughtBall)
         buffer.writeFloat(this.spawnYaw)
         buffer.writeInt(this.friendship)
+        buffer.writeFloat(this.freezeFrame)
     }
 
     override fun applyData(entity: PokemonEntity) {
@@ -105,6 +108,7 @@ class SpawnPokemonPacket(
         entity.entityData.set(PokemonEntity.HIDE_LABEL, hideLabel)
         entity.entityData.set(PokemonEntity.SPAWN_DIRECTION, spawnYaw)
         entity.entityData.set(PokemonEntity.FRIENDSHIP, friendship)
+        entity.entityData.set(PokemonEntity.FREEZE_FRAME, freezeFrame)
     }
 
     override fun checkType(entity: Entity): Boolean = entity is PokemonEntity
@@ -130,9 +134,10 @@ class SpawnPokemonPacket(
             val caughtBall = buffer.readIdentifier()
             val spawnAngle = buffer.readFloat()
             val friendship = buffer.readInt()
+            val freezeFrame = buffer.readFloat()
             val vanillaPacket = decodeVanillaPacket(buffer)
 
-            return SpawnPokemonPacket(ownerId, scaleModifier, species, form, aspects, battleId, phasingTargetId, beamModeEmitter, nickname, labelLevel, poseType, unbattlable, hideLabel, caughtBall, spawnAngle, friendship, vanillaPacket)
+            return SpawnPokemonPacket(ownerId, scaleModifier, species, form, aspects, battleId, phasingTargetId, beamModeEmitter, nickname, labelLevel, poseType, unbattlable, hideLabel, caughtBall, spawnAngle, friendship, freezeFrame, vanillaPacket)
         }
     }
 

@@ -47,6 +47,11 @@ abstract class AreaTypeSpawningCondition<T : AreaSpawningContext> : SpawningCond
             neededNearbyBlocks = merger.merge(neededNearbyBlocks, other.neededNearbyBlocks)?.toMutableList()
         }
     }
+
+    override fun isValid(): Boolean {
+        val containsNullValues = neededNearbyBlocks != null && neededNearbyBlocks!!.any {it == null}
+        return super.isValid() && !containsNullValues
+    }
 }
 
 /**

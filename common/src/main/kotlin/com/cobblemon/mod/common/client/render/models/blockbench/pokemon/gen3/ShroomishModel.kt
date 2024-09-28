@@ -50,7 +50,7 @@ class ShroomishModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
             quirks = arrayOf(blink),
             condition = { !it.isBattling },
             animations = arrayOf(
-                singleBoneLook(),
+                singleBoneLook(pitchMultiplier = 0.5F),
                 bedrock("shroomish", "ground_idle")
             )
         )
@@ -60,7 +60,7 @@ class ShroomishModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
             poseTypes = MOVING_POSES,
             quirks = arrayOf(blink),
             animations = arrayOf(
-                singleBoneLook(),
+                singleBoneLook(pitchMultiplier = 0.5F),
                 bedrock("shroomish", "ground_walk")
             )
         )
@@ -72,7 +72,7 @@ class ShroomishModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
             quirks = arrayOf(blink),
             condition = { it.isBattling },
             animations = arrayOf(
-                singleBoneLook(),
+                singleBoneLook(pitchMultiplier = 0.5F),
                 bedrock("shroomish", "battle_idle")
             )
         )

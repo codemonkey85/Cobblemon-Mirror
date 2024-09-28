@@ -37,7 +37,7 @@
 				"linear_drag_coefficient": "math.random(4,5) / (math.clamp(q.entity_size,1,2))"
 			},
 			"minecraft:particle_appearance_billboard": {
-				"size": ["0.15 * math.clamp(q.entity_size,1,2)", "0.15 * math.clamp(q.entity_size,1,2)"],
+				"size": ["0.175 * math.max(q.entity_size,1)", "0.175 * math.max(q.entity_size,1)"],
 				"facing_camera_mode": "rotate_xyz",
 				"uv": {
 					"texture_width": 8,

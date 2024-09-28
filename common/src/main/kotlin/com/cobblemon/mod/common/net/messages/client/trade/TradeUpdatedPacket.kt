@@ -30,12 +30,12 @@ import java.util.UUID
 class TradeUpdatedPacket(val playerId: UUID, val pokemon: Pokemon?) : NetworkPacket<TradeUpdatedPacket>, UnsplittablePacket {
     companion object {
         val ID = cobblemonResource("trade_updated")
-        fun decode(buffer: RegistryFriendlyByteBuf) = TradeUpdatedPacket(buffer.readUUID(), buffer.readNullable(Pokemon.S2C_CODEC::decode))
+        fun decode(buffer: RegistryFriendlyByteBuf) = TradeUpdatedPacket(buffer.readUUID(), buffer.readNullable { Pokemon.S2C_CODEC.decode(buffer) })
     }
 
     override val id = ID
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeUUID(playerId)
-        buffer.writeNullable(pokemon, Pokemon.S2C_CODEC::encode)
+        buffer.writeNullable(pokemon) { _, pokemon -> Pokemon.S2C_CODEC.encode(buffer, pokemon) }
     }
 }

@@ -10,8 +10,6 @@ package com.cobblemon.mod.common.api.spawning.fishing
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.Cobblemon.LOGGER
-import com.cobblemon.mod.common.api.Priority
-import com.cobblemon.mod.common.api.abilities.Abilities
 import com.cobblemon.mod.common.api.fishing.FishingBait
 import com.cobblemon.mod.common.api.pokemon.Natures
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
@@ -58,7 +56,7 @@ class FishingSpawnCause(
             entity.pokemon.forcedAspects += FISHED_ASPECT
 
             bait?.effects?.forEach { it ->
-                if (Math.random() < it.chance) return
+                if (Math.random() > it.chance) return
                 when (it.type) {
                     FishingBait.Effects.SHINY_REROLL -> shinyReroll(entity, it)
                     FishingBait.Effects.NATURE -> alterNatureAttempt(entity, it)
@@ -85,10 +83,7 @@ class FishingSpawnCause(
         if (bait != null && bait.effects.any{ it.type == FishingBait.Effects.EV }){
             if (detail is PokemonSpawnDetail) {
                val detailSpecies = detail.pokemon.species?.let { PokemonSpecies.getByName(it) }
-               val speciesEVStat = detailSpecies?.evYield?.filter { it.value > 0 }
                val baitEVStat = bait.effects.firstOrNull { it.type == FishingBait.Effects.EV }?.subcategory?.path?.let { Stats.getStat(it) }
-
-               //val baitEVEffect = bait.effects.firstOrNull { detailSpecies?.evYield?.get(Stats.getStat(it.subcategory?.path.toString()))!! > 0 }
 
                if (detailSpecies != null && baitEVStat != null) {
                    val evYieldValue = detailSpecies.evYield[baitEVStat]?.toFloat() ?: 0f
@@ -133,10 +128,10 @@ class FishingSpawnCause(
     private fun alterIVAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
         val iv = effect.subcategory ?: return
 
-        if ((pokemonEntity.pokemon.ivs[com.cobblemon.mod.common.api.pokemon.stats.Stats.getStat(iv.path)] ?: 0) + effect.value > 31) // if HP IV is already less than 3 away from 31
-            pokemonEntity.pokemon.ivs.set(com.cobblemon.mod.common.api.pokemon.stats.Stats.getStat(iv.path), 31)
+        if ((pokemonEntity.pokemon.ivs[Stats.getStat(iv.path)] ?: 0) + effect.value > 31) // if HP IV is already less than 3 away from 31
+            pokemonEntity.pokemon.ivs.set(Stats.getStat(iv.path), 31)
         else
-            pokemonEntity.pokemon.ivs.set(com.cobblemon.mod.common.api.pokemon.stats.Stats.getStat(iv.path), (pokemonEntity.pokemon.ivs[com.cobblemon.mod.common.api.pokemon.stats.Stats.getStat(iv.path)] ?: 0) + (effect.value).toInt())
+            pokemonEntity.pokemon.ivs.set(Stats.getStat(iv.path), (pokemonEntity.pokemon.ivs[Stats.getStat(iv.path)] ?: 0) + (effect.value).toInt())
     }
 
     private fun alterGenderAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {

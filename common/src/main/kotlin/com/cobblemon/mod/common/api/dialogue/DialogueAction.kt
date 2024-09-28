@@ -8,8 +8,10 @@
 
 package com.cobblemon.mod.common.api.dialogue
 
+import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.molang.ExpressionLike
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.asMoLangValue
 import com.cobblemon.mod.common.util.resolve
 
 /**
@@ -39,6 +41,9 @@ class ExpressionLikeDialogueAction(val expression: ExpressionLike) : DialogueAct
         if (input != null) {
             dialogue.runtime.environment.setSimpleVariable("selected_option", StringValue(input))
         }
-        dialogue.runtime.resolve(expression)
+        dialogue.runtime.resolve(
+            expression,
+            mapOf("player" to dialogue.playerStruct, "npc" to (dialogue.npc?.struct ?: QueryStruct(hashMapOf())))
+        )
     }
 }

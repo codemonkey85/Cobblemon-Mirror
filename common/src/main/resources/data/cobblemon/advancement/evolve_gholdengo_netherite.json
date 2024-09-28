@@ -3,7 +3,9 @@
   "display": {
     "icon": {
       "id": "cobblemon:pokemon_model",
-      "nbt": "{\"species\":\"cobblemon:gholdengo\",\"aspects\":[\"netherite-coating-full\"]}"
+	"components": {
+        "minecraft:custom_data": {"species":"cobblemon:gholdengo","aspects":["netherite-coating-full"]}
+      }
     },
     "title": {
       "translate": "advancements.cobblemon.evolve_gholdengo_netherite"

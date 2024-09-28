@@ -35,7 +35,7 @@ class SwinubModel(root: ModelPart) : PokemonPosableModel(root) {
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("swinub", "sleep"))
+//            animations = arrayOf(bedrock("swinub", "sleep"))
 //        )
 
         standing = registerPose(

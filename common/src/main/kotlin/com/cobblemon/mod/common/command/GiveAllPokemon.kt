@@ -40,7 +40,7 @@ object GiveAllPokemon {
 
     private fun execute(context: CommandContext<CommandSourceStack>, range: IntRange) : Int {
         val player = context.source.playerOrException
-        val pc = player.party().getOverflowPC() ?: return 0
+        val pc = player.party().getOverflowPC(player.registryAccess()) ?: return 0
 
         val orderedSpeces = PokemonSpecies.implemented.sortedBy { it.nationalPokedexNumber }
 

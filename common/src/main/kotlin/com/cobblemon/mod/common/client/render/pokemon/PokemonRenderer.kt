@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.client.render.pokemon
 
+import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.battle.ClientBallDisplay
 import com.cobblemon.mod.common.client.entity.NPCClientDelegate
@@ -42,7 +44,7 @@ import com.mojang.math.Axis
 import kotlin.math.*
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.Font
+import net.minecraft.client.gui.Font.DisplayMode
 import net.minecraft.client.renderer.*
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.ItemRenderer
@@ -60,7 +62,7 @@ import org.joml.Vector3f
 import org.joml.Vector4f
 
 class PokemonRenderer(
-context: EntityRendererProvider.Context
+    context: EntityRendererProvider.Context
 ) : MobRenderer<PokemonEntity, PosablePokemonEntityModel>(context, PosablePokemonEntityModel(), 0.5f) {
     companion object {
         val recallBeamColour = Vector4f(1F, 0.1F, 0.1F, 1F)
@@ -80,7 +82,7 @@ context: EntityRendererProvider.Context
     }
 
     override fun getTextureLocation(entity: PokemonEntity): ResourceLocation {
-        return PokemonModelRepository.getTexture(entity.pokemon.species.resourceIdentifier, entity.aspects, (entity.delegate as PokemonClientDelegate).animationSeconds)
+        return PokemonModelRepository.getTexture(entity.pokemon.species.resourceIdentifier, entity.delegate as PokemonClientDelegate)
     }
 
     override fun render(
@@ -91,15 +93,22 @@ context: EntityRendererProvider.Context
         buffer: MultiBufferSource,
         packedLight: Int
     ) {
+        val clientDelegate = entity.delegate as PokemonClientDelegate
         shadowRadius = min((entity.boundingBox.maxX - entity.boundingBox.minX), (entity.boundingBox.maxZ) - (entity.boundingBox.minZ)).toFloat() / 1.5F * (entity.delegate as PokemonClientDelegate).entityScaleModifier
-        model.posableModel = PokemonModelRepository.getPoser(entity.pokemon.species.resourceIdentifier, entity.aspects)
+        model.posableModel = PokemonModelRepository.getPoser(entity.pokemon.species.resourceIdentifier, clientDelegate)
         model.posableModel.context = model.context
         model.setupEntityTypeContext(entity)
-        val clientDelegate = entity.delegate as PokemonClientDelegate
         val modelNow = model.posableModel
-        clientDelegate.updatePartialTicks(partialTicks)
 
-        if (entity.beamMode != 0) {
+        val freezeFrame = entity.entityData.get(PokemonEntity.FREEZE_FRAME)
+        if (freezeFrame != -1F) {
+            clientDelegate.updateAge(0)
+            clientDelegate.updatePartialTicks(freezeFrame * 20F)
+        } else {
+            clientDelegate.updatePartialTicks(partialTicks)
+        }
+
+        if (entity.beamMode != 0 && !Minecraft.getInstance().isPaused) {
             renderTransition(
                 modelNow,
                 entity.beamMode,
@@ -112,21 +121,7 @@ context: EntityRendererProvider.Context
             )
         }
 
-        modelNow.setLayerContext(buffer, clientDelegate, PokemonModelRepository.getLayers(entity.pokemon.species.resourceIdentifier, entity.aspects))
-
-
-        // TODO: Need a way to get a shader from a render layer, and need a way to get the renderlayer for the pokemon's main model
-        // TODO: Need packet to sync evo time from server to client
-//        val shader: ShaderInstance? = RenderSystem.getShader()
-//        shader?.let { shader ->
-//            if(shader == GameRenderer.getRenderTypeEntityCutoutProgram() ||
-//                shader == GameRenderer.getRenderTypeEntityTranslucentProgram() ||
-//                shader == GameRenderer.getRenderTypeEntityTranslucentEmissiveProgram()){
-//                val progressUniform = shader.getUniform("u_evo_progress")
-//                // TODO: set this to the actual progress, 0->1->0
-//                progressUniform?.set((sin(entity.ticksLived/20f) + 1f)/2f)
-//            }
-//        }
+        modelNow.setLayerContext(buffer, clientDelegate, PokemonModelRepository.getLayers(entity.pokemon.species.resourceIdentifier, clientDelegate))
 
         if (entity.ticksLived < 10) {
             entity.yBodyRot = entity.entityData.get(SPAWN_DIRECTION)
@@ -141,7 +136,7 @@ context: EntityRendererProvider.Context
         if (this.shouldRenderLabel(entity)) {
             this.renderNameTag(entity, entity.effectiveName(), poseMatrix, buffer, packedLight, partialTicks)
         }
-//        MinecraftClient.getInstance().bufferBuilders.entityVertexConsumers.draw()
+//        Minecraft.getInstance().bufferBuilders.entityVertexConsumers.draw()
     }
 
     fun renderTransition(
@@ -198,7 +193,6 @@ context: EntityRendererProvider.Context
         val angle = Mth.atan2(dir.z, dir.x) - PI / 2
         poseMatrix.mulPose(Axis.YP.rotation(-angle.toFloat() + (180 * Math.PI / 180).toFloat()))
 
-        // TODO: if you want to remove the open ball, add `!clientDelegate.ballDone` to the if statement
         if (beamMode == 1 && !clientDelegate.ballDone){
             if(entity.pokemon.caughtBall.name.toString().contains("beast")){
                 // get rotation angle on x-axis for facingDir
@@ -323,7 +317,10 @@ context: EntityRendererProvider.Context
         }
         val player = Minecraft.getInstance().player ?: return false
         val delegate = entity.delegate as? PokemonClientDelegate ?: return false
-        return player.isLookingAt(entity) && delegate.phaseTarget == null
+        return (!Cobblemon.config.displayEntityLabelsWhenCrouchingOnly || player.isCrouching) &&
+                player.isLookingAt(entity) &&
+                delegate.phaseTarget == null &&
+                !CobblemonClient.pokedexUsageContext.scanningGuiOpen
     }
 
     override fun renderNameTag(
@@ -346,36 +343,45 @@ context: EntityRendererProvider.Context
             val entityHeight = entity.boundingBox.ysize + 0.5f
             matrices.pushPose()
             matrices.translate(0.0, entityHeight, 0.0)
-            matrices.mulPose(entityRenderDispatcher.cameraOrientation())
-            matrices.translate(0.0,0.0+(offsetScale/2),-(scale+offsetScale))
-            matrices.scale((-0.025*sizeScale).toFloat(), (-0.025*sizeScale).toFloat(), 1 * sizeScale.toFloat())
+            matrices.mulPose(this.entityRenderDispatcher.cameraOrientation())
+            matrices.translate(0.0, 0.0 + (offsetScale / 2), -(scale + offsetScale))
+            matrices.scale((0.025 * sizeScale).toFloat(), (-0.025 * sizeScale).toFloat(), (1 * sizeScale).toFloat())
             val matrix4f = matrices.last().pose()
-            val opacity = (Minecraft.getInstance().options.getBackgroundOpacity(0.25f) * 255.0f).toInt() shl 24
-            var label = entity.name.copy()
+            val opacity = (Minecraft.getInstance().options.getBackgroundOpacity(0.25F) * 255.0F).toInt() shl 24
+            var label = if (ServerSettings.displayEntityNameLabel &&
+                !Cobblemon.config.diplayNameForUnknownPokemon &&
+                CobblemonClient.clientPokedexData.getKnowledgeForSpecies(entity.pokemon.species.resourceIdentifier) == PokedexEntryProgress.NONE) {
+                Component.literal("???")
+            } else if (ServerSettings.displayEntityNameLabel) {
+                entity.name.copy()
+            } else {
+                Component.empty()
+            }
+            if(ServerSettings.displayEntityNameLabel && ServerSettings.displayEntityLevelLabel && entity.labelLevel() > 0) {
+                label.append(Component.literal(" "))
+            }
             if (ServerSettings.displayEntityLevelLabel && entity.labelLevel() > 0) {
                 // This a Style.EMPTY with a lot of effects set to false and color set to white, renderer inherits these from nick otherwise
-                val levelLabel = Component.literal(" ")
-                    .append(lang("label.lv", entity.labelLevel()))
+                val levelLabel = lang("label.lv", entity.labelLevel())
                     .setStyle(LEVEL_LABEL_STYLE)
                 label = label.append(levelLabel)
             }
-            var h = (-font.width(label) / 2).toFloat()
+            var h = (-this.font.width(label) / 2).toFloat()
             val y = 0F
             val packedLight = LightTexture.pack(15, 15)
-            font.drawInBatch(label, h, y, 0x20FFFFFF, false, matrix4f, vertexConsumers, Font.DisplayMode.SEE_THROUGH, opacity, packedLight)
-            font.drawInBatch(label, h, y, -1, false, matrix4f, vertexConsumers, Font.DisplayMode.NORMAL, 0, packedLight)
+            this.font.drawInBatch(label, h, y, 0x20FFFFFF, false, matrix4f, vertexConsumers, DisplayMode.SEE_THROUGH, opacity, packedLight)
+            this.font.drawInBatch(label, h, y, -1, false, matrix4f, vertexConsumers, DisplayMode.NORMAL, 0, packedLight)
 
-            if (entity.canBattle(player)) {
+            if (CobblemonClient.clientPlayerData.showChallengeLabel && entity.canBattle(player)) {
                 val sendOutBinding = PartySendBinding.boundKey().displayName
                 val battlePrompt = lang("challenge_label", sendOutBinding)
-                h = (-font.width(battlePrompt) / 2).toFloat()
-                font.drawInBatch(battlePrompt, h, y + 10, 0x20FFFFFF, false, matrix4f, vertexConsumers, Font.DisplayMode.SEE_THROUGH, opacity, packedLight)
-                font.drawInBatch(battlePrompt, h, y + 10, -1, false, matrix4f, vertexConsumers, Font.DisplayMode.NORMAL, 0, packedLight)
+                h = (-this.font.width(battlePrompt) / 2).toFloat()
+                this.font.drawInBatch(battlePrompt, h, y + 10, 0x20FFFFFF, false, matrix4f, vertexConsumers, DisplayMode.SEE_THROUGH, opacity, packedLight)
+                this.font.drawInBatch(battlePrompt, h, y + 10, -1, false, matrix4f, vertexConsumers, DisplayMode.NORMAL, 0, packedLight)
             }
             matrices.popPose()
         }
     }
-
 
     private fun drawPokeBall(
         state: ClientBallDisplay,
@@ -390,8 +396,8 @@ context: EntityRendererProvider.Context
     ) {
         matrixStack.pushPose()
         matrixStack.scale(0.7F, -0.7F, -0.7F)
-        val model = PokeBallModelRepository.getPoser(ball.name, state.aspects)
-        val texture = PokeBallModelRepository.getTexture(ball.name, state.aspects, state.animationSeconds)
+        val model = PokeBallModelRepository.getPoser(ball.name, state)
+        val texture = PokeBallModelRepository.getTexture(ball.name, state)
         if (scale == 1.0f) {
             model.moveToPose(state, model.poses["open"]!!)
         } else {

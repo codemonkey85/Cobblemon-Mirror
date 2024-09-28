@@ -16,6 +16,7 @@ import com.cobblemon.mod.common.net.messages.client.storage.pc.SetPCBoxPokemonPa
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.DataKeys
 import com.google.gson.JsonObject
+import net.minecraft.core.RegistryAccess
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerPlayer
 
@@ -50,7 +51,7 @@ open class PCBox(val pc: PCStore) : Iterable<Pokemon> {
                 val previousCoordinates = pokemon.storeCoordinates.get()
                 val position = previousCoordinates?.position
                 pokemon.storeCoordinates.set(StoreCoordinates(pc, PCPosition(boxNumber, index)))
-                if (previousCoordinates?.store != this || (position as PCPosition).box != boxNumber) {
+                if (previousCoordinates?.store !is PCStore || previousCoordinates.store.uuid != pc.uuid || (position as PCPosition).box != boxNumber) {
                     trackPokemon(pokemon)
                 }
             }
@@ -92,7 +93,7 @@ open class PCBox(val pc: PCStore) : Iterable<Pokemon> {
             .pipe(
                 stopAfter {
                     val coordinates = it.storeCoordinates.get() ?: return@stopAfter true
-                    return@stopAfter coordinates.store != this || (coordinates.position as PCPosition).box != boxNumber
+                    return@stopAfter coordinates.store !is PCStore || coordinates.store.uuid != pc.uuid || (coordinates.position as PCPosition).box != boxNumber
                 }
             )
             .subscribe { boxChangeEmitter.emit(Unit) }
@@ -102,28 +103,28 @@ open class PCBox(val pc: PCStore) : Iterable<Pokemon> {
         SetPCBoxPokemonPacket(this).sendToPlayer(player)
     }
 
-    open fun saveToNBT(nbt: CompoundTag): CompoundTag {
+    open fun saveToNBT(nbt: CompoundTag, registryAccess: RegistryAccess): CompoundTag {
         for (slot in 0 until POKEMON_PER_BOX) {
             val pokemon = pokemon[slot] ?: continue
-            nbt.put(DataKeys.STORE_SLOT + slot, pokemon.saveToNBT())
+            nbt.put(DataKeys.STORE_SLOT + slot, pokemon.saveToNBT(registryAccess))
         }
         return nbt
     }
 
-    open fun saveToJSON(json: JsonObject): JsonObject {
+    open fun saveToJSON(json: JsonObject, registryAccess: RegistryAccess): JsonObject {
         for (slot in 0 until POKEMON_PER_BOX) {
             val pokemon = pokemon[slot] ?: continue
-            json.add(DataKeys.STORE_SLOT + slot, pokemon.saveToJSON())
+            json.add(DataKeys.STORE_SLOT + slot, pokemon.saveToJSON(registryAccess))
         }
         return json
     }
 
-    open fun loadFromJSON(json: JsonObject): PCBox {
+    open fun loadFromJSON(json: JsonObject, registryAccess: RegistryAccess): PCBox {
         for (slot in 0 until POKEMON_PER_BOX) {
             if (json.has(DataKeys.STORE_SLOT + slot)) {
                 val pokemonJson = json.getAsJsonObject(DataKeys.STORE_SLOT + slot)
                 try {
-                    pokemon[slot] = Pokemon.loadFromJSON(pokemonJson)
+                    pokemon[slot] = Pokemon.loadFromJSON(registryAccess, pokemonJson)
                 } catch (_: InvalidSpeciesException) {
                     pc.handleInvalidSpeciesJSON(pokemonJson)
                 }
@@ -132,12 +133,12 @@ open class PCBox(val pc: PCStore) : Iterable<Pokemon> {
         return this
     }
 
-    open fun loadFromNBT(nbt: CompoundTag): PCBox {
+    open fun loadFromNBT(nbt: CompoundTag, registryAccess: RegistryAccess): PCBox {
         for (slot in 0 until POKEMON_PER_BOX) {
             if (nbt.contains(DataKeys.STORE_SLOT + slot)) {
                 val pokemonNBT = nbt.getCompound(DataKeys.STORE_SLOT + slot)
                 try {
-                    pokemon[slot] = Pokemon.loadFromNBT(pokemonNBT)
+                    pokemon[slot] = Pokemon.loadFromNBT(registryAccess, pokemonNBT)
                 } catch (_: InvalidSpeciesException) {
                     pc.handleInvalidSpeciesNBT(pokemonNBT)
                 }

@@ -55,7 +55,7 @@ class EvolvePokemonCriterion(
 //        evolution = json.get("evolution")?.asString ?: "any"
 //    }
 //
-//    override fun matches(player: ServerPlayerEntity, context: EvolvePokemonContext): Boolean {
+//    override fun matches(player: ServerPlayer, context: EvolvePokemonContext): Boolean {
 //        return context.times >= count && (context.species == species.asIdentifierDefaultingNamespace() || species == "any") &&
 //                (context.evolution == evolution.asIdentifierDefaultingNamespace() || evolution == "any")
 //    }

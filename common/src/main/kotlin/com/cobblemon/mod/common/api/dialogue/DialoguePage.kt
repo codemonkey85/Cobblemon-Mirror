@@ -17,6 +17,7 @@ import com.cobblemon.mod.common.api.dialogue.input.DialogueInput
 import com.cobblemon.mod.common.api.dialogue.input.DialogueNoInput
 import com.google.gson.JsonArray
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
 
 /**
  * A page of a dialogue. This has lines of text and also some kind of input expected from the player.
@@ -29,6 +30,7 @@ class DialoguePage(
     var speaker: String? = null,
     var lines: MutableList<DialogueText> = mutableListOf(),
     var input: DialogueInput = DialogueNoInput(),
+    var background: ResourceLocation? = null,
     var clientActions: MutableList<Expression> = mutableListOf(),
     var escapeAction: DialogueAction? = null,
 ) {
@@ -40,6 +42,7 @@ class DialoguePage(
             speaker: String? = null,
             lines: Iterable<MutableComponent>,
             input: DialogueInput = DialogueNoInput(),
+            background: ResourceLocation? = null,
             clientActions: Iterable<Expression> = emptyList(),
             /** The thing to do when the player presses ESC while on this page. If null, falls back to the same property on [Dialogue]. */
             escapeAction: ((ActiveDialogue) -> Unit)? = null,
@@ -49,6 +52,7 @@ class DialoguePage(
                 speaker = speaker,
                 lines = lines.map { WrappedDialogueText(it) }.toMutableList(),
                 input = input,
+                background = background,
                 clientActions = clientActions.toMutableList(),
                 escapeAction = escapeAction?.let { func -> FunctionDialogueAction { activeDialogue, _ -> func(activeDialogue) } }
             )

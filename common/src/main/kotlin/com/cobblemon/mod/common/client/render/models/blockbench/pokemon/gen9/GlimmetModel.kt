@@ -9,8 +9,10 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen9
 
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import net.minecraft.client.model.geom.ModelPart
@@ -28,6 +30,10 @@ class GlimmetModel (root: ModelPart) : PokemonPosableModel(root) {
     lateinit var standing: Pose
     lateinit var walk: Pose
     lateinit var sleep: Pose
+    lateinit var shoulderLeft: Pose
+    lateinit var shoulderRight: Pose
+
+    val shoulderOffset = 8
 
     override val cryAnimation = CryProvider { bedrockStateful("glimmet", "cry") }
 
@@ -56,6 +62,28 @@ class GlimmetModel (root: ModelPart) : PokemonPosableModel(root) {
             animations = arrayOf(
                 bedrock("glimmet", "ground_walk")
             )
+        )
+
+        shoulderLeft = registerPose(
+                poseType = PoseType.SHOULDER_LEFT,
+                quirks = arrayOf(blink),
+                animations = arrayOf(
+                        bedrock("glimmet", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, shoulderOffset)
+                )
+        )
+
+        shoulderRight = registerPose(
+                poseType = PoseType.SHOULDER_RIGHT,
+                quirks = arrayOf(blink),
+                animations = arrayOf(
+                        bedrock("glimmet", "ground_idle")
+                ),
+                transformedParts = arrayOf(
+                        rootPart.createTransformation().addPosition(ModelPartTransformation.X_AXIS, -shoulderOffset)
+                )
         )
     }
     override fun getFaintAnimation(state: PosableState) = if (state.isPosedIn(standing, walk)) bedrockStateful("glimmet", "faint") else null

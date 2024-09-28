@@ -8,14 +8,15 @@
 
 package com.cobblemon.mod.common.client.render
 
+import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Bone
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
-import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
-import com.cobblemon.mod.common.util.adapters.ModelTextureSupplierAdapter
-import com.cobblemon.mod.common.util.adapters.Vector3fAdapter
-import com.cobblemon.mod.common.util.adapters.Vector4fAdapter
+import com.cobblemon.mod.common.util.adapters.*
+import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.resolveBoolean
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
 import kotlin.math.floor
@@ -37,30 +38,34 @@ class VaryingRenderableResolver<T : PosableModel>(
     val posers = mutableMapOf<Pair<ResourceLocation, ResourceLocation>, T>()
     val models = mutableMapOf<ResourceLocation, Bone>()
 
-    fun getResolvedPoser(aspects: Set<String>): ResourceLocation {
-        return getVariationValue(aspects) { poser }
-            ?: throw IllegalStateException("Unable to find a poser for $name with aspects ${aspects.joinToString()}. This shouldn't be possible if you've defined the fallback variation.")
+    fun getResolvedPoser(state: PosableState): ResourceLocation {
+        return getVariationValue(state) { poser }
+            ?: throw IllegalStateException("Unable to find a poser for $name with aspects ${state.currentAspects.joinToString()}. This shouldn't be possible if you've defined the fallback variation.")
     }
 
-    fun getResolvedModel(aspects: Set<String>): ResourceLocation {
-        return getVariationValue(aspects) { model }
-            ?: throw IllegalStateException("Unable to find a model for $name with aspects ${aspects.joinToString()}. This shouldn't be possible if you've defined the fallback variation.")
+    fun getResolvedModel(state: PosableState): ResourceLocation {
+        return getVariationValue(state) { model }
+            ?: throw IllegalStateException("Unable to find a model for $name with aspects ${state.currentAspects.joinToString()}. This shouldn't be possible if you've defined the fallback variation.")
     }
 
-    fun getResolvedTexture(aspects: Set<String>, animationSeconds: Float): ResourceLocation {
-        return getVariationValue(aspects) { texture }?.invoke(animationSeconds)
-            ?: throw IllegalStateException("Unable to find a texture for $name with aspects ${aspects.joinToString()}. This shouldn't be possible if you've defined the fallback variation.")
+    fun getResolvedTexture(state: PosableState): ResourceLocation {
+        return getVariationValue(state) { texture }?.invoke(state)
+            ?: throw IllegalStateException("Unable to find a texture for $name with aspects ${state.currentAspects.joinToString()}. This shouldn't be possible if you've defined the fallback variation.")
     }
 
-    private fun <T> getVariationValue(aspects: Set<String>, selector: ModelAssetVariation.() -> T?): T? {
-        return variations.lastOrNull { it.aspects.all { it in aspects } && selector(it) != null }?.let(selector)
+    fun getSprite(state: PosableState, type: SpriteType): ResourceLocation? {
+        return getVariationValue(state) { sprites }?.get(type)
     }
 
-    fun getResolvedLayers(aspects: Set<String>): Iterable<ModelLayer> {
+    private fun <T> getVariationValue(state: PosableState, selector: ModelAssetVariation.() -> T?): T? {
+        return variations.lastOrNull { it.fits(state) && selector(it) != null }?.let(selector)
+    }
+
+    fun getResolvedLayers(state: PosableState): Iterable<ModelLayer> {
         val layerMaps = mutableMapOf<String, ModelLayer>()
         for (variation in variations) {
             val layers = variation.layers
-            if (layers != null && variation.aspects.all { it in aspects }) {
+            if (layers != null && variation.fits(state)) {
                 for (layer in layers) {
                     layerMaps[layer.name] = layer
                 }
@@ -86,6 +91,8 @@ class VaryingRenderableResolver<T : PosableModel>(
             .registerTypeAdapter(Vector3f::class.java, Vector3fAdapter)
             .registerTypeAdapter(Vector4f::class.java, Vector4fAdapter)
             .registerTypeAdapter(ModelTextureSupplier::class.java, ModelTextureSupplierAdapter)
+            .registerTypeAdapter(ExpressionLike::class.java, ExpressionLikeAdapter)
+            .registerTypeAdapter(SpriteType::class.java, SpriteTypeAdapter)
             .disableHtmlEscaping()
             .setLenient()
             .create()
@@ -103,10 +110,10 @@ class VaryingRenderableResolver<T : PosableModel>(
         }
     }
 
-    fun getPoser(aspects: Set<String>): T {
-        val poserName = getResolvedPoser(aspects)
+    fun getPoser(state: PosableState): T {
+        val poserName = getResolvedPoser(state)
         val poserSupplier = repository.posers[poserName] ?: throw IllegalStateException("No poser found for name: $poserName for $name")
-        val modelName = getResolvedModel(aspects)
+        val modelName = getResolvedModel(state)
         val existingEntityModel = posers[poserName to modelName]
         return if (existingEntityModel != null) {
             existingEntityModel
@@ -120,14 +127,14 @@ class VaryingRenderableResolver<T : PosableModel>(
         }
     }
 
-    fun getTexture(aspects: Set<String>, animationSeconds: Float): ResourceLocation {
-        repository.posers[getResolvedPoser(aspects)] ?: throw IllegalStateException("No poser for $name")
-        return getResolvedTexture(aspects, animationSeconds)
+    fun getTexture(state: PosableState): ResourceLocation {
+        repository.posers[getResolvedPoser(state)] ?: throw IllegalStateException("No poser for $name")
+        return getResolvedTexture(state)
     }
 
-    fun getLayers(aspects: Set<String>): Iterable<ModelLayer> {
-        repository.posers[getResolvedPoser(aspects)] ?: throw IllegalStateException("No poser for $name")
-        return getResolvedLayers(aspects)
+    fun getLayers(state: PosableState): Iterable<ModelLayer> {
+        repository.posers[getResolvedPoser(state)] ?: throw IllegalStateException("No poser for $name")
+        return getResolvedLayers(state)
     }
 }
 
@@ -157,11 +164,17 @@ class ModelVariationSet(
  */
 class ModelAssetVariation(
     val aspects: MutableSet<String> = mutableSetOf(),
+    val condition: ExpressionLike? = null,
     val poser: ResourceLocation? = null,
     val model: ResourceLocation? = null,
     val texture: ModelTextureSupplier? = null,
-    val layers: List<ModelLayer>? = null
-)
+    val layers: List<ModelLayer>? = null,
+    val sprites: Map<SpriteType, ResourceLocation>? = null
+) {
+    fun fits(state: PosableState): Boolean {
+        return aspects.all { it in state.currentAspects } && (condition == null || state.runtime.resolveBoolean(condition))
+    }
+}
 
 /**
  * Given the animation seconds, returns a texture to use. Only implemented
@@ -171,11 +184,11 @@ class ModelAssetVariation(
  * @since February 6th, 2023
  */
 fun interface ModelTextureSupplier {
-    operator fun invoke(animationSeconds: Float): ResourceLocation
+    operator fun invoke(state: PosableState): ResourceLocation
 }
 
 class StaticModelTextureSupplier(val texture: ResourceLocation): ModelTextureSupplier {
-    override fun invoke(animationSeconds: Float): ResourceLocation {
+    override fun invoke(state: PosableState): ResourceLocation {
         return texture
     }
 }
@@ -185,12 +198,19 @@ class AnimatedModelTextureSupplier(
     val fps: Float,
     val frames: List<ResourceLocation>
 ): ModelTextureSupplier {
-    override fun invoke(animationSeconds: Float): ResourceLocation {
-        val frameIndex = floor(animationSeconds * fps).toInt()
+    override fun invoke(state: PosableState): ResourceLocation {
+        val frameIndex = floor(state.animationSeconds * fps).toInt()
         if (frameIndex >= frames.size && !loop) {
             return frames.last()
         }
         return frames[frameIndex % frames.size]
+    }
+}
+
+class VariableModelTextureSupplier : ModelTextureSupplier {
+    override fun invoke(state: PosableState): ResourceLocation {
+        return state.runtime.environment.variable.map["texture"]?.asString()?.asIdentifierDefaultingNamespace()
+            ?: cobblemonResource("textures/npcs/default.png")
     }
 }
 
@@ -201,4 +221,9 @@ class ModelLayer {
     val texture: ModelTextureSupplier? = null
     val emissive: Boolean = false
     val translucent: Boolean = false
+}
+
+enum class SpriteType {
+    PORTRAIT,
+    PROFILE
 }

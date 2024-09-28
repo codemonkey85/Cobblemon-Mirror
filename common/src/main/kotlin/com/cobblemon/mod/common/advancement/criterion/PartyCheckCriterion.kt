@@ -79,7 +79,7 @@ class PartyCheckCriterion(
         }
     }
 
-    override fun matches(player: ServerPlayerEntity, context: PartyCheckContext): Boolean {
+    override fun matches(player: ServerPlayer, context: PartyCheckContext): Boolean {
         val playerParty = player.party()
         val matches = mutableListOf<Identifier>()
         party.forEach {

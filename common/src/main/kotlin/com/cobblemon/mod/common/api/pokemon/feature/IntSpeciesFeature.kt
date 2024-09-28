@@ -29,8 +29,8 @@ import net.minecraft.world.phys.Vec3
 class IntSpeciesFeature(override var name: String) : SynchronizedSpeciesFeature, CustomPokemonProperty {
     var value = 0
 
-    constructor(): this("")
-    constructor(name: String, value: Int): this(name) {
+    constructor() : this("")
+    constructor(name: String, value: Int) : this(name) {
         this.value = value
     }
 
@@ -79,9 +79,11 @@ class IntSpeciesFeature(override var name: String) : SynchronizedSpeciesFeature,
     override fun matches(pokemon: Pokemon) = pokemon.getFeature<IntSpeciesFeature>(name)?.value == value
 }
 
-class IntSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<IntSpeciesFeature>, CustomPokemonPropertyType<IntSpeciesFeature> {
+class IntSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<IntSpeciesFeature>,
+    CustomPokemonPropertyType<IntSpeciesFeature> {
     class DisplayData : BufferSerializer {
         var name: String = ""
+
         @SerializedName(value = "colour" /* fuck you we use real english */, alternate = ["color"])
         var colour = Vec3(255.0, 255.0, 255.0)
         var underlay: ResourceLocation? = null
@@ -109,6 +111,7 @@ class IntSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<IntSpeciesF
     }
 
     override var keys = listOf<String>()
+
     // Uses get() = true because that way there's no backing field. It MUST be true, this way no JSON trickery will overwrite it
     override val needsKey get() = true
     override var visible = false
@@ -116,8 +119,10 @@ class IntSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<IntSpeciesF
     var min = 0
     var max = 100
     var display: DisplayData? = null
+    var itemPoints: Map<ResourceLocation, Int> = emptyMap()
 
-    override fun fromString(value: String?) = value?.toIntOrNull()?.takeIf { it in min..max }?.let { IntSpeciesFeature(keys.first(), it) }
+    override fun fromString(value: String?) =
+        value?.toIntOrNull()?.takeIf { it in min..max }?.let { IntSpeciesFeature(keys.first(), it) }
 
     override fun examples() = emptyList<String>()
     override fun invoke(buffer: RegistryFriendlyByteBuf, name: String): IntSpeciesFeature? {
@@ -156,6 +161,11 @@ class IntSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<IntSpeciesF
         buffer.writeInt(min)
         buffer.writeInt(max)
         buffer.writeNullable(display) { _, value -> value.saveToBuffer(buffer, toClient) }
+        buffer.writeMap(itemPoints, { _, item -> buffer.writeString(item.toString()) }) { _, points ->
+            buffer.writeInt(
+                points
+            )
+        }
     }
 
     override fun loadFromBuffer(buffer: RegistryFriendlyByteBuf) {
@@ -164,6 +174,7 @@ class IntSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<IntSpeciesF
         min = buffer.readInt()
         max = buffer.readInt()
         display = buffer.readNullable { DisplayData().also { it.loadFromBuffer(buffer) } }
+        itemPoints = buffer.readMap({ ResourceLocation.parse(buffer.readString()) }) { buffer.readInt() }
     }
 
     override fun getRenderer(pokemon: Pokemon): SummarySpeciesFeatureRenderer<IntSpeciesFeature>? {

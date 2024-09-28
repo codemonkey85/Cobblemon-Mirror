@@ -96,7 +96,8 @@ class PoseAdapter(
             transformTicks = pose.transformTicks,
             animations = pose.idleAnimations,
             transformedParts = pose.transformedParts,
-            quirks = pose.quirks.toTypedArray()
+            quirks = pose.quirks.toTypedArray(),
+            namedAnimations = pose.animations
         ).also {
             it.transitions.putAll(
                 pose.transitions

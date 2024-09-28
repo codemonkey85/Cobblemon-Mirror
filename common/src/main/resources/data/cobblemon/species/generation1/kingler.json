@@ -74,6 +74,9 @@
   ],
   "behaviour": {
     "moving": {
+      "walk": {
+        "walkSpeed": 0.41
+      },
       "swim": {
         "swimSpeed": 0.1,
         "canSwimInWater": false,
@@ -245,9 +248,9 @@
   ],
   "preEvolution": "krabby",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.85,
   "hitbox": {
-    "width": 1,
+    "width": 1.8,
     "height": 1,
     "fixed": false
   },

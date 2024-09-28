@@ -8,9 +8,12 @@
 
 package com.cobblemon.mod.common.mixin;
 
-import com.cobblemon.mod.common.client.sound.battle.BattleMusicController;
+import com.cobblemon.mod.common.client.sound.BlockEntitySoundTracker;
+import com.cobblemon.mod.common.client.sound.EntitySoundTracker;
+import com.cobblemon.mod.common.client.sound.BattleMusicController;
+import com.cobblemon.mod.common.client.sound.SoundTracker;
 import com.cobblemon.mod.common.duck.SoundManagerDuck;
-import com.cobblemon.mod.common.duck.SoundSystemDuck;
+import com.cobblemon.mod.common.duck.SoundEngineDuck;
 import net.minecraft.client.resources.sounds.BiomeAmbientSoundsHandler;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.resources.sounds.UnderwaterAmbientSoundInstances;
@@ -55,19 +58,13 @@ public abstract class SoundManagerMixin implements SoundManagerDuck {
     /** Pauses the queried SoundInstance(s). If id is null, will pause all sounds belonging to the SoundCategory. */
     @Override
     public void pauseSounds(@Nullable ResourceLocation id, @Nullable SoundSource category) {
-        ((SoundSystemDuck)soundEngine).pauseSounds(id, category);
+        ((SoundEngineDuck)soundEngine).pauseSounds(id, category);
     }
 
     /** Resumes the queried SoundInstance(s). If id is null, will resume all sounds belonging to the SoundCategory. */
     @Override
     public void resumeSounds(@Nullable ResourceLocation id, @Nullable SoundSource category) {
-        ((SoundSystemDuck)soundEngine).resumeSounds(id, category);
-    }
-
-    /** Stops the queried SoundInstance(s). If id is null, will stop all sounds belonging to the SoundCategory. */
-    @Override
-    public void stopSounds(@Nullable ResourceLocation id, @Nullable SoundSource category) {
-        ((SoundSystemDuck)soundEngine).stopSounds(id, category);
+        ((SoundEngineDuck)soundEngine).resumeSounds(id, category);
     }
 
     /** Blocks filtered sounds from being played while a BattleMusicInstance is in progress. */
@@ -90,5 +87,11 @@ public abstract class SoundManagerMixin implements SoundManagerDuck {
     @Inject(method = "playDelayed(Lnet/minecraft/client/resources/sounds/SoundInstance;I)V", at = @At("TAIL"))
     public void playEnd(SoundInstance sound, int delay, CallbackInfo cb) {
         if (ambientLoopCondition(sound)) this.pauseSounds(sound.getLocation(), SoundSource.AMBIENT);
+    }
+
+    /** Clears tracked sounds on the client when disconnected. */
+    @Inject(method = "stop()V", at = @At("TAIL"))
+    public void stop(CallbackInfo cb) {
+        SoundTracker.Companion.clear();
     }
 }

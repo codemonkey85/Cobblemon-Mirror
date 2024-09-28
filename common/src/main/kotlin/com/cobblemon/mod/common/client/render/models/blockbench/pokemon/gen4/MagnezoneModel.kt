@@ -32,7 +32,7 @@ class MagnezoneModel(root: ModelPart) : PokemonPosableModel(root) {
         val blink = quirk { bedrockStateful("magnezone", "blink") }
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("magnezone", "sleep"))
+//            animations = arrayOf(bedrock("magnezone", "sleep"))
 //        )
 
         registerPose(

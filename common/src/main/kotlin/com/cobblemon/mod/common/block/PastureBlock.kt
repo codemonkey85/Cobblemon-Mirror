@@ -53,6 +53,8 @@ import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 import java.util.*
+import net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED
+import net.minecraft.world.level.gameevent.GameEvent
 
 @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
 class PastureBlock(settings: Properties): BaseEntityBlock(settings), SimpleWaterloggedBlock, PreEmptsExplosion {
@@ -61,7 +63,6 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), SimpleWater
 
         val PART: EnumProperty<PasturePart> = EnumProperty.create("part", PasturePart::class.java)
         val ON: BooleanProperty = BooleanProperty.create("on")
-        val WATERLOGGED: BooleanProperty = BooleanProperty.create("waterlogged")
 
         private val SOUTH_AABB_TOP = buildCollider(top = true, Direction.NORTH)
         private val NORTH_AABB_TOP = buildCollider(top = true, Direction.SOUTH)
@@ -254,10 +255,11 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), SimpleWater
             world.getBlockEntity(basePos.above())?.setRemoved()
 
             val baseEntity = world.getBlockEntity(basePos)
-            if (baseEntity !is PokemonPastureBlockEntity) return InteractionResult.SUCCESS
+            if (baseEntity !is PokemonPastureBlockEntity) {
+                return InteractionResult.SUCCESS
+            }
 
-
-            val pcId = Cobblemon.storage.getPC(player.uuid).uuid
+            val pcId = Cobblemon.storage.getPC(player).uuid
             val linkId = UUID.randomUUID()
 
             val perms = PasturePermissionControllers.permit(player, baseEntity)
@@ -280,7 +282,7 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), SimpleWater
                 volume = 0.5F,
                 pitch = 1F
             )
-
+            world.gameEvent(player, GameEvent.BLOCK_OPEN, pos)
             return InteractionResult.SUCCESS
         }
 

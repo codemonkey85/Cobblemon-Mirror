@@ -1,0 +1,51 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_smithing_trim_template": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:pokerod_smithing_template"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+	"has_ball": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:sport_ball"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+	},
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "cobblemon:sport_rod"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_smithing_trim_template",
+      "has_the_recipe"
+    ],
+	[
+	  "has_ball",
+	  "has_the_recipe"
+	]
+  ],
+  "rewards": {
+    "recipes": [
+      "cobblemon:sport_rod"
+    ]
+  },
+  "sends_telemetry_event": false
+}

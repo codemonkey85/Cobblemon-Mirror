@@ -9,38 +9,40 @@
 package com.cobblemon.mod.common.datafixer
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.datafixer.fix.BlockPosUpdateFix
 import com.cobblemon.mod.common.datafixer.fix.EvolutionProxyNestingFix
+import com.cobblemon.mod.common.datafixer.fix.FeatureFix
 import com.cobblemon.mod.common.datafixer.fix.IvEvToIdentifierFix
 import com.cobblemon.mod.common.datafixer.fix.TeraTypeFix
 import com.cobblemon.mod.common.datafixer.fix.TradeableMissingFix
+import com.cobblemon.mod.common.datafixer.schema.CobblemonRootSchema
+import com.cobblemon.mod.common.datafixer.schema.CobblemonSchemaV2
 import com.google.common.util.concurrent.ThreadFactoryBuilder
-import com.mojang.datafixers.DSL
 import com.mojang.datafixers.DSL.TypeReference
 import com.mojang.datafixers.DataFixer
 import com.mojang.datafixers.DataFixerBuilder
-import com.mojang.datafixers.schemas.Schema
-import com.mojang.datafixers.types.templates.TypeTemplate
 import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 import com.mojang.serialization.Dynamic
 import com.mojang.serialization.DynamicOps
-import net.minecraft.util.datafix.fixes.References
+import net.minecraft.util.datafix.fixes.ItemStackComponentizationFix
 import java.util.concurrent.Executors
-import java.util.function.Supplier
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 object CobblemonSchemas {
 
     private val RESULT: DataFixerBuilder.Result = this.create()
 
-    const val DATA_VERSION = 0
+    const val DATA_VERSION = 1
 
     /**
      * The Cobblemon [DataFixer].
      */
     @JvmStatic
     val DATA_FIXER: DataFixer get() = RESULT.fixer()
+
+    const val VERSION_KEY = "${Cobblemon.MODID}:data_version"
 
     /**
      * Wraps the given [Codec] with the Cobblemon [DataFixer].
@@ -67,16 +69,20 @@ object CobblemonSchemas {
                 .setPriority(1)
                 .build()
         )
-        result.optimize(types, executor)
+        result.optimize(types, executor).join()
         return result
     }
 
     private fun appendSchemas(builder: DataFixerBuilder) {
-        val schema0 = builder.addSchema(0, ::CobblemonRootSchema)
-        builder.addFixer(EvolutionProxyNestingFix(schema0))
-        builder.addFixer(IvEvToIdentifierFix(schema0))
-        builder.addFixer(TeraTypeFix(schema0))
-        builder.addFixer(TradeableMissingFix(schema0))
+        builder.addSchema(0, ::CobblemonRootSchema)
+        val schema1 = builder.addSchema(1, ::CobblemonSchemaV2)
+        builder.addFixer(EvolutionProxyNestingFix(schema1))
+        builder.addFixer(IvEvToIdentifierFix(schema1))
+        builder.addFixer(TeraTypeFix(schema1))
+        builder.addFixer(TradeableMissingFix(schema1))
+        builder.addFixer(ItemStackComponentizationFix(schema1))
+        builder.addFixer(BlockPosUpdateFix(schema1))
+        builder.addFixer(FeatureFix(schema1))
     }
 
     private class CobblemonDataFixerCodec<R>(private val baseCodec: Codec<R>, private val typeReference: TypeReference) : Codec<R> {
@@ -97,31 +103,8 @@ object CobblemonSchemas {
             val dataFixedDynamic = DATA_FIXER.update(this.typeReference, dynamicWithoutVersion, inputVersion, DATA_VERSION)
             return this.baseCodec.decode(dataFixedDynamic)
         }
-
-        companion object {
-            private const val VERSION_KEY = "${Cobblemon.MODID}:data_version"
-        }
-
     }
 
-    private class CobblemonRootSchema(versionKey: Int, parent: Schema?) : Schema(versionKey, parent) {
 
-        override fun registerTypes(
-            schema: Schema,
-            entityTypes: MutableMap<String, Supplier<TypeTemplate>>,
-            blockEntityTypes: MutableMap<String, Supplier<TypeTemplate>>
-        ) {
-            schema.registerType(false, CobblemonTypeReferences.POKEMON, DSL::remainder)
-            // Even thought these aren't used yet might as well, we need 1 recursive type present to prevent a crash anyhow.
-            schema.registerType(true, References.ENTITY) { DSL.taggedChoiceLazy("id", DSL.string(), entityTypes) }
-        }
-
-        // If we ever decide to target something do it here
-        override fun registerEntities(schema: Schema): MutableMap<String, Supplier<TypeTemplate>> = hashMapOf()
-
-        // If we ever decide to target something do it here
-        override fun registerBlockEntities(schema: Schema): MutableMap<String, Supplier<TypeTemplate>> = hashMapOf()
-
-    }
 
 }

@@ -1,0 +1,34 @@
+{
+  "parent": "cobblemon:recipes/root",
+  "rewards": {
+    "recipes": [
+      "cobblemon:smooth_sky_tumblestone_slab"
+    ]
+  },
+  "criteria": {
+    "has_tumblestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:smooth_sky_tumblestone"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "cobblemon:smooth_sky_tumblestone_slab"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_tumblestone",
+      "has_the_recipe"
+    ]
+  ]
+}

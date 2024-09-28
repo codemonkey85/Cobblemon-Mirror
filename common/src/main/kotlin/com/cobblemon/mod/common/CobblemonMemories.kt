@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common
 
+import com.cobblemon.mod.common.api.dialogue.ActiveDialogue
+import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.ListCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
@@ -23,6 +25,8 @@ object CobblemonMemories {
 
     val BATTLING_POKEMON = register("battling_pokemon", ListCodec(UUIDUtil.CODEC, 0, 31))
     val NPC_BATTLING = register("npc_battling", PrimitiveCodec.BOOL)
+    val DIALOGUES = register<List<ActiveDialogue>>("npc_dialogues")
+    val ACTIVE_ACTION_EFFECT = register<ActionEffectContext>("active_action_effect")
     val POKEMON_FLYING = register("pokemon_flying", PrimitiveCodec.BOOL)
     val POKEMON_DROWSY = register("pokemon_drowsy", PrimitiveCodec.BOOL)
     val POKEMON_SLEEPING = register("pokemon_sleeping", PrimitiveCodec.BOOL)

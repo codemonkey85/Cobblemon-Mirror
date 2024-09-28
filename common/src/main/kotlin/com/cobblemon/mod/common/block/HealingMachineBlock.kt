@@ -14,7 +14,10 @@ import com.cobblemon.mod.common.api.text.gray
 import com.cobblemon.mod.common.api.text.green
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.block.entity.HealingMachineBlockEntity
-import com.cobblemon.mod.common.util.*
+import com.cobblemon.mod.common.util.asTranslated
+import com.cobblemon.mod.common.util.isInBattle
+import com.cobblemon.mod.common.util.lang
+import com.cobblemon.mod.common.util.party
 import com.mojang.serialization.MapCodec
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -31,12 +34,18 @@ import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.*
+import net.minecraft.world.level.block.BaseEntityBlock
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.HorizontalDirectionalBlock
+import net.minecraft.world.level.block.Mirror
+import net.minecraft.world.level.block.RenderShape
+import net.minecraft.world.level.block.Rotation
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
+import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.IntegerProperty
 import net.minecraft.world.level.block.state.properties.Property
 import net.minecraft.world.level.pathfinder.PathComputationType
@@ -71,11 +80,13 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
         // Charge level 6 is used only when healing machine is active
         const val MAX_CHARGE_LEVEL = 5
         val CHARGE_LEVEL: IntegerProperty = IntegerProperty.create("charge", 0, MAX_CHARGE_LEVEL + 1)
+        val NATURAL: BooleanProperty = BooleanProperty.create("natural")
     }
 
     init {
         registerDefaultState(stateDefinition.any()
             .setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH)
+            .setValue(NATURAL, false)
             .setValue(CHARGE_LEVEL, 0))
     }
 
@@ -108,7 +119,7 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
-        builder.add(HorizontalDirectionalBlock.FACING)
+        builder.add(HorizontalDirectionalBlock.FACING, NATURAL)
         builder.add(*arrayOf<Property<*>>(CHARGE_LEVEL))
     }
 
@@ -126,13 +137,7 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
         if (!state.`is`(newState.block)) super.onRemove(state, world, pos, newState, moved)
     }
 
-    override fun useWithoutItem(
-        blockState: BlockState,
-        world: Level,
-        blockPos: BlockPos,
-        player: Player,
-        hit: BlockHitResult
-    ): InteractionResult {
+    override fun useWithoutItem(blockState: BlockState, world: Level, blockPos: BlockPos, player: Player, hit: BlockHitResult): InteractionResult {
         if (world.isClientSide) {
             return InteractionResult.SUCCESS
         }
@@ -169,8 +174,8 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
             return InteractionResult.SUCCESS
         }
 
-        if (blockEntity.canHeal(player)) {
-            blockEntity.activate(player)
+        if (blockEntity.canHeal(party)) {
+            blockEntity.activate(player.uuid, party)
             player.sendSystemMessage(lang("healingmachine.healing").green(), true)
         } else {
             val neededCharge = player.party().getHealingRemainderPercent() - blockEntity.healingCharge
@@ -223,5 +228,4 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
         tooltip.add("block.${Cobblemon.MODID}.healing_machine.tooltip1".asTranslated().gray())
         tooltip.add("block.${Cobblemon.MODID}.healing_machine.tooltip2".asTranslated().gray())
     }
-
 }

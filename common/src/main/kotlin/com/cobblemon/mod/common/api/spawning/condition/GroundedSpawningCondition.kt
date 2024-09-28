@@ -39,6 +39,11 @@ abstract class GroundedTypeSpawningCondition<T : GroundedSpawningContext> : Area
             neededBaseBlocks = merger.merge(neededBaseBlocks, other.neededBaseBlocks)?.toMutableList()
         }
     }
+
+    override fun isValid(): Boolean {
+        val containsNullValues = neededBaseBlocks != null && neededBaseBlocks!!.any {it == null}
+        return super.isValid() && !containsNullValues
+    }
 }
 
 /**

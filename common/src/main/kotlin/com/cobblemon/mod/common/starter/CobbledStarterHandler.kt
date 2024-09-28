@@ -13,6 +13,8 @@ import com.cobblemon.mod.common.advancement.CobblemonCriteria
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.starter.StarterChosenEvent
 import com.cobblemon.mod.common.api.starter.StarterHandler
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.net.messages.client.starter.OpenStarterUIPacket
 import com.cobblemon.mod.common.util.lang
@@ -26,7 +28,7 @@ open class CobblemonStarterHandler : StarterHandler {
     override fun handleJoin(player: ServerPlayer) {}
 
     override fun requestStarterChoice(player: ServerPlayer) {
-        val playerData = Cobblemon.playerData.get(player)
+        val playerData = Cobblemon.playerDataManager.getGenericData(player)
         if (playerData.starterSelected) {
             playerData.sendToPlayer(player)
             player.sendSystemMessage(lang("ui.starter.alreadyselected").red(), true)
@@ -35,12 +37,12 @@ open class CobblemonStarterHandler : StarterHandler {
         } else {
             OpenStarterUIPacket(getStarterList(player)).sendToPlayer(player)
             playerData.starterPrompted = true
-            Cobblemon.playerData.saveSingle(playerData)
+            Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreTypes.GENERAL)
         }
     }
 
     override fun chooseStarter(player: ServerPlayer, categoryName: String, index: Int) {
-        val playerData = Cobblemon.playerData.get(player)
+        val playerData = Cobblemon.playerDataManager.getGenericData(player)
         if (playerData.starterSelected) {
             return player.sendSystemMessage(lang("ui.starter.alreadyselected").red(), true)
         } else if (playerData.starterLocked) {
@@ -65,7 +67,7 @@ open class CobblemonStarterHandler : StarterHandler {
                 }
             )
             CobblemonCriteria.PICK_STARTER.trigger(player, pokemon)
-            Cobblemon.playerData.saveSingle(playerData)
+            Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreTypes.GENERAL)
             playerData.sendToPlayer(player)
         }
     }

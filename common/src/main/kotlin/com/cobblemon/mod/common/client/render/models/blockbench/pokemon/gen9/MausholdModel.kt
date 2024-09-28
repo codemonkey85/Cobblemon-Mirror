@@ -80,10 +80,10 @@ class MausholdModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
         //    poseName = "sleep",
         //    poseType = PoseType.SLEEP,
         //    transformTicks = 10,
-        //    idleAnimations = arrayOf(
+        //    animations = arrayOf(
         //        bedrock("maushold_three", "sleep")
         //    )
         //)
     }
-    override fun getFaintAnimation(state: PosableState) = if (state.isNotPosedIn(sleep)) bedrockStateful("maushold_three", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = bedrockStateful("maushold_three", "faint")
 }

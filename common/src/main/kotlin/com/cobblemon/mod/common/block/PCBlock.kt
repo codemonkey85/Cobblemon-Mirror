@@ -38,8 +38,10 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
+import net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.EnumProperty
+import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.pathfinder.PathComputationType
@@ -54,6 +56,7 @@ class PCBlock(properties: Properties): BaseEntityBlock(properties), SimpleWaterl
         val PART = EnumProperty.create("part", PCPart::class.java)
         val ON = BooleanProperty.create("on")
         val WATERLOGGED = BooleanProperty.create("waterlogged")
+        val NATURAL = BooleanProperty.create("natural")
 
         private val NORTH_AABB_TOP = Shapes.or(
             Shapes.box(0.1875, 0.0, 0.0, 0.8125, 0.875, 0.125),
@@ -131,7 +134,9 @@ class PCBlock(properties: Properties): BaseEntityBlock(properties), SimpleWaterl
             .setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH)
             .setValue(PART, PCPart.BOTTOM)
             .setValue(ON, false)
-            .setValue(WATERLOGGED, false))
+            .setValue(WATERLOGGED, false)
+            .setValue(NATURAL, false)
+        )
     }
 
     override fun newBlockEntity(blockPos: BlockPos, blockState: BlockState) = if (blockState.getValue(PART) == PCPart.BOTTOM) PCBlockEntity(blockPos, blockState) else null
@@ -235,7 +240,7 @@ class PCBlock(properties: Properties): BaseEntityBlock(properties), SimpleWaterl
     ): Boolean = false
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
-        builder.add(HorizontalDirectionalBlock.FACING)
+        builder.add(HorizontalDirectionalBlock.FACING, NATURAL)
         builder.add(PART)
         builder.add(ON)
         builder.add(WATERLOGGED)
@@ -288,6 +293,7 @@ class PCBlock(properties: Properties): BaseEntityBlock(properties), SimpleWaterl
             volume = 0.5F,
             pitch = 1F
         )
+        world.gameEvent(player, GameEvent.BLOCK_OPEN, blockPos)
         return InteractionResult.SUCCESS
     }
 

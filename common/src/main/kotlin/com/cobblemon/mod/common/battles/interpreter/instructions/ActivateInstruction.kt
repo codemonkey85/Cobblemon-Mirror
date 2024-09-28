@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.battles.interpreter.instructions
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
+import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
 import com.cobblemon.mod.common.api.moves.animations.UsersProvider
 import com.cobblemon.mod.common.api.pokemon.status.Statuses
@@ -78,19 +79,30 @@ class ActivateInstruction(val instructionSet: InstructionSet, val message: Battl
             val effect = message.effectAt(1) ?: return@dispatch GO
             val pokemonName = pokemon.getName()
             val sourceName = message.battlePokemonFromOptional(battle)?.getName() ?: Component.literal("UNKNOWN")
+
+            if (effect.id == "sketch" && pokemon.effectedPokemon.moveSet.any { it.name == "sketch" } && extraEffect is String) {
+                // Apply Sketch to the pokemon's current moveset if it was successfully used in battle
+                val moveTemplate = Moves.getByName(extraEffect.replace(" ", ""))
+                Moves.getByName("sketch")?.let {
+                    moveTemplate?.let { template ->
+                        pokemon.effectedPokemon.exchangeMove(oldMove = it, newMove = template)
+                    }
+                }
+
+            }
+
             val lang = when (effect.id) {
                 // Includes a 3rd argument being the magnitude level as a number
                 "magnitude" -> battleLang("activate.magnitude", message.argumentAt(2)?.toIntOrNull() ?: 1)
                 // Includes spited move and the PP it was reduced by
                 "spite", "eeriespell" -> battleLang("activate.spite", pokemonName, extraEffect, message.argumentAt(3)!!)
                 // Don't need additional lang, announced elsewhere
-                "toxicdebris", "shedskin" -> return@dispatch GO
+                "toxicdebris", "shedskin", "iceface", "owntempo" -> return@dispatch GO
                 // Add activation to each Pokemon's history
                 "destinybond" -> {
                     battle.activePokemon.mapNotNull { it.battlePokemon?.uuid }.forEach { battle.minorBattleActions[it] = message }
                     battleLang("activate.destinybond", pokemonName)
                 }
-                "focussash", "focusband" -> battleLang("activate.focusband", pokemonName, effect.typelessData)
                 "maxguard", "protect" -> battleLang("activate.protect", pokemonName)
                 "shadowforce", "hyperspacefury", "hyperspacehole" -> battleLang("activate.phantomforce", pokemonName)
                 else -> battleLang("activate.${effect.id}", pokemonName, sourceName, extraEffect)

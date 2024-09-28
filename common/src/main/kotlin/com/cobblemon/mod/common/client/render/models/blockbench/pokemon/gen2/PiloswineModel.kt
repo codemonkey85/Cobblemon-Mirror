@@ -35,7 +35,7 @@ class PiloswineModel(root: ModelPart) : PokemonPosableModel(root) {
     override fun registerPoses() {
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("piloswine", "sleep"))
+//            animations = arrayOf(bedrock("piloswine", "sleep"))
 //        )
 
         standing = registerPose(

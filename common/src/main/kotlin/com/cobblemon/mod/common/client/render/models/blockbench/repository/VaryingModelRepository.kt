@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.client.render.ModelLayer
 import com.cobblemon.mod.common.client.render.ModelVariationSet
+import com.cobblemon.mod.common.client.render.SpriteType
 import com.cobblemon.mod.common.client.render.VaryingRenderableResolver
 import com.cobblemon.mod.common.client.render.models.blockbench.*
 import com.cobblemon.mod.common.client.render.models.blockbench.bedrock.animation.BedrockAnimationRepository
@@ -190,31 +191,31 @@ abstract class VaryingModelRepository<T : PosableModel> {
         registerVariations(resourceManager)
     }
 
-    fun getPoser(name: ResourceLocation, aspects: Set<String>): T {
+    fun getPoser(name: ResourceLocation, state: PosableState): T {
         try {
-            val poser = this.variations[name]?.getPoser(aspects)
+            val poser = this.variations[name]?.getPoser(state)
             if (poser != null) {
                 return poser
             }
         } catch(e: IllegalStateException) {
 //            e.printStackTrace()
         }
-        return this.variations[fallback]!!.getPoser(aspects)
+        return this.variations[fallback]!!.getPoser(state)
     }
 
-    fun getTexture(name: ResourceLocation, aspects: Set<String>, animationSeconds: Float = 0F): ResourceLocation {
+    fun getTexture(name: ResourceLocation, state: PosableState): ResourceLocation {
         try {
-            val texture = this.variations[name]?.getTexture(aspects, animationSeconds)
-            if (texture != null && texture.exists()) {
+            val texture = this.variations[name]?.getTexture(state)
+            if (texture != null) {
                 return texture
             }
         } catch(_: IllegalStateException) { }
-        return this.variations[fallback]!!.getTexture(aspects, animationSeconds)
+        return this.variations[fallback]!!.getTexture(state)
     }
 
-    fun getTextureNoSubstitute(name: ResourceLocation, aspects: Set<String>, animationSeconds: Float = 0F): ResourceLocation? {
+    fun getTextureNoSubstitute(name: ResourceLocation, state: PosableState): ResourceLocation? {
         try {
-            val texture = this.variations[name]?.getTexture(aspects, animationSeconds)
+            val texture = this.variations[name]?.getTexture(state)
             if (texture != null && texture.exists()) {
                 return texture
             }
@@ -222,14 +223,21 @@ abstract class VaryingModelRepository<T : PosableModel> {
         return null
     }
 
-    fun getLayers(name: ResourceLocation, aspects: Set<String>): Iterable<ModelLayer> {
+    fun getLayers(name: ResourceLocation, state: PosableState): Iterable<ModelLayer> {
         try {
-            val layers = this.variations[name]?.getLayers(aspects)
+            val layers = this.variations[name]?.getLayers(state)
             if (layers != null) {
                 return layers
             }
         } catch(_: IllegalStateException) { }
-        return this.variations[fallback]!!.getLayers(aspects)
+        return this.variations[fallback]!!.getLayers(state)
+    }
+
+    fun getSprite(name: ResourceLocation, state: PosableState, type: SpriteType): ResourceLocation? {
+        try {
+            return this.variations[name]?.getSprite(state, type)
+        } catch (_: IllegalStateException) {}
+        return null
     }
 
     companion object {

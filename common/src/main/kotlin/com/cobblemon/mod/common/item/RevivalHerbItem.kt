@@ -28,6 +28,7 @@ import net.minecraft.world.InteractionResult
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.item.ItemNameBlockItem
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 
 class RevivalHerbItem(block: RevivalHerbBlock) : ItemNameBlockItem(block, Properties()), PokemonSelectingItem {
@@ -41,6 +42,7 @@ class RevivalHerbItem(block: RevivalHerbBlock) : ItemNameBlockItem(block, Proper
 
     override val bagItem = object : BagItem {
         override val itemName = "item.cobblemon.revival_herb"
+        override val returnItem = Items.AIR
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) = target.health <= 0
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?): String {
             battlePokemon.effectedPokemon.decrementFriendship(CobblemonMechanics.remedies.getFriendshipDrop(runtime))
@@ -66,7 +68,7 @@ class RevivalHerbItem(block: RevivalHerbBlock) : ItemNameBlockItem(block, Proper
     ): InteractionResultHolder<ItemStack>? {
         return if (pokemon.isFainted()) {
             player.playSound(CobblemonSounds.MEDICINE_HERB_USE, 1F, 1F)
-            pokemon.currentHealth = ceil(pokemon.hp / 4F).toInt()
+            pokemon.currentHealth = ceil(pokemon.maxHealth / 4F).toInt()
             pokemon.decrementFriendship(CobblemonMechanics.remedies.getFriendshipDrop(runtime))
             if (!player.isCreative) {
                 stack.shrink(1)

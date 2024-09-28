@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen9
 
+import com.cobblemon.mod.common.client.render.models.blockbench.animation.PrimaryAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
@@ -44,7 +45,7 @@ class GimmighoulChestModel (root: ModelPart) : PokemonPosableModel(root), Headed
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("gimmighoul_chest", "blink") }
-        val quirk = quirk(secondsBetweenOccurrences = 30F to 120F) { bedrockStateful("gimmighoul_chest", "idle_quirk") }
+        val quirk = quirk(secondsBetweenOccurrences = 30F to 120F) { PrimaryAnimation(bedrockStateful("gimmighoul_chest", "idle_quirk")) }
 
         standing = registerPose(
             poseName = "standing",
@@ -82,7 +83,7 @@ class GimmighoulChestModel (root: ModelPart) : PokemonPosableModel(root), Headed
         battle = registerPose(
             poseName = "battle",
             poseTypes = PoseType.STATIONARY_POSES,
-            quirks = arrayOf(blink, quirk),
+            quirks = arrayOf(blink),
             condition = { it.isBattling },
             animations = arrayOf(
                 singleBoneLook(),

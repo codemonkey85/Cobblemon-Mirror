@@ -1,11 +1,11 @@
 {
   "parent": "cobblemon:recipes/root",
   "criteria": {
-    "has_terracotta": {
+    "has_scute": {
       "conditions": {
         "items": [
           {
-            "items": "#minecraft:terracotta"
+            "items": "minecraft:armadillo_scute"
           }
         ]
       },
@@ -20,7 +20,7 @@
   },
   "requirements": [
     [
-      "has_terracotta",
+      "has_scute",
       "has_the_recipe"
     ]
   ],

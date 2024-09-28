@@ -35,10 +35,8 @@ class MoveSet : Iterable<Move> {
     /**
      * Gets all Moves from the Pokémon but skips null Moves
      */
-    fun getMoves(): List<Move> {
-        return moves.filterNotNull()
-    }
-
+    fun getMoves() = moves.filterNotNull()
+    fun getMovesWithNulls() = moves.toList()
     fun hasSpace() = moves.any { it == null }
 
     /**
@@ -56,7 +54,7 @@ class MoveSet : Iterable<Move> {
     fun copyFrom(other: MoveSet) {
         doWithoutEmitting {
             clear()
-            other.getMoves().forEach { add(it) }
+            other.getMoves().forEach { add(it.copy()) }
         }
         update()
     }
@@ -125,6 +123,7 @@ class MoveSet : Iterable<Move> {
         for (i in 0 until MOVE_COUNT) {
             if (moves[i] == null) {
                 moves[i] = move
+                move.observable.subscribe { this.update() }
                 update()
                 return
             }

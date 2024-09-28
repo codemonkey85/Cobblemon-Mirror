@@ -127,7 +127,7 @@ class WalkingwakeModel (root: ModelPart) : PokemonPosableModel(root), HeadedFram
             transformedParts = arrayOf(
                 hair.asTransformed().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("walkingwake", "ground_idle")
             )
@@ -141,7 +141,7 @@ class WalkingwakeModel (root: ModelPart) : PokemonPosableModel(root), HeadedFram
             transformedParts = arrayOf(
                 hair.asTransformed().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("walkingwake", "ground_walk")
             )

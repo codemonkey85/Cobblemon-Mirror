@@ -67,7 +67,7 @@ class DusknoirModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
 //            poseTypes = PoseType.UI_POSES + PoseType.HOVER + PoseType.FLOAT,
 //            condition = { !it.isBattling },
 //            quirks = arrayOf(blink),
-//            idleAnimations = arrayOf(
+//            animations = arrayOf(
 //                bedrock("dusknoir", "air_idle")
 //            )
 //        )
@@ -77,7 +77,7 @@ class DusknoirModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
 //            poseTypes = setOf(PoseType.FLY, PoseType.SWIM, PoseType.WALK),
 //            condition = { !it.isBattling },
 //            quirks = arrayOf(blink),
-//            idleAnimations = arrayOf(
+//            animations = arrayOf(
 //                bedrock("dusknoir", "air_fly")
 //            )
 //        )

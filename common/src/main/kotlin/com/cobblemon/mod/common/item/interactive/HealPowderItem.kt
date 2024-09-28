@@ -22,11 +22,13 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 
 class HealPowderItem : CobblemonItem(Properties()), PokemonSelectingItem {
     override val bagItem = object : BagItem {
         override val itemName = "item.cobblemon.heal_powder"
+        override val returnItem = Items.AIR
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) = canUseOnPokemon(target.effectedPokemon)
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "cure_status"
     }

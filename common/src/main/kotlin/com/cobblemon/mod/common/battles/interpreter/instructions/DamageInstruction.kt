@@ -128,7 +128,7 @@ class DamageInstruction(
             val pokemonEntity = battlePokemon.entity
             //Play recoil animation if the pokemon recoiling isnt dead
             if (!causedFaint && pokemonEntity != null) {
-                val pkt = PlayPosableAnimationPacket(pokemonEntity.id, setOf("recoil"), emptySet())
+                val pkt = PlayPosableAnimationPacket(pokemonEntity.id, setOf("recoil"), emptyList())
                 pkt.sendToPlayersAround(
                     x = pokemonEntity.x,
                     y = pokemonEntity.y,
@@ -195,6 +195,16 @@ class DamageInstruction(
             privateMessage.pnxAndUuid(0)?.let { (pnx, _) -> battle.sendSidedUpdate(actor, BattleHealthChangePacket(pnx, remainingHealth.toFloat()), BattleHealthChangePacket(pnx, newHealthRatio)) }
 
             battle.minorBattleActions[battlePokemon.uuid] = privateMessage
+            if (lastCauser is MoveInstruction) {
+                if (lastCauser.spreadTargets.size > 1) {
+                    val subsequentInstructions = instructionSet.findInstructionsCausedBy(lastCauser)
+                    // Only wait on the last target of a multitarget attack
+                    if (subsequentInstructions.filterIsInstance<DamageInstruction>().last() != this) {
+                        // TODO: Dragon darts?
+                        return@dispatch GO
+                    }
+                }
+            }
 
             // If they faint from this damage then don't bother waiting for the damage to be applied.
             if (lastCauser is MoveInstruction && lastCauser.actionEffect != null && !causedFaint) {

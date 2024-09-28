@@ -11,5 +11,4 @@ package com.cobblemon.mod.common.api.storage.party
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 
 class NPCPartyStore(val npc: NPCEntity) : PartyStore(npc.uuid) {
-    val isLiving: Boolean get() = npc.showVehicleHealth()
 }

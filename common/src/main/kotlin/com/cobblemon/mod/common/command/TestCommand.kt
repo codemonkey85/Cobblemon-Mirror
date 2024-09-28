@@ -14,6 +14,7 @@ import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.abilities.Abilities
 import com.cobblemon.mod.common.api.item.ability.AbilityChanger
+import com.cobblemon.mod.common.api.npc.NPCClasses
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
 import com.cobblemon.mod.common.api.scheduling.taskBuilder
@@ -66,8 +67,11 @@ object TestCommand {
         try {
             //this.testCodecOutput(context)
             val player = context.source.entity as ServerPlayer
+            player.party().forEach { it.currentHealth = it.hp / 2 }
             val npc = NPCEntity(player.level())
             npc.setPos(player.x, player.y, player.z)
+            npc.npc = NPCClasses.getByName("standard")!!
+            npc.initialize(50)
             player.level().addFreshEntity(npc)
 //            val evolutionEntity = GenericBedrockEntity(world = player.level())
 //            evolutionEntity.apply {
@@ -82,6 +86,7 @@ object TestCommand {
 //            after(seconds = 0.5F) {
 //                player.sendPacket(PlayPoseableAnimationPacket(evolutionEntity.id, setOf("evolution:animation.evolution.evolution"), emptySet()))
 //            }
+
 
 //            readBerryDataFromCSV()
 

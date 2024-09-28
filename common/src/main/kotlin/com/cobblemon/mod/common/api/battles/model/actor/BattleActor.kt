@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.api.battles.model.actor
 
+import com.bedrockk.molang.runtime.struct.QueryStruct
+import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.battles.ActiveBattlePokemon
@@ -17,6 +19,7 @@ import com.cobblemon.mod.common.battles.ShowdownActionResponse
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.exception.IllegalActionChoiceException
+import com.cobblemon.mod.common.item.battle.BagItem
 import com.cobblemon.mod.common.net.messages.client.battle.BattleApplyPassResponsePacket
 import com.cobblemon.mod.common.net.messages.client.battle.BattleMakeChoicePacket
 import com.cobblemon.mod.common.net.messages.client.battle.BattleMessagePacket
@@ -33,6 +36,8 @@ abstract class BattleActor(
         pokemonList.forEach { it.actor = this }
     }
 
+    val struct = QueryStruct(hashMapOf())
+
     lateinit var showdownId: String
     lateinit var battle: PokemonBattle
 
@@ -44,6 +49,7 @@ abstract class BattleActor(
     val expectingPassActions = mutableListOf<ShowdownActionResponse>()
     var mustChoose = false
 
+    var itemsUsed = mutableListOf<BagItem>()
     /** For when battles start, it's the number of Pokémon that are still in the process of being sent out (animation wise) */
     var stillSendingOutCount = 0
 
@@ -65,11 +71,14 @@ abstract class BattleActor(
     open fun isForPlayer(serverPlayerEntity: ServerPlayer) = serverPlayerEntity.uuid in getPlayerUUIDs()
     open fun isForPokemon(pokemonEntity: PokemonEntity) = activePokemon.any { it.battlePokemon?.effectedPokemon?.entity == pokemonEntity }
 
-    fun turn() {
+  fun turn() {
         val request = request ?: return
         responses.clear()
-        mustChoose = true
-        sendUpdate(BattleMakeChoicePacket())
+        if(activePokemon.any { it.isAlive() }) {
+            mustChoose = true
+            sendUpdate(BattleMakeChoicePacket())
+        }
+
 
         val requestActive = request.active
         if (requestActive == null || requestActive.isEmpty() || request.wait) {
@@ -129,6 +138,10 @@ abstract class BattleActor(
         battle.writeShowdownAction(">$showdownId ${showdownMessages.joinToString()}")
     }
 
+    open fun setupStruct() {
+        struct.addFunction("uuid") { StringValue(uuid.toString()) }
+    }
+
     abstract fun getName(): MutableComponent
 
     /**
@@ -136,7 +149,7 @@ abstract class BattleActor(
      * NPC and player actors expect to append their [getName] while wild Pokémon append nothing.
      *
      * @param name The name of an object being appended, typically a Pokémon nickname received from showdown.
-     * @return A [MutableText] of the [name] append with owner prefix.
+     * @return A [MutableComponent] of the [name] append with owner prefix.
      */
     abstract fun nameOwned(name: String): MutableComponent
 
