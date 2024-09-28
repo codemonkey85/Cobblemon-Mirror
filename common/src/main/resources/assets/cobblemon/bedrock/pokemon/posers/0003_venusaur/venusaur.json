@@ -1,0 +1,72 @@
+{
+  "portraitScale": 1,
+  "portraitTranslation": [0, 0, 0],
+  "profileScale": 1,
+  "profileTranslation": [0.0, 0.0, 0.0],
+  "animations": {
+    "faint": "q.bedrock_primary('venusaur', 'faint', q.curve('one'))",
+    "cry": "q.bedrock_stateful('venusaur', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "NONE",
+        "PORTRAIT",
+        "PROFILE"
+      ],
+      "animations": [
+        "q.look('head', 1, 0, 10, -45)",
+        "q.look('leaf_front', 1, 0, 3, -15)",
+        "q.bedrock('venusaur', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('venusaur', 'blink')"
+      ],
+      "transformedParts": [
+        {
+          "part": "vines",
+          "isVisible": false
+        }
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "WALK",
+        "SWIM"
+      ],
+      "animations": [
+        "q.look('head', 1, 0, 10, -45)",
+        "q.look('leaf_front', 1, 0, 0, -35)",
+        "q.quadruped_walk(0.66, 0.6, 'arm_left', 'arm_right', 'leg_left', 'leg_right')",
+        "q.bedrock('venusaur', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('venusaur', 'blink')"
+      ],
+      "transformedParts": [
+        {
+          "part": "vines",
+          "isVisible": false
+        }
+      ]
+    },
+    "sleep": {
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('venusaur', 'sleep')"
+      ],
+      "transformedParts": [
+        {
+          "part": "vines",
+          "isVisible": false
+        }
+      ]
+    }
+  }
+}
