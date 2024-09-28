@@ -204,7 +204,7 @@ class BattleConfigureGUI(
             options = listOf(PlayerInteractOptionsPacket.Options.TEAM_REQUEST)
         } else if (challenge != null) {
             options = packet.options.keys.filter { packet.options[it] === PlayerInteractOptionsPacket.OptionStatus.AVAILABLE && battleRequestMap[it]?.battleFormat?.battleType?.name == challenge.battleFormat?.battleType?.name }
-            val level = challenge.battleFormat?.getAdjustLevelRule() ?: -1
+            val level = challenge.battleFormat?.adjustLevel ?: -1
             levelRulesetOptionIndex = maxOf(0, levelRulesetOption.indexOf(level))
         } else {
             options = packet.options.keys.filter { packet.options[it] === PlayerInteractOptionsPacket.OptionStatus.AVAILABLE && battleRequestMap.containsKey(it) }.toList()
@@ -247,9 +247,7 @@ class BattleConfigureGUI(
                 battleRequestMap[options[currentPage]]?.onRequest?.let { it1 ->
                     val battleFormat = battleRequestMap[options[currentPage]]?.battleFormat ?: BattleFormat.GEN_9_SINGLES
                     val level = levelRulesetOption[levelRulesetOptionIndex]
-                    if (level > 0) {
-                        battleFormat.ruleSet += "Adjust Level = $level"
-                    }
+                    battleFormat.adjustLevel = level
                     it1(packet, battleFormat)
                 }
                 closeGUI()

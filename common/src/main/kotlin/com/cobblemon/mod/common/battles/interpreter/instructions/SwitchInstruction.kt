@@ -94,7 +94,7 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
 
             val futureSwitches = instructionSet.getSubsequentInstructions(this).filterIsInstance<SwitchInstruction>()
             if (futureSwitches.isEmpty()) {
-                if (battle.battlePartyStores.isNotEmpty()) {
+                if (battle.format.adjustLevel > 0) {
                     // means battle is using clone teams, recall the "real" pokemon before the sendouts occur
                     var waitOnRecall = false
                     battle.actors.forEach { it ->
