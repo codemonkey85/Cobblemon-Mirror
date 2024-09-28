@@ -24,7 +24,6 @@ import com.cobblemon.mod.common.client.keybind.keybinds.SummaryBinding
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.getDepletableRedGreen
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.client.render.renderScaledGuiItemIcon
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.util.cobblemonResource
@@ -161,7 +160,6 @@ class PartyOverlay : Gui(Minecraft.getInstance()) {
                     matrixStack = matrices,
                     partialTicks = 0F, // partialDeltaTicks, //Before you get any funny ideas about party animated pokemon, make sure they each get their own state instead of sharing.
                     contextScale = pokemon.form.baseScale,
-                    repository = PokemonModelRepository,
                     state = state
                 )
                 matrices.popPose()

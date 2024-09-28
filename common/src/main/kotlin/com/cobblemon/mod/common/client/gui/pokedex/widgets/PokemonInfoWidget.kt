@@ -36,7 +36,7 @@ import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Gender
@@ -609,7 +609,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
     fun recalculatePoses(renderablePokemon: RenderablePokemon) {
         val state = FloatingState()
         state.currentAspects = renderablePokemon.aspects
-        val poser = PokemonModelRepository.getPoser(renderablePokemon.species.resourceIdentifier, state)
+        val poser = VaryingModelRepository.getPoser(renderablePokemon.species.resourceIdentifier, state)
         state.currentModel = poser
         this.poseList = poser.poses
             .map { it.value.poseTypes.first() }

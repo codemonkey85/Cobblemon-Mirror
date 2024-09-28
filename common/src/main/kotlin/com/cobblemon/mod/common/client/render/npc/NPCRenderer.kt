@@ -11,8 +11,8 @@ package com.cobblemon.mod.common.client.render.npc
 import com.cobblemon.mod.common.client.entity.NPCClientDelegate
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableEntityModel
 import com.cobblemon.mod.common.client.render.models.blockbench.npc.PosableNPCModel
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.NPCModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlin.math.min
@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation
 
 class NPCRenderer(context: Context) : LivingEntityRenderer<NPCEntity, PosableEntityModel<NPCEntity>>(context, PosableNPCModel(), 0.5f) {
     override fun getTextureLocation(entity: NPCEntity): ResourceLocation {
-        return NPCModelRepository.getTexture(entity.npc.id, (entity.delegate as NPCClientDelegate))
+        return VaryingModelRepository.getTexture(entity.npc.id, (entity.delegate as NPCClientDelegate))
     }
 
     override fun render(
@@ -38,14 +38,14 @@ class NPCRenderer(context: Context) : LivingEntityRenderer<NPCEntity, PosableEnt
         val clientDelegate = entity.delegate as NPCClientDelegate
         clientDelegate.currentAspects = aspects
         shadowRadius = min((entity.boundingBox.maxX - entity.boundingBox.minX), (entity.boundingBox.maxZ) - (entity.boundingBox.minZ)).toFloat() / 1.5F
-        val model = NPCModelRepository.getPoser(entity.npc.resourceIdentifier, clientDelegate)
+        val model = VaryingModelRepository.getPoser(entity.npc.resourceIdentifier, clientDelegate)
         this.model.posableModel = model
         model.context = this.model.context
         this.model.setupEntityTypeContext(entity)
         this.model.context.put(RenderContext.TEXTURE, getTextureLocation(entity))
         clientDelegate.updatePartialTicks(partialTicks)
 
-        model.setLayerContext(buffer, clientDelegate, NPCModelRepository.getLayers(entity.npc.id, clientDelegate))
+        model.setLayerContext(buffer, clientDelegate, VaryingModelRepository.getLayers(entity.npc.id, clientDelegate))
 
         super.render(entity, entityYaw, partialTicks, poseMatrix, buffer, packedLight)
 

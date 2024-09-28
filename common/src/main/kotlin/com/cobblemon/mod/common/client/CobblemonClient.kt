@@ -70,15 +70,6 @@ object CobblemonClient {
     var checkedStarterScreen = false
     var requests = ClientPlayerActionRequests()
     var teamData = ClientPlayerTeamData()
-    var posableModelRepositories = listOf(
-        PokemonModelRepository,
-        PokeBallModelRepository,
-        NPCModelRepository,
-        FossilModelRepository,
-        BlockEntityModelRepository,
-        GenericBedrockEntityModelRepository
-    )
-
 
     val overlay: PartyOverlay by lazy { PartyOverlay() }
     val battleOverlay: BattleOverlay by lazy { BattleOverlay() }
@@ -288,9 +279,9 @@ object CobblemonClient {
         // Animations come next because models need them.
         BedrockAnimationRepository.loadAnimations(
             resourceManager = resourceManager,
-            directories = posableModelRepositories.flatMap { it.animationDirectories }
+            directories = VaryingModelRepository.animationDirectories
         )
-        posableModelRepositories.forEach { it.reload(resourceManager) }
+        VaryingModelRepository.reload(resourceManager)
 
         BerryModelRepository.reload(resourceManager)
         MiscModelRepository.reload(resourceManager)

@@ -21,9 +21,8 @@ import com.cobblemon.mod.common.client.keybind.keybinds.PartySendBinding
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PosablePokemonEntityModel
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokeBallModelRepository
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.cobblemon.mod.common.client.render.pokeball.PokeBallPosableState
 import com.cobblemon.mod.common.client.render.renderBeaconBeam
 import com.cobblemon.mod.common.client.settings.ServerSettings
@@ -82,7 +81,7 @@ class PokemonRenderer(
     }
 
     override fun getTextureLocation(entity: PokemonEntity): ResourceLocation {
-        return PokemonModelRepository.getTexture(entity.pokemon.species.resourceIdentifier, entity.delegate as PokemonClientDelegate)
+        return VaryingModelRepository.getTexture(entity.pokemon.species.resourceIdentifier, entity.delegate as PokemonClientDelegate)
     }
 
     override fun render(
@@ -95,7 +94,7 @@ class PokemonRenderer(
     ) {
         val clientDelegate = entity.delegate as PokemonClientDelegate
         shadowRadius = min((entity.boundingBox.maxX - entity.boundingBox.minX), (entity.boundingBox.maxZ) - (entity.boundingBox.minZ)).toFloat() / 1.5F * (entity.delegate as PokemonClientDelegate).entityScaleModifier
-        model.posableModel = PokemonModelRepository.getPoser(entity.pokemon.species.resourceIdentifier, clientDelegate)
+        model.posableModel = VaryingModelRepository.getPoser(entity.pokemon.species.resourceIdentifier, clientDelegate)
         model.posableModel.context = model.context
         model.setupEntityTypeContext(entity)
         val modelNow = model.posableModel
@@ -121,7 +120,7 @@ class PokemonRenderer(
             )
         }
 
-        modelNow.setLayerContext(buffer, clientDelegate, PokemonModelRepository.getLayers(entity.pokemon.species.resourceIdentifier, clientDelegate))
+        modelNow.setLayerContext(buffer, clientDelegate, VaryingModelRepository.getLayers(entity.pokemon.species.resourceIdentifier, clientDelegate))
 
         if (entity.ticksLived < 10) {
             entity.yBodyRot = entity.entityData.get(SPAWN_DIRECTION)
@@ -396,8 +395,8 @@ class PokemonRenderer(
     ) {
         matrixStack.pushPose()
         matrixStack.scale(0.7F, -0.7F, -0.7F)
-        val model = PokeBallModelRepository.getPoser(ball.name, state)
-        val texture = PokeBallModelRepository.getTexture(ball.name, state)
+        val model = VaryingModelRepository.getPoser(ball.name, state)
+        val texture = VaryingModelRepository.getTexture(ball.name, state)
         if (scale == 1.0f) {
             model.moveToPose(state, model.poses["open"]!!)
         } else {

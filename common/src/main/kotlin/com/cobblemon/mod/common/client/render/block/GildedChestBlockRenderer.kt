@@ -9,8 +9,9 @@
 package com.cobblemon.mod.common.client.render.block
 
 import com.cobblemon.mod.common.block.entity.GildedChestBlockEntity
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.BlockEntityModelRepository
+import com.cobblemon.mod.common.client.render.models.blockbench.blockentity.BlockEntityModel
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import net.minecraft.client.renderer.MultiBufferSource
@@ -40,9 +41,9 @@ class GildedChestBlockRenderer(context: BlockEntityRendererProvider.Context) : B
 
         val poserId = entity.type.poserId
 
-        val model = BlockEntityModelRepository.getPoser(poserId, state)
+        val model = VaryingModelRepository.getPoser(poserId, state) as BlockEntityModel
         model.context = context
-        val texture = BlockEntityModelRepository.getTexture(poserId, state)
+        val texture = VaryingModelRepository.getTexture(poserId, state)
         val vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutout(texture))
         model.bufferProvider = vertexConsumers
         state.currentModel = model
@@ -67,7 +68,7 @@ class GildedChestBlockRenderer(context: BlockEntityRendererProvider.Context) : B
             ageInTicks = state.animationSeconds * 20
         )
         model.render(context, matrices, vertexConsumer, light, overlay, -0x1)
-        model.withLayerContext(vertexConsumers, state, BlockEntityModelRepository.getLayers(poserId, state)) {
+        model.withLayerContext(vertexConsumers, state, VaryingModelRepository.getLayers(poserId, state)) {
             model.render(context, matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY, -0x1)
         }
         model.setDefault()

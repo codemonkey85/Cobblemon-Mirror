@@ -12,12 +12,10 @@ import com.cobblemon.mod.common.api.text.font
 import com.cobblemon.mod.common.client.gui.battle.BattleOverlay.Companion.PORTRAIT_DIAMETER
 import com.cobblemon.mod.common.client.render.SpriteType
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.toHex
-import com.mojang.authlib.minecraft.client.MinecraftClient
 import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.platform.Lighting
 import com.mojang.blaze3d.systems.RenderSystem
@@ -209,7 +207,6 @@ fun drawPosablePortrait(
     contextScale: Float = 1F,
     reversed: Boolean = false,
     state: PosableState,
-    repository: VaryingModelRepository<*>,
     partialTicks: Float,
     limbSwing: Float = 0F,
     limbSwingAmount: Float = 0F,
@@ -228,16 +225,16 @@ fun drawPosablePortrait(
 //    matrixStack.translate(0.0, 1.5 * contextScale , 0.0)
     matrixStack.translate(0.0, -PORTRAIT_DIAMETER / 18.0, 0.0)
 
-    val sprite = repository.getSprite(identifier, state, SpriteType.PORTRAIT);
+    val sprite = VaryingModelRepository.getSprite(identifier, state, SpriteType.PORTRAIT);
 
     if (sprite == null) {
-        val model = repository.getPoser(identifier, state)
+        val model = VaryingModelRepository.getPoser(identifier, state)
         state.currentModel = model
-        val texture = repository.getTexture(identifier, state)
+        val texture = VaryingModelRepository.getTexture(identifier, state)
 
         val context = RenderContext()
         model.context = context
-        repository.getTextureNoSubstitute(identifier, state).let { context.put(RenderContext.TEXTURE, it) }
+        VaryingModelRepository.getTextureNoSubstitute(identifier, state).let { context.put(RenderContext.TEXTURE, it) }
         context.put(RenderContext.SCALE, contextScale)
         context.put(RenderContext.SPECIES, identifier)
         context.put(RenderContext.ASPECTS, state.currentAspects)
@@ -273,7 +270,7 @@ fun drawPosablePortrait(
         val packedLight = LightTexture.pack(11, 7)
 
         val colour = toHex(r, g, b, a)
-        model.withLayerContext(immediate, state, repository.getLayers(identifier, state)) {
+        model.withLayerContext(immediate, state, VaryingModelRepository.getLayers(identifier, state)) {
             model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, colour)
             immediate.endBatch()
         }
@@ -289,7 +286,6 @@ fun drawPosablePortrait(
 }
 
 fun drawProfile(
-    repository: VaryingModelRepository<*>,
     resourceIdentifier: ResourceLocation,
     matrixStack: PoseStack,
     state: PosableState,
@@ -299,16 +295,16 @@ fun drawProfile(
     RenderSystem.applyModelViewMatrix()
     matrixStack.scale(scale, scale, -scale)
 
-    val sprite = repository.getSprite(resourceIdentifier, state, SpriteType.PROFILE)
+    val sprite = VaryingModelRepository.getSprite(resourceIdentifier, state, SpriteType.PROFILE)
 
     if (sprite == null) {
 
-        val model = repository.getPoser(resourceIdentifier, state)
-        val texture = repository.getTexture(resourceIdentifier, state)
+        val model = VaryingModelRepository.getPoser(resourceIdentifier, state)
+        val texture = VaryingModelRepository.getTexture(resourceIdentifier, state)
 
         val context = RenderContext()
         model.context = context
-        repository.getTextureNoSubstitute(resourceIdentifier, state).let { context.put(RenderContext.TEXTURE, it) }
+        VaryingModelRepository.getTextureNoSubstitute(resourceIdentifier, state).let { context.put(RenderContext.TEXTURE, it) }
         context.put(RenderContext.SCALE, 1F)
         context.put(RenderContext.SPECIES, resourceIdentifier)
         context.put(RenderContext.ASPECTS, state.currentAspects)
@@ -342,7 +338,7 @@ fun drawProfile(
         RenderSystem.setShaderLights(light1, light2)
         val packedLight = LightTexture.pack(11, 7)
 
-        model.withLayerContext(bufferSource, state, repository.getLayers(resourceIdentifier, state)) {
+        model.withLayerContext(bufferSource, state, VaryingModelRepository.getLayers(resourceIdentifier, state)) {
             model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
             bufferSource.endBatch()
         }

@@ -11,7 +11,6 @@ package com.cobblemon.mod.common.client.gui.npc.widgets
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.gui.drawProfile
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.NPCModelRepository
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Renderable
@@ -50,7 +49,6 @@ class NPCRenderWidget(
         context.pose().translate(x + WIDTH / 2F, y + HEIGHT / 2F, 0F)
 
         drawProfile(
-            repository = NPCModelRepository,
             resourceIdentifier = identifier,
             matrixStack = context.pose(),
             partialTicks = delta,

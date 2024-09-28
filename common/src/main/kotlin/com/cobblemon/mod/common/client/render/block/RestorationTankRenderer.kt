@@ -12,23 +12,24 @@ import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.block.entity.RestorationTankBlockEntity
 import com.cobblemon.mod.common.block.multiblock.FossilMultiblockStructure
 import com.cobblemon.mod.common.client.CobblemonBakingOverrides
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.FossilModelRepository
+import com.cobblemon.mod.common.client.render.models.blockbench.fossil.FossilModel
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.WaveFunction
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.parabolaFunction
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.rerange
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.timeDilate
 import com.cobblemon.mod.common.util.cobblemonResource
-import kotlin.math.pow
-import net.minecraft.world.level.block.HorizontalDirectionalBlock
-import net.minecraft.client.renderer.texture.OverlayTexture
-import net.minecraft.client.renderer.RenderType
-import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
+import kotlin.math.pow
+import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
+import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.core.Direction
+import net.minecraft.world.level.block.HorizontalDirectionalBlock
 
 class RestorationTankRenderer(ctx: BlockEntityRendererProvider.Context) : BlockEntityRenderer<RestorationTankBlockEntity> {
     val context = RenderContext().also {
@@ -114,8 +115,14 @@ class RestorationTankRenderer(ctx: BlockEntityRendererProvider.Context) : BlockE
         state.updatePartialTicks(tickDelta)
         state.currentAspects = aspects
 
+        var fossilPoserId = fossil.identifier.withPath("${fossil.identifier.path}_fetus")
+
         val completionPercentage = (1 - timeRemaining / FossilMultiblockStructure.TIME_TO_TAKE.toFloat()).coerceIn(0F, 1F)
-        val fossilFetusModel = FossilModelRepository.getPoser(fossil.identifier, state)
+        val fossilFetusModel = VaryingModelRepository.getPoser(fossilPoserId, state) as? FossilModel ?: let {
+            fossilPoserId = cobblemonResource("fossil_fetus")
+            VaryingModelRepository.getPoser(fossilPoserId, state) as FossilModel
+        }
+
         fossilFetusModel.context = context
 
         val embryo1Scale = EMBRYO_CURVE_1(completionPercentage)
@@ -124,15 +131,15 @@ class RestorationTankRenderer(ctx: BlockEntityRendererProvider.Context) : BlockE
         val fossilScale = FOSSIL_CURVE(completionPercentage)
 
         val identifiersAndScales = listOf(
-                Pair(EMBRYO_IDENTIFIERS[0], embryo1Scale),
-                Pair(EMBRYO_IDENTIFIERS[1], embryo2Scale),
-                Pair(EMBRYO_IDENTIFIERS[2], embryo3Scale),
-                Pair(fossil.identifier, fossilScale)
+            Pair(EMBRYO_IDENTIFIERS[0], embryo1Scale),
+            Pair(EMBRYO_IDENTIFIERS[1], embryo2Scale),
+            Pair(EMBRYO_IDENTIFIERS[2], embryo3Scale),
+            Pair(fossilPoserId, fossilScale)
         )
 
         identifiersAndScales.forEach { (identifier, scale) ->
-            val model = FossilModelRepository.getPoser(identifier, state)
-            val texture = FossilModelRepository.getTexture(identifier, state)
+            val model = VaryingModelRepository.getPoser(identifier, state) as FossilModel
+            val texture = VaryingModelRepository.getTexture(identifier, state)
 
             if (scale > 0F) {
                 val vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutout(texture))
@@ -175,7 +182,7 @@ class RestorationTankRenderer(ctx: BlockEntityRendererProvider.Context) : BlockE
                     ageInTicks = state.animationSeconds * 20
                 )
                 model.render(context, matrices, vertexConsumer, light, overlay, -0x1)
-                model.withLayerContext(vertexConsumers, state, FossilModelRepository.getLayers(fossil.identifier, state)) {
+                model.withLayerContext(vertexConsumers, state, VaryingModelRepository.getLayers(fossilPoserId, state)) {
                     model.render(context, matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY, -0x1)
                 }
                 model.setDefault()

@@ -10,8 +10,7 @@ package com.cobblemon.mod.common.client.entity
 
 import com.cobblemon.mod.common.api.entity.EntitySideDelegate
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.GenericBedrockEntityModelRepository
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.cobblemon.mod.common.entity.generic.GenericBedrockEntity
 
 class GenericBedrockClientDelegate : EntitySideDelegate<GenericBedrockEntity>, PosableState() {
@@ -24,7 +23,7 @@ class GenericBedrockClientDelegate : EntitySideDelegate<GenericBedrockEntity>, P
         super.initialize(entity)
         this.currentEntity = entity
         this.age = entity.tickCount
-        this.currentModel = GenericBedrockEntityModelRepository.getPoser(entity.category, entity.delegate as GenericBedrockClientDelegate)
+        this.currentModel = VaryingModelRepository.getPoser(entity.category, entity.delegate as GenericBedrockClientDelegate)
         currentModel!!.updateLocators(entity, this)
         updateLocatorPosition(entity.position())
 

@@ -20,8 +20,10 @@ import java.lang.reflect.Type
  * @since October 18th, 2022
  */
 class JsonModelAdapter<T : PosableModel>(private val constructor: (Bone) -> T) : InstanceCreator<T> {
-    var modelPart: Bone? = null
-    var model: T? = null
+    companion object {
+        var modelPart: Bone? = null
+        var model: PosableModel? = null
+    }
     override fun createInstance(type: Type): T {
         val rootBone = modelPart!!
         return constructor(rootBone).also {

@@ -12,8 +12,8 @@ import com.cobblemon.mod.common.api.gui.renderSprite
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.client.render.SpriteType
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.toHex
@@ -76,16 +76,16 @@ fun drawProfilePokemon(
     RenderSystem.applyModelViewMatrix()
     matrixStack.scale(scale, scale, -scale)
 
-    val sprite = PokemonModelRepository.getSprite(species, state, SpriteType.PROFILE);
+    val sprite = VaryingModelRepository.getSprite(species, state, SpriteType.PROFILE);
 
     if (sprite == null) {
 
-        val model = PokemonModelRepository.getPoser(species, state)
-        val texture = PokemonModelRepository.getTexture(species, state)
+        val model = VaryingModelRepository.getPoser(species, state)
+        val texture = VaryingModelRepository.getTexture(species, state)
 
         val context = RenderContext()
         model.context = context
-        PokemonModelRepository.getTextureNoSubstitute(species, state).let { context.put(RenderContext.TEXTURE, it) }
+        VaryingModelRepository.getTextureNoSubstitute(species, state).let { context.put(RenderContext.TEXTURE, it) }
         val baseScale = PokemonSpecies.getByIdentifier(species)!!.getForm(state.currentAspects).baseScale
         context.put(RenderContext.SCALE, baseScale)
         context.put(RenderContext.SPECIES, species)
@@ -127,7 +127,7 @@ fun drawProfilePokemon(
         val packedLight = LightTexture.pack(11, 7)
 
         val colour = toHex(r, g, b, a)
-        model.withLayerContext(bufferSource, state, PokemonModelRepository.getLayers(species, state)) {
+        model.withLayerContext(bufferSource, state, VaryingModelRepository.getLayers(species, state)) {
             model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, colour)
             bufferSource.endBatch()
         }

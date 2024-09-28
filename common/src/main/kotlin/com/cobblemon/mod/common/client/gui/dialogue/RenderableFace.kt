@@ -15,8 +15,6 @@ import com.cobblemon.mod.common.client.entity.NPCClientDelegate
 import com.cobblemon.mod.common.client.entity.PokemonClientDelegate
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.NPCModelRepository
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.entity.PosableEntity
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import java.util.UUID
@@ -82,7 +80,6 @@ class ReferenceRenderableFace(val entity: PosableEntity, override val isLeftSide
             state.currentAspects = state.currentEntity.pokemon.aspects
             drawPosablePortrait(
                 identifier = state.currentEntity.pokemon.species.resourceIdentifier,
-                repository = PokemonModelRepository,
                 contextScale = state.currentEntity.pokemon.form.baseScale,
                 matrixStack = GuiGraphics.pose(),
                 state = state,
@@ -96,7 +93,6 @@ class ReferenceRenderableFace(val entity: PosableEntity, override val isLeftSide
             val limbSwingAmount = entity.walkAnimation.speed(partialTicks)
             drawPosablePortrait(
                 identifier = state.npcEntity.npc.resourceIdentifier,
-                repository = NPCModelRepository,
                 matrixStack = GuiGraphics.pose(),
                 state = state,
                 reversed = !isLeftSide,
@@ -131,7 +127,6 @@ class ArtificialRenderableFace(
                 contextScale = species.getForm(aspects).baseScale,
                 state = state,
                 reversed = !isLeftSide,
-                repository = PokemonModelRepository,
                 partialTicks = partialTicks
             )
         } else if (modelType == "npc") {
@@ -140,7 +135,6 @@ class ArtificialRenderableFace(
                 matrixStack = GuiGraphics.pose(),
                 state = state,
                 reversed = !isLeftSide,
-                repository = NPCModelRepository,
                 partialTicks = partialTicks
             )
         }
