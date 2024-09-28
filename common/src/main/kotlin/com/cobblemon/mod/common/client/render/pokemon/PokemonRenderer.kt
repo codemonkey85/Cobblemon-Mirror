@@ -119,7 +119,7 @@ class PokemonRenderer(
                 clientDelegate
             )
         }
-        if(true || entity.platform) {
+        if(entity.platform) {
             drawPlatform(
                     poseMatrix,
                     (entity.delegate as PokemonClientDelegate).entityScaleModifier,

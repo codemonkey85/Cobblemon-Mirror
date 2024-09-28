@@ -137,6 +137,7 @@ open class PokemonEntity(
         @JvmStatic val MOVING = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.BOOLEAN)
         @JvmStatic val BEHAVIOUR_FLAGS = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.BYTE)
         @JvmStatic val PHASING_TARGET_ID = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.INT)
+        @JvmStatic val HAS_PlATFORM = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.BOOLEAN)
         @JvmStatic val BEAM_MODE = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.BYTE)
         @JvmStatic val BATTLE_ID = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.OPTIONAL_UUID)
         @JvmStatic val ASPECTS = SynchedEntityData.defineId(PokemonEntity::class.java, StringSetDataSerializer)
@@ -249,7 +250,9 @@ open class PokemonEntity(
     /** The form exposed to the client and used for calculating hitbox and height. */
     val exposedForm: FormData get() = this.effects.mockEffect?.exposedForm ?: this.pokemon.form
 
-    var platform : Boolean = false
+    var platform : Boolean
+        get() = entityData.get(HAS_PlATFORM)
+        set(value) { entityData.set(HAS_PlATFORM, value) }
 
     override val struct: QueryStruct = QueryStruct(hashMapOf())
         .addStandardFunctions()
@@ -289,6 +292,7 @@ open class PokemonEntity(
         builder.define(MOVING, false)
         builder.define(BEHAVIOUR_FLAGS, 0)
         builder.define(BEAM_MODE, 0)
+        builder.define(HAS_PlATFORM, false)
         builder.define(PHASING_TARGET_ID, -1)
         builder.define(BATTLE_ID, Optional.empty())
         builder.define(ASPECTS, emptySet())
@@ -547,6 +551,9 @@ open class PokemonEntity(
         if (!enablePoseTypeRecalculation) {
             nbt.putBoolean(DataKeys.POKEMON_RECALCULATE_POSE, enablePoseTypeRecalculation)
         }
+        if(entityData.get(HAS_PlATFORM)) {
+            nbt.putBoolean(DataKeys.POKEMON_HAS_PLATFORM, entityData.get(HAS_PlATFORM))
+        }
 
         // save active effects
         nbt.put(DataKeys.ENTITY_EFFECTS, effects.saveToNbt(this.level().registryAccess()))
@@ -630,6 +637,10 @@ open class PokemonEntity(
         }
         if (nbt.contains(DataKeys.POKEMON_RECALCULATE_POSE)) {
             enablePoseTypeRecalculation = nbt.getBoolean(DataKeys.POKEMON_RECALCULATE_POSE)
+        }
+
+        if (nbt.contains(DataKeys.POKEMON_HAS_PLATFORM)) {
+            entityData.set(HAS_PlATFORM, nbt.getBoolean(DataKeys.POKEMON_HAS_PLATFORM))
         }
 
         CobblemonEvents.POKEMON_ENTITY_LOAD.postThen(

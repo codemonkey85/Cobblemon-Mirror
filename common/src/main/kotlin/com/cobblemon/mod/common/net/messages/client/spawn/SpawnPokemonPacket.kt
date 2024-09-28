@@ -32,6 +32,7 @@ class SpawnPokemonPacket(
     private val battleId: UUID?,
     private val phasingTargetId: Int,
     private val beamMode: Byte,
+    private val platform: Boolean,
     private val nickname: MutableComponent?,
     private val labelLevel: Int,
     private val poseType: PoseType,
@@ -55,6 +56,7 @@ class SpawnPokemonPacket(
         entity.battleId,
         entity.phasingTargetId,
         entity.beamMode.toByte(),
+        entity.platform,
         entity.pokemon.nickname,
         if (Cobblemon.config.displayEntityLevelLabel) entity.entityData.get(PokemonEntity.LABEL_LEVEL) else -1,
         entity.entityData.get(PokemonEntity.POSE_TYPE),
@@ -76,6 +78,7 @@ class SpawnPokemonPacket(
         buffer.writeNullable(this.battleId) { pb, value -> pb.writeUUID(value) }
         buffer.writeInt(this.phasingTargetId)
         buffer.writeByte(this.beamMode.toInt())
+        buffer.writeBoolean(this.platform)
         buffer.writeNullable(this.nickname) { _, v -> buffer.writeText(v) }
         buffer.writeInt(this.labelLevel)
         buffer.writeEnumConstant(this.poseType)
@@ -99,6 +102,7 @@ class SpawnPokemonPacket(
         }
         entity.phasingTargetId = this.phasingTargetId
         entity.beamMode = this.beamMode.toInt()
+        entity.platform = this.platform
         entity.battleId = this.battleId
         entity.entityData.set(PokemonEntity.LABEL_LEVEL, labelLevel)
         entity.entityData.set(PokemonEntity.SPECIES, entity.pokemon.species.resourceIdentifier.toString())
@@ -126,6 +130,7 @@ class SpawnPokemonPacket(
             val battleId = buffer.readNullable { buffer.readUUID() }
             val phasingTargetId = buffer.readInt()
             val beamModeEmitter = buffer.readByte()
+            val platform = buffer.readBoolean()
             val nickname = buffer.readNullable { buffer.readText().copy() }
             val labelLevel = buffer.readInt()
             val poseType = buffer.readEnumConstant(PoseType::class.java)
@@ -137,7 +142,7 @@ class SpawnPokemonPacket(
             val freezeFrame = buffer.readFloat()
             val vanillaPacket = decodeVanillaPacket(buffer)
 
-            return SpawnPokemonPacket(ownerId, scaleModifier, species, form, aspects, battleId, phasingTargetId, beamModeEmitter, nickname, labelLevel, poseType, unbattlable, hideLabel, caughtBall, spawnAngle, friendship, freezeFrame, vanillaPacket)
+            return SpawnPokemonPacket(ownerId, scaleModifier, species, form, aspects, battleId, phasingTargetId, beamModeEmitter, platform, nickname, labelLevel, poseType, unbattlable, hideLabel, caughtBall, spawnAngle, friendship, freezeFrame, vanillaPacket)
         }
     }
 
