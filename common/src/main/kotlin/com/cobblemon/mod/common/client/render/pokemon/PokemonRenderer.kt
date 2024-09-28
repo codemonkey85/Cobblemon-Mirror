@@ -21,7 +21,7 @@ import com.cobblemon.mod.common.client.keybind.keybinds.PartySendBinding
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PosablePokemonEntityModel
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.PlatformModelRepository
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.MiscModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokeBallModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
@@ -438,21 +438,18 @@ class PokemonRenderer(
 
     private fun drawPlatform(
             matrixStack: PoseStack,
-            scale: Float = 5F,
+            scale: Float = 1F,
             partialTicks: Float,
             buff: MultiBufferSource,
             packedLight: Int,
             state: PosableState,
             ) {
+        val model = MiscModelRepository.modelOf(cobblemonResource("water_platform_m.geo")) ?: return
         matrixStack.pushPose()
         matrixStack.mulPose(Axis.ZP.rotationDegrees(180f))
-        val aspects = emptySet<String>()
-        val model = PlatformModelRepository.getPoser(cobblemonResource("water_platform_m"), state)
         val texture = cobblemonResource("textures/platforms/water_platform_m.png")
         val buffer = ItemRenderer.getFoilBufferDirect(buff, RenderType.entityCutout(texture), false, false)
-
-
-        model.render(ballContext, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
+        model.render(matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
 
         matrixStack.popPose()
     }

@@ -76,7 +76,6 @@ object CobblemonClient {
         NPCModelRepository,
         FossilModelRepository,
         BlockEntityModelRepository,
-        PlatformModelRepository,
         GenericBedrockEntityModelRepository
     )
 
