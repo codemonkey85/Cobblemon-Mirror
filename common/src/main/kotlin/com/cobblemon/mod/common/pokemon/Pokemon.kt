@@ -547,45 +547,52 @@ open class Pokemon : ShowdownIdentifiable {
     }
 
     fun sendOutWithAnimation(
-        source: LivingEntity,
-        level: ServerLevel,
-        position: Vec3,
-        battleId: UUID? = null,
-        doCry: Boolean = true,
-        illusion: IllusionEffect? = null,
-        mutation: (PokemonEntity) -> Unit = {},
+            source: LivingEntity,
+            level: ServerLevel,
+            position: Vec3,
+            battleId: UUID? = null,
+            doCry: Boolean = true,
+            illusion: IllusionEffect? = null,
+            mutation: (PokemonEntity) -> Unit = {},
     ): CompletableFuture<PokemonEntity> {
+
+        var targetPosition = Vec3(position.x, position.y, position.z)
 
         // send out raft if over water
         var platform = false
-        if (position != null) {
-            // todo if send out position is over water then add a raft entity to stand on
-            if (level.isWaterAt(
-                    BlockPos(
-                        position.x.toInt(),
-                        position.y.toInt() - 1,
-                        position.z.toInt()
-                    )
-                ) && this.species.types.all { it != ElementalTypes.WATER && it != ElementalTypes.FLYING }) {
+        var blockPos = BlockPos(targetPosition.x.toInt(), targetPosition.y.toInt(), targetPosition.z.toInt())
+        if (level.isWaterAt(blockPos) || level.isWaterAt(blockPos.below())) {
 
-//                // Create a new boat entity with the generic EntityType.BOAT
-//                val raftEntity = Boat(level, position.x, position.y, position.z)
-//
-//                raftEntity.variant = Boat.Type.BAMBOO
-//
-//                raftEntity.setPos(position.x, position.y, position.z) // Set the position of the boat
-//
-//                // Spawn the boat entity in the world
-//                level.addFreshEntity(raftEntity)
-//
-//                this.battleSurface = raftEntity
-                platform = true
+            if (!this.species.behaviour.moving.swim.canBreatheUnderwater) {
+                // move sendout pos to surface if it's near
+                val blockLookCount = 5
+                var foundSurface = false
+                for (i in 0..blockLookCount) {
+                    // Try to find a surface...
+                    val blockState = level.getBlockState(blockPos)
+                    if (blockState.fluidState.isEmpty) {
+                        if(blockState.getCollisionShape(level, blockPos).isEmpty) {
+                            foundSurface = true
+                        }
+                        // No space above the water surface
+                        break
+                    }
+                    blockPos = blockPos.above()
+                }
+                if (foundSurface) {
+                    val canFly = this.species.behaviour.moving.fly.canFly
+                    targetPosition = Vec3(targetPosition.x, blockPos.y.toDouble() + if (canFly) 1.2 else 0.0, targetPosition.z)
+                    if (!canFly) {
+                        // add a raft if we can't fly or swim
+                        platform = true
+                    }
+                }
             }
         }
 
         // Handle special case of shouldered Cobblemon
         if (this.state is ShoulderedState) {
-            return sendOutFromShoulder(source as ServerPlayer, level, position, battleId, doCry, illusion, mutation)
+            return sendOutFromShoulder(source as ServerPlayer, level, targetPosition, battleId, doCry, illusion, mutation)
         }
 
         // Proceed as normal for non-shouldered Cobblemon
@@ -597,7 +604,7 @@ open class Pokemon : ShowdownIdentifiable {
         }
 
         preamble.thenApply {
-            sendOut(level, position, illusion) {
+            sendOut(level, targetPosition, illusion) {
                 val owner = getOwnerEntity()
                 if (owner is LivingEntity) {
                     owner.swing(InteractionHand.MAIN_HAND, true)
@@ -610,6 +617,7 @@ open class Pokemon : ShowdownIdentifiable {
                 it.beamMode = 1
                 it.battleId = battleId
                 it.platform = platform
+//                it.isNoGravity = true
 
                 it.after(seconds = THROW_DURATION) {
                     it.phasingTargetId = -1

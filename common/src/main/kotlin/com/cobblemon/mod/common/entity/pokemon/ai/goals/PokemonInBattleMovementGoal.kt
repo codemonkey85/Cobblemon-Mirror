@@ -10,17 +10,35 @@ package com.cobblemon.mod.common.entity.pokemon.ai.goals
 
 import com.cobblemon.mod.common.battles.BattleRegistry
 import com.cobblemon.mod.common.entity.PoseType
+import com.cobblemon.mod.common.entity.pokemon.PokemonBehaviourFlag
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import net.minecraft.world.entity.ai.goal.Goal
+import net.minecraft.world.phys.Vec3
 
 class PokemonInBattleMovementGoal(val entity: PokemonEntity, val range: Int) : Goal() {
+
+    var battlePos : Vec3? = null
+    var ticksSinceStart: Int = 0
+    var ticksMax = 15
     override fun canUse(): Boolean {
         return entity.isBattling && getClosestPokemonEntity() != null && entity.getCurrentPoseType() != PoseType.SLEEP
     }
 
     override fun start() {
         super.start()
+        battlePos = entity.position()
         entity.navigation.stop()
+        if (!entity.onGround()) {
+            if (entity.pokemon.species.behaviour.moving.fly.canFly) {
+                // Let flyers fly in battle if they're in the air
+                entity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, true)
+            }
+        }
+    }
+
+    override fun stop() {
+        super.stop()
+        entity.isNoGravity = false
     }
 
     private fun getClosestPokemonEntity(): PokemonEntity? {
@@ -35,6 +53,30 @@ class PokemonInBattleMovementGoal(val entity: PokemonEntity, val range: Int) : G
         val closestPokemonEntity = getClosestPokemonEntity()
         if (closestPokemonEntity != null) {
             entity.lookControl.setLookAt(closestPokemonEntity.x, closestPokemonEntity.eyeY, closestPokemonEntity.z)
+        }
+
+        if( ticksSinceStart <= 2 * ticksMax) {
+            ++ticksSinceStart
+        }
+
+        if (ticksSinceStart == ticksMax) {
+            // kick start swimming/flying after letting them fall for a bit
+            entity.navigation.moveTo(
+                    battlePos!!.x,
+                    battlePos!!.y,
+                    battlePos!!.z,
+                    0.7
+            )
+            entity.isNoGravity = true
+        } else if (ticksSinceStart == ticksMax * 2) {
+            // halt them in place
+            entity.navigation.stop()
+            entity.isNoGravity = true
+        } else if(ticksSinceStart > ticksMax * 2) {
+            // TODO: Swimmers continue to drift upward/downward. Why?
+            // I believe the fluid is pushing them around
+            entity.isNoGravity = true
+
         }
     }
 }
