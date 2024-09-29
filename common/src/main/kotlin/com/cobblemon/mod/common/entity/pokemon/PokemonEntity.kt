@@ -23,6 +23,7 @@ import com.cobblemon.mod.common.api.events.entity.PokemonEntitySaveToWorldEvent
 import com.cobblemon.mod.common.api.events.pokemon.ShoulderMountEvent
 import com.cobblemon.mod.common.api.interaction.PokemonEntityInteraction
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
+import com.cobblemon.mod.common.api.net.serializers.PlatformTypeDataSerializer
 import com.cobblemon.mod.common.api.net.serializers.PoseTypeDataSerializer
 import com.cobblemon.mod.common.api.net.serializers.StringSetDataSerializer
 import com.cobblemon.mod.common.api.pokemon.feature.ChoiceSpeciesFeatureProvider
@@ -43,6 +44,7 @@ import com.cobblemon.mod.common.battles.BattleBuilder
 import com.cobblemon.mod.common.battles.BattleRegistry
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity
 import com.cobblemon.mod.common.client.entity.PokemonClientDelegate
+import com.cobblemon.mod.common.entity.PlatformType
 import com.cobblemon.mod.common.entity.PosableEntity
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.generic.GenericBedrockEntity
@@ -66,7 +68,6 @@ import com.cobblemon.mod.common.pokemon.activestate.InactivePokemonState
 import com.cobblemon.mod.common.pokemon.activestate.ShoulderedState
 import com.cobblemon.mod.common.pokemon.ai.FormPokemonBehaviour
 import com.cobblemon.mod.common.pokemon.evolution.variants.ItemInteractionEvolution
-import com.cobblemon.mod.common.pokemon.misc.GimmighoulStashHandler
 import com.cobblemon.mod.common.pokemon.properties.UncatchableProperty
 import com.cobblemon.mod.common.pokemon.feature.StashHandler
 import com.cobblemon.mod.common.util.*
@@ -137,7 +138,7 @@ open class PokemonEntity(
         @JvmStatic val MOVING = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.BOOLEAN)
         @JvmStatic val BEHAVIOUR_FLAGS = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.BYTE)
         @JvmStatic val PHASING_TARGET_ID = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.INT)
-        @JvmStatic val HAS_PlATFORM = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.BOOLEAN)
+        @JvmStatic val PLATFORM_TYPE = SynchedEntityData.defineId(PokemonEntity::class.java, PlatformTypeDataSerializer)
         @JvmStatic val BEAM_MODE = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.BYTE)
         @JvmStatic val BATTLE_ID = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.OPTIONAL_UUID)
         @JvmStatic val ASPECTS = SynchedEntityData.defineId(PokemonEntity::class.java, StringSetDataSerializer)
@@ -250,9 +251,9 @@ open class PokemonEntity(
     /** The form exposed to the client and used for calculating hitbox and height. */
     val exposedForm: FormData get() = this.effects.mockEffect?.exposedForm ?: this.pokemon.form
 
-    var platform : Boolean
-        get() = entityData.get(HAS_PlATFORM)
-        set(value) { entityData.set(HAS_PlATFORM, value) }
+    var platform : PlatformType
+        get() = entityData.get(PLATFORM_TYPE)
+        set(value) { entityData.set(PLATFORM_TYPE, value) }
 
     override val struct: QueryStruct = QueryStruct(hashMapOf())
         .addStandardFunctions()
@@ -292,7 +293,7 @@ open class PokemonEntity(
         builder.define(MOVING, false)
         builder.define(BEHAVIOUR_FLAGS, 0)
         builder.define(BEAM_MODE, 0)
-        builder.define(HAS_PlATFORM, false)
+        builder.define(PLATFORM_TYPE, PlatformType.NONE)
         builder.define(PHASING_TARGET_ID, -1)
         builder.define(BATTLE_ID, Optional.empty())
         builder.define(ASPECTS, emptySet())
@@ -342,9 +343,9 @@ open class PokemonEntity(
 //        val targetPos = node?.blockPos
 //        if (targetPos == null || world.getBlockState(targetPos.up()).isAir) {
         return if (state.`is`(FluidTags.WATER) && !isEyeInFluid(FluidTags.WATER)) {
-            behaviour.moving.swim.canWalkOnWater || platform
+            behaviour.moving.swim.canWalkOnWater || platform != PlatformType.NONE
         } else if (state.`is`(FluidTags.LAVA) && !isEyeInFluid(FluidTags.LAVA)) {
-            behaviour.moving.swim.canWalkOnLava || platform
+            behaviour.moving.swim.canWalkOnLava || platform != PlatformType.NONE
         } else {
             super.canStandOnFluid(state)
         }
@@ -551,9 +552,9 @@ open class PokemonEntity(
         if (!enablePoseTypeRecalculation) {
             nbt.putBoolean(DataKeys.POKEMON_RECALCULATE_POSE, enablePoseTypeRecalculation)
         }
-        if(entityData.get(HAS_PlATFORM)) {
-            nbt.putBoolean(DataKeys.POKEMON_HAS_PLATFORM, entityData.get(HAS_PlATFORM))
-        }
+//        if (entityData.get(PLATFORM_TYPE) != PlatformType.NONE) {
+//            nbt.putBoolean(DataKeys.POKEMON_PLATFORM_TYPE, entityData.get(PLATFORM_TYPE))
+//        }
 
         // save active effects
         nbt.put(DataKeys.ENTITY_EFFECTS, effects.saveToNbt(this.level().registryAccess()))
@@ -639,8 +640,8 @@ open class PokemonEntity(
             enablePoseTypeRecalculation = nbt.getBoolean(DataKeys.POKEMON_RECALCULATE_POSE)
         }
 
-        if (nbt.contains(DataKeys.POKEMON_HAS_PLATFORM)) {
-            entityData.set(HAS_PlATFORM, nbt.getBoolean(DataKeys.POKEMON_HAS_PLATFORM))
+        if (nbt.contains(DataKeys.POKEMON_PLATFORM_TYPE)) {
+            entityData.set(PLATFORM_TYPE, PlatformType.valueOf(nbt.getString(DataKeys.POKEMON_PLATFORM_TYPE)))
         }
 
         CobblemonEvents.POKEMON_ENTITY_LOAD.postThen(
@@ -1206,7 +1207,7 @@ open class PokemonEntity(
 
     override fun travel(movementInput: Vec3) {
         val prevBlockPos = this.blockPosition()
-        if (beamMode != 3 && !platform) { // Don't let Pokémon move during recall
+        if (beamMode != 3 && platform == PlatformType.NONE) { // Don't let Pokémon move during recall
             super.travel(movementInput)
             this.updateBlocksTraveled(prevBlockPos)
         }

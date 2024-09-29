@@ -28,6 +28,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.repository.Rende
 import com.cobblemon.mod.common.client.render.pokeball.PokeBallPosableState
 import com.cobblemon.mod.common.client.render.renderBeaconBeam
 import com.cobblemon.mod.common.client.settings.ServerSettings
+import com.cobblemon.mod.common.entity.PlatformType
 import com.cobblemon.mod.common.entity.PosableEntity
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
@@ -36,6 +37,7 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity.Companion.SPAWN_DIR
 import com.cobblemon.mod.common.pokeball.PokeBall
 import com.cobblemon.mod.common.util.*
 import com.cobblemon.mod.common.util.math.DoubleRange
+import com.cobblemon.mod.common.util.math.geometry.toDegrees
 import com.cobblemon.mod.common.util.math.geometry.toRadians
 import com.cobblemon.mod.common.util.math.remap
 import com.mojang.blaze3d.vertex.PoseStack
@@ -119,14 +121,19 @@ class PokemonRenderer(
                 clientDelegate
             )
         }
-        if(entity.platform) {
+        if(entity.platform != PlatformType.NONE) {
+//            poseMatrix.pushPose()
+//            poseMatrix.rotateAround(Axis.YP.rotationDegrees(entity.entityData.get(SPAWN_DIRECTION).toDegrees()), 0.0f, 0f, 0.0f)
             drawPlatform(
                     poseMatrix,
+                    entity,
                     (entity.delegate as PokemonClientDelegate).entityScaleModifier,
                     partialTicks,
                     buffer,
                     packedLight,
             )
+//            poseMatrix.popPose()
+            // keeps the pokemon's root on the raft
             poseMatrix.translate(0.0, 0.25 * (entity.delegate as PokemonClientDelegate).entityScaleModifier, 0.0)
         }
 
@@ -437,17 +444,18 @@ class PokemonRenderer(
 
     private fun drawPlatform(
             matrixStack: PoseStack,
+            entity: PokemonEntity,
             scale: Float = 1F,
             partialTicks: Float,
             buff: MultiBufferSource,
             packedLight: Int,
             ) {
-        val model = MiscModelRepository.modelOf(cobblemonResource("water_platform_m.geo")) ?: return
+        val (modelResource, textureResource) = PlatformType.GetModelWithTexture(entity.platform)
+        val model = MiscModelRepository.modelOf(modelResource) ?: return
         matrixStack.pushPose()
         matrixStack.mulPose(Axis.ZP.rotationDegrees(180f))
         matrixStack.scale(scale, scale, scale)
-        val texture = cobblemonResource("textures/platforms/water_platform_m.png")
-        val buffer = ItemRenderer.getFoilBufferDirect(buff, RenderType.entityCutout(texture), false, false)
+        val buffer = ItemRenderer.getFoilBufferDirect(buff, RenderType.entityCutout(textureResource), false, false)
         model.render(matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
 
         matrixStack.popPose()

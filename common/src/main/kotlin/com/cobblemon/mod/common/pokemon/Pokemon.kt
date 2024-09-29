@@ -57,6 +57,7 @@ import com.cobblemon.mod.common.api.types.tera.TeraTypes
 import com.cobblemon.mod.common.config.CobblemonConfig
 import com.cobblemon.mod.common.datafixer.CobblemonSchemas
 import com.cobblemon.mod.common.datafixer.CobblemonTypeReferences
+import com.cobblemon.mod.common.entity.PlatformType
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.entity.pokemon.effects.IllusionEffect
@@ -559,7 +560,7 @@ open class Pokemon : ShowdownIdentifiable {
         var targetPosition = Vec3(position.x, position.y, position.z)
 
         // send out raft if over water
-        var platform = false
+        var platform = PlatformType.NONE
         var blockPos = BlockPos(targetPosition.x.toInt(), targetPosition.y.toInt(), targetPosition.z.toInt())
         if (level.isWaterAt(blockPos) || level.isWaterAt(blockPos.below())) {
 
@@ -584,7 +585,7 @@ open class Pokemon : ShowdownIdentifiable {
                     targetPosition = Vec3(targetPosition.x, blockPos.y.toDouble() + if (canFly) 1.2 else 0.0, targetPosition.z)
                     if (!canFly) {
                         // add a raft if we can't fly or swim
-                        platform = true
+                        platform = PlatformType.GetPlatformTypeForPokemon(this)
                     }
                 }
             }

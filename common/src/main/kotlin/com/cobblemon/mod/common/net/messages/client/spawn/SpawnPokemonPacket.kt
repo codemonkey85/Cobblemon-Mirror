@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.net.messages.client.spawn
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
+import com.cobblemon.mod.common.entity.PlatformType
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.FormData
@@ -32,7 +33,7 @@ class SpawnPokemonPacket(
     private val battleId: UUID?,
     private val phasingTargetId: Int,
     private val beamMode: Byte,
-    private val platform: Boolean,
+    private val platform: PlatformType,
     private val nickname: MutableComponent?,
     private val labelLevel: Int,
     private val poseType: PoseType,
@@ -78,7 +79,7 @@ class SpawnPokemonPacket(
         buffer.writeNullable(this.battleId) { pb, value -> pb.writeUUID(value) }
         buffer.writeInt(this.phasingTargetId)
         buffer.writeByte(this.beamMode.toInt())
-        buffer.writeBoolean(this.platform)
+        buffer.writeEnumConstant(this.platform)
         buffer.writeNullable(this.nickname) { _, v -> buffer.writeText(v) }
         buffer.writeInt(this.labelLevel)
         buffer.writeEnumConstant(this.poseType)
@@ -130,7 +131,7 @@ class SpawnPokemonPacket(
             val battleId = buffer.readNullable { buffer.readUUID() }
             val phasingTargetId = buffer.readInt()
             val beamModeEmitter = buffer.readByte()
-            val platform = buffer.readBoolean()
+            val platform = buffer.readEnumConstant(PlatformType::class.java)
             val nickname = buffer.readNullable { buffer.readText().copy() }
             val labelLevel = buffer.readInt()
             val poseType = buffer.readEnumConstant(PoseType::class.java)

@@ -15,6 +15,7 @@ import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.net.serializers.IdentifierDataSerializer
 import com.cobblemon.mod.common.api.net.serializers.NPCPlayerTextureSerializer
 import com.cobblemon.mod.common.api.net.serializers.PoseTypeDataSerializer
+import com.cobblemon.mod.common.api.net.serializers.PlatformTypeDataSerializer
 import com.cobblemon.mod.common.api.net.serializers.StringSetDataSerializer
 import com.cobblemon.mod.common.api.net.serializers.UUIDSetDataSerializer
 import com.cobblemon.mod.common.api.net.serializers.Vec3DataSerializer
@@ -220,6 +221,7 @@ object CobblemonFabric : CobblemonImplementation {
         EntityDataSerializers.registerSerializer(Vec3DataSerializer)
         EntityDataSerializers.registerSerializer(StringSetDataSerializer)
         EntityDataSerializers.registerSerializer(PoseTypeDataSerializer)
+        EntityDataSerializers.registerSerializer(PlatformTypeDataSerializer)
         EntityDataSerializers.registerSerializer(IdentifierDataSerializer)
         EntityDataSerializers.registerSerializer(UUIDSetDataSerializer)
         EntityDataSerializers.registerSerializer(NPCPlayerTextureSerializer)
