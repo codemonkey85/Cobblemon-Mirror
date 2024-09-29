@@ -39,15 +39,52 @@
 - Sunflora
 - Wobbuffet
 - Girafarig
+- Remoraid
+- Octillery
+- Mantine
+- Corsola
 
 #### Gen 3
 - Wynaut
+- Feebas
+- Milotic
+- Spheal
+- Sealeo
+- Walrein
+- Kecleon
+
+#### Gen 4
+- Mantyke
+- Finneon
+- Lumineon
+- Shellos
+- Gastrodon
+- Rotom
+
+#### Gen 5
+- Purrloin
+- Liepard
+
+#### Gen 6
+- Clauncher
+- Clawitzer
+
+#### Gen 7
+- Bruxish
+- Mareanie
+- Toxapex
 
 #### Gen 8
 - Cramorant
+- Pincurchin
 
 #### Gen 9
 - Farigiraf
+- Finizen
+- Palafin
+- Wiglett
+- Wugtrio
+- Flamigo
 
 ### Added cries to the following Pokémon
 - Timburr, Gurdurr, Conkeldurr
@@ -66,7 +103,7 @@
 - Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs.
 - Updated UI sounds for clicking and evolving Pokémon.
 - Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users.
-- Bulbasaur, Ivysaur, Venusaur, Kakuna, Beedrill, Snorlax, Munchlax, Krabby, Kingler, and Lurantis received model updates.
+- Bulbasaur, Ivysaur, Venusaur, Kakuna, Beedrill, Snorlax, Munchlax, Krabby, Kingler, Lurantis, Horsea, Seadra, Kingdra, Litten, Torracat, Incineroar, Mudkip, Marshtomp, Swampert, Scorbunny, Cinderace, Prinplup, Empoleon, Relicanth, Goldeen, Seaking, Shellder, Cloyster, Tatsugiri, Igglybuff, Jigglypuff, Wigglytuff, Krookodile, Gible, Gabite, Garchomp, Rhyhorn, Rhydon, Rhyperior, and Carvanha received model updates.
 - Vivillon wings will stop being clear when you remove any Vivillon related resourcepacks. The default pattern will be the meadow wings.
 - Adjusted Pokémon sendout positions for single battles.
 - Wild Pokémon interaction range increased to 12 blocks (from 10 blocks).
