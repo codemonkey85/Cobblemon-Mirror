@@ -210,7 +210,7 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
         const val WIN_ANIMATION = "win"
     }
 
-    override fun brainProvider(): Brain.Provider<out NPCEntity> = Brain.provider(MEMORY_MODULES, SENSORS)
+    override fun brainProvider(): Brain.Provider<NPCEntity> = Brain.provider(MEMORY_MODULES, SENSORS)
     override fun getBreedOffspring(world: ServerLevel, entity: AgeableMob) = null // No lovemaking! Unless...
     override fun getCurrentPoseType() = this.entityData.get(POSE_TYPE)
 
