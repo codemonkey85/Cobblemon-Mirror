@@ -1,6 +1,8 @@
 package com.cobblemon.mod.common.client.render
 
 import com.cobblemon.mod.common.client.CobblemonClient
+import com.cobblemon.mod.common.client.requests.ClientPlayerActionRequest
+import com.cobblemon.mod.common.client.ClientMultiBattleTeamMember
 import com.cobblemon.mod.common.platform.events.RenderEvent
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.mojang.blaze3d.systems.RenderSystem
@@ -17,59 +19,58 @@ import org.joml.Quaternionf
 import java.util.*
 
 /**
- * Visual notification rendered above a player's nametag.
+ * Visual notification rendered above a player's nametag for [ClientMultiBattleTeamMember]s and unanswered [ClientPlayerActionRequest]s.
+ *
+ * @param expiryTime The amount of time (in seconds) this icon is valid.
  *
  * @author Segfault Guy
  * @since September 1st, 2024
  */
 abstract class ClientPlayerIcon(expiryTime: Int? = null) {
 
-    /** The texture to render above the player. */
+    /** The texture to use for the icon. */
     open val texture: ResourceLocation = cobblemonResource("textures/particle/icon_exclamation.png")
+    /** The offset of the icon from the player's head. */
     open val Y_OFFSET = 1.5F
+    /** The offset of the icon from the player's head. */
+    private val FADE_RATIO = 0.25F
 
-    // lifetime
-    open val fadeTime = 0 //100
-    private var tickCount = 0
-    private val expiryTicks = expiryTime?.let { it * 20 }
-    private val tickRateManager by lazy { Minecraft.getInstance().level!!.tickRateManager() }
+    private val tickCount get() = Minecraft.getInstance().player!!.tickCount    // icon is only ticked when tracked, so derive lifetime from player tick - startTick
     private val startTick = Minecraft.getInstance().player!!.tickCount
+    private val tickRateManager = Minecraft.getInstance().level!!.tickRateManager()
+    /** The tick at which the icon begins fading. */
+    private val fadeTickStamp = expiryTime?.let { it * tickRateManager.tickrate() * (1 - FADE_RATIO) + startTick}?.toInt() ?: Int.MAX_VALUE // TODO is server expiration based on epoc going to cause a problem?
 
-    // fade
-    open val fadeDuration = 30   // ticks
+    /** Duration (in ticks) of the fade transition. */
+    open val fadeDuration = 30
+    /** How long (in ticks) the icon has been fading. */
     private var fadeCount = 0
+    private val fading get() = tickCount >= fadeTickStamp
     private var fadeOut = true
         set(value) {
             fadeCount = 0
             field = value
         }
 
-    // alpha
-    val MAX_ALPHA = 1F
-    val MIN_ALPHA = 0.15F
+    private val MAX_ALPHA = 1F
+    private val MIN_ALPHA = 0.15F   // MC fragment shaders won't draw textures with < 0.1 alpha and the sudden cutoff from 0.1 to 0 and vice versa is jarring
     private var alpha = 1F
     private val startAlpha get() = if (fadeOut) MAX_ALPHA else MIN_ALPHA
     private val finalAlpha get() = if (fadeOut) MIN_ALPHA else MAX_ALPHA
 
     fun onTick() {
-        tickCount++
-        if (tickCount >= fadeTime) fadeCount++
-        if (fadeCount == fadeDuration) fadeOut = !fadeOut
-        alpha = if (tickCount >= fadeTime) Mth.lerp(fadeCount.toFloat()/fadeDuration, startAlpha, finalAlpha) else 1F
+        if (!fading) return else fadeCount++
+        if (fadeCount == fadeDuration) fadeOut = !fadeOut   // toggle transition
+
+        // alpha changed outside of render deltaticks so fade does not freeze off screen
+        alpha = Mth.lerp(fadeCount.toFloat()/fadeDuration, startAlpha, finalAlpha)
     }
 
     fun render(player: Player) {
-        if (expiryTicks != null && tickCount >= expiryTicks) return
-        //if (Minecraft.getInstance().player?.let { BattleRegistry.getBattleByParticipatingPlayerId(it.uuid) } == null) return
-
         DeferredRenderer.enqueue(RenderEvent.Stage.TRANSLUCENT) { event ->
             val poseStack = event.poseStack
-            val partialTicks = event.tickCounter.getGameTimeDeltaPartialTick(!tickRateManager.isEntityFrozen(player)) //LevelRenderer for Entities does this
+            val partialTicks = event.tickCounter.getGameTimeDeltaPartialTick(!tickRateManager.isEntityFrozen(player))
             val camera = event.camera
-
-            // changing alpha here?
-            // keep in mind tick rate can change now... thanks Mojang. see TickRateManager
-            // keep in mind server timing is based on system time. change this?
 
             poseStack.pushPose()
             positionTag(player, poseStack, camera, partialTicks)
@@ -102,10 +103,12 @@ abstract class ClientPlayerIcon(expiryTime: Int? = null) {
 
     /** Sets the shading and gl states of the quad then queues for drawing. */
     private fun drawTag(poseStack: PoseStack) {
+        // texture
         RenderSystem.setShader { GameRenderer.getPositionTexColorShader() }
         RenderSystem.setShaderTexture(0, texture)
         RenderSystem.setShaderColor(1f, 1f, 1f, alpha)
 
+        // gl states
         RenderSystem.enableBlend()
         RenderSystem.defaultBlendFunc()
         RenderSystem.enableDepthTest()
@@ -116,6 +119,7 @@ abstract class ClientPlayerIcon(expiryTime: Int? = null) {
         buildTag(model, buffer)
         BufferUploader.drawWithShader(buffer.buildOrThrow())
 
+        // undo
         RenderSystem.disableBlend()
         RenderSystem.disableDepthTest()
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f)
@@ -130,12 +134,13 @@ abstract class ClientPlayerIcon(expiryTime: Int? = null) {
         fun update(player: UUID) {
             val teamIcon = CobblemonClient.teamData.multiBattleTeamMembers.find { it.uuid == player }
             val requests = CobblemonClient.requests.getRequestsFrom(player).filterIsInstance<ClientPlayerIcon>()
-            if (teamIcon != null) {
-                trackedIcons[player] = teamIcon
-            }
-            else if (requests.isNotEmpty()) {
-                val icon = if (requests.size > 1) CompoundClientPlayerIcon(*requests.toTypedArray()) else requests.first()
+
+            if (requests.isNotEmpty()) {
+                val icon = requests.minBy { it.fadeTickStamp }  // icon that expires the soonest has priority
                 trackedIcons[player] = icon
+            }
+            else if (teamIcon != null) {
+                trackedIcons[player] = teamIcon
             }
             else {
                 trackedIcons.remove(player)

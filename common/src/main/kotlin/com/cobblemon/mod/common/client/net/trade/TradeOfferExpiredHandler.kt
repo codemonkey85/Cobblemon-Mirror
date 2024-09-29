@@ -8,7 +8,6 @@
 
 package com.cobblemon.mod.common.client.net.trade
 
-import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.render.ClientPlayerIcon
@@ -17,7 +16,7 @@ import net.minecraft.client.Minecraft
 
 object TradeOfferExpiredHandler : ClientNetworkPacketHandler<TradeOfferExpiredPacket> {
     override fun handle(packet: TradeOfferExpiredPacket, client: Minecraft) {
-        CobblemonClient.requests.tradeOffers.remove(packet.traderId)?.let { Cobblemon.LOGGER.error("Missing trade offer from ${packet.traderId}") }
+        CobblemonClient.requests.tradeOffers.remove(packet.traderId)
         ClientPlayerIcon.update(packet.traderId)
     }
 }
