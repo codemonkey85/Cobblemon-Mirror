@@ -70,9 +70,6 @@ object PokemonBrain {
         MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
         CobblemonMemories.POKEMON_FLYING,
         CobblemonMemories.NEAREST_VISIBLE_ATTACKER,
-
-//            CobblemonMemories.NPC_BATTLING,
-//            CobblemonMemories.BATTLING_POKEMON,
         MemoryModuleType.HURT_BY,
         MemoryModuleType.HURT_BY_ENTITY,
         MemoryModuleType.NEAREST_PLAYERS,
@@ -110,14 +107,6 @@ object PokemonBrain {
             ImmutableList.copyOf(sleepingTasks())
         )
         brain.addActivityAndRemoveMemoryWhenStopped(
-            Activity.FIGHT,
-            0,
-            ImmutableList.of(
-                MeleeAttack.create(10)
-            ),
-            MemoryModuleType.ATTACK_TARGET
-        )
-        brain.addActivityAndRemoveMemoryWhenStopped(
             Activity.AVOID,
             10,
             ImmutableList.of(
@@ -151,10 +140,9 @@ object PokemonBrain {
     fun updateActivities(pokemon:PokemonEntity) {
         pokemon.brain.setActiveActivityToFirstValid(
             ImmutableList.of(
-//                Activity.CORE,
+                Activity.CORE,
                 Activity.AVOID,
                 Activity.IDLE,
-                Activity.FIGHT,
                 CobblemonActivities.BATTLING_ACTIVITY,
                 CobblemonActivities.POKEMON_SLEEPING_ACTIVITY,
                 CobblemonActivities.POKEMON_GROW_CROP
@@ -172,6 +160,7 @@ object PokemonBrain {
         add(0 toDF HandleBattleActivityGoal.create())
         add(0 toDF FollowWalkTargetTask())
         add(0 toDF DefendOwnerTask()) // try to defend owners here as a test
+        add(0 toDF PokemonMeleeTask.create(20))
     }
 
 

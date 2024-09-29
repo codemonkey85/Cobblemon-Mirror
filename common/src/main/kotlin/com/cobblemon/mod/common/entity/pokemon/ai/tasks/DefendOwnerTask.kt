@@ -54,8 +54,8 @@ class DefendOwnerTask : Behavior<PokemonEntity>(
             if (followRange != null && entity.distanceTo(it) <= followRange) {
                 if (entity.distanceTo(it) > 2.0) {
                     entity.brain.setMemory(
-                            MemoryModuleType.WALK_TARGET,
-                            WalkTarget(it, 1.0f, 1)
+                        MemoryModuleType.WALK_TARGET,
+                        WalkTarget(it, 0.6f, 1)
                     )
                 } else {
                     entity.doHurtTarget(it)

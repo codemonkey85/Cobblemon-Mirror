@@ -156,8 +156,8 @@ open class PokemonEntity(
 
         const val BATTLE_LOCK = "battle"
 
-        fun createAttributes(): AttributeSupplier.Builder = LivingEntity.createLivingAttributes()
-            .add(Attributes.FOLLOW_RANGE)
+        fun createAttributes(): AttributeSupplier.Builder = createLivingAttributes()
+            .add(Attributes.FOLLOW_RANGE, 6.0)
             .add(Attributes.ATTACK_KNOCKBACK)
             .add(Attributes.ATTACK_DAMAGE)
     }
@@ -423,7 +423,7 @@ open class PokemonEntity(
 
     override fun customServerAiStep() {
         this.getBrain().tick(level() as ServerLevel, this)
-        PokemonBrain.updateActivities(this)
+//        PokemonBrain.updateActivities(this)
         super.customServerAiStep()
     }
 
