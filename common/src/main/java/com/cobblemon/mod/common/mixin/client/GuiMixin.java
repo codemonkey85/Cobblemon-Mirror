@@ -32,7 +32,7 @@ public class GuiMixin {
     // sus af. You have to get the method name by looking at the bytecode of the class. Can do in intellij By clicking View -> Show Bytecode (top left)
     @Inject(method = "method_55797", at = @At("HEAD"), cancellable = true)
     private static void cobblemon$dontRenderUiInPokedex(Minecraft minecraft, CallbackInfoReturnable<Boolean> cir) {
-        if (CobblemonClient.INSTANCE.getPokedexUsageContext().getScanningGuiOpen()) {
+        if (CobblemonClient.INSTANCE.getPokedexUsageContext().getScanningGuiOpen() && minecraft.options.getCameraType().isFirstPerson()) {
             cir.setReturnValue(false);
         }
     }

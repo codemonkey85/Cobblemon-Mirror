@@ -24,15 +24,6 @@ class DescriptionWidget(descX: Int, descY: Int): InfoTextScrollWidget(pX = descX
     var showPlaceholder: Boolean = true
 
     override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        drawScaledText(
-            context = context,
-            font = CobblemonResources.DEFAULT_LARGE,
-            text = Component.translatable("cobblemon.ui.pokedex.info.description").bold(),
-            x = pX + 9,
-            y = pY - 10,
-            shadow = true
-        )
-
         if (showPlaceholder) {
             blitk(
                 matrixStack = context.pose(),
@@ -43,6 +34,15 @@ class DescriptionWidget(descX: Int, descY: Int): InfoTextScrollWidget(pX = descX
                 height = 10
             )
         } else {
+            drawScaledText(
+                context = context,
+                font = CobblemonResources.DEFAULT_LARGE,
+                text = Component.translatable("cobblemon.ui.pokedex.info.entry").bold(),
+                x = pX + 9,
+                y = pY - 10,
+                shadow = true
+            )
+
             super.renderWidget(context, mouseX, mouseY, delta)
         }
     }
