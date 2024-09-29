@@ -9,11 +9,11 @@
 package com.cobblemon.mod.common.net.serverhandling.pokedex.scanner
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.events.CobblemonEvents.POKEMON_SCANNED
 import com.cobblemon.mod.common.api.events.pokedex.scanning.PokemonScannedEvent
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.net.messages.client.pokedex.ServerConfirmedScanPacket
+import com.cobblemon.mod.common.net.messages.client.pokedex.ServerConfirmedRegisterPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.FinishScanningPacket
 import com.cobblemon.mod.common.pokedex.scanner.PlayerScanningDetails
 import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext
@@ -22,7 +22,7 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 
 /**
- * Calls POKEMON_SCANNED event when pokemon is finished scanning
+ * Calls [POKEMON_SCANNED] event when Pokémon is finished scanning
  *
  * @author Apion
  * @since August 10, 2024
@@ -34,21 +34,22 @@ object FinishScanningHandler : ServerNetworkPacketHandler<FinishScanningPacket> 
         player: ServerPlayer
     ) {
         val targetEntity = player.level().getEntity(packet.targetedId) ?: return
-
-        if (PokemonScanner.isEntityInRange(player, targetEntity)) {
+        if (PokemonScanner.isEntityInRange(player, targetEntity, packet.zoomLevel)) {
             val inProgressUUID = PlayerScanningDetails.playerToEntityMap[player.uuid]
             val progressTick = PlayerScanningDetails.playerToTickMap[player.uuid]
             val ticksScan = progressTick?.let { server.tickCount - it } ?: return
-            if (targetEntity.uuid == inProgressUUID && ticksScan >= PokedexUsageContext.TICKS_TO_SCAN) {
+            if (targetEntity.uuid == inProgressUUID && ticksScan >= PokedexUsageContext.SUCCESS_SCAN_SERVER_TICKS) {
                 val pokemonEntity = targetEntity as? PokemonEntity ?: return
                 val dex = Cobblemon.playerDataManager.getPokedexData(player)
+                val newInformation = dex.getNewInformation(pokemonEntity.pokemon)
+
                 if (pokemonEntity.owner == player) {
                     dex.catch(pokemonEntity.pokemon)
                 } else {
                     dex.encounter(pokemonEntity.pokemon)
                 }
-                CobblemonEvents.POKEMON_SCANNED.post(PokemonScannedEvent(player, pokemonEntity))
-                ServerConfirmedScanPacket(pokemonEntity.pokemon.species.resourceIdentifier).sendToPlayer(player)
+                POKEMON_SCANNED.post(PokemonScannedEvent(player, pokemonEntity))
+                ServerConfirmedRegisterPacket(pokemonEntity.pokemon.species.resourceIdentifier, newInformation).sendToPlayer(player)
             }
         }
     }

@@ -9,79 +9,265 @@
 package com.cobblemon.mod.common.client.pokedex
 
 import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.api.text.bold
-import com.cobblemon.mod.common.api.text.text
+import com.cobblemon.mod.common.api.pokedex.PokedexLearnedInformation
+import com.cobblemon.mod.common.api.text.*
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.CobblemonResources
+import com.cobblemon.mod.common.client.gui.battle.BattleOverlay.Companion.SCALE
+import com.cobblemon.mod.common.client.gui.battle.BattleOverlay.Companion.caughtIndicator
+import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.BASE_HEIGHT
+import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.BASE_WIDTH
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext
+import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.lang
 import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.vertex.BufferUploader
-import com.mojang.blaze3d.vertex.DefaultVertexFormat
-import com.mojang.blaze3d.vertex.Tesselator
-import com.mojang.blaze3d.vertex.VertexFormat
+import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.renderer.GameRenderer
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth.clamp
 import org.joml.Quaternionf
-import kotlin.math.ceil
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.math.*
 
 /**
- * Renders the UI for scanning a pokemon
+ * Renders the UI for scanning a Pokémon
  *
  * @author Village
  */
 class PokedexScannerRenderer {
-    fun renderScanProgress(graphics: GuiGraphics, progress: Int) {
-        val client = Minecraft.getInstance()
-        val screenWidth = client.window.guiScaledWidth
-        val screenHeight = client.window.guiScaledHeight
+    companion object {
+        val SCAN_OVERLAY_NOTCH_WIDTH = 200
+        val CENTER_INFO_FRAME_WIDTH = 128
+        val CENTER_INFO_FRAME_HEIGHT = 16
+        val OUTER_INFO_FRAME_WIDTH = 92
+        val OUTER_INFO_FRAME_HEIGHT = 55
+        val INNER_INFO_FRAME_WIDTH = 120
+        val INNER_INFO_FRAME_HEIGHT = 20
+        val INNER_INFO_FRAME_STEM_WIDTH = 28
+        val UNKNOWN_MARK_WIDTH = 34
+        val UNKNOWN_MARK_HEIGHT = 46
+        val POINTER_WIDTH = 6
+        val POINTER_HEIGHT = 10
+        val POINTER_OFFSET = 30
 
-        val centerX = screenWidth / 2.0
-        val centerY = screenHeight / 2.0
-        val radius = 50.0  // Radius of the circle
-        val segments = 100  // Number of segments in the circle
+        val SCAN_RING_MIDDLE_WIDTH = 100
+        val SCAN_RING_MIDDLE_HEIGHT = 1
 
-        val progressAngle = 360.0 * (progress / 100.0)  // Calculate the angle for the current progress
+        val SCAN_RING_OUTER_DIAMETER = 116
+        val SCAN_RING_INNER_DIAMETER = 84
 
-        // Prepare rendering
-        RenderSystem.enableBlend()
-        RenderSystem.defaultBlendFunc()
-        RenderSystem.setShader(GameRenderer::getPositionColorShader)
+        val SCAN_SCREEN = cobblemonResource("textures/gui/pokedex/pokedex_screen_scan.png")
+        val SCAN_OVERLAY_CORNERS = cobblemonResource("textures/gui/pokedex/scan/overlay_corners.png")
+        val SCAN_OVERLAY_TOP = cobblemonResource("textures/gui/pokedex/scan/overlay_border_top.png")
+        val SCAN_OVERLAY_BOTTOM = cobblemonResource("textures/gui/pokedex/scan/overlay_border_bottom.png")
+        val SCAN_OVERLAY_LEFT = cobblemonResource("textures/gui/pokedex/scan/overlay_border_left.png")
+        val SCAN_OVERLAY_RIGHT = cobblemonResource("textures/gui/pokedex/scan/overlay_border_right.png")
+        val SCAN_OVERLAY_LINES = cobblemonResource("textures/gui/pokedex/scan/overlay_scanlines.png")
+        val SCAN_OVERLAY_NOTCH = cobblemonResource("textures/gui/pokedex/scan/overlay_notch.png")
 
-        // Start drawing
-        val tessellator = Tesselator.getInstance()
-        val bufferBuilder = tessellator.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR)
+        val SCAN_RING_OUTER = cobblemonResource("textures/gui/pokedex/scan/scan_ring_outer.png")
+        val SCAN_RING_MIDDLE = cobblemonResource("textures/gui/pokedex/scan/scan_ring_middle.png")
+        val SCAN_RING_INNER = cobblemonResource("textures/gui/pokedex/scan/scan_ring_inner.png")
 
-        // Center vertex
-        bufferBuilder
-            .addVertex(centerX.toFloat(), centerY.toFloat(), 0.0f)
-            .setColor(0.0f, 1.0f, 1.0f, 1.0f)
+        val CENTER_INFO_FRAME = cobblemonResource("textures/gui/pokedex/scan/scan_info_frame.png")
+        val UNKNOWN_MARK = cobblemonResource("textures/gui/pokedex/scan/scan_unknown.png")
+        val POINTER = cobblemonResource("textures/gui/pokedex/scan/pointer.png")
 
-        // Circle vertices
-        for (i in 0..segments) {
-            val angle = progressAngle * (i / segments.toDouble()) * (Math.PI / 180.0)
-            val x = centerX + radius * cos(angle)
-            val y = centerY + radius * sin(angle)
-            bufferBuilder
-                .addVertex(x.toFloat(), y.toFloat(), 0.0f)
-                .setColor(0.0f, 1.0f, 1.0f, 1.0f)
-        }
-
-        // Finish drawing
-        val builtBuffer = bufferBuilder.buildOrThrow()
-        BufferUploader.draw(builtBuffer)
-
-        // Restore rendering state
-        RenderSystem.disableBlend()
+        fun infoFrameResource(isLeft: Boolean, tier: Int): ResourceLocation = cobblemonResource("textures/gui/pokedex/scan/scan_info_frame_${if (isLeft) "left" else "right"}_$tier.png")
     }
 
-    fun renderPhotodexOverlay(graphics: GuiGraphics, tickDelta: Float, scale: Float) {
+    fun renderInfoFrames(graphics: GuiGraphics, poseStack: PoseStack, usageContext: PokedexUsageContext, centerX: Int, centerY: Int, opacity: Float) {
+        if (usageContext.focusIntervals > 0) {
+            var infoDisplayedCounter = 0
+            usageContext.availableInfoFrames.forEachIndexed {index, isLeftSide ->
+                if (isLeftSide !== null) {
+                    if (infoDisplayedCounter > 1 && !usageContext.isPokemonInFocusOwned) return@forEachIndexed
+                    infoDisplayedCounter++
+                    // Frames
+                    val isInnerFrame = index == 1 || index == 2
+                    val frameHeight = if (isInnerFrame) INNER_INFO_FRAME_HEIGHT else OUTER_INFO_FRAME_HEIGHT
+                    val xOffset = (if (isInnerFrame) (-177) else (-120)) + (if (isLeftSide) 0 else (if (isInnerFrame) 234 else 148))
+                    val yOffset = when(index) { 0 -> -80; 1 -> -26; 2 -> 6; 3 -> 25; else -> 0 }
+                    blitk(
+                        matrixStack = poseStack,
+                        texture = infoFrameResource(isLeftSide, index),
+                        x = centerX + xOffset,
+                        y = centerY + yOffset,
+                        width = if (!isInnerFrame) OUTER_INFO_FRAME_WIDTH else INNER_INFO_FRAME_WIDTH,
+                        height = frameHeight,
+                        textureHeight = frameHeight * 10,
+                        vOffset = ceil(usageContext.focusIntervals) * frameHeight,
+                        alpha = opacity
+                    )
+
+                    val xOffsetText = if (isInnerFrame) (((INNER_INFO_FRAME_WIDTH - INNER_INFO_FRAME_STEM_WIDTH) / 2) + if (isLeftSide) 0 else INNER_INFO_FRAME_STEM_WIDTH) else (OUTER_INFO_FRAME_WIDTH / 2)
+                    val yOffsetText = when(index) { 0 -> 5; 1 -> 4; 2 -> 8; 3 -> 42; else -> 0 }
+
+                    // Text
+                    if (usageContext.focusIntervals == PokedexUsageContext.FOCUS_INTERVALS && usageContext.pokemonInFocus != null) {
+                        val pokemon = usageContext.pokemonInFocus!!.pokemon
+
+                        if (infoDisplayedCounter == 1) {
+                            drawScaledText(
+                                context = graphics,
+                                font = CobblemonResources.DEFAULT_LARGE,
+                                text = lang("ui.lv.number", pokemon.level).bold(),
+                                x = centerX + xOffset + xOffsetText,
+                                y = centerY + yOffset + yOffsetText,
+                                shadow = true,
+                                centered = true
+                            )
+                        }
+
+                        if (infoDisplayedCounter == 2) {
+                            val hasTrainer = usageContext.pokemonInFocus?.ownerUUID !== null
+                            val speciesName = pokemon.species.name.text().bold()
+                            var yOffsetName = if (hasTrainer) 2 else 0
+                            if (hasTrainer) {
+                                drawScaledText(
+                                    context = graphics,
+                                    text = lang("ui.generic.trainer"),
+                                    x = centerX + xOffset + xOffsetText,
+                                    y = centerY + yOffset + yOffsetText - yOffsetName,
+                                    shadow = true,
+                                    centered = true,
+                                    scale = 0.5F
+                                )
+                            }
+                            drawScaledText(
+                                context = graphics,
+                                font = CobblemonResources.DEFAULT_LARGE,
+                                text = speciesName,
+                                x = centerX + xOffset + xOffsetText,
+                                y = centerY + yOffset + yOffsetText + yOffsetName,
+                                shadow = true,
+                                centered = true
+                            )
+
+                            val gender = pokemon.gender
+                            val speciesNameWidth = Minecraft.getInstance().font.width(speciesName.font(CobblemonResources.DEFAULT_LARGE))
+                            if (gender != Gender.GENDERLESS) {
+                                val isMale = gender == Gender.MALE
+                                val textSymbol = if (isMale) "♂".text().bold() else "♀".text().bold()
+                                drawScaledText(
+                                    context = graphics,
+                                    font = CobblemonResources.DEFAULT_LARGE,
+                                    text = textSymbol,
+                                    x = centerX + xOffset + xOffsetText + 2 + (speciesNameWidth / 2),
+                                    y = centerY + yOffset + yOffsetText + yOffsetName,
+                                    colour = if (isMale) 0x32CBFF else 0xFC5454,
+                                    shadow = true
+                                )
+                            }
+
+                            if (usageContext.isPokemonInFocusOwned) {
+                                blitk(
+                                    matrixStack = poseStack,
+                                    texture = caughtIndicator,
+                                    x = (centerX + xOffset + xOffsetText - 7 - (speciesNameWidth / 2)) / SCALE,
+                                    y = (centerY + yOffset + yOffsetText + yOffsetName + 2) / SCALE,
+                                    height = 10,
+                                    width = 10,
+                                    scale = SCALE
+                                )
+                            }
+                        }
+
+                        if (infoDisplayedCounter == 3) {
+                            val typeText = lang("type.suffix", pokemon.types.map { it.displayName.copy() }.reduce { acc, next -> acc.plus("/").plus(next) })
+                            val typeWidth = Minecraft.getInstance().font.width(typeText.font(CobblemonResources.DEFAULT_LARGE))
+
+                            // Split into 2 lines if text width is too long
+                            if (typeWidth > (OUTER_INFO_FRAME_WIDTH - 8) && pokemon.secondaryType !== null) {
+                                drawScaledText(
+                                    context = graphics,
+                                    font = CobblemonResources.DEFAULT_LARGE,
+                                    text = lang("type.suffix", pokemon.primaryType.displayName).bold(),
+                                    x = centerX + xOffset + xOffsetText - 3,
+                                    y = centerY + yOffset + yOffsetText,
+                                    shadow = true,
+                                    centered = true
+                                )
+
+                                drawScaledText(
+                                    context = graphics,
+                                    font = CobblemonResources.DEFAULT_LARGE,
+                                    text = lang("type.suffix", pokemon.secondaryType!!.displayName).bold(),
+                                    x = centerX + xOffset + xOffsetText + 3,
+                                    y = centerY + yOffset + yOffsetText,
+                                    shadow = true,
+                                    centered = true
+                                )
+                            } else {
+                                drawScaledText(
+                                    context = graphics,
+                                    font = CobblemonResources.DEFAULT_LARGE,
+                                    text = typeText.bold(),
+                                    x = centerX + xOffset + xOffsetText,
+                                    y = centerY + yOffset + yOffsetText,
+                                    shadow = true,
+                                    centered = true
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun renderScanRings(poseStack: PoseStack, usageContext: PokedexUsageContext, centerX: Int, centerY: Int, opacity: Float) {
+        val rotation = usageContext.usageIntervals % 360
+
+        poseStack.pushPose()
+        poseStack.translate(centerX.toFloat(), centerY.toFloat(), 0.0f)
+
+        poseStack.pushPose()
+        poseStack.mulPose(Quaternionf().rotateZ(Math.toRadians((-rotation) * 0.5).toFloat()))
+        blitk(matrixStack = poseStack, texture = SCAN_RING_OUTER, x = -(SCAN_RING_OUTER_DIAMETER / 2), y = -(SCAN_RING_OUTER_DIAMETER / 2), width = SCAN_RING_OUTER_DIAMETER, height = SCAN_RING_OUTER_DIAMETER, alpha = opacity)
+        poseStack.popPose()
+
+        var progressOpacity = opacity
+        var segments = 40
+        if (usageContext.scanningProgress > 0) {
+            if (usageContext.scanningProgress < 20) {
+                progressOpacity -= usageContext.scanningProgress * 0.05F
+            } else {
+                if (progressOpacity != opacity) progressOpacity = opacity
+                segments = floor((usageContext.scanningProgress - 20.0) / 2.0).toInt()
+            }
+        }
+
+        for (i in 0 until segments) {
+            val rotationQuaternion = Quaternionf().rotateZ(Math.toRadians((i * 4.5) + (rotation * 0.5)).toFloat())
+            poseStack.pushPose()
+            poseStack.mulPose(rotationQuaternion)
+            blitk(matrixStack = poseStack, texture = SCAN_RING_MIDDLE, x = -(SCAN_RING_MIDDLE_WIDTH / 2), y = -(SCAN_RING_MIDDLE_HEIGHT.toFloat() / 2F), width = SCAN_RING_MIDDLE_WIDTH, height = SCAN_RING_MIDDLE_HEIGHT, alpha = progressOpacity)
+            poseStack.popPose()
+        }
+
+        poseStack.pushPose()
+        poseStack.mulPose(Quaternionf().rotateZ(Math.toRadians(-usageContext.innerRingRotation.toDouble()).toFloat()))
+        blitk(matrixStack = poseStack, texture = SCAN_RING_INNER, x = -(SCAN_RING_INNER_DIAMETER / 2), y = -(SCAN_RING_INNER_DIAMETER / 2), width = SCAN_RING_INNER_DIAMETER, height = SCAN_RING_INNER_DIAMETER, alpha = opacity)
+        poseStack.popPose()
+
+        poseStack.popPose()
+    }
+
+    fun getRegisterText(info: PokedexLearnedInformation): MutableComponent {
+        val type = when (info) {
+            PokedexLearnedInformation.FORM -> lang("ui.pokedex.info.form")
+            PokedexLearnedInformation.VARIATION -> lang("ui.pokedex.info.variation")
+            else -> lang("ui.pokemon")
+        }
+        return lang("ui.pokedex.registered_suffix", type).bold()
+    }
+
+    fun renderScanOverlay(graphics: GuiGraphics, tickDelta: Float) {
         val client = Minecraft.getInstance()
         val matrices = graphics.pose()
         val usageContext = CobblemonClient.pokedexUsageContext
@@ -89,57 +275,31 @@ class PokedexScannerRenderer {
         val screenWidth = client.window.guiScaledWidth
         val screenHeight = client.window.guiScaledHeight
 
-        // Texture dimensions
-        val textureWidth = 345
-        val textureHeight = 207
-
-        // Get player yaw and convert to degrees in a circle
-        val yaw = client.player?.yRot ?: 0f
-        val degrees = (yaw % 360 + 360) % 360  // Normalize the angle
-
-        // Compass configuration : Note: compass seems like it's not necessary for a dex scanner, maybe later
-//        val compassPoints = arrayOf("n", "i", "e", "i", "s", "i", "w", "i")
-//        val degreesPerSegment = 360 / compassPoints.size
-//        val centerIndex = Math.round(degrees / degreesPerSegment) % compassPoints.size
-//        val visibleSegments = arrayOfNulls<String>(5)  // Showing 5 segments at a time
-//        for (i in visibleSegments.indices) {
-//            val index = (centerIndex + i - 2 + compassPoints.size) % compassPoints.size
-//            visibleSegments[i] = compassPoints[index]
-//        }
-//
-//        // Render Compass at the Top Center
-//        val compassSpacing = 20  // Width of each compass segment texture
-//        val compassStartX = (screenWidth - compassSpacing * visibleSegments.size) / 2
-//        val compassY = 10  // Top of the screen
-//        for (i in visibleSegments.indices) {
-//            val segmentTexture = getCompassTexture(visibleSegments[i] ?: "i")  // Assuming a method to get the right texture
-//            blitk(matrixStack = matrices, texture = segmentTexture, x = compassStartX + i * compassSpacing, y = compassY, width = 16, height = 16, alpha = 1.0F)
-//        }
-
         RenderSystem.enableBlend()
-        // Pokédex zoom in/out animation
-        val effectiveTicks = clamp(usageContext.transitionTicks + (if (usageContext.scanningGuiOpen) 1 else -1) * tickDelta, 0F, 12F)
-        if (effectiveTicks <= 12) {
-            val scale = 1 + (if (effectiveTicks <= 2) 0F else ((effectiveTicks - 2) * 0.075F))
 
-            // Calculate centered position
-            val x = (screenWidth - (textureWidth * scale)) / 2
-            val y = (screenHeight - (textureHeight * scale)) / 2
+        // Pokédex transition in/out animation
+        val effectiveIntervals = clamp(usageContext.transitionIntervals + (if (usageContext.scanningGuiOpen) 1 else -1) * tickDelta, 0F, 12F)
 
-            val opacity = if (effectiveTicks <= 2) 1F else (10F - (effectiveTicks.toFloat() - 2F)) / 10F
-            blitk(matrixStack = matrices, texture = CobblemonClient.pokedexUsageContext.type.getTexturePath(), x = x / scale, y = y / scale, width = textureWidth, height = textureHeight, scale = scale, alpha = opacity)
-            blitk(matrixStack = matrices, texture = SCAN_SCREEN, x = x / scale, y = y / scale, width = textureWidth, height = textureHeight, scale = scale, alpha = opacity)
+        if (effectiveIntervals <= PokedexUsageContext.TRANSITION_INTERVALS) {
+            val scale = 1 + (if (effectiveIntervals <= 2) 0F else ((effectiveIntervals - 2) * 0.075F))
+
+            val centerX = (screenWidth - (BASE_WIDTH * scale)) / 2
+            val centerY = (screenHeight - (BASE_HEIGHT * scale)) / 2
+
+            val opacity = if (effectiveIntervals <= 2) 1F else (10F - (effectiveIntervals - 2F)) / 10F
+            blitk(matrixStack = matrices, texture = CobblemonClient.pokedexUsageContext.type.getTexturePath(), x = centerX / scale, y = centerY / scale, width = BASE_WIDTH, height = BASE_HEIGHT, scale = scale, alpha = opacity)
+            blitk(matrixStack = matrices, texture = SCAN_SCREEN, x = centerX / scale, y = centerY / scale, width = BASE_WIDTH, height = BASE_HEIGHT, scale = scale, alpha = opacity)
         }
 
         // Scanning overlay
-        val opacity = if (effectiveTicks >= 10) 1F else effectiveTicks/10F
+        val opacity = if (effectiveIntervals >= 10) 1F else effectiveIntervals/10F
         // Draw scan lines
-        val interlacePos = ceil((usageContext.usageTicks % 14) * 0.5) * 0.5
+        val interlacePos = ceil((usageContext.usageIntervals % 14) * 0.5) * 0.5
         for (i in 0 until screenHeight) {
             if (i % 4 == 0) blitk(matrixStack = matrices, texture = SCAN_OVERLAY_LINES, x = 0, y = i - interlacePos, width = screenWidth, height = 4, alpha = opacity)
         }
 
-        // Draw border
+        // Draw borders
         // Top left corner
         blitk(matrixStack = matrices, texture = SCAN_OVERLAY_CORNERS, x = 0, y = 0, width = 4, height = 4, textureWidth = 8, textureHeight = 8, alpha = opacity)
         // Top right corner
@@ -150,89 +310,131 @@ class PokedexScannerRenderer {
         blitk(matrixStack = matrices, texture = SCAN_OVERLAY_CORNERS, x = (screenWidth - 4), y = (screenHeight - 4), width = 4, height = 4, textureWidth = 8, textureHeight = 8, vOffset = 4, uOffset = 4, alpha = opacity)
 
         // Border sides
-        val notchStartX = (screenWidth - 200) / 2
+        val notchStartX = (screenWidth - SCAN_OVERLAY_NOTCH_WIDTH) / 2
         blitk(matrixStack = matrices, texture = SCAN_OVERLAY_TOP, x = 4, y = 0, width = notchStartX - 4, height = 3, alpha = opacity)
-        blitk(matrixStack = matrices, texture = SCAN_OVERLAY_TOP, x = notchStartX + 200, y = 0, width = (screenWidth - (notchStartX + 200 + 4)), height = 3, alpha = opacity)
+        blitk(matrixStack = matrices, texture = SCAN_OVERLAY_TOP, x = notchStartX + SCAN_OVERLAY_NOTCH_WIDTH, y = 0, width = (screenWidth - (notchStartX + SCAN_OVERLAY_NOTCH_WIDTH + 4)), height = 3, alpha = opacity)
         blitk(matrixStack = matrices, texture = SCAN_OVERLAY_BOTTOM, x = 4, y = (screenHeight - 3), width = (screenWidth - 8), height = 3, alpha = opacity)
         blitk(matrixStack = matrices, texture = SCAN_OVERLAY_LEFT, x = 0, y = 4, width = 3, height = (screenHeight - 8), alpha = opacity)
         blitk(matrixStack = matrices, texture = SCAN_OVERLAY_RIGHT, x = (screenWidth - 3), y = 4, width = 3, height = (screenHeight - 8), alpha = opacity)
-        blitk(matrixStack = matrices, texture = cobblemonResource("textures/gui/pokedex/scan/overlay_notch.png"), x = notchStartX, y = 0, width = 200, height = 12, alpha = opacity)
+        blitk(matrixStack = matrices, texture = SCAN_OVERLAY_NOTCH, x = notchStartX, y = 0, width = SCAN_OVERLAY_NOTCH_WIDTH, height = 12, alpha = opacity)
+
+        val centerX = screenWidth / 2
+        val centerY = screenHeight / 2
 
         // Scan info frame
-        if (usageContext.focusTicks > 0) {
-            blitk(matrixStack = matrices, texture = cobblemonResource("textures/gui/pokedex/scan/scan_info_frame.png"),
-                x = (screenWidth / 2) - 120,
-                y = (screenHeight / 2) - 80,
-                width = 92,
-                height = 55,
-                textureHeight = 550,
-                textureWidth = 92,
-                vOffset = usageContext.focusTicks * 55,
+        renderInfoFrames(graphics, matrices, usageContext, centerX, centerY, opacity)
+
+        // Scan rings
+        renderScanRings(matrices, usageContext, centerX, centerY, opacity)
+
+        if (usageContext.displayRegisterInfoIntervals > 0) {
+            blitk(
+                matrixStack = matrices,
+                texture = CENTER_INFO_FRAME,
+                x = centerX - (CENTER_INFO_FRAME_WIDTH / 2),
+                y = centerY - (CENTER_INFO_FRAME_HEIGHT / 2),
+                width = CENTER_INFO_FRAME_WIDTH,
+                height = CENTER_INFO_FRAME_HEIGHT,
+                textureHeight = CENTER_INFO_FRAME_HEIGHT * 6,
+                vOffset = min(ceil(usageContext.displayRegisterInfoIntervals), PokedexUsageContext.CENTER_INFO_DISPLAY_INTERVALS) * CENTER_INFO_FRAME_HEIGHT,
                 alpha = opacity
             )
 
-            if (usageContext.focusTicks == 9 && usageContext.pokemonInFocus != null) {
+            if (usageContext.displayRegisterInfoIntervals >= PokedexUsageContext.CENTER_INFO_DISPLAY_INTERVALS) {
                 drawScaledText(
                     context = graphics,
                     font = CobblemonResources.DEFAULT_LARGE,
-                    text = usageContext.pokemonInFocus!!.pokemon.species.name.text().bold(),
-                    x = (screenWidth / 2) - 74,
-                    y = (screenHeight / 2) - 74,
+                    text = getRegisterText(usageContext.newPokemonInfo),
+                    x = centerX,
+                    y = centerY - (CENTER_INFO_FRAME_HEIGHT / 2) + 4,
                     shadow = true,
                     centered = true
                 )
             }
+        } else {
+            if (usageContext.scanningProgress > 0) {
+                // If scan progress reaches max ticks - 10,decrement opacity using last 10 ticks
+                // else increment opacity using scan progress
+                var centerOpacity = (
+                        if (usageContext.scanningProgress > (PokedexUsageContext.MAX_SCAN_PROGRESS - 10))
+                            (PokedexUsageContext.MAX_SCAN_PROGRESS - usageContext.scanningProgress)
+                        else usageContext.scanningProgress
+                        ) * 0.1F
+
+                blitk(
+                    matrixStack = matrices,
+                    texture = UNKNOWN_MARK,
+                    x = centerX - (UNKNOWN_MARK_WIDTH / 2),
+                    y = centerY - (UNKNOWN_MARK_HEIGHT / 2) + 2,
+                    width = UNKNOWN_MARK_WIDTH,
+                    height = UNKNOWN_MARK_HEIGHT,
+                    alpha = max(0F, min(opacity, centerOpacity))
+                )
+
+                matrices.pushPose()
+                matrices.translate(centerX.toFloat(), centerY.toFloat(), 0.0f)
+
+                matrices.pushPose()
+                matrices.mulPose(Quaternionf().rotateZ(Math.toRadians(usageContext.innerRingRotation * 0.5).toFloat()))
+                blitk(
+                    matrixStack = matrices,
+                    texture = POINTER,
+                    x = -POINTER_WIDTH - POINTER_OFFSET,
+                    y = -(POINTER_HEIGHT / 2),
+                    width = POINTER_WIDTH,
+                    height = POINTER_HEIGHT,
+                    textureWidth = POINTER_WIDTH * 2,
+                    alpha = max(0F, min(opacity, centerOpacity))
+                )
+
+                blitk(
+                    matrixStack = matrices,
+                    texture = POINTER,
+                    x = POINTER_OFFSET,
+                    y = -(POINTER_HEIGHT / 2),
+                    width = POINTER_WIDTH,
+                    height = POINTER_HEIGHT,
+                    textureWidth = POINTER_WIDTH * 2,
+                    uOffset = POINTER_WIDTH,
+                    alpha = max(0F, min(opacity, centerOpacity))
+                )
+                matrices.popPose()
+                matrices.popPose()
+            } else if (usageContext.viewInfoTicks > 0) {
+                val pointerOpacity = usageContext.viewInfoTicks * 0.1F
+
+                blitk(
+                    matrixStack = matrices,
+                    texture = POINTER,
+                    x = centerX - POINTER_WIDTH - POINTER_OFFSET + usageContext.viewInfoTicks,
+                    y = centerY - (POINTER_HEIGHT / 2),
+                    width = POINTER_WIDTH,
+                    height = POINTER_HEIGHT,
+                    textureWidth = POINTER_WIDTH * 2,
+                    alpha = max(0F, min(opacity, pointerOpacity))
+                )
+
+                blitk(
+                    matrixStack = matrices,
+                    texture = POINTER,
+                    x = centerX + POINTER_OFFSET - usageContext.viewInfoTicks,
+                    y = centerY - (POINTER_HEIGHT / 2),
+                    width = POINTER_WIDTH,
+                    height = POINTER_HEIGHT,
+                    textureWidth = POINTER_WIDTH * 2,
+                    uOffset = POINTER_WIDTH,
+                    alpha = max(0F, min(opacity, pointerOpacity))
+                )
+            }
         }
-
-
-        val rotation = usageContext.usageTicks % 360
-
-        // Scan rings
-        matrices.pushPose()
-        matrices.translate((screenWidth / 2).toFloat(), (screenHeight / 2).toFloat(), 0.0f)
-
-        matrices.pushPose()
-        matrices.mulPose(Quaternionf().rotateZ(Math.toRadians((-rotation) * 0.5).toFloat()))
-        blitk(matrixStack = matrices, texture = cobblemonResource("textures/gui/pokedex/scan/scan_ring_outer.png"), x = -58, y = -58, width = 116, height = 116, alpha = opacity)
-        matrices.popPose()
-
-        for (i in 0 until 80) {
-            val rotationQuaternion = Quaternionf().rotateZ(Math.toRadians((i * 4.5) + (rotation * 0.5)).toFloat())
-            matrices.pushPose()
-            matrices.mulPose(rotationQuaternion)
-            blitk(matrixStack = matrices, texture = cobblemonResource("textures/gui/pokedex/scan/scan_ring_middle.png"), x = -50, y = -0.5F, width = 100, height = 1, alpha = opacity)
-            matrices.popPose()
-        }
-
-        matrices.pushPose()
-        matrices.mulPose(Quaternionf().rotateZ(Math.toRadians(-usageContext.innerRingRotation.toDouble()).toFloat()))
-        blitk(matrixStack = matrices, texture = cobblemonResource("textures/gui/pokedex/scan/scan_ring_inner.png"), x = -42, y = -42, width = 84, height = 84, alpha = opacity)
-        matrices.popPose()
-
-        matrices.popPose()
 
         RenderSystem.disableBlend()
     }
 
     fun onRenderOverlay(graphics: GuiGraphics, tickCounter: DeltaTracker) {
-        if (CobblemonClient.pokedexUsageContext.scanningGuiOpen) {
+        if ((CobblemonClient.pokedexUsageContext.scanningGuiOpen || CobblemonClient.pokedexUsageContext.transitionIntervals > 0) && Minecraft.getInstance().options.cameraType.isFirstPerson) {
             val tickDelta = tickCounter.realtimeDeltaTicks
-            renderPhotodexOverlay(graphics, tickDelta, 1.0F)
-            renderScanProgress(graphics, CobblemonClient.pokedexUsageContext.scanningProgress)
-        }
-    }
-
-    companion object {
-        val SCAN_SCREEN = cobblemonResource("textures/gui/pokedex/pokedex_screen_scan.png")
-        val SCAN_OVERLAY_CORNERS = cobblemonResource("textures/gui/pokedex/scan/overlay_corners.png")
-        val SCAN_OVERLAY_TOP = cobblemonResource("textures/gui/pokedex/scan/overlay_border_top.png")
-        val SCAN_OVERLAY_BOTTOM = cobblemonResource("textures/gui/pokedex/scan/overlay_border_bottom.png")
-        val SCAN_OVERLAY_LEFT = cobblemonResource("textures/gui/pokedex/scan/overlay_border_left.png")
-        val SCAN_OVERLAY_RIGHT = cobblemonResource("textures/gui/pokedex/scan/overlay_border_right.png")
-        val SCAN_OVERLAY_LINES = cobblemonResource("textures/gui/pokedex/scan/overlay_scanlines.png")
-
-        fun getCompassTexture(direction: String): ResourceLocation {
-            return cobblemonResource("textures/gui/pokedex/compass/$direction.png")
+            renderScanOverlay(graphics, tickDelta)
         }
     }
 }

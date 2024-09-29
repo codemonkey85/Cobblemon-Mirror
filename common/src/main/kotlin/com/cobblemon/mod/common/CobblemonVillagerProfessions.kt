@@ -24,7 +24,7 @@ object CobblemonVillagerProfessions: PlatformRegistry<Registry<VillagerProfessio
     override val resourceKey: ResourceKey<Registry<VillagerProfession>> = Registries.VILLAGER_PROFESSION
 
     @JvmField
-    val NURSE = profession(CobblemonVillagerPoiTypes.NURSE_KEY, null)
+    val NURSE = profession(CobblemonVillagerPoiTypes.NURSE_KEY, CobblemonSounds.VILLAGER_WORK_NURSE)
 
     /**
      * Register a villager profession texture override for Cobblemon villagers of the given [VillagerProfession] for specified names.
