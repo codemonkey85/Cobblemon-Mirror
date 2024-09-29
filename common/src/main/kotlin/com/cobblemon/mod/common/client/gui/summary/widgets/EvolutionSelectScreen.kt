@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui.summary.widgets
 
+import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.pokemon.evolution.EvolutionDisplay
 import com.cobblemon.mod.common.api.text.bold
@@ -25,6 +26,8 @@ import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.sounds.SoundEvent
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
@@ -73,6 +76,7 @@ class EvolutionSelectScreen(
             clickAction = {
                 Minecraft.getInstance().player?.clientSideCloseContainer()
                 Minecraft.getInstance().player?.sendSystemMessage(lang("ui.evolve.into", pokemon.getDisplayName(), evolution.species.translatedName))
+                playSound(CobblemonSounds.GUI_CLICK)
                 pokemon.evolutionProxy.client().start(this.evolution)
             },
             text = lang("ui.evolve"),
@@ -81,6 +85,10 @@ class EvolutionSelectScreen(
             largeText = false,
             textScale = 0.5F
         )
+
+        fun playSound(soundEvent: SoundEvent) {
+            Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))
+        }
 
         override fun getNarration() = evolution.species.translatedName
 
