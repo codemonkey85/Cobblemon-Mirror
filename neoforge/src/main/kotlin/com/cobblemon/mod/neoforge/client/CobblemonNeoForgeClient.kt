@@ -65,10 +65,11 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.ShaderInstance
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.CreativeModeTab.TabVisibility
+import net.neoforged.neoforge.client.event.ClientTickEvent
 import net.neoforged.neoforge.client.event.RenderGuiEvent
-import net.neoforged.neoforge.common.NeoForge.EVENT_BUS
 
 object CobblemonNeoForgeClient : CobblemonClientImplementation {
 
@@ -84,6 +85,7 @@ object CobblemonNeoForgeClient : CobblemonClientImplementation {
         }
         NeoForge.EVENT_BUS.addListener(this::onRenderGuiOverlayEvent)
         NeoForge.EVENT_BUS.addListener(this::afterRenderGuiOverlayEvent)
+        NeoForge.EVENT_BUS.addListener(this::afterEndClientTickEvent)
     }
 
     private fun onClientSetup(event: FMLClientSetupEvent) {
@@ -198,8 +200,30 @@ object CobblemonNeoForgeClient : CobblemonClientImplementation {
         val player = client.player
         if (player != null) {
             val itemStack = player.mainHandItem
-            if (itemStack.item is PokedexItem) {
-                pokedexUsageContext.tryRenderOverlay(event.guiGraphics, event.partialTick)
+            val offhandStack = player.offhandItem
+            if (((itemStack.item is PokedexItem && player.usedItemHand == InteractionHand.MAIN_HAND) ||
+                (offhandStack.item is PokedexItem && player.usedItemHand == InteractionHand.OFF_HAND))
+            ) {
+                pokedexUsageContext.renderUpdate(player, event.guiGraphics, event.partialTick)
+            } else if (pokedexUsageContext.transitionIntervals > 0) {
+                pokedexUsageContext.resetState()
+            }
+        }
+    }
+
+    private fun afterEndClientTickEvent(event: ClientTickEvent.Post) {
+        val client = Minecraft.getInstance()
+        val player = client.player
+        if (player != null) {
+            val itemStack = player.mainHandItem
+            val offhandStack = player.offhandItem
+            if (((itemStack.item is PokedexItem && player.usedItemHand == InteractionHand.MAIN_HAND) ||
+                        (offhandStack.item is PokedexItem && player.usedItemHand == InteractionHand.OFF_HAND)) &&
+                player.isUsingItem &&
+                pokedexUsageContext.scanningGuiOpen
+            ) {
+                val keyAttack = client.options.keyAttack
+                pokedexUsageContext.attackKeyHeld(player, keyAttack.isDown)
             }
         }
     }

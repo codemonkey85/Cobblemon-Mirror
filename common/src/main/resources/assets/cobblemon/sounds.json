@@ -8,6 +8,9 @@
   "battle.pvw.default": {
     "sounds": []
   },
+  "entity.villager.work_nurse": {
+    "sounds": [ { "name":  "cobblemon:entity/villager/work_nurse", "volume":  0.8 } ]
+  },
   "healing_machine.active": {
     "sounds": [ "cobblemon:block/healing_machine_active" ]
   },
@@ -83,9 +86,6 @@
   "item.pokedex.click_short": {
     "sounds": [ "cobblemon:item/pokedex/pokedex_click_short" ]
   },
-  "item.pokedex.scan": {
-    "sounds": [ "cobblemon:item/pokedex/pokedex_scan" ]
-  },
   "item.pokedex.scan_open": {
     "sounds": [
       { "name": "cobblemon:item/pokedex/pokedex_scan_open", "volume": 0.6 }]
@@ -102,15 +102,16 @@
     "sounds": [
       { "name": "cobblemon:item/pokedex/pokedex_scan_detail", "volume": 0.4 }]
   },
-  "item.pokedex.zoom_increment": {
-    "sounds": [ "cobblemon:item/pokedex/pokedex_zoom_increment" ]
-  },
-  "item.pokedex.snap": {
+  "item.pokedex.scan_register_pokemon": {
     "sounds": [
-      { "name": "cobblemon:item/pokedex/pokedex_snap_picture_1" },
-      { "name": "cobblemon:item/pokedex/pokedex_snap_picture_2" },
-      { "name": "cobblemon:item/pokedex/pokedex_snap_picture_3" }
-    ]
+      { "name": "cobblemon:item/pokedex/pokedex_scan_register_pokemon", "volume": 0.9 }]
+  },
+  "item.pokedex.scan_register_aspect": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_register_aspect", "volume": 0.9 }]
+  },
+  "item.pokedex.scan_zoom_increment": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_scan_zoom_increment" ]
   },
   "evolution.notification": {
     "sounds": [ { "name": "cobblemon:evolution/evolution_notification", "volume": 0.7 } ]

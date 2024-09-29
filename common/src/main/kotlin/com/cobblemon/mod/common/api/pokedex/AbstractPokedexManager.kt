@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexForm
 import com.cobblemon.mod.common.pokemon.Gender
+import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import net.minecraft.resources.ResourceLocation
 
@@ -44,6 +45,11 @@ abstract class AbstractPokedexManager {
             onSpeciesRecordUpdated(record)
             record
         }
+    }
+
+    fun getHighestKnowledgeForSpecies(pokemon: Pokemon): PokedexEntryProgress {
+        val speciesRecord = getSpeciesRecord(pokemon.species.resourceIdentifier)
+        return speciesRecord?.getKnowledge() ?: PokedexEntryProgress.NONE
     }
 
     fun getHighestKnowledgeFor(entry: PokedexEntry): PokedexEntryProgress {
@@ -78,6 +84,21 @@ abstract class AbstractPokedexManager {
         return entry.forms.filter { form ->
             form.unlockForms.any { (speciesRecord.getFormRecord(it)?.knowledge ?: PokedexEntryProgress.NONE) >= knowledge }
         }
+    }
+
+    fun getNewInformation(pokemon: Pokemon): PokedexLearnedInformation {
+        val speciesRecord = getSpeciesRecord(pokemon.species.resourceIdentifier)
+        if (speciesRecord == null || speciesRecord.getKnowledge() == PokedexEntryProgress.NONE) {
+            return PokedexLearnedInformation.SPECIES
+        }
+        val formRecord = speciesRecord.getFormRecord(pokemon.form.name)
+        if (formRecord == null || formRecord.knowledge == PokedexEntryProgress.NONE) {
+            return PokedexLearnedInformation.FORM
+        }
+        if (pokemon.aspects.none(speciesRecord::hasAspect) || pokemon.gender !in formRecord.getGenders() || !formRecord.hasSeenShinyState(pokemon.shiny)) {
+            return PokedexLearnedInformation.VARIATION
+        }
+        return PokedexLearnedInformation.NONE
     }
 
     fun getSeenShinyStates(entry: PokedexEntry, form: PokedexForm): Set<String> {

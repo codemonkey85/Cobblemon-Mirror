@@ -47,7 +47,8 @@ class BattleSwitchPokemonSelection(
     battleGUI,
     request,
     x = 0,
-    y = 0,
+    y = if (Minecraft.getInstance().window.guiScaledHeight > 630) Minecraft.getInstance().window.guiScaledHeight / 2 - 148 / 2
+    else Minecraft.getInstance().window.guiScaledHeight - 226,
     width = Minecraft.getInstance().window.guiScaledWidth,
     height = Minecraft.getInstance().window.guiScaledHeight,
     battleLang("switch_pokemon")
@@ -93,7 +94,7 @@ class BattleSwitchPokemonSelection(
 
     fun getSlotPosition(index: Int): Pair<Float, Float> {
         val startX = ((width / 2) - SwitchTile.SELECT_WIDTH - 1)
-        val startY = ((height - BACKGROUND_HEIGHT) / 2) + 34
+        val startY = y + 34
         val row = index / 2
         val column = index % 2
         val slotX = startX.toFloat() + column * (SLOT_HORIZONTAL_SPACING + SwitchTile.SELECT_WIDTH)
@@ -105,12 +106,11 @@ class BattleSwitchPokemonSelection(
         if (opacity <= 0.05F) return
 
         val matrixStack = context.pose()
-        val startY = (height - BACKGROUND_HEIGHT) / 2
         blitk(
             matrixStack = matrixStack,
             texture = underlayTexture,
             x = x,
-            y = startY,
+            y = y,
             width = width,
             height = BACKGROUND_HEIGHT
         )
@@ -122,7 +122,7 @@ class BattleSwitchPokemonSelection(
             context = context,
             text = text,
             x = (width - textWidth) / 2,
-            y = startY + 17,
+            y = y + 17,
             shadow = true
         )
 
