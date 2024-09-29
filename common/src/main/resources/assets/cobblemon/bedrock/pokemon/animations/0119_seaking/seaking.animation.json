@@ -3,52 +3,85 @@
 	"animations": {
 		"animation.seaking.ground_idle": {
 			"loop": true,
+			"animation_length": 0.5417,
 			"bones": {
-				"lefttail": {
-					"rotation": [20, 15, -5]
+				"tail_back_left1": {
+					"rotation": [0, 35, -5]
 				},
-				"righttail": {
-					"rotation": [20, -15, 5]
+				"tail_bottom_left": {
+					"rotation": [25, 0, 0]
 				},
-				"rightwing": {
-					"rotation": [0, 0, -27.5]
+				"tail_back_left2": {
+					"rotation": [0, 0, 10]
 				},
-				"leftwing": {
-					"rotation": [0, 0, 27.5]
+				"tail_back_left3": {
+					"rotation": [0, 0, 15]
+				},
+				"tail_back_right1": {
+					"rotation": [0, -35, 5]
+				},
+				"tail_back_right2": {
+					"rotation": [0, 0, -10]
+				},
+				"tail_back_right3": {
+					"rotation": [0, 0, -15]
+				},
+				"tail_bottom_right": {
+					"rotation": [25, 0, 0]
+				},
+				"fin_left1": {
+					"rotation": [-3.96562, -14.51281, 9.91475],
+					"position": [0, 0, 0]
+				},
+				"fin_left2": {
+					"rotation": [0.88045, 9.96156, 5.07673]
+				},
+				"fin_right1": {
+					"rotation": [-3.96562, 14.51281, -9.91475]
+				},
+				"fin_right2": {
+					"rotation": [0.88045, -9.96156, -5.07673]
+				},
+				"seaking_male": {
+					"position": [0, 0, 1]
+				},
+				"pupil_right": {
+					"position": [0, 0, 0]
+				},
+				"pupil_left": {
+					"position": [0, 0, 0]
 				}
 			}
 		},
-		"animation.seaking.water_idle": {
-			"loop": true,
+		"animation.seaking.blink": {
+			"animation_length": 0.1667,
 			"bones": {
-				"lefttail": {
-					"rotation": [0, 30, -15]
+				"pupil_right": {
+					"position": {
+						"0.0": [0.1, 0, 0],
+						"0.125": [0.1, 0, 0],
+						"0.1667": [0, 0, 0]
+					}
 				},
-				"righttail": {
-					"rotation": [0, -30, 15]
+				"pupil_left": {
+					"position": {
+						"0.0": [-0.1, 0, 0],
+						"0.1667": [0, 0, 0]
+					}
 				},
-				"rightwing": {
-					"rotation": [15, 0, -30]
+				"eye_blink_left": {
+					"position": {
+						"0.0": [0.1, 0, 0],
+						"0.125": [0.1, 0, 0],
+						"0.1667": [0, 0, 0]
+					}
 				},
-				"leftwing": {
-					"rotation": [15, 0, 30]
-				}
-			}
-		},
-		"animation.seaking.water_swim": {
-			"loop": true,
-			"bones": {
-				"lefttail": {
-					"rotation": [0, 15, -15]
-				},
-				"righttail": {
-					"rotation": [0, -15, 15]
-				},
-				"rightwing": {
-					"rotation": [15, 15, -30]
-				},
-				"leftwing": {
-					"rotation": [15, -15, 30]
+				"eye_blink_right": {
+					"position": {
+						"0.0": [-0.1, 0, 0],
+						"0.125": [-0.1, 0, 0],
+						"0.1667": [0, 0, 0]
+					}
 				}
 			}
 		}
