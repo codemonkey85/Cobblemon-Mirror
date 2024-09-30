@@ -1,0 +1,41 @@
+{
+  "portraitScale": 1,
+  "portraitTranslation": [0, 0, 0],
+  "profileScale": 1,
+  "profileTranslation": [0.0, 0.0, 0.0],
+  "animations": {
+    "cry": "q.bedrock_stateful('liepard', 'cry')"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseName": "battle-standing",
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('liepard', 'pose')"
+      ],
+      "quirks": ["q.bedrock_quirk('liepard', 'blink')"]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('liepard', 'pose')"
+      ],
+      "quirks": ["q.bedrock_quirk('liepard', 'blink')"]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": ["WALK"],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('liepard', 'pose')",
+        "q.quadruped_walk(1, 1, 'leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right')"
+      ],
+      "quirks": ["q.bedrock_quirk('liepard', 'blink')"]
+    }
+  }
+}
