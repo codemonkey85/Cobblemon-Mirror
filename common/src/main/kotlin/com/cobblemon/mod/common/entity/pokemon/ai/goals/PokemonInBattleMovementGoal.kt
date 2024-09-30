@@ -19,7 +19,7 @@ class PokemonInBattleMovementGoal(val entity: PokemonEntity, val range: Int) : G
 
     var battlePos : Vec3? = null
     var ticksSinceStart: Int = 0
-    var ticksMax = 15
+    var ticksMax = 5
     override fun canUse(): Boolean {
         return entity.isBattling && getClosestPokemonEntity() != null && entity.getCurrentPoseType() != PoseType.SLEEP
     }
@@ -28,12 +28,6 @@ class PokemonInBattleMovementGoal(val entity: PokemonEntity, val range: Int) : G
         super.start()
         battlePos = entity.position()
         entity.navigation.stop()
-        if (!entity.onGround()) {
-            if (entity.pokemon.species.behaviour.moving.fly.canFly) {
-                // Let flyers fly in battle if they're in the air
-                entity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, true)
-            }
-        }
     }
 
     override fun stop() {
@@ -61,22 +55,24 @@ class PokemonInBattleMovementGoal(val entity: PokemonEntity, val range: Int) : G
 
         if (ticksSinceStart == ticksMax) {
             // kick start swimming/flying after letting them fall for a bit
-            entity.navigation.moveTo(
+            if(!entity.onGround()) {
+                if (entity.pokemon.species.behaviour.moving.fly.canFly) {
+                    // Let flyers fly in battle if they're in the air
+                    entity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, true)
+                }
+                entity.navigation.moveTo(
                     battlePos!!.x,
                     battlePos!!.y,
                     battlePos!!.z,
                     0.7
-            )
-            entity.isNoGravity = true
+                )
+            }
+//            entity.isNoGravity = true
         } else if (ticksSinceStart == ticksMax * 2) {
             // halt them in place
-            entity.navigation.stop()
-            entity.isNoGravity = true
-        } else if(ticksSinceStart > ticksMax * 2) {
-            // TODO: Swimmers continue to drift upward/downward. Why?
+            // TODO: Swimmers continue to drift upward/downward. Need to find a way to halt vertical motion
             // I believe the fluid is pushing them around
-            entity.isNoGravity = true
-
+            entity.navigation.stop()
         }
     }
 }

@@ -119,6 +119,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.*
 import net.minecraft.world.phys.Vec3
+import kotlin.math.*
 
 enum class OriginalTrainerType : StringRepresentable {
     NONE, PLAYER, NPC;
@@ -554,6 +555,7 @@ open class Pokemon : ShowdownIdentifiable {
             battleId: UUID? = null,
             doCry: Boolean = true,
             illusion: IllusionEffect? = null,
+            faceSource: Boolean = true,
             mutation: (PokemonEntity) -> Unit = {},
     ): CompletableFuture<PokemonEntity> {
 
@@ -582,7 +584,7 @@ open class Pokemon : ShowdownIdentifiable {
                 }
                 if (foundSurface) {
                     val canFly = this.species.behaviour.moving.fly.canFly
-                    targetPosition = Vec3(targetPosition.x, blockPos.y.toDouble() + if (canFly) 1.2 else 0.0, targetPosition.z)
+                    targetPosition = Vec3(targetPosition.x, blockPos.y.toDouble() + if (canFly) 2.0 else 0.0, targetPosition.z)
                     if (!canFly) {
                         // add a raft if we can't fly or swim
                         platform = PlatformType.GetPlatformTypeForPokemon(this)
@@ -609,6 +611,9 @@ open class Pokemon : ShowdownIdentifiable {
                 val owner = getOwnerEntity()
                 if (owner is LivingEntity) {
                     owner.swing(InteractionHand.MAIN_HAND, true)
+                    val spawnDirection = targetPosition.subtract(owner.position())
+                    val spawnYaw = atan2(spawnDirection.z, spawnDirection.x) * 180.0 / PI + if (faceSource) 102.5F else -90F
+                    it.entityData.set(PokemonEntity.SPAWN_DIRECTION, spawnYaw.toFloat())
                 }
                 if (owner != null) {
                     level.playSoundServer(owner.position(), CobblemonSounds.POKE_BALL_THROW, volume = 0.6F)
@@ -618,6 +623,7 @@ open class Pokemon : ShowdownIdentifiable {
                 it.beamMode = 1
                 it.battleId = battleId
                 it.platform = platform
+
 //                it.isNoGravity = true
 
                 it.after(seconds = THROW_DURATION) {
