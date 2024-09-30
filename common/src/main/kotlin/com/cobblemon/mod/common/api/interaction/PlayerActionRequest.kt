@@ -1,5 +1,9 @@
 package com.cobblemon.mod.common.api.interaction
 
+import com.cobblemon.mod.common.api.text.aqua
+import com.cobblemon.mod.common.util.lang
+import net.minecraft.network.chat.Component
+import net.minecraft.server.level.ServerPlayer
 import java.util.UUID
 
 /**
@@ -12,9 +16,25 @@ interface PlayerActionRequest {
     /** The unique ID of this request. */
     val requestID: UUID
 
+    /** The amount of seconds this request is valid for. */
+    val expiryTime: Int
+}
+
+/**
+ * An outbound [PlayerActionRequest].
+ *
+ * @author Segfault Guy
+ * @since September 29th, 2024
+ */
+interface ServerPlayerActionRequest : PlayerActionRequest {
     /** The unique ID of the player receiving this request. */
     val targetID: UUID
 
-    /** The amount of seconds this request is valid for. */
-    val expiryTime: Int
+    companion object {
+        /** System message to inform [player] about [langKey] request. */
+        fun notify(langKey: String, player: ServerPlayer, relatedName: Component? = null, vararg params: Any) {
+            val lang = relatedName?.let { lang(langKey, relatedName.copy().aqua(), *params) } ?: lang(langKey, *params)
+            player.sendSystemMessage(lang, false)
+        }
+    }
 }

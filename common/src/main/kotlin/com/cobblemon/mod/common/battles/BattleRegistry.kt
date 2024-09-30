@@ -14,7 +14,7 @@ import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.battles.BattleStartedPostEvent
 import com.cobblemon.mod.common.api.events.battles.BattleStartedPreEvent
-import com.cobblemon.mod.common.api.interaction.PlayerActionRequest
+import com.cobblemon.mod.common.api.interaction.ServerPlayerActionRequest
 import com.cobblemon.mod.common.api.pokemon.helditem.HeldItemProvider
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.api.pokemon.status.Statuses
@@ -25,7 +25,6 @@ import com.cobblemon.mod.common.net.messages.client.battle.TeamMemberRemoveNotif
 import com.cobblemon.mod.common.net.messages.client.battle.TeamRequestExpiredPacket
 import com.cobblemon.mod.common.util.getPlayer
 import com.cobblemon.mod.common.util.server
-import com.cobblemon.mod.common.util.lang
 import com.google.gson.GsonBuilder
 import java.time.Instant
 import java.util.UUID
@@ -43,7 +42,7 @@ object BattleRegistry {
         val selectedPokemonId: UUID,
         val battleFormat: BattleFormat,
         override val expiryTime: Int = 60
-    ) : PlayerActionRequest
+    ) : ServerPlayerActionRequest
     {
         val challengedTime = Instant.now()
         fun isExpired() = Instant.now().isAfter(challengedTime.plusSeconds(expiryTime.toLong()))
@@ -51,10 +50,9 @@ object BattleRegistry {
 
     data class TeamRequest(
         override val requestID: UUID,
-
         override val targetID: UUID,
         override val expiryTime: Int = 60
-    ) : PlayerActionRequest
+    ) : ServerPlayerActionRequest
     {
         val challengedTime = Instant.now()
         fun isExpired() = Instant.now().isAfter(challengedTime.plusSeconds(expiryTime.toLong()))
@@ -140,8 +138,8 @@ object BattleRegistry {
 
                     // Notify opposing team that the challenge was cancelled
                     val opposingTeam = multiBattleTeams[battleChallengeEntry.key]
-                    opposingTeam?.teamPlayersUUID?.map { it.getPlayer() }?.forEach { serverPlayerEntity ->
-                        serverPlayerEntity?.sendSystemMessage(lang("challenge.multi.decline.disband"))
+                    opposingTeam?.teamPlayersUUID?.mapNotNull { it.getPlayer() }?.forEach { serverPlayerEntity ->
+                        ServerPlayerActionRequest.notify("challenge.multi.decline.disband", serverPlayerEntity)
                     }
                 }
 

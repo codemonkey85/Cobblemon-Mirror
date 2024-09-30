@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.trade
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.pokemon.TradeCompletedEvent
-import com.cobblemon.mod.common.api.interaction.PlayerActionRequest
+import com.cobblemon.mod.common.api.interaction.ServerPlayerActionRequest
 import com.cobblemon.mod.common.api.scheduling.afterOnServer
 import com.cobblemon.mod.common.net.messages.client.trade.TradeOfferExpiredPacket
 import com.cobblemon.mod.common.net.messages.client.trade.TradeOfferNotificationPacket
@@ -20,7 +20,6 @@ import com.cobblemon.mod.common.net.messages.client.trade.TradeStartedPacket.Tra
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.variants.TradeEvolution
 import com.cobblemon.mod.common.util.getPlayer
-import com.cobblemon.mod.common.util.lang
 import java.util.UUID
 import net.minecraft.server.level.ServerPlayer
 
@@ -30,7 +29,7 @@ object TradeManager {
         val senderId: UUID,
         override val targetID: UUID,
         override val expiryTime: Int = 20
-    ) : PlayerActionRequest
+    ) : ServerPlayerActionRequest
 
     val requests = mutableListOf<TradeRequest>()
     val activeTrades = mutableListOf<ActiveTrade>()
@@ -45,26 +44,26 @@ object TradeManager {
             existingFromPlayer.targetID.getPlayer()?.sendPacket(TradeOfferExpiredPacket(existingFromPlayer.requestID))
         }
         if (getActiveTrade(otherPlayerEntity.uuid) != null) {
-            player.sendSystemMessage(lang("trade.occupied", otherPlayerEntity.name), true)
+            ServerPlayerActionRequest.notify("trade.occupied", player, otherPlayerEntity.name.copy())
         } else {
             val request = TradeRequest(UUID.randomUUID(), player.uuid, otherPlayerEntity.uuid)
             requests.add(request)
             afterOnServer(seconds = request.expiryTime.toFloat()) {
                 if (requests.remove(request)) {
-                    player.sendSystemMessage(lang("trade.request_expired", otherPlayerEntity.name), true)
+                    ServerPlayerActionRequest.notify("trade.request_expired", player, otherPlayerEntity.name.copy())
                     otherPlayerEntity.sendPacket(TradeOfferExpiredPacket(player.uuid))
                 }
             }
 
             otherPlayerEntity.sendPacket(TradeOfferNotificationPacket(request.requestID, player.uuid, player.name.copy(), request.expiryTime))
-            player.sendSystemMessage(lang("trade.request_sent", otherPlayerEntity.name), true)
+            ServerPlayerActionRequest.notify("trade.request_sent", player, otherPlayerEntity.name)
         }
     }
 
     fun acceptTradeRequest(player: ServerPlayer, tradeOfferId: UUID) {
         val request = requests.find { it.requestID == tradeOfferId }
         if (request == null) {
-            player.sendSystemMessage(lang("trade.request_already_expired"), true)
+            ServerPlayerActionRequest.notify("trade.request_already_expired", player)
         } else {
             requests.remove(request)
             val otherPlayer = request.senderId.getPlayer() ?: return

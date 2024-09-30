@@ -9,7 +9,6 @@
 package com.cobblemon.mod.common.client.battle
 
 import com.cobblemon.mod.common.battles.BattleFormat
-import com.cobblemon.mod.common.client.render.ClientPlayerIcon
 import com.cobblemon.mod.common.client.requests.ClientPlayerActionRequest
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.resources.ResourceLocation
@@ -19,7 +18,6 @@ data class ClientBattleChallenge(
     override val requestID: UUID,
     override val expiryTime: Int,
     val battleFormat: BattleFormat
-) : ClientPlayerActionRequest, ClientPlayerIcon(expiryTime) {
-    override val texture: ResourceLocation
-        get() = cobblemonResource("textures/particle/icon_challenge.png")
+) : ClientPlayerActionRequest(expiryTime) {
+    override val texture: ResourceLocation = cobblemonResource("textures/particle/icon_challenge.png")
 }

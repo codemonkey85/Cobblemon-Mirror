@@ -9,10 +9,10 @@
 package com.cobblemon.mod.common.client.net.battle
 
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
-import com.cobblemon.mod.common.api.text.yellow
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.battle.ClientBattleChallenge
 import com.cobblemon.mod.common.client.render.ClientPlayerIcon
+import com.cobblemon.mod.common.client.requests.ClientPlayerActionRequest
 import com.cobblemon.mod.common.net.messages.client.battle.BattleChallengeNotificationPacket
 import com.cobblemon.mod.common.util.lang
 import net.minecraft.client.Minecraft
@@ -24,12 +24,10 @@ object BattleChallengeNotificationHandler : ClientNetworkPacketHandler<BattleCha
             CobblemonClient.requests.battleChallenges[it] = clientBattleChallenge
             ClientPlayerIcon.update(it)
         }
-        client.player?.sendSystemMessage(
-            lang(
-                "challenge.receiver",
-                packet.challengerNames.first(),
-                lang("battle.types.${packet.battleFormat.battleType.name}"),
-            ).yellow()
+        ClientPlayerActionRequest.notify(
+            "challenge.receiver",
+            packet.challengerNames.first(),
+            lang("battle.types.${packet.battleFormat.battleType.name}")
         )
     }
 }

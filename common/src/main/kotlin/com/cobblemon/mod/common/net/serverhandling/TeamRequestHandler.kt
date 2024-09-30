@@ -10,15 +10,14 @@ package com.cobblemon.mod.common.net.serverhandling
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
+import com.cobblemon.mod.common.api.interaction.ServerPlayerActionRequest
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.api.scheduling.afterOnServer
 import com.cobblemon.mod.common.api.text.aqua
-import com.cobblemon.mod.common.api.text.yellow
 import com.cobblemon.mod.common.battles.BattleRegistry
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.net.messages.client.battle.TeamRequestNotificationPacket
 import com.cobblemon.mod.common.net.messages.server.BattleTeamRequestPacket
-import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.traceFirstEntityCollision
 import java.util.UUID
 import net.minecraft.server.MinecraftServer
@@ -46,7 +45,7 @@ object TeamRequestHandler : ServerNetworkPacketHandler<BattleTeamRequestPacket> 
             ignoreEntity = player,
             maxDistance = Cobblemon.config.BattlePvPMaxDistance,
             collideBlock = ClipContext.Fluid.NONE) != targetedEntity) {
-            player.sendSystemMessage(lang("ui.interact.failed").yellow())
+            ServerPlayerActionRequest.notify("ui.interact.failed", player)
             return
         }
 
@@ -70,7 +69,7 @@ object TeamRequestHandler : ServerNetworkPacketHandler<BattleTeamRequestPacket> 
                     val requestId = UUID.randomUUID()
                     val teamRequest = BattleRegistry.TeamRequest(requestId, targetedEntity.uuid)
                     BattleRegistry.multiBattleTeamRequests[player.uuid] = teamRequest
-                    player.sendSystemMessage(lang("challenge.multi.team_request.sender", targetedEntity.name))
+                    ServerPlayerActionRequest.notify("challenge.multi.team_request.sender", player, targetedEntity.name)
                     targetedEntity.sendPacket(TeamRequestNotificationPacket(requestId, player.uuid, player.name.copy().aqua(), teamRequest.expiryTime))
                     // Add timeout callback to cancel the request
                     afterOnServer(seconds = teamRequest.expiryTime.toFloat()) {

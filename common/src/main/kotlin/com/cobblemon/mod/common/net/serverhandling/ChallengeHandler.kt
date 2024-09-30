@@ -11,11 +11,11 @@ package com.cobblemon.mod.common.net.serverhandling
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonNetwork
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
+import com.cobblemon.mod.common.api.interaction.ServerPlayerActionRequest
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.api.scheduling.afterOnServer
 import com.cobblemon.mod.common.api.text.aqua
 import com.cobblemon.mod.common.api.text.red
-import com.cobblemon.mod.common.api.text.yellow
 import com.cobblemon.mod.common.battles.BattleBuilder
 import com.cobblemon.mod.common.battles.BattleFormat
 import com.cobblemon.mod.common.battles.BattleRegistry
@@ -55,7 +55,7 @@ object ChallengeHandler : ServerNetworkPacketHandler<BattleChallengePacket> {
                 maxDistance = maxDistance,
                 collideBlock = ClipContext.Fluid.NONE) != targetedEntity) {
             if(targetedEntity !is PokemonEntity) {
-                player.sendSystemMessage(lang("cobblemon.ui.interact.failed").yellow())
+                ServerPlayerActionRequest.notify("ui.interact.failed", player)
             }
             return
         }
@@ -83,7 +83,7 @@ object ChallengeHandler : ServerNetworkPacketHandler<BattleChallengePacket> {
                 if (existingChallenge != null && !existingChallenge.isExpired() && existingChallenge.targetID == targetedEntity.uuid) {
                     // Overwrite the challenge or do nothing.
                     // send a message about there being an existing challenge
-                    player.sendSystemMessage(lang("challenge.pending", targetedEntity.name).yellow())
+                    ServerPlayerActionRequest.notify("challenge.pending", player, targetedEntity.name)
                 } else {
                     if (packet.battleFormat.battleType.name == BattleTypes.MULTI.name) {
                         // check for team
@@ -99,9 +99,8 @@ object ChallengeHandler : ServerNetworkPacketHandler<BattleChallengePacket> {
                             // Notify everyone of the challenge
 
                             // Notify challenging team
-                            existingPlayerTeam.teamPlayersUUID.forEach { uuid ->
-                                val serverPlayerEntity = uuid.getPlayer()
-                                serverPlayerEntity?.sendSystemMessage(lang("challenge.multi.sender", targetedEntity.name, existingTargetTeam.teamPlayersUUID.size))
+                            existingPlayerTeam.teamPlayersUUID.mapNotNull { it.getPlayer() }.forEach {
+                                ServerPlayerActionRequest.notify("challenge.multi.sender", it, targetedEntity.name, existingTargetTeam.teamPlayersUUID.size)
                             }
                             // Notify challenged tam
                             CobblemonNetwork.sendPacketToPlayers(
@@ -137,7 +136,7 @@ object ChallengeHandler : ServerNetworkPacketHandler<BattleChallengePacket> {
                             packet.battleFormat,
                             challenge.expiryTime
                         ))
-                        player.sendSystemMessage(lang("challenge.sender", targetedEntity.name, lang(battleFormatLang)).yellow())
+                        ServerPlayerActionRequest.notify("challenge.sender", player, targetedEntity.name, lang(battleFormatLang))
                     }
                 }
             }
