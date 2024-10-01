@@ -1,0 +1,26 @@
+{
+    "portraitScale": 1,
+    "portraitTranslation": [0,0,0],
+    "profileScale": 1,
+    "profileTranslation": [0,0,0],
+    "poses": {
+      "standing": {
+        "poseTypes": ["STAND", "WALK", "PORTRAIT", "PROFILE", "NONE"],
+        "animations": [
+          "q.bedrock('clauncher_left', 'ground_idle')"
+        ],
+        "quirks": [
+          "q.bedrock_quirk('clauncher_left', 'blink')"
+        ]
+      },
+      "swimming": {
+        "poseTypes": ["SWIM", "FLOAT"],
+        "animations": [
+          "q.bedrock('clauncher_left', 'water_idle')"
+        ],
+        "quirks": [
+          "q.bedrock_quirk('clauncher_left', 'blink')"
+        ]
+      }
+    }
+  }
