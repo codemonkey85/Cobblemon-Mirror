@@ -1,0 +1,45 @@
+{
+  "portraitScale": 1,
+  "portraitTranslation": [0, 0, 0],
+  "profileScale": 1,
+  "profileTranslation": [0.0, 0.0, 0.0],
+  "animations": {
+    "recoil": "q.bedrock_stateful('wugtrio', 'recoil')"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseName": "battle-standing",
+      "poseTypes": [
+        "STAND"
+      ],
+      "isBattle": true,
+      "animations": [
+        "q.bedrock('wugtrio', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wugtrio', 'blink')",
+        "q.bedrock_quirk('wugtrio', 'blink2')",
+        "q.bedrock_quirk('wugtrio', 'blink3')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "WALK",
+        "NONE",
+        "PORTRAIT",
+        "PROFILE"
+      ],
+      "isBattle": false,
+      "animations": [
+        "q.bedrock('wugtrio', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wugtrio', 'blink')",
+        "q.bedrock_quirk('wugtrio', 'blink2')",
+        "q.bedrock_quirk('wugtrio', 'blink3')"
+      ]
+    }
+  }
+}
