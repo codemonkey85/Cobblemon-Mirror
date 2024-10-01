@@ -1,0 +1,59 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.toxapex.ground_idle": {
+			"loop": true,
+			"bones": {
+				"leg_front_left1_rotation": {
+					"rotation": [-3.73063, -13.65324, 4.97001]
+				},
+				"leg_front_left1_2": {
+					"rotation": [-25, 0, 0]
+				},
+				"leg_front_left1_3": {
+					"rotation": [-10, 0, 0]
+				},
+				"leg_front_left1_4": {
+					"rotation": [-25, 0, 0]
+				},
+				"leg_front_left1_5": {
+					"rotation": [-20, 0, 0]
+				},
+				"leg_front_right1_rotation": {
+					"rotation": [0, 15, -0.00001]
+				},
+				"leg_front_right1_2": {
+					"rotation": [-25, 0, 0]
+				},
+				"leg_front_right1_3": {
+					"rotation": [-10, 0, 0]
+				},
+				"leg_front_right1_4": {
+					"rotation": [-25, 0, 0]
+				},
+				"leg_front_right1_5": {
+					"rotation": [-20, 0, 0]
+				}
+			}
+		},
+		"animation.toxapex.blink": {
+			"animation_length": 0.1667,
+			"bones": {
+				"eyelid_left": {
+					"position": {
+						"0.0": [0.1, 0, -0.1],
+						"0.125": [0.1, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"eyelid_right": {
+					"position": {
+						"0.0": [-0.1, 0, -0.1],
+						"0.125": [-0.1, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				}
+			}
+		}
+	}
+}
