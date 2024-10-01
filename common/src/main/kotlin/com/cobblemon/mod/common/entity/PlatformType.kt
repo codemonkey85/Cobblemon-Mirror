@@ -44,15 +44,15 @@ enum class PlatformType {
         }
 
         fun GetPlatformTypeForPokemon(pokemon: Pokemon) : PlatformType {
-            val width = pokemon.form.hitbox.width * pokemon.form.baseScale * 1.414 // approx sqrt(2*x^2)
+            val width = pokemon.form.hitbox.width * pokemon.form.baseScale
 
-            return if (width < 1.0) {
+            return if (width <= 0.511) {
                WATER_XS
-            } else if (width < 1.25) {
+            } else if (width < 1.01) {
                 WATER_S
-            } else if (width < 2.5) {
+            } else if (width < 1.8) {
                 WATER_M
-            } else if (width < 3.0) {
+            } else if (width < 2.875) {
                 WATER_L
             } else {
                 WATER_XL
