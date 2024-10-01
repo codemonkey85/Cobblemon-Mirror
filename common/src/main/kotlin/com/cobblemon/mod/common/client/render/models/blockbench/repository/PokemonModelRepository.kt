@@ -461,7 +461,6 @@ object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
         inbuilt("skrelp", ::SkrelpModel)
         inbuilt("dragalge", ::DragalgeModel)
         inbuilt("bunnelby", ::BunnelbyModel)
-        inbuilt("diggersby", ::DiggersbyModel)
         inbuilt("arrokuda", ::ArrokudaModel)
         inbuilt("barraskewda", ::BarraskewdaModel)
         inbuilt("shroodle", ::ShroodleModel)
