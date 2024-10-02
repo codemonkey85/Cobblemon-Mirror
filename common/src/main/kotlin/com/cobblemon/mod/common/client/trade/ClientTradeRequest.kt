@@ -17,5 +17,5 @@ data class ClientTradeRequest(
     override val requestID: UUID,
     override val expiryTime: Int
 ) : ClientPlayerActionRequest(expiryTime) {
-    override val texture: ResourceLocation = cobblemonResource("textures/particle/icon_trade.png")
+    override val texture: ResourceLocation = cobblemonResource("textures/particle/request/icon_trade.png")
 }

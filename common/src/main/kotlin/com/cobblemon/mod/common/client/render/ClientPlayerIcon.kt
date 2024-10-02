@@ -1,3 +1,11 @@
+/*
+ * Copyright (C) 2023 Cobblemon Contributors
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.cobblemon.mod.common.client.render
 
 import com.cobblemon.mod.common.client.CobblemonClient
@@ -29,9 +37,9 @@ import java.util.*
 abstract class ClientPlayerIcon(expiryTime: Int? = null) {
 
     /** The texture to use for the icon. */
-    open val texture: ResourceLocation = cobblemonResource("textures/particle/icon_exclamation.png")
+    open val texture: ResourceLocation = cobblemonResource("textures/particle/request/icon_exclamation.png")
     /** The offset of the icon from the player's head. */
-    open val Y_OFFSET = 1.5F
+    open val Y_OFFSET = 1.25F
     /** The offset of the icon from the player's head. */
     private val FADE_RATIO = 0.25F
 
@@ -90,7 +98,7 @@ abstract class ClientPlayerIcon(expiryTime: Int? = null) {
 
         // billboard
         poseStack.mulPose(Quaternionf(0.0F, camera.rotation().y, 0.0F, camera.rotation().w))
-        poseStack.scale(1.0f, -1.0f, 1.0f)
+        poseStack.scale(0.5f, -0.5f, 0.5f)
     }
 
     /** Constructs the vertices for the rendered quad. */
