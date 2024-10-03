@@ -18,8 +18,8 @@
         "PROFILE"
       ],
       "animations": [
-        "q.look('head', 1, 0, 10, -45)",
-        "q.look('leaf_front', 1, 0, 3, -15)",
+        "q.look('head', 1, 0, 10, -35)",
+        "q.look('leaf_front', 1, 0, 3, -23)",
         "q.bedrock('venusaur', 'ground_idle')"
       ],
       "quirks": [
@@ -39,9 +39,9 @@
         "SWIM"
       ],
       "animations": [
-        "q.look('head', 1, 0, 10, -45)",
-        "q.look('leaf_front', 1, 0, 0, -35)",
-        "q.quadruped_walk(0.66, 0.6, 'arm_left', 'arm_right', 'leg_left', 'leg_right')",
+        "q.look('head', 1, 0, 10, -35)",
+        "q.look('leaf_front', 1, 0, 0, -23)",
+        "q.quadruped_walk(0.66, 0.6, 'leg_front_left', 'leg_front_right', 'leg_left', 'leg_right')",
         "q.bedrock('venusaur', 'ground_idle')"
       ],
       "quirks": [
