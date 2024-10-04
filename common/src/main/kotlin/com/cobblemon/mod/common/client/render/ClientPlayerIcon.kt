@@ -15,6 +15,7 @@ import com.cobblemon.mod.common.platform.events.RenderEvent
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
+import com.mojang.math.Axis
 import net.minecraft.client.Camera
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GameRenderer
@@ -23,7 +24,6 @@ import net.minecraft.util.Mth
 import net.minecraft.world.entity.EntityAttachment
 import net.minecraft.world.entity.player.Player
 import org.joml.Matrix4f
-import org.joml.Quaternionf
 import java.util.*
 
 /**
@@ -39,8 +39,8 @@ abstract class ClientPlayerIcon(expiryTime: Int? = null) {
     /** The texture to use for the icon. */
     open val texture: ResourceLocation = cobblemonResource("textures/particle/request/icon_exclamation.png")
     /** The offset of the icon from the player's head. */
-    open val Y_OFFSET = 1.25F
-    /** The offset of the icon from the player's head. */
+    open val Y_OFFSET = 1.5F
+    open val SCALE = 0.75F
     private val FADE_RATIO = 0.25F
 
     private val tickCount get() = Minecraft.getInstance().player!!.tickCount    // icon is only ticked when tracked, so derive lifetime from player tick - startTick
@@ -91,14 +91,14 @@ abstract class ClientPlayerIcon(expiryTime: Int? = null) {
     protected open fun positionTag(player: Player, poseStack: PoseStack, camera: Camera, partialTicks: Float) {
         // position
         val vec3 = player.attachments.getNullable(EntityAttachment.NAME_TAG, 0, player.getViewYRot(partialTicks))
-        poseStack.pushPose()
         poseStack.translate(player.getPosition(partialTicks).x, player.getPosition(partialTicks).y, player.getPosition(partialTicks).z)
         poseStack.translate(vec3!!.x, vec3.y + Y_OFFSET, vec3.z)
         poseStack.translate(-camera.position.x, -camera.position.y, -camera.position.z) // event posestack does not have PlayerRenderer context
 
         // billboard
-        poseStack.mulPose(Quaternionf(0.0F, camera.rotation().y, 0.0F, camera.rotation().w))
-        poseStack.scale(0.5f, -0.5f, 0.5f)
+        val entityRenderDispatcher = Minecraft.getInstance().entityRenderDispatcher
+        poseStack.mulPose(Axis.YP.rotationDegrees((180f - entityRenderDispatcher.camera.yRot)))
+        poseStack.scale(SCALE, -SCALE, SCALE)
     }
 
     /** Constructs the vertices for the rendered quad. */
