@@ -75,6 +75,7 @@ abstract class ClientPlayerIcon(expiryTime: Int? = null) {
     }
 
     fun render(player: Player) {
+        if (CobblemonClient.battle != null) return
         DeferredRenderer.enqueue(RenderEvent.Stage.TRANSLUCENT) { event ->
             val poseStack = event.poseStack
             val partialTicks = event.tickCounter.getGameTimeDeltaPartialTick(!tickRateManager.isEntityFrozen(player))
