@@ -16,7 +16,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType
 import net.minecraft.world.entity.ai.memory.WalkTarget
 
 object MoveToAttackTargetTask {
-    fun create(): OneShot<LivingEntity> = BehaviorBuilder.create {
+    fun create(speedModifier: Float = 0.7F): OneShot<LivingEntity> = BehaviorBuilder.create {
         it.group(
             it.present(MemoryModuleType.ATTACK_TARGET),
             it.registered(MemoryModuleType.WALK_TARGET)
@@ -26,7 +26,7 @@ object MoveToAttackTargetTask {
                 val position = attackTarget.position()
                 val walkTarget = it.tryGet(walkTarget).orElse(null)
                 if (walkTarget == null || walkTarget.target.currentPosition().distanceToSqr(position) > 2.0) {
-                    entity.brain.setMemory(MemoryModuleType.WALK_TARGET, WalkTarget(attackTarget, 0.5F, 1))
+                    entity.brain.setMemory(MemoryModuleType.WALK_TARGET, WalkTarget(attackTarget, speedModifier, 1))
                     true
                 } else {
                     false

@@ -13,12 +13,14 @@ import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.CobblemonSensors
 import com.cobblemon.mod.common.entity.ai.AttackAngryAtTask
 import com.cobblemon.mod.common.entity.ai.ChooseLandWanderTargetTask
+import com.cobblemon.mod.common.entity.ai.FleeFromAttackerTask
 import com.cobblemon.mod.common.entity.ai.FollowWalkTargetTask
 import com.cobblemon.mod.common.entity.ai.GetAngryAtAttackerTask
 import com.cobblemon.mod.common.entity.ai.LookAroundTaskWrapper
 import com.cobblemon.mod.common.entity.ai.LookAtMobTaskWrapper
 import com.cobblemon.mod.common.entity.ai.MoveToAttackTargetTask
 import com.cobblemon.mod.common.entity.ai.StayAfloatTask
+import com.cobblemon.mod.common.entity.ai.SwapActivityTask
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.entity.pokemon.ai.tasks.*
 import com.cobblemon.mod.common.pokemon.Pokemon
@@ -103,27 +105,35 @@ object PokemonBrain {
             ImmutableList.copyOf(battlingTasks())
         )
         brain.addActivity(
+            Activity.FIGHT,
+            ImmutableList.copyOf(fightTasks(pokemon))
+        )
+        brain.addActivity(
+            Activity.AVOID,
+            ImmutableList.copyOf(avoidTasks(pokemon))
+        )
+        brain.addActivity(
             CobblemonActivities.POKEMON_SLEEPING_ACTIVITY,
             ImmutableList.copyOf(sleepingTasks())
         )
-        brain.addActivityAndRemoveMemoryWhenStopped(
-            Activity.AVOID,
-            10,
-            ImmutableList.of(
-                SetWalkTargetAwayFrom.entity(
-                    MemoryModuleType.AVOID_TARGET,
-                    1.5f,
-                    15,
-                    false
-                ),
-                makeRandomWalkTask(),
-                SetEntityLookTargetSometimes.create(
-                    8.0f,
-                    UniformInt.of(30, 60)
-                ),
-            ),
-            MemoryModuleType.AVOID_TARGET
-        )
+//        brain.addActivityAndRemoveMemoryWhenStopped(
+//            Activity.AVOID,
+//            10,
+//            ImmutableList.of(
+//                SetWalkTargetAwayFrom.entity(
+//                    MemoryModuleType.AVOID_TARGET,
+//                    1.5f,
+//                    15,
+//                    false
+//                ),
+//                makeRandomWalkTask(),
+//                SetEntityLookTargetSometimes.create(
+//                    8.0f,
+//                    UniformInt.of(30, 60)
+//                ),
+//            ),
+//            MemoryModuleType.AVOID_TARGET
+//        )
         brain.addActivityWithConditions(
             CobblemonActivities.POKEMON_GROW_CROP,
             ImmutableList.copyOf(growingPlantTasks(pokemon)),
@@ -155,14 +165,31 @@ object PokemonBrain {
             add(0 toDF StayAfloatTask(0.8F))
         }
 
-        add(0 toDF GetAngryAtAttackerTask.create())
+        if (pokemon.form.behaviour.combat.willDefendSelf) {
+            add(0 toDF GetAngryAtAttackerTask.create())
+        } else {
+            add(0 toDF FleeFromAttackerTask.create())
+        }
+
         add(0 toDF StopBeingAngryIfTargetDead.create())
         add(0 toDF HandleBattleActivityGoal.create())
         add(0 toDF FollowWalkTargetTask())
-        add(0 toDF DefendOwnerTask()) // try to defend owners here as a test
-        add(0 toDF PokemonMeleeTask.create(20))
+
+        add(0 toDF SwapActivityTask.possessing(CobblemonMemories.POKEMON_BATTLE, CobblemonActivities.BATTLING_ACTIVITY))
     }
 
+    private fun fightTasks(pokemon: Pokemon) = buildList<Pair<Int, BehaviorControl<in PokemonEntity>>> {
+        add(0 toDF MoveToAttackTargetTask.create())
+        add(0 toDF PokemonMeleeTask.create(20))
+        add(0 toDF SwapActivityTask.lacking(MemoryModuleType.ATTACK_TARGET, Activity.IDLE))
+    }
+
+    private fun avoidTasks(pokemon: Pokemon) = buildList<Pair<Int, BehaviorControl<in PokemonEntity>>> {
+        add(0 toDF SetWalkTargetAwayFrom.entity(MemoryModuleType.AVOID_TARGET, 0.55F, 15, false))
+        add(0 toDF makeRandomWalkTask())
+        add(0 toDF SetEntityLookTargetSometimes.create(8.0f, UniformInt.of(30, 60)))
+        add(0 toDF SwapActivityTask.lacking(MemoryModuleType.AVOID_TARGET, Activity.IDLE))
+    }
 
     private fun idleTasks(pokemon: Pokemon) = buildList<Pair<Int, BehaviorControl<in PokemonEntity>>> {
         add(0 toDF WakeUpTask.create() )
@@ -179,9 +206,14 @@ object PokemonBrain {
         add(0 toDF FindRestingPlaceTask.create(16, 8))
         add(0 toDF EatGrassTask())
         add(0 toDF AttackAngryAtTask.create())
-        add(0 toDF MoveToAttackTargetTask.create())
         add(0 toDF MoveToOwnerTask.create(completionRange = 4, maxDistance = 14F, teleportDistance = 24F))
         add(0 toDF WalkTowardsParentSpeciesTask.create(ADULT_FOLLOW_RANGE, 0.4f))
+        if (pokemon.form.behaviour.combat.willDefendOwner) {
+            add(0 toDF DefendOwnerTask.create())
+        }
+        add(0 toDF SwapActivityTask.possessing(MemoryModuleType.ATTACK_TARGET, Activity.FIGHT))
+        add(0 toDF SwapActivityTask.possessing(MemoryModuleType.AVOID_TARGET, Activity.AVOID))
+
 //        add(0 toDF HuntPlayerTask()) // commenting this out to test other things
         add(1 toDF FertilizerTask())
 
@@ -208,11 +240,14 @@ object PokemonBrain {
     private fun battlingTasks() = buildList<Pair<Int, BehaviorControl<in PokemonEntity>>> {
         add(0 toDF LookAtTargetedBattlePokemonTask.create())
         add(0 toDF LookAtTargetSink(Int.MAX_VALUE - 1, Int.MAX_VALUE - 1))
+
+        add(0 toDF SwapActivityTask.lacking(CobblemonMemories.POKEMON_BATTLE, Activity.IDLE))
     }
 
     private fun sleepingTasks() = buildList<Pair<Int, BehaviorControl<in PokemonEntity>>> {
         add(1 toDF WakeUpTask.create())
     }
+
     private fun growingPlantTasks(pokemon: Pokemon) = buildList<Pair<Int, BehaviorControl<in PokemonEntity>>> {
         if (pokemon.species.primaryType.name.equals("grass", true)){
             add(1 toDF FertilizerTask())

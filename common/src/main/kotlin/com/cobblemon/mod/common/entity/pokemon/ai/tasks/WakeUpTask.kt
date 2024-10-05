@@ -21,12 +21,11 @@ object WakeUpTask {
     fun create(): OneShot<PokemonEntity> {
         return BehaviorBuilder.create {
             it.group(
-                it.absent(CobblemonMemories.POKEMON_BATTLE),
                 it.absent(CobblemonMemories.POKEMON_DROWSY),
                 it.registered(MemoryModuleType.HURT_BY),
                 it.registered(MemoryModuleType.HURT_BY_ENTITY),
                 it.registered(MemoryModuleType.ANGRY_AT),
-            ).apply(it) { _, _, hurtBy, hurtByEntity, angerTarget ->
+            ).apply(it) { _, hurtBy, hurtByEntity, angerTarget ->
                 Trigger { world, entity, _ ->
                     if (entity.pokemon.status?.status == Statuses.SLEEP && entity.pokemon.storeCoordinates.get()?.store !is PartyStore) {
                         entity.pokemon.status = null

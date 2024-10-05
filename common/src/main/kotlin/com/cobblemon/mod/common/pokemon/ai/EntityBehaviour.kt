@@ -15,11 +15,10 @@ import net.minecraft.server.level.ServerPlayer
 
 /**
  * Behavioural properties relating to how it treats other entities and how base Minecraft entities treat it.
- *
  */
 class EntityBehaviour {
     val avoidedByCreeper = false
-    val avoidedByPhantom = false
+//    val avoidedByPhantom = false
     val avoidedBySkeleton = false
 
     companion object {

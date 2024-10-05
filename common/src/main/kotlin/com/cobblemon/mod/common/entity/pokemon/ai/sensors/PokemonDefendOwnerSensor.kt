@@ -16,7 +16,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType
 import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities
 import net.minecraft.world.entity.ai.sensing.Sensor
 
-class DefendOwnerSensor : Sensor<PokemonEntity>(100) {
+class DefendOwnerSensor : Sensor<PokemonEntity>(10) {
 
     override fun requires() = setOf(CobblemonMemories.NEAREST_VISIBLE_ATTACKER)
 
