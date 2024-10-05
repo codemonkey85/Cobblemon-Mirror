@@ -1,0 +1,4 @@
+(v.callback_dialogue != 0) ? {
+  c.npc.run_dialogue(c.player, v.callback_dialogue);
+  v.callback_dialogue = 0;
+}

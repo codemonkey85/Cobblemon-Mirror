@@ -14,6 +14,7 @@ import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.FormData
+import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.util.*
 import java.util.UUID
@@ -27,6 +28,8 @@ class SpawnPokemonPacket(
     private val ownerId: UUID?,
     private val scaleModifier: Float,
     private val species: Species,
+    private val gender: Gender,
+    private val shiny: Boolean,
     private val form: FormData,
     private val aspects: Set<String>,
     private val battleId: UUID?,
@@ -40,6 +43,7 @@ class SpawnPokemonPacket(
     private val caughtBall: ResourceLocation,
     private val spawnYaw: Float,
     private val friendship: Int,
+    private val freezeFrame: Float,
     vanillaSpawnPacket: ClientboundAddEntityPacket
 ) : SpawnExtraDataEntityPacket<SpawnPokemonPacket, PokemonEntity>(vanillaSpawnPacket) {
 
@@ -49,6 +53,8 @@ class SpawnPokemonPacket(
         entity.ownerUUID,
         entity.pokemon.scaleModifier,
         entity.exposedSpecies,
+        entity.pokemon.gender,
+        entity.pokemon.shiny,
         entity.pokemon.form,
         entity.pokemon.aspects,
         entity.battleId,
@@ -62,6 +68,7 @@ class SpawnPokemonPacket(
         entity.pokemon.caughtBall.name,
         entity.entityData.get(PokemonEntity.SPAWN_DIRECTION),
         entity.entityData.get(PokemonEntity.FRIENDSHIP),
+        entity.entityData.get(PokemonEntity.FREEZE_FRAME),
         vanillaSpawnPacket
     )
 
@@ -69,6 +76,8 @@ class SpawnPokemonPacket(
         buffer.writeNullable(ownerId) { _, v -> buffer.writeUUID(v) }
         buffer.writeFloat(this.scaleModifier)
         buffer.writeIdentifier(this.species.resourceIdentifier)
+        buffer.writeEnumConstant(this.gender)
+        buffer.writeBoolean(this.shiny)
         buffer.writeString(this.form.formOnlyShowdownId())
         buffer.writeCollection(this.aspects) { pb, value -> pb.writeString(value) }
         buffer.writeNullable(this.battleId) { pb, value -> pb.writeUUID(value) }
@@ -82,6 +91,7 @@ class SpawnPokemonPacket(
         buffer.writeIdentifier(this.caughtBall)
         buffer.writeFloat(this.spawnYaw)
         buffer.writeInt(this.friendship)
+        buffer.writeFloat(this.freezeFrame)
     }
 
     override fun applyData(entity: PokemonEntity) {
@@ -89,6 +99,8 @@ class SpawnPokemonPacket(
         entity.pokemon.apply {
             scaleModifier = this@SpawnPokemonPacket.scaleModifier
             species = this@SpawnPokemonPacket.species
+            gender = this@SpawnPokemonPacket.gender
+            shiny = this@SpawnPokemonPacket.shiny
             form = this@SpawnPokemonPacket.form
             forcedAspects = this@SpawnPokemonPacket.aspects
             nickname = this@SpawnPokemonPacket.nickname
@@ -105,6 +117,7 @@ class SpawnPokemonPacket(
         entity.entityData.set(PokemonEntity.HIDE_LABEL, hideLabel)
         entity.entityData.set(PokemonEntity.SPAWN_DIRECTION, spawnYaw)
         entity.entityData.set(PokemonEntity.FRIENDSHIP, friendship)
+        entity.entityData.set(PokemonEntity.FREEZE_FRAME, freezeFrame)
     }
 
     override fun checkType(entity: Entity): Boolean = entity is PokemonEntity
@@ -116,6 +129,8 @@ class SpawnPokemonPacket(
             val scaleModifier = buffer.readFloat()
             val identifier = buffer.readIdentifier()
             val species = requireNotNull(PokemonSpecies.getByIdentifier(identifier)) { "received unknown PokemonSpecies: $identifier" }
+            val gender = buffer.readEnumConstant(Gender::class.java)
+            val shiny = buffer.readBoolean()
             val showdownId = buffer.readString()
             val form = species.forms.firstOrNull { it.formOnlyShowdownId() == showdownId } ?: species.standardForm
             val aspects = buffer.readList { it.readString() }.toSet()
@@ -130,9 +145,10 @@ class SpawnPokemonPacket(
             val caughtBall = buffer.readIdentifier()
             val spawnAngle = buffer.readFloat()
             val friendship = buffer.readInt()
+            val freezeFrame = buffer.readFloat()
             val vanillaPacket = decodeVanillaPacket(buffer)
 
-            return SpawnPokemonPacket(ownerId, scaleModifier, species, form, aspects, battleId, phasingTargetId, beamModeEmitter, nickname, labelLevel, poseType, unbattlable, hideLabel, caughtBall, spawnAngle, friendship, vanillaPacket)
+            return SpawnPokemonPacket(ownerId, scaleModifier, species, gender, shiny, form, aspects, battleId, phasingTargetId, beamModeEmitter, nickname, labelLevel, poseType, unbattlable, hideLabel, caughtBall, spawnAngle, friendship, freezeFrame, vanillaPacket)
         }
     }
 

@@ -27,6 +27,7 @@ import com.cobblemon.mod.common.api.events.item.LeftoversCreatedEvent
 import com.cobblemon.mod.common.api.events.pokeball.PokeBallCaptureCalculatedEvent
 import com.cobblemon.mod.common.api.events.pokeball.PokemonCatchRateEvent
 import com.cobblemon.mod.common.api.events.pokeball.ThrownPokeballHitEvent
+import com.cobblemon.mod.common.api.events.pokedex.scanning.PokemonScannedEvent
 import com.cobblemon.mod.common.api.events.pokemon.*
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionAcceptedEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEvent
@@ -40,6 +41,7 @@ import com.cobblemon.mod.common.api.events.storage.ReleasePokemonEvent
 import com.cobblemon.mod.common.api.events.world.BigRootPropagatedEvent
 import com.cobblemon.mod.common.api.reactive.CancelableObservable
 import com.cobblemon.mod.common.api.reactive.EventObservable
+import com.cobblemon.mod.common.api.reactive.Observable
 import com.cobblemon.mod.common.api.reactive.Observable.Companion.filter
 import com.cobblemon.mod.common.api.reactive.Observable.Companion.map
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
@@ -68,8 +70,6 @@ object CobblemonEvents {
     val EVOLUTION_COMPLETE = EventObservable<EvolutionCompleteEvent>()
     @JvmField
     val POKEMON_NICKNAMED = CancelableObservable<PokemonNicknamedEvent>()
-    @JvmField
-    val HELD_ITEM_UPDATED = CancelableObservable<HeldItemUpdatedEvent>()
 
     @JvmField
     val THROWN_POKEBALL_HIT = CancelableObservable<ThrownPokeballHitEvent>()
@@ -149,6 +149,9 @@ object CobblemonEvents {
     val STARTER_CHOSEN = CancelableObservable<StarterChosenEvent>()
 
     @JvmField
+    val POKEMON_SCANNED = EventObservable<PokemonScannedEvent>()
+
+    @JvmField
     val APRICORN_HARVESTED = EventObservable<ApricornHarvestEvent>()
     // Berries
     @JvmField
@@ -167,6 +170,11 @@ object CobblemonEvents {
     val HELD_ITEM_PRE = CancelableObservable<HeldItemEvent.Pre>()
     @JvmField
     val HELD_ITEM_POST = EventObservable<HeldItemEvent.Post>()
+
+    @JvmField
+    val POKEMON_GAINED = EventObservable<PokemonGainedEvent>()
+    @JvmField
+    val POKEMON_SEEN = EventObservable<PokemonSeenEvent>()
 
     // -------------------------------------------------------------------------------------
     //

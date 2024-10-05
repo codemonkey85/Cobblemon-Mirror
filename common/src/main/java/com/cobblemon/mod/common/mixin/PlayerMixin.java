@@ -18,7 +18,18 @@ import com.cobblemon.mod.common.api.tags.CobblemonItemTags;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.util.CompoundTagExtensionsKt;
 import com.cobblemon.mod.common.util.DataKeys;
+import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,15 +40,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 import java.util.UUID;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin extends LivingEntity {
@@ -63,7 +65,7 @@ public abstract class PlayerMixin extends LivingEntity {
         super(p_20966_, p_20967_);
     }
 
-    @Inject(method = "respawnEntityOnShoulder", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;create(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/world/Level;)Ljava/util/Optional;"), cancellable = true)
+    @Inject(method = "respawnEntityOnShoulder", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;create(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/world/level/Level;)Ljava/util/Optional;"), cancellable = true)
     private void cobblemon$removePokemon(CompoundTag nbt, CallbackInfo ci) {
         if (CompoundTagExtensionsKt.isPokemonEntity(nbt)) {
             final UUID uuid = this.getPokemonID(nbt);
@@ -117,14 +119,12 @@ public abstract class PlayerMixin extends LivingEntity {
 
     private void recallPokemon(UUID uuid) {
         // We need to do this cause the Entity doesn't store a reference to its storage
-        try {
-            final PartyStore party = Cobblemon.INSTANCE.getStorage().getParty(this.uuid);
-            for (Pokemon pokemon : party) {
-                if (pokemon.getUuid().equals(uuid)) {
-                    pokemon.recall();
-                }
+        final PartyStore party = Cobblemon.INSTANCE.getStorage().getParty(this.getUUID(), this.registryAccess());
+        for (Pokemon pokemon : party) {
+            if (pokemon.getUuid().equals(uuid)) {
+                pokemon.recall();
             }
-        } catch (NoPokemonStoreException ignored) {}
+        }
     }
 
     private boolean isShoulderPokemon(CompoundTag nbt) {
@@ -156,6 +156,18 @@ public abstract class PlayerMixin extends LivingEntity {
                         return null;
                     }
                 );
+            }
+        }
+    }
+
+    @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
+    public void isInvulnerableTo(DamageSource source, CallbackInfoReturnable<Boolean> ci) {
+        if (!level().isClientSide) {
+            ServerPlayer player = (ServerPlayer)(Object)this;
+            boolean invulnerableInBattle = this.level().getGameRules().getBoolean(CobblemonGameRules.BATTLE_INVULNERABILITY);
+            boolean inBattle = Cobblemon.INSTANCE.getBattleRegistry().getBattleByParticipatingPlayer(player) != null;
+            if (invulnerableInBattle && inBattle) {
+                ci.setReturnValue(true);
             }
         }
     }

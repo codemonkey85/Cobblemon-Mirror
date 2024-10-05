@@ -170,6 +170,20 @@ object PokemonSpecies : JsonDataRegistry<Species> {
     fun count() = this.speciesByIdentifier.size
 
     /**
+     * Gets a map of dex numbers to species.
+     *
+     * @return The dex numbers map to species.
+     */
+    fun getSpeciesInNamespace(namespace: String = Cobblemon.MODID): MutableMap<Int, Species> = speciesByDex.row(namespace)
+
+    /**
+     * Get a list of loaded namespaces.
+     *
+     * @return The list of loaded namespaces.
+     */
+    fun getNamespaces() = speciesByDex.rowKeySet().toList()
+
+    /**
      * Picks a random [Species].
      *
      * @throws [NoSuchElementException] if there are no Pokémon species loaded.

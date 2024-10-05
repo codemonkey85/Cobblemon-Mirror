@@ -23,5 +23,5 @@ object ServerSettings {
 
     var preventCompletePartyDeposit = Cobblemon.config.preventCompletePartyDeposit
     var displayEntityLevelLabel = Cobblemon.config.displayEntityLevelLabel
-
+    var displayEntityNameLabel = Cobblemon.config.displayEntityNameLabel
 }

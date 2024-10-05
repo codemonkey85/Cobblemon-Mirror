@@ -8,6 +8,9 @@
   "battle.pvw.default": {
     "sounds": []
   },
+  "entity.villager.work_nurse": {
+    "sounds": [ { "name":  "cobblemon:entity/villager/work_nurse", "volume":  0.8 } ]
+  },
   "healing_machine.active": {
     "sounds": [ "cobblemon:block/healing_machine_active" ]
   },
@@ -24,10 +27,10 @@
     "sounds": [ "cobblemon:pc/pc_off" ]
   },
   "pc.grab": {
-    "sounds": [ "cobblemon:pc/pc_grab" ]
+    "sounds": [ { "name":  "cobblemon:pc/pc_grab", "volume":  0.7 }  ]
   },
   "pc.drop": {
-    "sounds": [ "cobblemon:pc/pc_drop" ]
+    "sounds": [ { "name": "cobblemon:pc/pc_drop", "volume":  0.7 } ]
   },
   "pc.release": {
     "sounds": [ "cobblemon:pc/pc_release" ]
@@ -71,14 +74,53 @@
   "item.use": {
     "sounds": [ "cobblemon:use_item" ]
   },
-  "pokemon.can_evolve": {
-    "sounds": [ "cobblemon:pokemon/evolution_notification"]
+  "item.pokedex.open": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_open" ]
   },
-  "evolution.evolve": {
-    "sounds": []
+  "item.pokedex.close": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_close" ]
   },
-  "evolution.evolving": {
-    "sounds": ["cobblemon:evolution/evolve_full"]
+  "item.pokedex.click": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_click" ]
+  },
+  "item.pokedex.click_short": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_click_short" ]
+  },
+  "item.pokedex.scan_open": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_open", "volume": 0.6 }]
+  },
+  "item.pokedex.scan_close": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_close", "volume": 0.6 }]
+  },
+  "item.pokedex.scan_loop": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_loop", "volume": 0.3 }]
+  },
+  "item.pokedex.scan_detail": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_detail", "volume": 0.4 }]
+  },
+  "item.pokedex.scan_register_pokemon": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_register_pokemon", "volume": 0.9 }]
+  },
+  "item.pokedex.scan_register_aspect": {
+    "sounds": [
+      { "name": "cobblemon:item/pokedex/pokedex_scan_register_aspect", "volume": 0.9 }]
+  },
+  "item.pokedex.scan_zoom_increment": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_scan_zoom_increment" ]
+  },
+  "evolution.notification": {
+    "sounds": [ { "name": "cobblemon:evolution/evolution_notification", "volume": 0.7 } ]
+  },
+  "evolution.full": {
+    "sounds": [ "cobblemon:evolution/evolution_full" ]
+  },
+  "evolution.ui": {
+    "sounds": [ { "name": "cobblemon:evolution/evolution_ui", "volume": 0.2 } ]
   },
   "gui.click": {
     "sounds": [ "cobblemon:click" ]
@@ -286,10 +328,10 @@
   },
   "tumblestone.place": {
     "sounds": [
-      "cobblemon:block/tumblestone/tumblestone_place_1",
-      "cobblemon:block/tumblestone/tumblestone_place_2",
-      "cobblemon:block/tumblestone/tumblestone_place_3",
-      "cobblemon:block/tumblestone/tumblestone_place_4"
+      { "name": "cobblemon:block/tumblestone/tumblestone_place_1", "volume": 0.7 },
+      { "name": "cobblemon:block/tumblestone/tumblestone_place_2", "volume": 0.7 },
+      { "name": "cobblemon:block/tumblestone/tumblestone_place_3", "volume": 0.7 },
+      { "name": "cobblemon:block/tumblestone/tumblestone_place_4", "volume": 0.7 }
     ]
   },
   "tumblestone.step": {
@@ -298,6 +340,38 @@
       "cobblemon:block/tumblestone/tumblestone_step_2",
       "cobblemon:block/tumblestone/tumblestone_step_3",
       "cobblemon:block/tumblestone/tumblestone_step_4"
+    ]
+  },
+  "evolution_stone_block.break": {
+    "sounds": [
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_break_1",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_break_2",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_break_3",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_break_4"
+    ]
+  },
+  "evolution_stone_block.hit": {
+    "sounds": [
+      { "name": "cobblemon:block/evolution_stone_block/evolution_stone_block_hit_1", "volume": 0.8 },
+      { "name": "cobblemon:block/evolution_stone_block/evolution_stone_block_hit_2", "volume": 0.8 },
+      { "name": "cobblemon:block/evolution_stone_block/evolution_stone_block_hit_3", "volume": 0.8 },
+      { "name": "cobblemon:block/evolution_stone_block/evolution_stone_block_hit_4", "volume": 0.8 }
+    ]
+  },
+  "evolution_stone_block.place": {
+    "sounds": [
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_place_1",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_place_2",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_place_3",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_place_4"
+    ]
+  },
+  "evolution_stone_block.step": {
+    "sounds": [
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_step_1",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_step_2",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_step_3",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_step_4"
     ]
   },
   "display_case.break": {
@@ -309,10 +383,10 @@
   },
   "display_case.hit": {
     "sounds": [
-      "cobblemon:block/display_case/display_case_hit_1",
-      "cobblemon:block/display_case/display_case_hit_2",
-      "cobblemon:block/display_case/display_case_hit_3",
-      "cobblemon:block/display_case/display_case_hit_4"
+      { "name": "cobblemon:block/display_case/display_case_hit_1", "volume": 0.8 },
+      { "name": "cobblemon:block/display_case/display_case_hit_2", "volume": 0.8 },
+      { "name": "cobblemon:block/display_case/display_case_hit_3", "volume": 0.8 },
+      { "name": "cobblemon:block/display_case/display_case_hit_4", "volume": 0.8 }
     ]
   },
   "display_case.place": {
@@ -345,9 +419,9 @@
   },
   "berry_bush.place": {
     "sounds": [
-      "cobblemon:block/plants/berry/berry_bush_place_1",
-      "cobblemon:block/plants/berry/berry_bush_place_2",
-      "cobblemon:block/plants/berry/berry_bush_place_3"
+      { "name": "cobblemon:block/plants/berry/berry_bush_place_1", "volume": 0.7 },
+      { "name": "cobblemon:block/plants/berry/berry_bush_place_2", "volume": 0.7 },
+      { "name": "cobblemon:block/plants/berry/berry_bush_place_3", "volume": 0.7 }
     ]
   },
   "big_root.break": {
@@ -359,9 +433,9 @@
   },
   "energy_root.place": {
     "sounds": [
-      "cobblemon:block/plants/energy_root/energy_root_place_1",
-      "cobblemon:block/plants/energy_root/energy_root_place_2",
-      "cobblemon:block/plants/energy_root/energy_root_place_3"
+      { "name": "cobblemon:block/plants/energy_root/energy_root_place_1", "volume": 0.7 },
+      { "name": "cobblemon:block/plants/energy_root/energy_root_place_2", "volume": 0.7 },
+      { "name": "cobblemon:block/plants/energy_root/energy_root_place_3", "volume": 0.7 }
     ]
   },
   "medicinal_leek.break": {
@@ -373,9 +447,9 @@
   },
   "medicinal_leek.plant": {
     "sounds": [
-      "cobblemon:block/plants/medicinal_leek/medicinal_leek_plant_1",
-      "cobblemon:block/plants/medicinal_leek/medicinal_leek_plant_2",
-      "cobblemon:block/plants/medicinal_leek/medicinal_leek_plant_3"
+      { "name": "cobblemon:block/plants/medicinal_leek/medicinal_leek_plant_1", "volume": 0.6 },
+      { "name": "cobblemon:block/plants/medicinal_leek/medicinal_leek_plant_2", "volume": 0.6 },
+      { "name": "cobblemon:block/plants/medicinal_leek/medicinal_leek_plant_3", "volume": 0.6 }
     ]
   },
   "vivichoke.break": {
@@ -387,37 +461,37 @@
   },
   "vivichoke.place": {
     "sounds": [
-      "cobblemon:block/plants/vivichoke/vivichoke_place_1",
-      "cobblemon:block/plants/vivichoke/vivichoke_place_2",
-      "cobblemon:block/plants/vivichoke/vivichoke_place_3"
+      { "name": "cobblemon:block/plants/vivichoke/vivichoke_place_1", "volume": 0.7 },
+      { "name": "cobblemon:block/plants/vivichoke/vivichoke_place_2", "volume": 0.7 },
+      { "name": "cobblemon:block/plants/vivichoke/vivichoke_place_3", "volume": 0.7 }
     ]
   },
   "mint.break": {
     "sounds": [
-      "cobblemon:block/plants/mint/mint_break_1",
-      "cobblemon:block/plants/mint/mint_break_2",
-      "cobblemon:block/plants/mint/mint_break_3"
+      { "name": "cobblemon:block/plants/mint/mint_break_1", "volume": 0.6 },
+      { "name": "cobblemon:block/plants/mint/mint_break_2", "volume": 0.6 },
+      { "name": "cobblemon:block/plants/mint/mint_break_3", "volume": 0.6 }
     ]
   },
   "mint.place": {
     "sounds": [
-      "cobblemon:block/plants/mint/mint_place_1",
-      "cobblemon:block/plants/mint/mint_place_2",
-      "cobblemon:block/plants/mint/mint_place_3"
+      { "name": "cobblemon:block/plants/mint/mint_place_1", "volume": 0.4 },
+      { "name": "cobblemon:block/plants/mint/mint_place_2", "volume": 0.4 },
+      { "name": "cobblemon:block/plants/mint/mint_place_3", "volume": 0.4 }
     ]
   },
   "revival_herb.break": {
     "sounds": [
-      "cobblemon:block/plants/revival_herb/revival_herb_break_1",
-      "cobblemon:block/plants/revival_herb/revival_herb_break_2",
-      "cobblemon:block/plants/revival_herb/revival_herb_break_3"
+      { "name": "cobblemon:block/plants/revival_herb/revival_herb_break_1", "volume": 0.5 },
+      { "name": "cobblemon:block/plants/revival_herb/revival_herb_break_2", "volume": 0.5 },
+      { "name": "cobblemon:block/plants/revival_herb/revival_herb_break_3", "volume": 0.5 }
     ]
   },
   "revival_herb.place": {
     "sounds": [
-      "cobblemon:block/plants/revival_herb/revival_herb_place_1",
-      "cobblemon:block/plants/revival_herb/revival_herb_place_2",
-      "cobblemon:block/plants/revival_herb/revival_herb_place_3"
+      { "name": "cobblemon:block/plants/revival_herb/revival_herb_place_1", "volume": 0.4 },
+      { "name": "cobblemon:block/plants/revival_herb/revival_herb_place_2", "volume": 0.4 },
+      { "name": "cobblemon:block/plants/revival_herb/revival_herb_place_3", "volume": 0.4 }
     ]
   },
   "gilded_chest.break": {
@@ -439,10 +513,10 @@
   },
   "gilded_chest.hit": {
     "sounds": [
-      "cobblemon:block/gilded_chest/gilded_chest_hit_1",
-      "cobblemon:block/gilded_chest/gilded_chest_hit_2",
-      "cobblemon:block/gilded_chest/gilded_chest_hit_3",
-      "cobblemon:block/gilded_chest/gilded_chest_hit_4"
+      { "name": "cobblemon:block/gilded_chest/gilded_chest_hit_1", "volume": 0.8 },
+      { "name": "cobblemon:block/gilded_chest/gilded_chest_hit_2", "volume": 0.8 },
+      { "name": "cobblemon:block/gilded_chest/gilded_chest_hit_3", "volume": 0.8 },
+      { "name": "cobblemon:block/gilded_chest/gilded_chest_hit_4", "volume": 0.8 }
     ]
   },
   "gilded_chest.place": {

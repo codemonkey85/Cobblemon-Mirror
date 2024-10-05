@@ -139,7 +139,7 @@ open class PartySelectPokemonDTO(
         aspects = pokemon.aspects,
         heldItem = pokemon.heldItemNoCopy(),
         currentHealth = pokemon.currentHealth,
-        maxHealth = pokemon.hp,
+        maxHealth = pokemon.maxHealth,
         enabled = enabled
     )
 

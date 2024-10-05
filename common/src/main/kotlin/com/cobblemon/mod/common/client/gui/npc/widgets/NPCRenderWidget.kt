@@ -24,7 +24,10 @@ class NPCRenderWidget(
     var identifier: ResourceLocation,
     val aspects: MutableSet<String>
 ) : Renderable, GuiEventListener {
-    val state = FloatingState()
+    val state = FloatingState().also {
+        it.currentAspects = aspects
+    }
+
     companion object {
         val profileBackgroundResource = cobblemonResource("textures/gui/npc/profile_background.png")
         const val WIDTH = 66
@@ -49,7 +52,6 @@ class NPCRenderWidget(
         drawProfile(
             repository = NPCModelRepository,
             resourceIdentifier = identifier,
-            aspects = aspects,
             matrixStack = context.pose(),
             partialTicks = delta,
             scale = 30F,

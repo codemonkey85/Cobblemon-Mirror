@@ -22,6 +22,7 @@ class MoveSetUpdatePacket(pokemon: () -> Pokemon, value: MoveSet) : SingleUpdate
     override fun set(pokemon: Pokemon, value: MoveSet) {
         pokemon.moveSet.copyFrom(value)
     }
+
     companion object {
         val ID = cobblemonResource("moveset_update")
         fun decode(buffer: RegistryFriendlyByteBuf) = MoveSetUpdatePacket(decodePokemon(buffer), MoveSet().apply { loadFromBuffer(buffer) })

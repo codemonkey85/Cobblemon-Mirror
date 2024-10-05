@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.api.storage.PokemonStore
 import com.cobblemon.mod.common.api.storage.StorePosition
 import com.cobblemon.mod.common.api.storage.adapter.CobblemonAdapter
 import java.util.UUID
+import net.minecraft.core.RegistryAccess
 
 /**
  * Interface for some type of file backend for [PokemonStore] saving and loading.
@@ -21,7 +22,7 @@ import java.util.UUID
  */
 interface FileStoreAdapter<S> : CobblemonAdapter<S> {
     /** Converts the specified store into a serialized form. This is expected to run on the server thread, and as fast as possible. */
-    fun <E : StorePosition, T : PokemonStore<E>> serialize(store: T): S
+    fun <E : StorePosition, T : PokemonStore<E>> serialize(store: T, registryAccess: RegistryAccess): S
     /** Writes the serialized form of a store into the appropriate file. This should be threadsafe. */
     fun save(storeClass: Class<out PokemonStore<*>>, uuid: UUID, serialized: S)
 }

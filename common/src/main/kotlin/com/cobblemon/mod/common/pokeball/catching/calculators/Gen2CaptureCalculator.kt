@@ -50,7 +50,7 @@ class Gen2CaptureCalculator(val bugsFixed: Boolean) : CaptureCalculator {
             this.bugsFixed && (status is ParalysisStatus || status is BurnStatus || status is PoisonStatus || status is PoisonBadlyStatus) -> 5
             else -> 1
         }
-        val modifiedCatchRate = max((((3F * pokemon.hp - 2F * pokemon.currentHealth) * modifiedRate) / (3F * pokemon.hp)) + bonusStatus, 1F).coerceAtMost(255F).roundToInt()
+        val modifiedCatchRate = max((((3F * pokemon.maxHealth - 2F * pokemon.currentHealth) * modifiedRate) / (3F * pokemon.maxHealth)) + bonusStatus, 1F).coerceAtMost(255F).roundToInt()
         if (Random.nextInt(256) <= modifiedCatchRate) {
             return CaptureContext.successful()
         }

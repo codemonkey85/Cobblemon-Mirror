@@ -334,7 +334,7 @@ class EmptyPokeBallEntity : ThrowableItemProjectile, PosableEntity, WaterDragMod
                         pokemon.discard()
                         discard()
                         captureFuture.complete(true)
-                        val party = Cobblemon.storage.getParty(player.uuid)
+                        val party = player.party()
                         pokemon.pokemon.caughtBall = pokeBall
                         pokeBall.effects.forEach { effect -> effect.apply(player, pokemon.pokemon) }
                         party.add(pokemon.pokemon)
@@ -368,6 +368,7 @@ class EmptyPokeBallEntity : ThrowableItemProjectile, PosableEntity, WaterDragMod
         level().playSoundServer(position(), CobblemonSounds.POKE_BALL_OPEN, volume = 0.8F)
 
         after(seconds = 1F) {
+            pokemon.beamMode = 0
             pokemon.busyLocks.remove(this)
             captureFuture.complete(false)
             level().sendParticlesServer(ParticleTypes.CLOUD, position(), 20,
@@ -388,7 +389,7 @@ class EmptyPokeBallEntity : ThrowableItemProjectile, PosableEntity, WaterDragMod
         level().playSoundServer(position(), CobblemonSounds.POKE_BALL_HIT, volume = 0.4F)
 
         // Hit Pokémon plays recoil animation
-        val pkt = PlayPosableAnimationPacket(pokemonEntity.id, setOf("recoil"), emptySet())
+        val pkt = PlayPosableAnimationPacket(pokemonEntity.id, setOf("recoil"), emptyList())
         pkt.sendToPlayersAround(
             x = pokemonEntity.x,
             y = pokemonEntity.y,

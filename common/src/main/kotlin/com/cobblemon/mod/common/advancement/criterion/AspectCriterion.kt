@@ -59,7 +59,7 @@ class AspectCriterion(
 //        pokemon = json.get("pokemon").asString.asIdentifierDefaultingNamespace()
 //    }
 //
-//    override fun matches(player: ServerPlayerEntity, context: MutableMap<Identifier, MutableSet<String>>): Boolean {
+//    override fun matches(player: ServerPlayer, context: MutableMap<Identifier, MutableSet<String>>): Boolean {
 //        val caughtAspects = context.getOrDefault(pokemon, mutableSetOf())
 //        return this.aspects.all { it in caughtAspects }
 //    }

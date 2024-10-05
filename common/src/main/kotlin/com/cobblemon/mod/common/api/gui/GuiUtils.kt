@@ -16,6 +16,8 @@ import com.cobblemon.mod.common.client.render.models.blockbench.repository.Pokem
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.cobblemon.mod.common.entity.PoseType
+import com.cobblemon.mod.common.util.toHex
+import com.mojang.authlib.minecraft.client.MinecraftClient
 import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.platform.Lighting
 import com.mojang.blaze3d.systems.RenderSystem
@@ -96,8 +98,6 @@ fun drawRectangle(
     bufferbuilder.addVertex(matrix, endX, endY, blitOffset).setUv(maxU, maxV)
     bufferbuilder.addVertex(matrix, endX, y, blitOffset).setUv(maxU, minV)
     bufferbuilder.addVertex(matrix, x, y, blitOffset).setUv(minU, minV)
-    // TODO: Figure out if this is correct replacement.
-    // OLD: BufferRenderer.draw(bufferbuilder)
     BufferUploader.drawWithShader(bufferbuilder.buildOrThrow())
 }
 
@@ -149,6 +149,21 @@ fun drawText(
 }
 
 @JvmOverloads
+fun drawTextJustifiedRight(
+    context: GuiGraphics,
+    font: ResourceLocation? = null,
+    text: MutableComponent,
+    x: Number,
+    y: Number,
+    colour: Int,
+    shadow: Boolean = true
+) {
+    val comp = text.let { if (font != null) it.font(font) else it }
+    val font = Minecraft.getInstance().font
+    context.drawString(font, comp, x.toInt() - font.width(comp), y.toInt(), colour, shadow)
+}
+
+@JvmOverloads
 fun drawText(
     context: GuiGraphics,
     text: FormattedCharSequence,
@@ -189,7 +204,6 @@ fun drawString(
 @JvmOverloads
 fun drawPosablePortrait(
     identifier: ResourceLocation,
-    aspects: Set<String>,
     matrixStack: PoseStack,
     scale: Float = 13F,
     contextScale: Float = 1F,
@@ -201,7 +215,11 @@ fun drawPosablePortrait(
     limbSwingAmount: Float = 0F,
     ageInTicks: Float = 0F,
     headYaw: Float = 0F,
-    headPitch: Float = 0F
+    headPitch: Float = 0F,
+    r: Float = 1F,
+    g: Float = 1F,
+    b: Float = 1F,
+    a: Float = 1F
 ) {
     RenderSystem.applyModelViewMatrix()
     matrixStack.pushPose()
@@ -209,21 +227,19 @@ fun drawPosablePortrait(
     matrixStack.scale(scale, scale, -scale)
     matrixStack.translate(0.0, -PORTRAIT_DIAMETER / 18.0, 0.0)
 
-    val sprite = repository.getSprite(identifier, aspects, SpriteType.PORTRAIT);
+    val sprite = repository.getSprite(identifier, state, SpriteType.PORTRAIT);
 
-    if(sprite == null) {
-
-        val model = repository.getPoser(identifier, aspects)
-        state.currentAspects = aspects
+    if (sprite == null) {
+        val model = repository.getPoser(identifier, state)
         state.currentModel = model
-        val texture = repository.getTexture(identifier, aspects, state.animationSeconds)
+        val texture = repository.getTexture(identifier, state)
 
         val context = RenderContext()
         model.context = context
-        repository.getTextureNoSubstitute(identifier, aspects, 0f).let { context.put(RenderContext.TEXTURE, it) }
+        repository.getTextureNoSubstitute(identifier, state).let { context.put(RenderContext.TEXTURE, it) }
         context.put(RenderContext.SCALE, contextScale)
         context.put(RenderContext.SPECIES, identifier)
-        context.put(RenderContext.ASPECTS, aspects)
+        context.put(RenderContext.ASPECTS, state.currentAspects)
         context.put(RenderContext.POSABLE_STATE, state)
 
         val renderType = RenderType.entityCutout(texture)
@@ -243,7 +259,7 @@ fun drawPosablePortrait(
             model.portraitTranslation.z - 4
         )
         matrixStack.scale(model.portraitScale, model.portraitScale, 1 / model.portraitScale)
-        matrixStack.mulPose(quaternion1) // TODO (techdaan): correct?
+        matrixStack.mulPose(quaternion1)
         matrixStack.mulPose(quaternion2)
 
         val light1 = Vector3f(0.2F, 1.0F, -1.0F)
@@ -255,8 +271,9 @@ fun drawPosablePortrait(
         val buffer = immediate.getBuffer(renderType)
         val packedLight = LightTexture.pack(11, 7)
 
-        model.withLayerContext(immediate, state, repository.getLayers(identifier, aspects)) {
-            model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
+        val colour = toHex(r, g, b, a)
+        model.withLayerContext(immediate, state, repository.getLayers(identifier, state)) {
+            model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, colour)
             immediate.endBatch()
         }
 
@@ -273,7 +290,6 @@ fun drawPosablePortrait(
 fun drawProfile(
     repository: VaryingModelRepository<*>,
     resourceIdentifier: ResourceLocation,
-    aspects: Set<String>,
     matrixStack: PoseStack,
     state: PosableState,
     partialTicks: Float,
@@ -282,22 +298,20 @@ fun drawProfile(
     RenderSystem.applyModelViewMatrix()
     matrixStack.scale(scale, scale, -scale)
 
-    val sprite = repository.getSprite(resourceIdentifier, aspects, SpriteType.PROFILE);
+    val sprite = repository.getSprite(resourceIdentifier, state, SpriteType.PROFILE)
 
-    if(sprite == null) {
+    if (sprite == null) {
 
-        val model = repository.getPoser(resourceIdentifier, aspects)
-        val texture = repository.getTexture(resourceIdentifier, aspects, state.animationSeconds)
+        val model = repository.getPoser(resourceIdentifier, state)
+        val texture = repository.getTexture(resourceIdentifier, state)
 
         val context = RenderContext()
         model.context = context
-        repository.getTextureNoSubstitute(resourceIdentifier, aspects, 0f)
-            .let { context.put(RenderContext.TEXTURE, it) }
+        repository.getTextureNoSubstitute(resourceIdentifier, state).let { context.put(RenderContext.TEXTURE, it) }
         context.put(RenderContext.SCALE, 1F)
         context.put(RenderContext.SPECIES, resourceIdentifier)
-        context.put(RenderContext.ASPECTS, aspects)
+        context.put(RenderContext.ASPECTS, state.currentAspects)
         context.put(RenderContext.POSABLE_STATE, state)
-        state.currentAspects = aspects
         state.currentModel = model
 
         val renderType = RenderType.entityCutout(texture)//model.getLayer(texture)
@@ -312,7 +326,7 @@ fun drawProfile(
         val quaternion2 = Axis.XP.rotationDegrees(5F)
         matrixStack.mulPose(quaternion1)
         matrixStack.mulPose(quaternion2)
-        Lighting.setupForEntityInInventory() // TODO (techdaan): Does this map correctly?
+        Lighting.setupForEntityInInventory()
         val entityRenderDispatcher = Minecraft.getInstance().entityRenderDispatcher
         entityRenderDispatcher.setRenderShadow(true)
 
@@ -323,7 +337,7 @@ fun drawProfile(
         RenderSystem.setShaderLights(light1, light2)
         val packedLight = LightTexture.pack(11, 7)
 
-        model.withLayerContext(bufferSource, state, repository.getLayers(resourceIdentifier, aspects)) {
+        model.withLayerContext(bufferSource, state, repository.getLayers(resourceIdentifier, state)) {
             model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
             bufferSource.endBatch()
         }

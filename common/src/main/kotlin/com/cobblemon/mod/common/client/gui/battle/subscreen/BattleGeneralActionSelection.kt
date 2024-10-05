@@ -36,6 +36,9 @@ class BattleGeneralActionSelection(
     (BattleOptionTile.OPTION_HEIGHT + 3 * BattleGUI.OPTION_VERTICAL_SPACING).toInt(),
     battleLang("choose_action")
 ) {
+    val backButton = BattleBackButton(BattleGUI.OPTION_ROOT_X - 3F, Minecraft.getInstance().window.guiScaledHeight - 22F)
+    val lastAnwseredRequest = CobblemonClient.battle?.getLastAnsweredRequest()
+
     val tiles = mutableListOf<BattleOptionTile>()
     init {
         var rank = 0
@@ -66,7 +69,7 @@ class BattleGeneralActionSelection(
                     playDownSound(Minecraft.getInstance().soundManager)
                 }
             } else {
-                addOption(rank++, battleLang("ui.forfeit"), BattleGUI.runResource) {
+                addOption(rank++, battleLang("ui.forfeit"), BattleGUI.forfeitResource) {
                     battleGUI.changeActionSelection(ForfeitConfirmationSelection(battleGUI, request))
                     playDownSound(Minecraft.getInstance().soundManager)
                 }
@@ -91,13 +94,22 @@ class BattleGeneralActionSelection(
     }
 
     override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        if(lastAnwseredRequest != null) {
+            backButton.render(context, mouseX, mouseY, delta)
+        }
         for (tile in tiles) {
             tile.render(context, mouseX, mouseY, delta)
         }
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        return tiles.any { it.mouseClicked(mouseX, mouseY, button) }
+    override fun mousePrimaryClicked(mouseX: Double, mouseY: Double): Boolean {
+        if (lastAnwseredRequest != null && backButton.isHovered(mouseX, mouseY)) {
+            playDownSound(Minecraft.getInstance().soundManager)
+            CobblemonClient.battle?.cancelLastAnsweredRequest()
+            battleGUI.selectAction(request, null)
+            battleGUI.changeActionSelection(null)
+        }
+        return tiles.any { it.mousePrimaryClicked(mouseX, mouseY) }
     }
 
     override fun defaultButtonNarrationText(builder: NarrationElementOutput) {

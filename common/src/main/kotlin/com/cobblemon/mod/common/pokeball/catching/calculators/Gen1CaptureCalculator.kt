@@ -71,7 +71,7 @@ object Gen1CaptureCalculator : CaptureCalculator {
             PokeBalls.GREAT_BALL -> 8F
             else -> 12F
         }
-        val f = ((pokemon.hp * 255F * 4F) / (pokemon.currentHealth * ballValue)).coerceIn(1F, 255F).roundToInt()
+        val f = ((pokemon.maxHealth * 255F * 4F) / (pokemon.currentHealth * ballValue)).coerceIn(1F, 255F).roundToInt()
         if (f >= m) {
             return CaptureContext.successful()
         }

@@ -19,7 +19,12 @@ class EvolutionProxyNestingFix(outputSchema: Schema) : PokemonFix(outputSchema) 
             val evolutionsDynamic = dynamic.get(DataKeys.POKEMON_EVOLUTIONS).get().orThrow
             if (evolutionsDynamic.get(POKEMON_PENDING_EVOLUTIONS).result().isPresent) {
                 val pendingDynamic = evolutionsDynamic.get(POKEMON_PENDING_EVOLUTIONS).get().orThrow
-                return dynamic.set(DataKeys.POKEMON_EVOLUTIONS, pendingDynamic)
+                val nestedPendingDynamic = pendingDynamic.get("pending").get().orThrow
+                val progressDynamic = pendingDynamic.get("progress").get().orThrow
+                val newMap = mutableMapOf<Dynamic<*>, Dynamic<*>>()
+                newMap.put(dynamic.createString("pending"), nestedPendingDynamic)
+                newMap.put(dynamic.createString("progress"), progressDynamic)
+                return dynamic.remove(DataKeys.POKEMON_EVOLUTIONS).set(DataKeys.POKEMON_EVOLUTIONS, dynamic.createMap(newMap))
             }
         }
         return dynamic

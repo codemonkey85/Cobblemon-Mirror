@@ -26,6 +26,11 @@ interface ActiveAnimation {
     val isTransition: Boolean
     /** The animation's duration in seconds. */
     val duration: Float
+    /** Whether a primary animation will not remove this animation before playing. */
+    val enduresPrimaryAnimations: Boolean
+
+    fun start(state: PosableState) {}
+
     /** Runs the animation. Returns true if the animation should continue. */
     fun run(
         context: RenderContext,
@@ -40,5 +45,5 @@ interface ActiveAnimation {
     ): Boolean
 
     /** Applies animation effects, such as particle effects. These can occur on tick, therefore not necessarily on screen. */
-    fun applyEffects(entity: Entity, state: PosableState, previousSeconds: Float, newSeconds: Float) {}
+    fun applyEffects(entity: Entity?, state: PosableState, previousSeconds: Float, newSeconds: Float) {}
 }

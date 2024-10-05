@@ -112,9 +112,10 @@ class RestorationTankRenderer(ctx: BlockEntityRendererProvider.Context) : BlockE
         val aspects = emptySet<String>()
         val state = struc.fossilState
         state.updatePartialTicks(tickDelta)
+        state.currentAspects = aspects
 
         val completionPercentage = (1 - timeRemaining / FossilMultiblockStructure.TIME_TO_TAKE.toFloat()).coerceIn(0F, 1F)
-        val fossilFetusModel = FossilModelRepository.getPoser(fossil.identifier, aspects)
+        val fossilFetusModel = FossilModelRepository.getPoser(fossil.identifier, state)
         fossilFetusModel.context = context
 
         val embryo1Scale = EMBRYO_CURVE_1(completionPercentage)
@@ -130,13 +131,12 @@ class RestorationTankRenderer(ctx: BlockEntityRendererProvider.Context) : BlockE
         )
 
         identifiersAndScales.forEach { (identifier, scale) ->
-            val model = FossilModelRepository.getPoser(identifier, aspects)
-            val texture = FossilModelRepository.getTexture(identifier, aspects, state.animationSeconds)
+            val model = FossilModelRepository.getPoser(identifier, state)
+            val texture = FossilModelRepository.getTexture(identifier, state)
 
             if (scale > 0F) {
                 val vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutout(texture))
                 state.currentModel = model
-                state.currentAspects = aspects
                 state.setPoseToFirstSuitable()
 
                 val scale = if (timeRemaining == 0) {
@@ -175,7 +175,7 @@ class RestorationTankRenderer(ctx: BlockEntityRendererProvider.Context) : BlockE
                     ageInTicks = state.animationSeconds * 20
                 )
                 model.render(context, matrices, vertexConsumer, light, overlay, -0x1)
-                model.withLayerContext(vertexConsumers, state, FossilModelRepository.getLayers(fossil.identifier, aspects)) {
+                model.withLayerContext(vertexConsumers, state, FossilModelRepository.getLayers(fossil.identifier, state)) {
                     model.render(context, matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY, -0x1)
                 }
                 model.setDefault()

@@ -328,5 +328,14 @@ class StarterSelectionScreen(private val categories: List<RenderableStarterCateg
         )
     }
 
+    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+        if (minecraft?.options?.keyInventory?.matches(keyCode, scanCode) == true) {
+            Minecraft.getInstance().setScreen(null)
+            return true
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifiers)
+    }
+
     override fun isPauseScreen() = true
 }

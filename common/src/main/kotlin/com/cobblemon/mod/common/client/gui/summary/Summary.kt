@@ -40,6 +40,7 @@ import com.cobblemon.mod.common.net.messages.server.storage.party.SwapPartyPokem
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.isInventoryKeyPressed
 import com.cobblemon.mod.common.util.lang
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.Minecraft
@@ -49,7 +50,6 @@ import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.player.Input
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvent
@@ -149,62 +149,48 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
 
         // Evolve Button
         addRenderableWidget(
-                SummaryButton(
-                        buttonX = x + 12F,
-                        buttonY = y + 145F,
-                        buttonWidth = 54,
-                        buttonHeight = 15,
-                        clickAction = {
-                            momentarily {
-                                displaySideScreen(if (sideScreenIndex == EVOLVE) PARTY else EVOLVE)
-                            }
-                        },
-                        text = lang("ui.evolve"),
-                        resource = evolveButtonResource,
-                        renderRequirement = { selectedPokemon.evolutionProxy.client().isNotEmpty() },
-                        clickRequirement = { selectedPokemon.evolutionProxy.client().isNotEmpty() }
-                )
+            SummaryButton(
+                buttonX = x + 12F,
+                buttonY = y + 145F,
+                buttonWidth = 54,
+                buttonHeight = 15,
+                clickAction = {
+                    momentarily { displaySideScreen(if (sideScreenIndex == EVOLVE) PARTY else EVOLVE) }
+                },
+                text = lang("ui.evolve"),
+                resource = evolveButtonResource,
+                renderRequirement = { selectedPokemon.evolutionProxy.client().isNotEmpty() },
+                clickRequirement = { selectedPokemon.evolutionProxy.client().isNotEmpty() }
+            )
         )
 
         // Init Tabs
         summaryTabs.clear()
         summaryTabs.add(
-                SummaryTab(
-                        pX = x + 78,
-                        pY = y - 1,
-                        label = lang("ui.info")
-                ) {
-                    if (mainScreenIndex != INFO) {
-                        displayMainScreen(INFO)
-                        playSound(CobblemonSounds.GUI_CLICK)
-                    }
+            SummaryTab(pX = x + 78, pY = y - 1, label = lang("ui.info")) {
+                if (mainScreenIndex != INFO) {
+                    displayMainScreen(INFO)
+                    playSound(CobblemonSounds.GUI_CLICK)
                 }
+            }
         )
 
         summaryTabs.add(
-                SummaryTab(
-                        pX = x + 119,
-                        pY = y - 1,
-                        label = lang("ui.moves")
-                ) {
-                    if (mainScreenIndex != MOVES) {
-                        displayMainScreen(MOVES)
-                        playSound(CobblemonSounds.GUI_CLICK)
-                    }
+            SummaryTab(pX = x + 119, pY = y - 1, label = lang("ui.moves")) {
+                if (mainScreenIndex != MOVES) {
+                    displayMainScreen(MOVES)
+                    playSound(CobblemonSounds.GUI_CLICK)
                 }
+            }
         )
 
         summaryTabs.add(
-                SummaryTab(
-                        pX = x + 160,
-                        pY = y - 1,
-                        label = lang("ui.stats")
-                ) {
-                    if (mainScreenIndex != STATS) {
-                        displayMainScreen(STATS)
-                        playSound(CobblemonSounds.GUI_CLICK)
-                    }
+            SummaryTab(pX = x + 160, pY = y - 1, label = lang("ui.stats")) {
+                if (mainScreenIndex != STATS) {
+                    displayMainScreen(STATS)
+                    playSound(CobblemonSounds.GUI_CLICK)
                 }
+            }
         )
 
         summaryTabs[mainScreenIndex].toggleTab()
@@ -212,24 +198,21 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
 
         // Add Exit Button
         addRenderableWidget(
-                ExitButton(
-                        pX = x + 302,
-                        pY = y + 145
-                ) {
-                    playSound(CobblemonSounds.GUI_CLICK)
-                    Minecraft.getInstance().setScreen(null)
-                }
+            ExitButton(pX = x + 302, pY = y + 145) {
+                playSound(CobblemonSounds.GUI_CLICK)
+                Minecraft.getInstance().setScreen(null)
+            }
         )
 
         // Add Nickname Entry
         nicknameEntryWidget = NicknameEntryWidget(
-                selectedPokemon,
-                x = x + 12,
-                y = (y + 14.5).toInt(),
-                width = 50,
-                height = 10,
-                isParty = true,
-                lang("ui.nickname")
+            selectedPokemon,
+            x = x + 12,
+            y = (y + 14.5).toInt(),
+            width = 50,
+            height = 10,
+            isParty = true,
+            lang("ui.nickname")
         )
         focused = nicknameEntryWidget
         nicknameEntryWidget.isFocused = false
@@ -237,14 +220,14 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
 
         // Add Model Preview
         modelWidget = ModelWidget(
-                pX = x + 6,
-                pY = y + 32,
-                pWidth = PORTRAIT_SIZE,
-                pHeight = PORTRAIT_SIZE,
-                pokemon = selectedPokemon.asRenderablePokemon(),
-                baseScale = 2F,
-                rotationY = 325F,
-                offsetY = -10.0
+            pX = x + 6,
+            pY = y + 32,
+            pWidth = PORTRAIT_SIZE,
+            pHeight = PORTRAIT_SIZE,
+            pokemon = selectedPokemon.asRenderablePokemon(),
+            baseScale = 2F,
+            rotationY = 325F,
+            offsetY = -10.0
         )
         addRenderableOnly(this.modelWidget)
     }
@@ -380,7 +363,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
 
             MOVE_SWAP -> {
                 val movesWidget = mainScreen
-                if (movesWidget is MovesWidget && move != null) {
+                if (movesWidget is MovesWidget) {
                     sideScreen = MoveSwapScreen(
                             x + 216,
                             y + 24,
@@ -388,14 +371,18 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
                             replacedMove = move
                     ).also { switchPane ->
                         val pokemon = selectedPokemon
-                        pokemon.allAccessibleMoves
+                        var moveSlotList = (pokemon.allAccessibleMoves
                                 .filter { template -> pokemon.moveSet.none { it.template == template } }
                                 .map { template ->
                                     val benched = pokemon.benchedMoves.find { it.moveTemplate == template }
                                     MoveSwapScreen.MoveSlot(switchPane, template, benched?.ppRaisedStages
                                             ?: 0, pokemon)
-                                }
-                                .forEach { switchPane.addEntry(it) }
+                                })
+                        if (pokemon.moveSet.getMoves().size > 1 && move != null) {
+                            // Adds the "Forget" slot
+                            moveSlotList += MoveSwapScreen.MoveSlot(switchPane, null, 0, pokemon)
+                        }
+                        moveSlotList.forEach { switchPane.addEntry(it) }
                     }
                 }
             }
@@ -417,8 +404,6 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
     override fun renderMenuBackground(context: GuiGraphics) {}
 
     override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-//        this.renderBackground(context, mouseX, mouseY, delta)
-//        super.render(context, mouseX, mouseY, delta)
         schedulingTracker.update(delta / 20F)
 
         val x = (width - BASE_WIDTH) / 2
@@ -427,24 +412,24 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
 
         // Render Portrait Background
         blitk(
-                matrixStack = matrices,
-                texture = portraitBackgroundResource,
-                x = x + 6,
-                y = y + 32,
-                width = PORTRAIT_SIZE,
-                height = PORTRAIT_SIZE
+            matrixStack = matrices,
+            texture = portraitBackgroundResource,
+            x = x + 6,
+            y = y + 32,
+            width = PORTRAIT_SIZE,
+            height = PORTRAIT_SIZE
         )
 
         //modelWidget.render(context, pMouseX, pMouseY, pPartialTicks)
 
         // Render Base Resource
         blitk(
-                matrixStack = matrices,
-                texture = baseResource,
-                x = x,
-                y = y,
-                width = BASE_WIDTH,
-                height = BASE_HEIGHT
+            matrixStack = matrices,
+            texture = baseResource,
+            x = x,
+            y = y,
+            width = BASE_WIDTH,
+            height = BASE_HEIGHT
         )
 
         // Status
@@ -452,100 +437,100 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         if (selectedPokemon.isFainted() || status != null) {
             val statusName = if (selectedPokemon.isFainted()) "fnt" else status?.showdownName
             blitk(
-                    matrixStack = matrices,
-                    texture = cobblemonResource("textures/gui/battle/battle_status_$statusName.png"),
-                    x = x + 34,
-                    y = y + 4,
-                    height = 7,
-                    width = 39,
-                    uOffset = 35,
-                    textureWidth = 74
+                matrixStack = matrices,
+                texture = cobblemonResource("textures/gui/battle/battle_status_$statusName.png"),
+                x = x + 34,
+                y = y + 4,
+                height = 7,
+                width = 39,
+                uOffset = 35,
+                textureWidth = 74
             )
 
             blitk(
-                    matrixStack = matrices,
-                    texture = cobblemonResource("textures/gui/summary/status_trim.png"),
-                    x = x + 34,
-                    y = y + 5,
-                    height = 6,
-                    width = 3
+                matrixStack = matrices,
+                texture = cobblemonResource("textures/gui/summary/status_trim.png"),
+                x = x + 34,
+                y = y + 5,
+                height = 6,
+                width = 3
             )
 
             drawScaledText(
-                    context = context,
-                    font = CobblemonResources.DEFAULT_LARGE,
-                    text = lang("ui.status.$statusName").bold(),
-                    x = x + 39,
-                    y = y + 3
+                context = context,
+                font = CobblemonResources.DEFAULT_LARGE,
+                text = lang("ui.status.$statusName").bold(),
+                x = x + 39,
+                y = y + 3
             )
         }
 
         // Poké Ball
         val ballResource = cobblemonResource("textures/item/poke_balls/" + selectedPokemon.caughtBall.name.path + ".png")
         blitk(
-                matrixStack = matrices,
-                texture = ballResource,
-                x = (x + 3.5) / SCALE,
-                y = (y + 15) / SCALE,
-                width = 16,
-                height = 16,
-                scale = SCALE
+            matrixStack = matrices,
+            texture = ballResource,
+            x = (x + 3.5) / SCALE,
+            y = (y + 15) / SCALE,
+            width = 16,
+            height = 16,
+            scale = SCALE
         )
 
         if (selectedPokemon.gender != Gender.GENDERLESS) {
             val isMale = selectedPokemon.gender == Gender.MALE
             val textSymbol = if (isMale) "♂".text().bold() else "♀".text().bold()
             drawScaledText(
-                    context = context,
-                    font = CobblemonResources.DEFAULT_LARGE,
-                    text = textSymbol,
-                    x = x + 69, // 64 when tag icon is implemented
-                    y = y + 14.5,
-                    colour = if (isMale) 0x32CBFF else 0xFC5454,
-                    shadow = true
+                context = context,
+                font = CobblemonResources.DEFAULT_LARGE,
+                text = textSymbol,
+                x = x + 69, // 64 when tag icon is implemented
+                y = y + 14.5,
+                colour = if (isMale) 0x32CBFF else 0xFC5454,
+                shadow = true
             )
         }
 
         drawScaledText(
-                context = context,
-                font = CobblemonResources.DEFAULT_LARGE,
-                text = lang("ui.lv").bold(),
-                x = x + 6,
-                y = y + 4.5,
-                shadow = true
+            context = context,
+            font = CobblemonResources.DEFAULT_LARGE,
+            text = lang("ui.lv").bold(),
+            x = x + 6,
+            y = y + 4.5,
+            shadow = true
         )
 
         drawScaledText(
-                context = context,
-                font = CobblemonResources.DEFAULT_LARGE,
-                text = selectedPokemon.level.toString().text().bold(),
-                x = x + 19,
-                y = y + 4.5,
-                shadow = true
+            context = context,
+            font = CobblemonResources.DEFAULT_LARGE,
+            text = selectedPokemon.level.toString().text().bold(),
+            x = x + 19,
+            y = y + 4.5,
+            shadow = true
         )
 
         // Shiny Icon
         if (selectedPokemon.shiny) {
             blitk(
-                    matrixStack = matrices,
-                    texture = iconShinyResource,
-                    x = (x + 62.5) / SCALE,
-                    y = (y + 33.5) / SCALE,
-                    width = 16,
-                    height = 16,
-                    scale = SCALE
+                matrixStack = matrices,
+                texture = iconShinyResource,
+                x = (x + 62.5) / SCALE,
+                y = (y + 33.5) / SCALE,
+                width = 16,
+                height = 16,
+                scale = SCALE
             )
         }
 
         // Type Icon(s)
         blitk(
-                matrixStack = matrices,
-                texture = if (selectedPokemon.secondaryType != null) typeSpacerDoubleResource else typeSpacerResource,
-                x = (x + 5.5) / SCALE,
-                y = (y + 126) / SCALE,
-                width = 134,
-                height = 24,
-                scale = SCALE
+            matrixStack = matrices,
+            texture = if (selectedPokemon.secondaryType != null) typeSpacerDoubleResource else typeSpacerResource,
+            x = (x + 5.5) / SCALE,
+            y = (y + 126) / SCALE,
+            width = 134,
+            height = 24,
+            scale = SCALE
         )
 
         // Held Item
@@ -558,29 +543,29 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         }
 
         drawScaledText(
-                context = context,
-                text = lang("held_item"),
-                x = x + 27,
-                y = y + 114.5,
-                scale = SCALE
+            context = context,
+            text = lang("held_item"),
+            x = x + 27,
+            y = y + 114.5,
+            scale = SCALE
         )
 
         TypeIcon(
-                x = x + 39,
-                y = y + 123,
-                type = selectedPokemon.primaryType,
-                secondaryType = selectedPokemon.secondaryType,
-                centeredX = true
+            x = x + 39,
+            y = y + 123,
+            type = selectedPokemon.primaryType,
+            secondaryType = selectedPokemon.secondaryType,
+            centeredX = true
         ).render(context)
 
         blitk(
-                matrixStack = matrices,
-                texture = sideSpacerResource,
-                x = (x + 217) / SCALE,
-                y = (y + 141) / SCALE,
-                width = 144,
-                height = 14,
-                scale = SCALE
+            matrixStack = matrices,
+            texture = sideSpacerResource,
+            x = (x + 217) / SCALE,
+            y = (y + 141) / SCALE,
+            width = 144,
+            height = 14,
+            scale = SCALE
         )
 
         // Render all added Widgets
@@ -614,6 +599,13 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+        val nicknameSelected = this::nicknameEntryWidget.isInitialized && nicknameEntryWidget.isFocused
+
+        if (isInventoryKeyPressed(minecraft, keyCode, scanCode) && !nicknameSelected) {
+            Minecraft.getInstance().setScreen(null)
+            return true
+        }
+
         if ((keyCode == InputConstants.KEY_RETURN || keyCode == InputConstants.KEY_NUMPADENTER)
             && this::nicknameEntryWidget.isInitialized
             && this.nicknameEntryWidget.isFocused
@@ -621,7 +613,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
             this.focused = null
         }
         if (Cobblemon.config.enableDebugKeys) {
-            val model = PokemonModelRepository.getPoser(selectedPokemon.species.resourceIdentifier, selectedPokemon.aspects)
+            val model = PokemonModelRepository.getPoser(selectedPokemon.species.resourceIdentifier, modelWidget.state)
             if (keyCode == InputConstants.KEY_UP) {
                 model.profileTranslation = model.profileTranslation.add(0.0, -0.01, 0.0)
             }
@@ -650,7 +642,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
 
     override fun onClose() {
         if (Cobblemon.config.enableDebugKeys) {
-            val model = PokemonModelRepository.getPoser(selectedPokemon.species.resourceIdentifier, selectedPokemon.aspects)
+            val model = PokemonModelRepository.getPoser(selectedPokemon.species.resourceIdentifier, modelWidget.state)
             Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Profile Translation: ${model.profileTranslation}"))
             Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Profile Scale: ${model.profileScale}"))
             Cobblemon.LOGGER.info("override var profileTranslation = Vec3d(${model.profileTranslation.x}, ${model.profileTranslation.y}, ${model.profileTranslation.z})")

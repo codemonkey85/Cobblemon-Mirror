@@ -51,7 +51,7 @@ dependencies {
     bundle(project(path = ":common", configuration = "transformProductionFabric")) {
         isTransitive = false
     }
-
+    modLocalRuntime(libs.fabric.debugutils)
     modImplementation(libs.fabric.loader)
     modApi(libs.fabric.api)
     modApi(libs.bundles.fabric)
@@ -59,13 +59,13 @@ dependencies {
     modCompileOnly(libs.bundles.fabric.integrations.compileOnly) {
         isTransitive = false
     }
-//    modRuntimeOnly(libs.jei.fabric)
+    modRuntimeOnly(libs.bundles.fabric.integrations.runtimeOnly)
 //    modImplementation(libs.flywheelFabric)
 //    include(libs.flywheelFabric)
 
+    include(libs.fabric.kotlin)
+
     listOf(
-        libs.bundles.kotlin,
-        libs.bundles.fabric.kotlin.deps,
         libs.graal,
         libs.molang
     ).forEach {
