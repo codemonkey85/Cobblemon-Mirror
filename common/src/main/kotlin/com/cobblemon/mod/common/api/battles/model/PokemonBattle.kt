@@ -42,6 +42,7 @@ import com.cobblemon.mod.common.battles.dispatch.WaitDispatch
 import com.cobblemon.mod.common.battles.interpreter.ContextManager
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.battles.runner.ShowdownService
+import com.cobblemon.mod.common.entity.PlatformType
 import com.cobblemon.mod.common.entity.npc.NPCBattleActor
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -294,6 +295,9 @@ open class PokemonBattle(
         actors.forEach { actor ->
             actor.pokemonList.forEach { battlePokemon ->
                 battlePokemon.entity?.let { entity -> battlePokemon.postBattleEntityOperation(entity) }
+                if (battlePokemon.effectedPokemon.entity != null && battlePokemon.effectedPokemon.entity?.platform != PlatformType.NONE) {
+                    battlePokemon.effectedPokemon.tryRecallWithAnimation()
+                }
             }
         }
         sendUpdate(BattleEndPacket())

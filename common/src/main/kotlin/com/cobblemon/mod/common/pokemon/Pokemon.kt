@@ -556,42 +556,13 @@ open class Pokemon : ShowdownIdentifiable {
             doCry: Boolean = true,
             illusion: IllusionEffect? = null,
             faceSource: Boolean = true,
+            platformType: PlatformType = PlatformType.NONE,
             mutation: (PokemonEntity) -> Unit = {},
     ): CompletableFuture<PokemonEntity> {
 
-        var targetPosition = Vec3(position.x, position.y, position.z)
 
         // send out raft if over water
-        var platform = PlatformType.NONE
-        var blockPos = BlockPos(targetPosition.x.toInt(), targetPosition.y.toInt(), targetPosition.z.toInt())
-        if (level.isWaterAt(blockPos) || level.isWaterAt(blockPos.below())) {
-
-            if (!this.species.behaviour.moving.swim.canBreatheUnderwater) {
-                // move sendout pos to surface if it's near
-                val blockLookCount = 5
-                var foundSurface = false
-                for (i in 0..blockLookCount) {
-                    // Try to find a surface...
-                    val blockState = level.getBlockState(blockPos)
-                    if (blockState.fluidState.isEmpty) {
-                        if(blockState.getCollisionShape(level, blockPos).isEmpty) {
-                            foundSurface = true
-                        }
-                        // No space above the water surface
-                        break
-                    }
-                    blockPos = blockPos.above()
-                }
-                if (foundSurface) {
-                    val canFly = this.species.behaviour.moving.fly.canFly
-                    targetPosition = Vec3(targetPosition.x, blockPos.y.toDouble() + if (canFly) 2.0 else 0.0, targetPosition.z)
-                    if (!canFly) {
-                        // add a raft if we can't fly or swim
-                        platform = PlatformType.GetPlatformTypeForPokemon(this)
-                    }
-                }
-            }
-        }
+        val (targetPosition, platform) = getAjustedSendoutPosition(position, level)
 
         // Handle special case of shouldered Cobblemon
         if (this.state is ShoulderedState) {
@@ -624,7 +595,6 @@ open class Pokemon : ShowdownIdentifiable {
                 it.battleId = battleId
                 it.platform = platform
 
-//                it.isNoGravity = true
 
                 it.after(seconds = THROW_DURATION) {
                     it.phasingTargetId = -1
@@ -701,6 +671,45 @@ open class Pokemon : ShowdownIdentifiable {
             mutation(it)
         }
         return future
+    }
+
+    /**
+     * Adjusts a given sent out position based on the local environment.
+     */
+    fun getAjustedSendoutPosition(pos: Vec3, level: Level) : kotlin.Pair<Vec3, PlatformType> {
+        var platform = PlatformType.NONE
+        var newPos = pos
+        var blockPos = BlockPos(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
+        if (level.isWaterAt(blockPos) || level.isWaterAt(blockPos.below())) {
+
+            if (!this.species.behaviour.moving.swim.canBreatheUnderwater) {
+                // move sendout pos to surface if it's near
+                val blockLookCount = 5
+                var foundSurface = false
+                for (i in 0..blockLookCount) {
+                    // Try to find a surface...
+                    val blockState = level.getBlockState(blockPos)
+                    if (blockState.fluidState.isEmpty) {
+                        if(blockState.getCollisionShape(level, blockPos).isEmpty) {
+                            foundSurface = true
+                        }
+                        // No space above the water surface
+                        break
+                    }
+                    blockPos = blockPos.above()
+                }
+                if (foundSurface) {
+                    val canFly = this.species.behaviour.moving.fly.canFly
+                    newPos = Vec3(newPos.x, blockPos.y.toDouble() + if (canFly) 2.0 else 0.0, newPos.z)
+                    if (!canFly) {
+                        // add a raft if we can't fly or swim
+                        platform = PlatformType.GetPlatformTypeForPokemon(this)
+                    }
+                }
+            }
+        }
+
+        return kotlin.Pair(newPos, platform)
     }
 
 

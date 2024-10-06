@@ -10,7 +10,6 @@ package com.cobblemon.mod.common.battles.interpreter.instructions
 
 import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
-import com.cobblemon.mod.common.api.text.yellow
 import com.cobblemon.mod.common.battles.ShowdownInterpreter
 import com.cobblemon.mod.common.battles.dispatch.InstructionSet
 import com.cobblemon.mod.common.battles.dispatch.InterpreterInstruction
@@ -18,9 +17,6 @@ import com.cobblemon.mod.common.net.messages.client.battle.BattleSwapPokemonPack
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.setPositionSafely
 import com.cobblemon.mod.common.util.swap
-import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.phys.Vec3
-import java.util.logging.Level
 
 
 /**
@@ -32,57 +28,33 @@ import java.util.logging.Level
  */
 class SwapInstruction(val message: BattleMessage, val instructionSet: InstructionSet): InterpreterInstruction {
     override fun invoke(battle: PokemonBattle) {
-        // TODO: more error checks
         battle.dispatchWaiting {
             val battlePokemonA = message.battlePokemon(0, battle) ?: return@dispatchWaiting
             val pnxA = message.argumentAt(0)?.substring(0, 3)
-            var posA: Vec3? = null
             val (actor, activePokemonA) = battle.getActorAndActiveSlotFromPNX(pnxA!!)
-            if (battlePokemonA.entity == null) {
-                posA = ShowdownInterpreter.getSendoutPosition(battle, activePokemonA, battlePokemonA.actor)
-            } else {
-                posA = battlePokemonA.entity?.position()
-            }
+
 
             val activeBattlePokemonB = activePokemonA.getAdjacentAllies().firstOrNull()
-            if(activeBattlePokemonB != null) {
+            if (activeBattlePokemonB != null) {
                 val pnxB = activeBattlePokemonB.getPNX()
                 val (actorB, activePokemonB) = battle.getActorAndActiveSlotFromPNX(pnxB)
-
-                // Swap the position of the 2 on the field
-                var posB: Vec3? = null
-                if (activePokemonB.battlePokemon?.entity == null) {
-                    // target slot is likely fainted
-                    posB = ShowdownInterpreter.getSendoutPosition(battle, activePokemonB, actorB)
-                } else {
-                    posB = activePokemonB.battlePokemon?.entity?.position()
-                }
-                if (posB != null && battlePokemonA.entity != null) {
-                    battlePokemonA.entity?.setPositionSafely(posB)
-                } else if(posB != null) {
-                    if (activePokemonA.battlePokemon?.entity != null) {
-                        activePokemonA.battlePokemon?.entity?.setPositionSafely(posB)
-                    } else {
-                        activePokemonB.position.let {
-                            if (it != null) {
-                                activePokemonB.position = Pair<ServerLevel, Vec3>(it.first, posB)
-                            }
-                        }
-                    }
-                }
-                if(posA != null) {
-                    if (activePokemonB.battlePokemon?.entity != null) {
-                        activePokemonB.battlePokemon?.entity?.setPositionSafely(posA)
-                    } else {
-                        activePokemonA.position.let {
-                            if (it != null) {
-                                activePokemonB.position = Pair<ServerLevel, Vec3>(it.first, posA)
-                            }
-                        }
-                    }
-                }
                 // Swap references of the 2 pokemon
                 actor.activePokemon.swap((pnxA[2] - 'a'), (pnxB[2] - 'a'))
+
+                val posA = ShowdownInterpreter.getSendoutPosition(battle, activePokemonA, battlePokemonA.actor) ?: activePokemonA.position?.second
+                if (posA != null && battlePokemonA.entity != null) {
+                    val (newPosA, platformA) = battlePokemonA.effectedPokemon.getAjustedSendoutPosition(posA, activePokemonA.position!!.first)
+                    battlePokemonA.entity?.setPositionSafely(newPosA)
+                    activePokemonA.battlePokemon?.entity?.platform = platformA
+                }
+
+                val posB = ShowdownInterpreter.getSendoutPosition(battle, activePokemonB, battlePokemonA.actor) ?: activePokemonB.position?.second
+                val battlePokemonB = activePokemonB.battlePokemon
+                if (posB != null && battlePokemonB?.entity != null) {
+                    val (newPosB, platformB) = activePokemonB.battlePokemon!!.effectedPokemon.getAjustedSendoutPosition(posB, activePokemonB.position!!.first)
+                    activePokemonB.battlePokemon?.entity?.setPositionSafely(newPosB)
+                    activePokemonB.battlePokemon?.entity?.platform = platformB
+                }
 
                 // Notify clients of the swap
                 battle.sendUpdate(BattleSwapPokemonPacket(pnxA))

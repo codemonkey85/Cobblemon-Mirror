@@ -14,10 +14,10 @@ import net.minecraft.resources.ResourceLocation
 import java.util.EnumSet
 
 /**
- * The type of a platform. Used for battling on .
+ * The type of a platform. Used to give pokemon a "surface" to stand on over water.
  *
- * @author Hiroku
- * @since December 5th, 2021
+ * @author JazzMcNade
+ * @since September 29th, 2024
  */
 enum class PlatformType {
     NONE,
