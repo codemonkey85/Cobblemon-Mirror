@@ -160,6 +160,83 @@
   "baseExperienceYield": 267,
   "experienceGroup": "medium_slow",
   "eggCycles": 20,
+  "riding": {
+    "controller": {
+      "key": "cobblemon:composite/run_up_to_flight",
+      "minimumSpeed": "0.2",
+      "minimumJump": "80",
+      "landController": {
+        "key": "cobblemon:land/generic",
+        "speed": "Math.clamp(q.entity.velocity.horizontal_magnitude + 0.33, 0, 1)",
+        "jumpVector": [0, "0.3*q.jump_strength/50", "-1 * 0.5*q.jump_strength/50"]
+      },
+      "flightController": {
+        "key": "cobblemon:air/bird",
+        "gravity": "q.gravity * (0.1 + (q.passenger_count - 1) * 0.1)",
+        "speed": "Math.clamp(q.entity.velocity.horizontal_magnitude + 0.33, 0, 1)"
+      }
+    },
+    "seats": [
+      {
+        "offset": {
+          "x": 0,
+          "y": 1.5,
+          "z": -0.5
+        },
+        "poseOffsets": [
+          {
+            "poseTypes": [
+              "HOVER"
+            ],
+            "offset": {
+              "x": 0,
+              "y": 0.7,
+              "z": 0
+            }
+          },
+            {
+              "poseTypes": [
+                "FLY"
+              ],
+              "offset": {
+                "x": 0,
+                "y": 0.2,
+                "z": 0.2
+              }
+            }
+        ]
+      },
+      {
+        "offset": {
+          "x": 0,
+          "y": 1.5,
+          "z": -1.5
+        },
+        "poseOffsets": [
+          {
+            "poseTypes": [
+              "HOVER"
+            ],
+            "offset": {
+              "x": 0,
+              "y": 0.4,
+              "z": 1
+            }
+          },
+          {
+            "poseTypes": [
+              "FLY"
+            ],
+            "offset": {
+              "x": 0,
+              "y": 0.2,
+              "z": 0.2
+            }
+          }
+        ]
+      }
+    ]
+  },
   "eggGroups": [
     "monster",
     "dragon"

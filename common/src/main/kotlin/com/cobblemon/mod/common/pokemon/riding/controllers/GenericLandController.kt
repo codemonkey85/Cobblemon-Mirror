@@ -8,7 +8,6 @@
 
 package com.cobblemon.mod.common.pokemon.riding.controllers
 
-import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.cobblemon.mod.common.api.riding.controller.RideController
 import com.cobblemon.mod.common.api.riding.controller.posing.PoseOption
@@ -44,17 +43,15 @@ class GenericLandController : RideController {
     var speed = "1.0".asExpression()
         private set
 
-    private var runtime = MoLangRuntime()
-
     @Transient
-    private var initializedEntityId = -1
-
     override val key: ResourceLocation = KEY
-    override val poseProvider: PoseProvider = PoseProvider(PoseType.STAND).with(PoseOption(PoseType.WALK) { it.entityData.get(PokemonEntity.MOVING) })
+    @Transient
+    override val poseProvider: PoseProvider = PoseProvider(PoseType.STAND).with(PoseOption(PoseType.WALK) { it.deltaMovement.horizontalDistance() > 0.1 })
+    @Transient
     override val condition: (PokemonEntity) -> Boolean = { entity ->
-        //Are there any blocks under the mon that aren't air or fluid
-        //Cant just check one block since some mons may be more than one block big
-        //This should be changed so that the any predicate is only ran on blocks under the mon
+        // Are there any blocks under the mon that aren't air or fluid
+        // Cant just check one block since some mons may be more than one block big
+        // This should be changed so that the any predicate is only ran on blocks under the mon
         Shapes.create(entity.boundingBox).blockPositionsAsListRounded().any {
             //Need to check other fluids
             if (entity.isInWater || entity.isUnderWater) {
@@ -69,26 +66,15 @@ class GenericLandController : RideController {
         }
     }
 
-    // temporary until the struct stuff is properly and explicitly added to PokemonEntity
-    private fun attachEntity(entity: PokemonEntity) {
-        if (initializedEntityId == entity.id) {
-            return
-        }
-        initializedEntityId = entity.id
-
-        runtime.environment.query.addFunction("entity") { entity.struct }
-    }
-
     override fun speed(entity: PokemonEntity, driver: Player): Float {
-        attachEntity(entity)
-        return runtime.resolveFloat(speed)
+        return getRuntime(entity).resolveFloat(speed)
     }
 
-    override fun rotation(driver: LivingEntity): Vec2 {
+    override fun rotation(entity: PokemonEntity, driver: LivingEntity): Vec2 {
         return Vec2(driver.xRot * 0.5f, driver.yRot)
     }
 
-    override fun velocity(driver: Player, input: Vec3): Vec3 {
+    override fun velocity(entity: PokemonEntity, driver: Player, input: Vec3): Vec3 {
         val f = driver.xxa * 0.2f
         var g = driver.zza
         if (g <= 0.0f) {
@@ -103,7 +89,7 @@ class GenericLandController : RideController {
     override fun canJump(entity: PokemonEntity, driver: Player) = true
 
     override fun jumpForce(entity: PokemonEntity, driver: Player, jumpStrength: Int): Vec3 {
-        attachEntity(entity)
+        val runtime = getRuntime(entity)
         runtime.environment.query.addFunction("jump_strength") { DoubleValue(jumpStrength.toDouble()) }
         val jumpVector = jumpVector.map { runtime.resolveFloat(it) }
         return Vec3(jumpVector[0].toDouble(), jumpVector[1].toDouble(), jumpVector[2].toDouble())

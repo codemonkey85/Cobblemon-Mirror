@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.api.riding.controller
 
 import com.cobblemon.mod.common.api.net.Decodable
 import com.cobblemon.mod.common.api.net.Encodable
+import com.cobblemon.mod.common.api.riding.RidingState
 import com.cobblemon.mod.common.api.riding.controller.posing.PoseProvider
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -68,17 +69,25 @@ interface RideController : Encodable, Decodable {
      * Sets the rotation of the mount. This is typically based on the controlling driver and is manipulated as
      * necessary.
      */
-    fun rotation(driver: LivingEntity) : Vec2
+    fun rotation(entity: PokemonEntity, driver: LivingEntity) : Vec2
 
     /**
      * Manipulates the movement input as necessary by the controller. This is primarily used to apply limits
      * to the types of movements. For instance, we can apply limits to any sort of sideways movement input, so that
      * it would otherwise be slower than normal forward movement.
      */
-    fun velocity(driver: Player, input: Vec3) : Vec3
+    fun velocity(entity: PokemonEntity, driver: Player, input: Vec3) : Vec3
 
     fun canJump(entity: PokemonEntity, driver: Player) : Boolean
     fun jumpForce(entity: PokemonEntity, driver: Player, jumpStrength: Int) : Vec3
+
+    fun gravity(entity: PokemonEntity, regularGravity: Double) : Double? = null
+
+    fun getRuntime(entity: PokemonEntity) = entity.riding.runtime
+
+    fun <T : RidingState> getState(entity: PokemonEntity, constructor: (PokemonEntity) -> T): T {
+        return entity.riding.getState(key, constructor)
+    }
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeIdentifier(this.key)

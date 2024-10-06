@@ -72,9 +72,8 @@ import com.cobblemon.mod.common.pokemon.activestate.InactivePokemonState
 import com.cobblemon.mod.common.pokemon.activestate.ShoulderedState
 import com.cobblemon.mod.common.pokemon.ai.FormPokemonBehaviour
 import com.cobblemon.mod.common.pokemon.evolution.variants.ItemInteractionEvolution
-import com.cobblemon.mod.common.pokemon.misc.GimmighoulStashHandler
-import com.cobblemon.mod.common.pokemon.properties.UncatchableProperty
 import com.cobblemon.mod.common.pokemon.feature.StashHandler
+import com.cobblemon.mod.common.pokemon.properties.UncatchableProperty
 import com.cobblemon.mod.common.util.*
 import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules
 import com.mojang.serialization.Codec
@@ -94,14 +93,10 @@ import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
+import net.minecraft.network.protocol.game.DebugPackets
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
-import com.mojang.serialization.Codec
-import net.minecraft.nbt.NbtOps
-import net.minecraft.network.protocol.game.DebugPackets
-import java.util.*
-import java.util.concurrent.CompletableFuture
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerEntity
 import net.minecraft.server.level.ServerLevel
@@ -329,7 +324,7 @@ open class PokemonEntity(
             SPECIES -> refreshDimensions()
             POSE_TYPE -> {
                 val value = entityData.get(data) as PoseType
-                if (value == PoseType.FLY || value == PoseType.HOVER) {
+                if ((value == PoseType.FLY || value == PoseType.HOVER) && passengers.isEmpty()) {
                     setNoGravity(true)
                 } else {
                     setNoGravity(false)
@@ -1511,7 +1506,7 @@ open class PokemonEntity(
         if (this.hasPassenger(passenger)) {
             val index = passengers.indexOf(passenger).takeIf { it >= 0 && it < seats.size } ?: return
             val seat = seats[index]
-            val offset = seat.offset.yRot(-this.yRot * (Math.PI.toFloat() / 180))//.rotateX(-this.pitch * (Math.PI.toFloat() / 180))
+            val offset = seat.getOffset(getCurrentPoseType()).yRot(-this.yRot * (Math.PI.toFloat() / 180))//.rotateX(-this.pitch * (Math.PI.toFloat() / 180))
             positionUpdater.accept(passenger, this.x + offset.x, this.y + offset.y, this.z + offset.z)
             if (passenger is LivingEntity) {
                 passenger.yRot = this.yRot
@@ -1521,13 +1516,14 @@ open class PokemonEntity(
 
     override fun getControllingPassenger(): LivingEntity? {
         val riders = this.passengers.filterIsInstance<LivingEntity>()
-        if(riders.isEmpty()) {
+        if (riders.isEmpty()) {
+            riding.states.clear()
             return null
         }
 
         val event = SelectDriverEvent(riders.toSet())
         val owner = riders.find { it.uuid == ownerUUID }
-        if(owner != null) {
+        if (owner != null) {
             event.suggest(owner, 0)
         }
 
@@ -1581,11 +1577,20 @@ open class PokemonEntity(
     fun side() = if (delegate is PokemonServerDelegate) "SERVER" else "CLIENT"
 
     override fun handleStopJump() {
+        jumping = false
         // Set back to land pose type?
     }
 
     override fun dismountsUnderwater(): Boolean {
         return true
+    }
+
+    override fun getDefaultGravity(): Double {
+        val regularGravity = super.getDefaultGravity()
+        if (this.passengers.isEmpty()) {
+            return regularGravity
+        }
+        return riding.gravity(this, regularGravity) ?: regularGravity
     }
 
     /**

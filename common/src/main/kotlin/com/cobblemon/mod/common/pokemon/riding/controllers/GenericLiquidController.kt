@@ -57,11 +57,11 @@ class GenericLiquidController : RideController {
         return (1 / ((300 * this.speed) + (18.5F - (this.acceleration * 5.3F)))) * (0.9F * ((this.acceleration + 1) / 2))
     }
 
-    override fun rotation(driver: LivingEntity): Vec2 {
+    override fun rotation(entity: PokemonEntity, driver: LivingEntity): Vec2 {
         return Vec2(driver.xRot * 0.5f, driver.yRot)
     }
 
-    override fun velocity(driver: Player, input: Vec3): Vec3 {
+    override fun velocity(entity: PokemonEntity, driver: Player, input: Vec3): Vec3 {
         val f = driver.xxa * 0.1f
         var g = driver.zza * 0.3f
         if (g <= 0.0f) {

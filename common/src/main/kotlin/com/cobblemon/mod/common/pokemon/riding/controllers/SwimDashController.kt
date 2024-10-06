@@ -61,11 +61,11 @@ class SwimDashController : RideController {
         return this.dashSpeed
     }
 
-    override fun rotation(driver: LivingEntity): Vec2 {
+    override fun rotation(entity: PokemonEntity, driver: LivingEntity): Vec2 {
         return Vec2(driver.xRot * 0.5f, driver.yRot)
     }
 
-    override fun velocity(driver: Player, input: Vec3): Vec3 {
+    override fun velocity(entity: PokemonEntity, driver: Player, input: Vec3): Vec3 {
         val f = driver.xxa * 0.05f
         var g = driver.zza * 0.6f
         if (g <= 0.0f) {

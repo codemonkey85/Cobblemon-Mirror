@@ -21,29 +21,29 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 class RidingProperties(
     val seats: List<Seat> = listOf(),
     val conditions: List<Expression> = listOf(),
-    val controllers: List<RideController> = listOf()
+    val controller: RideController? = null
 ) {
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf): RidingProperties {
             val seats: List<Seat> = buffer.readList { _ -> Seat.decode(buffer) }
             val conditions = buffer.readList { buffer.readString().asExpression() }
-            val controllers: List<RideController> = buffer.readList { _ ->
+            val controller = buffer.readNullable { _ ->
                 val key = buffer.readIdentifier()
                 val controller = RideControllerAdapter.types[key]?.getConstructor()?.newInstance() ?: error("Unknown controller key: $key")
                 controller.decode(buffer)
-                return@readList controller
+                return@readNullable controller
             }
 
-            return RidingProperties(seats = seats, conditions = conditions, controllers = controllers)
+            return RidingProperties(seats = seats, conditions = conditions, controller = controller)
         }
     }
 
     val canRide: Boolean
-        get() = seats.isNotEmpty() && controllers.isNotEmpty()
+        get() = seats.isNotEmpty() && controller != null
 
     fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeCollection(seats) { _, seat -> seat.encode(buffer) }
         buffer.writeCollection(conditions) { _, condition -> buffer.writeString(condition.getString()) }
-        buffer.writeCollection(controllers) { _, controller -> controller.encode(buffer) }
+        buffer.writeNullable(controller) { _, controller -> controller.encode(buffer) }
     }
 }
