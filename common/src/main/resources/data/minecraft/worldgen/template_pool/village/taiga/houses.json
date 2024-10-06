@@ -282,6 +282,16 @@
     },
     {
       "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "cobblemon:village_taiga/village_taiga_pokecenter",
+        "override_liquid_settings": "ignore_waterlogging",
+        "processors": "cobblemon:villages/pokecenter_mossy",
+        "projection": "rigid"
+      },
+      "weight": 150
+    },
+    {
+      "element": {
         "element_type": "minecraft:empty_pool_element"
       },
       "weight": 6

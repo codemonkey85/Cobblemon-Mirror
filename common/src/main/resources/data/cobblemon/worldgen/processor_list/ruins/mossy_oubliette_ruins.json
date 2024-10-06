@@ -141,6 +141,10 @@
                     }
                 },
                 {
+                    "block_entity_modifier": {
+                        "type": "minecraft:append_loot",
+                        "loot_table": "cobblemon:ruins/pots/ruins"
+                    },
                     "input_predicate": {
                         "block": "minecraft:polished_granite",
                         "predicate_type": "minecraft:random_block_match",
