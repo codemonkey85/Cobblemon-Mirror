@@ -37,18 +37,20 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.Vec3
+import net.minecraft.world.phys.HitResult
 import java.util.*
 import kotlin.math.min
 
 // Stuff like getting their party
 fun ServerPlayer.party() = Cobblemon.storage.getParty(this)
-fun ServerPlayer.pc() = Cobblemon.storage.getPC(this.uuid)
+fun ServerPlayer.pc() = Cobblemon.storage.getPC(this)
+fun ServerPlayer.pokedex() = Cobblemon.playerDataManager.getPokedexData(this)
 val ServerPlayer.activeDialogue: ActiveDialogue?
     get() = DialogueManager.activeDialogues[uuid]
 val ServerPlayer.isInDialogue: Boolean
     get() = DialogueManager.activeDialogues.containsKey(uuid)
 fun ServerPlayer.closeDialogue() {
-    DialogueManager.stopDialogue(this)
+    activeDialogue?.close()
 }
 fun ServerPlayer.openDialogue(dialogue: Dialogue) {
     DialogueManager.startDialogue(this, dialogue)
@@ -56,8 +58,8 @@ fun ServerPlayer.openDialogue(dialogue: Dialogue) {
 fun ServerPlayer.openDialogue(activeDialogue: ActiveDialogue) {
     DialogueManager.startDialogue(activeDialogue)
 }
-fun ServerPlayer.extraData(key: String) = Cobblemon.playerData.get(this).extraData[key]
-fun ServerPlayer.hasKeyItem(key: ResourceLocation) = Cobblemon.playerData.get(this).keyItems.contains(key)
+fun ServerPlayer.extraData(key: String) = Cobblemon.playerDataManager.getGenericData(this).extraData[key]
+fun ServerPlayer.hasKeyItem(key: ResourceLocation) = Cobblemon.playerDataManager.getGenericData(this).keyItems.contains(key)
 fun UUID.getPlayer() = server()?.playerList?.getPlayer(this)
 
 fun ServerPlayer.onLogout(handler: () -> Unit) {
@@ -118,16 +120,18 @@ class EntityTraceResult<T : Entity>(
 )
 
 fun <T : Entity> Player.traceFirstEntityCollision(
-    maxDistance: Float = 10F,
-    stepDistance: Float = 0.05F,
-    entityClass: Class<T>,
-    ignoreEntity: T? = null
+        maxDistance: Float = 10F,
+        stepDistance: Float = 0.05F,
+        entityClass: Class<T>,
+        ignoreEntity: T? = null,
+        collideBlock: ClipContext.Fluid? = null
 ): T? {
     return traceEntityCollision(
         maxDistance,
         stepDistance,
         entityClass,
-        ignoreEntity
+        ignoreEntity,
+        collideBlock
     )?.let { it.entities.minByOrNull { it.distanceTo(this) } }
 }
 
@@ -135,7 +139,8 @@ fun <T : Entity> Player.traceEntityCollision(
     maxDistance: Float = 10F,
     stepDistance: Float = 0.05F,
     entityClass: Class<T>,
-    ignoreEntity: T? = null
+    ignoreEntity: T? = null,
+    collideBlock: ClipContext.Fluid?
 ): EntityTraceResult<T>? {
     var step = stepDistance
     val startPos = eyePosition
@@ -147,7 +152,6 @@ fun <T : Entity> Player.traceEntityCollision(
         AABB(startPos.subtract(maxDistanceVector), startPos.add(maxDistanceVector)),
         { entityClass.isInstance(it) }
     )
-
     while (step <= maxDistance) {
         val location = startPos.add(direction.scale(step.toDouble()))
         step += stepDistance
@@ -155,6 +159,10 @@ fun <T : Entity> Player.traceEntityCollision(
         val collided = entities.filter { ignoreEntity != it && location in it.boundingBox }.filter { entityClass.isInstance(it) }
 
         if (collided.isNotEmpty()) {
+            if(collideBlock != null && level().clip(ClipContext(startPos, location, ClipContext.Block.COLLIDER, collideBlock, this)).type == HitResult.Type.BLOCK) {
+                // Collided with block on the way to the entity
+                return null
+            }
             return EntityTraceResult(location, collided.filterIsInstance(entityClass))
         }
     }
@@ -381,4 +389,4 @@ fun Player.giveOrDropItemStack(stack: ItemStack, playSound: Boolean = true) {
 }
 
 /** Retrieves the battle theme associated with this player, or the default PVP theme if null. */
-fun ServerPlayer.getBattleTheme() = Cobblemon.playerData.get(this).battleTheme?.let { BuiltInRegistries.SOUND_EVENT.get(it) } ?: CobblemonSounds.PVP_BATTLE
+fun ServerPlayer.getBattleTheme() = Cobblemon.playerDataManager.getGenericData(this).battleTheme?.let { BuiltInRegistries.SOUND_EVENT.get(it) } ?: CobblemonSounds.PVP_BATTLE

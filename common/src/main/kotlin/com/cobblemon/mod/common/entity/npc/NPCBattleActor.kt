@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.entity.npc
 
+import com.bedrockk.molang.runtime.value.DoubleValue
+import com.bedrockk.molang.runtime.value.StringValue
+import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.battles.model.actor.AIBattleActor
 import com.cobblemon.mod.common.api.battles.model.actor.ActorType
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
@@ -15,25 +18,34 @@ import com.cobblemon.mod.common.api.battles.model.actor.EntityBackedBattleActor
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.battles.ai.RandomBattleAI
+import com.cobblemon.mod.common.battles.ai.StrongBattleAI
 import com.cobblemon.mod.common.net.messages.client.battle.BattleEndPacket
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.chainFutures
 import com.cobblemon.mod.common.util.effectiveName
 import com.cobblemon.mod.common.util.update
+import net.minecraft.world.phys.Vec3
 import java.util.concurrent.CompletableFuture
 
 class NPCBattleActor(
     val npc: NPCEntity,
-    val party: PartyStore
+    val party: PartyStore,
+    val skill: Int
 ) : AIBattleActor(
     gameId = npc.uuid,
     pokemonList = party.toBattleTeam(),
-    battleAI = RandomBattleAI()
+    battleAI = StrongBattleAI(skill)
 ), EntityBackedBattleActor<NPCEntity> {
     override val entity = npc
     override val type = ActorType.NPC
     override fun getName() = npc.effectiveName().copy()
     override fun nameOwned(name: String) = battleLang("owned_pokemon", this.getName(), name)
+    override val initialPos = entity.position()
+
+    override fun setupStruct() {
+        super.setupStruct()
+        struct.addFunction("skill") { DoubleValue(skill) }
+    }
 
     override fun sendUpdate(packet: NetworkPacket<*>) {
         super.sendUpdate(packet)
@@ -65,5 +77,10 @@ class NPCBattleActor(
     override fun lose(winners: List<BattleActor>, otherLosers: List<BattleActor>) {
         super.lose(winners, otherLosers)
         npc.playAnimation(NPCEntity.LOSE_ANIMATION)
+//        winners.forEach {
+//            rewards.forEach {
+//                winner give reward :))
+//            }
+//        }
     }
 }

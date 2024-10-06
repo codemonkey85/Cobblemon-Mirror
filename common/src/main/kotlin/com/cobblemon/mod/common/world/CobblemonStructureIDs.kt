@@ -12,15 +12,15 @@ import com.cobblemon.mod.common.util.cobblemonResource
 
 object CobblemonStructureIDs {
     @JvmField
-    val PLAINS_POKECENTER = cobblemonResource("village_plains/village_plains_pokecenter")
+    val VILLAGE_PLAINS_POKECENTER = cobblemonResource("village_plains/village_plains_pokecenter")
     @JvmField
-    val DESERT_POKECENTER = cobblemonResource("village_desert/village_desert_pokecenter")
+    val VILLAGE_DESERT_POKECENTER = cobblemonResource("village_desert/village_desert_pokecenter")
     @JvmField
-    val SAVANNA_POKECENTER = cobblemonResource("village_savanna/village_savanna_pokecenter")
+    val VILLAGE_SAVANNA_POKECENTER = cobblemonResource("village_savanna/village_savanna_pokecenter")
     @JvmField
-    val SNOWY_POKECENTER = cobblemonResource("village_snowy/village_snowy_pokecenter")
+    val VILLAGE_SNOWY_POKECENTER = cobblemonResource("village_snowy/village_snowy_pokecenter")
     @JvmField
-    val TAIGA_POKECENTER = cobblemonResource("village_taiga/village_taiga_pokecenter")
+    val VILLAGE_TAIGA_POKECENTER = cobblemonResource("village_taiga/village_taiga_pokecenter")
     @JvmField
     val PLAINS_LONG_PATH = cobblemonResource("village_plains/village_plains_long_path")
     @JvmField

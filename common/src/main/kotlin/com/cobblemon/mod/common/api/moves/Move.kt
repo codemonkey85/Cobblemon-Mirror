@@ -118,6 +118,8 @@ open class Move(
         return json
     }
 
+    fun copy() = loadFromJSON(saveToJSON(JsonObject()))
+
     fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(name)
         buffer.writeSizedInt(IntSize.U_BYTE, currentPp)

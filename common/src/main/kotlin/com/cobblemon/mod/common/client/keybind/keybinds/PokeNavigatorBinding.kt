@@ -23,7 +23,7 @@ object PokeNavigatorBinding : CobblemonPartyLockedKeyBinding(
     KeybindCategories.COBBLEMON_CATEGORY
 ) {
     override fun onPress() {
-        // MinecraftClient.getInstance().setScreen(PokeNav())
+        // Minecraft.getInstance().setScreen(PokeNav())
         try {
             Summary.open(CobblemonClient.storage.myParty.slots, true, CobblemonClient.storage.selectedSlot)
         } catch (e: Exception) {

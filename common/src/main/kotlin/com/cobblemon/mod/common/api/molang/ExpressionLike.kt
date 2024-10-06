@@ -10,6 +10,8 @@ package com.cobblemon.mod.common.api.molang
 
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.value.MoValue
+import com.cobblemon.mod.common.util.asExpressionLike
+import com.mojang.serialization.Codec
 
 /**
  * An object that can be given a [MoLangRuntime] to produce a single [MoValue]. This abstracts
@@ -21,7 +23,7 @@ import com.bedrockk.molang.runtime.value.MoValue
 interface ExpressionLike {
     override fun toString(): String
     /** Produces a [MoValue] for a [MoLangRuntime] to supply an environment. */
-    fun resolve(runtime: MoLangRuntime, context: Map<String, MoValue> = emptyMap()): MoValue
+    fun resolve(runtime: MoLangRuntime, context: Map<String, MoValue> = runtime.environment.context?.map ?: hashMapOf()): MoValue
     fun getString(): String = toString()
 
     fun resolveDouble(runtime: MoLangRuntime) = resolve(runtime).asDouble()
@@ -31,4 +33,11 @@ interface ExpressionLike {
     fun resolveBoolean(runtime: MoLangRuntime) = resolveDouble(runtime) == 1.0
     fun resolveObject(runtime: MoLangRuntime) = resolve(runtime) as ObjectValue<*>
 
+    companion object {
+        val CODEC: Codec<ExpressionLike> = Codec.STRING.xmap({
+            it.asExpressionLike()
+        }) {
+            it.getString()
+        }
+    }
 }

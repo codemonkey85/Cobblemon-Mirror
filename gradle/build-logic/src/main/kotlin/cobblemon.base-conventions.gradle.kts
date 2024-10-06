@@ -35,6 +35,7 @@ repositories {
     mavenCentral()
     //JEI
     maven("https://maven.blamejared.com/")
+    maven("https://maven.parchmentmc.org")
 }
 
 license {
@@ -52,7 +53,10 @@ loom {
 
 dependencies {
     minecraft("net.minecraft:minecraft:${rootProject.property("mc_version")}")
-    mappings(loom.officialMojangMappings())
+    mappings(loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.21:${rootProject.property("parchment_version")}")
+    })
 }
 
 tasks {

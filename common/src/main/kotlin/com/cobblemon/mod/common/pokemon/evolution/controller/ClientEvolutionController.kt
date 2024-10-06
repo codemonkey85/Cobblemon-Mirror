@@ -9,20 +9,17 @@
 package com.cobblemon.mod.common.pokemon.evolution.controller
 
 import com.cobblemon.mod.common.CobblemonNetwork
+import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.pokemon.evolution.EvolutionController
 import com.cobblemon.mod.common.api.pokemon.evolution.EvolutionDisplay
 import com.cobblemon.mod.common.api.pokemon.evolution.PreProcessor
 import com.cobblemon.mod.common.api.pokemon.evolution.progress.EvolutionProgress
-import com.cobblemon.mod.common.net.messages.client.pokemon.update.evolution.AddEvolutionPacket
+import com.cobblemon.mod.common.api.text.green
 import com.cobblemon.mod.common.net.messages.server.pokemon.update.evolution.AcceptEvolutionPacket
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.util.readList
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.Tag
-import net.minecraft.network.RegistryFriendlyByteBuf
+import com.cobblemon.mod.common.util.asTranslated
 import com.mojang.serialization.Codec
+import net.minecraft.client.Minecraft
 
 class ClientEvolutionController(
     private val pokemon: Pokemon,
@@ -55,7 +52,14 @@ class ClientEvolutionController(
         return progressFactory()
     }
 
-    override fun add(element: EvolutionDisplay) = this.evolutions.add(element)
+    override fun add(element: EvolutionDisplay): Boolean {
+        var result = this.evolutions.add(element)
+        if(result) {
+            Minecraft.getInstance().player?.sendSystemMessage("cobblemon.ui.evolve.hint".asTranslated(pokemon.getDisplayName()).green())
+            Minecraft.getInstance().player?.playSound(CobblemonSounds.EVOLUTION_NOTIFICATION, 1F, 1F)
+        }
+        return result
+    }
 
     override fun addAll(elements: Collection<EvolutionDisplay>) = this.evolutions.addAll(elements)
 

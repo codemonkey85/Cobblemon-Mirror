@@ -16,6 +16,7 @@ import com.cobblemon.mod.common.api.battles.interpreter.Effect
 import com.cobblemon.mod.common.api.battles.interpreter.MissingContext
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
+import com.cobblemon.mod.common.api.battles.model.actor.EntityBackedBattleActor
 import com.cobblemon.mod.common.api.text.yellow
 import com.cobblemon.mod.common.battles.dispatch.InstructionSet
 import com.cobblemon.mod.common.battles.dispatch.InterpreterInstruction
@@ -24,6 +25,7 @@ import com.cobblemon.mod.common.battles.interpreter.instructions.*
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.runOnServer
+import net.minecraft.world.phys.Vec3
 import java.util.UUID
 import kotlin.collections.Iterator
 import kotlin.collections.filter
@@ -67,7 +69,7 @@ object ShowdownInterpreter {
         updateInstructionParser["-clearallboost"]        = { _, _, message, _ -> ClearAllBoostInstruction(message) }
         updateInstructionParser["-clearnegativeboost"]   = { _, _, message, _ -> ClearNegativeBoostInstruction(message) }
         updateInstructionParser["-copyboost"]            = { _, _, message, _ -> CopyBoostInstruction(message) }
-        updateInstructionParser["-crit"]                 = { _, _, message, _ -> CritInstruction(message) }
+        updateInstructionParser["-crit"]                 = { _, instructionSet, message, _ -> CritInstruction(message, instructionSet) }
         updateInstructionParser["-curestatus"]           = { _, _, message, _ -> CureStatusInstruction(message) }
         updateInstructionParser["detailschange"]         = { _, _, message, _ -> DetailsChangeInstruction(message) }
         updateInstructionParser["-endability"]           = { _, _, message, _ -> EndAbilityInstruction(message) }
@@ -90,8 +92,7 @@ object ShowdownInterpreter {
         updateInstructionParser["-prepare"]              = { _, _, message, _ -> PrepareInstruction(message) }
         updateInstructionParser["-mustrecharge"]         = { _, _, message, _ -> RechargeInstruction(message) }
         updateInstructionParser["replace"]               = { _, _, message, _ -> ReplaceInstruction(message) }
-        updateInstructionParser["-resisted"]             = { _, _, message, _ -> ResistedInstruction(message) }
-        updateInstructionParser["-resisted"]             = { _, _, message, _ -> ResistedInstruction(message) }
+        updateInstructionParser["-resisted"]             = { _, instructionSet, message, _ -> ResistedInstruction(message, instructionSet) }
         updateInstructionParser["-setboost"]             = { _, _, message, _ -> SetBoostInstruction(message) }
         updateInstructionParser["-sideend"]              = { _, _, message, _ -> SideEndInstruction(message) }
         updateInstructionParser["-sidestart"]            = { _, _, message, _ -> SideStartInstruction(message) }
@@ -100,7 +101,7 @@ object ShowdownInterpreter {
         updateInstructionParser["start"]                 = { _, instructionSet, message, _ -> InitializeInstruction(instructionSet, message) }
         updateInstructionParser["-start"]                = { _, _, message, _ -> StartInstruction(message) }
         updateInstructionParser["-status"]               = { _, _, message, _ -> StatusInstruction(message) }
-        updateInstructionParser["-supereffective"]       = { _, _, message, _ -> SuperEffectiveInstruction(message) }
+        updateInstructionParser["-supereffective"]       = { _, instructionSet, message, _ -> SuperEffectiveInstruction(message, instructionSet) }
         updateInstructionParser["-swapboost"]            = { _, _, message, _ -> SwapBoostInstruction(message) }
         updateInstructionParser["-swapsideconditions"]   = { _, _, message, _ -> SwapSideConditionsInstruction(message) }
         updateInstructionParser["-terastallize"]         = { _, _, message, _ -> TerastallizeInstruction(message) }
@@ -112,6 +113,8 @@ object ShowdownInterpreter {
         updateInstructionParser["win"]                   = { _, _, message, _ -> WinInstruction(message) }
         updateInstructionParser["-zbroken"]              = { _, _, message, _ -> ZBrokenInstruction(message) }
         updateInstructionParser["-zpower"]               = { _, _, message, _ -> ZPowerInstruction(message) }
+        updateInstructionParser["swap"]                  = { _, instructionSet, message, _ -> SwapInstruction(message, instructionSet) }
+        updateInstructionParser["-center"]               = { _, _, message, _ -> CenterInstruction(message) }
 
         sideInstructionParser["error"]                   = { _, targetActor, _, message -> ErrorInstruction(targetActor, message) }
         sideInstructionParser["request"]                 = { _, targetActor, _, message -> RequestInstruction(targetActor, message) }
@@ -132,8 +135,74 @@ object ShowdownInterpreter {
                                                                 SwitchInstruction(instructionSet, targetActor, publicMessage, privateMessage)
                                                            }
 
+
         // Note '-cureteam' is a legacy thing that is only used in generation 2 and 4 mods for heal bell and aromatherapy respectively as such we can just ignore that
     }
+
+    /**
+     *
+     * Figures out the sendout position for a pokemon in a battle
+     * 
+     *
+     */
+     fun getSendoutPosition(battle: PokemonBattle, activePokemon: ActiveBattlePokemon, battleActor: BattleActor): Vec3? {
+        val pnx = activePokemon.getPNX()
+        val entityPosList = battleActor.getSide().actors.mapNotNull { if (it is EntityBackedBattleActor<*>) it.initialPos else null }
+        var entityPos = if (entityPosList.size == 1)
+            entityPosList[0]
+        else if (entityPosList.size > 1)
+            entityPosList.fold(Vec3(0.0, 0.0, 0.0)) { acc, vec3 -> acc.add(vec3.scale(1.0 / entityPosList.size)) }
+        else
+            null
+        val opposingEntityList = battleActor.getSide().getOppositeSide().actors.mapNotNull { if (it is EntityBackedBattleActor<*>) it.initialPos else null }
+        val opposingEntityPos = if (opposingEntityList.size == 1)
+            opposingEntityList[0]
+        else if (opposingEntityList.size > 1)
+            opposingEntityList.fold(Vec3(0.0, 0.0, 0.0)) { acc, vec3 -> acc.add(vec3.scale(1.0 / opposingEntityList.size)) }
+        else null
+        
+        var baseOffset = entityPos?.let { opposingEntityPos?.subtract(it) }
+
+        if (baseOffset != null) {
+            val minDistance = if (battle.isPvW) 8.0 else 5.0
+            val length = baseOffset.length()
+            if (length < minDistance) {
+                val temp = baseOffset.scale(minDistance / length) ?: baseOffset
+                entityPos = entityPos?.subtract(temp.subtract(baseOffset))
+                baseOffset = temp
+            }
+            var vector = Vec3(baseOffset.x, 0.0, baseOffset.z).normalize()
+            vector = vector.cross(Vec3(0.0, 1.0, 0.0))
+
+            if (battle.format.battleType.pokemonPerSide == 1) { // Singles
+                entityPos = entityPos?.add(baseOffset.scale(if (battle.isPvW) 0.4 else 0.3))
+                activePokemon.battlePokemon?.let { battlePokemon ->
+                    val hitbox = battlePokemon.originalPokemon.form.hitbox
+                    val scale = battlePokemon.originalPokemon.form.baseScale
+                    if (hitbox.height * scale > 1.1) {
+                        entityPos = entityPos?.add(vector.scale(-1.5 - hitbox.width * scale / 2))
+                    }
+                }
+            } else if (battle.format.battleType.pokemonPerSide == 2) { // Doubles
+                if (battle.actors.first() !== battle.actors.last()) {
+                    val offsetB = if (pnx[2] == 'a') vector.scale(-1.0) else vector
+                    entityPos = entityPos?.add(baseOffset.scale(0.33))?.add(offsetB.scale(2.5))
+                }
+            } else if (battle.format.battleType.pokemonPerSide == 3) { // Triples
+                if (battle.actors.first() !== battle.actors.last()) {
+                    entityPos = when (pnx[2]) {
+                        'a' -> entityPos?.add(baseOffset.scale(0.15))?.add(vector.scale(-3.5))
+                        'b' -> entityPos?.add(baseOffset.scale(0.3))
+                        'c' -> entityPos?.add(baseOffset.scale(0.15))?.add(vector.scale(3.5))
+                        else -> entityPos
+                    }
+                }
+            }
+        }
+        return entityPos
+    }
+
+
 
     fun interpretMessage(battleId: UUID, message: String) {
         // Check key map and use function if matching

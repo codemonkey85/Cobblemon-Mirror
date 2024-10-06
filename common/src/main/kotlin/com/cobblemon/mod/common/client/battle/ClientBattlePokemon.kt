@@ -36,7 +36,7 @@ class ClientBattlePokemon(
     val uuid: UUID,
     var displayName: MutableComponent,
     var properties: PokemonProperties,
-    var aspects: Set<String>,
+    private var aspects: Set<String>,
     var hpValue: Float,
     var maxHp: Float,
     var isHpFlat: Boolean,
@@ -52,6 +52,12 @@ class ClientBattlePokemon(
     val gender: Gender
         get() = properties.gender ?: Gender.GENDERLESS
 
-    var state = FloatingState()
+    var state = FloatingState().also {
+        it.currentAspects = aspects
+    }
 
+    fun updateAspects(aspects: Set<String>) {
+        this.aspects = aspects
+        state.currentAspects = aspects
+    }
 }

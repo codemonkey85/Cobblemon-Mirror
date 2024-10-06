@@ -10,8 +10,13 @@ package com.cobblemon.mod.common.mixin;
 
 import com.cobblemon.mod.common.client.CobblemonClient;
 import com.cobblemon.mod.common.client.keybind.keybinds.PartySendBinding;
+import com.cobblemon.mod.common.item.PokedexItem;
+import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
+import net.minecraft.util.Mth;
 import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,6 +27,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PartyScrollMixin {
     @Shadow
     private double accumulatedScrollY;
+
+    @Shadow @Final private Minecraft minecraft;
 
     @Inject(
             method = "onScroll",
@@ -34,20 +41,37 @@ public class PartyScrollMixin {
             ),
             cancellable = true
     )
-    public void onMouseScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
+    public void cobblemon$scrollParty(long window, double horizontal, double vertical, CallbackInfo ci) {
         if (PartySendBinding.INSTANCE.getWasDown()) {
-            int i = (int)accumulatedScrollY;
+            int i = (int) accumulatedScrollY;
             if (i > 0) {
-                while (i-- > 0) CobblemonClient.INSTANCE.getStorage().shiftSelected(false);
+                accumulatedScrollY -= i;
+                CobblemonClient.INSTANCE.getStorage().shiftSelected(false);
                 ci.cancel();
-                accumulatedScrollY = 0;
                 PartySendBinding.INSTANCE.actioned();
             } else if (i < 0) {
-                while (i++ < 0) CobblemonClient.INSTANCE.getStorage().shiftSelected(true);
+                accumulatedScrollY -= i;
+                CobblemonClient.INSTANCE.getStorage().shiftSelected(true);
                 ci.cancel();
-                accumulatedScrollY = 0;
                 PartySendBinding.INSTANCE.actioned();
             }
         }
     }
+
+    @Inject(
+        method = "onScroll",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/player/Inventory;swapPaint(D)V"
+        ),
+        cancellable = true
+    )
+    public void cobblemon$doPokedexZoom(long window, double horizontal, double vertical, CallbackInfo ci) {
+        PokedexUsageContext usageContext = CobblemonClient.INSTANCE.getPokedexUsageContext();
+        if (usageContext.getScanningGuiOpen()) {
+            usageContext.adjustZoom(vertical);
+            ci.cancel();
+        }
+    }
+
 }

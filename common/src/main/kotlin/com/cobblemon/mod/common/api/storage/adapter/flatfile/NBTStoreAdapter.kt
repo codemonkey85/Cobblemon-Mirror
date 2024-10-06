@@ -15,6 +15,7 @@ import net.minecraft.nbt.NbtAccounter
 import net.minecraft.nbt.NbtIo
 import java.io.File
 import java.util.*
+import net.minecraft.core.RegistryAccess
 
 /**
  * A [OneToOneFileStoreAdapter] that can arbitrarily save a single [PokemonStore] into an [CompoundTag] with the
@@ -29,17 +30,17 @@ open class NBTStoreAdapter(
     useNestedFolders: Boolean,
     folderPerClass: Boolean,
 ) : OneToOneFileStoreAdapter<CompoundTag>(rootFolder, useNestedFolders, folderPerClass, "dat") {
-    override fun <E : StorePosition, T : PokemonStore<E>> serialize(store: T) = store.saveToNBT(CompoundTag())
+    override fun <E : StorePosition, T : PokemonStore<E>> serialize(store: T, registryAccess: RegistryAccess) = store.saveToNBT(CompoundTag(), registryAccess)
     override fun save(file: File, serialized: CompoundTag) = NbtIo.writeCompressed(serialized, file.toPath())
-    override fun <E, T : PokemonStore<E>> load(file: File, storeClass: Class<out T>, uuid: UUID): T? {
+    override fun <E, T : PokemonStore<E>> load(file: File, storeClass: Class<out T>, uuid: UUID, registryAccess: RegistryAccess): T? {
         val store = try {
-            storeClass.getConstructor(UUID::class.java).newInstance(uuid)
+            storeClass.getConstructor(UUID::class.java, UUID::class.java).newInstance(uuid, uuid)
         } catch (exception: NoSuchMethodException) {
             storeClass.getConstructor(UUID::class.java).newInstance(uuid)
         }
         return try {
             val nbt = NbtIo.readCompressed(file.toPath(), NbtAccounter.unlimitedHeap())
-            store.loadFromNBT(nbt)
+            store.loadFromNBT(nbt, registryAccess)
             store
         } catch (e: Exception) {
             e.printStackTrace()

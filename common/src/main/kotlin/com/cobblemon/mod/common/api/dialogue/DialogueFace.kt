@@ -20,6 +20,8 @@ import net.minecraft.resources.ResourceLocation
  * @since January 1st, 2024
  */
 sealed interface DialogueFaceProvider {
+    val isLeftSide: Boolean
+
     companion object {
         val types = mutableMapOf(
             "player" to PlayerDialogueFaceProvider::class.java,
@@ -32,15 +34,24 @@ sealed interface DialogueFaceProvider {
 class ArtificialDialogueFaceProvider(
     val modelType: String = "",
     val identifier: ResourceLocation = cobblemonResource("bulbasaur"),
-    val aspects: Set<String> = setOf()
+    val aspects: Set<String> = setOf(),
+    override val isLeftSide: Boolean = true
 ) : DialogueFaceProvider
 
 class ReferenceDialogueFaceProvider(
-    val entityId: Int
+    val entityId: Int,
+    override val isLeftSide: Boolean = true
 ): DialogueFaceProvider
 
-class PlayerDialogueFaceProvider(val playerId: UUID) : DialogueFaceProvider
+/**
+ * A face provider that uses the player's skin as the face, as long as there is a player with this UUID online.
+ *
+ * What's interesting is that this works for fake players, which is what Taterzens' NPCs use.
+ */
+class PlayerDialogueFaceProvider(val playerId: UUID = UUID.randomUUID(), override val isLeftSide: Boolean = true) : DialogueFaceProvider
 
 class ExpressionLikeDialogueFaceProvider(
     val providerExpression: ExpressionLike
-): DialogueFaceProvider
+): DialogueFaceProvider {
+    override val isLeftSide: Boolean = false // Doesn't get used
+}

@@ -31,7 +31,7 @@ class AnimationActionEffectKeyframe : ConditionalActionEffectKeyframe(), EntityC
             .filterIsInstance<EntityProvider>()
             .flatMap { prov -> prov.entities.filter { test(context, it, isUser = prov is UsersProvider) } }
 
-        val expressions = variables.map { it.originalString }.toSet()
+        val expressions = variables.map { it.originalString }
 
         // Treat them as expressions if possible but otherwise yeah just send them as strings
         val animation = animation.map {

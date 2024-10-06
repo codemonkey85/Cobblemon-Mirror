@@ -41,20 +41,27 @@ class MultiLineLabelK(
     fun renderLeftAligned(
         context: GuiGraphics,
         x: Number, y: Number,
+        YStartOffset: Number = 0,
         ySpacing: Number,
         colour: Int,
+        scale: Float = 1F,
         shadow: Boolean = true
     ) {
+        context.pose().pushPose()
+        context.pose().scale(scale, scale, 1F)
         comps.forEachIndexed { index, textWithWidth ->
+            val yOffset = if (index == 0) YStartOffset else 0
             drawString(
                 context = context,
-                x = x, y = y.toFloat() + ySpacing.toFloat() * index,
+                x = x.toFloat() / scale,
+                y = (y.toFloat() + yOffset.toFloat() + ySpacing.toFloat() * index) / scale,
                 colour = colour,
                 shadow = shadow,
                 text = textWithWidth.text.string,
                 font = font
             )
         }
+        context.pose().popPose()
     }
 
     class TextWithWidth internal constructor(val text: FormattedText, val width: Int)

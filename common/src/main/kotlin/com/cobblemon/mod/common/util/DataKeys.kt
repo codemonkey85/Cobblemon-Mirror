@@ -63,9 +63,14 @@ object DataKeys {
     const val POKEMON_HIDE_LABEL = "HideLabel"
     const val POKEMON_UNBATTLEABLE = "Unbattleable"
     const val POKEMON_COUNTS_TOWARDS_SPAWN_CAP = "CountsTowardsSpawnCap"
+    const val POKEMON_FREEZE_FRAME = "FreezeFrame"
+    const val POKEMON_RECALCULATE_POSE = "RecalculatePose"
 
     const val POKEMON_ORIGINAL_TRAINER = "PokemonOriginalTrainer"
     const val POKEMON_ORIGINAL_TRAINER_TYPE = "PokemonOriginalTrainerType"
+
+    const val POKEMON_PROPERTIES_MOVES = "Moves"
+    const val POKEMON_PROPERTIES_HELDITEM = "HeldItem"
 
     // Entity effects
     const val ENTITY_EFFECTS = "EntityEffects"
@@ -87,6 +92,12 @@ object DataKeys {
     const val STORE_BOX_COUNT = "BoxCount"
     const val STORE_BOX_COUNT_LOCKED = "BoxCountLocked"
     const val STORE_BACKUP = "BackupStore"
+
+    // Pokedex Keys
+    const val POKEDEX_TYPE = "PokedexType"
+    const val NUM_ENCOUNTED_WILD = "NumberEncounteredWild"
+    const val NUM_ENCOUNTED_BATTLE = "NumberEncounteredBattle"
+    const val NUM_CAUGHT = "NumberCaught"
 
     const val TETHER_OWNER_ID = "TetherOwnerId"
     const val TETHER_OWNER_NAME = "TetherOwnerName"
@@ -187,15 +198,20 @@ object DataKeys {
     const val NPC_SIMULTANEOUS_BATTLES = "SimultaneousBattles"
     const val NPC_HEAL_AFTERWARDS = "HealAfterwards"
     const val NPC_PARTY = "Party"
+    const val NPC_PARTY_IS_STATIC = "IsStatic"
     const val NPC_PARTY_TYPE = "PartyType"
     const val NPC_PARTY_POKEMON = "Pokemon"
     const val NPC_ASPECTS = "AppliedAspects"
     const val NPC_DATA = "Data"
+    const val NPC_CONFIG = "Config"
     const val NPC_INTERACTION = "Interaction"
     const val NPC_INTERACT_TYPE = "Type"
     const val NPC_INTERACT_SCRIPT = "Script"
     const val NPC_INTERACT_CUSTOM_SCRIPT = "CustomScript"
     const val NPC_INTERACT_DIALOGUE = "Dialogue"
+    const val NPC_PLAYER_TEXTURE = "NPCPlayerTexture"
+    const val NPC_PLAYER_TEXTURE_MODEL = "Model"
+    const val NPC_PLAYER_TEXTURE_TEXTURE = "Texture"
 
     // PokemonProperties
     const val ELEMENTAL_TYPE = "ElementalType"

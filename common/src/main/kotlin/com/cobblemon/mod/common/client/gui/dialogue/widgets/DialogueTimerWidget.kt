@@ -15,7 +15,6 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.events.GuiEventListener
-import net.minecraft.core.Vec3i
 
 class DialogueTimerWidget(
     val dialogueScreen: DialogueScreen,
@@ -25,8 +24,7 @@ class DialogueTimerWidget(
     val height: Int,
 ) : Renderable, GuiEventListener {
     companion object {
-        val timerResource = cobblemonResource("textures/gui/dialogue/dialogue_bar.png")
-        private val BG_COLOUR = Vec3i(128, 128, 128)
+        val timerResource = cobblemonResource("textures/gui/dialogue/dialogue_timer_bar.png")
     }
 
     override fun isFocused() = false
@@ -39,18 +37,6 @@ class DialogueTimerWidget(
             return
         }
 
-        blitk(
-            texture = CobblemonResources.WHITE,
-            matrixStack = context.pose(),
-            x = x + 3,
-            y = y + 2,
-            width = width - 5,
-            height = height - 2,
-            blend = false,
-            red = BG_COLOUR.x / 255F,
-            green = BG_COLOUR.y / 255F,
-            blue = BG_COLOUR.z / 255F
-        )
         context.setColor(1F, 1F, 1F, 1F)
         blitk(
             texture = timerResource,
@@ -64,16 +50,16 @@ class DialogueTimerWidget(
         blitk(
             texture = CobblemonResources.WHITE,
             matrixStack = context.pose(),
-            x = x.toFloat() + 3,
-            y = y.toFloat() + 2,
-            width = width * ratio - 4,
-            height = height - 5,
+            x = x.toFloat() + 4,
+            y = y.toFloat() + 1,
+            width = width * ratio - 8,
+            height = height - 2,
             textureWidth = 1,
             textureHeight = 1,
             blend = false,
-            red = 193/255F,
-            green = 161/255F,
-            blue = 32/255F
+            red = 255F/255F,
+            green = 208F/255F,
+            blue = 64F/255F
         )
     }
 }

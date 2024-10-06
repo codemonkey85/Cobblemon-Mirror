@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.advancement.CobblemonCriteria
 import com.cobblemon.mod.common.advancement.predicate.CobblemonEntitySubPredicates
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.net.serializers.IdentifierDataSerializer
+import com.cobblemon.mod.common.api.net.serializers.NPCPlayerTextureSerializer
 import com.cobblemon.mod.common.api.net.serializers.PoseTypeDataSerializer
 import com.cobblemon.mod.common.api.net.serializers.StringSetDataSerializer
 import com.cobblemon.mod.common.api.net.serializers.UUIDSetDataSerializer
@@ -37,31 +38,31 @@ import com.cobblemon.mod.neoforge.net.CobblemonNeoForgeNetworkManager
 import com.cobblemon.mod.neoforge.permission.ForgePermissionValidator
 import com.cobblemon.mod.neoforge.worldgen.CobblemonBiomeModifiers
 import com.mojang.brigadier.arguments.ArgumentType
-import net.minecraft.commands.synchronization.ArgumentTypeInfo
-import net.minecraft.commands.synchronization.ArgumentTypeInfos
 import java.io.File
 import java.util.UUID
 import java.util.concurrent.ExecutionException
 import kotlin.reflect.KClass
+import net.minecraft.commands.synchronization.ArgumentTypeInfo
+import net.minecraft.commands.synchronization.ArgumentTypeInfos
 import net.minecraft.core.registries.Registries
-import net.minecraft.world.level.ItemLike
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
-import net.minecraft.tags.TagKey
-import net.minecraft.server.packs.PackType
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.PackLocationInfo
 import net.minecraft.server.packs.PackResources
 import net.minecraft.server.packs.PackSelectionConfig
+import net.minecraft.server.packs.PackType
 import net.minecraft.server.packs.PathPackResources
 import net.minecraft.server.packs.repository.Pack
 import net.minecraft.server.packs.repository.PackSource
 import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.server.packs.resources.ResourceManager
+import net.minecraft.tags.TagKey
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.level.GameRules
+import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.block.ComposterBlock
 import net.minecraft.world.level.levelgen.GenerationStep
@@ -73,9 +74,9 @@ import net.neoforged.fml.common.Mod
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLDedicatedServerSetupEvent
 import net.neoforged.fml.loading.FMLEnvironment
+import net.neoforged.neoforge.common.ItemAbilities
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.common.NeoForgeMod
-import net.neoforged.neoforge.common.ToolActions
 import net.neoforged.neoforge.event.AddPackFindersEvent
 import net.neoforged.neoforge.event.AddReloadListenerEvent
 import net.neoforged.neoforge.event.LootTableLoadEvent
@@ -242,6 +243,7 @@ class CobblemonNeoForge : CobblemonImplementation {
                 helper.register(PoseTypeDataSerializer.ID, PoseTypeDataSerializer)
                 helper.register(IdentifierDataSerializer.ID, IdentifierDataSerializer)
                 helper.register(UUIDSetDataSerializer.ID, UUIDSetDataSerializer)
+                helper.register(NPCPlayerTextureSerializer.ID, NPCPlayerTextureSerializer)
             }
         }
     }
@@ -263,7 +265,7 @@ class CobblemonNeoForge : CobblemonImplementation {
     }
 
     private fun handleBlockStripping(e: BlockEvent.BlockToolModificationEvent) {
-        if (e.toolAction == ToolActions.AXE_STRIP) {
+        if (e.itemAbility == ItemAbilities.AXE_STRIP) {
             val start = e.state.block
             val result = CobblemonBlocks.strippedBlocks()[start] ?: return
             e.setFinalState(result.withPropertiesOf(e.state))
@@ -316,6 +318,20 @@ class CobblemonNeoForge : CobblemonImplementation {
         MOD_BUS.addListener<RegisterEvent> { event ->
             event.register(CobblemonBlockEntities.resourceKey) { helper ->
                 CobblemonBlockEntities.register { identifier, type -> helper.register(identifier, type) }
+            }
+        }
+    }
+
+    override fun registerVillagers() {
+        MOD_BUS.addListener<RegisterEvent> { event ->
+            event.register(CobblemonVillagerPoiTypes.resourceKey) { helper ->
+                CobblemonVillagerPoiTypes.register { identifier, type -> helper.register(identifier, type) }
+            }
+        }
+
+        MOD_BUS.addListener<RegisterEvent> { event ->
+            event.register(CobblemonVillagerProfessions.resourceKey) { helper ->
+                CobblemonVillagerProfessions.register { identifier, profession -> helper.register(identifier, profession) }
             }
         }
     }

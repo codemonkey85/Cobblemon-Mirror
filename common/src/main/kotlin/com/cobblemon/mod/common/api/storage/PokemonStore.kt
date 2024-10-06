@@ -16,6 +16,7 @@ import com.cobblemon.mod.common.api.storage.factory.PokemonStoreFactory
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.google.gson.JsonObject
 import java.util.UUID
+import net.minecraft.core.RegistryAccess
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerPlayer
 
@@ -147,11 +148,11 @@ abstract class PokemonStore<T : StorePosition> : Iterable<Pokemon> {
     operator fun get(uuid: UUID) = find { it.uuid == uuid }
 
     open fun handleInvalidSpeciesNBT(nbt: CompoundTag) {}
-    abstract fun saveToNBT(nbt: CompoundTag): CompoundTag
-    abstract fun loadFromNBT(nbt: CompoundTag): PokemonStore<T>
+    abstract fun saveToNBT(nbt: CompoundTag, registryAccess: RegistryAccess): CompoundTag
+    abstract fun loadFromNBT(nbt: CompoundTag, registryAccess: RegistryAccess): PokemonStore<T>
     open fun handleInvalidSpeciesJSON(json: JsonObject) {}
-    abstract fun saveToJSON(json: JsonObject): JsonObject
-    abstract fun loadFromJSON(json: JsonObject): PokemonStore<T>
+    abstract fun saveToJSON(json: JsonObject, registryAccess: RegistryAccess): JsonObject
+    abstract fun loadFromJSON(json: JsonObject, registryAccess: RegistryAccess): PokemonStore<T>
     abstract fun savePositionToNBT(position: T, nbt: CompoundTag)
     abstract fun loadPositionFromNBT(nbt: CompoundTag): StoreCoordinates<T>
 

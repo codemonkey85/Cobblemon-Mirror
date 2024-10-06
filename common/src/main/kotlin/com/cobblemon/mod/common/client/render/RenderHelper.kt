@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render
 
 import com.cobblemon.mod.common.api.gui.drawText
+import com.cobblemon.mod.common.api.gui.drawTextJustifiedRight
 import com.cobblemon.mod.common.api.text.font
 import com.cobblemon.mod.common.client.CobblemonResources
 import com.mojang.blaze3d.platform.GlStateManager
@@ -118,7 +119,7 @@ fun drawScaledText(
 
     val textWidth = Minecraft.getInstance().font.width(if (font != null) text.font(font) else text)
     val extraScale = if (textWidth < maxCharacterWidth) 1F else (maxCharacterWidth / textWidth.toFloat())
-    val fontHeight = if (font == null) 5 else 6
+    val fontHeight = if (font == null) 5F else 6F
     val matrices = context.pose()
     matrices.pushPose()
     matrices.scale(scale * extraScale, scale * extraScale, 1F)
@@ -127,15 +128,15 @@ fun drawScaledText(
         font = font,
         text = text,
         x = x.toFloat() / (scale * extraScale),
-        y = y.toFloat() / (scale * extraScale) + (1 - extraScale) * fontHeight * scale,
+        y = y.toFloat() / (scale * extraScale) + (1F - extraScale) * fontHeight * scale,
         centered = centered,
         colour = colour,
         shadow = shadow,
         pMouseX = pMouseX?.toFloat()?.div((scale * extraScale)),
-        pMouseY = pMouseY?.toFloat()?.div(scale * extraScale)?.plus((1 - extraScale) * fontHeight * scale)
+        pMouseY = pMouseY?.toFloat()?.div(scale * extraScale)?.plus((1F - extraScale) * fontHeight * scale)
     )
     matrices.popPose()
-    // Draw tooltip that was created with onHover and is attached to the MutableText
+    // Draw tooltip that was created with onHover and is attached to the MutableComponent
     if (isHovered) {
         context.renderComponentHoverEffect(Minecraft.getInstance().font, text.style, pMouseX!!, pMouseY!!)
     }
@@ -165,6 +166,67 @@ fun drawScaledText(
         x = x.toFloat() / scaleX,
         y = y.toFloat() / scaleY,
         centered = centered,
+        colour = colour,
+        shadow = shadow
+    )
+    matrixStack.popPose()
+}
+
+fun drawScaledTextJustifiedRight(
+    context: GuiGraphics,
+    font: ResourceLocation? = null,
+    text: MutableComponent,
+    x: Number,
+    y: Number,
+    scale: Float = 1F,
+    opacity: Number = 1F,
+    maxCharacterWidth: Int = Int.MAX_VALUE,
+    colour: Int = 0x00FFFFFF + ((opacity.toFloat() * 255).toInt() shl 24),
+    shadow: Boolean = false
+) {
+    if (opacity.toFloat() < 0.05F) {
+        return
+    }
+    val textWidth = Minecraft.getInstance().font.width(if (font != null) text.font(font) else text)
+    val extraScale = if (textWidth < maxCharacterWidth) 1F else (maxCharacterWidth / textWidth.toFloat())
+    val fontHeight = if (font == null) 5F else 6F
+    val matrixStack = context.pose()
+    matrixStack.pushPose()
+    matrixStack.scale(scale * extraScale, scale * extraScale, 1F)
+    drawTextJustifiedRight(
+        context = context,
+        font = font,
+        text = text,
+        x = x.toFloat() / (scale * extraScale),
+        y = y.toFloat() / (scale * extraScale) + (1F - extraScale) * fontHeight * scale,
+        colour = colour,
+        shadow = shadow
+    )
+    matrixStack.popPose()
+}
+
+fun drawScaledTextJustifiedRight(
+    context: GuiGraphics,
+    text: MutableComponent,
+    x: Number,
+    y: Number,
+    scaleX: Float = 1F,
+    scaleY: Float = 1F,
+    opacity: Number = 1F,
+    colour: Int = 0x00FFFFFF + ((opacity.toFloat() * 255).toInt() shl 24),
+    shadow: Boolean = false
+) {
+    if (opacity.toFloat() < 0.05F) {
+        return
+    }
+    val matrixStack = context.pose()
+    matrixStack.pushPose()
+    matrixStack.scale(scaleX, scaleY, 1F)
+    drawTextJustifiedRight(
+        context = context,
+        text = text,
+        x = x.toFloat() / scaleX,
+        y = y.toFloat() / scaleY,
         colour = colour,
         shadow = shadow
     )

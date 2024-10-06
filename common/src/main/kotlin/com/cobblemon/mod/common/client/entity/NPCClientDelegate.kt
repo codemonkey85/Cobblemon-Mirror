@@ -9,11 +9,17 @@
 package com.cobblemon.mod.common.client.entity
 
 import com.bedrockk.molang.runtime.struct.QueryStruct
+import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.entity.NPCSideDelegate
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunctions
 import com.cobblemon.mod.common.client.ClientMoLangFunctions
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.entity.npc.NPCEntity
+import com.cobblemon.mod.common.entity.npc.NPCPlayerModelType
+import com.cobblemon.mod.common.util.cobblemonResource
+import com.mojang.blaze3d.platform.NativeImage
+import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.texture.DynamicTexture
 import net.minecraft.network.syncher.EntityDataAccessor
 
 class NPCClientDelegate : PosableState(), NPCSideDelegate {
@@ -34,6 +40,13 @@ class NPCClientDelegate : PosableState(), NPCSideDelegate {
         super.onSyncedDataUpdated(data)
         if (data == NPCEntity.ASPECTS) {
             currentAspects = getEntity().entityData.get(NPCEntity.ASPECTS)
+        } else if (data == NPCEntity.NPC_PLAYER_TEXTURE) {
+            val currentTexture = getEntity().entityData.get(NPCEntity.NPC_PLAYER_TEXTURE)
+            val textureResource = cobblemonResource(npcEntity.uuid.toString())
+            if (currentTexture.model != NPCPlayerModelType.NONE) {
+                Minecraft.getInstance().textureManager.register(textureResource, DynamicTexture(NativeImage.read(currentTexture.texture)))
+                runtime.environment.setSimpleVariable("texture", StringValue(textureResource.toString()))
+            }
         }
     }
 

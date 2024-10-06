@@ -130,7 +130,6 @@ object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
         inbuilt("kabutops", ::KabutopsModel)
         inbuilt("kadabra", ::KadabraModel)
         inbuilt("kangaskhan", ::KangaskhanModel)
-        inbuilt("kingler", ::KinglerModel)
         inbuilt("koffing", ::KoffingModel)
         inbuilt("krabby", ::KrabbyModel)
         inbuilt("lickitung", ::LickitungModel)

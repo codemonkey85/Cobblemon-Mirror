@@ -171,7 +171,12 @@ class PartySelectGUI(
     }
 
     override fun shouldCloseOnEsc() = true
+
     override fun isPauseScreen() = false
+
+    override fun renderBlurredBackground(delta: Float) {}
+
+    override fun renderMenuBackground(context: GuiGraphics) {}
 
     fun playSound(soundEvent: SoundEvent) {
         Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))

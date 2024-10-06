@@ -10,6 +10,7 @@ package com.cobblemon.mod.common
 
 import com.cobblemon.mod.common.api.apricorn.Apricorn
 import com.cobblemon.mod.common.block.*
+import com.cobblemon.mod.common.block.LecternBlock
 import com.cobblemon.mod.common.block.MintBlock.MintType
 import com.cobblemon.mod.common.block.chest.GildedChestBlock
 import com.cobblemon.mod.common.block.sign.CobblemonHangingSignBlock
@@ -263,6 +264,27 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
         )
     )
     @JvmField
+    val SMOOTH_TUMBLESTONE = this.create("smooth_tumblestone",
+        Block(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.TERRACOTTA_ORANGE)
+                .strength(1.0F)
+                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+                .requiresCorrectToolForDrops()
+                .instrument(NoteBlockInstrument.BASEDRUM)
+        )
+    )
+    @JvmField
+    val SMOOTH_TUMBLESTONE_STAIRS = this.create("smooth_tumblestone_stairs", StairsBlockInvoker.`cobblemon$create`(SMOOTH_TUMBLESTONE.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(SMOOTH_TUMBLESTONE)))
+    @JvmField
+    val SMOOTH_TUMBLESTONE_SLAB = this.create("smooth_tumblestone_slab", SlabBlock(BlockBehaviour.Properties.of()
+        .mapColor(MapColor.TERRACOTTA_ORANGE)
+        .strength(1.0F)
+        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+        .requiresCorrectToolForDrops()
+        .instrument(NoteBlockInstrument.BASEDRUM)
+    ))
+    @JvmField
     val TUMBLESTONE_BRICKS = this.create("tumblestone_bricks", Block(
         BlockBehaviour.Properties.of()
             .mapColor(MapColor.TERRACOTTA_ORANGE)
@@ -270,8 +292,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
             .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
             .requiresCorrectToolForDrops()
             .instrument(NoteBlockInstrument.BASEDRUM)
-    )
-    )
+    ))
     @JvmField
     val TUMBLESTONE_BRICK_STAIRS = this.create("tumblestone_brick_stairs", StairsBlockInvoker.`cobblemon$create`(TUMBLESTONE_BRICKS.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(TUMBLESTONE_BRICKS)))
     @JvmField
@@ -341,6 +362,27 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
                 .instrument(NoteBlockInstrument.BASEDRUM)
         )
     )
+    @JvmField
+    val SMOOTH_SKY_TUMBLESTONE = this.create("smooth_sky_tumblestone",
+        Block(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.COLOR_LIGHT_BLUE)
+                .strength(1.0F)
+                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+                .requiresCorrectToolForDrops()
+                .instrument(NoteBlockInstrument.BASEDRUM)
+        )
+    )
+    @JvmField
+    val SMOOTH_SKY_TUMBLESTONE_STAIRS = this.create("smooth_sky_tumblestone_stairs", StairsBlockInvoker.`cobblemon$create`(SMOOTH_SKY_TUMBLESTONE.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(SMOOTH_SKY_TUMBLESTONE)))
+    @JvmField
+    val SMOOTH_SKY_TUMBLESTONE_SLAB = this.create("smooth_sky_tumblestone_slab", SlabBlock(BlockBehaviour.Properties.of()
+        .mapColor(MapColor.COLOR_LIGHT_BLUE)
+        .strength(1.0F)
+        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+        .requiresCorrectToolForDrops()
+        .instrument(NoteBlockInstrument.BASEDRUM)
+    ))
     @JvmField
     val SKY_TUMBLESTONE_BRICKS = this.create("sky_tumblestone_bricks",
         Block(
@@ -422,6 +464,28 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
                 .instrument(NoteBlockInstrument.BASEDRUM)
         )
     )
+
+    @JvmField
+    val SMOOTH_BLACK_TUMBLESTONE = this.create("smooth_black_tumblestone",
+        Block(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.TERRACOTTA_BLACK)
+                .strength(1.0F)
+                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+                .requiresCorrectToolForDrops()
+                .instrument(NoteBlockInstrument.BASEDRUM)
+        )
+    )
+    @JvmField
+    val SMOOTH_BLACK_TUMBLESTONE_STAIRS = this.create("smooth_black_tumblestone_stairs", StairsBlockInvoker.`cobblemon$create`(SMOOTH_BLACK_TUMBLESTONE.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(SMOOTH_BLACK_TUMBLESTONE)))
+    @JvmField
+    val SMOOTH_BLACK_TUMBLESTONE_SLAB = this.create("smooth_black_tumblestone_slab", SlabBlock(BlockBehaviour.Properties.of()
+        .mapColor(MapColor.TERRACOTTA_BLACK)
+        .strength(1.0F)
+        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
+        .requiresCorrectToolForDrops()
+        .instrument(NoteBlockInstrument.BASEDRUM)
+    ))
     @JvmField
     val BLACK_TUMBLESTONE_BRICKS = this.create("black_tumblestone_bricks",
         Block(
@@ -464,6 +528,117 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
         )
     )
 
+        @JvmField
+    val FIRE_STONE_BLOCK = this.create("fire_stone_block",
+        Block(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.FIRE)
+                .strength(1.0F)
+                .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
+                .requiresCorrectToolForDrops()
+                .instrument(NoteBlockInstrument.BIT)
+        )
+    )
+    @JvmField
+    val WATER_STONE_BLOCK = this.create("water_stone_block",
+        Block(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.WATER)
+                .strength(1.0F)
+                .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
+                .requiresCorrectToolForDrops()
+                .instrument(NoteBlockInstrument.BIT)
+        )
+    )
+    @JvmField
+    val THUNDER_STONE_BLOCK = this.create("thunder_stone_block",
+        Block(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.GLOW_LICHEN)
+                .strength(1.0F)
+                .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
+                .requiresCorrectToolForDrops()
+                .instrument(NoteBlockInstrument.BIT)
+        )
+    )
+    @JvmField
+    val LEAF_STONE_BLOCK = this.create("leaf_stone_block",
+        Block(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.COLOR_GREEN)
+                .strength(1.0F)
+                .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
+                .requiresCorrectToolForDrops()
+                .instrument(NoteBlockInstrument.BIT)
+        )
+    )
+    @JvmField
+    val ICE_STONE_BLOCK = this.create("ice_stone_block",
+        Block(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.ICE)
+                .strength(1.0F)
+                .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
+                .requiresCorrectToolForDrops()
+                .instrument(NoteBlockInstrument.BIT)
+        )
+    )
+    @JvmField
+    val SUN_STONE_BLOCK = this.create("sun_stone_block",
+        Block(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.TERRACOTTA_ORANGE)
+                .strength(1.0F)
+                .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
+                .requiresCorrectToolForDrops()
+                .instrument(NoteBlockInstrument.BIT)
+        )
+    )
+    @JvmField
+    val MOON_STONE_BLOCK = this.create("moon_stone_block",
+        Block(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.DEEPSLATE)
+                .strength(1.0F)
+                .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
+                .requiresCorrectToolForDrops()
+                .instrument(NoteBlockInstrument.BIT)
+        )
+    )
+    @JvmField
+    val SHINY_STONE_BLOCK = this.create("shiny_stone_block",
+        Block(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.QUARTZ)
+                .strength(1.0F)
+                .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
+                .requiresCorrectToolForDrops()
+                .instrument(NoteBlockInstrument.BIT)
+        )
+    )
+    @JvmField
+    val DAWN_STONE_BLOCK = this.create("dawn_stone_block",
+        Block(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.DIAMOND)
+                .strength(1.0F)
+                .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
+                .requiresCorrectToolForDrops()
+                .instrument(NoteBlockInstrument.BIT)
+        )
+    )
+    @JvmField
+    val DUSK_STONE_BLOCK = this.create("dusk_stone_block",
+        Block(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.WARPED_HYPHAE)
+                .strength(1.0F)
+                .sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS)
+                .requiresCorrectToolForDrops()
+                .instrument(NoteBlockInstrument.BIT)
+        )
+    )
+
     @JvmField
     val BLACK_APRICORN = apricornBlock("black_apricorn", Apricorn.BLACK)
     @JvmField
@@ -486,7 +661,6 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
             BlockBehaviour.Properties.of()
                 .sound(CobblemonSounds.RELIC_COIN_POUCH_SOUNDS)
                 .pushReaction(PushReaction.DESTROY)
-                .strength(0.4f)
                 .noOcclusion(), true
         )
     )
@@ -639,6 +813,19 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     )
 
     @JvmField
+    val LECTERN = create(
+        "lectern",
+        LecternBlock(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.WOOD)
+                .instrument(NoteBlockInstrument.BASS)
+                .sound(SoundType.WOOD)
+                .strength(2.5F)
+                .ignitedByLava()
+        )
+    )
+
+    @JvmField
     val DISPLAY_CASE = create(
         "display_case",
         DisplayCaseBlock(
@@ -647,7 +834,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
                 .noOcclusion()
                 .pushReaction(PushReaction.BLOCK)
                 .mapColor(MapColor.STONE)
-                .strength(0.3f)
+                .strength(0.3F)
         )
     )
 

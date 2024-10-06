@@ -76,6 +76,8 @@ class PartySlotWidget(
         val slotPokemon = if (isDraggedSlot) null else pokemon
         val isSelected = this.isClientPartyMember && this.summary.selectedPokemon.uuid == slotPokemon?.uuid
 
+        state.currentAspects = slotPokemon?.aspects ?: emptySet()
+
         blitk(
             matrixStack = matrices,
             texture = getSlotTexture(slotPokemon),
@@ -129,7 +131,7 @@ class PartySlotWidget(
                 )
             }
 
-            val hpRatio = slotPokemon.currentHealth / slotPokemon.hp.toFloat()
+            val hpRatio = slotPokemon.currentHealth / slotPokemon.maxHealth.toFloat()
             val barWidthMax = 37
             val barWidth = hpRatio * barWidthMax
             val (red, green) = getDepletableRedGreen(hpRatio)
@@ -154,7 +156,6 @@ class PartySlotWidget(
             matrices.scale(2.5F, 2.5F, 1F)
             drawProfilePokemon(
                 species = slotPokemon.species.resourceIdentifier,
-                aspects = slotPokemon.aspects.toSet(),
                 matrixStack = matrices,
                 rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),
                 state = state,
@@ -207,8 +208,8 @@ class PartySlotWidget(
         }
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        if (isValidClick(mouseX, mouseY, button)) {
+    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+        if (isValidClick(pMouseX, pMouseY, pButton)) {
             if (partyWidget.swapEnabled) {
                 toggleDrag(true)
             } else {
@@ -219,7 +220,7 @@ class PartySlotWidget(
                 }
             }
         }
-        return super.mouseClicked(mouseX, mouseY, button)
+        return super.mouseClicked(pMouseX, pMouseY, pButton)
     }
 
     override fun mouseReleased(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {

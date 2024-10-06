@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 
 /**
@@ -35,6 +36,7 @@ import net.minecraft.world.level.Level
 class PortionHealingBerryItem(block: BerryBlock, val canCauseConfusion: Boolean, val portion: () -> ExpressionLike): BerryItem(block), PokemonSelectingItem {
     override val bagItem = object : BagItem {
         override val itemName: String get() = "item.cobblemon.${this@PortionHealingBerryItem.berry()!!.identifier.path}"
+        override val returnItem = Items.AIR
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?): String {
             val confuse = if (canCauseConfusion) berry()!!.dislikedBy(battlePokemon.nature) else false
             return "potion_by_portion ${genericRuntime.resolveFloat(portion(), battlePokemon)} $confuse"
@@ -52,7 +54,7 @@ class PortionHealingBerryItem(block: BerryBlock, val canCauseConfusion: Boolean,
             return InteractionResultHolder.fail(stack)
         }
 
-        pokemon.currentHealth = Integer.min(pokemon.currentHealth + (genericRuntime.resolveFloat(portion(), pokemon) * pokemon.hp).toInt(), pokemon.hp)
+        pokemon.currentHealth = Integer.min(pokemon.currentHealth + (genericRuntime.resolveFloat(portion(), pokemon) * pokemon.maxHealth).toInt(), pokemon.maxHealth)
         player.playSound(CobblemonSounds.BERRY_EAT, 1F, 1F)
         if (!player.isCreative) {
             stack.shrink(1)

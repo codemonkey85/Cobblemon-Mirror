@@ -9,8 +9,8 @@
 package com.cobblemon.mod.common.client.net.battle
 
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
-import com.cobblemon.mod.common.client.sound.battle.BattleMusicController
-import com.cobblemon.mod.common.client.sound.battle.BattleMusicInstance
+import com.cobblemon.mod.common.client.sound.BattleMusicController
+import com.cobblemon.mod.common.client.sound.instances.BattleMusicInstance
 import com.cobblemon.mod.common.net.messages.client.battle.BattleMusicPacket
 import net.minecraft.client.Minecraft
 

@@ -1,0 +1,34 @@
+{
+  "parent": "cobblemon:recipes/root",
+  "rewards": {
+    "recipes": [
+      "cobblemon:dawn_stone_block"
+    ]
+  },
+  "criteria": {
+    "has_dawn_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:dawn_stone"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "cobblemon:dawn_stone_block"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_dawn_stone",
+      "has_the_recipe"
+    ]
+  ]
+}
