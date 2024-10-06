@@ -98,7 +98,7 @@ class AggregatePokedexDef(
         ) { id, sortOrder, entries ->
             val result = AggregatePokedexDef(id)
             result.sortOrder = sortOrder
-            //result.subDexIds.addAll(entries)
+            result.subDexIds.addAll(entries)
             result
         }
     }
