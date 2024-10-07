@@ -96,7 +96,7 @@
   },
   "item.pokedex.scan_loop": {
     "sounds": [
-      { "name": "cobblemon:item/pokedex/pokedex_scan_loop", "volume": 0.3 }]
+      { "name": "cobblemon:item/pokedex/pokedex_scan_loop", "volume": 0.1 }]
   },
   "item.pokedex.scan_detail": {
     "sounds": [
@@ -111,7 +111,7 @@
       { "name": "cobblemon:item/pokedex/pokedex_scan_register_aspect", "volume": 0.9 }]
   },
   "item.pokedex.scan_zoom_increment": {
-    "sounds": [ "cobblemon:item/pokedex/pokedex_scan_zoom_increment" ]
+    "sounds": [ { "name": "cobblemon:item/pokedex/pokedex_scan_zoom_increment", "volume": 0.6 } ]
   },
   "evolution.notification": {
     "sounds": [ { "name": "cobblemon:evolution/evolution_notification", "volume": 0.7 } ]
