@@ -11,16 +11,19 @@ package com.cobblemon.mod.common.util.codec.internal
 import com.cobblemon.mod.common.pokemon.OriginalTrainerType
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.DataKeys
+import com.cobblemon.mod.common.util.codec.optionalFieldOfWithDefault
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import java.util.*
+import net.minecraft.world.item.ItemStack
 
 internal data class ClientPokemonP3(
     val originalTrainerType: OriginalTrainerType,
     val originalTrainer: Optional<String>,
     val originalTrainerName: Optional<String>,
-    val aspects: Set<String>
+    val aspects: Set<String>,
+    val cosmeticItem: Optional<ItemStack>
 ) : Partial<Pokemon> {
 
     override fun into(other: Pokemon): Pokemon {
@@ -28,6 +31,7 @@ internal data class ClientPokemonP3(
         this.originalTrainer.ifPresent { other.originalTrainer = it }
         this.originalTrainerName.ifPresent { other.originalTrainerName = it }
         other.forcedAspects = this.aspects
+        other.cosmeticItem = this.cosmeticItem.orElse(ItemStack.EMPTY)
         return other
     }
 
@@ -38,6 +42,7 @@ internal data class ClientPokemonP3(
                 Codec.STRING.optionalFieldOf(DataKeys.POKEMON_ORIGINAL_TRAINER).forGetter(ClientPokemonP3::originalTrainer),
                 Codec.STRING.optionalFieldOf(DataKeys.POKEMON_ORIGINAL_TRAINER).forGetter(ClientPokemonP3::originalTrainerName),
                 Codec.list(Codec.STRING).optionalFieldOf(DataKeys.POKEMON_FORCED_ASPECTS, emptyList()).xmap({ it.toSet() }, { it.toMutableList() }).forGetter(ClientPokemonP3::aspects),
+                ItemStack.CODEC.optionalFieldOf(DataKeys.POKEMON_COSMETIC_ITEM).forGetter(ClientPokemonP3::cosmeticItem)
             ).apply(instance, ::ClientPokemonP3)
         }
 
@@ -45,7 +50,8 @@ internal data class ClientPokemonP3(
             pokemon.originalTrainerType,
             Optional.ofNullable(pokemon.originalTrainer),
             Optional.ofNullable(pokemon.originalTrainerName),
-            pokemon.aspects + pokemon.forcedAspects
+            pokemon.aspects + pokemon.forcedAspects,
+            Optional.ofNullable(pokemon.cosmeticItem.takeIf { !it.isEmpty })
         )
     }
 

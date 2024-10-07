@@ -20,12 +20,12 @@ import java.lang.reflect.Type
 
 /**
  * An adapter that can deserialize a string field that is either an [ResourceLocation] or a [TagKey]
- * for the registry specified by the [ResourceKey] parameter.
+ * for the registry specified by the [resourceKey] parameter.
  *
  * @author Hiroku
  * @since May 7th, 2023
  */
-class EitherIdentifierOrTagAdapter<E, T : Registry<E>>(val ResourceKey: ResourceKey<T>) : JsonDeserializer<Either<ResourceLocation, TagKey<E>>> {
+class EitherIdentifierOrTagAdapter<E, T : Registry<E>>(val resourceKey: ResourceKey<T>) : JsonDeserializer<Either<ResourceLocation, TagKey<E>>> {
     override fun deserialize(
         element: JsonElement,
         type: Type,
@@ -33,7 +33,7 @@ class EitherIdentifierOrTagAdapter<E, T : Registry<E>>(val ResourceKey: Resource
     ): Either<ResourceLocation, TagKey<E>> {
         val string = element.asString
         return if (string.startsWith("#")) {
-            Either.right(TagKey.create(ResourceKey, ResourceLocation.parse(string.substring(1))))
+            Either.right(TagKey.create(resourceKey, ResourceLocation.parse(string.substring(1))))
         } else {
             Either.left(ResourceLocation.parse(string))
         }

@@ -379,8 +379,7 @@ fun Player.giveOrDropItemStack(stack: ItemStack, playSound: Boolean = true) {
             this.level().playSound(null, this.x, this.y, this.z, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2f, ((this.random.nextFloat() - this.random.nextFloat()) * 0.7f + 1.0f) * 2.0f)
         }
         this.containerMenu.broadcastChanges()
-    }
-    else {
+    } else {
         this.drop(stack, false)?.let { itemEntity ->
             itemEntity.setNoPickUpDelay()
             itemEntity.setTarget(this.uuid)

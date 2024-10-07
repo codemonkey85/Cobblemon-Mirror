@@ -436,6 +436,12 @@ open class Pokemon : ShowdownIdentifiable {
     var caughtBall: PokeBall = PokeBalls.POKE_BALL
         set(value) { field = value ; _caughtBall.emit(caughtBall) }
     var features = mutableListOf<SpeciesFeature>()
+    var cosmeticItem = ItemStack.EMPTY
+        set(value) {
+            field = value
+            updateAspects()
+            _cosmeticItem.emit(value)
+        }
 
     fun asRenderablePokemon() = RenderablePokemon(species, aspects)
 
@@ -964,6 +970,7 @@ open class Pokemon : ShowdownIdentifiable {
         this.originalTrainerType = other.originalTrainerType
         this.originalTrainer = other.originalTrainer
         this.forcedAspects = other.forcedAspects
+        this.cosmeticItem = other.cosmeticItem
         this.refreshOriginalTrainer()
         this.initialize()
         return this
@@ -1553,6 +1560,7 @@ open class Pokemon : ShowdownIdentifiable {
     private val _state = registerObservable(SimpleObservable<PokemonState>()) { PokemonStateUpdatePacket({ this }, it) }
     private val _status = registerObservable(SimpleObservable<PersistentStatus?>()) { StatusUpdatePacket({ this }, it) }
     private val _caughtBall = registerObservable(SimpleObservable<PokeBall>()) { CaughtBallUpdatePacket({ this }, it) }
+    private val _cosmeticItem = registerObservable(SimpleObservable<ItemStack>()) { CosmeticItemUpdatePacket({ this }, it) }
     private val _benchedMoves = registerObservable(benchedMoves.observable) { BenchedMovesUpdatePacket({ this }, it) }
     private val _ivs = registerObservable(ivs.observable) { IVsUpdatePacket({ this }, it as IVs) }
     private val _evs = registerObservable(evs.observable) { EVsUpdatePacket({ this }, it as EVs) }

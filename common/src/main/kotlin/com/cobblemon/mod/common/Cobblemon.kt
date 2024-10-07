@@ -85,6 +85,7 @@ import com.cobblemon.mod.common.net.messages.client.settings.ServerSettingsPacke
 import com.cobblemon.mod.common.permission.LaxPermissionValidator
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.pokemon.aspects.COSMETIC_SLOT_ASPECT
 import com.cobblemon.mod.common.pokemon.aspects.GENDER_ASPECT
 import com.cobblemon.mod.common.pokemon.aspects.SHINY_ASPECT
 import com.cobblemon.mod.common.pokemon.evolution.variants.BlockClickEvolution
@@ -259,6 +260,7 @@ object Cobblemon {
 
         SHINY_ASPECT.register()
         GENDER_ASPECT.register()
+        COSMETIC_SLOT_ASPECT.register()
 
         SpeciesFeatures.types["choice"] = ChoiceSpeciesFeatureProvider::class.java
         SpeciesFeatures.types["flag"] = FlagSpeciesFeatureProvider::class.java
