@@ -1211,6 +1211,11 @@ open class PokemonEntity(
             super.travel(movementInput)
             this.updateBlocksTraveled(prevBlockPos)
         }
+        if (isBattling && this.isInWater) {
+            // Prevent swimmers from sinking in battle
+            // TODO: check for pokemon that can swim?
+            this.deltaMovement = Vec3(deltaMovement.x, 0.0, deltaMovement.z)
+        }
     }
 
     private fun updateBlocksTraveled(fromBp: BlockPos) {

@@ -189,7 +189,7 @@ class PokemonMoveControl(val pokemonEntity: PokemonEntity) : MoveControl(pokemon
             }
 
             // Float
-            if (mob.isEyeInFluid(FluidTags.WATER) && behaviour.moving.swim.canSwimInWater) {
+            if (mob.isEyeInFluid(FluidTags.WATER) && behaviour.moving.swim.canSwimInWater && !this.pokemonEntity.isBattling) {
                 pokemonEntity.yya = 0.2F
             }
         }
