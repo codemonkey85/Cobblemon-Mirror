@@ -171,7 +171,14 @@ class RestorationTankBlock(settings: Properties) : MultiblockBlock(settings), Wo
     }
 
     override fun onRemove(state: BlockState, world: Level, pos: BlockPos, newState: BlockState, moved: Boolean) {
-        if (!state.`is`(newState.block)) super.onRemove(state, world, pos, newState, moved)
+        if (state.block != newState.block) {
+            super.onRemove(state, world, pos, newState, moved)
+            val otherPart = world.getBlockState(getPositionOfOtherPart(state, pos))
+
+            if (otherPart.block is RestorationTankBlock) {
+                world.setBlock(getPositionOfOtherPart(state, pos), Blocks.AIR.defaultBlockState(), UPDATE_CLIENTS)
+            }
+        }
     }
 
     @Deprecated("Deprecated in Java")

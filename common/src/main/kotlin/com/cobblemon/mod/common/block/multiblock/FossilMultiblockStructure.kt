@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.block.multiblock
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.advancement.CobblemonCriteria
 import com.cobblemon.mod.common.api.events.CobblemonEvents
@@ -328,9 +329,9 @@ class FossilMultiblockStructure (
         val analyzerEntity = world.getBlockEntity(analyzerPos) as? MultiblockEntity
         val tankBaseEntity = world.getBlockEntity(tankBasePos) as? MultiblockEntity
         val tankTopEntity = world.getBlockEntity(tankBasePos.above()) as? MultiblockEntity
-        val tankBaseBlockState = world.getBlockState(tankBaseEntity?.blockPos)
-        val direction = tankBaseBlockState.getValue(HorizontalDirectionalBlock.FACING).opposite
-        val wildPokemon: Pokemon? = if(hasCreatedPokemon) resultingFossil?.result?.create() else null
+        val tankBaseBlockState =  tankBaseEntity?.blockPos?.let { world.getBlockState(it) }
+        val direction = if (tankBaseBlockState?.block == CobblemonBlocks.RESTORATION_TANK) tankBaseBlockState.getValue(HorizontalDirectionalBlock.FACING).opposite else null
+        val wildPokemon: Pokemon? = if (hasCreatedPokemon) resultingFossil?.result?.create() else null
 
         monitorEntity?.multiblockStructure = null
         analyzerEntity?.multiblockStructure = null
@@ -363,7 +364,7 @@ class FossilMultiblockStructure (
             //var wildPokemon = this.createdPokemon?.sendOut(world as ServerWorld, pos.toVec3d())
 
             //world.spawnEntity(wildPokemon)
-            this.spawn(world, pos, direction, wildPokemon)
+            this.spawn(world, pos, direction ?: Direction.UP, wildPokemon)
 
         }
         this.protectionTime = -1
