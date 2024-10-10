@@ -918,6 +918,7 @@ open class Pokemon : ShowdownIdentifiable {
         val encoded = CODEC.encodeStart(NbtOps.INSTANCE, this).orThrow
         if (newUUID) {
             NbtOps.INSTANCE.set(encoded, DataKeys.POKEMON_UUID, StringTag.valueOf(UUID.randomUUID().toString()))
+            NbtOps.INSTANCE.remove(encoded, DataKeys.TETHERING_ID)
         }
         val result = CODEC.decode(NbtOps.INSTANCE, encoded).orThrow.first
         result.isClient = this.isClient
