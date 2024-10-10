@@ -104,18 +104,7 @@ class BedrockSoundKeyframe(
         val soundEvent = SoundEvent.createVariableRangeEvent(sound) // Means we don't need to setup a sound registry entry for every single thing
         if (soundEvent != null) {
             if (entity != null) {
-                Minecraft.getInstance().soundManager.play(
-                    SimpleSoundInstance(
-                        soundEvent,
-                        SoundSource.NEUTRAL,
-                        1F,
-                        1F,
-                        entity.level().random,
-                        entity.x,
-                        entity.y,
-                        entity.z
-                    )
-                )
+                entity.playSound(soundEvent, 1F, 1F)
             } else {
                 Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1F))
             }
