@@ -29,9 +29,7 @@ import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.phys.Vec3
 import java.util.*
 
@@ -104,7 +102,7 @@ class BedrockSoundKeyframe(
         val soundEvent = SoundEvent.createVariableRangeEvent(sound) // Means we don't need to setup a sound registry entry for every single thing
         if (soundEvent != null) {
             if (entity != null) {
-                entity.playSound(soundEvent, 1F, 1F)
+                entity.level().playLocalSound(entity, soundEvent, entity.soundSource, 1F, 1F)
             } else {
                 Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1F))
             }
