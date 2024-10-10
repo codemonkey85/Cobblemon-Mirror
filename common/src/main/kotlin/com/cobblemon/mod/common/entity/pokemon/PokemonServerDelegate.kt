@@ -103,6 +103,8 @@ class PokemonServerDelegate : PokemonSideDelegate {
         val trackedNickname =  mock?.nickname ?: entity.pokemon.nickname ?: Component.empty()
         val trackedAspects = mock?.aspects ?: entity.pokemon.aspects
 
+        //used getOwnerPlayer().uuid instead of getOwnerUUID() to avoid a potential NPE
+        entity.ownerUUID = entity.pokemon.getOwnerPlayer()?.uuid
         entity.entityData.set(PokemonEntity.SPECIES, trackedSpecies)
         if (entity.entityData.get(PokemonEntity.NICKNAME) != trackedNickname) {
             entity.entityData.set(PokemonEntity.NICKNAME, trackedNickname)

@@ -51,11 +51,17 @@
   "poke_ball.open": {
     "sounds": [ "cobblemon:pokeball/open" ]
   },
+  "poke_ball.shiny_open": {
+    "sounds": [ "cobblemon:pokeball/shiny_open" ]
+  },
   "poke_ball.recall": {
     "sounds": [ "cobblemon:pokeball/recall" ]
   },
   "poke_ball.send_out": {
     "sounds": [ "cobblemon:pokeball/send_out" ]
+  },
+  "poke_ball.shiny_send_out": {
+    "sounds": [ "cobblemon:pokeball/sendout_shiny" ]
   },
   "poke_ball.hit": {
     "sounds": [ "cobblemon:pokeball/hit" ]
@@ -820,6 +826,35 @@
         { "name": "cobblemon:attacks/powder_attacks/spore_mushroom_3", "volume": 0.1 },
         { "name": "cobblemon:attacks/powder_attacks/spore_mushroom_4", "volume": 0.1 }
       ]
+  },
+  "particle.shiny_shine": {
+    "subtitle": "cobblemon.subtitle.pokemon.shiny_shine",
+    "sounds": [
+      { "name": "cobblemon:shiny/shiny_appear_chime", "volume": 0.6 }
+    ]
+  },
+  "particle.wild_shiny_shine": {
+    "subtitle": "cobblemon.subtitle.pokemon.wild_shiny_shine",
+    "sounds": [
+      { "name": "cobblemon:shiny/wild_shiny_appear_chime", "volume": 2.0 }
+    ]
+  },
+  "particle.shiny_ambient": {
+    "sounds": [
+      { "name": "cobblemon:shiny/shiny_ambient_chime_1", "volume": 0.05 },
+      { "name": "cobblemon:shiny/shiny_ambient_chime_2", "volume": 0.05 },
+      { "name": "cobblemon:shiny/shiny_ambient_chime_3", "volume": 0.05 },
+      { "name": "cobblemon:shiny/shiny_ambient_chime_4", "volume": 0.05 }
+    ]
+  },
+  "particle.shiny_ambient_wild": {
+    "subtitle": "cobblemon.subtitle.pokemon.shiny_ambient",
+    "sounds": [
+      { "name": "cobblemon:shiny/wild_shiny_ambient_chime_1", "volume": 1.5 },
+      { "name": "cobblemon:shiny/wild_shiny_ambient_chime_2", "volume": 1.5 },
+      { "name": "cobblemon:shiny/wild_shiny_ambient_chime_3", "volume": 1.5 },
+      { "name": "cobblemon:shiny/wild_shiny_ambient_chime_4", "volume": 1.5 }
+    ]
   },
   "pokemon.bulbasaur.ambient": {
     "sounds": [ "cobblemon:pokemon/bulbasaur/bulbasaur_ambient" ]
