@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.berry
 
 import com.cobblemon.mod.common.api.berry.GrowthFactor
+import com.cobblemon.mod.common.mixin.accessor.BiomeAccessor
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.advancements.critereon.MinMaxBounds
 import net.minecraft.core.BlockPos
@@ -36,7 +37,7 @@ class BiomeDownfallGrowthFactor(
     }
 
     override fun isValid(world: LevelReader, state: BlockState, pos: BlockPos): Boolean {
-        val biome = world.getBiome(pos).value()
+        val biome = world.getBiome(pos).value() as BiomeAccessor
         return this.range.matches(biome.climateSettings.downfall.toDouble())
     }
 
