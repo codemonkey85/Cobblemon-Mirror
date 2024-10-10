@@ -41,8 +41,10 @@ import com.cobblemon.mod.common.client.tooltips.TooltipManager
 import com.cobblemon.mod.common.client.trade.ClientTrade
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatType
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext
+import com.cobblemon.mod.common.util.isLookingAt
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
@@ -58,6 +60,7 @@ import net.minecraft.client.resources.PlayerSkin
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.phys.AABB
 
 object CobblemonClient {
 
@@ -143,6 +146,14 @@ object CobblemonClient {
                 ) {
                     // Stop using Pokédex in main hand if player switches to a different slot in hotbar
                     pokedexUsageContext.stopUsing(player, PokedexUsageContext.OPEN_SCANNER_BUFFER_TICKS + 1)
+                }
+                if(event.client.isPaused) {
+                    return@subscribe
+                }
+                val nearbyShinies = player?.level()?.getEntities(player, AABB.ofSize(player.position(), 16.0, 16.0, 16.0)) { (it is PokemonEntity) && it.pokemon.shiny }
+                nearbyShinies?.firstOrNull { player.isLookingAt(it) }.let {
+                    if(it is PokemonEntity)
+                        it.delegate.spawnShinyParticle(player!!)
                 }
             }
         }

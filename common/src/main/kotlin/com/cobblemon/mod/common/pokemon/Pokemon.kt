@@ -54,6 +54,7 @@ import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.api.types.tera.TeraType
 import com.cobblemon.mod.common.api.types.tera.TeraTypes
+import com.cobblemon.mod.common.client.entity.PokemonClientDelegate
 import com.cobblemon.mod.common.config.CobblemonConfig
 import com.cobblemon.mod.common.datafixer.CobblemonSchemas
 import com.cobblemon.mod.common.datafixer.CobblemonTypeReferences
