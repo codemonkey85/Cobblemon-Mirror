@@ -11,7 +11,9 @@ package com.cobblemon.mod.common.api.events.pokemon
 import com.cobblemon.mod.common.pokemon.Pokemon
 import net.minecraft.server.level.ServerPlayer
 
-class HatchEggEvent (
-    val pokemon: Pokemon,
-    val player: ServerPlayer
+class CollectEggEvent (
+    val egg : Pokemon,
+    val maleParent : Pokemon,
+    val femaleParent : Pokemon,
+    val player : ServerPlayer
 )

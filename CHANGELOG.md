@@ -162,6 +162,7 @@
 - Made the `Pokemon.aspects` setter private. This could technically break side-mods but if you are affected by this then you were using it wrong! Use `Pokemon.forcedAspects` to fix it.
 - Cobblemon's main logger is properly static now.
 - PokemonEntity.enablePoseTypeRecalculation can be used to disable automatic pose type recalculation.
+- Added CollectEggEvent and HatchEggEvent for compatibility usage.
 
 ### Data Pack & Resource Pack Creators
 - Added support for "shedders" similar to Shedinja's evolution logic.
