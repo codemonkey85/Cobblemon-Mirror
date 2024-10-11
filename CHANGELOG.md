@@ -169,6 +169,12 @@
 - 'player' type dialogue faces can now be explicitly stated so that NPC mods that use fake players can show in dialogue portraits.
 - Added `isLeftSide` field for dialogue faces. This determines what side of dialogue box the portrait is on.
 
+### Localization
+- Updated translations for:
+  - Czech, German, Greek, Spanish, Mexican Spanish, French, Canadian French, Hungarian, Italian, Japanese, Korean, Dutch, Polish, Portuguese, Brazilian Portuguese, Russian, Ukrainian, Simplified Chinese, and Traditional Chinese 
+- Migrated translation project to Weblate at https://lang.cobblemon.com/projects/cobblemon/mod/
+
+
 ## [1.5.2 (May 27th, 2024)](#1-5-2)
 ### Fixes
 - Fixed Wooloo and Dubwool dyeing making your game start dying. Only if you do it on a server.
