@@ -50,7 +50,7 @@ object BedrockParticleCommand {
                                         val entities = EntityArgument.getEntities(it, "target")
                                         val locator = StringArgumentType.getString(it, "locator")
 
-                                        return@executes entities.sumOf { entity -> execute(it.source, effectId, entity.level() as ServerLevel, entity, locator) }
+                                        return@executes entities.sumOf { entity -> execute(it.source, effectId, entity.level() as ServerLevel, entity, listOf(locator)) }
                                     }
                             )
                     )
@@ -78,7 +78,7 @@ object BedrockParticleCommand {
         return Command.SINGLE_SUCCESS
     }
 
-    private fun execute(source: CommandSourceStack, effectId: ResourceLocation, world: ServerLevel, target: Entity, locator: String): Int {
+    private fun execute(source: CommandSourceStack, effectId: ResourceLocation, world: ServerLevel, target: Entity, locator: List<String>): Int {
         val pos = target.blockPosition()
         val nearbyPlayers = world.getPlayers { it.distanceTo(pos) < 1000 }
         nearbyPlayers.forEach { player -> player.sendPacket(SpawnSnowstormEntityParticlePacket(effectId, target.id, locator)) }

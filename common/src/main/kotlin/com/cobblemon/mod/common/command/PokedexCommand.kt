@@ -41,8 +41,7 @@ object PokedexCommand {
         val commandArgumentBuilder = Commands.literal(NAME)
         val grantCommandBuilder = Commands.literal(GRANT_NAME).then(
             Commands.argument("player", EntityArgument.player())
-                .then(Commands.literal("all")
-                    .then(
+                .then(Commands.literal("all").then(
                         Commands.argument("dex", DexArgumentType.dex()).executes(::executeGrantAll)
                     )
                 )
@@ -142,9 +141,12 @@ object PokedexCommand {
 
     private fun executeRemoveAll(context: CommandContext<CommandSourceStack>): Int {
         val players = context.getArgument("player", EntitySelector::class.java).findPlayers(context.source)
+        val dexDef = context.getArgument("dex", PokedexDef::class.java)
         players.forEach {
             val dex = Cobblemon.playerDataManager.getPokedexData(it)
-            dex.speciesRecords.clear()
+            dexDef.getEntries().forEach {
+                dex.deleteSpeciesRecord(it.speciesId)
+            }
             dex.clearCalculatedValues()
             it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreTypes.POKEDEX, dex.toClientData()))
         }
