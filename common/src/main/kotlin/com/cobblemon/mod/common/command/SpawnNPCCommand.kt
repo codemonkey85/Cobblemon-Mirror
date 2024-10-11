@@ -69,6 +69,7 @@ object SpawnNPCCommand {
         val npc = NPCEntity(world)
         npc.moveTo(pos.x, pos.y, pos.z, npc.yRot, npc.xRot)
         npc.npc = npcClass
+        npc.initialize(1)
         if (world.addFreshEntity(npc)) {
             return Command.SINGLE_SUCCESS
         }
