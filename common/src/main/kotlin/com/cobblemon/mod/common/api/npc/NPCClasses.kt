@@ -60,6 +60,7 @@ object NPCClasses : JsonDataRegistry<NPCClass> {
         .registerTypeAdapter(CompoundTag::class.java, NbtCompoundAdapter)
         .registerTypeAdapter(NPCPartyProvider::class.java, NPCPartyProviderAdapter)
         .registerTypeAdapter(NPCInteractConfiguration::class.java, NPCInteractConfigurationAdapter)
+        .registerTypeAdapter(ExpressionLike::class.java, ExpressionLikeAdapter)
         .registerTypeAdapter(MoValue::class.java, MoValueAdapter)
         .registerTypeAdapter(NPCClass::class.java, NPCClassAdapter)
         .registerTypeAdapter(Component::class.java, TextAdapter)
