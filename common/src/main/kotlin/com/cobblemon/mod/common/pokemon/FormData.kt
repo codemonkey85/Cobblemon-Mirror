@@ -208,6 +208,10 @@ class FormData(
             return this._lightingData
         }
 
+    fun hitboxWithEyeHeight(entity: PokemonEntity): EntityDimensions {
+        return hitbox.withEyeHeight(eyeHeight(entity))
+    }
+
     fun eyeHeight(entity: PokemonEntity): Float {
         val multiplier = this.resolveEyeHeight(entity) ?: return this.species.eyeHeight(entity)
         return entity.bbHeight * multiplier

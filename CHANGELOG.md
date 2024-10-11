@@ -30,6 +30,7 @@
 - New config setting `displayEntityNameLabel` and `displayEntityLabelsWhenCrouchingOnly` to control what and when is displayed for the pokemon label
 - `/freezepokemon` command to pause a Pokémon's animation at a specific point in time.
 - Added `no_ai` and `freeze_frame` options to the `/spawnpokemon` command.
+- Added shiny Pokémon particles with sound effects.
 
 ### Pokémon Added
 #### Gen 2

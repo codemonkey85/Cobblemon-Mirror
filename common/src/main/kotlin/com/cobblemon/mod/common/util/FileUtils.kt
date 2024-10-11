@@ -8,8 +8,10 @@
 
 package com.cobblemon.mod.common.util
 
+import com.cobblemon.mod.common.Cobblemon
 import java.io.FileInputStream
 import java.io.IOException
+import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
@@ -17,6 +19,17 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 object FileUtils {
+
+    private fun getResourceStream(internal: String): InputStream {
+        return Cobblemon::class.java.getResourceAsStream(internal)
+            ?: throw Exception("Could not read $internal")
+    }
+
+    fun copyInternalToExternal(internal: String, external: Path) {
+        getResourceStream(internal).use { stream ->
+            Files.copy(stream, external, StandardCopyOption.REPLACE_EXISTING)
+        }
+    }
 
     /**
      * Unzips a file to the target path

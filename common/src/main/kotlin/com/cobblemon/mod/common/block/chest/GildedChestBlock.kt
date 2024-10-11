@@ -208,7 +208,9 @@ class GildedChestBlock(settings: Properties, val type: Type = Type.RED) : BaseEn
         newState: BlockState,
         moved: Boolean
     ) {
-        Containers.dropContentsOnDestroy(state, newState, world, pos)
+        if (!isFake()) {
+            Containers.dropContentsOnDestroy(state, newState, world, pos)
+        }
         super.onRemove(state, world, pos, newState, moved)
     }
 

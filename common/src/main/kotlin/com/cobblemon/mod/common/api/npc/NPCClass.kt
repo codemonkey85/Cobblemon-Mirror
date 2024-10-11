@@ -82,7 +82,7 @@ class NPCClass {
     }
 
     fun decode(buffer: RegistryFriendlyByteBuf) {
-        resourceIdentifier = ResourceLocation.parse(buffer.readText().toString())
+        resourceIdentifier = ResourceLocation.parse(buffer.readString().toString())
         names = buffer.readList { buffer.readText().copy() }.toMutableList()
         val length = buffer.readFloat()
         val width = buffer.readFloat()
