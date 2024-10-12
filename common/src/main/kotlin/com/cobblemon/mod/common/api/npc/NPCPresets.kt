@@ -18,6 +18,7 @@ import com.cobblemon.mod.common.api.entity.EntityDimensionsAdapter
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.npc.configuration.NPCInteractConfiguration
 import com.cobblemon.mod.common.api.npc.variation.NPCVariationProvider
+import com.cobblemon.mod.common.api.npc.variation.WeightedAspect
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
 import com.cobblemon.mod.common.api.spawning.TimeRange
@@ -55,8 +56,9 @@ object NPCPresets : JsonDataRegistry<NPCPreset> {
         .registerTypeAdapter(DropEntry::class.java, DropEntryAdapter)
         .registerTypeAdapter(CompoundTag::class.java, NbtCompoundAdapter)
         .registerTypeAdapter(NPCPartyProvider::class.java, NPCPartyProviderAdapter)
-        .registerTypeAdapter(ExpressionLike::class.java, ExpressionLikeAdapter)
         .registerTypeAdapter(NPCInteractConfiguration::class.java, NPCInteractConfigurationAdapter)
+        .registerTypeAdapter(WeightedAspect::class.java, WeightedAspectAdapter)
+        .registerTypeAdapter(ExpressionLike::class.java, ExpressionLikeAdapter)
         .registerTypeAdapter(NPCVariationProvider::class.java, NPCVariationProviderAdapter)
         .registerTypeAdapter(MoValue::class.java, MoValueAdapter)
         .registerTypeAdapter(Component::class.java, TextAdapter)
