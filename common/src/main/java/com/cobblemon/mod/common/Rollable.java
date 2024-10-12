@@ -47,7 +47,7 @@ public interface Rollable {
      */
 
     default Rollable rotateYaw(float yaw) {
-        return updateOrientation(prev -> prev.rotate((float) Math.toRadians(-yaw), UP));
+        return updateOrientation(prev -> prev.rotateY((float) Math.toRadians(-yaw)));
     }
 
     /**
@@ -57,7 +57,7 @@ public interface Rollable {
      */
 
     default Rollable rotatePitch(float pitch) {
-        return updateOrientation(prev -> prev.rotate((float) Math.toRadians(-pitch), LEFT));
+        return updateOrientation(prev -> prev.rotateX((float) Math.toRadians(-pitch)));
     }
 
     /**
@@ -66,7 +66,7 @@ public interface Rollable {
      * @return The Rollable object this method was called on
      */
     default Rollable rotateRoll(float roll) {
-        return updateOrientation(prev -> prev.rotate((float) Math.toRadians(-roll), FORWARDS));
+        return updateOrientation(prev -> prev.rotateZ((float) Math.toRadians(-roll)));
     }
 
 
@@ -88,7 +88,7 @@ public interface Rollable {
     * Value is between [-90, 90] with 0 being straight forward, 90 being straight down, and -90 being straight up
      */
     default float getYaw() {
-        return (float) Math.toDegrees(Math.PI - FORWARDS.angleSigned(getForwardVector(), UP));
+        return (float) (180F - Math.toDegrees(FORWARDS.angleSigned(getForwardVector(), UP)));
     }
 
     /**
@@ -96,7 +96,7 @@ public interface Rollable {
      * Value is between [-180, 180] with 0 being South, 90 being West, 180/-180 being North, and -90 being East
      */
     default float getPitch() {
-        return (float) Math.toDegrees(Math.PI/2 - Math.acos(getForwardVector().y));
+        return (float) Math.toDegrees(Math.asin(getForwardVector().y));
     }
 
     /**
@@ -104,7 +104,9 @@ public interface Rollable {
      * Value is between [-180, 180] with 0 being no roll (normal), 90 being 90 degrees CW, 180/-180 being 180 degrees CW/CCW, and -90 being 90 degrees CCW
      */
     default float getRoll() {
-        return (float) Math.toDegrees(- LEFT.angleSigned(getLeftVector(), FORWARDS));
+        var upVector = getUpVector();
+        var forwardVector = getForwardVector();
+        return (float) Math.toDegrees(upVector.angleSigned(UP, forwardVector));
     }
 
     boolean shouldRoll();

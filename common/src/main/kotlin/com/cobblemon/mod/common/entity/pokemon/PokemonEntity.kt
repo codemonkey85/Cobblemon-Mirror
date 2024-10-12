@@ -1484,12 +1484,19 @@ open class PokemonEntity(
 
         val lookAngle: Vec3 = driver.getLookAngle()
         if (!driver.isNearGround() || lookAngle.y >= 0.3) {
+            setBehaviourFlag(PokemonBehaviourFlag.FLYING, true)
+            entityData.set(POSE_TYPE, PoseType.HOVER)
+
             val deltaMovement = this.deltaMovement
-//            this.setDeltaMovement(
-//                lookAngle.x * 0.1 + (lookAngle.x * 1.5 - deltaMovement.x) * 1,
-//                lookAngle.y * 0.1 + (lookAngle.y * 1.5 - deltaMovement.y) * 1,
-//                lookAngle.z * 0.1 + (lookAngle.z * 1.5 - deltaMovement.z) * 1
-//            )
+            this.setDeltaMovement(
+                lookAngle.x * 0.1 + (lookAngle.x * 1.5 - deltaMovement.x) * 1,
+                lookAngle.y * 0.1 + (lookAngle.y * 1.5 - deltaMovement.y) * 1,
+                lookAngle.z * 0.1 + (lookAngle.z * 1.5 - deltaMovement.z) * 1
+            )
+        }
+        else {
+            setBehaviourFlag(PokemonBehaviourFlag.FLYING, false)
+            this.setDeltaMovement(0.0, 0.0, 0.0)
         }
     }
 
@@ -1521,7 +1528,7 @@ open class PokemonEntity(
         if (this.hasPassenger(passenger)) {
             val index = passengers.indexOf(passenger).takeIf { it >= 0 && it < seats.size } ?: return
             val seat = seats[index]
-            val offset = seat.getOffset(getCurrentPoseType()).yRot(-this.yRot * (Math.PI.toFloat() / 180))//.rotateX(-this.pitch * (Math.PI.toFloat() / 180))
+            val offset = Vec3(0.0, 1.4, -0.0).yRot(-this.yRot * (Math.PI.toFloat() / 180))//.rotateX(-this.pitch * (Math.PI.toFloat() / 180))
             positionUpdater.accept(passenger, this.x + offset.x, this.y + offset.y, this.z + offset.z)
             if (passenger is LivingEntity) {
                 passenger.yRot = this.yRot

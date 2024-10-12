@@ -237,9 +237,9 @@ public abstract class PlayerMixin extends LivingEntity implements Rollable {
         if (!this.equals(player)) return false;
         if (player.getVehicle() == null) return false;
         if (!(player.getVehicle() instanceof PokemonEntity pokemon)) return false;
-//        if (player.onGround()) return false;
-//        BlockPos blockBelow = pokemon.blockPosition().below();
-//        if (pokemon.level().getBlockState(blockBelow).isSolid()) return false;
+        if (player.onGround()) return false;
+        BlockPos blockBelow = pokemon.blockPosition().below();
+        if (pokemon.level().getBlockState(blockBelow).isSolid()) return false;
         return true;
     }
 
