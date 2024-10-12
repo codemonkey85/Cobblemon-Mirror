@@ -106,10 +106,10 @@ object CobblemonDataProvider : DataProvider {
     }
 
     override fun <T : DataRegistry> register(registry: T): T {
-        // Only send message once
-        if (this.registries.isEmpty()) {
-            LOGGER.info("Note: Cobblemon data registries are only loaded once per server instance as Pokémon species are not safe to reload.")
-        }
+//        // Only send message once
+//        if (this.registries.isEmpty()) {
+//            LOGGER.info("Note: Cobblemon data registries are only loaded once per server instance as Pokémon species are not safe to reload.")
+//        }
         this.registries.add(registry)
         LOGGER.info("Registered the {} registry", registry.id.toString())
         LOGGER.debug("Registered the {} registry of class {}", registry.id.toString(), registry::class.qualifiedName)
@@ -148,7 +148,7 @@ object CobblemonDataProvider : DataProvider {
             registries.filter { it.type == this.type }
                 .forEach { it.reload(manager) }
             if (isInGame && this.type == PackType.SERVER_DATA) {
-                canReload = false
+//                canReload = false
             }
         }
     }

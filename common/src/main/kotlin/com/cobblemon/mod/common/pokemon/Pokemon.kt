@@ -96,7 +96,9 @@ import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
+import kotlin.properties.Delegates
 import kotlin.random.Random
+import kotlin.reflect.KProperty
 import net.minecraft.core.BlockPos
 import net.minecraft.core.RegistryAccess
 import net.minecraft.nbt.*
@@ -132,15 +134,17 @@ enum class OriginalTrainerType : StringRepresentable {
 
 open class Pokemon : ShowdownIdentifiable {
     var uuid = UUID.randomUUID()
-    var species = PokemonSpecies.random()
+
+    var speciesIdentifier = PokemonSpecies.random().resourceIdentifier
         set(value) {
-            if (PokemonSpecies.getByIdentifier(value.resourceIdentifier) == null) {
+            val species = PokemonSpecies.getByIdentifier(value) ?: PokemonSpecies.random()
+            if (PokemonSpecies.getByIdentifier(value) == null) {
                 throw IllegalArgumentException("Cannot set a species that isn't registered")
             }
             val quotient = clamp(currentHealth / maxHealth.toFloat(), 0F, 1F)
             field = value
             if (!isClient) {
-                val newFeatures = SpeciesFeatures.getFeaturesFor(species).mapNotNull { it.invoke(this) }
+                val newFeatures = SpeciesFeatures.getFeaturesFor(value).mapNotNull { it.invoke(this) }
                 features.clear()
                 features.addAll(newFeatures)
             }
@@ -150,12 +154,12 @@ open class Pokemon : ShowdownIdentifiable {
             checkGender()
             updateHP(quotient)
             this.attemptAbilityUpdate()
-            _species.emit(value)
+            _species.emit(species)
         }
-
-    var form = species.standardForm
+    var formName = "Default"
         set(value) {
-            val old = field
+            val old = species.forms.find { it.name == formName } ?: species.standardForm
+            val new = species.forms.find { it.name == value } ?: species.standardForm
             // Species updates already update HP but just a form change may require it
             // Moved to before the field was set else it won't actually do the hp calc proper <3
             val quotient = clamp(currentHealth / maxHealth.toFloat(), 0F, 1F)
@@ -167,8 +171,16 @@ open class Pokemon : ShowdownIdentifiable {
             checkGender()
             updateHP(quotient)
             this.attemptAbilityUpdate()
-            _form.emit(value)
+            _form.emit(new)
         }
+
+    var species: Species
+        get() = PokemonSpecies.getByIdentifier(speciesIdentifier) ?: PokemonSpecies.random()
+        set(value) { speciesIdentifier = value.resourceIdentifier }
+
+    var form: FormData
+        get() = species.forms.find { it.name == formName } ?: species.standardForm
+        set(value) { formName = value.name }
 
     // Floating Platform for surface water battles
     var battleSurface: Boat? = null

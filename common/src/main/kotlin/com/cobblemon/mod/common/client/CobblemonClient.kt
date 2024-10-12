@@ -94,7 +94,7 @@ object CobblemonClient {
         teamData = ClientPlayerTeamData()
         clientPokedexData = ClientPokedexManager(mutableMapOf())
         storage.onLogin()
-        CobblemonDataProvider.canReload = false
+//        CobblemonDataProvider.canReload = false
     }
 
     fun onLogout() {

@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.api.pokemon.feature
 
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
+import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
 import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
@@ -76,6 +77,12 @@ object SpeciesFeatures : JsonDataRegistry<SpeciesFeatureProvider<*>> {
     }
 
     fun getFeatures() = (resourceFeatures.keys + codeFeatures.keys).mapNotNull(this::getFeature)
+
+    fun getFeaturesFor(speciesIdentifier: ResourceLocation): List<SpeciesFeatureProvider<*>> {
+        val species = PokemonSpecies.getByIdentifier(speciesIdentifier) ?: return emptyList()
+        return getFeaturesFor(species)
+    }
+
     fun getFeaturesFor(species: Species): List<SpeciesFeatureProvider<*>> {
         val mentionedFeatures = species.features.mapNotNull(this::getFeature)
         val globalFeatures = GlobalSpeciesFeatures.getFeatures()
