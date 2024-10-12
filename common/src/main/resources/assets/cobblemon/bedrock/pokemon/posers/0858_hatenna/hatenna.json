@@ -1,0 +1,32 @@
+{
+  "portraitScale": 1.66,
+  "portraitTranslation": [-0.06,-0.74,0],
+  "profileScale": 0.62,
+  "profileTranslation": [-0.05,0.83,0],
+  "animations": {},
+  "poses": {
+    "standing": {
+      "poseTypes": [
+        "STAND",
+        "NONE",
+        "PORTRAIT",
+        "PROFILE",
+        "FLOAT"
+      ],
+      "isBattle": false,
+      "animations": [
+        "q.bedrock('hatenna', 'ground_idle')"
+      ]
+    },
+    "walking": {
+      "poseTypes": [
+        "WALK",
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('hatenna', 'ground_idle')",
+        "q.biped_walk(1, 1, 'foot_left', 'foot_right')"
+      ]
+    }
+  }
+}

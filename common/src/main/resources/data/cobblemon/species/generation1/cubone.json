@@ -16,9 +16,58 @@
     "special_defence": 50,
     "speed": 35
   },
+  "features": [
+    "alolan",
+    "region_bias"
+  ],
   "catchRate": 190,
   "maleRatio": 0.5,
   "shoulderMountable": false,
+  "forms": [
+    {
+      "name": "Alola Bias",
+      "maleRatio": 0.5,
+      "labels": [
+        "alola_regional"
+      ],
+      "aspects": [
+        "region-bias-alola"
+      ],
+      "evolutions": [
+        {
+          "id": "alola_cubone_kanto_marowak",
+          "variant": "level_up",
+          "result": "marowak alolan=false",
+          "consumeHeldItem": false,
+          "requirements": [
+            {
+              "variant": "level",
+              "minLevel": 28
+            },
+            {
+              "variant": "time_range",
+              "range": "day"
+            }
+          ]
+        },
+        {
+          "id": "alola_cubone_alola_marowak",
+          "variant": "level_up",
+          "result": "marowak alolan=true",
+          "consumeHeldItem": false,
+          "learnableMoves": [
+            "shadowbone"
+          ],
+          "requirements": [
+            {
+              "variant": "level",
+              "minLevel": 28
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "baseExperienceYield": 64,
   "experienceGroup": "medium_fast",
   "eggCycles": 20,
@@ -218,7 +267,7 @@
   ],
   "evolutions": [
     {
-      "id": "cubone_marowak",
+      "id": "cubone kanto_marowak kanto",
       "variant": "level_up",
       "result": "marowak",
       "consumeHeldItem": false,
@@ -231,7 +280,7 @@
       ]
     },
     {
-      "id": "cubone_marowak",
+      "id": "cubone kanto_marowak alola",
       "variant": "level_up",
       "result": "marowak alolan",
       "consumeHeldItem": false,

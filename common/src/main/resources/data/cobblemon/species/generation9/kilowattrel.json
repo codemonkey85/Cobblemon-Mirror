@@ -34,6 +34,13 @@
     "water_1",
     "flying"
   ],
+  "behaviour": {
+    "moving": {
+      "fly": {
+        "canFly": true
+      }
+    }
+  },
   "moves": [
     "1:growl",
     "1:peck",
@@ -97,6 +104,12 @@
   "weight": 386,
   "preEvolution": "wattrel",
   "evolutions": [],
+  "baseScale": 1.1,
+  "hitbox": {
+    "width": 1,
+    "height": 1.72,
+    "fixed": false
+  },
   "cannotDynamax": false,
   "pokedex": [
     "cobblemon.species.kilowattrel.desc"
