@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render.pokemon
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.Rollable
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.battle.ClientBallDisplay
@@ -41,7 +42,6 @@ import com.cobblemon.mod.common.util.math.geometry.toRadians
 import com.cobblemon.mod.common.util.math.remap
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
-import kotlin.math.*
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font.DisplayMode
@@ -56,10 +56,8 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.phys.Vec3
-import org.joml.Math
-import org.joml.Quaternionf
-import org.joml.Vector3f
-import org.joml.Vector4f
+import org.joml.*
+import kotlin.math.*
 
 class PokemonRenderer(
     context: EntityRendererProvider.Context
@@ -128,7 +126,12 @@ class PokemonRenderer(
             entity.yBodyRotO = entity.yBodyRot
         }
 
-        super.render(entity, entityYaw, partialTicks, poseMatrix, buffer, packedLight)
+        if (entity.passengers.isNotEmpty()) {
+            renderRiding(entity, partialTicks, poseMatrix, buffer, packedLight)
+        }
+        else {
+            super.render(entity, entityYaw, partialTicks, poseMatrix, buffer, packedLight)
+        }
 
         modelNow.green = 1F
         modelNow.blue = 1F
@@ -137,6 +140,38 @@ class PokemonRenderer(
             this.renderNameTag(entity, entity.effectiveName(), poseMatrix, buffer, packedLight, partialTicks)
         }
 //        Minecraft.getInstance().bufferBuilders.entityVertexConsumers.draw()
+    }
+
+    fun renderRiding(
+        entity: PokemonEntity,
+        partialTicks: Float,
+        poseMatrix: PoseStack,
+        buffer: MultiBufferSource,
+        packedLight: Int
+    ) {
+        // TODO: This is all broken at the moment, need to figure out proper way to rotate the model according to camera
+        val driver = entity.firstPassenger ?: return
+        val rollable = driver as? Rollable ?: return
+
+        val camera = Minecraft.getInstance().gameRenderer.mainCamera
+        val isThirdPerson = camera.isDetached
+
+        val vehicleOrigin = entity.position()
+        val driverOrigin = if (isThirdPerson) driver.position() else driver.eyePosition
+
+        val offset = driverOrigin.subtract(vehicleOrigin)
+
+        poseMatrix.pushPose()
+        val yaw = Mth.rotLerp(partialTicks, entity.yBodyRotO, entity.yBodyRot)
+
+        poseMatrix.translate(offset.x, offset.y, offset.z)
+        poseMatrix.mulPose(Axis.YP.rotationDegrees(-(180.0f - yaw)))
+        val rotation = rollable.orientation!!.normal(Matrix3f()).getNormalizedRotation(Quaternionf())
+        poseMatrix.mulPose(rotation)
+        poseMatrix.translate(-offset.x, -offset.y, -offset.z)
+
+        super.render(entity, 0f, partialTicks, poseMatrix, buffer, packedLight)
+        poseMatrix.popPose()
     }
 
     fun renderTransition(

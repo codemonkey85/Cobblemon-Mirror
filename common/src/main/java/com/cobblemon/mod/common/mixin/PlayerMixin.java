@@ -10,15 +10,20 @@ package com.cobblemon.mod.common.mixin;
 
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.CobblemonItems;
+import com.cobblemon.mod.common.Rollable;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
 import com.cobblemon.mod.common.api.events.item.LeftoversCreatedEvent;
 import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.api.storage.party.PartyStore;
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags;
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.util.CompoundTagExtensionsKt;
 import com.cobblemon.mod.common.util.DataKeys;
 import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,10 +34,13 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.joml.Matrix3f;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -40,9 +48,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Mixin(Player.class)
-public abstract class PlayerMixin extends LivingEntity {
+public abstract class PlayerMixin extends LivingEntity implements Rollable {
 
     @Shadow public abstract CompoundTag getShoulderEntityLeft();
 
@@ -60,6 +69,7 @@ public abstract class PlayerMixin extends LivingEntity {
 
     @Shadow public abstract void displayClientMessage(Component message, boolean overlay);
 
+    @Unique private Matrix3f orientation = new Matrix3f();
 
     protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
@@ -171,4 +181,71 @@ public abstract class PlayerMixin extends LivingEntity {
             }
         }
     }
+
+    @Override
+    public void absMoveTo(double x, double y, double z, float yaw, float pitch) {
+        if (shouldRoll()) {
+            this.absMoveTo(x, y, z);
+            this.setYRot(yaw % 360.0f);
+            this.setXRot(pitch % 360.0f);
+            this.yRotO = this.getYRot();
+            this.xRotO = this.getXRot();
+        }
+        else {
+            this.absMoveTo(x, y, z);
+            this.absRotateTo(yaw, pitch);
+        }
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    public void tick(CallbackInfo ci) {
+        if (this.shouldRoll()) {
+            // Proof of concept for yaw movement
+            if (this.getMainHandItem().is(Items.STICK)) {
+                this.rotateYaw(2);
+            }
+            else if (this.getMainHandItem().is(Items.BLAZE_ROD)) {
+                this.rotateYaw(-2);
+            }
+        }
+    }
+
+    @Override
+    public Matrix3f getOrientation() {
+        return orientation;
+    }
+
+    @Override
+    public Rollable updateOrientation(Function<Matrix3f, Matrix3f> update) {
+        if (!shouldRoll()) return this;
+
+        if (this.orientation == null) {
+            this.orientation = new Matrix3f();
+            this.rotate(getYRot() - 180, getXRot(), 0);
+        }
+        this.orientation = update.apply(this.orientation);
+        setYRot(this.getYaw());
+        setXRot(this.getPitch());
+        this.yRotO = this.getYRot();
+        this.xRotO = this.getXRot();
+        return this;
+    }
+
+    @Override
+    public boolean shouldRoll() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (!this.equals(player)) return false;
+        if (player.getVehicle() == null) return false;
+        if (!(player.getVehicle() instanceof PokemonEntity pokemon)) return false;
+//        if (player.onGround()) return false;
+//        BlockPos blockBelow = pokemon.blockPosition().below();
+//        if (pokemon.level().getBlockState(blockBelow).isSolid()) return false;
+        return true;
+    }
+
+    @Override
+    public void clearRotation() {
+        this.orientation = null;
+    }
+
 }

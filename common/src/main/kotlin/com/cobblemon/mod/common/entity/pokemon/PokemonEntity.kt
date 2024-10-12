@@ -77,9 +77,6 @@ import com.cobblemon.mod.common.pokemon.properties.UncatchableProperty
 import com.cobblemon.mod.common.util.*
 import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules
 import com.mojang.serialization.Codec
-import java.util.*
-import java.util.concurrent.CompletableFuture
-import kotlin.math.PI
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -129,6 +126,9 @@ import net.minecraft.world.level.pathfinder.PathType
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
+import java.util.*
+import java.util.concurrent.CompletableFuture
+import kotlin.math.PI
 
 @Suppress("unused")
 open class PokemonEntity(
@@ -1481,6 +1481,21 @@ open class PokemonEntity(
                 this.jumpInputStrength = 0
             }
         }
+
+        val lookAngle: Vec3 = driver.getLookAngle()
+        if (!driver.isNearGround() || lookAngle.y >= 0.3) {
+            val deltaMovement = this.deltaMovement
+//            this.setDeltaMovement(
+//                lookAngle.x * 0.1 + (lookAngle.x * 1.5 - deltaMovement.x) * 1,
+//                lookAngle.y * 0.1 + (lookAngle.y * 1.5 - deltaMovement.y) * 1,
+//                lookAngle.z * 0.1 + (lookAngle.z * 1.5 - deltaMovement.z) * 1
+//            )
+        }
+    }
+
+    fun Entity.isNearGround(): Boolean {
+        val blockBelow: BlockPos = this.blockPosition().below()
+        return this.level().getBlockState(blockBelow).isSolid()
     }
 
 //    override fun jump() {
