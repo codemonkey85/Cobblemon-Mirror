@@ -166,6 +166,10 @@ class PokemonRenderer(
 
         poseMatrix.translate(offset.x, offset.y, offset.z)
         poseMatrix.mulPose(Axis.YP.rotationDegrees(-(180.0f - yaw)))
+//        val matrix = poseMatrix.last().pose()
+//        matrix.rotateX(rollable.pitch.toRadians())
+//        matrix.rotateZ(-rollable.roll.toRadians())
+//        matrix.rotateY(rollable.yaw.toRadians())
         val rotation = rollable.orientation!!.normal(Matrix3f()).getNormalizedRotation(Quaternionf())
         poseMatrix.mulPose(rotation)
         poseMatrix.translate(-offset.x, -offset.y, -offset.z)

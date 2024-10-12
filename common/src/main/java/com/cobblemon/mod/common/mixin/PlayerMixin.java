@@ -69,7 +69,7 @@ public abstract class PlayerMixin extends LivingEntity implements Rollable {
 
     @Shadow public abstract void displayClientMessage(Component message, boolean overlay);
 
-    @Unique private Matrix3f orientation = new Matrix3f();
+    @Unique private Matrix3f orientation = null;
 
     protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);

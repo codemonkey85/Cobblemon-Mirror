@@ -90,7 +90,11 @@ public class PartyScrollMixin {
     )
     public boolean cobblemon$modifyRotation(LocalPlayer player, double cursorDeltaX, double cursorDeltaY, @Local(argsOnly = true) double d) {
         if (!(player instanceof Rollable rollable)) return true;
-        if (!rollable.shouldRoll()) return true;
+        if (!rollable.shouldRoll()) {
+            pitchSmoother.reset();
+            rollSmoother.reset();
+            return true;
+        }
 
         var pitch = pitchSmoother.getNewDeltaValue(cursorDeltaY * 0.15f, d);
         var roll = rollSmoother.getNewDeltaValue(cursorDeltaX * 0.15f, d);
