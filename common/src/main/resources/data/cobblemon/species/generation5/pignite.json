@@ -30,6 +30,14 @@
     "speed": 55
   },
   "behaviour": {
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.3
+      },
+      "swim": {
+        "avoidsWater": true
+      }
+    },
     "resting": {
       "canSleep": true,
       "willSleepOnBed": false,
