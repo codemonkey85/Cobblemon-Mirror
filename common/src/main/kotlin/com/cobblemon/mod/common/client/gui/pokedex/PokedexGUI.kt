@@ -71,7 +71,7 @@ class PokedexGUI private constructor(
     val type: PokedexTypes,
     val initSpecies: ResourceLocation?
 ): Screen(Component.translatable("cobblemon.ui.pokedex.title")) {
-    var initialDragPosX = 0.0
+    var oldDragPosX = 0.0
     var canDragRender = false
 
     private var filteredPokedex: Collection<PokedexDef> = mutableListOf()
@@ -287,7 +287,7 @@ class PokedexGUI private constructor(
         ) {
             canDragRender = true
             isDragging = true
-            initialDragPosX = mouseX
+            oldDragPosX = mouseX
             playSound(CobblemonSounds.POKEDEX_CLICK_SHORT)
         }
         return try {
@@ -305,9 +305,10 @@ class PokedexGUI private constructor(
 
     override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, deltaX: Double, deltaY: Double): Boolean {
         if (isDragging && canDragRender) {
-            val dragOffsetY = ((initialDragPosX - mouseX) * 1).toFloat()
+            val dragOffsetY = (oldDragPosX - mouseX).toFloat()
             pokemonInfoWidget.rotationY = (((pokemonInfoWidget.rotationY + dragOffsetY) % 360 + 360) % 360)
         }
+        oldDragPosX = mouseX
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
     }
 
