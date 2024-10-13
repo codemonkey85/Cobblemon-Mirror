@@ -82,8 +82,8 @@ class PokedexUsageContext {
                 transitionIntervals = max(transitionIntervals - updateInterval, 0F)
                 if (transitionIntervals <= 0) {
 
-                    if (viewInfoTicks >= VIEW_INFO_BUFFER_TICKS)
-                        openPokedexGUI(user, type, scannableEntityInFocus?.resolvePokemonScan()?.species?.resourceIdentifier
+                    if (viewInfoTicks >= VIEW_INFO_BUFFER_TICKS) openPokedexGUI(user, type,
+                        scannableEntityInFocus!!.resolvePokemonScan()?.species?.resourceIdentifier
                     )
                     resetState()
                 }
@@ -154,14 +154,14 @@ class PokedexUsageContext {
             if (targetScannableEntity != scannableEntityInFocus) {
                 resetFocusedPokemonState()
                 scannableEntityInFocus = targetScannableEntity
-                val resolvedPokemon = scannableEntityInFocus?.resolvePokemonScan()
+                val resolvedPokemon = scannableEntityInFocus!!.resolvePokemonScan()
                 if(resolvedPokemon == null){
                     resetFocusedPokemonState()
                     return
                 }
 
                 // Check if Pokémon in focus is owned
-                isPokemonInFocusOwned = CobblemonClient.clientPokedexData.getHighestKnowledgeForSpecies(resolvedPokemon.species.resourceIdentifier) == PokedexEntryProgress.CAUGHT
+                isPokemonInFocusOwned = CobblemonClient.clientPokedexData.getHighestKnowledgeForSpecies(resolvedPokemon) == PokedexEntryProgress.CAUGHT
 
                 // Randomize info frames for render
                 if (focusIntervals == 0F) {
@@ -175,11 +175,8 @@ class PokedexUsageContext {
 
                 // Check if Pokémon in focus is new or has new data
                 newPokemonInfo = CobblemonClient.clientPokedexData.getNewInformation(resolvedPokemon)
-                if (newPokemonInfo == PokedexLearnedInformation.NONE) {
-                    user.playSound(CobblemonSounds.POKEDEX_SCAN_DETAIL)
-                } else {
-                    scannedSpecies = resolvedPokemon.species.resourceIdentifier
-                }
+                if (newPokemonInfo == PokedexLearnedInformation.NONE) user.playSound(CobblemonSounds.POKEDEX_SCAN_DETAIL)
+                scannedSpecies = resolvedPokemon.species.resourceIdentifier //TODO: Why was this an IF/ELSE?
             }
         } else {
             resetFocusedPokemonState()
