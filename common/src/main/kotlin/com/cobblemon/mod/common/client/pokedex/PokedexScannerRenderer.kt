@@ -18,8 +18,10 @@ import com.cobblemon.mod.common.client.gui.battle.BattleOverlay.Companion.caught
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.BASE_HEIGHT
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.BASE_WIDTH
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext
 import com.cobblemon.mod.common.pokemon.Gender
+import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.mojang.blaze3d.systems.RenderSystem
@@ -108,8 +110,8 @@ class PokedexScannerRenderer {
                     val yOffsetText = when(index) { 0 -> 5; 1 -> 4; 2 -> 8; 3 -> 42; else -> 0 }
 
                     // Text
-                    if (usageContext.focusIntervals == PokedexUsageContext.FOCUS_INTERVALS && usageContext.pokemonInFocus != null) {
-                        val pokemon = usageContext.pokemonInFocus!!.pokemon
+                    if (usageContext.focusIntervals == PokedexUsageContext.FOCUS_INTERVALS && usageContext.scannableEntityInFocus != null) {
+                        val pokemon = usageContext.scannableEntityInFocus?.resolvePokemonScan() ?: return
 
                         if (infoDisplayedCounter == 1) {
                             drawScaledText(
@@ -124,7 +126,7 @@ class PokedexScannerRenderer {
                         }
 
                         if (infoDisplayedCounter == 2) {
-                            val hasTrainer = usageContext.pokemonInFocus?.ownerUUID !== null
+                            val hasTrainer = (usageContext.scannableEntityInFocus?.resolveEntityScan() as? PokemonEntity)?.ownerUUID !== null
                             val speciesName = pokemon.species.name.text().bold()
                             var yOffsetName = if (hasTrainer) 2 else 0
                             if (hasTrainer) {

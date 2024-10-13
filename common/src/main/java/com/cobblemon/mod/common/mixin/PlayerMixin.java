@@ -15,9 +15,10 @@ import com.cobblemon.mod.common.api.events.item.LeftoversCreatedEvent;
 import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.api.storage.party.PartyStore;
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags;
+import com.cobblemon.mod.common.pokedex.scanner.ScannableEntity;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.util.CompoundTagExtensionsKt;
-import com.cobblemon.mod.common.util.DataKeys;
+import com.cobblemon.mod.common.util.CompoundTagUtilities;
 import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -30,7 +31,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -42,7 +45,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Mixin(Player.class)
-public abstract class PlayerMixin extends LivingEntity {
+public abstract class PlayerMixin extends LivingEntity implements ScannableEntity {
 
     @Shadow public abstract CompoundTag getShoulderEntityLeft();
 
@@ -68,16 +71,16 @@ public abstract class PlayerMixin extends LivingEntity {
     @Inject(method = "respawnEntityOnShoulder", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;create(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/world/level/Level;)Ljava/util/Optional;"), cancellable = true)
     private void cobblemon$removePokemon(CompoundTag nbt, CallbackInfo ci) {
         if (CompoundTagExtensionsKt.isPokemonEntity(nbt)) {
-            final UUID uuid = this.getPokemonID(nbt);
-            if (this.isShoulderPokemon(this.getShoulderEntityRight())) {
-                final UUID uuidRight = this.getPokemonID(this.getShoulderEntityRight());
+            final UUID uuid = CompoundTagUtilities.getPokemonID(nbt);
+            if (CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityRight())) {
+                final UUID uuidRight = CompoundTagUtilities.getPokemonID(this.getShoulderEntityRight());
                 if (uuid.equals(uuidRight)) {
                     this.recallPokemon(uuidRight);
                     this.setShoulderEntityRight(new CompoundTag());
                 }
             }
-            if (this.isShoulderPokemon(this.getShoulderEntityLeft())) {
-                final UUID uuidLeft = this.getPokemonID(this.getShoulderEntityLeft());
+            if (CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityLeft())) {
+                final UUID uuidLeft = CompoundTagUtilities.getPokemonID(this.getShoulderEntityLeft());
                 if (uuid.equals(uuidLeft)) {
                     this.recallPokemon(uuidLeft);
                     this.setShoulderEntityLeft(new CompoundTag());
@@ -101,20 +104,15 @@ public abstract class PlayerMixin extends LivingEntity {
         // We want to allow both of these to forcefully remove the entities
         if (this.isSpectator() || this.isDeadOrDying())
             return;
-        if (!this.isShoulderPokemon(this.getShoulderEntityLeft())) {
+        if (!CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityLeft())) {
             this.respawnEntityOnShoulder(this.getShoulderEntityLeft());
             this.setShoulderEntityLeft(new CompoundTag());
         }
-        if (!this.isShoulderPokemon(this.getShoulderEntityRight())) {
+        if (!CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityRight())) {
             this.respawnEntityOnShoulder(this.getShoulderEntityRight());
             this.setShoulderEntityRight(new CompoundTag());
         }
         ci.cancel();
-    }
-
-    private UUID getPokemonID(CompoundTag nbt) {
-        return nbt.getCompound(DataKeys.POKEMON)
-                .getUUID(DataKeys.POKEMON_UUID);
     }
 
     private void recallPokemon(UUID uuid) {
@@ -125,10 +123,6 @@ public abstract class PlayerMixin extends LivingEntity {
                 pokemon.recall();
             }
         }
-    }
-
-    private boolean isShoulderPokemon(CompoundTag nbt) {
-        return CompoundTagExtensionsKt.isPokemonEntity(nbt);
     }
 
     @Inject(
@@ -170,5 +164,43 @@ public abstract class PlayerMixin extends LivingEntity {
                 ci.setReturnValue(true);
             }
         }
+    }
+
+    @Override
+    public @Nullable Pokemon resolvePokemonScan() {
+        if(CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityRight())){
+            // We need to do this cause the Entity doesn't store a reference to its storage
+            try {
+                PartyStore party = Cobblemon.INSTANCE.getStorage().getParty(this.uuid, this.registryAccess());
+                for (Pokemon pokemon : party) {
+                    if (pokemon.getUuid().equals(CompoundTagUtilities.getPokemonID(this.getShoulderEntityRight()))) {
+                        return pokemon;
+                    }
+                }
+            } catch (Exception e) {
+                //Cobblemon.LOGGER.warn("Got error trying to find pokemon on right shoulder, {}: {}", e.getClass(), e.getMessage());
+            }
+        }
+        if(CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityLeft())){
+            // We need to do this cause the Entity doesn't store a reference to its storage
+            try {
+                PartyStore party = Cobblemon.INSTANCE.getStorage().getParty(this.uuid, this.registryAccess());
+                for (Pokemon pokemon : party) {
+                    if (pokemon.getUuid().equals(CompoundTagUtilities.getPokemonID(this.getShoulderEntityLeft()))) {
+                        return pokemon;
+                    }
+                }
+            } catch (Exception e) {
+                //Cobblemon.LOGGER.warn("Got error trying to find pokemon on left shoulder, {}: {}", e.getClass(), e.getMessage());
+            }
+        }
+        return null;
+    }
+
+
+
+    @Override
+    public LivingEntity resolveEntityScan() {
+        return this;
     }
 }
