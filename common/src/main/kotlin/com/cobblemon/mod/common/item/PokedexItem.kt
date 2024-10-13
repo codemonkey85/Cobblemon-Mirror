@@ -10,6 +10,8 @@ package com.cobblemon.mod.common.item
 
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.pokedex.PokedexTypes
+import com.cobblemon.mod.common.pokedex.scanner.PokedexController
+import com.cobblemon.mod.common.pokedex.scanner.PokemonScanner
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
@@ -53,6 +55,10 @@ class PokedexItem(val type: PokedexTypes): CobblemonItem(Item.Properties().stack
             val ticksInUse = getUseDuration(stack, user) - remainingUseTicks
             usageContext.useTick(user, ticksInUse, true)
         }
+        if (!world.isClientSide && user is ServerPlayer) {
+            val controller = PokedexController.getController(user)
+            controller.useTick(remainingUseTicks)
+        }
         super.onUseTick(world, user, stack, remainingUseTicks)
     }
 
@@ -66,6 +72,10 @@ class PokedexItem(val type: PokedexTypes): CobblemonItem(Item.Properties().stack
             val usageContext = CobblemonClient.pokedexUsageContext
             val ticksInUse = getUseDuration(stack, user) - remainingUseTicks
             usageContext.stopUsing(user, ticksInUse)
+        }
+        if (!world.isClientSide && user is ServerPlayer) {
+            val controller = PokedexController.getController(user)
+            controller.end()
         }
 
         super.releaseUsing(stack, world, user, remainingUseTicks)
