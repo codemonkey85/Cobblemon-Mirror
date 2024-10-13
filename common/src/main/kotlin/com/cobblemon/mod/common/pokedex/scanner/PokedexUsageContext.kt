@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.pokedex.scanner
 
+import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokedex.PokedexLearnedInformation
@@ -82,8 +83,8 @@ class PokedexUsageContext {
                 transitionIntervals = max(transitionIntervals - updateInterval, 0F)
                 if (transitionIntervals <= 0) {
 
-                    if (viewInfoTicks >= VIEW_INFO_BUFFER_TICKS) openPokedexGUI(user, type,
-                        scannableEntityInFocus!!.resolvePokemonScan()?.species?.resourceIdentifier
+                    if (viewInfoTicks >= VIEW_INFO_BUFFER_TICKS)
+                        openPokedexGUI(user, type, scannableEntityInFocus?.resolvePokemonScan()?.species?.resourceIdentifier
                     )
                     resetState()
                 }
@@ -175,8 +176,12 @@ class PokedexUsageContext {
 
                 // Check if Pokémon in focus is new or has new data
                 newPokemonInfo = CobblemonClient.clientPokedexData.getNewInformation(resolvedPokemon)
-                if (newPokemonInfo == PokedexLearnedInformation.NONE) user.playSound(CobblemonSounds.POKEDEX_SCAN_DETAIL)
-                scannedSpecies = resolvedPokemon.species.resourceIdentifier //TODO: Why was this an IF/ELSE?
+                if (newPokemonInfo == PokedexLearnedInformation.NONE) {
+                    user.playSound(CobblemonSounds.POKEDEX_SCAN_DETAIL)
+                } else {
+                    scannedSpecies = resolvedPokemon.species.resourceIdentifier
+                    Cobblemon.LOGGER.info(scannedSpecies)
+                }
             }
         } else {
             resetFocusedPokemonState()
