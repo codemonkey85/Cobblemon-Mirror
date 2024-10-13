@@ -15,8 +15,6 @@ import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUI
 import com.cobblemon.mod.common.client.pokedex.PokedexScannerRenderer
 import com.cobblemon.mod.common.client.pokedex.PokedexTypes
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.item.PokedexItem
 import com.cobblemon.mod.common.net.messages.client.pokedex.ServerConfirmedRegisterPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.FinishScanningPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.StartScanningPacket
@@ -51,7 +49,7 @@ class PokedexUsageContext {
     var isPokemonInFocusOwned: Boolean = false
     var registerCompleted: Boolean = false
     var scannedSpecies: ResourceLocation? = null
-    var pokemonInFocus: PokemonEntity? = null
+    var scannableEntityInFocus: ScannableEntity? = null
     var viewInfoTicks: Int = 0
     var scanningProgress: Float = 0F
     var displayRegisterInfoIntervals: Float = 0F
@@ -71,32 +69,35 @@ class PokedexUsageContext {
     }
 
     fun renderUpdate(user: LocalPlayer, graphics: GuiGraphics, tickCounter: DeltaTracker) {
-        val tickDelta = tickCounter.realtimeDeltaTicks.takeIf { !Minecraft.getInstance()!!.isPaused } ?: 0F
+        val tickDelta = tickCounter.realtimeDeltaTicks.takeIf { !Minecraft.getInstance().isPaused } ?: 0F
         val updateInterval = (tickDelta / 20) * RENDER_UPDATES_PER_SECOND
 
         if (scanningGuiOpen && viewInfoTicks < VIEW_INFO_BUFFER_TICKS) {
             if (transitionIntervals < TRANSITION_INTERVALS) transitionIntervals = min(transitionIntervals + updateInterval, TRANSITION_INTERVALS)
-            innerRingRotation = (if (pokemonInFocus != null) (innerRingRotation + (updateInterval * 10F)) else (innerRingRotation + updateInterval)) % 360
+            innerRingRotation = (if (scannableEntityInFocus != null) (innerRingRotation + (updateInterval * 10F)) else (innerRingRotation + updateInterval)) % 360
             usageIntervals += updateInterval
         } else {
             if (transitionIntervals > 0) {
                 if (transitionIntervals == TRANSITION_INTERVALS) user.playSound(CobblemonSounds.POKEDEX_SCAN_CLOSE)
                 transitionIntervals = max(transitionIntervals - updateInterval, 0F)
                 if (transitionIntervals <= 0) {
-                    if (viewInfoTicks >= VIEW_INFO_BUFFER_TICKS) openPokedexGUI(user, type, pokemonInFocus!!.pokemon.species.resourceIdentifier)
+
+                    if (viewInfoTicks >= VIEW_INFO_BUFFER_TICKS) openPokedexGUI(user, type,
+                        scannableEntityInFocus!!.resolvePokemonScan()?.species?.resourceIdentifier
+                    )
                     resetState()
                 }
             }
         }
 
-        if (scannedSpecies != null && pokemonInFocus?.id !== null) {
-            val targetId = pokemonInFocus!!.id
-            if (scanningProgress == 0F) StartScanningPacket(targetId, zoomLevel.toInt()).sendToServer()
+        if (scannedSpecies !== null && scannableEntityInFocus != null) {
+            val targetId = scannableEntityInFocus?.resolveEntityScan()?.id
+            if (scanningProgress == 0F) targetId?.let { StartScanningPacket(it, zoomLevel.toInt()).sendToServer() }
             if (scanningProgress < (MAX_SCAN_PROGRESS + CENTER_INFO_DISPLAY_INTERVALS)) scanningProgress += updateInterval
-            if (scanningProgress >= MAX_SCAN_PROGRESS) FinishScanningPacket(targetId, zoomLevel.toInt()).sendToServer()
+            if (scanningProgress >= MAX_SCAN_PROGRESS) targetId?.let { FinishScanningPacket(it, zoomLevel.toInt()).sendToServer() }
             if (focusIntervals > 0) focusIntervals = max(0F, focusIntervals - updateInterval)
         } else {
-            if (pokemonInFocus != null) {
+            if (scannableEntityInFocus != null) {
                 if (focusIntervals < FOCUS_INTERVALS) focusIntervals = min(focusIntervals + updateInterval, FOCUS_INTERVALS)
             } else {
                 if (focusIntervals > 0) focusIntervals = max(0F, focusIntervals - updateInterval)
@@ -116,7 +117,7 @@ class PokedexUsageContext {
     fun useTick(user: LocalPlayer, ticksInUse: Int, inUse: Boolean) {
         tryOpenScanGui(user, ticksInUse, inUse)
         if (scanningGuiOpen) tryScanPokemon(user)
-        if (scannedSpecies != null && pokemonInFocus?.id !== null) user.playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
+        if (scannedSpecies !== null && scannableEntityInFocus !== null) user.playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
     }
 
     fun tryOpenScanGui(user: AbstractClientPlayer, ticksInUse: Int, inUse: Boolean) {
@@ -139,7 +140,7 @@ class PokedexUsageContext {
     }
 
     fun attackKeyHeld(user: LocalPlayer, isHeld: Boolean) {
-        if (isHeld && pokemonInFocus !== null && viewInfoTicks < VIEW_INFO_BUFFER_TICKS && scanningProgress == 0F) {
+        if (isHeld && scannableEntityInFocus !== null && viewInfoTicks < VIEW_INFO_BUFFER_TICKS && scanningProgress == 0F) {
             viewInfoTicks++
             if (viewInfoTicks % 2 == 0) user.playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
         } else if (viewInfoTicks > 0 && viewInfoTicks < VIEW_INFO_BUFFER_TICKS) {
@@ -148,14 +149,19 @@ class PokedexUsageContext {
     }
 
     fun tryScanPokemon(user: LocalPlayer) {
-        val targetPokemon = PokemonScanner.findPokemon(user, zoomLevel.toInt())
-        if (targetPokemon != null) {
-            if (targetPokemon != pokemonInFocus) {
+        val targetScannableEntity = PokemonScanner.findScannableEntity(user, zoomLevel.toInt())
+        if (targetScannableEntity != null) {
+            if (targetScannableEntity != scannableEntityInFocus) {
                 resetFocusedPokemonState()
-                pokemonInFocus = targetPokemon
+                scannableEntityInFocus = targetScannableEntity
+                val resolvedPokemon = scannableEntityInFocus!!.resolvePokemonScan()
+                if(resolvedPokemon == null){
+                    resetFocusedPokemonState()
+                    return
+                }
 
                 // Check if Pokémon in focus is owned
-                isPokemonInFocusOwned = CobblemonClient.clientPokedexData.getHighestKnowledgeForSpecies(pokemonInFocus!!.pokemon) == PokedexEntryProgress.CAUGHT
+                isPokemonInFocusOwned = CobblemonClient.clientPokedexData.getHighestKnowledgeForSpecies(resolvedPokemon) == PokedexEntryProgress.CAUGHT
 
                 // Randomize info frames for render
                 if (focusIntervals == 0F) {
@@ -168,9 +174,9 @@ class PokedexUsageContext {
                 }
 
                 // Check if Pokémon in focus is new or has new data
-                newPokemonInfo = CobblemonClient.clientPokedexData.getNewInformation(pokemonInFocus!!.pokemon)
+                newPokemonInfo = CobblemonClient.clientPokedexData.getNewInformation(resolvedPokemon)
                 if (newPokemonInfo == PokedexLearnedInformation.NONE) user.playSound(CobblemonSounds.POKEDEX_SCAN_DETAIL)
-                else scannedSpecies = pokemonInFocus!!.pokemon.species.resourceIdentifier
+                scannedSpecies = resolvedPokemon.species.resourceIdentifier //TODO: Why was this an IF/ELSE?
             }
         } else {
             resetFocusedPokemonState()
@@ -178,7 +184,7 @@ class PokedexUsageContext {
     }
 
     fun onServerConfirmedRegister(packet: ServerConfirmedRegisterPacket) {
-        if (scannedSpecies == packet.species) {
+        if (scannedSpecies?.equals(packet.species) == true) {
             newPokemonInfo = packet.newInformation
             registerCompleted = true
             scannedSpecies = null
@@ -192,7 +198,7 @@ class PokedexUsageContext {
     }
 
     fun resetFocusedPokemonState() {
-        pokemonInFocus = null
+        scannableEntityInFocus = null
         scannedSpecies = null
         viewInfoTicks = 0
         scanningProgress = 0F

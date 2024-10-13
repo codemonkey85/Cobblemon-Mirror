@@ -58,6 +58,7 @@ import com.cobblemon.mod.common.net.messages.client.sound.UnvalidatedPlaySoundS2
 import com.cobblemon.mod.common.net.messages.client.spawn.SpawnPokemonPacket
 import com.cobblemon.mod.common.net.messages.client.ui.InteractPokemonUIPacket
 import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler.SEND_OUT_DURATION
+import com.cobblemon.mod.common.pokedex.scanner.ScannableEntity
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.Species
@@ -127,7 +128,7 @@ open class PokemonEntity(
     world: Level,
     pokemon: Pokemon = Pokemon().apply { isClient = world.isClientSide },
     type: EntityType<out PokemonEntity> = CobblemonEntities.POKEMON,
-) : ShoulderRidingEntity(type, world), PosableEntity, Shearable, Schedulable {
+) : ShoulderRidingEntity(type, world), PosableEntity, Shearable, Schedulable, ScannableEntity {
     companion object {
         @JvmStatic val SPECIES = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.STRING)
         @JvmStatic val NICKNAME = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.COMPONENT)
@@ -1404,4 +1405,12 @@ open class PokemonEntity(
      * @return The [Codec].
      */
     private fun sidedCodec(): Codec<Pokemon> = if (this.level().isClientSide) Pokemon.CLIENT_CODEC else Pokemon.CODEC
+
+    override fun resolvePokemonScan(): Pokemon? {
+        return this.pokemon
+    }
+
+    override fun resolveEntityScan(): LivingEntity {
+        return this
+    }
 }
