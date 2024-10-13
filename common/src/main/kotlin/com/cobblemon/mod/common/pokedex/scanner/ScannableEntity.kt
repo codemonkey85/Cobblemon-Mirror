@@ -8,10 +8,9 @@
 
 package com.cobblemon.mod.common.pokedex.scanner
 
-import com.cobblemon.mod.common.pokemon.Pokemon
 import net.minecraft.world.entity.LivingEntity
 
 interface ScannableEntity {
-    fun resolvePokemonScan(): Pokemon?
+    fun resolvePokemonScan(): PokedexEntityData?
     fun resolveEntityScan(): LivingEntity
 }

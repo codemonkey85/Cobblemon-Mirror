@@ -8,14 +8,14 @@
 
 package com.cobblemon.mod.common.api.events.pokedex.scanning
 
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.pokedex.scanner.PokedexEntityData
+import com.cobblemon.mod.common.pokedex.scanner.ScannableEntity
 import net.minecraft.server.level.ServerPlayer
 
-data class PokemonScannedEvent(val player: ServerPlayer, val scannedPokemon: Pokemon) {
-    val pokemon: Pokemon
-        get() = scannedPokemon
+data class PokemonScannedEvent(val player: ServerPlayer, val scannedPokemonEntityData: PokedexEntityData, val scannedEntity: ScannableEntity) {
+    val pokedexEntityData: PokedexEntityData
+        get() = scannedPokemonEntityData
 
     val isOwned: Boolean
-        get() = pokemon.getOwnerPlayer() == player
+        get() = scannedPokemonEntityData.ownerUUID == player.uuid
 }

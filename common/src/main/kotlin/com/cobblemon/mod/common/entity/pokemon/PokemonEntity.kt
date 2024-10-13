@@ -25,6 +25,7 @@ import com.cobblemon.mod.common.api.interaction.PokemonEntityInteraction
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
 import com.cobblemon.mod.common.api.net.serializers.PoseTypeDataSerializer
 import com.cobblemon.mod.common.api.net.serializers.StringSetDataSerializer
+import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.feature.ChoiceSpeciesFeatureProvider
 import com.cobblemon.mod.common.api.pokemon.feature.FlagSpeciesFeature
 import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatures
@@ -58,6 +59,7 @@ import com.cobblemon.mod.common.net.messages.client.sound.UnvalidatedPlaySoundS2
 import com.cobblemon.mod.common.net.messages.client.spawn.SpawnPokemonPacket
 import com.cobblemon.mod.common.net.messages.client.ui.InteractPokemonUIPacket
 import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler.SEND_OUT_DURATION
+import com.cobblemon.mod.common.pokedex.scanner.PokedexEntityData
 import com.cobblemon.mod.common.pokedex.scanner.ScannableEntity
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Pokemon
@@ -1406,8 +1408,18 @@ open class PokemonEntity(
      */
     private fun sidedCodec(): Codec<Pokemon> = if (this.level().isClientSide) Pokemon.CLIENT_CODEC else Pokemon.CODEC
 
-    override fun resolvePokemonScan(): Pokemon? {
-        return this.pokemon
+    override fun resolvePokemonScan(): PokedexEntityData? {
+        return PokemonSpecies.getByIdentifier(this.exposedSpecies.resourceIdentifier)?.let { species ->
+            PokedexEntityData(
+                species = species,
+                form = this.form,
+                gender = this.pokemon.gender,
+                aspects = this.aspects,
+                shiny = this.pokemon.shiny,
+                level = this.labelLevel(),
+                ownerUUID = this.ownerUUID ?: UUID.randomUUID()
+            )
+        }
     }
 
     override fun resolveEntityScan(): LivingEntity {

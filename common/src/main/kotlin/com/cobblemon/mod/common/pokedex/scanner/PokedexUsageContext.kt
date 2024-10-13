@@ -8,7 +8,6 @@
 
 package com.cobblemon.mod.common.pokedex.scanner
 
-import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokedex.PokedexLearnedInformation
@@ -155,14 +154,14 @@ class PokedexUsageContext {
             if (targetScannableEntity != scannableEntityInFocus) {
                 resetFocusedPokemonState()
                 scannableEntityInFocus = targetScannableEntity
-                val resolvedPokemon = scannableEntityInFocus!!.resolvePokemonScan()
+                val resolvedPokemon = scannableEntityInFocus?.resolvePokemonScan()
                 if(resolvedPokemon == null){
                     resetFocusedPokemonState()
                     return
                 }
 
                 // Check if Pokémon in focus is owned
-                isPokemonInFocusOwned = CobblemonClient.clientPokedexData.getHighestKnowledgeForSpecies(resolvedPokemon) == PokedexEntryProgress.CAUGHT
+                isPokemonInFocusOwned = CobblemonClient.clientPokedexData.getHighestKnowledgeForSpecies(resolvedPokemon.species.resourceIdentifier) == PokedexEntryProgress.CAUGHT
 
                 // Randomize info frames for render
                 if (focusIntervals == 0F) {
@@ -180,7 +179,6 @@ class PokedexUsageContext {
                     user.playSound(CobblemonSounds.POKEDEX_SCAN_DETAIL)
                 } else {
                     scannedSpecies = resolvedPokemon.species.resourceIdentifier
-                    Cobblemon.LOGGER.info(scannedSpecies)
                 }
             }
         } else {
