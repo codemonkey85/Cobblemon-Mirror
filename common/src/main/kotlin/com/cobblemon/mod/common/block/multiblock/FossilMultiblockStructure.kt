@@ -233,7 +233,7 @@ class FossilMultiblockStructure (
 
         for (i in 0..5) {
             box = box.move(directionToBehind.normal.x.toDouble(), 0.0, directionToBehind.normal.z.toDouble())
-            val fixedPosition = makeSuitableY(world, idealPlace.offset(directionToBehind.normal), entity, box)
+            val fixedPosition = makeSuitableY(world, idealPlace.offset(directionToBehind.normal.multiply(i + 1)), entity, box)
             if (fixedPosition != null) {
                 entity.setPos(fixedPosition.center.subtract(0.0, 0.5, 0.0))
                 // TODO: Find a correct way to set the new entity's Yaw rotation. (Face away from the machine)
@@ -330,7 +330,7 @@ class FossilMultiblockStructure (
         val tankBaseEntity = world.getBlockEntity(tankBasePos) as? MultiblockEntity
         val tankTopEntity = world.getBlockEntity(tankBasePos.above()) as? MultiblockEntity
         val tankBaseBlockState =  tankBaseEntity?.blockPos?.let { world.getBlockState(it) }
-        val direction = if (tankBaseBlockState?.block == CobblemonBlocks.RESTORATION_TANK) tankBaseBlockState.getValue(HorizontalDirectionalBlock.FACING).opposite else null
+        val direction = if (tankBaseBlockState?.block == CobblemonBlocks.RESTORATION_TANK) tankBaseBlockState.getValue(HorizontalDirectionalBlock.FACING).opposite else Direction.UP
         val wildPokemon: Pokemon? = if (hasCreatedPokemon) resultingFossil?.result?.create() else null
 
         monitorEntity?.multiblockStructure = null
@@ -364,7 +364,7 @@ class FossilMultiblockStructure (
             //var wildPokemon = this.createdPokemon?.sendOut(world as ServerWorld, pos.toVec3d())
 
             //world.spawnEntity(wildPokemon)
-            this.spawn(world, pos, direction ?: Direction.UP, wildPokemon)
+            this.spawn(world, pos, direction, wildPokemon)
 
         }
         this.protectionTime = -1

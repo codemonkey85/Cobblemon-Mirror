@@ -72,7 +72,7 @@ class RestorationTankBlock(settings: Properties) : MultiblockBlock(settings), Wo
 
     override fun playerWillDestroy(world: Level, pos: BlockPos, state: BlockState, player: Player): BlockState {
         val result = super.playerWillDestroy(world, pos, state, player)
-        if (!world.isClientSide) {
+        if (!world.isClientSide && player.isCreative) {
             val otherPart = world.getBlockState(getPositionOfOtherPart(state, pos))
 
             if (otherPart.block is RestorationTankBlock) {
@@ -85,7 +85,6 @@ class RestorationTankBlock(settings: Properties) : MultiblockBlock(settings), Wo
                 )
             }
         }
-
         return result
     }
 
@@ -224,6 +223,25 @@ class RestorationTankBlock(settings: Properties) : MultiblockBlock(settings), Wo
             shape
         }
     }
+
+    override fun updateShape(
+            state: BlockState,
+            direction: Direction,
+            neighborState: BlockState,
+            world: LevelAccessor,
+            pos: BlockPos,
+            neighborPos: BlockPos
+    ): BlockState {
+        val isTank = neighborState.`is`(this)
+        val part = state.getValue(PART)
+        if (!isTank && part == TankPart.TOP && neighborPos == pos.below()) {
+            return Blocks.AIR.defaultBlockState()
+        } else if (!isTank && part == TankPart.BOTTOM && neighborPos == pos.above()) {
+            return Blocks.AIR.defaultBlockState()
+        }
+        return state
+    }
+
     override fun getContainer(
         state: BlockState,
         world: LevelAccessor,
