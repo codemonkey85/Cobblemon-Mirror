@@ -30,6 +30,7 @@
 - New config setting `displayEntityNameLabel` and `displayEntityLabelsWhenCrouchingOnly` to control what and when is displayed for the pokemon label
 - `/freezepokemon` command to pause a Pokémon's animation at a specific point in time.
 - Added `no_ai` and `freeze_frame` options to the `/spawnpokemon` command.
+- Added shiny Pokémon particles with sound effects.
 
 ### Pokémon Added
 #### Gen 2
@@ -167,6 +168,12 @@
 - Fixed the placeholder `WingFlapIdle` animation so the wings are not rotating opposite to each other.
 - 'player' type dialogue faces can now be explicitly stated so that NPC mods that use fake players can show in dialogue portraits.
 - Added `isLeftSide` field for dialogue faces. This determines what side of dialogue box the portrait is on.
+
+### Localization
+- Updated translations for:
+  - Czech, German, Greek, Spanish, Mexican Spanish, French, Canadian French, Hungarian, Italian, Japanese, Korean, Dutch, Polish, Portuguese, Brazilian Portuguese, Russian, Ukrainian, Simplified Chinese, and Traditional Chinese 
+- Migrated translation project to Weblate at https://lang.cobblemon.com/projects/cobblemon/mod/
+
 
 ## [1.5.2 (May 27th, 2024)](#1-5-2)
 ### Fixes

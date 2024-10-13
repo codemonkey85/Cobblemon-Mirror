@@ -54,6 +54,7 @@ import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.api.types.tera.TeraType
 import com.cobblemon.mod.common.api.types.tera.TeraTypes
+import com.cobblemon.mod.common.client.entity.PokemonClientDelegate
 import com.cobblemon.mod.common.config.CobblemonConfig
 import com.cobblemon.mod.common.datafixer.CobblemonSchemas
 import com.cobblemon.mod.common.datafixer.CobblemonTypeReferences
@@ -918,6 +919,7 @@ open class Pokemon : ShowdownIdentifiable {
         val encoded = CODEC.encodeStart(NbtOps.INSTANCE, this).orThrow
         if (newUUID) {
             NbtOps.INSTANCE.set(encoded, DataKeys.POKEMON_UUID, StringTag.valueOf(UUID.randomUUID().toString()))
+            NbtOps.INSTANCE.remove(encoded, DataKeys.TETHERING_ID)
         }
         val result = CODEC.decode(NbtOps.INSTANCE, encoded).orThrow.first
         result.isClient = this.isClient
@@ -1535,7 +1537,6 @@ open class Pokemon : ShowdownIdentifiable {
                 this.moveSet.setMove(0, Move(benchedMove.moveTemplate, benchedMove.ppRaisedStages))
                 return
             }
-            this.initializeMoveset()
         }
     }
 

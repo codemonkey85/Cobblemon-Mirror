@@ -103,6 +103,8 @@ class PokemonServerDelegate : PokemonSideDelegate {
         val trackedNickname =  mock?.nickname ?: entity.pokemon.nickname ?: Component.empty()
         val trackedAspects = mock?.aspects ?: entity.pokemon.aspects
 
+        //used getOwnerPlayer().uuid instead of getOwnerUUID() to avoid a potential NPE
+        entity.ownerUUID = entity.pokemon.getOwnerPlayer()?.uuid
         entity.entityData.set(PokemonEntity.SPECIES, trackedSpecies)
         if (entity.entityData.get(PokemonEntity.NICKNAME) != trackedNickname) {
             entity.entityData.set(PokemonEntity.NICKNAME, trackedNickname)
@@ -249,7 +251,7 @@ class PokemonServerDelegate : PokemonSideDelegate {
         }
 
         if (entity.deathTime == 60) {
-            if (entity.ownerUUID == null) {
+            if (entity.ownerUUID == null && entity.owner == null) {
                 entity.level().broadcastEntityEvent(entity, 60.toByte()) // Sends smoke effect
                 if(entity.level().gameRules.getBoolean(CobblemonGameRules.DO_POKEMON_LOOT)) {
                     (entity.drops ?: entity.pokemon.form.drops).drop(entity, entity.level() as ServerLevel, entity.position(), entity.killer)
