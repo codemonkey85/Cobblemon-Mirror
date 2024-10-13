@@ -347,9 +347,7 @@ abstract class PosableState : Schedulable {
     fun addPrimaryAnimation(primaryAnimation: PrimaryAnimation) {
         this.primaryAnimation = primaryAnimation
         primaryAnimation.start(this)
-        this.activeAnimations.forEach {
-            if (!it.enduresPrimaryAnimations) this.activeAnimations.remove(it)
-        }
+        this.activeAnimations.removeIf { !it.enduresPrimaryAnimations }
         this.quirks.clear()
         this.poseIntensity = 1F
     }
