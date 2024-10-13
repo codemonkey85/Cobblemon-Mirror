@@ -12,13 +12,13 @@ import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.CobblemonItems;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
 import com.cobblemon.mod.common.api.events.item.LeftoversCreatedEvent;
+import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.api.storage.party.PartyStore;
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags;
 import com.cobblemon.mod.common.pokedex.scanner.ScannableEntity;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.util.CompoundTagExtensionsKt;
 import com.cobblemon.mod.common.util.CompoundTagUtilities;
-import com.cobblemon.mod.common.util.DataKeys;
 import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -33,6 +33,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -168,13 +169,35 @@ public abstract class PlayerMixin extends LivingEntity implements ScannableEntit
     @Override
     public @Nullable Pokemon resolvePokemonScan() {
         if(CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityRight())){
-            return Pokemon.Companion.loadFromNBT(this.registryAccess(), this.getShoulderEntityRight().getCompound(DataKeys.POKEMON));
+            // We need to do this cause the Entity doesn't store a reference to its storage
+            try {
+                PartyStore party = Cobblemon.INSTANCE.getStorage().getParty(this.uuid, this.registryAccess());
+                for (Pokemon pokemon : party) {
+                    if (pokemon.getUuid().equals(CompoundTagUtilities.getPokemonID(this.getShoulderEntityRight()))) {
+                        return pokemon;
+                    }
+                }
+            } catch (Exception e) {
+                //Cobblemon.LOGGER.warn("Got error trying to find pokemon on right shoulder, {}: {}", e.getClass(), e.getMessage());
+            }
         }
         if(CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityLeft())){
-            return Pokemon.Companion.loadFromNBT(this.registryAccess(), this.getShoulderEntityLeft().getCompound(DataKeys.POKEMON));
+            // We need to do this cause the Entity doesn't store a reference to its storage
+            try {
+                PartyStore party = Cobblemon.INSTANCE.getStorage().getParty(this.uuid, this.registryAccess());
+                for (Pokemon pokemon : party) {
+                    if (pokemon.getUuid().equals(CompoundTagUtilities.getPokemonID(this.getShoulderEntityLeft()))) {
+                        return pokemon;
+                    }
+                }
+            } catch (Exception e) {
+                //Cobblemon.LOGGER.warn("Got error trying to find pokemon on left shoulder, {}: {}", e.getClass(), e.getMessage());
+            }
         }
         return null;
     }
+
+
 
     @Override
     public LivingEntity resolveEntityScan() {
