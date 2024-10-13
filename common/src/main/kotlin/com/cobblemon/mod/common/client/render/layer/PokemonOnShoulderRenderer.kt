@@ -104,8 +104,8 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
 
             var state = FloatingState()
             state.currentAspects = shoulderData.aspects
-
             val model = PokemonModelRepository.getPoser(shoulderData.species.resourceIdentifier, state)
+            model.context = context
             context.put(RenderContext.SPECIES, shoulderData.species.resourceIdentifier)
             context.put(RenderContext.ASPECTS, shoulderData.aspects)
             val scale = shoulderData.form.baseScale * shoulderData.scaleModifier

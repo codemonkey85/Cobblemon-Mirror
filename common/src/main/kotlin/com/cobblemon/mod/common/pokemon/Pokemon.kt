@@ -170,9 +170,6 @@ open class Pokemon : ShowdownIdentifiable {
             _form.emit(value)
         }
 
-    // Floating Platform for surface water battles
-    var battleSurface: Boat? = null
-
     // Need to happen before currentHealth init due to the calc
     var ivs = IVs.createRandomIVs()
         internal set
@@ -567,18 +564,6 @@ open class Pokemon : ShowdownIdentifiable {
                         position.z.toInt()
                     )
                 ) && this.species.types.all { it != ElementalTypes.WATER && it != ElementalTypes.FLYING }) {
-
-                // Create a new boat entity with the generic EntityType.BOAT
-                val raftEntity = Boat(level, position.x, position.y, position.z)
-
-                raftEntity.variant = Boat.Type.BAMBOO
-
-                raftEntity.setPos(position.x, position.y, position.z) // Set the position of the boat
-
-                // Spawn the boat entity in the world
-                level.addFreshEntity(raftEntity)
-
-                this.battleSurface = raftEntity
             }
         }
 
@@ -686,13 +671,11 @@ open class Pokemon : ShowdownIdentifiable {
         return future
     }
 
-
     fun recall() {
         CobblemonEvents.POKEMON_RECALLED.post(PokemonRecalledEvent(this, this.entity))
         val state = this.state as? ActivePokemonState
         this.state = InactivePokemonState()
         state?.recall()
-        this.battleSurface?.discard() // destroy the battle surface if it exists
     }
 
     fun tryRecallWithAnimation() {
