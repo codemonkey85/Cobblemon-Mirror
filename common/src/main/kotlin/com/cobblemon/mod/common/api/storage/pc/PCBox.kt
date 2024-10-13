@@ -148,4 +148,5 @@ open class PCBox(val pc: PCStore) : Iterable<Pokemon> {
     }
 
     open fun getNonEmptySlots() = (0 until POKEMON_PER_BOX).filter { get(it) != null }.associateWith { get(it)!! }
+    open fun getNonEmptySlotsForPackets() = getNonEmptySlots().mapValues { (_, pokemon) -> { _: RegistryAccess -> pokemon } }
 }
