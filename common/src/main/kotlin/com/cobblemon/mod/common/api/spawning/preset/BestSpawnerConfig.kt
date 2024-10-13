@@ -53,6 +53,8 @@ class BestSpawnerConfig {
             .create()
 
         const val CONFIG_NAME = "best-spawner-config"
+        const val INTERNAL_PATH = "/data/${Cobblemon.MODID}/spawning/$CONFIG_NAME.json"
+        const val EXTERNAL_PATH = "config/${Cobblemon.MODID}/spawning/$CONFIG_NAME.json"
 
         fun load(): BestSpawnerConfig {
             val internal = loadInternal()
@@ -75,14 +77,14 @@ class BestSpawnerConfig {
         }
 
         private fun loadInternal(): BestSpawnerConfig {
-            val reader = InputStreamReader(Cobblemon::class.java.getResourceAsStream("/assets/${Cobblemon.MODID}/spawning/$CONFIG_NAME.json")!!)
+            val reader = InputStreamReader(Cobblemon::class.java.getResourceAsStream(INTERNAL_PATH)!!)
             val config = GSON.fromJson(reader, BestSpawnerConfig::class.java)
             reader.close()
             return config
         }
 
         private fun loadExternal(): BestSpawnerConfig? {
-            val configFile = File("config/${Cobblemon.MODID}/spawning/$CONFIG_NAME.json")
+            val configFile = File(EXTERNAL_PATH)
             configFile.parentFile.mkdirs()
             return if (configFile.exists()) {
                 try {
@@ -100,10 +102,10 @@ class BestSpawnerConfig {
         }
 
         fun saveExternal() {
-            val stream = Cobblemon::class.java.getResourceAsStream("/assets/${Cobblemon.MODID}/spawning/$CONFIG_NAME.json")!!
+            val stream = Cobblemon::class.java.getResourceAsStream(INTERNAL_PATH)!!
             val bytes = stream.readAllBytes()
             stream.close()
-            val configFile = File("config/${Cobblemon.MODID}/spawning/$CONFIG_NAME.json")
+            val configFile = File(EXTERNAL_PATH)
             configFile.parentFile.mkdirs()
             configFile.createNewFile()
             val outputStream = FileOutputStream(configFile)

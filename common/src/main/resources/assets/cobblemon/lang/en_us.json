@@ -632,6 +632,7 @@
 
   "cobblemon.ui.generic.yes": "Yes",
   "cobblemon.ui.generic.no": "No",
+  "cobblemon.ui.generic.trainer": "Trainer",
 
   "cobblemon.ui.pokenav.title": "PokéNav",
   "cobblemon.ui.pokenav.narrator.backbutton": "Poke Nav button pressed",
@@ -713,6 +714,7 @@
   "cobblemon.ui.interact.team_request": "Team up",
   "cobblemon.ui.interact.too_far": "Target is too far away",
 
+  "cobblemon.ui.pokedex.registered_suffix": "%1$s Registered",
 
   "cobblemon.ui.pokedex.region.national": "National",
   "cobblemon.ui.pokedex.region.alola": "Alola",
@@ -726,8 +728,9 @@
   "cobblemon.ui.pokedex.region.sinnoh": "Sinnoh",
   "cobblemon.ui.pokedex.region.unknown": "Unknown",
   "cobblemon.ui.pokedex.region.unova": "Unova",
+
   "cobblemon.ui.pokedex.info.ability": "Ability: %1$s",
-  "cobblemon.ui.pokedex.info.description": "Description",
+  "cobblemon.ui.pokedex.info.entry": "Entry",
   "cobblemon.ui.pokedex.info.stats": "Base Stats",
   "cobblemon.ui.pokedex.info.drops": "Drops",
   "cobblemon.ui.pokedex.info.drops_display": "%1$s %2$s",
@@ -736,6 +739,9 @@
   "cobblemon.ui.pokedex.info.drops_percentage": "%1$s%%",
   "cobblemon.ui.pokedex.info.drops_empty": "No drops available.",
 
+  "cobblemon.ui.pokedex.info.variation": "Variation",
+
+  "cobblemon.ui.pokedex.info.form": "Form",
   "cobblemon.ui.pokedex.info.form.normal": "Standard",
   "cobblemon.ui.pokedex.info.form.alola": "Alolan",
   "cobblemon.ui.pokedex.info.form.region-bias-alola": "Alola Bias",
@@ -900,6 +906,10 @@
   "key.cobblemon.categories.cobblemon.debug": "Cobblemon Debug",
 
   "cobblemon.subtitle.poke_ball.capture_succeeded": "Poké Ball capture succeeds",
+  "cobblemon.subtitle.pokemon.shiny_shine": "Owned shiny Pokémon shines",
+  "cobblemon.subtitle.pokemon.wild_shiny_shine": "Wild shiny Pokémon shines!",
+  "cobblemon.subtitle.pokemon.owned_shiny_ambient": "Ambient shiny Pokémon sparkles",
+  "cobblemon.subtitle.pokemon.shiny_ambient": "Wild shiny Pokémon sparkles!",
   "cobblemon.subtitle.fossilmachine.activate": "Restoration Machine activates",
   "cobblemon.subtitle.fossilmachine.active_loop": "Restoration Machine hums",
   "cobblemon.subtitle.fossilmachine.dna_full": "Restoration Tank reaches capacity",
@@ -1143,6 +1153,7 @@
   "cobblemon.command.friendship": "%1$s has %2$s friendship.",
   "cobblemon.command.givepokemon.nospecies": "Error: You need to include a Pokémon name or 'random'",
   "cobblemon.command.spawnpokemon.nospecies": "Error: You need to include a Pokémon name or 'random'",
+  "cobblemon.command.error.nonpc": "Error: You need to include a valid NPC identifier.",
   "cobblemon.command.held_item": "%1$s's %2$s was given the %3$s to hold.",
   "cobblemon.command.pokeheal.in_battle": "You cannot heal your party while in a battle!",
   "cobblemon.command.spawnpokemonfrompool": "A %1$s has spawned in the area.",
@@ -1765,6 +1776,7 @@
 
   "cobblemon.party.faintRecover": "%1$s has recovered from fainting.",
 
+  "cobblemon.type.suffix": "%1$s Type",
   "cobblemon.type.fire": "Fire",
   "cobblemon.type.water": "Water",
   "cobblemon.type.grass": "Grass",
@@ -3732,6 +3744,8 @@
   "cobblemon.move.twister.desc": "The user whips up a vicious tornado to tear at opposing Pokémon. This may also make them flinch.",
   "cobblemon.move.uproar": "Uproar",
   "cobblemon.move.uproar.desc": "The user attacks in an uproar for three turns. During that time, no Pokémon can fall asleep.",
+  "cobblemon.move.upperhand": "Upper Hand",
+  "cobblemon.move.upperhand.desc": "The user reacts to the target's movement and strikes with the heel of its palm, making the target flinch. This move fails if the target is not readying a priority move.",
   "cobblemon.move.uturn": "U-turn",
   "cobblemon.move.uturn.desc": "After making its attack, the user rushes back to switch places with a party Pokémon in waiting.",
   "cobblemon.move.vacuumwave": "Vacuum Wave",

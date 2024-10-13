@@ -40,6 +40,8 @@ object CobblemonSounds : PlatformRegistry<Registry<SoundEvent>, ResourceKey<Regi
     val PC_CLICK = this.create("pc.click")
 
     @JvmField
+    val VILLAGER_WORK_NURSE = this.create("entity.villager.work_nurse")
+    @JvmField
     val HEALING_MACHINE_ACTIVE = this.create("healing_machine.active")
 
     @JvmField
@@ -51,9 +53,13 @@ object CobblemonSounds : PlatformRegistry<Registry<SoundEvent>, ResourceKey<Regi
     @JvmField
     val POKE_BALL_OPEN = this.create("poke_ball.open")
     @JvmField
+    val POKE_BALL_SHINY_OPEN = this.create("poke_ball.shiny_open")
+    @JvmField
     val POKE_BALL_HIT = this.create("poke_ball.hit")
     @JvmField
     val POKE_BALL_SEND_OUT = this.create("poke_ball.send_out")
+    @JvmField
+    val POKE_BALL_SHINY_SEND_OUT = this.create("poke_ball.shiny_send_out")
     @JvmField
     val POKE_BALL_RECALL = this.create("poke_ball.recall")
     @JvmField
@@ -66,29 +72,23 @@ object CobblemonSounds : PlatformRegistry<Registry<SoundEvent>, ResourceKey<Regi
     @JvmField
     val POKEDEX_CLOSE = this.create("item.pokedex.close")
     @JvmField
+    val POKEDEX_CLICK = this.create("item.pokedex.click")
+    @JvmField
+    val POKEDEX_CLICK_SHORT = this.create("item.pokedex.click_short")
+    @JvmField
     val POKEDEX_SCAN_OPEN = this.create("item.pokedex.scan_open")
     @JvmField
     val POKEDEX_SCAN_CLOSE = this.create("item.pokedex.scan_close")
-    @JvmField
-    val POKEDEX_SCAN = this.create("item.pokedex.scan")
     @JvmField
     val POKEDEX_SCAN_LOOP = this.create("item.pokedex.scan_loop")
     @JvmField
     val POKEDEX_SCAN_DETAIL = this.create("item.pokedex.scan_detail")
     @JvmField
-    val POKEDEX_CLICK = this.create("item.pokedex.click")
+    val POKEDEX_SCAN_REGISTER_POKEMON = this.create("item.pokedex.scan_register_pokemon")
     @JvmField
-    val POKEDEX_CLICK_SHORT = this.create("item.pokedex.click_short")
+    val POKEDEX_SCAN_REGISTER_ASPECT = this.create("item.pokedex.scan_register_aspect")
     @JvmField
-    val POKEDEX_SNAP_PICTURE = this.create("item.pokedex.snap")
-    @JvmField
-    val POKEDEX_ZOOM_IN = this.create("item.pokedex.zoom_in")
-    @JvmField
-    val POKEDEX_ZOOM_OUT = this.create("item.pokedex.zoom_out")
-    @JvmField
-    val POKEDEX_ZOOM_INCREMENT = this.create("item.pokedex.zoom_increment")
-
-
+    val POKEDEX_SCAN_ZOOM_INCREMENT = this.create("item.pokedex.scan_zoom_increment")
 
     @JvmField
     val ITEM_USE = this.create("item.use")

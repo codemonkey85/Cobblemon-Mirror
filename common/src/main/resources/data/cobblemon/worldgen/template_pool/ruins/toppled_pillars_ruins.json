@@ -7,6 +7,7 @@
             "element": {
                 "location": "cobblemon:ruins/toppled_pillars_circle_layout",
                 "element_type": "minecraft:single_pool_element",
+                "override_liquid_settings": "apply_waterlogging",
                 "processors": "minecraft:empty",
                 "projection": "terrain_matching"
             }
@@ -16,6 +17,7 @@
             "element": {
                 "location": "cobblemon:ruins/toppled_pillars_square_layout",
                 "element_type": "minecraft:single_pool_element",
+                "override_liquid_settings": "apply_waterlogging",
                 "processors": "minecraft:empty",
                 "projection": "terrain_matching"
             }

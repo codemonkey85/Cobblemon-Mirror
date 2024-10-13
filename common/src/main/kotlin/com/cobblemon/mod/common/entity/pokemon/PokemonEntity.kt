@@ -875,7 +875,7 @@ open class PokemonEntity(
 
     override fun getDimensions(pose: Pose): EntityDimensions {
         val scale = effects.mockEffect?.scale ?: (form.baseScale * pokemon.scaleModifier)
-        return this.exposedForm.hitbox.scale(scale)
+        return this.exposedForm.hitboxWithEyeHeight(this).scale(scale)
     }
 
     override fun canBeSeenAsEnemy() = super.canBeSeenAsEnemy() && !isBusy
@@ -906,22 +906,6 @@ open class PokemonEntity(
             discard()
         }
     }
-
-    //override fun getEyeHeight(pose: EntityPose): Float = this.exposedForm.eyeHeight(this)
-
-    /*
-    @Suppress("SENSELESS_COMPARISON")
-    override fun getActiveEyeHeight(pose: EntityPose, dimensions: EntityDimensions): Float {
-        // DO NOT REMOVE
-        // LivingEntity#getActiveEyeHeight is called in the constructor of Entity
-        // Pokémon param is not available yet
-        if (this.pokemon == null) {
-            return super.getActiveEyeHeight(pose, dimensions)
-        }
-        return this.exposedForm.eyeHeight(this)
-    }
-
-     */
 
     fun setBehaviourFlag(flag: PokemonBehaviourFlag, on: Boolean) {
         entityData.set(BEHAVIOUR_FLAGS, setBitForByte(entityData.get(BEHAVIOUR_FLAGS), flag.bit, on))

@@ -5,7 +5,7 @@
 ### Additions
 - Added Pokémon (and item) fishing using modified fishing rods - Poké Rods! You'll need a Poké Rod smithing template, a fishing rod, and some type of Poké Ball. Each Poké Ball makes a differently themed rod. Why not?
 - Added Lure Ball functionality, increasing the catch rate of Pokémon that were caught on a fishing rod.
-- Added Repeat Ball functionality, increasing the catch reate of Pokémon that are already registered as caught in a player's Pokédex.
+- Added Repeat Ball functionality, increasing the catch rate of Pokémon that are already registered as caught in a player's Pokédex.
 - Added property chaining support for duplicate CustomPokemonPropertyType elements.
 - Added `aspect` and `unaspect` PokemonProperty arguments (which also includes commands such as `/pokemonedit`, `/spawnpokemon`, and `/givepokemon`) to allow forcing or un-forcing an aspect on a Pokémon.
 - Added `type` alternatively `elemental_type` PokemonProperty argument, this is only used for filtering and is not applied to Pokémon. Example `type=fire` would be true for Charmander but false for Squirtle.
@@ -30,6 +30,7 @@
 - New config setting `displayEntityNameLabel` and `displayEntityLabelsWhenCrouchingOnly` to control what and when is displayed for the pokemon label
 - `/freezepokemon` command to pause a Pokémon's animation at a specific point in time.
 - Added `no_ai` and `freeze_frame` options to the `/spawnpokemon` command.
+- Added shiny Pokémon particles with sound effects.
 
 ### Pokémon Added
 #### Gen 2
@@ -80,6 +81,7 @@
 - Relic coin pouches can now be waterlogged.
 - Pokemon Name (and level) labels are now only visible when crouching by default, set the `displayEntityLabelsWhenCrouchingOnly` to `false` to always them even when not crouching
 - The "Press R to start battle prompt" will now disappear after a player's first battle has been won
+- The default number of digits for the Pokédex number in the summary has been increased, from 3 to 4.
 
 ### Fixes
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating.
@@ -166,6 +168,12 @@
 - Fixed the placeholder `WingFlapIdle` animation so the wings are not rotating opposite to each other.
 - 'player' type dialogue faces can now be explicitly stated so that NPC mods that use fake players can show in dialogue portraits.
 - Added `isLeftSide` field for dialogue faces. This determines what side of dialogue box the portrait is on.
+
+### Localization
+- Updated translations for:
+  - Czech, German, Greek, Spanish, Mexican Spanish, French, Canadian French, Hungarian, Italian, Japanese, Korean, Dutch, Polish, Portuguese, Brazilian Portuguese, Russian, Ukrainian, Simplified Chinese, and Traditional Chinese 
+- Migrated translation project to Weblate at https://lang.cobblemon.com/projects/cobblemon/mod/
+
 
 ## [1.5.2 (May 27th, 2024)](#1-5-2)
 ### Fixes

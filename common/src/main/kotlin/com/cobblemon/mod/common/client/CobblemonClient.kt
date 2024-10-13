@@ -41,8 +41,10 @@ import com.cobblemon.mod.common.client.tooltips.TooltipManager
 import com.cobblemon.mod.common.client.trade.ClientTrade
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatType
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext
+import com.cobblemon.mod.common.util.isLookingAt
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
@@ -56,7 +58,9 @@ import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.LivingEntityRenderer
 import net.minecraft.client.resources.PlayerSkin
 import net.minecraft.server.packs.resources.ResourceManager
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.phys.AABB
 
 object CobblemonClient {
 
@@ -130,11 +134,27 @@ object CobblemonClient {
 
         PlatformEvents.CLIENT_ENTITY_UNLOAD.subscribe { event -> EntitySoundTracker.clear(event.entity.id) }
         PlatformEvents.CLIENT_TICK_POST.subscribe { event ->
-            if (pokedexUsageContext.scanningGuiOpen &&
-                event.client.player?.inventory?.getItem(event.client.player!!.inventory.selected)?.`is`(CobblemonItemTags.POKEDEX) != true
-            ) {
-                //dont open scanner if player switches off the dex via hotbar
-                pokedexUsageContext.stopUsing(event.client.player!!, PokedexUsageContext.TIME_TO_OPEN_SCANNER + 1)
+            val player = event.client.player
+            if (player !== null) {
+                var selectedItem = player.inventory.getItem(player.inventory.selected)
+                if (pokedexUsageContext.scanningGuiOpen &&
+                    !(selectedItem.`is`(CobblemonItemTags.POKEDEX)) &&
+                    !(player.offhandItem.`is`(CobblemonItemTags.POKEDEX) &&
+                        player.isUsingItem == true &&
+                        player.usedItemHand == InteractionHand.OFF_HAND
+                    )
+                ) {
+                    // Stop using Pokédex in main hand if player switches to a different slot in hotbar
+                    pokedexUsageContext.stopUsing(player, PokedexUsageContext.OPEN_SCANNER_BUFFER_TICKS + 1)
+                }
+                if(event.client.isPaused) {
+                    return@subscribe
+                }
+                val nearbyShinies = player?.level()?.getEntities(player, AABB.ofSize(player.position(), 16.0, 16.0, 16.0)) { (it is PokemonEntity) && it.pokemon.shiny }
+                nearbyShinies?.firstOrNull { player.isLookingAt(it) }.let {
+                    if(it is PokemonEntity)
+                        it.delegate.spawnShinyParticle(player!!)
+                }
             }
         }
     }

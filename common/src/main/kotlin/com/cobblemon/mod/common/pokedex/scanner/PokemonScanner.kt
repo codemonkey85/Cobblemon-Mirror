@@ -9,17 +9,20 @@
 package com.cobblemon.mod.common.pokedex.scanner
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext.Companion.BLOCK_LENGTH_PER_ZOOM_STAGE
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.phys.AABB
 
 //Handles the actual raycasting to figure out what pokemon we are looking at
 object PokemonScanner {
+    val RAY_LENGTH = 10.0
+
     //This basically draws a box around the casting entity, finds all entities in the box, then finds the one that a ray emanating from the player hits first
-    fun detectEntity(castingEntity: Entity): Entity? {
+    fun detectEntity(castingEntity: Entity, zoomLevel: Int): Entity? {
         val eyePos = castingEntity.getEyePosition(1.0F)
         val lookVec = castingEntity.getViewVector(1.0F)
-        val maxDistance = RAY_LENGTH
-        val boundingBoxSize = 12.0
+        val maxDistance = RAY_LENGTH + zoomLevel
+        val boundingBoxSize = 12.0 + zoomLevel
         var closestEntity: Entity? = null
         var closestDistance = maxDistance
 
@@ -74,14 +77,12 @@ object PokemonScanner {
         return closestEntity
     }
 
-    fun findPokemon(castingEntity: Entity): PokemonEntity? {
-        val targetedEntity = detectEntity(castingEntity)
+    fun findPokemon(castingEntity: Entity, zoomLevel: Int): PokemonEntity? {
+        val targetedEntity = detectEntity(castingEntity, zoomLevel * BLOCK_LENGTH_PER_ZOOM_STAGE)
         return targetedEntity as? PokemonEntity
     }
 
-    fun isEntityInRange(castingEntity: Entity, targetEntity: Entity): Boolean {
-        return targetEntity.position().distanceTo(castingEntity.position()) <= RAY_LENGTH
+    fun isEntityInRange(castingEntity: Entity, targetEntity: Entity, zoomLevel: Int): Boolean {
+        return targetEntity.position().distanceTo(castingEntity.position()) <= RAY_LENGTH + (zoomLevel * BLOCK_LENGTH_PER_ZOOM_STAGE)
     }
-
-    val RAY_LENGTH = 10.0
 }
