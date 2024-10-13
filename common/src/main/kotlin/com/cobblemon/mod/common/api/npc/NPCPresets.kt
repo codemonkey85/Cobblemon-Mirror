@@ -71,7 +71,7 @@ object NPCPresets : JsonDataRegistry<NPCPreset> {
         .create()
 
     override val typeToken: TypeToken<NPCPreset> = TypeToken.get(NPCPreset::class.java)
-    override val resourcePath = "npcs"
+    override val resourcePath = "npc_presets"
     override val observable = SimpleObservable<NPCPresets>()
     private val npcPresetsByIdentifier = mutableMapOf<ResourceLocation, NPCPreset>()
 

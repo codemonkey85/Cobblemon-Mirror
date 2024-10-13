@@ -379,6 +379,7 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
         npc.config.forEach { it.applyDefault(this) }
         npc.variations.values.forEach { this.appliedAspects.addAll(it.provideAspects(this)) }
         party = npc.party?.provide(this, level)
+        updateAspects()
     }
 
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
