@@ -16,14 +16,12 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUI
 import com.cobblemon.mod.common.client.pokedex.PokedexScannerRenderer
 import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.item.PokedexItem
 import com.cobblemon.mod.common.net.messages.client.pokedex.ServerConfirmedRegisterPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.FinishScanningPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.StartScanningPacket
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.resources.ResourceLocation
@@ -67,12 +65,12 @@ class PokedexUsageContext {
     var availableInfoFrames: MutableList<Boolean?> = mutableListOf(null, null, null, null)
     val renderer: PokedexScannerRenderer = PokedexScannerRenderer()
 
-    fun stopUsing(user: LocalPlayer, ticksInUse: Int) {
-        tryOpenInfoGui(user, ticksInUse)
+    fun stopUsing(ticksInUse: Int) {
+        tryOpenInfoGui(ticksInUse)
         resetState(false)
     }
 
-    fun renderUpdate(user: LocalPlayer, graphics: GuiGraphics, tickCounter: DeltaTracker) {
+    fun renderUpdate(graphics: GuiGraphics, tickCounter: DeltaTracker) {
         val tickDelta = tickCounter.realtimeDeltaTicks.takeIf { !Minecraft.getInstance()!!.isPaused } ?: 0F
         val updateInterval = (tickDelta / 20) * RENDER_UPDATES_PER_SECOND
 
@@ -128,7 +126,7 @@ class PokedexUsageContext {
         }
     }
 
-    fun tryOpenInfoGui(user: LocalPlayer, ticksInUse: Int) {
+    fun tryOpenInfoGui(ticksInUse: Int) {
         if (ticksInUse < OPEN_SCANNER_BUFFER_TICKS) {
             openPokedexGUI(type)
             infoGuiOpen = true

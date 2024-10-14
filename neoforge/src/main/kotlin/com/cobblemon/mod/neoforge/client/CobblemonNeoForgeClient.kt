@@ -204,7 +204,7 @@ object CobblemonNeoForgeClient : CobblemonClientImplementation {
             if (((itemStack.item is PokedexItem && player.usedItemHand == InteractionHand.MAIN_HAND) ||
                 (offhandStack.item is PokedexItem && player.usedItemHand == InteractionHand.OFF_HAND))
             ) {
-                pokedexUsageContext.renderUpdate(player, event.guiGraphics, event.partialTick)
+                pokedexUsageContext.renderUpdate(event.guiGraphics, event.partialTick)
             } else if (pokedexUsageContext.transitionIntervals > 0) {
                 pokedexUsageContext.resetState()
             }

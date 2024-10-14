@@ -110,7 +110,7 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
                 if (((itemStack.item is PokedexItem && player.usedItemHand == InteractionHand.MAIN_HAND) ||
                     (offhandStack.item is PokedexItem && player.usedItemHand == InteractionHand.OFF_HAND))
                 ) {
-                    pokedexUsageContext.renderUpdate(player, graphics, tickDelta)
+                    pokedexUsageContext.renderUpdate(graphics, tickDelta)
                 } else if (pokedexUsageContext.transitionIntervals > 0) {
                     pokedexUsageContext.resetState()
                 }
