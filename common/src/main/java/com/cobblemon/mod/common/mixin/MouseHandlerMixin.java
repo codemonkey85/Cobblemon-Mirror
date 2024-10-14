@@ -100,7 +100,8 @@ public class MouseHandlerMixin {
             this.smoothTurnX.reset();
             var defaultSensitivity = this.minecraft.options.sensitivity().get() * 0.6000000238418579 + 0.20000000298023224;
             var spyglassSensitivity = Math.pow(defaultSensitivity, 3);
-            var sensitivity = Mth.lerp(defaultSensitivity, spyglassSensitivity, usageContext.getFovMultiplier());
+            var lookSensitivity = spyglassSensitivity * 8.0;
+            var sensitivity = Mth.lerp(usageContext.getFovMultiplier(), spyglassSensitivity, lookSensitivity);
             player.turn(this.accumulatedDX * sensitivity, (this.accumulatedDY * sensitivity));
             return false;
         }
