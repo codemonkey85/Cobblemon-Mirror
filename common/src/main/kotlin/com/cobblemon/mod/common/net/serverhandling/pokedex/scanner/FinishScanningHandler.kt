@@ -19,6 +19,7 @@ import com.cobblemon.mod.common.pokedex.scanner.PlayerScanningDetails
 import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext
 import com.cobblemon.mod.common.pokedex.scanner.PokemonScanner
 import com.cobblemon.mod.common.pokedex.scanner.ScannableEntity
+import com.cobblemon.mod.common.pokemon.Pokemon
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 
@@ -42,17 +43,17 @@ object FinishScanningHandler : ServerNetworkPacketHandler<FinishScanningPacket> 
             if (targetEntity.uuid == inProgressUUID && ticksScan >= PokedexUsageContext.SUCCESS_SCAN_SERVER_TICKS) {
                 val scannableEntity = targetEntity as? ScannableEntity ?: return
                 val dex = Cobblemon.playerDataManager.getPokedexData(player)
-                val pokedexEntityData = scannableEntity.resolvePokemonScan()
-                if(pokedexEntityData != null){
-                    val newInformation = dex.getNewInformation(pokedexEntityData)
+                val pokemon = scannableEntity.resolvePokemonScan()
+                if(pokemon != null){
+                    val newInformation = dex.getNewInformation(pokemon)
                     if ((scannableEntity as? PokemonEntity)?.owner === player) {
                         dex.catch(scannableEntity.pokemon)
                     } else {
-                        dex.encounter(pokedexEntityData)
+                        dex.encounter(pokemon)
                     }
 
-                    POKEMON_SCANNED.post(PokemonScannedEvent(player, pokedexEntityData, scannableEntity))
-                    ServerConfirmedRegisterPacket(pokedexEntityData.species.resourceIdentifier, newInformation).sendToPlayer(player)
+                    POKEMON_SCANNED.post(PokemonScannedEvent(player, pokemon))
+                    ServerConfirmedRegisterPacket(pokemon.species.resourceIdentifier, newInformation).sendToPlayer(player)
                 }
             }
         }
