@@ -186,7 +186,7 @@ class PokedexUsageContext {
             scannedSpecies = null
             scanningProgress = 0F
             val player = Minecraft.getInstance().player ?: return
-            player.playSound(
+            playSound(
                 if (newPokemonInfo == PokedexLearnedInformation.SPECIES) CobblemonSounds.POKEDEX_SCAN_REGISTER_POKEMON
                 else CobblemonSounds.POKEDEX_SCAN_REGISTER_ASPECT
             )
@@ -221,7 +221,7 @@ class PokedexUsageContext {
         zoomLevel = clamp(zoomLevel + verticalScrollAmount.toFloat(), 0F, ZOOM_STAGES.toFloat())
         val player = Minecraft.getInstance().player ?: return
         if (zoomLevel > 0F && zoomLevel < ZOOM_STAGES.toFloat()) {
-            player.playSound(CobblemonSounds.POKEDEX_SCAN_ZOOM_INCREMENT)
+            playSound(CobblemonSounds.POKEDEX_SCAN_ZOOM_INCREMENT)
         }
     }
 
