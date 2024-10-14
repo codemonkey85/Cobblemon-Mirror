@@ -372,6 +372,8 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
         updateAspects()
     }
 
+    override fun isPersistenceRequired() = !npc.canDespawn
+
     override fun getDefaultDimensions(pose: Pose) = npc.hitbox
 
     fun initialize(level: Int) {

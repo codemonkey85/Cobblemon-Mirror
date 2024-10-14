@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.api.npc
 import com.bedrockk.molang.runtime.value.MoValue
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.ai.SleepDepth
+import com.cobblemon.mod.common.api.ai.config.BrainConfig
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.drop.DropEntry
@@ -66,6 +67,7 @@ object NPCClasses : JsonDataRegistry<NPCClass> {
         .registerTypeAdapter(NPCClass::class.java, NPCClassAdapter)
         .registerTypeAdapter(Component::class.java, TextAdapter)
         .registerTypeAdapter(WeightedAspect::class.java, WeightedAspectAdapter)
+        .registerTypeAdapter(BrainConfig::class.java, BrainConfigAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Biome::class.java).type, BiomeLikeConditionAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Block::class.java).type, BlockLikeConditionAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Item::class.java).type, ItemLikeConditionAdapter)
