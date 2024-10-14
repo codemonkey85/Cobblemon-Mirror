@@ -85,7 +85,7 @@ class PokedexUsageContext {
                 if (transitionIntervals == TRANSITION_INTERVALS) playSound(CobblemonSounds.POKEDEX_SCAN_CLOSE)
                 transitionIntervals = max(transitionIntervals - updateInterval, 0F)
                 if (transitionIntervals <= 0) {
-                    if (viewInfoTicks >= VIEW_INFO_BUFFER_TICKS) openPokedexGUI(user, type, pokemonInFocus!!.pokemon.species.resourceIdentifier)
+                    if (viewInfoTicks >= VIEW_INFO_BUFFER_TICKS) openPokedexGUI(type, pokemonInFocus!!.pokemon.species.resourceIdentifier)
                     resetState()
                 }
             }
@@ -116,7 +116,7 @@ class PokedexUsageContext {
     }
 
     fun useTick(user: LocalPlayer, ticksInUse: Int, inUse: Boolean) {
-        tryOpenScanGui(user, ticksInUse, inUse)
+        tryOpenScanGui(ticksInUse, inUse)
         if (scanningGuiOpen) tryScanPokemon(user)
         if (scannedSpecies != null && pokemonInFocus?.id !== null) playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
     }
@@ -130,7 +130,7 @@ class PokedexUsageContext {
 
     fun tryOpenInfoGui(user: LocalPlayer, ticksInUse: Int) {
         if (ticksInUse < OPEN_SCANNER_BUFFER_TICKS) {
-            openPokedexGUI(user, type)
+            openPokedexGUI(type)
             infoGuiOpen = true
         }
     }
