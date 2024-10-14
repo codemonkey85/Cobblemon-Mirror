@@ -25,7 +25,9 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.client.player.LocalPlayer
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.sounds.SoundEvent
 import net.minecraft.util.Mth.clamp
 import kotlin.math.max
 import kotlin.math.min
@@ -80,7 +82,7 @@ class PokedexUsageContext {
             usageIntervals += updateInterval
         } else {
             if (transitionIntervals > 0) {
-                if (transitionIntervals == TRANSITION_INTERVALS) user.playSound(CobblemonSounds.POKEDEX_SCAN_CLOSE)
+                if (transitionIntervals == TRANSITION_INTERVALS) playSound(CobblemonSounds.POKEDEX_SCAN_CLOSE)
                 transitionIntervals = max(transitionIntervals - updateInterval, 0F)
                 if (transitionIntervals <= 0) {
                     if (viewInfoTicks >= VIEW_INFO_BUFFER_TICKS) openPokedexGUI(user, type, pokemonInFocus!!.pokemon.species.resourceIdentifier)
@@ -116,13 +118,13 @@ class PokedexUsageContext {
     fun useTick(user: LocalPlayer, ticksInUse: Int, inUse: Boolean) {
         tryOpenScanGui(user, ticksInUse, inUse)
         if (scanningGuiOpen) tryScanPokemon(user)
-        if (scannedSpecies != null && pokemonInFocus?.id !== null) user.playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
+        if (scannedSpecies != null && pokemonInFocus?.id !== null) playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
     }
 
     fun tryOpenScanGui(user: AbstractClientPlayer, ticksInUse: Int, inUse: Boolean) {
         if (inUse && ticksInUse == OPEN_SCANNER_BUFFER_TICKS) {
             scanningGuiOpen = true
-            user.playSound(CobblemonSounds.POKEDEX_SCAN_OPEN)
+            playSound(CobblemonSounds.POKEDEX_SCAN_OPEN)
         }
     }
 
@@ -135,13 +137,13 @@ class PokedexUsageContext {
 
     fun openPokedexGUI(user: LocalPlayer, types: PokedexTypes = PokedexTypes.RED, speciesId: ResourceLocation? = null) {
         PokedexGUI.open(CobblemonClient.clientPokedexData, types, speciesId)
-        user.playSound(CobblemonSounds.POKEDEX_OPEN)
+        playSound(CobblemonSounds.POKEDEX_OPEN)
     }
 
     fun attackKeyHeld(user: LocalPlayer, isHeld: Boolean) {
         if (isHeld && pokemonInFocus !== null && viewInfoTicks < VIEW_INFO_BUFFER_TICKS && scanningProgress == 0F) {
             viewInfoTicks++
-            if (viewInfoTicks % 2 == 0) user.playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
+            if (viewInfoTicks % 2 == 0) playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
         } else if (viewInfoTicks > 0 && viewInfoTicks < VIEW_INFO_BUFFER_TICKS) {
             viewInfoTicks--
         }
@@ -169,7 +171,7 @@ class PokedexUsageContext {
 
                 // Check if Pokémon in focus is new or has new data
                 newPokemonInfo = CobblemonClient.clientPokedexData.getNewInformation(pokemonInFocus!!.pokemon)
-                if (newPokemonInfo == PokedexLearnedInformation.NONE) user.playSound(CobblemonSounds.POKEDEX_SCAN_DETAIL)
+                if (newPokemonInfo == PokedexLearnedInformation.NONE) playSound(CobblemonSounds.POKEDEX_SCAN_DETAIL)
                 else scannedSpecies = pokemonInFocus!!.pokemon.species.resourceIdentifier
             }
         } else {
@@ -225,4 +227,8 @@ class PokedexUsageContext {
 
     // Higher multiplier = more zoomed out
     fun getFovMultiplier() = 1 - (zoomLevel / ZOOM_STAGES)
+
+    fun playSound(soundEvent: SoundEvent) {
+        Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))
+    }
 }
