@@ -23,7 +23,13 @@
           "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
           "effect": "'cobblemon:impact_' + q.move.type",
           "locator": "target"
-        }
+        },
+		{
+		  "type": "entity_molang",
+		  "expressions": ["q.particle('cobblemon:hit', 'target')"],
+		  "entityCondition": "q.entity.is_user == false",
+		  "delay": 2
+		}
       ]
     },
     {

@@ -33,16 +33,22 @@ import com.cobblemon.mod.common.battles.BattleRegistry
 import com.cobblemon.mod.common.battles.BattleTypes
 import com.cobblemon.mod.common.battles.ForcePassActionResponse
 import com.cobblemon.mod.common.client.entity.EmptyPokeBallClientDelegate
+import com.cobblemon.mod.common.client.particle.BedrockParticleOptionsRepository
+import com.cobblemon.mod.common.client.particle.ParticleStorm
+import com.cobblemon.mod.common.client.render.MatrixWrapper
 import com.cobblemon.mod.common.entity.PosableEntity
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonServerDelegate
 import com.cobblemon.mod.common.net.messages.client.animation.PlayPosableAnimationPacket
 import com.cobblemon.mod.common.net.messages.client.battle.BattleCaptureStartPacket
+import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket
 import com.cobblemon.mod.common.net.messages.client.spawn.SpawnPokeballPacket
 import com.cobblemon.mod.common.pokeball.PokeBall
 import com.cobblemon.mod.common.pokemon.properties.UncatchableProperty
 import com.cobblemon.mod.common.util.*
+import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.Minecraft
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket
@@ -65,6 +71,7 @@ import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import java.util.concurrent.CompletableFuture
+import kotlin.compareTo
 
 class EmptyPokeBallEntity : ThrowableItemProjectile, PosableEntity, WaterDragModifier, Schedulable {
     enum class CaptureState {
@@ -365,15 +372,37 @@ class EmptyPokeBallEntity : ThrowableItemProjectile, PosableEntity, WaterDragMod
         }
 
         captureState = CaptureState.BROKEN_FREE
-        level().playSoundServer(position(), CobblemonSounds.POKE_BALL_OPEN, volume = 0.8F)
+        if (pokemon.pokemon.shiny) {
+            level().playSoundServer(position(), CobblemonSounds.POKE_BALL_SHINY_OPEN, volume = 0.8F)
+        } else {
+            level().playSoundServer(position(), CobblemonSounds.POKE_BALL_OPEN, volume = 0.8F)
+        }
 
-        after(seconds = 1F) {
+        after(seconds = 0.8F) {
+            if (pokemon.pokemon.shiny) {
+                SpawnSnowstormEntityParticlePacket(cobblemonResource("wild_shiny_ring"), pokemon.id, listOf("shiny_particles", "middle"))
+                    .sendToPlayersAround(pokemon.x, pokemon.y, pokemon.z, 32.0, pokemon.level().dimension())
+            }
+            discard()
+        }
+
+        after(seconds = 0.1F) {
             pokemon.beamMode = 0
             pokemon.busyLocks.remove(this)
             captureFuture.complete(false)
-            level().sendParticlesServer(ParticleTypes.CLOUD, position(), 20,
-                Vec3(0.0, 0.2, 0.0), 0.05)
-            discard()
+            val ballType =
+                this.pokeBall.name.path.toString().toLowerCase().replace("_", "")
+            val mode = "casual"
+            val sendflash =
+                BedrockParticleOptionsRepository.getEffect(cobblemonResource("${ballType}/${mode}/sendflash"))
+            sendflash?.let { effect ->
+                val wrapper = MatrixWrapper()
+                val matrix = PoseStack()
+                matrix.translate(x, y, z)
+                wrapper.updateMatrix(matrix.last().pose())
+                val world = Minecraft.getInstance().level ?: return@let
+                ParticleStorm(effect, wrapper, world).spawn()
+            }
         }
     }
 

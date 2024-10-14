@@ -22,7 +22,7 @@ class NPCPreset {
     var variations: Map<String, NPCVariationProvider>? = null
     var config: List<NPCConfigVariable>? = null
     var party: NPCPartyProvider? = null
-    var aiScripts: List<ResourceLocation>? = null
+    var canDespawn: Boolean? = null
     var interaction: NPCInteractConfiguration? = null
     var names: MutableSet<Component>? = null
     var hitbox: EntityDimensions? = null
@@ -38,7 +38,8 @@ class NPCPreset {
         }
         variations?.entries?.forEach { (key, value) -> npcClass.variations[key] = value }
         party?.let { npcClass.party = it }
-        aiScripts?.let { npcClass.aiScripts.addAll(it) }
+        canDespawn?.let { npcClass.canDespawn = it }
+//        aiScripts?.let { npcClass.aiScripts.addAll(it) }
         interaction?.let { npcClass.interaction = it }
         names?.let { npcClass.names.addAll(it) }
         hitbox?.let { npcClass.hitbox = it }

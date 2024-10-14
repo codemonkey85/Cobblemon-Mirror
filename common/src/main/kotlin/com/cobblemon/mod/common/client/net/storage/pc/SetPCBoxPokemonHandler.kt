@@ -20,7 +20,7 @@ object SetPCBoxPokemonHandler : ClientNetworkPacketHandler<SetPCBoxPokemonPacket
             val boxNumber = packet.boxNumber
             while (pc.boxes.size <= boxNumber) { pc.boxes.add(ClientBox()) }
             pc.boxes[boxNumber] = ClientBox()
-            packet.pokemon.forEach { (slot, pokemon) -> pc.boxes[packet.boxNumber].slots[slot] = pokemon }
+            packet.pokemon.forEach { (slot, pokemon) -> pc.boxes[packet.boxNumber].slots[slot] = pokemon(client.level!!.registryAccess()) }
         }
     }
 }

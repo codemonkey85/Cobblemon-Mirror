@@ -13,7 +13,8 @@ import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.network.RegistryFriendlyByteBuf
 
-class DexEntrySyncPacket(dexEntries: Collection<PokedexEntry>) : DataRegistrySyncPacket<PokedexEntry, PokedexDexSyncPacket>(dexEntries) {
+class DexEntrySyncPacket(dexEntries: Collection<PokedexEntry>) :
+    DataRegistrySyncPacket<PokedexEntry, DexEntrySyncPacket>(dexEntries) {
     override fun encodeEntry(buffer: RegistryFriendlyByteBuf, entry: PokedexEntry) {
         entry.encode(buffer)
     }
@@ -23,12 +24,13 @@ class DexEntrySyncPacket(dexEntries: Collection<PokedexEntry>) : DataRegistrySyn
     }
 
     override fun synchronizeDecoded(entries: Collection<PokedexEntry>) {
-        DexEntries.reload(entries.associateBy { it.speciesId })
+        DexEntries.reload(entries.associateBy { it.id })
     }
 
     override val id = ID
 
     companion object {
         val ID = cobblemonResource("dex_entry_sync")
+        fun decode(buffer: RegistryFriendlyByteBuf) = DexEntrySyncPacket(emptyList()).apply { decodeBuffer(buffer) }
     }
 }
