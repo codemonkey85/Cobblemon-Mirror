@@ -35,7 +35,6 @@ object SpawnNPCCommand {
     private const val ALIAS = "npcspawn"
     private const val AT_NAME = "${NAME}at"
     private const val AT_ALIAS = "${ALIAS}at"
-    private val NO_NPC_EXCEPTION = SimpleCommandExceptionType(commandLang("${NAME}.nonpc").red())
     // ToDo maybe dedicated lang down the line but the errors shouldn't really happen unless people are really messing up
     private val INVALID_POS_EXCEPTION = SimpleCommandExceptionType(Component.literal("Invalid position").red())
     private val FAILED_SPAWN_EXCEPTION = SimpleCommandExceptionType(Component.literal("Unable to spawn at the given position").red())
