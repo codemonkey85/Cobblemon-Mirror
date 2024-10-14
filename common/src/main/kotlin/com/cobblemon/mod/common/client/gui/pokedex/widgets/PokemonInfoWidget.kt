@@ -587,6 +587,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
     }
 
     private fun playCry() {
+        state.activeAnimations.clear()
         state.addFirstAnimation(setOf("cry"))
     }
 

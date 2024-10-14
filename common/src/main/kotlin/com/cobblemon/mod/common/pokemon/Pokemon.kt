@@ -54,6 +54,7 @@ import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.api.types.tera.TeraType
 import com.cobblemon.mod.common.api.types.tera.TeraTypes
+import com.cobblemon.mod.common.client.entity.PokemonClientDelegate
 import com.cobblemon.mod.common.config.CobblemonConfig
 import com.cobblemon.mod.common.datafixer.CobblemonSchemas
 import com.cobblemon.mod.common.datafixer.CobblemonTypeReferences
@@ -168,9 +169,6 @@ open class Pokemon : ShowdownIdentifiable {
             this.attemptAbilityUpdate()
             _form.emit(value)
         }
-
-    // Floating Platform for surface water battles
-    var battleSurface: Boat? = null
 
     // Need to happen before currentHealth init due to the calc
     var ivs = IVs.createRandomIVs()
@@ -566,18 +564,6 @@ open class Pokemon : ShowdownIdentifiable {
                         position.z.toInt()
                     )
                 ) && this.species.types.all { it != ElementalTypes.WATER && it != ElementalTypes.FLYING }) {
-
-                // Create a new boat entity with the generic EntityType.BOAT
-                val raftEntity = Boat(level, position.x, position.y, position.z)
-
-                raftEntity.variant = Boat.Type.BAMBOO
-
-                raftEntity.setPos(position.x, position.y, position.z) // Set the position of the boat
-
-                // Spawn the boat entity in the world
-                level.addFreshEntity(raftEntity)
-
-                this.battleSurface = raftEntity
             }
         }
 
@@ -685,13 +671,11 @@ open class Pokemon : ShowdownIdentifiable {
         return future
     }
 
-
     fun recall() {
         CobblemonEvents.POKEMON_RECALLED.post(PokemonRecalledEvent(this, this.entity))
         val state = this.state as? ActivePokemonState
         this.state = InactivePokemonState()
         state?.recall()
-        this.battleSurface?.discard() // destroy the battle surface if it exists
     }
 
     fun tryRecallWithAnimation() {
@@ -918,6 +902,7 @@ open class Pokemon : ShowdownIdentifiable {
         val encoded = CODEC.encodeStart(NbtOps.INSTANCE, this).orThrow
         if (newUUID) {
             NbtOps.INSTANCE.set(encoded, DataKeys.POKEMON_UUID, StringTag.valueOf(UUID.randomUUID().toString()))
+            NbtOps.INSTANCE.remove(encoded, DataKeys.TETHERING_ID)
         }
         val result = CODEC.decode(NbtOps.INSTANCE, encoded).orThrow.first
         result.isClient = this.isClient
@@ -991,10 +976,11 @@ open class Pokemon : ShowdownIdentifiable {
 
     fun getOwnerUUID(): UUID? {
         storeCoordinates.get()?.let {
-            if (it.store is PlayerPartyStore) {
-                return it.store.playerUUID
-            } else if (it.store is NPCPartyStore) {
-                return it.store.npc.uuid
+            return when (it.store) {
+                is PlayerPartyStore -> it.store.playerUUID
+                is NPCPartyStore -> it.store.npc.uuid
+                is PCStore -> it.store.uuid
+                else -> null
             }
         }
         return null
@@ -1535,7 +1521,6 @@ open class Pokemon : ShowdownIdentifiable {
                 this.moveSet.setMove(0, Move(benchedMove.moveTemplate, benchedMove.ppRaisedStages))
                 return
             }
-            this.initializeMoveset()
         }
     }
 

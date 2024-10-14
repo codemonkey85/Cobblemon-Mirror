@@ -9,6 +9,8 @@
 package com.cobblemon.mod.common.block.entity
 
 import com.cobblemon.mod.common.CobblemonBlockEntities
+import com.cobblemon.mod.common.block.sign.CobblemonHangingSignBlock
+import com.cobblemon.mod.common.block.sign.CobblemonWallHangingSignBlock
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.entity.HangingSignBlockEntity
@@ -18,4 +20,7 @@ class CobblemonHangingSignBlockEntity(pos: BlockPos, state: BlockState) : Hangin
 
     override fun getType(): BlockEntityType<*> = CobblemonBlockEntities.HANGING_SIGN
 
+    override fun isValidBlockState(blockState: BlockState): Boolean {
+        return blockState.block is CobblemonHangingSignBlock || blockState.block is CobblemonWallHangingSignBlock
+    }
 }

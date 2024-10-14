@@ -54,7 +54,8 @@ object DexEntries : JsonDataRegistry<PokedexEntry> {
     }
 
     override val observable = SimpleObservable<DexEntries>()
+
     override fun sync(player: ServerPlayer) {
-        DexEntrySyncPacket(entries.values)
+        DexEntrySyncPacket(entries.values).sendToPlayer(player)
     }
 }

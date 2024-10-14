@@ -218,7 +218,9 @@ class PokedexUsageContext {
     fun adjustZoom(verticalScrollAmount: Double) {
         zoomLevel = clamp(zoomLevel + verticalScrollAmount.toFloat(), 0F, ZOOM_STAGES.toFloat())
         val player = Minecraft.getInstance().player ?: return
-        player.playSound(CobblemonSounds.POKEDEX_SCAN_ZOOM_INCREMENT)
+        if (zoomLevel > 0F && zoomLevel < 10F) {
+            player.playSound(CobblemonSounds.POKEDEX_SCAN_ZOOM_INCREMENT)
+        }
     }
 
     // Higher multiplier = more zoomed out

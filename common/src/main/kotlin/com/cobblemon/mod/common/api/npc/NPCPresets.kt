@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.api.npc
 
 import com.bedrockk.molang.runtime.value.MoValue
 import com.cobblemon.mod.common.api.ai.SleepDepth
+import com.cobblemon.mod.common.api.ai.config.BrainConfig
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.drop.DropEntry
@@ -17,6 +18,8 @@ import com.cobblemon.mod.common.api.drop.ItemDropMethod
 import com.cobblemon.mod.common.api.entity.EntityDimensionsAdapter
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.npc.configuration.NPCInteractConfiguration
+import com.cobblemon.mod.common.api.npc.variation.NPCVariationProvider
+import com.cobblemon.mod.common.api.npc.variation.WeightedAspect
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
 import com.cobblemon.mod.common.api.spawning.TimeRange
@@ -55,8 +58,12 @@ object NPCPresets : JsonDataRegistry<NPCPreset> {
         .registerTypeAdapter(CompoundTag::class.java, NbtCompoundAdapter)
         .registerTypeAdapter(NPCPartyProvider::class.java, NPCPartyProviderAdapter)
         .registerTypeAdapter(NPCInteractConfiguration::class.java, NPCInteractConfigurationAdapter)
+        .registerTypeAdapter(WeightedAspect::class.java, WeightedAspectAdapter)
+        .registerTypeAdapter(ExpressionLike::class.java, ExpressionLikeAdapter)
+        .registerTypeAdapter(NPCVariationProvider::class.java, NPCVariationProviderAdapter)
         .registerTypeAdapter(MoValue::class.java, MoValueAdapter)
         .registerTypeAdapter(Component::class.java, TextAdapter)
+        .registerTypeAdapter(BrainConfig::class.java, BrainConfigAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Biome::class.java).type, BiomeLikeConditionAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Block::class.java).type, BlockLikeConditionAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Item::class.java).type, ItemLikeConditionAdapter)
@@ -66,7 +73,7 @@ object NPCPresets : JsonDataRegistry<NPCPreset> {
         .create()
 
     override val typeToken: TypeToken<NPCPreset> = TypeToken.get(NPCPreset::class.java)
-    override val resourcePath = "npcs"
+    override val resourcePath = "npc_presets"
     override val observable = SimpleObservable<NPCPresets>()
     private val npcPresetsByIdentifier = mutableMapOf<ResourceLocation, NPCPreset>()
 

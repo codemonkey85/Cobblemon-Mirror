@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * See [UnsplittablePacket] for why this is necessary
+ * See {@link UnsplittablePacket} for why this is necessary
  * I am concerned about how mappings will work with this, as the CustomPayloadS2CPacket stuff needs to be remapped
  * NeoForge stuff doesnt...
  */

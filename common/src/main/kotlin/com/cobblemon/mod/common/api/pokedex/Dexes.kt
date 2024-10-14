@@ -10,8 +10,6 @@ package com.cobblemon.mod.common.api.pokedex
 
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.pokedex.def.PokedexDef
-import com.cobblemon.mod.common.api.pokedex.entry.DexEntries
-import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
 import com.cobblemon.mod.common.net.messages.client.data.PokedexDexSyncPacket
 import com.cobblemon.mod.common.util.adapters.CodecBackedAdapter
@@ -49,6 +47,6 @@ object Dexes : JsonDataRegistry<PokedexDef> {
     }
 
     override fun sync(player: ServerPlayer) {
-        PokedexDexSyncPacket(dexEntryMap.values)
+        PokedexDexSyncPacket(dexEntryMap.values).sendToPlayer(player)
     }
 }

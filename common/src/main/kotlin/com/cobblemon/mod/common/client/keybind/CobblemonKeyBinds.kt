@@ -38,7 +38,6 @@ object CobblemonKeyBinds {
     val PARTY_OVERLAY_DOWN = this.queue(DownShiftPartyBinding)
     val PARTY_OVERLAY_UP = this.queue(UpShiftPartyBinding)
     val SEND_OUT_POKEMON = this.queue(PartySendBinding)
-    val POKEDEX = this.queue(PokedexBinding)
 
     fun register(registrar: (KeyMapping) -> Unit) {
         this.keyBinds.forEach(registrar::invoke)

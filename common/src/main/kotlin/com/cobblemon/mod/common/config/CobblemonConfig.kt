@@ -187,6 +187,9 @@ class CobblemonConfig {
     var shinyRate = 8192F
 
     @NodeCategory(Category.Pokemon)
+    val shinyNoticeParticlesDistance = 24F
+
+    @NodeCategory(Category.Pokemon)
     var captureCalculator: CaptureCalculator = CobblemonCaptureCalculator
 
     @NodeCategory(Category.Pokemon)

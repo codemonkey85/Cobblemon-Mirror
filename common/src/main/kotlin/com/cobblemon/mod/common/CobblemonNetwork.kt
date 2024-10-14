@@ -323,6 +323,7 @@ object CobblemonNetwork {
         list.add(PacketRegisterInfo(PokeRodRegistrySyncPacket.ID, PokeRodRegistrySyncPacket::decode, DataRegistrySyncPacketHandler()))
         list.add(PacketRegisterInfo(ScriptRegistrySyncPacket.ID, ScriptRegistrySyncPacket::decode, DataRegistrySyncPacketHandler()))
         list.add(PacketRegisterInfo(PokedexDexSyncPacket.ID, PokedexDexSyncPacket::decode, DataRegistrySyncPacketHandler()))
+        list.add(PacketRegisterInfo(DexEntrySyncPacket.ID, DexEntrySyncPacket::decode, DataRegistrySyncPacketHandler()))
         list.add(PacketRegisterInfo(FishingBaitRegistrySyncPacket.ID, FishingBaitRegistrySyncPacket::decode, DataRegistrySyncPacketHandler()))
 
         // Effects
