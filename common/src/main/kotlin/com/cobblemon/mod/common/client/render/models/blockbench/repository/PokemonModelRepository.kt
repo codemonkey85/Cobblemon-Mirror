@@ -52,6 +52,8 @@ object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
         inbuilt("rattata_alolan", ::RattataAlolanModel)
         inbuilt("raticate_alolan", ::RaticateAlolanModel)
         inbuilt("eevee", ::EeveeModel)
+        inbuilt("magikarp", ::MagikarpModel)
+        inbuilt("gyarados", ::GyaradosModel)
         inbuilt("pidgey", ::PidgeyModel)
         inbuilt("pidgeotto", ::PidgeottoModel)
         inbuilt("pidgeot", ::PidgeotModel)
