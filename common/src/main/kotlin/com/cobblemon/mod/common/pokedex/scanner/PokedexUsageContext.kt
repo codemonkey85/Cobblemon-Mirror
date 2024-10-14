@@ -121,7 +121,7 @@ class PokedexUsageContext {
         if (scannedSpecies != null && pokemonInFocus?.id !== null) playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
     }
 
-    fun tryOpenScanGui(user: AbstractClientPlayer, ticksInUse: Int, inUse: Boolean) {
+    fun tryOpenScanGui(ticksInUse: Int, inUse: Boolean) {
         if (inUse && ticksInUse == OPEN_SCANNER_BUFFER_TICKS) {
             scanningGuiOpen = true
             playSound(CobblemonSounds.POKEDEX_SCAN_OPEN)
@@ -135,12 +135,12 @@ class PokedexUsageContext {
         }
     }
 
-    fun openPokedexGUI(user: LocalPlayer, types: PokedexTypes = PokedexTypes.RED, speciesId: ResourceLocation? = null) {
+    fun openPokedexGUI(types: PokedexTypes = PokedexTypes.RED, speciesId: ResourceLocation? = null) {
         PokedexGUI.open(CobblemonClient.clientPokedexData, types, speciesId)
         playSound(CobblemonSounds.POKEDEX_OPEN)
     }
 
-    fun attackKeyHeld(user: LocalPlayer, isHeld: Boolean) {
+    fun attackKeyHeld(isHeld: Boolean) {
         if (isHeld && pokemonInFocus !== null && viewInfoTicks < VIEW_INFO_BUFFER_TICKS && scanningProgress == 0F) {
             viewInfoTicks++
             if (viewInfoTicks % 2 == 0) playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
@@ -185,7 +185,6 @@ class PokedexUsageContext {
             registerCompleted = true
             scannedSpecies = null
             scanningProgress = 0F
-            val player = Minecraft.getInstance().player ?: return
             playSound(
                 if (newPokemonInfo == PokedexLearnedInformation.SPECIES) CobblemonSounds.POKEDEX_SCAN_REGISTER_POKEMON
                 else CobblemonSounds.POKEDEX_SCAN_REGISTER_ASPECT
@@ -219,7 +218,6 @@ class PokedexUsageContext {
 
     fun adjustZoom(verticalScrollAmount: Double) {
         zoomLevel = clamp(zoomLevel + verticalScrollAmount.toFloat(), 0F, ZOOM_STAGES.toFloat())
-        val player = Minecraft.getInstance().player ?: return
         if (zoomLevel > 0F && zoomLevel < ZOOM_STAGES.toFloat()) {
             playSound(CobblemonSounds.POKEDEX_SCAN_ZOOM_INCREMENT)
         }
