@@ -1,0 +1,29 @@
+{
+  "type": "crafting_shaped",
+  "group": "adorn:drawer",
+  "pattern": [
+    "S",
+    "C",
+    "S"
+  ],
+  "key": {
+    "C": {
+      "tag": "c:chests/wooden"
+    },
+    "S": {
+      "item": "cobblemon:apricorn_slab"
+    }
+  },
+  "result": {
+    "item": "adorn:cobblemon/apricorn_drawer",
+    "count": 2
+  },
+  "fabric:load_conditions": [{
+    "condition": "fabric:all_mods_loaded",
+    "values": ["adorn"]
+  }],
+  "conditions": [{
+    "type": "neoforge:mod_loaded",
+    "modid": "adorn"
+  }]
+}

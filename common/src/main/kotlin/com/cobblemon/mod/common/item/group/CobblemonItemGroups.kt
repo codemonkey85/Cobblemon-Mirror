@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.item.group
 
+import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.core.registries.BuiltInRegistries
@@ -74,6 +75,7 @@ object CobblemonItemGroups {
     @JvmStatic val HELD_ITEMS get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(HELD_ITEMS_KEY)
     @JvmStatic val EVOLUTION_ITEMS get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(EVOLUTION_ITEMS_KEY)
 
+    @JvmStatic val BUILDING_BLOCKS_INJECTIONS = this.inject(ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.parse("building_blocks")), this::blocksInjections)
     @JvmStatic val FOOD_INJECTIONS = this.inject(ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.parse("food_and_drinks")), this::foodInjections)
     @JvmStatic val TOOLS_AND_UTILITIES_INJECTIONS = this.inject(ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.parse("tools_and_utilities")), this::toolsAndUtilitiesInjections)
     @JvmStatic val INGREDIENTS_INJECTIONS = this.inject(ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.parse("ingredients")), this::ingredientsInjections)
@@ -357,7 +359,6 @@ object CobblemonItemGroups {
         entries.accept(CobblemonItems.SUN_STONE_BLOCK)
         entries.accept(CobblemonItems.THUNDER_STONE_BLOCK)
         entries.accept(CobblemonItems.WATER_STONE_BLOCK)
-
     }
 
     private fun consumableEntries(displayContext: ItemDisplayParameters, entries: Output) {
@@ -632,6 +633,24 @@ object CobblemonItemGroups {
     private fun pokeballEntries(displayContext: ItemDisplayParameters, entries: Output) {
         CobblemonItems.pokeBalls.forEach(entries::accept)
         CobblemonItems.pokeRods.forEach(entries::accept)
+    }
+
+    private fun blocksInjections(injector: Injector) {
+        if(Cobblemon.implementation.isModInstalled("adorn")) { //adorn modifies vanilla block tab and if we dont follow suit we crash the game
+            injector.putLast(CobblemonItems.APRICORN_LOG)
+            injector.putLast(CobblemonItems.APRICORN_WOOD)
+            injector.putLast(CobblemonItems.STRIPPED_APRICORN_LOG)
+            injector.putLast(CobblemonItems.STRIPPED_APRICORN_WOOD)
+            injector.putLast(CobblemonItems.APRICORN_PLANKS)
+            injector.putLast(CobblemonItems.APRICORN_STAIRS)
+            injector.putLast(CobblemonItems.APRICORN_SLAB)
+            injector.putLast(CobblemonItems.APRICORN_FENCE)
+            injector.putLast(CobblemonItems.APRICORN_FENCE_GATE)
+            injector.putLast(CobblemonItems.APRICORN_DOOR)
+            injector.putLast(CobblemonItems.APRICORN_TRAPDOOR)
+            injector.putLast(CobblemonItems.APRICORN_BUTTON)
+            injector.putLast(CobblemonItems.APRICORN_PRESSURE_PLATE)
+        }
     }
 
     private fun foodInjections(injector: Injector) {
