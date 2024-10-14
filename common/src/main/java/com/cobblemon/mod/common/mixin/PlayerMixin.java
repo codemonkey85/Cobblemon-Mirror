@@ -47,6 +47,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -192,7 +193,9 @@ public abstract class PlayerMixin extends LivingEntity implements ScannableEntit
         Species species = PokemonSpecies.INSTANCE.getByIdentifier(ResourceLocation.parse(pokemonTag.getString(DataKeys.POKEMON_SPECIES_IDENTIFIER)));
         if(species == null) return null;
         String formId = pokemonTag.getString(DataKeys.POKEMON_FORM_ID);
-        FormData form = species.getForms().stream().filter(it -> it.formOnlyShowdownId().equals(formId)).toList().getFirst();
+        List<FormData> formList = species.getForms().stream().filter(it -> it.formOnlyShowdownId().equals(formId)).toList();
+        if(formList.isEmpty()) return null;
+        FormData form = formList.getFirst();
         if(form == null) return null;
         String genderString = pokemonTag.getString(DataKeys.POKEMON_GENDER);
         if(genderString.isEmpty()) return null;
