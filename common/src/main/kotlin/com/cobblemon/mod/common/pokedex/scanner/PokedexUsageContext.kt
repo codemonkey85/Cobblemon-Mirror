@@ -16,16 +16,16 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUI
 import com.cobblemon.mod.common.client.pokedex.PokedexScannerRenderer
 import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.item.PokedexItem
 import com.cobblemon.mod.common.net.messages.client.pokedex.ServerConfirmedRegisterPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.FinishScanningPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.StartScanningPacket
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.client.player.LocalPlayer
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.sounds.SoundEvent
 import net.minecraft.util.Mth.clamp
 import kotlin.math.max
 import kotlin.math.min
@@ -65,12 +65,12 @@ class PokedexUsageContext {
     var availableInfoFrames: MutableList<Boolean?> = mutableListOf(null, null, null, null)
     val renderer: PokedexScannerRenderer = PokedexScannerRenderer()
 
-    fun stopUsing(user: LocalPlayer, ticksInUse: Int) {
-        tryOpenInfoGui(user, ticksInUse)
+    fun stopUsing(ticksInUse: Int) {
+        tryOpenInfoGui(ticksInUse)
         resetState(false)
     }
 
-    fun renderUpdate(user: LocalPlayer, graphics: GuiGraphics, tickCounter: DeltaTracker) {
+    fun renderUpdate(graphics: GuiGraphics, tickCounter: DeltaTracker) {
         val tickDelta = tickCounter.realtimeDeltaTicks.takeIf { !Minecraft.getInstance()!!.isPaused } ?: 0F
         val updateInterval = (tickDelta / 20) * RENDER_UPDATES_PER_SECOND
 
@@ -80,10 +80,10 @@ class PokedexUsageContext {
             usageIntervals += updateInterval
         } else {
             if (transitionIntervals > 0) {
-                if (transitionIntervals == TRANSITION_INTERVALS) user.playSound(CobblemonSounds.POKEDEX_SCAN_CLOSE)
+                if (transitionIntervals == TRANSITION_INTERVALS) playSound(CobblemonSounds.POKEDEX_SCAN_CLOSE)
                 transitionIntervals = max(transitionIntervals - updateInterval, 0F)
                 if (transitionIntervals <= 0) {
-                    if (viewInfoTicks >= VIEW_INFO_BUFFER_TICKS) openPokedexGUI(user, type, pokemonInFocus!!.pokemon.species.resourceIdentifier)
+                    if (viewInfoTicks >= VIEW_INFO_BUFFER_TICKS) openPokedexGUI(type, pokemonInFocus!!.pokemon.species.resourceIdentifier)
                     resetState()
                 }
             }
@@ -114,34 +114,34 @@ class PokedexUsageContext {
     }
 
     fun useTick(user: LocalPlayer, ticksInUse: Int, inUse: Boolean) {
-        tryOpenScanGui(user, ticksInUse, inUse)
+        tryOpenScanGui(ticksInUse, inUse)
         if (scanningGuiOpen) tryScanPokemon(user)
-        if (scannedSpecies != null && pokemonInFocus?.id !== null) user.playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
+        if (scannedSpecies != null && pokemonInFocus?.id !== null) playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
     }
 
-    fun tryOpenScanGui(user: AbstractClientPlayer, ticksInUse: Int, inUse: Boolean) {
+    fun tryOpenScanGui(ticksInUse: Int, inUse: Boolean) {
         if (inUse && ticksInUse == OPEN_SCANNER_BUFFER_TICKS) {
             scanningGuiOpen = true
-            user.playSound(CobblemonSounds.POKEDEX_SCAN_OPEN)
+            playSound(CobblemonSounds.POKEDEX_SCAN_OPEN)
         }
     }
 
-    fun tryOpenInfoGui(user: LocalPlayer, ticksInUse: Int) {
+    fun tryOpenInfoGui(ticksInUse: Int) {
         if (ticksInUse < OPEN_SCANNER_BUFFER_TICKS) {
-            openPokedexGUI(user, type)
+            openPokedexGUI(type)
             infoGuiOpen = true
         }
     }
 
-    fun openPokedexGUI(user: LocalPlayer, types: PokedexTypes = PokedexTypes.RED, speciesId: ResourceLocation? = null) {
+    fun openPokedexGUI(types: PokedexTypes = PokedexTypes.RED, speciesId: ResourceLocation? = null) {
         PokedexGUI.open(CobblemonClient.clientPokedexData, types, speciesId)
-        user.playSound(CobblemonSounds.POKEDEX_OPEN)
+        playSound(CobblemonSounds.POKEDEX_OPEN)
     }
 
-    fun attackKeyHeld(user: LocalPlayer, isHeld: Boolean) {
+    fun attackKeyHeld(isHeld: Boolean) {
         if (isHeld && pokemonInFocus !== null && viewInfoTicks < VIEW_INFO_BUFFER_TICKS && scanningProgress == 0F) {
             viewInfoTicks++
-            if (viewInfoTicks % 2 == 0) user.playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
+            if (viewInfoTicks % 2 == 0) playSound(CobblemonSounds.POKEDEX_SCAN_LOOP)
         } else if (viewInfoTicks > 0 && viewInfoTicks < VIEW_INFO_BUFFER_TICKS) {
             viewInfoTicks--
         }
@@ -169,7 +169,7 @@ class PokedexUsageContext {
 
                 // Check if Pokémon in focus is new or has new data
                 newPokemonInfo = CobblemonClient.clientPokedexData.getNewInformation(pokemonInFocus!!.pokemon)
-                if (newPokemonInfo == PokedexLearnedInformation.NONE) user.playSound(CobblemonSounds.POKEDEX_SCAN_DETAIL)
+                if (newPokemonInfo == PokedexLearnedInformation.NONE) playSound(CobblemonSounds.POKEDEX_SCAN_DETAIL)
                 else scannedSpecies = pokemonInFocus!!.pokemon.species.resourceIdentifier
             }
         } else {
@@ -183,8 +183,7 @@ class PokedexUsageContext {
             registerCompleted = true
             scannedSpecies = null
             scanningProgress = 0F
-            val player = Minecraft.getInstance().player ?: return
-            player.playSound(
+            playSound(
                 if (newPokemonInfo == PokedexLearnedInformation.SPECIES) CobblemonSounds.POKEDEX_SCAN_REGISTER_POKEMON
                 else CobblemonSounds.POKEDEX_SCAN_REGISTER_ASPECT
             )
@@ -217,12 +216,15 @@ class PokedexUsageContext {
 
     fun adjustZoom(verticalScrollAmount: Double) {
         zoomLevel = clamp(zoomLevel + verticalScrollAmount.toFloat(), 0F, ZOOM_STAGES.toFloat())
-        val player = Minecraft.getInstance().player ?: return
-        if (zoomLevel > 0F && zoomLevel < 10F) {
-            player.playSound(CobblemonSounds.POKEDEX_SCAN_ZOOM_INCREMENT)
+        if (zoomLevel > 0F && zoomLevel < ZOOM_STAGES.toFloat()) {
+            playSound(CobblemonSounds.POKEDEX_SCAN_ZOOM_INCREMENT)
         }
     }
 
     // Higher multiplier = more zoomed out
     fun getFovMultiplier() = 1 - (zoomLevel / ZOOM_STAGES)
+
+    fun playSound(soundEvent: SoundEvent) {
+        Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))
+    }
 }
