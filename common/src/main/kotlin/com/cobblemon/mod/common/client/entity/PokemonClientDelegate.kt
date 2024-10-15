@@ -276,7 +276,7 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
                             currentEntity.after(seconds = 0.5F) {
                                 ballDone = true
                             }
-                            if (!playedSendOutSound && client.soundManager.getSoundEvent(soundEvent.location) != null) {
+                            if (!playedSendOutSound && client.soundManager.getSoundEvent(soundEvent.location) != null && currentEntity.ownerUUID != null) {
                                 client.level?.playSound(
                                     client.player,
                                     soundPos.x,

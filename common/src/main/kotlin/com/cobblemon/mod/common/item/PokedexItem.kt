@@ -65,7 +65,7 @@ class PokedexItem(val type: PokedexTypes): CobblemonItem(Item.Properties().stack
         if (world.isClientSide && user is LocalPlayer) {
             val usageContext = CobblemonClient.pokedexUsageContext
             val ticksInUse = getUseDuration(stack, user) - remainingUseTicks
-            usageContext.stopUsing(user, ticksInUse)
+            usageContext.stopUsing(ticksInUse)
         }
 
         super.releaseUsing(stack, world, user, remainingUseTicks)
