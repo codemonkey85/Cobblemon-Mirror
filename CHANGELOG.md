@@ -170,6 +170,8 @@
 - Fixed the placeholder `WingFlapIdle` animation so the wings are not rotating opposite to each other.
 - 'player' type dialogue faces can now be explicitly stated so that NPC mods that use fake players can show in dialogue portraits.
 - Added `isLeftSide` field for dialogue faces. This determines what side of dialogue box the portrait is on.
+- Spore now has a unique sound event, letting it be changed with resource packs.
+- 'attacks' folder has been renamed to 'move' and sound events for Sleep Powder, Poison Powder, Stun Spore and Spore's mushrooms have been renamed.
 
 ### Localization
 - Updated translations for:
