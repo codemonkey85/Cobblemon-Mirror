@@ -66,6 +66,7 @@
 - Link Cable recipe has been redesigned.
 - Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs.
 - Updated UI sounds for clicking and evolving Pokémon.
+- Updated cries for Chansey, Crobat, Hoothoot, Noctowl.
 - Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users.
 - Kakuna, Beedrill, Snorlax, Munchlax, Krabby, Kingler, and Lurantis received model updates.
 - Vivillon wings will stop being clear when you remove any Vivillon related resourcepacks. The default pattern will be the meadow wings.
@@ -86,6 +87,7 @@
 ### Fixes
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating.
 - Fixed Cubone's cry not having a sound.
+- Fixed the sendout sound erronously playing when a wild Pokémon breaks out of a Poké ball.
 - Fixed the Seafloor spawning context not being a usable context.
 - Fixed Pokemon spawning in non-full blocks like slabs.
 - Fixed Gilded Chests not dropping the chest itself when broken, only the contents.
