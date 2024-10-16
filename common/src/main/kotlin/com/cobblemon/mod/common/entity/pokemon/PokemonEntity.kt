@@ -55,6 +55,7 @@ import com.cobblemon.mod.common.entity.pokemon.ai.goals.*
 import com.cobblemon.mod.common.entity.pokemon.effects.EffectTracker
 import com.cobblemon.mod.common.entity.pokemon.effects.IllusionEffect
 import com.cobblemon.mod.common.net.messages.client.animation.PlayPosableAnimationPacket
+import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket
 import com.cobblemon.mod.common.net.messages.client.sound.UnvalidatedPlaySoundS2CPacket
 import com.cobblemon.mod.common.net.messages.client.spawn.SpawnPokemonPacket
 import com.cobblemon.mod.common.net.messages.client.ui.InteractPokemonUIPacket
@@ -1406,28 +1407,8 @@ open class PokemonEntity(
             CobblemonEvents.POKEMON_HEADPAT.postThen(PokemonHeadpatEvent(this, player)) {
                 pokemon.headpatTime = currentTime
                 pokemon.incrementFriendship(2)
-                val eyePos = pokemon.entity?.eyePosition
-                val newX = (eyePos?.x ?: 0.0) + (level().random.nextDouble() * 0.5)
-                val newY = (eyePos?.y ?: 0.0) + (level().random.nextDouble() * 0.5)
-                val newZ = (eyePos?.z ?: 0.0) + (level().random.nextDouble() * 0.5)
-                for(i in 0 .. 2){
-                    ClientboundLevelParticlesPacket(
-                        ParticleTypes.HEART, true, newX, newY, newZ,
-                        Math.PI.toFloat() * Math.cos(i.toDouble()).toFloat() * 0.1f,
-                        Math.PI.toFloat() * 0.1f,
-                        Math.PI.toFloat() * Math.sin(i.toDouble()).toFloat() * 0.1f, .2f, 1
-                    ).also {
-                        server?.playerList?.broadcast(
-                            null,
-                            (eyePos?.x ?: 0.0),
-                            (eyePos?.y ?: 0.0),
-                            (eyePos?.z ?: 0.0),
-                            64.0,
-                            level().dimension(),
-                            it
-                        )
-                    }
-                }
+                SpawnSnowstormEntityParticlePacket(cobblemonResource("happyheart"), id)
+                    .sendToPlayersAround(this.x, this.y, this.z, 16.0, this.level().dimension())
             }
         }
     }
