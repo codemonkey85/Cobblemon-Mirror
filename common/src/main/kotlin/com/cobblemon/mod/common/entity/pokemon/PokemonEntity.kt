@@ -20,6 +20,7 @@ import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.entity.PokemonEntityLoadEvent
 import com.cobblemon.mod.common.api.events.entity.PokemonEntitySaveEvent
 import com.cobblemon.mod.common.api.events.entity.PokemonEntitySaveToWorldEvent
+import com.cobblemon.mod.common.api.events.pokemon.PokemonHeadpatEvent
 import com.cobblemon.mod.common.api.events.pokemon.ShoulderMountEvent
 import com.cobblemon.mod.common.api.interaction.PokemonEntityInteraction
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
@@ -1402,28 +1403,30 @@ open class PokemonEntity(
         cry()
         player.swing(InteractionHand.MAIN_HAND, true)
         if(pokemon.headpatTime == 0L || lastHeadpat > (pokemon.headpatTime + (SharedConstants.TICKS_PER_MINUTE * 15))){
-            pokemon.headpatTime = currentTime
-            pokemon.incrementFriendship(2)
-            val eyePos = pokemon.entity?.eyePosition
-            val newX = (eyePos?.x ?: 0.0) + (level().random.nextDouble() * 0.5)
-            val newY = (eyePos?.y ?: 0.0) + (level().random.nextDouble() * 0.5)
-            val newZ = (eyePos?.z ?: 0.0) + (level().random.nextDouble() * 0.5)
-            for(i in 0 .. 2){
-                ClientboundLevelParticlesPacket(
-                    ParticleTypes.HEART, true, newX, newY, newZ,
-                    Math.PI.toFloat() * Math.cos(i.toDouble()).toFloat() * 0.1f,
-                    Math.PI.toFloat() * 0.1f,
-                    Math.PI.toFloat() * Math.sin(i.toDouble()).toFloat() * 0.1f, .2f, 1
-                ).also {
-                    server?.playerList?.broadcast(
-                        null,
-                        (eyePos?.x ?: 0.0),
-                        (eyePos?.y ?: 0.0),
-                        (eyePos?.z ?: 0.0),
-                        64.0,
-                        level().dimension(),
-                        it
-                    )
+            CobblemonEvents.POKEMON_HEADPAT.postThen(PokemonHeadpatEvent(this, player)) {
+                pokemon.headpatTime = currentTime
+                pokemon.incrementFriendship(2)
+                val eyePos = pokemon.entity?.eyePosition
+                val newX = (eyePos?.x ?: 0.0) + (level().random.nextDouble() * 0.5)
+                val newY = (eyePos?.y ?: 0.0) + (level().random.nextDouble() * 0.5)
+                val newZ = (eyePos?.z ?: 0.0) + (level().random.nextDouble() * 0.5)
+                for(i in 0 .. 2){
+                    ClientboundLevelParticlesPacket(
+                        ParticleTypes.HEART, true, newX, newY, newZ,
+                        Math.PI.toFloat() * Math.cos(i.toDouble()).toFloat() * 0.1f,
+                        Math.PI.toFloat() * 0.1f,
+                        Math.PI.toFloat() * Math.sin(i.toDouble()).toFloat() * 0.1f, .2f, 1
+                    ).also {
+                        server?.playerList?.broadcast(
+                            null,
+                            (eyePos?.x ?: 0.0),
+                            (eyePos?.y ?: 0.0),
+                            (eyePos?.z ?: 0.0),
+                            64.0,
+                            level().dimension(),
+                            it
+                        )
+                    }
                 }
             }
         }
