@@ -1,0 +1,67 @@
+{
+    "portraitScale": 1.94,
+    "portraitTranslation": [-0.18,0.14,0],
+    "profileScale": 0.75,
+    "profileTranslation": [0,0.59,0],
+    "animations": {
+      "faint": "q.bedrock_primary('porygon', 'faint', q.curve('one'))",
+      "faint2": "q.bedrock_primary('porygon', 'faint2', q.curve('one'))",
+      "cry": "q.bedrock_stateful('porygon', 'cry')"
+    },
+    "poses": {
+      "battle-standing": {
+        "poseTypes": [
+          "STAND"
+        ],
+        "isBattle": true,
+        "namedAnimations": { "cry":
+                "q.bedrock_stateful('porygon', 'battle_cry')" },
+        "animations": [
+          "q.look('head')",
+          "q.bedrock('porygon', 'battle_idle')"
+        ],
+        "quirks": [
+          "q.bedrock_quirk('porygon', 'blink')"
+        ]
+      },
+      "standing": {
+        "poseTypes": [
+          "STAND",
+          "FLOAT",
+          "NONE",
+          "PORTRAIT",
+          "PROFILE"
+        ],
+        "isBattle": false,
+        "animations": [
+          "q.look('head')",
+          "q.bedrock('porygon', 'ground_idle')"
+        ],
+        "quirks": [
+          "q.bedrock_quirk('porygon', 'blink')",
+          "q.bedrock_quirk('porygon', 'quirk')"
+        ]
+      },
+      "walking": {
+        "poseTypes": [
+          "WALK",
+          "HOVER"
+        ],
+        "animations": [
+          "q.look('head')",
+          "q.bedrock('porygon', 'ground_walk')"
+        ],
+        "quirks": [
+          "q.bedrock_quirk('porygon', 'blink')"
+        ]
+      },
+      "sleeping": {
+        "poseTypes": [
+          "SLEEP"
+        ],
+        "animations": [
+          "q.bedrock('porygon', 'sleep')"
+        ]
+      }
+    }
+  }
