@@ -36,9 +36,6 @@ object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
     override val fallback = cobblemonResource("substitute")
 
     override fun registerInBuiltPosers() {
-        inbuilt("charmander", ::CharmanderModel)
-        inbuilt("charmeleon", ::CharmeleonModel)
-        inbuilt("charizard", ::CharizardModel)
         inbuilt("squirtle", ::SquirtleModel)
         inbuilt("wartortle", ::WartortleModel)
         inbuilt("caterpie", ::CaterpieModel)
