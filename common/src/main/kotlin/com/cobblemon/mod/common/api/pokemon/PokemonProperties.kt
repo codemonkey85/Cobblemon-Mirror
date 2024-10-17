@@ -508,7 +508,17 @@ open class PokemonProperties {
             val server = server() ?: return false
             val parser = ItemParser(server.registryAccess())
             val result = parser.parse(StringReader(itemKey))
-            return result.item.value() == pokemon.heldItem.item && result.components == pokemon.heldItem.componentsPatch
+
+            if (!pokemon.heldItem.`is`(result.item)) return false
+
+            for (entry in result.components.entrySet()) {
+                val targetPropValue = pokemon.heldItem.get(entry.key)
+                if (targetPropValue != entry.value.get()) {
+                    return false
+                }
+            }
+
+            return true
         }?.let { return false }
         return true
     }
