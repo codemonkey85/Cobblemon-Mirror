@@ -564,17 +564,35 @@
   "move.protect.actor": {
     "sounds": [ { "name": "cobblemon:move/protect/protect_actor", "volume": 0.8 } ]
   },
+  "move.powder.actor": {
+    "sounds": [ { "name": "cobblemon:move/powder/powder_actor", "volume": 1.0 } ]
+  },
+  "move.powder.target": {
+    "sounds": [ { "name": "cobblemon:move/powder/powder_target", "volume": 1.0 } ]
+  },
   "move.poisonpowder.actor": {
     "sounds": [ { "name": "cobblemon:move/poison_powder/poison_powder_actor", "volume": 1.0 } ]
+  },
+  "move.poisonpowder.target": {
+    "sounds": [ { "name": "cobblemon:move/powder/powder_target", "volume": 1.0 } ]
   },
   "move.sleeppowder.actor": {
     "sounds": [ { "name": "cobblemon:move/sleep_powder/sleep_powder_actor", "volume": 1.0 } ]
   },
-  "move.spore.actor": {
-    "sounds": [ { "name": "cobblemon:move/sleep_powder/sleep_powder_actor", "volume": 1.0 } ]
+  "move.sleeppowder.target": {
+    "sounds": [ { "name": "cobblemon:move/powder/powder_target", "volume": 1.0 } ]
   },
   "move.stunspore.actor": {
     "sounds": [ { "name": "cobblemon:move/stun_spore/stun_spore_actor", "volume": 1.0 } ]
+  },
+  "move.stunspore.target": {
+    "sounds": [ { "name": "cobblemon:move/powder/powder_actor", "volume": 1.0 } ]
+  },
+  "move.spore.actor": {
+    "sounds": [ { "name": "cobblemon:move/sleep_powder/sleep_powder_actor", "volume": 1.0 } ]
+  },
+  "move.spore.target": {
+    "sounds": [ { "name": "cobblemon:move/powder/powder_actor", "volume": 1.0 } ]
   },
   "move.spore.mushroom": {
     "sounds": [
@@ -801,18 +819,13 @@
     ]
   },
   "status.nonvolatile.paralysis.actor": {
-    "sounds": [ { "name": "cobblemon:status/non_volatile/status_paralysis_actor", "volume": 0.8 } ]
+    "sounds": [ { "name": "cobblemon:status/nonvolatile/status_paralysis_actor", "volume": 0.8 } ]
   },
   "status.nonvolatile.poison.actor": {
-    "sounds": [ { "name": "cobblemon:status/non_volatile/status_poison_actor", "volume": 0.8 } ]
+    "sounds": [ { "name": "cobblemon:status/nonvolatile/status_poison_actor", "volume": 0.8 } ]
   },
   "status.nonvolatile.toxpoison.actor": {
-  },
-  "powder.generic.actor": {
-      "sounds": [ { "name": "cobblemon:move/powder_attacks/generic_powder_actor", "volume": 1.0 } ]
-  },
-  "powder.generic.target": {
-      "sounds": [ { "name": "cobblemon:move/powder_attacks/generic_powder_target", "volume": 1.0 } ]
+    "sounds": [ { "name": "cobblemon:status/nonvolatile/status_toxpoison_actor", "volume": 0.8 } ]
   },
   "particle.shiny_shine": {
     "subtitle": "cobblemon.subtitle.pokemon.shiny_shine",
