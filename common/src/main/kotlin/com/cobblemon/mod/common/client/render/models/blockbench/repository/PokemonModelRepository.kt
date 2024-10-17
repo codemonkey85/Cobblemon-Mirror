@@ -459,7 +459,6 @@ object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
         inbuilt("boltund", ::BoltundModel)
         inbuilt("tinkatink", ::TinkatinkModel)
         inbuilt("tinkatuff", ::TinkatuffModel)
-        inbuilt("tinkaton", ::TinkatonModel)
         inbuilt("fuecoco", :: FuecocoModel)
         inbuilt("crocalor", :: CrocalorModel)
         inbuilt("skeledirge", :: SkeledirgeModel)
