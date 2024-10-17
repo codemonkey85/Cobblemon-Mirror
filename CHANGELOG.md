@@ -88,6 +88,7 @@
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating.
 - Fixed Cubone's cry not having a sound.
 - Fixed the sendout sound erronously playing when a wild Pokémon breaks out of a Poké ball.
+- Flamethrower is no longer missing sounds.
 - Fixed the Seafloor spawning context not being a usable context.
 - Fixed Pokemon spawning in non-full blocks like slabs.
 - Fixed Gilded Chests not dropping the chest itself when broken, only the contents.
@@ -171,7 +172,7 @@
 - 'player' type dialogue faces can now be explicitly stated so that NPC mods that use fake players can show in dialogue portraits.
 - Added `isLeftSide` field for dialogue faces. This determines what side of dialogue box the portrait is on.
 - Spore now has a unique sound event, letting it be changed with resource packs.
-- 'attacks' folder has been renamed to 'move' and sound events for Sleep Powder, Poison Powder, Stun Spore and Spore's mushrooms have been renamed.
+- 'attacks' folder has been renamed to 'move' and sound events for Sleep Powder, Poison Powder, Stun Spore, Spore's mushrooms and Flamethrower have been renamed.
 
 ### Localization
 - Updated translations for:
