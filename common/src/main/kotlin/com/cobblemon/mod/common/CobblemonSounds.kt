@@ -107,15 +107,15 @@ object CobblemonSounds : PlatformRegistry<Registry<SoundEvent>, ResourceKey<Regi
     val PVW_BATTLE = this.create("battle.pvw.default")
 
     @JvmField
-    val MEDICINE_HERB_USE = this.create("medicine_herb.use")
+    val MEDICINE_HERB_USE = this.create("item.medicine.herb.use")
     @JvmField
-    val MEDICINE_LIQUID_USE = this.create("medicine_liquid.use")
+    val MEDICINE_LIQUID_USE = this.create("item.medicine.liquid.use")
     @JvmField
-    val MEDICINE_PILLS_USE = this.create("medicine_pills.use")
+    val MEDICINE_PILLS_USE = this.create("item.medicine.pills.use")
     @JvmField
-    val MEDICINE_SPRAY_USE = this.create("medicine_spray.use")
+    val MEDICINE_SPRAY_USE = this.create("item.medicine.spray.use")
     @JvmField
-    val MEDICINE_FEATHER_USE = this.create("medicine_feather.use")
+    val MEDICINE_FEATHER_USE = this.create("item.medicine.feather.use")
 
     @JvmField
     val BERRY_HARVEST = this.create("berry.harvest")

@@ -125,26 +125,23 @@
   "gui.click": {
     "sounds": [ "cobblemon:click" ]
   },
-  "medicine_herb.use": {
-    "sounds": [ "cobblemon:medicine_herb_use" ]
+  "item.medicine.herb.use": {
+    "sounds": [ "cobblemon:item/medicine/medicine_herb_use" ]
   },
-  "medicine_liquid.use": {
-    "sounds": [ "cobblemon:medicine_liquid_use" ]
+  "item.medicine.liquid.use": {
+    "sounds": [ "cobblemon:item/medicine/medicine_liquid_use" ]
   },
-  "medicine_pills.use": {
-    "sounds": [ "cobblemon:medicine_pills_use" ]
+  "item.medicine.pills.use": {
+    "sounds": [ "cobblemon:item/medicine/medicine_pills_use" ]
   },
-  "medicine_spray.use": {
-    "sounds": [ "cobblemon:medicine_spray_use" ]
+  "item.medicine.spray.use": {
+    "sounds": [ "cobblemon:item/medicine/medicine_spray_use" ]
   },
-  "medicine_feather.use": {
-    "sounds": [ "cobblemon:medicine_feather_use" ]
+  "item.medicine.feather.use": {
+    "sounds": [ "cobblemon:item/medicine/medicine_feather_use" ]
   },
-  "berry.harvest": {
-    "sounds": [ "cobblemon:block/berry_harvest_1", "cobblemon:block/berry_harvest_2", "cobblemon:block/berry_harvest_3" ]
-  },
-  "berry.eat": {
-    "sounds": [ "cobblemon:berry_eat" ]
+  "item.berry.eat": {
+    "sounds": [ "cobblemon:item/berry/berry_eat" ]
   },
   "fossil_machine.activate": {
     "subtitle": "cobblemon.subtitle.fossilmachine.activate",
@@ -422,6 +419,13 @@
       { "name": "cobblemon:block/plants/berry/berry_bush_place_1", "volume": 0.7 },
       { "name": "cobblemon:block/plants/berry/berry_bush_place_2", "volume": 0.7 },
       { "name": "cobblemon:block/plants/berry/berry_bush_place_3", "volume": 0.7 }
+    ]
+  },
+  "berry_bush.harvest": {
+    "sounds": [
+      "cobblemon:block/plants/berry/berry_harvest_1",
+      "cobblemon:block/plants/berry/berry_harvest_2",
+      "cobblemon:block/plants/berry/berry_harvest_3"
     ]
   },
   "big_root.break": {
