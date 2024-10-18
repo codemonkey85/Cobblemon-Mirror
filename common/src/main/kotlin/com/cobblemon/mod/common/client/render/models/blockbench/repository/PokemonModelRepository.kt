@@ -256,8 +256,6 @@ object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
         inbuilt("klinklang", :: KlinklangModel)
         inbuilt("morelull", :: MorelullModel)
         inbuilt("shiinotic", :: ShiinoticModel)
-        inbuilt("joltik", :: JoltikModel)
-        inbuilt("galvantula", :: GalvantulaModel)
         inbuilt("riolu", :: RioluModel)
         inbuilt("lucario", :: LucarioModel)
         inbuilt("treecko", :: TreeckoModel)
