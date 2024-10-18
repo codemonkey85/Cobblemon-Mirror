@@ -123,9 +123,9 @@ object CobblemonSounds : PlatformRegistry<Registry<SoundEvent>, ResourceKey<Regi
     val BERRY_EAT = this.create("berry.eat")
 
     @JvmField
-    val MULCH_PLACE = this.create("mulch.place")
+    val MULCH_PLACE = this.create("block.mulch.place")
     @JvmField
-    val MULCH_REMOVE = this.create("mulch.remove")
+    val MULCH_REMOVE = this.create("block.mulch.remove")
 
     @JvmField
     val FOSSIL_MACHINE_ACTIVATE = this.create("fossil_machine.activate")

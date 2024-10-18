@@ -160,7 +160,6 @@
 - Serialization of PokemonStores and Pokemon themselves now require registry access, which will break some sidemods. This sucked for us more than it will suck for you! If you have a world or player instance, you can get it from there.
 - ``TeraTypes`` now implements ``Iterable``.
 - PokemonBattle now starts on turn 0.
-- All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.
 - Added `forcedAspects` to Pokémon to make it easier to easily add basic aspects to a Pokémon in a way that persists. We already know that everyone is going to overuse this.
 - Made the `Pokemon.aspects` setter private. This could technically break side-mods but if you are affected by this then you were using it wrong! Use `Pokemon.forcedAspects` to fix it.
 - Cobblemon's main logger is properly static now.
@@ -171,11 +170,14 @@
 - Fixed the placeholder `WingFlapIdle` animation so the wings are not rotating opposite to each other.
 - 'player' type dialogue faces can now be explicitly stated so that NPC mods that use fake players can show in dialogue portraits.
 - Added `isLeftSide` field for dialogue faces. This determines what side of dialogue box the portrait is on.
-- 'attacks' folder has been renamed to 'move'
-- Moves sharing generic sounds now have a unique sound event, allowing them to be changed with resource packs.
-- All move sound events have been renamed to 'move.NAME.actor' or 'move.NAME.target' for consistency.
+
+- "sounds/attacks" folder has been renamed to "sounds/move"
+- Moves sharing generic sounds now have unique sound events, allowing them to be changed with resource packs.
+- All move sound events have been renamed to "move.NAME.SOURCE" for consistency.
 - Status moves have been moved out of the 'attacks' folder and split into volatile and nonvolatile.
-- 'status.badlypoison.actor' sound event has been renamed to 'status.toxpoison.actor'
+- 'status.badlypoison.actor' sound event has been renamed to "status.toxpoison.actor"
+- Mulch and berry harvesting sound events have been renamed and moved to their respective folders in "sounds/block."
+- All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.
 - Unused sound files and sound events have been removed.
 
 ### Localization

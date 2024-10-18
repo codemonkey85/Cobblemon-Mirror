@@ -14,12 +14,6 @@
   "healing_machine.active": {
     "sounds": [ "cobblemon:block/healing_machine_active" ]
   },
-  "mulch.place": {
-    "sounds": [ "cobblemon:block/mulch_place_1", "cobblemon:block/mulch_place_2", "cobblemon:block/mulch_place_3" ]
-  },
-  "mulch.remove": {
-    "sounds": [ "cobblemon:block/mulch_remove_1", "cobblemon:block/mulch_remove_2", "cobblemon:block/mulch_remove_3" ]
-  },
   "pc.on": {
     "sounds": [ "cobblemon:pc/pc_on" ]
   },
@@ -407,95 +401,109 @@
   "display_case.remove_item": {
     "sounds": [ "cobblemon:block/display_case/display_case_remove_item" ]
   },
+  "block.mulch.place": {
+    "sounds": [
+      "cobblemon:block/mulch/mulch_place_1",
+      "cobblemon:block/mulch/mulch_place_2",
+      "cobblemon:block/mulch/mulch_place_3"
+    ]
+  },
+  "block.mulch.remove": {
+    "sounds": [
+      "cobblemon:block/mulch/mulch_remove_1",
+      "cobblemon:block/mulch/mulch_remove_2",
+      "cobblemon:block/mulch/mulch_remove_3"
+    ]
+  },
   "berry_bush.break": {
     "sounds": [
-      "cobblemon:block/plants/berry/berry_bush_break_1",
-      "cobblemon:block/plants/berry/berry_bush_break_2",
-      "cobblemon:block/plants/berry/berry_bush_break_3"
+      "cobblemon:block/berry/berry_bush_break_1",
+      "cobblemon:block/berry/berry_bush_break_2",
+      "cobblemon:block/berry/berry_bush_break_3"
     ]
   },
   "berry_bush.place": {
     "sounds": [
-      { "name": "cobblemon:block/plants/berry/berry_bush_place_1", "volume": 0.7 },
-      { "name": "cobblemon:block/plants/berry/berry_bush_place_2", "volume": 0.7 },
-      { "name": "cobblemon:block/plants/berry/berry_bush_place_3", "volume": 0.7 }
+      { "name": "cobblemon:block/berry/berry_bush_place_1", "volume": 0.7 },
+      { "name": "cobblemon:block/berry/berry_bush_place_2", "volume": 0.7 },
+      { "name": "cobblemon:block/berry/berry_bush_place_3", "volume": 0.7 }
     ]
   },
   "berry_bush.harvest": {
     "sounds": [
-      "cobblemon:block/plants/berry/berry_harvest_1",
-      "cobblemon:block/plants/berry/berry_harvest_2",
-      "cobblemon:block/plants/berry/berry_harvest_3"
+      "cobblemon:block/berry/berry_bush_harvest_1",
+      "cobblemon:block/berry/berry_bush_harvest_2",
+      "cobblemon:block/berry/berry_bush_harvest_3"
     ]
   },
   "big_root.break": {
     "sounds": [
-      "cobblemon:block/plants/big_root/big_root_break_1",
-      "cobblemon:block/plants/big_root/big_root_break_2",
-      "cobblemon:block/plants/big_root/big_root_break_3"
+      "cobblemon:block/big_root/big_root_break_1",
+      "cobblemon:block/big_root/big_root_break_2",
+      "cobblemon:block/big_root/big_root_break_3"
     ]
   },
   "energy_root.place": {
     "sounds": [
-      { "name": "cobblemon:block/plants/energy_root/energy_root_place_1", "volume": 0.7 },
-      { "name": "cobblemon:block/plants/energy_root/energy_root_place_2", "volume": 0.7 },
-      { "name": "cobblemon:block/plants/energy_root/energy_root_place_3", "volume": 0.7 }
+      { "name": "cobblemon:block/energy_root/energy_root_place_1", "volume": 0.7 },
+      { "name": "cobblemon:block/energy_root/energy_root_place_2", "volume": 0.7 },
+      { "name": "cobblemon:block/energy_root/energy_root_place_3", "volume": 0.7 }
     ]
   },
   "medicinal_leek.break": {
     "sounds": [
-      "cobblemon:block/plants/medicinal_leek/medicinal_leek_break_1",
-      "cobblemon:block/plants/medicinal_leek/medicinal_leek_break_2",
-      "cobblemon:block/plants/medicinal_leek/medicinal_leek_break_3"
+      "cobblemon:block/medicinal_leek/medicinal_leek_break_1",
+      "cobblemon:block/medicinal_leek/medicinal_leek_break_2",
+      "cobblemon:block/medicinal_leek/medicinal_leek_break_3"
     ]
   },
   "medicinal_leek.plant": {
     "sounds": [
-      { "name": "cobblemon:block/plants/medicinal_leek/medicinal_leek_plant_1", "volume": 0.6 },
-      { "name": "cobblemon:block/plants/medicinal_leek/medicinal_leek_plant_2", "volume": 0.6 },
-      { "name": "cobblemon:block/plants/medicinal_leek/medicinal_leek_plant_3", "volume": 0.6 }
+      { "name": "cobblemon:block/medicinal_leek/medicinal_leek_plant_1", "volume": 0.6 },
+      { "name": "cobblemon:block/medicinal_leek/medicinal_leek_plant_2", "volume": 0.6 },
+      { "name": "cobblemon:block/medicinal_leek/medicinal_leek_plant_3", "volume": 0.6 }
     ]
   },
   "vivichoke.break": {
     "sounds": [
-      "cobblemon:block/plants/vivichoke/vivichoke_break_1",
-      "cobblemon:block/plants/vivichoke/vivichoke_break_2",
-      "cobblemon:block/plants/vivichoke/vivichoke_break_3"
+      "cobblemon:block/vivichoke/vivichoke_break_1",
+      "cobblemon:block/vivichoke/vivichoke_break_2",
+      "cobblemon:block/vivichoke/vivichoke_break_3"
     ]
   },
   "vivichoke.place": {
     "sounds": [
-      { "name": "cobblemon:block/plants/vivichoke/vivichoke_place_1", "volume": 0.7 },
-      { "name": "cobblemon:block/plants/vivichoke/vivichoke_place_2", "volume": 0.7 },
-      { "name": "cobblemon:block/plants/vivichoke/vivichoke_place_3", "volume": 0.7 }
+      { "name": "cobblemon:block/vivichoke/vivichoke_place_1", "volume": 0.7 },
+      { "name": "cobblemon:block/vivichoke/vivichoke_place_2", "volume": 0.7 },
+      { "name": "cobblemon:block/vivichoke/vivichoke_place_3", "volume": 0.7 }
     ]
   },
   "mint.break": {
     "sounds": [
-      { "name": "cobblemon:block/plants/mint/mint_break_1", "volume": 0.6 },
-      { "name": "cobblemon:block/plants/mint/mint_break_2", "volume": 0.6 },
-      { "name": "cobblemon:block/plants/mint/mint_break_3", "volume": 0.6 }
+      { "name": "cobblemon:block/mint/mint_break_1", "volume": 0.6 },
+      { "name": "cobblemon:block/mint/mint_break_2", "volume": 0.6 },
+      { "name": "cobblemon:block/mint/mint_break_3", "volume": 0.6 }
     ]
   },
   "mint.place": {
     "sounds": [
-      { "name": "cobblemon:block/plants/mint/mint_place_1", "volume": 0.4 },
-      { "name": "cobblemon:block/plants/mint/mint_place_2", "volume": 0.4 },
-      { "name": "cobblemon:block/plants/mint/mint_place_3", "volume": 0.4 }
+      { "name": "cobblemon:block/mint/mint_place_1", "volume": 0.4 },
+      { "name": "cobblemon:block/mint/mint_place_2", "volume": 0.4 },
+      { "name": "cobblemon:block/mint/mint_place_3", "volume": 0.4 }
     ]
   },
   "revival_herb.break": {
     "sounds": [
-      { "name": "cobblemon:block/plants/revival_herb/revival_herb_break_1", "volume": 0.5 },
-      { "name": "cobblemon:block/plants/revival_herb/revival_herb_break_2", "volume": 0.5 },
-      { "name": "cobblemon:block/plants/revival_herb/revival_herb_break_3", "volume": 0.5 }
+      { "name": "cobblemon:block/revival_herb/revival_herb_break_1", "volume": 0.5 },
+      { "name": "cobblemon:block/revival_herb/revival_herb_break_2", "volume": 0.5 },
+      { "name": "cobblemon:block/revival_herb/revival_herb_break_3", "volume": 0.5 }
     ]
   },
   "revival_herb.place": {
     "sounds": [
-      { "name": "cobblemon:block/plants/revival_herb/revival_herb_place_1", "volume": 0.4 },
-      { "name": "cobblemon:block/plants/revival_herb/revival_herb_place_2", "volume": 0.4 },
-      { "name": "cobblemon:block/plants/revival_herb/revival_herb_place_3", "volume": 0.4 }
+      { "name": "cobblemon:block/revival_herb/revival_herb_place_1", "volume": 0.4 },
+      { "name": "cobblemon:block/revival_herb/revival_herb_place_2", "volume": 0.4 },
+      { "name": "cobblemon:block/revival_herb/revival_herb_place_3", "volume": 0.4 }
     ]
   },
   "gilded_chest.break": {
