@@ -205,7 +205,7 @@ object CobblemonSounds : PlatformRegistry<Registry<SoundEvent>, ResourceKey<Regi
     @JvmField
     val BERRY_BUSH_PLACE = this.create("block.berry_bush.place")
     @JvmField
-    val BERRY_HARVEST = this.create("block.berry.harvest")
+    val BERRY_HARVEST = this.create("block.berry_bush.harvest")
     @JvmField
     val BERRY_EAT = this.create("item.berry.eat")
 

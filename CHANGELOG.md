@@ -170,7 +170,6 @@
 - Fixed the placeholder `WingFlapIdle` animation so the wings are not rotating opposite to each other.
 - 'player' type dialogue faces can now be explicitly stated so that NPC mods that use fake players can show in dialogue portraits.
 - Added `isLeftSide` field for dialogue faces. This determines what side of dialogue box the portrait is on.
-
 - "sounds/attacks" folder has been renamed to "sounds/move"
 - Moves sharing generic sounds now have unique sound events, allowing them to be changed with resource packs.
 - All move sound events have been renamed to "move.NAME.SOURCE" for consistency.
@@ -179,6 +178,7 @@
 - Mulch and berry harvesting sound events have been renamed and moved to their respective folders in "sounds/block."
 - All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.
 - Sound events for all blocks now start with "block."
+- Gimmighoul chest and item interaction sounds have been moved to where its cry is.
 - Unused sound files and sound events have been removed.
 
 ### Localization
