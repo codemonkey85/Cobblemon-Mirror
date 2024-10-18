@@ -178,6 +178,7 @@
 - 'status.badlypoison.actor' sound event has been renamed to "status.toxpoison.actor"
 - Mulch and berry harvesting sound events have been renamed and moved to their respective folders in "sounds/block."
 - All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.
+- Sound events for all blocks now start with "block."
 - Unused sound files and sound events have been removed.
 
 ### Localization
