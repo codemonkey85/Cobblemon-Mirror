@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.item
 
+import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.cobblemon.mod.common.pokeball.PokeBall
 import com.cobblemon.mod.common.util.isServerSide
@@ -21,8 +22,13 @@ import net.minecraft.world.level.Level
 import kotlin.math.cos
 
 class PokeBallItem(
-    val pokeBall : PokeBall
-) : CobblemonItem(Properties()) {
+        val pokeBall: PokeBall
+) : CobblemonItem(Properties().apply {
+    if (pokeBall.name == PokeBalls.MASTER_BALL.name) {
+        // Master balls are a netherite product and should be fire immune
+        fireResistant()
+    }
+}) {
 
     override fun use(world: Level, player: Player, usedHand: InteractionHand): InteractionResultHolder<ItemStack> {
         val itemStack = player.getItemInHand(usedHand)
@@ -49,12 +55,4 @@ class PokeBallItem(
         }
         world.addFreshEntity(pokeBallEntity)
     }
-
-    /*
-    override fun isFireproof(): Boolean {
-        return pokeBall.name == PokeBalls.MASTER_BALL.name || super.isFireproof()
-    }
-
-     */
-
 }
