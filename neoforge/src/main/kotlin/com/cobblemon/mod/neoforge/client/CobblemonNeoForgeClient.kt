@@ -204,7 +204,7 @@ object CobblemonNeoForgeClient : CobblemonClientImplementation {
             if (((itemStack.item is PokedexItem && player.usedItemHand == InteractionHand.MAIN_HAND) ||
                 (offhandStack.item is PokedexItem && player.usedItemHand == InteractionHand.OFF_HAND))
             ) {
-                pokedexUsageContext.renderUpdate(player, event.guiGraphics, event.partialTick)
+                pokedexUsageContext.renderUpdate(event.guiGraphics, event.partialTick)
             } else if (pokedexUsageContext.transitionIntervals > 0) {
                 pokedexUsageContext.resetState()
             }
@@ -223,7 +223,7 @@ object CobblemonNeoForgeClient : CobblemonClientImplementation {
                 pokedexUsageContext.scanningGuiOpen
             ) {
                 val keyAttack = client.options.keyAttack
-                pokedexUsageContext.attackKeyHeld(player, keyAttack.isDown)
+                pokedexUsageContext.attackKeyHeld(keyAttack.isDown)
             }
         }
     }
