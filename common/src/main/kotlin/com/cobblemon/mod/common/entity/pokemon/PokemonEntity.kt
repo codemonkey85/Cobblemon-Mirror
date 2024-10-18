@@ -860,7 +860,9 @@ open class PokemonEntity(
 
     override fun getDimensions(pose: Pose): EntityDimensions {
         val scale = effects.mockEffect?.scale ?: (form.baseScale * pokemon.scaleModifier)
-        return this.exposedForm.hitboxWithEyeHeight(this).scale(scale)
+        var result = this.exposedForm.hitbox.scale(scale)
+        result = result.withEyeHeight(this.exposedForm.eyeHeight(this) * result.height)
+        return result
     }
 
     override fun canBeSeenAsEnemy() = super.canBeSeenAsEnemy() && !isBusy
