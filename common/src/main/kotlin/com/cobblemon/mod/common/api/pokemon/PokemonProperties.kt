@@ -505,20 +505,20 @@ open class PokemonProperties {
         originalTrainerType?.takeIf { it != pokemon.originalTrainerType }?.let { return false }
         moves?.takeIf { it.any { move -> pokemon.moveSet.none { it.template.name == move } } }?.let { return false }
         heldItem?.takeIf { itemKey ->
-            val server = server() ?: return false
+            val server = server() ?: return@takeIf true
             val parser = ItemParser(server.registryAccess())
             val result = parser.parse(StringReader(itemKey))
 
-            if (!pokemon.heldItem.`is`(result.item)) return false
+            if (!pokemon.heldItem.`is`(result.item)) return@takeIf true
 
             for (entry in result.components.entrySet()) {
                 val targetPropValue = pokemon.heldItem.get(entry.key)
                 if (targetPropValue != entry.value.get()) {
-                    return false
+                    return@takeIf true
                 }
             }
 
-            return true
+            return@takeIf false
         }?.let { return false }
         return true
     }
