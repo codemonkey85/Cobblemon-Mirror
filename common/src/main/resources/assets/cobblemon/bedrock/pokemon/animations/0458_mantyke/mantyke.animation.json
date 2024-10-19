@@ -1,0 +1,250 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.mantyke.water_idle": {
+			"loop": true,
+			"bones": {
+				"torso": {
+					"position": [0, 3, 0]
+				},
+				"wing_left": {
+					"rotation": [0, -35, 0]
+				},
+				"wing_left2": {
+					"rotation": [0, -10, 0]
+				},
+				"wing_left3": {
+					"rotation": [0, -10, 0]
+				},
+				"antenna_right": {
+					"rotation": [-30, 0, -25]
+				},
+				"antenna_right2": {
+					"rotation": [-20, 0, 0]
+				},
+				"antenna_right3": {
+					"rotation": [-20, 0, 0]
+				},
+				"antenna_left": {
+					"rotation": [-30, 0, 25]
+				},
+				"antenna_left2": {
+					"rotation": [-20, 0, 0]
+				},
+				"antenna_left3": {
+					"rotation": [-20, 0, 0]
+				},
+				"wing_right": {
+					"rotation": [0, 35, 0]
+				},
+				"wing_right2": {
+					"rotation": [0, 10, 0]
+				},
+				"wing_right3": {
+					"rotation": [0, 10, 0]
+				}
+			}
+		},
+		"animation.mantyke.blink": {
+			"animation_length": 0.1667,
+			"bones": {
+				"eye_emote_left": {
+					"position": {
+						"0.0": [0, 0, 0.1],
+						"0.125": {"pre": [0, 0, 0.1], "post": [0, 0, 0.1]},
+						"0.1667": {"pre": [0, 0, 0.1], "post": [0, 0, 0]}
+					}
+				},
+				"pupil_left": {
+					"position": {
+						"0.0": [0, 0, 0.1],
+						"0.125": {"pre": [0, 0, 0.1], "post": [0, 0, 0.1]},
+						"0.1667": {"pre": [0, 0, 0.1], "post": [0, 0, 0]}
+					}
+				},
+				"pupil_right": {
+					"position": {
+						"0.0": [0, 0, 0.1],
+						"0.125": {"pre": [0, 0, 0.1], "post": [0, 0, 0.1]},
+						"0.1667": {"pre": [0, 0, 0.1], "post": [0, 0, 0]}
+					}
+				},
+				"eye_emote_left2": {
+					"position": {
+						"0.0": [0, 0, 0.1],
+						"0.125": {"pre": [0, 0, 0.1], "post": [0, 0, 0.1]},
+						"0.1667": {"pre": [0, 0, 0.1], "post": [0, 0, 0]}
+					}
+				},
+				"eye_emote_right": {
+					"position": {
+						"0.0": [0, 0, 0.1],
+						"0.125": {"pre": [0, 0, 0.1], "post": [0, 0, 0.1]},
+						"0.1667": {"pre": [0, 0, 0.1], "post": [0, 0, 0]}
+					}
+				},
+				"eye_emote_right2": {
+					"position": {
+						"0.0": [0, 0, 0.1],
+						"0.125": {"pre": [0, 0, 0.1], "post": [0, 0, 0.1]},
+						"0.1667": {"pre": [0, 0, 0.1], "post": [0, 0, 0]}
+					}
+				}
+			}
+		},
+		"animation.mantyke.happy": {
+			"loop": true,
+			"bones": {
+				"mouth_closed": {
+					"position": [0, 0, 0.1]
+				},
+				"mouth_open": {
+					"position": [0, 0, -0.1]
+				}
+			}
+		},
+		"animation.mantyke.sad": {
+			"loop": true,
+			"bones": {
+				"mouth_closed": {
+					"position": [0, 0.5, 0]
+				},
+				"mouth_closed_right": {
+					"position": [0, -1, 0]
+				},
+				"mouth_closed_left": {
+					"position": [0, -1, 0]
+				},
+				"eye_emote_left": {
+					"position": [0, 0, 0.1]
+				},
+				"eye_emote_right": {
+					"position": [0, 0, 0.1]
+				}
+			}
+		},
+		"animation.mantyke.angry": {
+			"loop": true,
+			"bones": {
+				"mouth_closed": {
+					"position": [0, 0, 0.1]
+				},
+				"mouth_open": {
+					"position": [0, 0, -0.1]
+				},
+				"mouth_open_right": {
+					"position": [0, -1, 0]
+				},
+				"mouth_open_left": {
+					"position": [0, -1, 0]
+				},
+				"eye_emote_left2": {
+					"position": [0, 0, 0.1]
+				},
+				"eye_emote_right2": {
+					"position": [0, 0, 0.1]
+				}
+			}
+		},
+		"animation.mantyke.bored": {
+			"loop": true,
+			"bones": {
+				"eye_emote_left": {
+					"position": [0, 0, 0.1]
+				},
+				"pupil_left": {
+					"position": [0, -0.25, 0],
+					"scale": [1, 0.5, 1]
+				},
+				"pupil_right": {
+					"position": [0, -0.25, 0],
+					"scale": [1, 0.5, 1]
+				},
+				"mouth_closed_right": {
+					"position": [0, -0.5, 0]
+				},
+				"mouth_closed_left": {
+					"position": [0, -0.5, 0]
+				},
+				"eye_emote_left2": {
+					"position": [0, 0, 0.1]
+				},
+				"eye_emote_right": {
+					"position": [0, 0, 0.1]
+				},
+				"eye_emote_right2": {
+					"position": [0, 0, 0.1]
+				}
+			}
+		},
+		"animation.mantyke.surprised": {
+			"loop": true,
+			"bones": {
+				"pupil_left": {
+					"scale": [0.5, 0.5, 1]
+				},
+				"pupil_right": {
+					"scale": [0.5, 0.5, 1]
+				},
+				"mouth_closed": {
+					"position": [0, 0, 0.1]
+				},
+				"mouth_open": {
+					"position": [0, 0, -0.1]
+				},
+				"mouth_open_right": {
+					"position": [0, 0, 0.1]
+				},
+				"mouth_open_left": {
+					"position": [0, 0, 0.1]
+				}
+			}
+		},
+		"animation.mantyke.unsure": {
+			"loop": true,
+			"bones": {
+				"mouth_closed": {
+					"position": [0, 0.5, 0]
+				},
+				"mouth_closed_right": {
+					"position": [0, -0.5, 0]
+				},
+				"mouth_closed_left": {
+					"position": [0, -1.05, 0]
+				},
+				"eye_emote_left": {
+					"position": [0, 0, 0.1]
+				}
+			}
+		},
+		"animation.mantyke.hurt": {
+			"loop": true,
+			"bones": {
+				"eye_emote_left": {
+					"position": [0, 0, 0.1]
+				},
+				"pupil_left": {
+					"position": [0, 0, 0.1]
+				},
+				"pupil_right": {
+					"position": [0, 0, 0.1]
+				},
+				"mouth_closed": {
+					"position": [0, 0, 0.1]
+				},
+				"mouth_open": {
+					"position": [0, 0, -0.1]
+				},
+				"mouth_open_right": {
+					"position": [0, -1, 0]
+				},
+				"mouth_open_left": {
+					"position": [0, -1, 0]
+				},
+				"eye_emote_right": {
+					"position": [0, 0, 0.1]
+				}
+			}
+		}
+	}
+}

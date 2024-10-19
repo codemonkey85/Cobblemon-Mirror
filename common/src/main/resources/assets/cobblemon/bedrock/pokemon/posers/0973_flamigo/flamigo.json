@@ -1,0 +1,50 @@
+{
+  "portraitScale": 1,
+  "portraitTranslation": [0,0,0],
+  "profileScale": 1,
+  "profileTranslation": [0,0,0],
+  "animations": {
+    "recoil": "q.bedrock_stateful('flamigo', 'recoil')"
+  },
+  "poses": {
+    "standing": {
+      "poseTypes": [ "STAND", "FLOAT", "PORTRAIT", "PROFILE", "NONE" ],
+      "animations": [
+        "q.bedrock('flamigo', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('flamigo', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [ "WALK", "SWIM" ],
+      "animations": [
+        "q.bedrock('flamigo', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('flamigo', 'blink')"
+      ]
+    },
+    "hovering": {
+      "poseName": "hovering",
+      "poseTypes": [ "HOVER" ],
+      "animations": [
+        "q.bedrock('flamigo', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('flamigo', 'blink')"
+      ]
+    },
+    "flying": {
+      "poseName": "flying",
+      "poseTypes": [ "FLY" ],
+      "animations": [
+        "q.bedrock('flamigo', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('flamigo', 'blink')"
+      ]
+    }
+  }
+}

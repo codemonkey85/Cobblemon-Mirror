@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Slakoth",
   "nationalPokedexNumber": 287,
   "primaryType": "normal",
@@ -12,6 +13,24 @@
     "special_attack": 35,
     "special_defence": 35,
     "speed": 30
+  },
+  "behaviour": {
+    "moving": {
+      "wanderChance": "400",
+      "walk": {
+        "walkSpeed": 0.2
+      },
+      "swim": {
+        "avoidsWater": true
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "sleepChance": "0.0019",
+      "light": "0-14"
+    }
   },
   "catchRate": 255,
   "maleRatio": 0.5,
@@ -170,10 +189,10 @@
       ]
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.8,
   "hitbox": {
     "width": 1,
-    "height": 1,
+    "height": 0.4,
     "fixed": false
   },
   "baseFriendship": 70,

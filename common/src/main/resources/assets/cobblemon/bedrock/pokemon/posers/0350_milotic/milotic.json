@@ -1,0 +1,25 @@
+{
+  "portraitScale": 1.49,
+  "portraitTranslation": [-0.88,1.4,0],
+  "profileScale": 0.48,
+  "profileTranslation": [-0.1,0.93,0],
+  "poses": {
+    "standing": {
+      "poseTypes": [
+        "STAND",
+        "WALK",
+        "SWIM",
+        "FLOAT",
+        "PORTRAIT",
+        "PROFILE",
+        "NONE"
+      ],
+      "animations": [
+        "q.bedrock('milotic', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('milotic', 'blink')"
+      ]
+    }
+  }
+}
