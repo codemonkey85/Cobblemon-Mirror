@@ -187,6 +187,11 @@
       "fly": {
         "canFly": true,
         "flySpeedHorizontal": 0.6
+      },
+      "swim": {
+        "swimSpeed": 0.1,
+        "canSwimInWater": true,
+        "canWalkOnWater": true
       }
     }
   },
@@ -408,10 +413,10 @@
   ],
   "preEvolution": "charmeleon",
   "evolutions": [],
-  "baseScale": 1.35,
+  "baseScale": 1,
   "hitbox": {
-    "width": 1,
-    "height": 2.1,
+    "width": 1.5,
+    "height": 2.65,
     "fixed": false
   },
   "baseFriendship": 50,
