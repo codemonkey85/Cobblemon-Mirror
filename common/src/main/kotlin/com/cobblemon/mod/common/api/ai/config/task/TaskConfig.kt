@@ -1,15 +1,45 @@
+/*
+ * Copyright (C) 2023 Cobblemon Contributors
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.cobblemon.mod.common.api.ai.config.task
 
+import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.ai.BrainConfigurationContext
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.behavior.BehaviorControl
 
 fun interface TaskConfig {
     companion object {
         val types = mutableMapOf<String, Class<out TaskConfig>>(
-            "run_one" to RunOneTaskConfig::class.java
+            "one_of" to OneOfTaskConfig::class.java,
+            "wander" to WanderTaskConfig::class.java,
+            "look_at_target" to LookAtTargetTaskConfig::class.java,
+            "follow_walk_target" to FollowWalkTargetTaskConfig::class.java,
+            "random" to RandomTaskConfig::class.java,
+            "stay_afloat" to StayAfloatTaskConfig::class.java,
+            "look_at_entities" to LookAtEntitiesTaskConfig::class.java,
+            "do_nothing" to DoNothingTaskConfig::class.java,
+            "get_angry_at_attacker" to GetAngryAtAttackerTaskConfig::class.java,
+            "stop_being_angry_if_attacker_dead" to StopBeingAngryIfAttackerDeadTaskConfig::class.java,
+            "switch_npc_to_battle" to SwitchToNPCBattleTaskConfig::class.java,
+            "look_at_battling_pokemon" to LookAtBattlingPokemonTaskConfig::class.java,
+            "switch_npc_from_battle" to SwitchFromNPCBattleTaskConfig::class.java,
+            "go_to_healing_machine" to GoToHealingMachineTaskConfig::class.java,
+            "heal_using_healing_machine" to HealUsingHealingMachineTaskConfig::class.java,
+            "all_of" to AllOfTaskConfig::class.java,
         )
+
+        val runtime = MoLangRuntime().setup()
     }
 
-    fun createTask(entity: LivingEntity, brainConfigurationContext: BrainConfigurationContext): BehaviorControl<in LivingEntity>
+    val runtime: MoLangRuntime
+        get() = Companion.runtime
+
+    fun createTasks(entity: LivingEntity, brainConfigurationContext: BrainConfigurationContext): List<BehaviorControl<in LivingEntity>>
 }

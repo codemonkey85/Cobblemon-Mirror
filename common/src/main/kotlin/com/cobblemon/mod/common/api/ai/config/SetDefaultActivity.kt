@@ -10,7 +10,11 @@ package com.cobblemon.mod.common.api.ai.config
 
 import com.cobblemon.mod.common.api.ai.BrainConfigurationContext
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.schedule.Activity
 
-object DummyBrainConfig : BrainConfig {
-    override fun configure(entity: LivingEntity, brainConfigurationContext: BrainConfigurationContext) {}
+class SetDefaultActivity : BrainConfig {
+    val activity: Activity = Activity.IDLE
+    override fun configure(entity: LivingEntity, brainConfigurationContext: BrainConfigurationContext) {
+        brainConfigurationContext.defaultActivity = activity
+    }
 }

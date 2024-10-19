@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.api.npc
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.bedrockk.molang.runtime.value.MoValue
 import com.bedrockk.molang.runtime.value.StringValue
+import com.cobblemon.mod.common.api.ai.config.BrainConfig
 import com.cobblemon.mod.common.api.npc.configuration.NPCBattleConfiguration
 import com.cobblemon.mod.common.api.npc.configuration.NPCConfigVariable
 import com.cobblemon.mod.common.api.npc.configuration.NPCInteractConfiguration
@@ -46,6 +47,7 @@ class NPCClass {
     var variables = mutableMapOf<String, MoValue>() // Questionable whether this should be here.
     var party: NPCPartyProvider? = null
     var skill: Int = 0
+    var ai: MutableList<BrainConfig> = mutableListOf()
 
     // If you're adding stuff here, add it to NPCPreset and NPCClassAdapter too
 

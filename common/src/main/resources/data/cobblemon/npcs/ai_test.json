@@ -1,0 +1,48 @@
+{
+  "hitbox": "player",
+  "names": [
+    "AI Man"
+  ],
+  "presets": [
+    "cobblemon:battler_test"
+  ],
+  "canDespawn": false,
+  "ai": [
+    {
+      "type": "apply_preset",
+      "preset": "cobblemon:pauses_in_battle"
+    },
+    {
+      "type": "apply_preset",
+      "preset": "cobblemon:uses_healing_machine"
+    },
+    {
+      "type": "add_tasks_to_activity",
+      "activity": "core",
+      "tasksByPriority": {
+        "0": [
+          "look_at_target",
+          "stay_afloat"
+        ]
+      }
+    },
+    {
+      "type": "add_tasks_to_activity",
+      "activity": "idle",
+      "tasksByPriority": {
+        "0": [
+          "follow_walk_target",
+          "look_at_target"
+        ],
+        "1": [
+          {
+            "type": "wander",
+            "speedMultiplier": 0.33,
+            "shouldWander": "q.random(0, 20 * 7) < 1"
+          },
+          "look_at_entities"
+        ]
+      }
+    }
+  ]
+}

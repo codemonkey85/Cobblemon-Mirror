@@ -18,6 +18,7 @@ import com.cobblemon.mod.common.entity.ai.GetAngryAtAttackerTask
 import com.cobblemon.mod.common.entity.ai.MoveToAttackTargetTask
 import com.cobblemon.mod.common.entity.ai.StayAfloatTask
 import com.cobblemon.mod.common.entity.npc.ai.*
+import com.cobblemon.mod.common.util.asExpression
 import com.google.common.collect.ImmutableList
 import com.mojang.datafixers.util.Pair
 import net.minecraft.world.entity.ai.Brain
@@ -29,6 +30,10 @@ import net.minecraft.world.entity.schedule.Activity
 
 object NPCBrain {
     fun configure(npcEntity: NPCEntity, npcClass: NPCClass, brain: Brain<out NPCEntity>) {
+        val brainConfigurationContext = BrainConfigurationContext()
+        brainConfigurationContext.apply(npcEntity, npcClass.ai)
+        return
+
         brain.addActivity(
             Activity.CORE, ImmutableList.of(
                 Pair.of(0, StayAfloatTask(0.8F)),
@@ -44,19 +49,23 @@ object NPCBrain {
                     Pair.of(SetEntityLookTarget.create(15F), 2),
                     Pair.of(ChooseWanderTargetTask.create(horizontalRange = 10, verticalRange = 5, walkSpeed = 0.33F, completionRange = 1), 1)
                 )
-            )
-            ),
+            )),
             Pair.of(1, FollowWalkTargetTask()),
             Pair.of(0, SwitchToBattleTask.create()),
             Pair.of(1, AttackAngryAtTask.create()),
             Pair.of(1, MoveToAttackTargetTask.create()),
             Pair.of(1, MeleeAttackTask.create(2F, 30L)),
             Pair.of(1, HealUsingHealingMachineTask()),
-            Pair.of(1, GoToHealingMachineTask.create(14, 5, 0.33F, 1))
+            Pair.of(1, GoToHealingMachineTask.create(
+                horizontalSearchRange = "14".asExpression(),
+                verticalSearchRange = "5".asExpression(),
+                speedMultiplier = "0.33".asExpression(),
+                completionRange = "1".asExpression()
+            ))
         ))
         brain.addActivity(
             NPC_BATTLING, ImmutableList.of(
-            Pair.of(0, SwitchFromBattleTask.create()),
+            Pair.of(0, SwitchFromBattleTask.create(Activity.IDLE)),
             Pair.of(1, LookAtTargetSink(45, 90)),
             Pair.of(2, LookAtBattlingPokemonTask.create()),
         ))
@@ -76,16 +85,16 @@ object NPCBrain {
 
 
 
-        val brainConfigurationContext = BrainConfigurationContext()
-//        val brainStruct = createNPCBrainStruct(npcEntity, brain, brainConfigurationContext)
-        // run some scripts at some point
-
-        // apply the brain
-        brainConfigurationContext.activities.forEach {
-//            brain.addActivity(it.activity, ImmutableList.copyOf(it.tasks))
-        }
-        brain.setCoreActivities(brainConfigurationContext.coreActivities)
-        brain.setDefaultActivity(brainConfigurationContext.defaultActivity)
-        brain.schedule = brainConfigurationContext.schedule
+//        val brainConfigurationContext = BrainConfigurationContext()
+////        val brainStruct = createNPCBrainStruct(npcEntity, brain, brainConfigurationContext)
+//        // run some scripts at some point
+//
+//        // apply the brain
+//        brainConfigurationContext.activities.forEach {
+////            brain.addActivity(it.activity, ImmutableList.copyOf(it.tasks))
+//        }
+//        brain.setCoreActivities(brainConfigurationContext.coreActivities)
+//        brain.setDefaultActivity(brainConfigurationContext.defaultActivity)
+//        brain.schedule = brainConfigurationContext.schedule
     }
 }
