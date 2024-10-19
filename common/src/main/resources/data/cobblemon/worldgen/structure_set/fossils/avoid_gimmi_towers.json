@@ -1,6 +1,10 @@
 {
     "placement": {
         "type": "minecraft:random_spread",
+        "exclusion_zone": {
+            "chunk_count": 7,
+            "other_set": "cobblemon:ruins/gimmi_towers"
+        },
         "spacing": 20,
         "separation": 10,
         "salt": 1692720812,
