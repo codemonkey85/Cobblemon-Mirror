@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.api.pokedex
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
+import com.cobblemon.mod.common.pokedex.scanner.PokedexEntityData
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
@@ -19,7 +20,6 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.ListCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import java.util.UUID
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
 
@@ -90,12 +90,18 @@ class SpeciesDexRecord {
         aspects.addAll(pokemon.aspects)
     }
 
+    fun addInformation(pokedexEntityData: PokedexEntityData, knowledge: PokedexEntryProgress) {
+        aspects.addAll(pokedexEntityData.aspects)
+    }
+
     fun addAspects(addedAspects: Set<String>) {
         aspects.addAll(addedAspects)
     }
 
     /** Returns true if the given Pokémon contains new information. Internal because it's only to be called from [FormDexRecord.wouldBeDifferent]. */
     internal fun wouldBeDifferent(pokemon: Pokemon) = pokemon.aspects.any { it !in aspects }
+
+    internal fun wouldBeDifferent(pokedexEntityData: PokedexEntityData) = pokedexEntityData.aspects.any { it !in aspects }
 
     fun getOrCreateFormRecord(formName: String): FormDexRecord {
         return formRecords.getOrPut(formName.lowercase()) {

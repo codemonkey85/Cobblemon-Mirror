@@ -18,6 +18,7 @@ import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.FinishScanni
 import com.cobblemon.mod.common.pokedex.scanner.PlayerScanningDetails
 import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext
 import com.cobblemon.mod.common.pokedex.scanner.PokemonScanner
+import com.cobblemon.mod.common.pokedex.scanner.ScannableEntity
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 
@@ -39,17 +40,20 @@ object FinishScanningHandler : ServerNetworkPacketHandler<FinishScanningPacket> 
             val progressTick = PlayerScanningDetails.playerToTickMap[player.uuid]
             val ticksScan = progressTick?.let { server.tickCount - it } ?: return
             if (targetEntity.uuid == inProgressUUID && ticksScan >= PokedexUsageContext.SUCCESS_SCAN_SERVER_TICKS) {
-                val pokemonEntity = targetEntity as? PokemonEntity ?: return
+                val scannableEntity = targetEntity as? ScannableEntity ?: return
                 val dex = Cobblemon.playerDataManager.getPokedexData(player)
-                val newInformation = dex.getNewInformation(pokemonEntity.pokemon)
+                val pokedexEntityData = scannableEntity.resolvePokemonScan()
+                if(pokedexEntityData != null){
+                    val newInformation = dex.getNewInformation(pokedexEntityData)
+                    if ((scannableEntity as? PokemonEntity)?.owner === player) {
+                        dex.catch(scannableEntity.pokemon)
+                    } else {
+                        dex.encounter(pokedexEntityData)
+                    }
 
-                if (pokemonEntity.owner == player) {
-                    dex.catch(pokemonEntity.pokemon)
-                } else {
-                    dex.encounter(pokemonEntity.pokemon)
+                    POKEMON_SCANNED.post(PokemonScannedEvent(player, pokedexEntityData, scannableEntity))
+                    ServerConfirmedRegisterPacket(pokedexEntityData.species.resourceIdentifier, newInformation).sendToPlayer(player)
                 }
-                POKEMON_SCANNED.post(PokemonScannedEvent(player, pokemonEntity))
-                ServerConfirmedRegisterPacket(pokemonEntity.pokemon.species.resourceIdentifier, newInformation).sendToPlayer(player)
             }
         }
     }

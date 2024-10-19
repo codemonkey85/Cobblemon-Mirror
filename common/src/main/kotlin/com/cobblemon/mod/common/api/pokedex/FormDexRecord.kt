@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.api.pokedex
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.struct.VariableStruct
 import com.bedrockk.molang.runtime.value.StringValue
+import com.cobblemon.mod.common.pokedex.scanner.PokedexEntityData
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.readEnumConstant
@@ -77,6 +78,12 @@ class FormDexRecord {
         }
     }
 
+    fun encountered(pokedexEntityData: PokedexEntityData) {
+        if (wouldBeDifferent(pokedexEntityData, PokedexEntryProgress.ENCOUNTERED)) {
+            addInformation(pokedexEntityData, PokedexEntryProgress.ENCOUNTERED)
+        }
+    }
+
     fun caught(pokemon: Pokemon) {
         if (wouldBeDifferent(pokemon, PokedexEntryProgress.CAUGHT)) {
             addInformation(pokemon, PokedexEntryProgress.CAUGHT)
@@ -108,6 +115,16 @@ class FormDexRecord {
         speciesDexRecord.onFormRecordUpdated(this)
     }
 
+    private fun addInformation(pokedexEntityData: PokedexEntityData, knowledge: PokedexEntryProgress) {
+        genders.add(pokedexEntityData.gender)
+        seenShinyStates.add(if (pokedexEntityData.shiny) "shiny" else "normal")
+        if (knowledge.ordinal > this.knowledge.ordinal) {
+            this.knowledge = knowledge
+        }
+        speciesDexRecord.addInformation(pokedexEntityData, knowledge)
+        speciesDexRecord.onFormRecordUpdated(this)
+    }
+
     /** Returns whether the given [Pokemon] and [knowledge] would add new information to the Pokédex.*/
     fun wouldBeDifferent(pokemon: Pokemon, knowledge: PokedexEntryProgress): Boolean {
         return pokemon.gender !in genders
@@ -115,6 +132,14 @@ class FormDexRecord {
             || (!pokemon.shiny && "normal" !in seenShinyStates)
             || knowledge.ordinal > this.knowledge.ordinal
             || speciesDexRecord.wouldBeDifferent(pokemon)
+    }
+
+    fun wouldBeDifferent(pokedexEntityData: PokedexEntityData, knowledge: PokedexEntryProgress): Boolean {
+        return pokedexEntityData.gender !in genders
+                || (pokedexEntityData.shiny && "shiny" !in seenShinyStates)
+                || (!pokedexEntityData.shiny && "normal" !in seenShinyStates)
+                || knowledge.ordinal > this.knowledge.ordinal
+                || speciesDexRecord.wouldBeDifferent(pokedexEntityData)
     }
 
     fun encode(buffer: RegistryFriendlyByteBuf) {
