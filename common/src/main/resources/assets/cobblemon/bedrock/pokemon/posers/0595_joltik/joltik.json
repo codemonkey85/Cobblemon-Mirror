@@ -28,7 +28,10 @@
         "q.bedrock('joltik', 'ground_idle')",
         "q.quadruped_walk(1, 1, 'leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right')"
       ],
-      "quirks": ["q.bedrock_quirk('joltik', 'blink')"]
+      "quirks": [
+        "q.bedrock_quirk('joltik', 'blink1')",
+        "q.bedrock_quirk('joltik', 'blink2')"
+      ]
     }
   }
 }
