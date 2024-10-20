@@ -360,7 +360,7 @@ class PokedexGUI private constructor(
     fun getFilters(): Collection<EntryFilter> {
         val filters: MutableList<EntryFilter> = mutableListOf()
 
-        filters.add(SearchFilter(searchWidget.value))
+        filters.add(SearchFilter(CobblemonClient.clientPokedexData, searchWidget.value))
 
         return filters
     }
