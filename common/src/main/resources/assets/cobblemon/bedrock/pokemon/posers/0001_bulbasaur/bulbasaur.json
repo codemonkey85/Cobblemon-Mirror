@@ -1,0 +1,69 @@
+{
+  "portraitScale": 1.66,
+  "portraitTranslation": [-0.14, -0.74, 0],
+  "profileScale": 1,
+  "profileTranslation": [0.0, 0.24, 0.0],
+  "animations": {
+    "faint": "q.bedrock_primary('bulbasaur', 'faint', q.curve('one'))",
+    "cry": "q.bedrock_stateful('bulbasaur', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "NONE",
+        "PORTRAIT",
+        "PROFILE"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('bulbasaur', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('bulbasaur', 'blink')"
+      ],
+      "transformedParts": [
+        {
+          "part": "vines",
+          "isVisible": false
+        }
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "WALK",
+        "SWIM"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('bulbasaur', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('bulbasaur', 'blink')"
+      ],
+      "transformedParts": [
+        {
+          "part": "vines",
+          "isVisible": false
+        }
+      ]
+    },
+    "sleep": {
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('bulbasaur', 'sleep')"
+      ],
+      "transformedParts": [
+        {
+          "part": "vines",
+          "isVisible": false
+        }
+      ]
+    }
+  }
+}

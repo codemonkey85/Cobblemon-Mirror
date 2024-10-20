@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Trumbeak",
   "nationalPokedexNumber": 732,
   "primaryType": "normal",
@@ -25,6 +26,13 @@
   "eggGroups": [
     "flying"
   ],
+  "behaviour": {
+    "moving": {
+      "fly": {
+        "canFly": true
+      }
+    }
+  },
   "moves": [
     "1:echoedvoice",
     "1:growl",
@@ -123,7 +131,7 @@
   ],
   "baseScale": 1,
   "hitbox": {
-    "width": 1,
+    "width": 0.6,
     "height": 1,
     "fixed": false
   },

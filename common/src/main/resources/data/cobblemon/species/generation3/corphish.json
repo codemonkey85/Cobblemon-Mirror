@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Corphish",
   "nationalPokedexNumber": 341,
   "primaryType": "water",
@@ -25,6 +26,15 @@
     "water_1",
     "water_3"
   ],
+  "behaviour": {
+    "moving": {
+      "swim": {
+        "swimSpeed": 0.1,
+        "canSwimInWater": false,
+        "canBreatheUnderwater": true
+      }
+    }
+  },
   "moves": [
     "1:bubble",
     "1:harden",
@@ -168,9 +178,9 @@
       ]
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.75,
   "hitbox": {
-    "width": 1,
+    "width": 0.65,
     "height": 1,
     "fixed": false
   },

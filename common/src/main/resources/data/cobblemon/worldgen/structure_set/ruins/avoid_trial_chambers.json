@@ -1,0 +1,23 @@
+{
+    "placement": {
+        "type": "minecraft:random_spread",
+        "exclusion_zone": {
+            "chunk_count": 10,
+            "other_set": "minecraft:trial_chambers"
+        },
+        "spacing": 15,
+        "separation": 5,
+        "salt": 1695297744,
+        "spread_type": "triangular"
+    },
+    "structures": [
+        {
+            "structure": "cobblemon:ruins/crumbling_arch_ruins",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:ruins/rooted_arch_ruins",
+            "weight": 1
+        }
+    ]
+}

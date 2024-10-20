@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.api.storage.player.client.ClientPokedexManager
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
+import com.cobblemon.mod.common.pokedex.scanner.PokedexEntityData
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.getPlayer
 import com.mojang.serialization.Codec
@@ -30,6 +31,12 @@ class PokedexManager(
         val speciesId = pokemon.species.resourceIdentifier
         val formName = pokemon.form.name
         getOrCreateSpeciesRecord(speciesId).getOrCreateFormRecord(formName).encountered(pokemon)
+    }
+
+    fun encounter(pokedexEntityData: PokedexEntityData) {
+        val speciesId = pokedexEntityData.species.resourceIdentifier
+        val formName = pokedexEntityData.form.name
+        getOrCreateSpeciesRecord(speciesId).getOrCreateFormRecord(formName).encountered(pokedexEntityData)
     }
 
     fun catch(pokemon: Pokemon) {

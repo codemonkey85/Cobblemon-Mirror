@@ -1,0 +1,62 @@
+{
+  "portraitScale": 1.22,
+  "portraitTranslation": [-1.56, 1.41, 0],
+  "profileScale": 0.35,
+  "profileTranslation": [0, 1.15, 0],
+  "poses": {
+    "standing": {
+      "poseTypes": [
+        "STAND",
+        "NONE",
+        "PORTRAIT",
+        "PROFILE"
+      ],
+      "isBattle": false,
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('salamence', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('salamence', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseTypes": [
+        "WALK",
+        "SWIM"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('salamence', 'ground_idle')",
+        "q.quadruped_walk(1, 1, 'leg_front_left_rotation', 'leg_front_right_rotation', 'leg_back_left_rotation', 'leg_back_right_rotation')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('salamence', 'blink')"
+      ]
+    },
+    "hover": {
+      "poseTypes": [
+        "HOVER"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('salamence', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('salamence', 'blink')"
+      ]
+    },
+    "fly": {
+      "poseTypes": [
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('salamence', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('salamence', 'blink')"
+      ]
+    }
+  }
+}

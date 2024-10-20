@@ -18,6 +18,7 @@ import com.cobblemon.mod.common.client.gui.battle.BattleOverlay.Companion.caught
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.BASE_HEIGHT
 import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants.BASE_WIDTH
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.util.cobblemonResource
@@ -108,14 +109,14 @@ class PokedexScannerRenderer {
                     val yOffsetText = when(index) { 0 -> 5; 1 -> 4; 2 -> 8; 3 -> 42; else -> 0 }
 
                     // Text
-                    if (usageContext.focusIntervals == PokedexUsageContext.FOCUS_INTERVALS && usageContext.pokemonInFocus != null) {
-                        val pokemon = usageContext.pokemonInFocus!!.pokemon
+                    if (usageContext.focusIntervals == PokedexUsageContext.FOCUS_INTERVALS && usageContext.scannableEntityInFocus != null) {
+                        val pokedexEntityData = usageContext.scannableEntityInFocus?.resolvePokemonScan() ?: return
 
                         if (infoDisplayedCounter == 1) {
                             drawScaledText(
                                 context = graphics,
                                 font = CobblemonResources.DEFAULT_LARGE,
-                                text = lang("ui.lv.number", pokemon.level).bold(),
+                                text = lang("ui.lv.number", pokedexEntityData.level).bold(),
                                 x = centerX + xOffset + xOffsetText,
                                 y = centerY + yOffset + yOffsetText,
                                 shadow = true,
@@ -124,8 +125,8 @@ class PokedexScannerRenderer {
                         }
 
                         if (infoDisplayedCounter == 2) {
-                            val hasTrainer = usageContext.pokemonInFocus?.ownerUUID !== null
-                            val speciesName = pokemon.species.name.text().bold()
+                            val hasTrainer = (usageContext.scannableEntityInFocus?.resolveEntityScan() as? PokemonEntity)?.ownerUUID !== null
+                            val speciesName = pokedexEntityData.species.name.text().bold()
                             var yOffsetName = if (hasTrainer) 2 else 0
                             if (hasTrainer) {
                                 drawScaledText(
@@ -148,7 +149,7 @@ class PokedexScannerRenderer {
                                 centered = true
                             )
 
-                            val gender = pokemon.gender
+                            val gender = pokedexEntityData.gender
                             val speciesNameWidth = Minecraft.getInstance().font.width(speciesName.font(CobblemonResources.DEFAULT_LARGE))
                             if (gender != Gender.GENDERLESS) {
                                 val isMale = gender == Gender.MALE
@@ -178,15 +179,15 @@ class PokedexScannerRenderer {
                         }
 
                         if (infoDisplayedCounter == 3) {
-                            val typeText = lang("type.suffix", pokemon.types.map { it.displayName.copy() }.reduce { acc, next -> acc.plus("/").plus(next) })
+                            val typeText = lang("type.suffix", pokedexEntityData.form.types.map { it.displayName.copy() }.reduce { acc, next -> acc.plus("/").plus(next) })
                             val typeWidth = Minecraft.getInstance().font.width(typeText.font(CobblemonResources.DEFAULT_LARGE))
 
                             // Split into 2 lines if text width is too long
-                            if (typeWidth > (OUTER_INFO_FRAME_WIDTH - 8) && pokemon.secondaryType !== null) {
+                            if (typeWidth > (OUTER_INFO_FRAME_WIDTH - 8) && pokedexEntityData.form.secondaryType !== null) {
                                 drawScaledText(
                                     context = graphics,
                                     font = CobblemonResources.DEFAULT_LARGE,
-                                    text = lang("type.suffix", pokemon.primaryType.displayName).bold(),
+                                    text = lang("type.suffix", pokedexEntityData.form.primaryType.displayName).bold(),
                                     x = centerX + xOffset + xOffsetText - 3,
                                     y = centerY + yOffset + yOffsetText,
                                     shadow = true,
@@ -196,7 +197,7 @@ class PokedexScannerRenderer {
                                 drawScaledText(
                                     context = graphics,
                                     font = CobblemonResources.DEFAULT_LARGE,
-                                    text = lang("type.suffix", pokemon.secondaryType!!.displayName).bold(),
+                                    text = lang("type.suffix", pokedexEntityData.form.secondaryType!!.displayName).bold(),
                                     x = centerX + xOffset + xOffsetText + 3,
                                     y = centerY + yOffset + yOffsetText,
                                     shadow = true,
