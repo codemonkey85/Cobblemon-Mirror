@@ -53,7 +53,7 @@ object StashHandler {
             if (feature.value > relevantSpeciesFeatureProvider.max) feature.value = relevantSpeciesFeatureProvider.max
         }
         if (relevantSpeciesFeatureProviders.isNotEmpty()) {
-            if (pokemon.entity != null) pokemon.entity!!.playSound(CobblemonSounds.GIMMIGHOUL_GIVE_ITEM_SMALL, 1f, 1f)
+            if (pokemon.entity != null) pokemon.entity!!.playSound(CobblemonSounds.GIMMIGHOUL_GIVE_ITEM, 1f, 1f)
         }
         return relevantSpeciesFeatureProviders.isNotEmpty()
     }
