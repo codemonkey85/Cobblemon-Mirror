@@ -5,7 +5,132 @@
 			"loop": true,
 			"bones": {
 				"body": {
-					"rotation": [-7.5, 0, 0]
+					"rotation": [5, 0, 0],
+					"position": [0, 1, 0]
+				},
+				"shell_left": {
+					"rotation": [0, -2.5, 0]
+				},
+				"shell_right": {
+					"rotation": [0, 2.5, 0]
+				},
+				"head": {
+					"rotation": [-5, 0, 0]
+				}
+			}
+		},
+		"animation.cloyster.closed": {
+			"loop": true,
+			"bones": {
+				"shell_left": {
+					"rotation": [0, 12.5, 0]
+				},
+				"shell_right": {
+					"rotation": [0, -12.5, 0]
+				}
+			}
+		},
+		"animation.cloyster.blink": {
+			"animation_length": 0.1667,
+			"bones": {
+				"eyelid_left": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"eyelid_right": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.cloyster.shock": {
+			"loop": true,
+			"bones": {
+				"mouth_open": {
+					"position": [0, 0, -0.1]
+				},
+				"mouth_smile": {
+					"position": [0, 0, 0.1]
+				},
+				"pupil_left": {
+					"scale": [0.7, 0.7, 1]
+				},
+				"pupil_right": {
+					"scale": [0.7, 0.7, 1]
+				}
+			}
+		},
+		"animation.cloyster.angry": {
+			"loop": true,
+			"bones": {
+				"mouth_smile": {
+					"position": [0, 0, 0.1]
+				},
+				"mouth_frown": {
+					"position": [0, 0, -0.1]
+				},
+				"eye_angry_left": {
+					"position": [0, 0, -0.1]
+				},
+				"eye_angry_right": {
+					"position": [0, 0, -0.1]
+				}
+			}
+		},
+		"animation.cloyster.sad": {
+			"loop": true,
+			"bones": {
+				"mouth_smile": {
+					"position": [0, 0, 0.1]
+				},
+				"eye_sad_left": {
+					"position": [0, 0, -0.1]
+				},
+				"eye_sad_right": {
+					"position": [0, 0, -0.1]
+				},
+				"mouth_sad": {
+					"position": [0, 0, -0.1]
+				}
+			}
+		},
+		"animation.cloyster.happy": {
+			"loop": true,
+			"bones": {
+				"mouth_smile": {
+					"position": [0, 0, 0.1]
+				},
+				"mouth_smirk_left": {
+					"position": [0, 0, -0.1]
+				},
+				"eyelid_happy_left": {
+					"position": [0, 0, -0.1]
+				},
+				"eyelid_happy_right": {
+					"position": [0, 0, -0.1]
+				}
+			}
+		},
+		"animation.cloyster.recoil": {
+			"loop": true,
+			"bones": {
+				"mouth_smile": {
+					"position": [0, 0, 0.1]
+				},
+				"mouth_frown": {
+					"position": [0, 0, -0.1]
+				},
+				"eyelid_recoil_left": {
+					"position": [0, 0, -0.1]
+				},
+				"eyelid_recoil_right": {
+					"position": [0, 0, -0.1]
 				}
 			}
 		}

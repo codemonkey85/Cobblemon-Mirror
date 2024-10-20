@@ -101,14 +101,14 @@ open class PartyStore(override val uuid: UUID) : PokemonStore<PartyPosition>() {
         player.sendPacket(InitializePartyPacket(false, uuid, slots.size))
         slots.forEachIndexed { index, pokemon ->
             if (pokemon != null) {
-                player.sendPacket(SetPartyPokemonPacket(uuid, PartyPosition(index), pokemon))
+                player.sendPacket(SetPartyPokemonPacket(uuid, PartyPosition(index)) { pokemon })
             }
         }
     }
 
     override operator fun set(position: PartyPosition, pokemon: Pokemon) {
         super.set(position, pokemon)
-        sendPacketToObservers(SetPartyPokemonPacket(uuid, position, pokemon))
+        sendPacketToObservers(SetPartyPokemonPacket(uuid, position) { pokemon })
     }
 
     override fun remove(pokemon: Pokemon): Boolean {

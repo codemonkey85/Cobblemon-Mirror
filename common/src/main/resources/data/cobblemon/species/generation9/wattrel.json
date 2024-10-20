@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Wattrel",
   "nationalPokedexNumber": 940,
   "primaryType": "electric",
@@ -34,6 +35,13 @@
     "water_1",
     "flying"
   ],
+  "behaviour": {
+    "moving": {
+      "fly": {
+        "canFly": true
+      }
+    }
+  },
   "moves": [
     "1:growl",
     "1:peck",
@@ -112,6 +120,12 @@
       ]
     }
   ],
+  "baseScale": 0.55,
+  "hitbox": {
+    "width": 0.75,
+    "height": 1.15,
+    "fixed": false
+  },
   "cannotDynamax": false,
   "pokedex": [
     "cobblemon.species.wattrel.desc"

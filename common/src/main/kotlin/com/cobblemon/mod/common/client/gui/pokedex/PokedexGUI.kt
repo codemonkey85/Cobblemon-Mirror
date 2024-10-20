@@ -48,6 +48,7 @@ import com.cobblemon.mod.common.client.gui.pokedex.widgets.SizeWidget
 import com.cobblemon.mod.common.client.gui.pokedex.widgets.StatsWidget
 import com.cobblemon.mod.common.client.pokedex.PokedexTypes
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.cobblemon.mod.common.pokemon.abilities.HiddenAbility
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -59,7 +60,6 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.util.Mth
 
 /**
  * Pokedex GUI
@@ -71,7 +71,7 @@ class PokedexGUI private constructor(
     val type: PokedexTypes,
     val initSpecies: ResourceLocation?
 ): Screen(Component.translatable("cobblemon.ui.pokedex.title")) {
-    var initialDragPosX = 0.0
+    var oldDragPosX = 0.0
     var canDragRender = false
 
     private var filteredPokedex: Collection<PokedexDef> = mutableListOf()
@@ -287,12 +287,12 @@ class PokedexGUI private constructor(
         ) {
             canDragRender = true
             isDragging = true
-            initialDragPosX = mouseX
+            oldDragPosX = mouseX
             playSound(CobblemonSounds.POKEDEX_CLICK_SHORT)
         }
         return try {
             super.mouseClicked(mouseX, mouseY, button)
-        } catch(e: ConcurrentModificationException) {
+        } catch(_: ConcurrentModificationException) {
             false
         }
     }
@@ -305,9 +305,10 @@ class PokedexGUI private constructor(
 
     override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, deltaX: Double, deltaY: Double): Boolean {
         if (isDragging && canDragRender) {
-            val dragOffsetY = ((initialDragPosX - mouseX) * 1).toFloat()
+            val dragOffsetY = (oldDragPosX - mouseX).toFloat()
             pokemonInfoWidget.rotationY = (((pokemonInfoWidget.rotationY + dragOffsetY) % 360 + 360) % 360)
         }
+        oldDragPosX = mouseX
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
     }
 
@@ -359,7 +360,7 @@ class PokedexGUI private constructor(
     fun getFilters(): Collection<EntryFilter> {
         val filters: MutableList<EntryFilter> = mutableListOf()
 
-        filters.add(SearchFilter(searchWidget.value))
+        filters.add(SearchFilter(CobblemonClient.clientPokedexData, searchWidget.value))
 
         return filters
     }
@@ -448,7 +449,7 @@ class PokedexGUI private constructor(
                     (tabInfoElement as DescriptionWidget).showPlaceholder = false
                 }
                 TAB_ABILITIES -> {
-                    (tabInfoElement as AbilitiesWidget).abilitiesList = form.abilities.map { ability -> ability.template }!!
+                    (tabInfoElement as AbilitiesWidget).abilitiesList = form.abilities.sortedBy { it is HiddenAbility }.map { ability -> ability.template }
                     (tabInfoElement as AbilitiesWidget).selectedAbilitiesIndex = 0
                     (tabInfoElement as AbilitiesWidget).setAbility()
                     (tabInfoElement as AbilitiesWidget).scrollAmount = 0.0

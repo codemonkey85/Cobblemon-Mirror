@@ -1016,10 +1016,11 @@ open class Pokemon : ShowdownIdentifiable {
 
     fun getOwnerUUID(): UUID? {
         storeCoordinates.get()?.let {
-            if (it.store is PlayerPartyStore) {
-                return it.store.playerUUID
-            } else if (it.store is NPCPartyStore) {
-                return it.store.npc.uuid
+            return when (it.store) {
+                is PlayerPartyStore -> it.store.playerUUID
+                is NPCPartyStore -> it.store.npc.uuid
+                is PCStore -> it.store.uuid
+                else -> null
             }
         }
         return null

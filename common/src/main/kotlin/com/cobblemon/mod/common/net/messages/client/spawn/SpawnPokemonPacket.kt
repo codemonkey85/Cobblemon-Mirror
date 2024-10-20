@@ -14,9 +14,7 @@ import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.entity.PlatformType
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Gender
-import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.util.*
 import java.util.UUID
 import net.minecraft.world.entity.Entity
@@ -28,10 +26,10 @@ import net.minecraft.resources.ResourceLocation
 class SpawnPokemonPacket(
     private val ownerId: UUID?,
     private val scaleModifier: Float,
-    private val species: Species,
+    private val speciesId: ResourceLocation,
     private val gender: Gender,
     private val shiny: Boolean,
-    private val form: FormData,
+    private val formName: String,
     private val aspects: Set<String>,
     private val battleId: UUID?,
     private val phasingTargetId: Int,
@@ -54,10 +52,10 @@ class SpawnPokemonPacket(
     constructor(entity: PokemonEntity, vanillaSpawnPacket: ClientboundAddEntityPacket) : this(
         entity.ownerUUID,
         entity.pokemon.scaleModifier,
-        entity.exposedSpecies,
+        entity.exposedSpecies.resourceIdentifier,
         entity.pokemon.gender,
         entity.pokemon.shiny,
-        entity.pokemon.form,
+        entity.pokemon.form.formOnlyShowdownId(),
         entity.pokemon.aspects,
         entity.battleId,
         entity.phasingTargetId,
@@ -78,10 +76,10 @@ class SpawnPokemonPacket(
     override fun encodeEntityData(buffer: RegistryFriendlyByteBuf) {
         buffer.writeNullable(ownerId) { _, v -> buffer.writeUUID(v) }
         buffer.writeFloat(this.scaleModifier)
-        buffer.writeIdentifier(this.species.resourceIdentifier)
+        buffer.writeIdentifier(this.speciesId)
         buffer.writeEnumConstant(this.gender)
         buffer.writeBoolean(this.shiny)
-        buffer.writeString(this.form.formOnlyShowdownId())
+        buffer.writeString(this.formName)
         buffer.writeCollection(this.aspects) { pb, value -> pb.writeString(value) }
         buffer.writeNullable(this.battleId) { pb, value -> pb.writeUUID(value) }
         buffer.writeInt(this.phasingTargetId)
@@ -102,10 +100,10 @@ class SpawnPokemonPacket(
         entity.ownerUUID = ownerId
         entity.pokemon.apply {
             scaleModifier = this@SpawnPokemonPacket.scaleModifier
-            species = this@SpawnPokemonPacket.species
+            species = this@SpawnPokemonPacket.speciesId.let { PokemonSpecies.getByIdentifier(it) ?: PokemonSpecies.random() }
             gender = this@SpawnPokemonPacket.gender
             shiny = this@SpawnPokemonPacket.shiny
-            form = this@SpawnPokemonPacket.form
+            form = this@SpawnPokemonPacket.formName.let { formName -> species.forms.find { it.formOnlyShowdownId() == formName }} ?: species.standardForm
             forcedAspects = this@SpawnPokemonPacket.aspects
             nickname = this@SpawnPokemonPacket.nickname
             PokeBalls.getPokeBall(this@SpawnPokemonPacket.caughtBall)?.let { caughtBall = it }
@@ -132,12 +130,10 @@ class SpawnPokemonPacket(
         fun decode(buffer: RegistryFriendlyByteBuf): SpawnPokemonPacket {
             val ownerId = buffer.readNullable { buffer.readUUID() }
             val scaleModifier = buffer.readFloat()
-            val identifier = buffer.readIdentifier()
-            val species = requireNotNull(PokemonSpecies.getByIdentifier(identifier)) { "received unknown PokemonSpecies: $identifier" }
+            val speciesId = buffer.readIdentifier()
             val gender = buffer.readEnumConstant(Gender::class.java)
             val shiny = buffer.readBoolean()
-            val showdownId = buffer.readString()
-            val form = species.forms.firstOrNull { it.formOnlyShowdownId() == showdownId } ?: species.standardForm
+            val formName = buffer.readString()
             val aspects = buffer.readList { it.readString() }.toSet()
             val battleId = buffer.readNullable { buffer.readUUID() }
             val phasingTargetId = buffer.readInt()
@@ -154,7 +150,7 @@ class SpawnPokemonPacket(
             val freezeFrame = buffer.readFloat()
             val vanillaPacket = decodeVanillaPacket(buffer)
 
-            return SpawnPokemonPacket(ownerId, scaleModifier, species, gender, shiny, form, aspects, battleId, phasingTargetId, beamModeEmitter, platform, nickname, labelLevel, poseType, unbattlable, hideLabel, caughtBall, spawnAngle, friendship, freezeFrame, vanillaPacket)
+            return SpawnPokemonPacket(ownerId, scaleModifier, speciesId, gender, shiny, formName, aspects, battleId, phasingTargetId, beamModeEmitter, platform, nickname, labelLevel, poseType, unbattlable, hideLabel, caughtBall, spawnAngle, friendship, freezeFrame, vanillaPacket)
         }
     }
 

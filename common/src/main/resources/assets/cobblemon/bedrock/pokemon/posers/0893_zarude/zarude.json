@@ -1,0 +1,20 @@
+{
+  "portraitScale": 1.19,
+  "portraitTranslation": [-0.86, 2, 0],
+  "profileScale": 0.38,
+  "profileTranslation": [-0.05, 1.07, 0],
+  "animations": {
+    "cry": "q.bedrock_stateful('zarude', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseTypes": ["STAND", "WALK", "SWIM", "FLOAT", "PORTRAIT", "PROFILE", "NONE"],
+      "animations": [
+        "q.bedrock('zarude', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('zarude', 'blink')"
+      ]
+    }
+  }
+}

@@ -153,20 +153,21 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     @JvmField
     val ANCIENT_ORIGIN_BALL = pokeBallItem(PokeBalls.ANCIENT_ORIGIN_BALL)
 
+    val pokedexes = mutableListOf<PokedexItem>()
     @JvmField
-    val POKEDEX_BLACK = create("pokedex_black", PokedexItem(PokedexTypes.BLACK))
+    val POKEDEX_BLACK = pokedexItem(PokedexTypes.BLACK)
     @JvmField
-    val POKEDEX_BLUE = create("pokedex_blue", PokedexItem(PokedexTypes.BLUE))
+    val POKEDEX_BLUE = pokedexItem(PokedexTypes.BLUE)
     @JvmField
-    val POKEDEX_GREEN = create("pokedex_green", PokedexItem(PokedexTypes.GREEN))
+    val POKEDEX_GREEN = pokedexItem(PokedexTypes.GREEN)
     @JvmField
-    val POKEDEX_PINK = create("pokedex_pink", PokedexItem(PokedexTypes.PINK))
+    val POKEDEX_PINK = pokedexItem(PokedexTypes.PINK)
     @JvmField
-    val POKEDEX_RED = create("pokedex_red", PokedexItem(PokedexTypes.RED))
+    val POKEDEX_RED = pokedexItem(PokedexTypes.RED)
     @JvmField
-    val POKEDEX_WHITE = create("pokedex_white", PokedexItem(PokedexTypes.WHITE))
+    val POKEDEX_WHITE = pokedexItem(PokedexTypes.WHITE)
     @JvmField
-    val POKEDEX_YELLOW = create("pokedex_yellow", PokedexItem(PokedexTypes.YELLOW))
+    val POKEDEX_YELLOW = pokedexItem(PokedexTypes.YELLOW)
 
     @JvmField
     val VIVICHOKE = compostableItem("vivichoke")
@@ -1244,6 +1245,12 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
         val settings = Item.Properties().stacksTo(1).durability(Items.FISHING_ROD.components().get(DataComponents.MAX_DAMAGE)!!)
         val item = create(pokeRodId.path, PokerodItem(pokeRodId, settings))
         pokeRods.add(item)
+        return item
+    }
+
+    private fun pokedexItem(type: PokedexTypes): PokedexItem {
+        val item = create("pokedex_${type.name.lowercase()}", PokedexItem(type))
+        pokedexes.add(item)
         return item
     }
 

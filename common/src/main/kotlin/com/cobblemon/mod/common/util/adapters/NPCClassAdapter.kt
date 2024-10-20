@@ -58,6 +58,7 @@ object NPCClassAdapter : JsonDeserializer<NPCClass> {
         obj.get("hitbox")?.let { npcClass.hitbox = ctx.deserialize(it, EntityDimensions::class.java) }
         obj.get("battleConfiguration")?.let { npcClass.battleConfiguration = ctx.deserialize(it, NPCBattleConfiguration::class.java) }
         obj.get("interaction")?.let { npcClass.interaction = ctx.deserialize(it, NPCInteractConfiguration::class.java) }
+        obj.get("canDespawn")?.let { npcClass.canDespawn = it.asBoolean }
         obj.get("variations")?.let {
             val obj = it.asJsonObject
             obj.entrySet().forEach { (key, value) ->

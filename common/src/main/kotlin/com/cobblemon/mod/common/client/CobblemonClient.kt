@@ -145,7 +145,7 @@ object CobblemonClient {
                     )
                 ) {
                     // Stop using Pokédex in main hand if player switches to a different slot in hotbar
-                    pokedexUsageContext.stopUsing(player, PokedexUsageContext.OPEN_SCANNER_BUFFER_TICKS + 1)
+                    pokedexUsageContext.stopUsing(PokedexUsageContext.OPEN_SCANNER_BUFFER_TICKS + 1)
                 }
                 if(event.client.isPaused) {
                     return@subscribe

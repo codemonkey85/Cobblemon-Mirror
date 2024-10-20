@@ -66,7 +66,7 @@ object GimmighoulStashHandler {
             if (increase != 0) {
                 goldHoard.value += increase
                 if (goldHoard.value > 999) goldHoard.value = 999
-                if (pokemon.entity != null) pokemon.entity!!.playSound(CobblemonSounds.GIMMIGHOUL_GIVE_ITEM_SMALL, 1f, 1f)
+                if (pokemon.entity != null) pokemon.entity!!.playSound(CobblemonSounds.GIMMIGHOUL_GIVE_ITEM, 1f, 1f)
                 pokemon.markFeatureDirty(goldHoard)
                 return true
             }
@@ -83,7 +83,7 @@ object GimmighoulStashHandler {
             if (increase != 0) {
                 netheriteHoard.value += increase
                 if (netheriteHoard.value > 256) netheriteHoard.value = 256
-                if (pokemon.entity != null) pokemon.entity!!.playSound(CobblemonSounds.GIMMIGHOUL_GIVE_ITEM_SMALL, 1f, 1f)
+                if (pokemon.entity != null) pokemon.entity!!.playSound(CobblemonSounds.GIMMIGHOUL_GIVE_ITEM, 1f, 1f)
                 pokemon.markFeatureDirty(netheriteHoard)
                 return true
             }

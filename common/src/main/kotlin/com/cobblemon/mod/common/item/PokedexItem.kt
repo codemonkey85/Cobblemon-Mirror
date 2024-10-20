@@ -10,6 +10,8 @@ package com.cobblemon.mod.common.item
 
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.pokedex.PokedexTypes
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.cobblemon.mod.common.util.isLookingAt
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
@@ -20,6 +22,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.UseAnim
 import net.minecraft.world.level.Level
+import net.minecraft.world.phys.AABB
 
 class PokedexItem(val type: PokedexTypes): CobblemonItem(Item.Properties().stacksTo(1)) {
 
@@ -62,10 +65,15 @@ class PokedexItem(val type: PokedexTypes): CobblemonItem(Item.Properties().stack
         user: LivingEntity,
         remainingUseTicks: Int
     ) {
+        // Check if the player is interacting with a Pokémon
+        val entity = world.getEntities(user, AABB.ofSize(user.position(), 11.0, 11.0, 11.0))
+            .filter { user.isLookingAt(it, stepDistance = 0.1F) }
+            .minByOrNull { it.distanceTo(user) } as? PokemonEntity?
+
         if (world.isClientSide && user is LocalPlayer) {
             val usageContext = CobblemonClient.pokedexUsageContext
             val ticksInUse = getUseDuration(stack, user) - remainingUseTicks
-            usageContext.stopUsing(user, ticksInUse)
+            usageContext.stopUsing(ticksInUse, entity?.exposedSpecies?.resourceIdentifier)
         }
 
         super.releaseUsing(stack, world, user, remainingUseTicks)

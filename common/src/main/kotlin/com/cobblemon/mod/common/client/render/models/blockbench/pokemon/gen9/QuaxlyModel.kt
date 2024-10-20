@@ -27,6 +27,8 @@ class QuaxlyModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
     override val rootPart = root.registerChildWithAllChildren("quaxly")
     override val head = getPart("head")
 
+    private val messyHair = getPart("hair_messy")
+
     override val leftLeg = getPart("leg_left")
     override val rightLeg = getPart("leg_right")
 
@@ -57,6 +59,9 @@ class QuaxlyModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
         sleep = registerPose(
             poseName = "sleeping",
             poseType = PoseType.SLEEP,
+                transformedParts = arrayOf(
+                        messyHair.createTransformation().withVisibility(visibility = false)
+                ),
             condition = { !it.isInWater },
             animations = arrayOf(bedrock("quaxly", "sleep"))
         )
@@ -64,6 +69,9 @@ class QuaxlyModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
         watersleep = registerPose(
             poseName = "water_sleeping",
             poseType = PoseType.SLEEP,
+                transformedParts = arrayOf(
+                        messyHair.createTransformation().withVisibility(visibility = false)
+                ),
             condition = { it.isInWater },
             animations = arrayOf(bedrock("quaxly", "water_sleep"))
         )
@@ -72,6 +80,9 @@ class QuaxlyModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
             poseName = "standing",
             poseTypes = PoseType.UI_POSES + PoseType.STAND,
             transformTicks = 10,
+                transformedParts = arrayOf(
+                        messyHair.createTransformation().withVisibility(visibility = false)
+                ),
             condition = { !it.isBattling && !it.isInWater && !it.isUnderWater },
             quirks = arrayOf(blink),
             animations = arrayOf(
@@ -84,6 +95,9 @@ class QuaxlyModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
             poseName = "walk",
             transformTicks = 10,
             poseType = PoseType.WALK,
+                transformedParts = arrayOf(
+                        messyHair.createTransformation().withVisibility(visibility = false)
+                ),
             condition = { !it.isInWater && !it.isUnderWater },
             quirks = arrayOf(blink),
             animations = arrayOf(
@@ -97,6 +111,9 @@ class QuaxlyModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
             transformTicks = 10,
             poseType = PoseType.FLOAT,
             quirks = arrayOf(blink),
+                transformedParts = arrayOf(
+                        messyHair.createTransformation().withVisibility(visibility = false)
+                ),
             condition = { it.isUnderWater },
             animations = arrayOf(
                 singleBoneLook(),
@@ -107,6 +124,9 @@ class QuaxlyModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
         swimming = registerPose(
             poseName = "swimming",
             transformTicks = 10,
+                transformedParts = arrayOf(
+                        messyHair.createTransformation().withVisibility(visibility = false)
+                ),
             condition = { it.isUnderWater },
             poseType = PoseType.SWIM,
             quirks = arrayOf(blink),
@@ -121,6 +141,9 @@ class QuaxlyModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
+                transformedParts = arrayOf(
+                        messyHair.createTransformation().withVisibility(visibility = false)
+                ),
             condition = { it.isBattling && !it.isInWater },
             animations = arrayOf(
                 singleBoneLook(),
@@ -133,6 +156,9 @@ class QuaxlyModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
+                transformedParts = arrayOf(
+                        messyHair.createTransformation().withVisibility(visibility = false)
+                ),
             condition = { it.isBattling && it.isInWater },
             animations = arrayOf(
                 singleBoneLook(),
@@ -150,7 +176,8 @@ class QuaxlyModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
                 bedrock("quaxly", "surfacewater_idle"),
             ),
             transformedParts = arrayOf(
-                rootPart.createTransformation().addPosition(ModelPartTransformation.Y_AXIS, wateroffset)
+                rootPart.createTransformation().addPosition(ModelPartTransformation.Y_AXIS, wateroffset),
+                messyHair.createTransformation().withVisibility(visibility = false)
             )
         )
 
@@ -164,7 +191,8 @@ class QuaxlyModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bip
                 bedrock("quaxly", "surfacewater_swim"),
             ),
             transformedParts = arrayOf(
-                rootPart.createTransformation().addPosition(ModelPartTransformation.Y_AXIS, wateroffset)
+                rootPart.createTransformation().addPosition(ModelPartTransformation.Y_AXIS, wateroffset),
+                messyHair.createTransformation().withVisibility(visibility = false)
             )
         )
     }
