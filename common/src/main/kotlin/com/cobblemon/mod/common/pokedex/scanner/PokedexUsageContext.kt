@@ -64,8 +64,11 @@ class PokedexUsageContext {
     var availableInfoFrames: MutableList<Boolean?> = mutableListOf(null, null, null, null)
     val renderer: PokedexScannerRenderer = PokedexScannerRenderer()
 
-    fun stopUsing(ticksInUse: Int) {
-        tryOpenInfoGui(ticksInUse)
+    fun stopUsing(ticksInUse: Int, speciesId: ResourceLocation? = null) {
+        if (ticksInUse < OPEN_SCANNER_BUFFER_TICKS) {
+            openPokedexGUI(type, speciesId)
+            infoGuiOpen = true
+        }
         resetState(false)
     }
 
@@ -125,13 +128,6 @@ class PokedexUsageContext {
         }
     }
 
-    fun tryOpenInfoGui(ticksInUse: Int) {
-        if (ticksInUse < OPEN_SCANNER_BUFFER_TICKS) {
-            openPokedexGUI(type)
-            infoGuiOpen = true
-        }
-    }
-
     fun openPokedexGUI(types: PokedexTypes = PokedexTypes.RED, speciesId: ResourceLocation? = null) {
         PokedexGUI.open(CobblemonClient.clientPokedexData, types, speciesId)
         playSound(CobblemonSounds.POKEDEX_OPEN)
@@ -153,7 +149,7 @@ class PokedexUsageContext {
                 resetFocusedPokemonState()
                 scannableEntityInFocus = targetScannableEntity
                 val resolvedPokemon = scannableEntityInFocus?.resolvePokemonScan()
-                if(resolvedPokemon == null){
+                if(resolvedPokemon == null) {
                     resetFocusedPokemonState()
                     return
                 }
@@ -171,13 +167,10 @@ class PokedexUsageContext {
                     }
                 }
 
-                // Check if entity in focus is new or has new data
+                // Check if Pokémon in focus is new or has new data
                 newPokemonInfo = CobblemonClient.clientPokedexData.getNewInformation(resolvedPokemon)
-                if (newPokemonInfo == PokedexLearnedInformation.NONE) {
-                    user.playSound(CobblemonSounds.POKEDEX_SCAN_DETAIL)
-                } else {
-                    scannedSpecies = resolvedPokemon.species.resourceIdentifier
-                }
+                if (newPokemonInfo == PokedexLearnedInformation.NONE) playSound(CobblemonSounds.POKEDEX_SCAN_DETAIL)
+                else scannedSpecies = resolvedPokemon.species.resourceIdentifier
             }
         } else {
             resetFocusedPokemonState()

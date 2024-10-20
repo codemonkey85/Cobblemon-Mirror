@@ -31,43 +31,29 @@ object CobblemonItemGroups {
     private val INJECTORS = hashMapOf<ResourceKey<CreativeModeTab>, (injector: Injector) -> Unit>()
 
     @JvmStatic val BLOCKS_KEY = this.create("blocks", this::blockEntries) {
-        ItemStack(
-            CobblemonItems.PC
-        )
+        ItemStack( CobblemonItems.PC)
     }
-    @JvmStatic val POKEBALLS_KEY = this.create("pokeball", this::pokeballEntries) {
-        ItemStack(
-            CobblemonItems.POKE_BALL
-        )
+    @JvmStatic val UTILITY_ITEMS_KEY = this.create("utility_item", this::utilityItemEntries) {
+        ItemStack(CobblemonItems.POKE_BALL)
     }
     @JvmStatic val AGRICULTURE_KEY = this.create("agriculture", this::agricultureEntries) {
-        ItemStack(
-            CobblemonItems.MEDICINAL_LEEK
-        )
+        ItemStack(CobblemonItems.MEDICINAL_LEEK)
     }
     @JvmStatic val ARCHAEOLOGY_KEY = this.create("archaeology", this::archaeologyEntries) {
-        ItemStack(
-            CobblemonItems.HELIX_FOSSIL
-        )
+        ItemStack(CobblemonItems.HELIX_FOSSIL)
     }
     @JvmStatic val CONSUMABLES_KEY = this.create("consumables", this::consumableEntries) {
-        ItemStack(
-            CobblemonItems.ROASTED_LEEK
-        )
+        ItemStack(CobblemonItems.ROASTED_LEEK)
     }
     @JvmStatic val HELD_ITEMS_KEY = this.create("held_item", this::heldItemEntries) {
-        ItemStack(
-            CobblemonItems.EXP_SHARE
-        )
+        ItemStack(CobblemonItems.EXP_SHARE)
     }
     @JvmStatic val EVOLUTION_ITEMS_KEY = this.create("evolution_item", this::evolutionItemEntries) {
-        ItemStack(
-            CobblemonItems.BLACK_AUGURITE
-        )
+        ItemStack(CobblemonItems.BLACK_AUGURITE)
     }
 
     @JvmStatic val BLOCKS get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(BLOCKS_KEY)
-    @JvmStatic val POKEBALLS get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(POKEBALLS_KEY)
+    @JvmStatic val UTILITY_ITEMS get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(UTILITY_ITEMS_KEY)
     @JvmStatic val AGRICULTURE get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(AGRICULTURE_KEY)
     @JvmStatic val ARCHAEOLOGY get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(ARCHAEOLOGY_KEY)
     @JvmStatic val CONSUMABLES get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(CONSUMABLES_KEY)
@@ -629,9 +615,10 @@ object CobblemonItemGroups {
         entries.accept(CobblemonItems.PSYCHIC_SEED)
     }
 
-    private fun pokeballEntries(displayContext: ItemDisplayParameters, entries: Output) {
+    private fun utilityItemEntries(displayContext: ItemDisplayParameters, entries: Output) {
         CobblemonItems.pokeBalls.forEach(entries::accept)
         CobblemonItems.pokeRods.forEach(entries::accept)
+        CobblemonItems.pokedexes.forEach(entries::accept)
     }
 
     private fun foodInjections(injector: Injector) {
@@ -645,13 +632,6 @@ object CobblemonItemGroups {
     private fun toolsAndUtilitiesInjections(injector: Injector) {
         injector.putAfter(CobblemonItems.APRICORN_BOAT, Items.BAMBOO_CHEST_RAFT)
         injector.putAfter(CobblemonItems.APRICORN_CHEST_BOAT, CobblemonItems.APRICORN_BOAT)
-        injector.putAfter(CobblemonItems.POKEDEX_BLACK, Items.WRITABLE_BOOK)
-        injector.putAfter(CobblemonItems.POKEDEX_BLUE, CobblemonItems.POKEDEX_BLACK)
-        injector.putAfter(CobblemonItems.POKEDEX_GREEN, CobblemonItems.POKEDEX_BLUE)
-        injector.putAfter(CobblemonItems.POKEDEX_PINK, CobblemonItems.POKEDEX_GREEN)
-        injector.putAfter(CobblemonItems.POKEDEX_RED, CobblemonItems.POKEDEX_PINK)
-        injector.putAfter(CobblemonItems.POKEDEX_YELLOW, CobblemonItems.POKEDEX_RED)
-        injector.putAfter(CobblemonItems.POKEDEX_WHITE, CobblemonItems.POKEDEX_YELLOW)
     }
 
     private fun ingredientsInjections(injector: Injector) {

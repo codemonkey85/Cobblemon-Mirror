@@ -117,8 +117,10 @@
 - Updated party switching interface when in battle.
 - Relic coin pouches can now be waterlogged.
 - Pokemon Name (and level) labels are now only visible when crouching by default, set the `displayEntityLabelsWhenCrouchingOnly` to `false` to always them even when not crouching
-- The "Press R to start battle prompt" will now disappear after a player's first battle has been won
+- The "Press R to start battle prompt" will now disappear after a player's first battle has been won.
 - The default number of digits for the Pokédex number in the summary has been increased, from 3 to 4.
+- The pasture block model's screen is now off by default.
+- The Poké Balls creative tab is now named Utility Items as it also encompasses Poké Rod and Pokédex items.
 
 ### Fixes
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating.
