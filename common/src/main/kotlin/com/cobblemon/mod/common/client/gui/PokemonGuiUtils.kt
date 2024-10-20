@@ -76,7 +76,7 @@ fun drawProfilePokemon(
     RenderSystem.applyModelViewMatrix()
     matrixStack.scale(scale, scale, -scale)
 
-    val sprite = PokemonModelRepository.getSprite(species, state, SpriteType.PROFILE);
+    val sprite = PokemonModelRepository.getSprite(species, state, SpriteType.PROFILE)
 
     if (sprite == null) {
 
@@ -92,6 +92,7 @@ fun drawProfilePokemon(
         context.put(RenderContext.ASPECTS, state.currentAspects)
         context.put(RenderContext.RENDER_STATE, RenderContext.RenderState.PROFILE)
         context.put(RenderContext.POSABLE_STATE, state)
+        context.put(RenderContext.DO_QUIRKS, false)
 
         state.currentModel = model
 
