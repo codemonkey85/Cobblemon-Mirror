@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation
 
 class NPCRenderer(context: Context) : LivingEntityRenderer<NPCEntity, PosableEntityModel<NPCEntity>>(context, PosableNPCModel(), 0.5f) {
     override fun getTextureLocation(entity: NPCEntity): ResourceLocation {
-        return NPCModelRepository.getTexture(entity.npc.id, (entity.delegate as NPCClientDelegate))
+        return NPCModelRepository.getTexture(entity.npc.resourceIdentifier, (entity.delegate as NPCClientDelegate))
     }
 
     override fun render(
@@ -45,7 +45,7 @@ class NPCRenderer(context: Context) : LivingEntityRenderer<NPCEntity, PosableEnt
         this.model.context.put(RenderContext.TEXTURE, getTextureLocation(entity))
         clientDelegate.updatePartialTicks(partialTicks)
 
-        model.setLayerContext(buffer, clientDelegate, NPCModelRepository.getLayers(entity.npc.id, clientDelegate))
+        model.setLayerContext(buffer, clientDelegate, NPCModelRepository.getLayers(entity.npc.resourceIdentifier, clientDelegate))
 
         super.render(entity, entityYaw, partialTicks, poseMatrix, buffer, packedLight)
 

@@ -11,12 +11,13 @@ package com.cobblemon.mod.common.item
 import com.cobblemon.mod.common.CobblemonItemComponents
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
+import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.item.components.PokemonItemComponent
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.pokemon.Species
-import net.minecraft.world.item.ItemStack
 import net.minecraft.network.chat.Component
+import net.minecraft.world.item.ItemStack
 import org.joml.Vector4f
 
 class PokemonItem : CobblemonItem(Properties().stacksTo(1).component(CobblemonItemComponents.POKEMON_ITEM, null)) {
@@ -39,7 +40,7 @@ class PokemonItem : CobblemonItem(Properties().stacksTo(1).component(CobblemonIt
     fun asRenderablePokemon(stack: ItemStack): RenderablePokemon? = this.asPokemon(stack)?.asRenderablePokemon()
 
     private fun species(stack: ItemStack): Species? {
-        return stack.get(CobblemonItemComponents.POKEMON_ITEM)?.species
+        return stack.get(CobblemonItemComponents.POKEMON_ITEM)?.species?.let(PokemonSpecies::getByIdentifier)
     }
 
     private fun aspects(stack: ItemStack): Set<String>? {
@@ -66,10 +67,8 @@ class PokemonItem : CobblemonItem(Properties().stacksTo(1).component(CobblemonIt
         @JvmStatic
         fun from(species: Species, aspects: Set<String>, count: Int = 1, tint: Vector4f? = null): ItemStack {
             val stack = ItemStack(CobblemonItems.POKEMON_MODEL, count)
-            stack.set(CobblemonItemComponents.POKEMON_ITEM, PokemonItemComponent(species, aspects, tint))
+            stack.set(CobblemonItemComponents.POKEMON_ITEM, PokemonItemComponent(species.resourceIdentifier, aspects, tint))
             return stack
         }
-
     }
-
 }

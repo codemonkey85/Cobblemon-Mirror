@@ -49,7 +49,6 @@ import kotlin.random.Random
 import net.minecraft.ResourceLocationException
 import net.minecraft.commands.arguments.item.ItemParser
 import net.minecraft.core.HolderLookup
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.StringTag
@@ -505,6 +504,22 @@ open class PokemonProperties {
         originalTrainer?.takeIf { it != pokemon.originalTrainer }?.let { return false }
         originalTrainerType?.takeIf { it != pokemon.originalTrainerType }?.let { return false }
         moves?.takeIf { it.any { move -> pokemon.moveSet.none { it.template.name == move } } }?.let { return false }
+        heldItem?.takeIf { itemKey ->
+            val server = server() ?: return@takeIf true
+            val parser = ItemParser(server.registryAccess())
+            val result = parser.parse(StringReader(itemKey))
+
+            if (!pokemon.heldItem.`is`(result.item)) return@takeIf true
+
+            for (entry in result.components.entrySet()) {
+                val targetPropValue = pokemon.heldItem.get(entry.key)
+                if (targetPropValue != entry.value.get()) {
+                    return@takeIf true
+                }
+            }
+
+            return@takeIf false
+        }?.let { return false }
         return true
     }
 

@@ -73,6 +73,7 @@ any number of presets and the properties of those presets will be merged into th
       "battleConfiguration": {
         "canChallenge": true
       },
+      "canDespawn": false,
       "skill": 5,
       "party": {
         "type": "simple",
@@ -230,6 +231,10 @@ in this file. The script property can be a single string or an array of strings 
 
 ### battleConfiguration
 I don't really know whether this is going to stay tbh
+
+### canDespawn
+Whether or not regular entity despawning logic applies. By default, NPCs will despawn over time. If the value
+of this property is set to false, the NPC will never despawn over time.
 
 ### skill
 The skill level when this NPC is used in battle. This is a number from 1 to 5, with 5 being most difficult

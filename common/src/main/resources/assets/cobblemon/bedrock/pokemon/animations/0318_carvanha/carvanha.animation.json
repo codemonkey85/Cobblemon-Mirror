@@ -1,23 +1,46 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.carvanha.water_idle": {
+		"animation.carvanha.pose": {
 			"loop": true,
 			"bones": {
 				"body": {
-					"rotation": [0, "1+1*math.sin(q.anim_time*90*2+90)", 0]
+					"rotation": [7.50706, -0.32621, -12.47864]
 				},
-				"fin_left": {
-					"rotation": [0, 0, "1+4*math.sin(q.anim_time*90*2+90)"]
+				"torso": {
+					"rotation": [-22.5, 0, 0]
+				},
+				"jaw": {
+					"rotation": [45, 0, 0]
 				},
 				"fin_right": {
-					"rotation": [0, 0, "1-4*math.sin(q.anim_time*90*2+90)"]
+					"rotation": [14.51082, -3.84097, 14.51082]
+				},
+				"fin_right2": {
+					"rotation": [0, 10, 17.5]
+				},
+				"fin_left": {
+					"rotation": [14.51082, 3.84097, -14.51082]
+				},
+				"fin_left2": {
+					"rotation": [0, -10, -17.5]
+				},
+				"tail": {
+					"rotation": [5.12076, -12.45167, -1.10693]
 				},
 				"tail2": {
-					"rotation": [0, "1+4*math.sin(q.anim_time*90*2+90)", 0]
+					"rotation": [0, -25, 0]
+				},
+				"tail3": {
+					"rotation": [0, -5, 0]
+				},
+				"tail4": {
+					"rotation": [0, -27.5, 0]
 				}
 			}
+		},
+		"animation.carvanha.pose2": {
+			"loop": true
 		}
-	},
-	"geckolib_format_version": 2
+	}
 }

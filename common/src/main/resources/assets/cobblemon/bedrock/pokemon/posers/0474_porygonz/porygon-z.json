@@ -1,0 +1,71 @@
+{
+  "portraitScale": 1.9,
+  "portraitTranslation": [-0.02,1.39,0],
+  "profileScale": 0.6,
+  "profileTranslation": [0,0.88,0],
+  "animations": {
+    "faint": "q.bedrock_primary('porygon-z', 'faint', q.curve('one'))",
+    "faint2": "q.bedrock_primary('porygon-z', 'faint2', q.curve('one'))",
+    "recoil": "q.bedrock_stateful('porygon-z', 'recoil')",
+    "cry": "q.bedrock_stateful('porygon-z', 'cry')"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseTypes": [
+        "STAND"
+      ],
+      "isBattle": true,
+      "namedAnimations": { "cry":
+      "q.bedrock_stateful('porygon-z', 'battle_cry')" },
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('porygon-z', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('porygon-z', 'blink')",
+        "q.bedrock_quirk('porygon-z', q.array('twitch1', 'twitch2', 'twitch3', 'twitch4', 'twitch5', 'twitch6'), 1, 10, 1)"
+      ]
+    },
+    "standing": {
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "NONE",
+        "PORTRAIT",
+        "PROFILE"
+      ],
+      "isBattle": false,
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('porygon-z', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('porygon-z', 'blink')",
+        "q.bedrock_quirk('porygon-z', q.array('quirk', 'quirk2'), 20, 60, 1)",
+        "q.bedrock_quirk('porygon-z', q.array('twitch1', 'twitch2', 'twitch3', 'twitch4', 'twitch5', 'twitch6'), 1, 10, 1)"
+      ]
+    },
+    "walking": {
+      "poseTypes": [
+        "WALK",
+        "HOVER"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('porygon-z', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('porygon-z', 'blink')",
+        "q.bedrock_quirk('porygon-z', q.array('twitch1', 'twitch2', 'twitch3', 'twitch4', 'twitch5', 'twitch6'), 1, 10, 1)"
+      ]
+    },
+    "sleeping": {
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('porygon-z', 'sleep')"
+      ]
+    }
+  }
+}

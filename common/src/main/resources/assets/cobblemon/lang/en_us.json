@@ -469,7 +469,7 @@
   "cobblemon.fossilmachine.protected": "This fossil belongs to %s!",
 
   "itemGroup.cobblemon.blocks": "Blocks",
-  "itemGroup.cobblemon.pokeball": "Poké Balls",
+  "itemGroup.cobblemon.utility_item": "Utility Items",
   "itemGroup.cobblemon.agriculture": "Agriculture",
   "itemGroup.cobblemon.consumables": "Consumables",
   "itemGroup.cobblemon.held_item": "Held Items",
@@ -632,7 +632,6 @@
 
   "cobblemon.ui.generic.yes": "Yes",
   "cobblemon.ui.generic.no": "No",
-  "cobblemon.ui.generic.trainer": "Trainer",
 
   "cobblemon.ui.pokenav.title": "PokéNav",
   "cobblemon.ui.pokenav.narrator.backbutton": "Poke Nav button pressed",
@@ -714,7 +713,8 @@
   "cobblemon.ui.interact.team_request": "Team up",
   "cobblemon.ui.interact.too_far": "Target is too far away",
 
-  "cobblemon.ui.pokedex.registered_suffix": "%1$s Registered",
+  "cobblemon.ui.pokedex.scan.registered_suffix": "%1$s Registered",
+  "cobblemon.ui.pokedex.scan.trainer_owned": "Trainer Owned",
 
   "cobblemon.ui.pokedex.region.national": "National",
   "cobblemon.ui.pokedex.region.alola": "Alola",
@@ -886,6 +886,7 @@
   "cobblemon.pokedex.variation.region_bias": "Region Bias",
   "cobblemon.pokedex.variation.variant": "Variant",
   "cobblemon.pokedex.variation.season": "Season",
+  "cobblemon.pokedex.variation.snake_pattern": "Snake Pattern",
 
   "key.cobblemon.upshiftparty": "Party Shift Up",
   "key.cobblemon.downshiftparty": "Party Shift Down",
@@ -1153,6 +1154,7 @@
   "cobblemon.command.friendship": "%1$s has %2$s friendship.",
   "cobblemon.command.givepokemon.nospecies": "Error: You need to include a Pokémon name or 'random'",
   "cobblemon.command.spawnpokemon.nospecies": "Error: You need to include a Pokémon name or 'random'",
+  "cobblemon.command.error.nonpc": "Error: You need to include a valid NPC identifier.",
   "cobblemon.command.held_item": "%1$s's %2$s was given the %3$s to hold.",
   "cobblemon.command.pokeheal.in_battle": "You cannot heal your party while in a battle!",
   "cobblemon.command.spawnpokemonfrompool": "A %1$s has spawned in the area.",
@@ -1642,6 +1644,7 @@
   "cobblemon.battle.end.healblock": "%1$s's Heal Block wore off!",
   "cobblemon.battle.end.skydrop": "%1$s was freed from the Sky Drop!",
   "cobblemon.battle.end.illusion": "%1$s's illusion wore off!",
+  "cobblemon.battle.end.neutralizinggas": "The effects of the neutralizing gas wore off!",
 
   "cobblemon.battle.block.uproar": "But the uproar kept %1$s awake!",
 
@@ -2626,10 +2629,12 @@
   "cobblemon.move.gmaxcuddle.desc": "A Normal-type attack that Gigantamax Eevee use. This move infatuates opponents.",
   "cobblemon.move.gmaxdepletion": "G-Max Depletion",
   "cobblemon.move.gmaxdepletion.desc": "A Dragon-type attack that Gigantamax Duraludon use. Reduces the PP of the last move used.",
+  "cobblemon.move.gmaxdrumsolo": "G-Max Drum Solo",
+  "cobblemon.move.gmaxdrumsolo.desc": "A Grass-type attack that Gigantamax Rillaboom use. This move ignores the effects of opponents' abilities.",
   "cobblemon.move.gmaxfinale": "G-Max Finale",
   "cobblemon.move.gmaxfinale.desc": "A Fairy-type attack that Gigantamax Alcremie use. This move heals the HP of allies.",
   "cobblemon.move.gmaxfireball": "G-Max Fireball",
-  "cobblemon.move.gmaxfireball.desc": "A Fire-type attack that Gigantamax Cinderace use. This move ignores the effects of opponents abilities.",
+  "cobblemon.move.gmaxfireball.desc": "A Fire-type attack that Gigantamax Cinderace use. This move ignores the effects of opponents' abilities.",
   "cobblemon.move.gmaxfoamburst": "G-Max Foam Burst",
   "cobblemon.move.gmaxfoamburst.desc": "A Water-type attack that Gigantamax Kingler use. This move harshly lowers the Speed of opponents.",
   "cobblemon.move.gmaxgoldrush": "G-Max Gold Rush",
@@ -2637,7 +2642,7 @@
   "cobblemon.move.gmaxgravitas": "G-Max Gravitas",
   "cobblemon.move.gmaxgravitas.desc": "A Psychic-type attack that Gigantamax Orbeetle use. This move changes gravity for five turns.",
   "cobblemon.move.gmaxhydrosnipe": "G-Max Hydrosnipe",
-  "cobblemon.move.gmaxhydrosnipe.desc": "A Grass-type attack that Gigantamax Rillaboom use. This move ignores the effects of opponents abilities.",
+  "cobblemon.move.gmaxhydrosnipe.desc": "A Water-type attack that Gigantamax Inteleon use. This move ignores the effects of opponents' abilities.",
   "cobblemon.move.gmaxmalodor": "G-Max Malodor",
   "cobblemon.move.gmaxmalodor.desc": "A Poison-type attack that Gigantamax Garbodor use. This move poisons opponents.",
   "cobblemon.move.gmaxmeltdown": "G-Max Meltdown",

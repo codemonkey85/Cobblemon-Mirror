@@ -14,6 +14,7 @@ import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.ModAPI
 import com.cobblemon.mod.common.api.fishing.FishingBait
 import com.cobblemon.mod.common.api.fishing.FishingBaits
+import com.cobblemon.mod.common.api.scheduling.afterOnServer
 import com.cobblemon.mod.common.api.spawning.BestSpawner
 import com.cobblemon.mod.common.api.spawning.SpawnBucket
 import com.cobblemon.mod.common.api.spawning.detail.EntitySpawnResult
@@ -25,6 +26,7 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.item.interactive.PokerodItem
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormParticlePacket
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.party
 import com.cobblemon.mod.common.util.toBlockPos
 import kotlin.math.sqrt
 import net.minecraft.advancements.CriteriaTriggers
@@ -709,8 +711,11 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
             hookedEntity = level().getEntity(hookedEntityID)
         }
 
-        if (spawnedPokemon != null) {
-            BattleBuilder.pve((player as ServerPlayer), spawnedPokemon).ifErrored { it.sendTo(player) { it.red() } }
+        afterOnServer(ticks = 2) {
+            if (player !in player.level().players()) {
+                return@afterOnServer
+            }
+            spawnedPokemon?.forceBattle(player as ServerPlayer)
         }
     }
 

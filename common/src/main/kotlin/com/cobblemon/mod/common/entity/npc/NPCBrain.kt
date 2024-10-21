@@ -8,13 +8,9 @@
 
 package com.cobblemon.mod.common.entity.npc
 
-import com.bedrockk.molang.runtime.struct.QueryStruct
-import com.bedrockk.molang.runtime.value.DoubleValue
-import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonActivities
 import com.cobblemon.mod.common.CobblemonActivities.NPC_BATTLING
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
-import com.cobblemon.mod.common.api.molang.ObjectValue
+import com.cobblemon.mod.common.api.ai.BrainConfigurationContext
 import com.cobblemon.mod.common.api.npc.NPCClass
 import com.cobblemon.mod.common.entity.ai.AttackAngryAtTask
 import com.cobblemon.mod.common.entity.ai.FollowWalkTargetTask
@@ -22,19 +18,14 @@ import com.cobblemon.mod.common.entity.ai.GetAngryAtAttackerTask
 import com.cobblemon.mod.common.entity.ai.MoveToAttackTargetTask
 import com.cobblemon.mod.common.entity.ai.StayAfloatTask
 import com.cobblemon.mod.common.entity.npc.ai.*
-import com.cobblemon.mod.common.util.activityRegistry
-import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
-import com.cobblemon.mod.common.util.itemRegistry
 import com.google.common.collect.ImmutableList
 import com.mojang.datafixers.util.Pair
 import net.minecraft.world.entity.ai.Brain
-import net.minecraft.world.entity.ai.behavior.BehaviorControl
 import net.minecraft.world.entity.ai.behavior.LookAtTargetSink
 import net.minecraft.world.entity.ai.behavior.RunOne
 import net.minecraft.world.entity.ai.behavior.SetEntityLookTarget
 import net.minecraft.world.entity.ai.behavior.StopBeingAngryIfTargetDead
 import net.minecraft.world.entity.schedule.Activity
-import net.minecraft.world.entity.schedule.Schedule
 
 object NPCBrain {
     fun configure(npcEntity: NPCEntity, npcClass: NPCClass, brain: Brain<out NPCEntity>) {
@@ -85,67 +76,16 @@ object NPCBrain {
 
 
 
-        val brainBuilder = BrainBuilder()
-        val brainStruct = createNPCBrainStruct(npcEntity, brain, brainBuilder)
+        val brainConfigurationContext = BrainConfigurationContext()
+//        val brainStruct = createNPCBrainStruct(npcEntity, brain, brainConfigurationContext)
         // run some scripts at some point
 
         // apply the brain
-        brainBuilder.activities.forEach {
-            brain.addActivity(it.activity, ImmutableList.copyOf(it.tasks))
+        brainConfigurationContext.activities.forEach {
+//            brain.addActivity(it.activity, ImmutableList.copyOf(it.tasks))
         }
-        brain.setCoreActivities(brainBuilder.coreActivities)
-        brain.setDefaultActivity(brainBuilder.defaultActivity)
-        brain.schedule = brainBuilder.schedule
-    }
-
-
-    fun createNPCBrainStruct(npcEntity: NPCEntity, brain: Brain<out NPCEntity>, brainBuilder: BrainBuilder): QueryStruct {
-        return QueryStruct(hashMapOf()).addStandardFunctions()
-            .addFunction("npc") { npcEntity.struct }
-            .addFunction("create_activity") { params ->
-                val name = params.getString(0).asIdentifierDefaultingNamespace()
-                val activity = npcEntity.level().activityRegistry.get(name) ?: return@addFunction run {
-                    Cobblemon.LOGGER.error("Tried loading activity $name as part of an NPC brain but that activity does not exist")
-                    DoubleValue.ZERO
-                }
-                val existingActivityBuilder = brainBuilder.activities.find { it.activity == activity }
-                if (existingActivityBuilder != null) {
-                    return@addFunction createNPCActivityStruct(existingActivityBuilder)
-                } else {
-                    val activityBuilder = ActivityBuilder(activity)
-                    brainBuilder.activities.add(activityBuilder)
-                    return@addFunction createNPCActivityStruct(activityBuilder)
-                }
-            }
-            .addFunction("set_core_activities") { params ->
-                brainBuilder.coreActivities = params.params.map { (it as ObjectValue<ActivityBuilder>).obj.activity }.toSet()
-                return@addFunction DoubleValue.ONE
-            }
-            .addFunction("set_default_activity") { params ->
-                brainBuilder.defaultActivity = params.get<ObjectValue<ActivityBuilder>>(0).obj.activity
-                return@addFunction DoubleValue.ONE
-            }
-    }
-
-    fun createNPCActivityStruct(activityBuilder: ActivityBuilder): ObjectValue<ActivityBuilder> {
-        val struct = ObjectValue(activityBuilder)
-        struct.addStandardFunctions()
-            .addFunction("add_task") { params ->
-                val priority = params.getInt(0)
-                val task = params.get(1) as ObjectValue<BehaviorControl<NPCEntity>>
-                activityBuilder.tasks.add(Pair(priority, task.obj))
-            }
-        return struct
-    }
-
-    class BrainBuilder {
-        var defaultActivity = Activity.IDLE
-        var coreActivities = setOf(Activity.CORE)
-        val activities = mutableListOf<ActivityBuilder>()
-        val schedule = Schedule.EMPTY
-    }
-
-    class ActivityBuilder(val activity: Activity) {
-        val tasks = mutableListOf<Pair<Int, BehaviorControl<NPCEntity>>>()
+        brain.setCoreActivities(brainConfigurationContext.coreActivities)
+        brain.setDefaultActivity(brainConfigurationContext.defaultActivity)
+        brain.schedule = brainConfigurationContext.schedule
     }
 }
