@@ -345,7 +345,6 @@ class Berry(
                 Shapes.or(outerShape, Block.box(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ))
             }
         }
-        Cobblemon.LOGGER.info("Getting Shape, ${shape == null}: VoxelShape was null, so returning default block.")
         return shape ?: Shapes.block()
     }
 
