@@ -10,20 +10,20 @@ package com.cobblemon.mod.common.entity.npc.ai
 
 import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.entity.npc.NPCEntity
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.behavior.OneShot
 import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
 import net.minecraft.world.entity.ai.behavior.declarative.Trigger
 import net.minecraft.world.entity.schedule.Activity
 
-@Deprecated("Deprecated in favour of the JSON system")
-object ExitSpeakersActivityTask {
-    fun create(): OneShot<NPCEntity> {
+object SwitchFromActionEffectTask {
+    fun create(activity: Activity = Activity.IDLE): OneShot<in LivingEntity> {
         return BehaviorBuilder.create {
             it.group(
-                it.absent(CobblemonMemories.DIALOGUES)
+                it.absent(CobblemonMemories.ACTIVE_ACTION_EFFECT)
             ).apply(it) { _ ->
-                Trigger { _, entity, _ ->
-                    entity.brain.setActiveActivityIfPossible(Activity.IDLE)
+                Trigger { world, entity, time ->
+                    entity.brain.setActiveActivityIfPossible(activity)
                     return@Trigger true
                 }
             }

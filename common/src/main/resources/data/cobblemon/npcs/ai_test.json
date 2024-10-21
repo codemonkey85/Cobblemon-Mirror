@@ -9,12 +9,14 @@
   "canDespawn": false,
   "ai": [
     {
-      "type": "apply_preset",
-      "preset": "cobblemon:pauses_in_battle"
-    },
-    {
-      "type": "apply_preset",
-      "preset": "cobblemon:uses_healing_machine"
+      "type": "apply_presets",
+      "presets": [
+        "cobblemon:pauses_in_battle",
+        "cobblemon:uses_healing_machine",
+        "cobblemon:chats",
+        "cobblemon:retaliates",
+        "cobblemon:fights_melee"
+      ]
     },
     {
       "type": "add_tasks_to_activity",
@@ -35,11 +37,7 @@
           "look_at_target"
         ],
         "1": [
-          {
-            "type": "wander",
-            "speedMultiplier": 0.33,
-            "shouldWander": "q.random(0, 20 * 7) < 1"
-          },
+          "wander",
           "look_at_entities"
         ]
       }

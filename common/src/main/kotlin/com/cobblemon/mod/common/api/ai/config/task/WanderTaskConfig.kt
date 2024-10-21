@@ -33,10 +33,10 @@ import net.minecraft.world.entity.ai.util.LandRandomPos
 
 class WanderTaskConfig : SingleTaskConfig {
     val condition: ExpressionLike = "true".asExpressionLike()
-    val shouldWander: ExpressionLike = "true".asExpressionLike()
+    val shouldWander: ExpressionLike = "math.random(0, 20 * 8) <= 1".asExpressionLike()
     val horizontalRange: Expression = "10".asExpression()
     val verticalRange: Expression = "5".asExpression()
-    val speedMultiplier: Expression = "0.4".asExpression()
+    val speedMultiplier: Expression = "0.35".asExpression()
     val completionRange: Expression = "1".asExpression()
     val lookTargetYOffset: Expression = "1.5".asExpression()
 

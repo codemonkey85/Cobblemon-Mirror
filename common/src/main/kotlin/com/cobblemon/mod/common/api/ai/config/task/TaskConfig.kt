@@ -33,6 +33,16 @@ fun interface TaskConfig {
             "go_to_healing_machine" to GoToHealingMachineTaskConfig::class.java,
             "heal_using_healing_machine" to HealUsingHealingMachineTaskConfig::class.java,
             "all_of" to AllOfTaskConfig::class.java,
+            "attack_angry_at" to AttackAngryAtTaskConfig::class.java,
+            "move_to_attack_target" to MoveToAttackTargetTaskConfig::class.java,
+            "melee_attack" to MeleeAttackTaskConfig::class.java,
+            "switch_from_fight" to SwitchFromFightTaskConfig::class.java,
+            "switch_to_fight" to SwitchToFightTaskConfig::class.java,
+            "switch_to_chatting" to SwitchToChattingTaskConfig::class.java,
+            "switch_from_chatting" to SwitchFromChattingTaskConfig::class.java,
+            "look_at_speaker" to LookAtSpeakerTaskConfig::class.java,
+            "switch_to_action_effect" to SwitchToActionEffectTaskConfig::class.java,
+            "switch_from_action_effect" to SwitchFromActionEffectTaskConfig::class.java,
         )
 
         val runtime = MoLangRuntime().setup()

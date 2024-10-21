@@ -54,7 +54,7 @@ object NPCBrain {
             Pair.of(0, SwitchToBattleTask.create()),
             Pair.of(1, AttackAngryAtTask.create()),
             Pair.of(1, MoveToAttackTargetTask.create()),
-            Pair.of(1, MeleeAttackTask.create(2F, 30L)),
+            Pair.of(1, MeleeAttackTask.create("2".asExpression(), "30".asExpression())),
             Pair.of(1, HealUsingHealingMachineTask()),
             Pair.of(1, GoToHealingMachineTask.create(
                 horizontalSearchRange = "14".asExpression(),
@@ -71,7 +71,7 @@ object NPCBrain {
         ))
         brain.addActivity(
             CobblemonActivities.NPC_ACTION_EFFECT, ImmutableList.of(
-            Pair.of(0, FinishActionEffectTask.create())
+            Pair.of(0, SwitchFromActionEffectTask.create())
         ))
         brain.addActivity(
             CobblemonActivities.NPC_CHATTING, ImmutableList.of(
