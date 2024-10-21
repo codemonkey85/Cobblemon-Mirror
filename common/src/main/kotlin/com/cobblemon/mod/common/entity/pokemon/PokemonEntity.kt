@@ -883,7 +883,7 @@ open class PokemonEntity(
     }
 
     override fun shouldBeSaved(): Boolean {
-        if (ownerUUID == null && (Cobblemon.config.savePokemonToWorld || isPersistenceRequired)) {
+        if (ownerUUID == null && !pokemon.isNPCOwned() && (Cobblemon.config.savePokemonToWorld || isPersistenceRequired)) {
             CobblemonEvents.POKEMON_ENTITY_SAVE_TO_WORLD.postThen(PokemonEntitySaveToWorldEvent(this)) {
                 return true
             }
