@@ -101,11 +101,12 @@ abstract class VaryingModelRepository<T : PosableModel> {
         gsonBuilder.setupGsonForJsonPosableModels(adapter) { json -> conditionParser(json) }
     }
 
-    open fun loadJsonPoser(json: String): (Bone) -> T {
+    open fun loadJsonPoser(fileName: String, json: String): (Bone) -> T {
         // Faster to deserialize during asset load rather than rerunning this every time a poser is constructed.
         val jsonObject = gson.fromJson(json, JsonObject::class.java)
         return {
-            adapter.modelPart = it
+            var boneName = jsonObject.getAsJsonPrimitive("rootBone")
+            adapter.modelPart = if(boneName != null && it.children[boneName.asString] != null) it.children[boneName.asString] else it.children[fileName]
             gson.fromJson(jsonObject, poserClass).also {
                 it.poses.forEach { (poseName, pose) -> pose.poseName = poseName }
             }
@@ -129,7 +130,7 @@ abstract class VaryingModelRepository<T : PosableModel> {
                     resource.open().use { stream ->
                         val json = String(stream.readAllBytes(), StandardCharsets.UTF_8)
                         val resolvedIdentifier = ResourceLocation.fromNamespaceAndPath(identifier.namespace, File(identifier.path).nameWithoutExtension)
-                        posers[resolvedIdentifier] = loadJsonPoser(json)
+                        posers[resolvedIdentifier] = loadJsonPoser(resolvedIdentifier.path, json)
                     }
                 }
         }
