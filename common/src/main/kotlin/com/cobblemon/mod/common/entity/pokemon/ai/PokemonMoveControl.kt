@@ -12,6 +12,7 @@ import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunctions
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
 import com.cobblemon.mod.common.api.pokemon.status.Statuses
+import com.cobblemon.mod.common.entity.PlatformType
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonBehaviourFlag
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -26,12 +27,13 @@ import net.minecraft.tags.FluidTags
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.control.MoveControl
+import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.pathfinder.PathType
+import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.sqrt
 
 class PokemonMoveControl(val pokemonEntity: PokemonEntity) : MoveControl(pokemonEntity) {
     companion object {
@@ -192,7 +194,87 @@ class PokemonMoveControl(val pokemonEntity: PokemonEntity) : MoveControl(pokemon
             if (mob.isEyeInFluid(FluidTags.WATER) && behaviour.moving.swim.canSwimInWater && !this.pokemonEntity.isBattling) {
                 pokemonEntity.yya = 0.2F
             }
+
+            // In battle water antics
+            if (this.pokemonEntity.isBattling && mob.isInWater) {
+                val exposedSpecies = this.pokemonEntity.exposedSpecies
+                if (isUnderwater()) {
+                    if (this.pokemonEntity.platform != PlatformType.NONE) {
+                        // float up if on a platform
+                        pokemonEntity.yya = 0.6F
+                    }
+                } else if (checkInWater()) {
+                    if (this.pokemonEntity.platform != PlatformType.NONE || pokemonEntity.yya > 0) {
+                        // hold steady
+                        pokemonEntity.yya = 0F
+                    } else if (exposedSpecies.behaviour.moving.swim.canBreatheUnderwater) {
+                        // allow swimmers to sink a bit into the water
+                        pokemonEntity.yya = -2F
+                    }
+                }
+            }
         }
+    }
+
+    /*
+     * Return the ideal y position of the water level given a p
+     */
+    private fun getStableBattleFloatHeight(): Double {
+        val aABB: AABB = this.pokemonEntity.boundingBox
+        return if (this.pokemonEntity.exposedSpecies.behaviour.moving.swim.canBreatheUnderwater) ((aABB.maxY - aABB.minY) / 2.0) else 0.05
+    }
+
+    private fun checkInWater(): Boolean {
+        val aABB: AABB = mob.boundingBox
+        val i = Mth.floor(aABB.minX)
+        val j = Mth.ceil(aABB.maxX)
+        val k = Mth.floor(aABB.minY)
+        val l = Mth.ceil(aABB.minY + 0.001)
+        val m = Mth.floor(aABB.minZ)
+        val n = Mth.ceil(aABB.maxZ)
+        var bl = false
+        var waterLevel = -1.7976931348623157E308
+        val mutableBlockPos = BlockPos.MutableBlockPos()
+        for (o in i until j) {
+            for (p in k until l) {
+                for (q in m until n) {
+                    mutableBlockPos[o, p] = q
+                    val fluidState: FluidState = mob.level().getFluidState(mutableBlockPos)
+                    if (fluidState.`is`(FluidTags.WATER)) {
+                        val f = p.toFloat() + fluidState.getHeight(mob.level(), mutableBlockPos)
+                        waterLevel = max(f.toDouble(), waterLevel)
+                        bl = bl or (aABB.minY < f.toDouble())
+                    }
+                }
+            }
+        }
+        return bl
+    }
+
+    private fun isUnderwater(): Boolean {
+        val aABB: AABB = this.pokemonEntity.boundingBox
+        val d = aABB.minY + getStableBattleFloatHeight()
+        val i = Mth.floor(aABB.minX)
+        val j = Mth.ceil(aABB.maxX)
+        val k = Mth.floor(aABB.minY)
+        val l = Mth.ceil(aABB.maxY)
+        val m = Mth.floor(aABB.minZ)
+        val n = Mth.ceil(aABB.maxZ)
+        val bl = false
+        val mutableBlockPos = BlockPos.MutableBlockPos()
+        for (o in i until j) {
+            for (p in k until l) {
+                for (q in m until n) {
+                    mutableBlockPos[o, p] = q
+                    val fluidState: FluidState = mob.level().getFluidState(mutableBlockPos)
+                    if (fluidState.`is`(FluidTags.WATER) && d < (mutableBlockPos.y.toFloat() + fluidState.getHeight(mob.level(), mutableBlockPos)).toDouble()) {
+
+                        return true
+                    }
+                }
+            }
+        }
+        return bl
     }
 
     private fun isWalkable(xMovement: Float, zMovement: Float): Boolean {

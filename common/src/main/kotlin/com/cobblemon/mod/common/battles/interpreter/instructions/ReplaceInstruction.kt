@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.text.yellow
 import com.cobblemon.mod.common.battles.dispatch.InterpreterInstruction
+import com.cobblemon.mod.common.entity.pokemon.PokemonBehaviourFlag
 import com.cobblemon.mod.common.net.messages.client.battle.BattleReplacePokemonPacket
 import com.cobblemon.mod.common.net.messages.client.battle.BattleTransformPokemonPacket
 import com.cobblemon.mod.common.util.battleLang
@@ -42,6 +43,11 @@ class ReplaceInstruction(val message: BattleMessage): InterpreterInstruction {
             )
 
             activePokemon.illusion = null
+
+            // TODO: Handle other movement things that the revealed species should(n't) be doing
+            if (entity != null && !entity.exposedSpecies.behaviour.moving.fly.canFly && entity.getBehaviourFlag(PokemonBehaviourFlag.FLYING)) {
+                entity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, false)
+            }
             //lang done by EndInstruction
         }
     }

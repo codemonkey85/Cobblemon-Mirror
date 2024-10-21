@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.battles.ShowdownInterpreter
 import com.cobblemon.mod.common.battles.dispatch.InstructionSet
 import com.cobblemon.mod.common.battles.dispatch.InterpreterInstruction
+import com.cobblemon.mod.common.entity.pokemon.effects.IllusionEffect
 import com.cobblemon.mod.common.net.messages.client.battle.BattleSwapPokemonPacket
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.setPositionSafely
@@ -43,7 +44,7 @@ class SwapInstruction(val message: BattleMessage, val instructionSet: Instructio
 
                 val posA = ShowdownInterpreter.getSendoutPosition(battle, activePokemonA, battlePokemonA.actor) ?: activePokemonA.position?.second
                 if (posA != null && battlePokemonA.entity != null) {
-                    val (newPosA, platformA) = battlePokemonA.effectedPokemon.getAjustedSendoutPosition(posA, activePokemonA.position!!.first)
+                    val (newPosA, platformA) = battlePokemonA.effectedPokemon.getAjustedSendoutPosition(posA, activePokemonA.position!!.first, battlePokemonA.entity?.effects?.mockEffect as IllusionEffect?)
                     battlePokemonA.entity?.setPositionSafely(newPosA)
                     activePokemonA.battlePokemon?.entity?.platform = platformA
                 }
@@ -51,7 +52,7 @@ class SwapInstruction(val message: BattleMessage, val instructionSet: Instructio
                 val posB = ShowdownInterpreter.getSendoutPosition(battle, activePokemonB, battlePokemonA.actor) ?: activePokemonB.position?.second
                 val battlePokemonB = activePokemonB.battlePokemon
                 if (posB != null && battlePokemonB?.entity != null) {
-                    val (newPosB, platformB) = activePokemonB.battlePokemon!!.effectedPokemon.getAjustedSendoutPosition(posB, activePokemonB.position!!.first)
+                    val (newPosB, platformB) = activePokemonB.battlePokemon!!.effectedPokemon.getAjustedSendoutPosition(posB, activePokemonB.position!!.first, battlePokemonB.entity?.effects?.mockEffect as IllusionEffect?)
                     activePokemonB.battlePokemon?.entity?.setPositionSafely(newPosB)
                     activePokemonB.battlePokemon?.entity?.platform = platformB
                 }

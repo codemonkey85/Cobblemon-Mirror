@@ -1196,7 +1196,7 @@ open class PokemonEntity(
 
     override fun travel(movementInput: Vec3) {
         val prevBlockPos = this.blockPosition()
-        if (beamMode != 3 && platform == PlatformType.NONE) { // Don't let Pokémon move during recall
+        if (beamMode != 3 ) { // Don't let Pokémon move during recall
             super.travel(movementInput)
             this.updateBlocksTraveled(prevBlockPos)
         }

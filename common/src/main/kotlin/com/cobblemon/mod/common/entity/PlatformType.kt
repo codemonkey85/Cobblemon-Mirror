@@ -8,9 +8,11 @@
 
 package com.cobblemon.mod.common.entity
 
+import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.resources.ResourceLocation
+import java.text.Normalizer
 import java.util.EnumSet
 
 /**
@@ -43,8 +45,8 @@ enum class PlatformType {
             }
         }
 
-        fun GetPlatformTypeForPokemon(pokemon: Pokemon) : PlatformType {
-            val width = pokemon.form.hitbox.width * pokemon.form.baseScale
+        fun GetPlatformTypeForPokemon(form: FormData) : PlatformType {
+            val width = form.hitbox.width * form.baseScale
 
             return if (width <= 0.511) {
                WATER_XS
