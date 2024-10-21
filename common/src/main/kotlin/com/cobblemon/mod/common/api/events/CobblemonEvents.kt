@@ -34,14 +34,12 @@ import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEv
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionDisplayEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionTestedEvent
 import com.cobblemon.mod.common.api.events.pokemon.interaction.ExperienceCandyUseEvent
-import com.cobblemon.mod.common.api.events.pokemon.interaction.HeldItemUpdatedEvent
 import com.cobblemon.mod.common.api.events.pokemon.interaction.PokemonInteractionGUICreationEvent
 import com.cobblemon.mod.common.api.events.starter.StarterChosenEvent
 import com.cobblemon.mod.common.api.events.storage.ReleasePokemonEvent
 import com.cobblemon.mod.common.api.events.world.BigRootPropagatedEvent
 import com.cobblemon.mod.common.api.reactive.CancelableObservable
 import com.cobblemon.mod.common.api.reactive.EventObservable
-import com.cobblemon.mod.common.api.reactive.Observable
 import com.cobblemon.mod.common.api.reactive.Observable.Companion.filter
 import com.cobblemon.mod.common.api.reactive.Observable.Companion.map
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
@@ -80,8 +78,6 @@ object CobblemonEvents {
     val POKEMON_CAPTURED = EventObservable<PokemonCapturedEvent>()
     @JvmField
     val FOSSIL_REVIVED = EventObservable<FossilRevivedEvent>()
-//    @JvmField
-//    val EGG_HATCH = EventObservable<HatchEggEvent>()
     @JvmField
     val BATTLE_STARTED_PRE = CancelableObservable<BattleStartedPreEvent>()
     @JvmField
@@ -176,7 +172,9 @@ object CobblemonEvents {
     val POKEMON_SEEN = EventObservable<PokemonSeenEvent>()
 
     @JvmField
-    val COLLECT_EGG = EventObservable<CollectEggEvent>()
+    val COLLECT_EGG = CancelableObservable<CollectEggEvent>()
     @JvmField
-    val HATCH_EGG = EventObservable<HatchEggEvent>()
+    val HATCH_EGG_PRE = CancelableObservable<HatchEggEvent.Pre>()
+    @JvmField
+    val HATCH_EGG_POST = CancelableObservable<HatchEggEvent.Post>()
 }

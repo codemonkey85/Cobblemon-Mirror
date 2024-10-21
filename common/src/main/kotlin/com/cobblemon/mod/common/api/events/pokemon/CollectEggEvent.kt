@@ -8,12 +8,14 @@
 
 package com.cobblemon.mod.common.api.events.pokemon
 
+import com.cobblemon.mod.common.api.events.Cancelable
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.pokemon.Pokemon
 import net.minecraft.server.level.ServerPlayer
 
 class CollectEggEvent (
-    val egg : Pokemon,
+    val egg : PokemonProperties,
     val maleParent : Pokemon,
     val femaleParent : Pokemon,
     val player : ServerPlayer
-)
+) : Cancelable()
