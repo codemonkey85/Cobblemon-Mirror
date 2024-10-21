@@ -150,12 +150,12 @@ class DamageInstruction(
 
             if (effect != null) {
                 val lang = when (effect.id) {
-                    "blacksludge", "stickybarb" -> battleLang("damage.item", pokemonName, effect.typelessData)
+                    "blacksludge", "stickybarb", "jabocaberry", "rowapberry" -> battleLang("damage.item", pokemonName, effect.typelessData)
                     "brn", "psn", "tox" -> {
                         val status = Statuses.getStatus(effect.id)?.name?.path ?: return@dispatch GO
                         lang("status.$status.hurt", pokemonName)
                     }
-                    "aftermath" -> battleLang("damage.generic", pokemonName)
+                    "aftermath", "innardsout" -> battleLang("damage.generic", pokemonName)
                     "chloroblast", "steelbeam" -> battleLang("damage.mindblown", pokemonName)
                     "jumpkick" -> battleLang("damage.highjumpkick", pokemonName)
                     else -> battleLang("damage.${effect.id}", pokemonName, source?.getName() ?: Component.literal("UNKOWN"))
