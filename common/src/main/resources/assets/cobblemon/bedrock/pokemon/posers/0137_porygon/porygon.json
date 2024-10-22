@@ -3,7 +3,8 @@
     "portraitTranslation": [-0.18,0.14,0],
     "profileScale": 0.75,
     "profileTranslation": [0,0.59,0],
-    "animations": {
+    "rootBone": "porygon",
+  "animations": {
       "faint": "q.bedrock_primary('porygon', 'faint', q.curve('one'))",
       "faint2": "q.bedrock_primary('porygon', 'faint2', q.curve('one'))",
       "cry": "q.bedrock_stateful('porygon', 'cry')"
