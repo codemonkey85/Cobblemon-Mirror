@@ -33,6 +33,10 @@
 - Added shiny Pokémon particles with sound effects.
 
 ### Pokémon Added
+#### Gen 1
+- Alola Bias Cubone
+- Alolan Marowak
+
 #### Gen 2
 - Ledyba
 - Ledian
@@ -40,56 +44,191 @@
 - Sunflora
 - Wobbuffet
 - Girafarig
+- Corsola
 - Remoraid
 - Octillery
 - Mantine
-- Corsola
+- Smeargle
 
 #### Gen 3
-- Wynaut
+- Slakoth
+- Vigoroth
+- Slaking
+- Corphish
+- Crawdaunt
 - Feebas
 - Milotic
+- Wynaut
+- Absol
 - Spheal
 - Sealeo
 - Walrein
-- Kecleon
+- Bagon
+- Shelgon
+- Salamence
 
 #### Gen 4
-- Mantyke
+- Shellos [East Sea form]
+- Gastrodon [East Sea form]
 - Finneon
 - Lumineon
-- Shellos
-- Gastrodon
-- Rotom
+- Mantyke
 
 #### Gen 5
 - Purrloin
 - Liepard
+- Scraggy
+- Scrafty
 
 #### Gen 6
 - Clauncher
 - Clawitzer
 
 #### Gen 7
-- Bruxish
+- Pikipek
+- Trumbeak
+- Toucannon
 - Mareanie
 - Toxapex
+- Sandygast
+- Palossand
+- Bruxish
 
 #### Gen 8
 - Cramorant
+- Hatenna
+- Hattrem
+- Hatterene
 - Pincurchin
 
 #### Gen 9
-- Farigiraf
-- Finizen
-- Palafin
+- Wattrel
+- Kilowattrel
+- Klawf
 - Wiglett
 - Wugtrio
 - Flamigo
+- Veluza
+- Farigiraf
+
+#### Unique Forms
+- Magikarp Jump Variants
+- Gyarados Jump Variants
 
 ### Added cries to the following Pokémon
+- Magnemite, Magneton, Magnezone
+- Gastly, Haunter, Gengar
+- Rhyhorn, Rhydon, Rhyperior
+- Happiny, Chansey
+- Horsea, Seadra, Kingdra
+- Magby, Magmar, Magmortar
+- Porygon, Porygon2, Porygon-Z
+- Sentret, Furret
+- Misdreavus, Mismagius
+- Corsola
+- Mantyke, Mantine
+- Girafarig, Farigiraf
+- Wynaut, Wobbuffet
+- Lunatone
+- Solrock
+- Corphish, Crawdaunt
+- Feebas, Milotic
+- Kecleon
+- Absol
+- Spheal, Sealeo, Walrein
+- Relicanth
+- Bagon, Shelgon, Salamence
+- Munchlax
+- Finneon, Lumineon
+- Purrloin, Liepard
 - Timburr, Gurdurr, Conkeldurr
+- Joltik, Galvantula
+- Elgyem, Beheeyem
 - Golett, Golurk
+- Deino, Zweilous, Hydreigon
+- Flabébé, Floette, Florges
+- Clauncher, Clawitzer
+- Mareanie, Toxapex
+- Wimpod, Golisopod
+- Bruxish
+- Hatenna, Hattrem, Hatterene
+- Pincurchin
+- Finizen, Palafin [Zero], Palafin [Hero]
+- Dondozo
+
+### Added shoulder mounts for the following Pokémon
+- Weedle
+- Caterpie
+- Spearow
+- Mew
+- Murkrow
+- Smoochum
+- Larvitar
+- Tailow
+- Plusle
+- Minun
+- Beldum
+- Starly
+- Buneary
+- Combee
+- Pachirisu
+- Pidove
+- Petilil, Hisui Bias Petilil
+- Zorua, Hisui Bias Zorua
+- Elgyem
+- Fletchling
+- Skrelp
+- Klefki
+- Fomantis
+- Morelull
+- Dreepy
+- Shroodle
+- Tatsugiri
+- Glimmet
+- Gimmighoul [Roaming]
+
+### Remodeled the following Pokémon
+- Bulbasaur, Ivysaur, Venusaur
+- Charmander, Charmeleon, Charizard
+- Kakuna, Beedrill
+- Igglybuff, Jigglypuff, Wigglytuff
+- Poliwhirl, Poliwrath
+- Bellsprout, Weepinbell, Victreebel
+- Shellder, Cloyster
+- Gastly, Haunter
+- Onix
+- Krabby, Kingler
+- Rhyhorn, Rhydon, Rhyperior
+- Horsea, Seadra, Kingdra
+- Goldeen, Seaking
+- Magby, Magmar, Magmortar
+- Magikarp, Gyarados
+- Munchlax, Snorlax
+- Mudkip, Marshtomp, Swampert
+- Baltoy, Claydol
+- Carvanha
+- Relicanth
+- Prinplup, Empoleon
+- Gible, Gabite, Garchomp
+- Porygon-Z
+- Snivy, Servine, Serperior
+- Tepig, Pignite, Emboar
+- Krookodile
+- Joltik, Galvantula
+- Golett, Golurk
+- Fennekin, Braixen, Delphox
+- Phantump, Trevenant
+- Litten, Torracat, Incineroar
+- Popplio, Brionne, Primarina
+- Scorbunny, Cinderace
+- Tatsugiri
+
+#### Revamped/Tweaked models for the following Pokémon
+- Porygon, Porygon2
+- Riolu, Lucario
+- Klink, Klang, Klinglang
+- Lurantis
+- Quaxly
 
 ### Changes
 - Buffed Dusk Ball catch multipliers: Increased multiplier to 3.5 (from 3.0) in light level 0. Increased multiplier to 3.0 (from 1.5) in light levels 1-7.
@@ -97,14 +236,11 @@
 - Adjusted some berry balance values like yield and growth times.
 - Adjusted volumes of sounds made by Display Cases, Berry Bushes, Energy Root, Medicinal Leek, Vivichoke, Mints, Revival Herbs and Gilded Chests.
 - Changes to mulch buffs/durations.
-- Dreepy is now shoulder mountable.
 - Updated potion sprites.
-- Weedle, Caterpie, Spearow, Smoochum, Mew, Murkrow, Larvitar, Taillow, Plusle, Minun, Beldum, Starly, Buneary, Combee, Pachirisu, Pidove, Petilil, Hisui Bias Petilil, Zorua, Hisuian Zorua, Elgyem, Fletchling, Skrelp, Klefki, Fomantis, Morelull, Dreepy, Shroodle, Tatsugiri, Glimmet, and Roaming Gimmighoul are now shoulder mountable.
 - Link Cable recipe has been redesigned.
 - Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs.
 - Updated UI sounds for clicking and evolving Pokémon.
 - Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users.
-- Bulbasaur, Ivysaur, Venusaur, Kakuna, Beedrill, Snorlax, Munchlax, Krabby, Kingler, Lurantis, Horsea, Seadra, Kingdra, Litten, Torracat, Incineroar, Mudkip, Marshtomp, Swampert, Scorbunny, Cinderace, Prinplup, Empoleon, Relicanth, Goldeen, Seaking, Shellder, Cloyster, Tatsugiri, Igglybuff, Jigglypuff, Wigglytuff, Krookodile, Gible, Gabite, Garchomp, Rhyhorn, Rhydon, Rhyperior, and Carvanha received model updates.
 - Vivillon wings will stop being clear when you remove any Vivillon related resourcepacks. The default pattern will be the meadow wings.
 - Adjusted Pokémon sendout positions for single battles.
 - Wild Pokémon interaction range increased to 12 blocks (from 10 blocks).
