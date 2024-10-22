@@ -1,0 +1,27 @@
+{
+    "placement": {
+        "type": "minecraft:random_spread",
+        "exclusion_zone": {
+            "chunk_count": 7,
+            "other_set": "minecraft:trial_chambers"
+        },
+        "spacing": 5,
+        "separation": 3,
+        "salt": 1695299744,
+        "spread_type": "triangular"
+    },
+    "structures": [
+        {
+            "structure": "cobblemon:fossils/prehistoric_dripstone_oasis",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:fossils/prehistoric_enhydro_agate",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:fossils/prehistoric_mossy_pond",
+            "weight": 1
+        }
+    ]
+}

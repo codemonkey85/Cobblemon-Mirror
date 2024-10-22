@@ -68,6 +68,7 @@ object NPCClassAdapter : JsonDeserializer<NPCClass> {
         }
         obj.get("party")?.let { npcClass.party = ctx.deserialize(it, NPCPartyProvider::class.java) }
         obj.get("skill")?.let { npcClass.skill = it.asInt }
+        obj.get("battleTheme")?.let { npcClass.battleTheme = it.asString.asIdentifierDefaultingNamespace() }
 
         return npcClass
     }

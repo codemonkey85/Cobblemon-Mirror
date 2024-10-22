@@ -1,0 +1,25 @@
+{
+  "type": "crafting_shaped",
+  "group": "adorn:bench",
+  "pattern": [
+    "SSS",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:apricorn_slab"
+    }
+  },
+  "result": {
+    "id": "adorn:apricorn_bench",
+    "count": 2
+  },
+  "fabric:load_conditions": [{
+    "condition": "fabric:all_mods_loaded",
+    "values": ["adorn"]
+  }],
+  "conditions": [{
+    "type": "neoforge:mod_loaded",
+    "modid": "adorn"
+  }]
+}
