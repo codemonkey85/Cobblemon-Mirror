@@ -128,7 +128,6 @@
 #### Gen 9
 - Wattrel
 - Kilowattrel
-- Klawf
 - Wiglett
 - Wugtrio
 - Flamigo
@@ -145,6 +144,7 @@
 - Gyarados Jump Variants
 
 ### Added cries to the following Pokémon
+- Sandshrew, Sandslash
 - Magnemite, Magneton, Magnezone
 - Gastly, Haunter, Gengar
 - Rhyhorn, Rhydon, Rhyperior
