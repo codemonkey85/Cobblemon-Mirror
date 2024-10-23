@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.createTransforma
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
@@ -41,6 +42,8 @@ class ElgyemModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, Bi
     lateinit var battleidle: Pose
     lateinit var shoulderLeft: Pose
     lateinit var shoulderRight: Pose
+
+    override val cryAnimation = CryProvider { bedrockStateful("elgyem", "cry") }
 
     val shoulderOffset = 5.6
 

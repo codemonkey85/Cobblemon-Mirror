@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen4
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
@@ -26,6 +27,8 @@ class MagnezoneModel(root: ModelPart) : PokemonPosableModel(root) {
     lateinit var standing: Pose
     lateinit var walk: Pose
     lateinit var sleep: Pose
+
+    override val cryAnimation = CryProvider { bedrockStateful("magnezone", "cry") }
 
 
     override fun registerPoses() {

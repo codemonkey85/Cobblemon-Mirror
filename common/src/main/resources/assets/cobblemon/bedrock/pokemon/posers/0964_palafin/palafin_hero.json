@@ -4,7 +4,9 @@
   "profileScale": 0.51,
   "profileTranslation": [-0.02,1.02,0],
   "rootBone": "palafin_hero",
-  "animations": {},
+  "animations": {
+    "cry": "q.bedrock_stateful('palafin_hero', 'cry')"
+  },
   "poses": {
     "standing": {
       "poseTypes": [
