@@ -216,10 +216,11 @@
 - Glimmet
 - Gimmighoul [Roaming]
 
-### Remodeled the following Pokémon
+### Model updates for the following Pokémon
 - Bulbasaur, Ivysaur, Venusaur
 - Charmander, Charmeleon, Charizard
 - Kakuna, Beedrill
+- Porygon, Porygon2, Porygon-Z
 - Igglybuff, Jigglypuff, Wigglytuff
 - Poliwhirl, Poliwrath
 - Bellsprout, Weepinbell, Victreebel
@@ -239,25 +240,21 @@
 - Relicanth
 - Prinplup, Empoleon
 - Gible, Gabite, Garchomp
-- Porygon-Z
+- Riolu, Lucario
 - Snivy, Servine, Serperior
 - Tepig, Pignite, Emboar
 - Krookodile
 - Joltik, Galvantula
+- Klink, Klang, Klinglang
 - Golett, Golurk
 - Fennekin, Braixen, Delphox
 - Phantump, Trevenant
 - Litten, Torracat, Incineroar
 - Popplio, Brionne, Primarina
-- Scorbunny, Cinderace
-- Tatsugiri
-
-#### Revamped/Tweaked models for the following Pokémon
-- Porygon, Porygon2
-- Riolu, Lucario
-- Klink, Klang, Klinglang
 - Lurantis
+- Scorbunny, Cinderace
 - Quaxly
+- Tatsugiri
 
 ### Changes
 - Buffed Dusk Ball catch multipliers: Increased multiplier to 3.5 (from 3.0) in light level 0. Increased multiplier to 3.0 (from 1.5) in light levels 1-7.
