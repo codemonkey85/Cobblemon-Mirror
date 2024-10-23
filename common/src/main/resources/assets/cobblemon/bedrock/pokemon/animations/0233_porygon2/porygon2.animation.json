@@ -2179,6 +2179,30 @@
 					"position": [-0.1, 0, 0]
 				}
 			}
+		},
+		"animation.porygon2.portrait_idle": {
+			"loop": true,
+			"bones": {
+				"tail": {
+					"rotation": ["30+Math.cos((query.anim_time-0.9) * 90 * 1) * 5", 0, 0]
+				},
+				"neck": {
+					"rotation": [10, 0, 0]
+				},
+				"head": {
+					"rotation": [-10, 0, 0]
+				},
+				"leg_left": {
+					"rotation": ["2.5+Math.cos((query.anim_time-0.9) * 90 * 1) * 15", 0, 0]
+				},
+				"leg_right": {
+					"rotation": ["2.5+Math.cos((query.anim_time-0.9) * 90 * 1) * -15", 0, 0]
+				},
+				"body": {
+					"rotation": ["2.5+Math.cos((query.anim_time-0.5) * 90 * 1) * 2", 0, 0],
+					"position": [0, "10.5+Math.cos((query.anim_time) * 90 * 1) * 2", 0]
+				}
+			}
 		}
 	}
 }
