@@ -4,6 +4,9 @@
   "profileScale": 0.96,
   "profileTranslation": [-0.17,0.25,0],
   "rootBone": "clauncher",
+  "animations": {
+    "cry": "q.bedrock_stateful('clauncher_right', 'cry')"
+  },
   "poses": {
     "standing": {
       "poseTypes": ["STAND", "WALK", "PORTRAIT", "PROFILE", "NONE"],

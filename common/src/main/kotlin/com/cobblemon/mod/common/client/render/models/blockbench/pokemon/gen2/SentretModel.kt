@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.animation.Bimanu
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
@@ -34,6 +35,8 @@ class SentretModel (root: ModelPart) : PokemonPosableModel(root), BipedFrame, Bi
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose
+
+    override val cryAnimation = CryProvider { bedrockStateful("sentret", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("sentret", "blink") }

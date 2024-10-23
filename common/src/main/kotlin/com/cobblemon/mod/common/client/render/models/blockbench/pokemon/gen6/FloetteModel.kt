@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen6
 
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
@@ -27,6 +28,9 @@ class FloetteModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose
+
+    override val cryAnimation = CryProvider { bedrockStateful("floette", "cry") }
+
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("floette", "blink") }
 

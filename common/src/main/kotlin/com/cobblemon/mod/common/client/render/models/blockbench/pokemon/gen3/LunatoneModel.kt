@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
@@ -25,6 +26,8 @@ class LunatoneModel (root: ModelPart) : PokemonPosableModel(root) {
 
     lateinit var sleep: CobblemonPose
     lateinit var standing: CobblemonPose
+
+    override val cryAnimation = CryProvider { bedrockStateful("lunatone", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("lunatone", "blink") }

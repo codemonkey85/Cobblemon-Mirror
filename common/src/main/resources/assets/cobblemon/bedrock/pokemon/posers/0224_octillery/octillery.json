@@ -4,6 +4,9 @@
   "profileScale": 0.61,
   "profileTranslation": [0,0.76,0],
   "rootBone": "octillery",
+  "animations": {
+    "cry": "q.bedrock_stateful('octillery', 'cry')"
+  },
   "poses": {
     "standing": {
       "poseTypes": ["STAND", "WALK", "PORTRAIT", "PROFILE", "NONE"],

@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen6
 
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
@@ -30,6 +31,8 @@ class FlabebeModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     lateinit var walk: CobblemonPose
     lateinit var shoulderLeft: CobblemonPose
     lateinit var shoulderRight: CobblemonPose
+
+    override val cryAnimation = CryProvider { bedrockStateful("flabebe", "cry") }
 
     val shoulderOffset = 10.5
     override fun registerPoses() {
