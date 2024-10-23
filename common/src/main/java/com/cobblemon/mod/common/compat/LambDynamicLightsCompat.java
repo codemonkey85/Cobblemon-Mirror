@@ -13,11 +13,15 @@ import com.cobblemon.mod.common.client.render.layer.PokemonOnShoulderRenderer;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.pokemon.FormData;
 import com.cobblemon.mod.common.pokemon.lighthing.LightingData;
+import dev.lambdaurora.lambdynlights.api.DynamicLightHandler;
+import dev.lambdaurora.lambdynlights.api.DynamicLightHandlers;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import net.minecraft.util.Tuple;
+
 import net.minecraft.world.entity.player.Player;
 
 // Java class due to relying on entrypoint on Fabric side
@@ -29,44 +33,32 @@ public class LambDynamicLightsCompat {
     // Make sure not to call anything Fabric specific :)
     public static void hookCompat() {
         // Pokémon entities
-//        DynamicLightHandlers.registerDynamicLightHandler(
-//                CobblemonEntities.POKEMON,
-//                DynamicLightHandler.makeHandler(
-//                        pokemon -> resolvedPokemonLightLevel(pokemon, false),
-//                        pokemon -> true
-//                )
-//        );
-//        DynamicLightHandlers.registerDynamicLightHandler(
-//                CobblemonEntities.POKEMON,
-//                DynamicLightHandler.makeHandler(
-//                        pokemon -> resolvedPokemonLightLevel(pokemon, true),
-//                        pokemon -> false
-//                )
-//        );
+        DynamicLightHandlers.registerDynamicLightHandler(
+                CobblemonEntities.POKEMON,
+                DynamicLightHandler.makeHandler(
+                        LambDynamicLightsCompat::resolvedPokemonLightLevel,
+                        pokemon -> false
+                )
+        );
 
         // Shouldered Pokémon
-//        DynamicLightHandlers.registerDynamicLightHandler(
-//                EntityType.PLAYER,
-//                DynamicLightHandler.makeHandler(
-//                        player -> resolvedShoulderLightLevel(player, false),
-//                        player -> true
-//                )
-//        );
-//        DynamicLightHandlers.registerDynamicLightHandler(
-//                EntityType.PLAYER,
-//                DynamicLightHandler.makeHandler(
-//                        player -> resolvedShoulderLightLevel(player, true),
-//                        player -> false
-//                )
-//        );
+        DynamicLightHandlers.registerDynamicLightHandler(
+                EntityType.PLAYER,
+                DynamicLightHandler.makeHandler(
+                        LambDynamicLightsCompat::resolvedShoulderLightLevel,
+                        player -> false
+                )
+        );
     }
 
-    private static int resolvedPokemonLightLevel(PokemonEntity pokemon, boolean underwater) {
+    private static int resolvedPokemonLightLevel(PokemonEntity pokemon) {
+        var underwater = !pokemon.level().getFluidState(BlockPos.containing(pokemon.getX(), pokemon.getEyeY(), pokemon.getZ())).isEmpty();
         return extractFormLightLevel(pokemon.getForm(), underwater).orElse(0);
     }
 
-    private static int resolvedShoulderLightLevel(Player player, boolean underwater) {
+    private static int resolvedShoulderLightLevel(Player player) {
         final var shoulderDataPair = PokemonOnShoulderRenderer.shoulderDataOf(player);
+        var underwater = !player.level().getFluidState(BlockPos.containing(player.getX(), player.getEyeY(), player.getZ())).isEmpty();
         final Optional<Integer> leftLightLevel = extractShoulderLightLevel(shoulderDataPair.getFirst(), underwater);
         final Optional<Integer> rightLightLevel = extractShoulderLightLevel(shoulderDataPair.getSecond(), underwater);
         return Math.max(leftLightLevel.orElse(0), rightLightLevel.orElse(0));

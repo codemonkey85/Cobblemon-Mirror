@@ -3,7 +3,8 @@
     "portraitTranslation": [0.24,0.52,0],
     "profileScale": 0.7,
     "profileTranslation": [0.04,0.76,0],
-    "animations": {
+    "rootBone": "klang",
+  "animations": {
       "faint": "q.bedrock_primary('klang', 'faint', q.curve('one'))",
       "cry": "q.bedrock_stateful('klang', 'cry')",
       "recoil": "q.bedrock_stateful('klang', 'recoil')",

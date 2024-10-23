@@ -20,6 +20,7 @@ object CobblemonCommands {
         SpawnNPCCommand.register(dispatcher)
         GivePokemon.register(dispatcher)
         TakePokemon.register(dispatcher)
+        ChangeEyeHeight.register(dispatcher)
         ChangeScaleAndSize.register(dispatcher)
         ChangeWalkSpeed.register(dispatcher)
         TestCommand.register(dispatcher)

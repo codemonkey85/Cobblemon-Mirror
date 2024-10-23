@@ -185,7 +185,8 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
 
                 if (shouldDrawMon) {
                     val firstVisibleGender = CobblemonClient.clientPokedexData.getSeenGenders(dexData, firstVisibleForm).firstOrNull()
-                    val firstVisibleShiny = CobblemonClient.clientPokedexData.getSeenShinyStates(dexData, firstVisibleForm).firstOrNull() == "shiny"
+                    val shinyStates = CobblemonClient.clientPokedexData.getSeenShinyStates(dexData, firstVisibleForm)
+                    val firstVisibleShiny = shinyStates.count() == 1 && shinyStates.first() == "shiny"
                     val formAspects = species.forms.firstOrNull { it.name.equals(firstVisibleForm.displayForm, ignoreCase = true) }?.aspects ?: species.standardForm.aspects
                     val seenAspects = CobblemonClient.clientPokedexData.getSeenAspects(dexData)
                     val variationAspects = dexData.variations.mapNotNull { it.aspects.firstOrNull { it in seenAspects } }

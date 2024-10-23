@@ -33,6 +33,10 @@
 - Added shiny Pokémon particles with sound effects.
 
 ### Pokémon Added
+#### Gen 1
+- Alola Bias Cubone
+- Alolan Marowak
+
 #### Gen 2
 - Ledyba
 - Ledian
@@ -40,13 +44,39 @@
 - Sunflora
 - Wobbuffet
 - Girafarig
+- Corsola
+- Remoraid
+- Octillery
+- Mantine
+- Smeargle
 - Remoraid
 - Octillery
 - Mantine
 - Corsola
 
 #### Gen 3
+- Slakoth
+- Vigoroth
+- Slaking
+- Corphish
+- Crawdaunt
+- Feebas
+- Milotic
 - Wynaut
+- Absol
+- Spheal
+- Sealeo
+- Walrein
+- Bagon
+- Shelgon
+- Salamence
+
+#### Gen 4
+- Shellos [East Sea form]
+- Gastrodon [East Sea form]
+- Finneon
+- Lumineon
+- Mantyke
 - Feebas
 - Milotic
 - Spheal
@@ -65,12 +95,28 @@
 #### Gen 5
 - Purrloin
 - Liepard
+- Scraggy
+- Scrafty
 
 #### Gen 6
 - Clauncher
 - Clawitzer
 
 #### Gen 7
+- Pikipek
+- Trumbeak
+- Toucannon
+- Mareanie
+- Toxapex
+- Sandygast
+- Palossand
+- Bruxish
+
+#### Gen 8
+- Cramorant
+- Hatenna
+- Hattrem
+- Hatterene
 - Bruxish
 - Mareanie
 - Toxapex
@@ -80,6 +126,13 @@
 - Pincurchin
 
 #### Gen 9
+- Wattrel
+- Kilowattrel
+- Klawf
+- Wiglett
+- Wugtrio
+- Flamigo
+- Veluza
 - Farigiraf
 - Finizen
 - Palafin
@@ -87,9 +140,124 @@
 - Wugtrio
 - Flamigo
 
+#### Unique Forms
+- Magikarp Jump Variants
+- Gyarados Jump Variants
+
 ### Added cries to the following Pokémon
+- Magnemite, Magneton, Magnezone
+- Gastly, Haunter, Gengar
+- Rhyhorn, Rhydon, Rhyperior
+- Happiny, Chansey
+- Horsea, Seadra, Kingdra
+- Magby, Magmar, Magmortar
+- Porygon, Porygon2, Porygon-Z
+- Sentret, Furret
+- Misdreavus, Mismagius
+- Corsola
+- Mantyke, Mantine
+- Girafarig, Farigiraf
+- Wynaut, Wobbuffet
+- Lunatone
+- Solrock
+- Corphish, Crawdaunt
+- Feebas, Milotic
+- Kecleon
+- Absol
+- Spheal, Sealeo, Walrein
+- Relicanth
+- Bagon, Shelgon, Salamence
+- Munchlax
+- Finneon, Lumineon
+- Purrloin, Liepard
 - Timburr, Gurdurr, Conkeldurr
+- Joltik, Galvantula
+- Elgyem, Beheeyem
 - Golett, Golurk
+- Deino, Zweilous, Hydreigon
+- Flabébé, Floette, Florges
+- Clauncher, Clawitzer
+- Mareanie, Toxapex
+- Wimpod, Golisopod
+- Bruxish
+- Hatenna, Hattrem, Hatterene
+- Pincurchin
+- Finizen, Palafin [Zero], Palafin [Hero]
+- Dondozo
+
+### Added shoulder mounts for the following Pokémon
+- Weedle
+- Caterpie
+- Spearow
+- Mew
+- Murkrow
+- Smoochum
+- Larvitar
+- Tailow
+- Plusle
+- Minun
+- Beldum
+- Starly
+- Buneary
+- Combee
+- Pachirisu
+- Pidove
+- Petilil, Hisui Bias Petilil
+- Zorua, Hisui Bias Zorua
+- Elgyem
+- Fletchling
+- Skrelp
+- Klefki
+- Fomantis
+- Morelull
+- Dreepy
+- Shroodle
+- Tatsugiri
+- Glimmet
+- Gimmighoul [Roaming]
+
+### Remodeled the following Pokémon
+- Bulbasaur, Ivysaur, Venusaur
+- Charmander, Charmeleon, Charizard
+- Kakuna, Beedrill
+- Igglybuff, Jigglypuff, Wigglytuff
+- Poliwhirl, Poliwrath
+- Bellsprout, Weepinbell, Victreebel
+- Shellder, Cloyster
+- Gastly, Haunter
+- Onix
+- Krabby, Kingler
+- Rhyhorn, Rhydon, Rhyperior
+- Horsea, Seadra, Kingdra
+- Goldeen, Seaking
+- Magby, Magmar, Magmortar
+- Magikarp, Gyarados
+- Munchlax, Snorlax
+- Mudkip, Marshtomp, Swampert
+- Baltoy, Claydol
+- Carvanha
+- Relicanth
+- Prinplup, Empoleon
+- Gible, Gabite, Garchomp
+- Porygon-Z
+- Snivy, Servine, Serperior
+- Tepig, Pignite, Emboar
+- Krookodile
+- Joltik, Galvantula
+- Golett, Golurk
+- Fennekin, Braixen, Delphox
+- Phantump, Trevenant
+- Litten, Torracat, Incineroar
+- Popplio, Brionne, Primarina
+- Scorbunny, Cinderace
+- Tatsugiri
+
+#### Revamped/Tweaked models for the following Pokémon
+- Porygon, Porygon2
+- Riolu, Lucario
+- Klink, Klang, Klinglang
+- Lurantis
+- Quaxly
 
 ### Changes
 - Buffed Dusk Ball catch multipliers: Increased multiplier to 3.5 (from 3.0) in light level 0. Increased multiplier to 3.0 (from 1.5) in light levels 1-7.
@@ -97,12 +265,11 @@
 - Adjusted some berry balance values like yield and growth times.
 - Adjusted volumes of sounds made by Display Cases, Berry Bushes, Energy Root, Medicinal Leek, Vivichoke, Mints, Revival Herbs and Gilded Chests.
 - Changes to mulch buffs/durations.
-- Dreepy is now shoulder mountable.
 - Updated potion sprites.
-- Weedle, Caterpie, Spearow, Smoochum, Mew, Murkrow, Larvitar, Taillow, Plusle, Minun, Beldum, Starly, Buneary, Combee, Pachirisu, Pidove, Petilil, Hisui Bias Petilil, Zorua, Hisuian Zorua, Elgyem, Fletchling, Skrelp, Klefki, Fomantis, Morelull, Dreepy, Shroodle, Tatsugiri, Glimmet, and Roaming Gimmighoul are now shoulder mountable.
 - Link Cable recipe has been redesigned.
 - Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs.
 - Updated UI sounds for clicking and evolving Pokémon.
+- Updated cries for Chansey, Crobat, Hoothoot, Noctowl.
 - Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users.
 - Bulbasaur, Ivysaur, Venusaur, Kakuna, Beedrill, Snorlax, Munchlax, Krabby, Kingler, Lurantis, Horsea, Seadra, Kingdra, Litten, Torracat, Incineroar, Mudkip, Marshtomp, Swampert, Scorbunny, Cinderace, Prinplup, Empoleon, Relicanth, Goldeen, Seaking, Shellder, Cloyster, Tatsugiri, Igglybuff, Jigglypuff, Wigglytuff, Krookodile, Gible, Gabite, Garchomp, Rhyhorn, Rhydon, Rhyperior, and Carvanha received model updates.
 - Vivillon wings will stop being clear when you remove any Vivillon related resourcepacks. The default pattern will be the meadow wings.
@@ -117,12 +284,16 @@
 - Updated party switching interface when in battle.
 - Relic coin pouches can now be waterlogged.
 - Pokemon Name (and level) labels are now only visible when crouching by default, set the `displayEntityLabelsWhenCrouchingOnly` to `false` to always them even when not crouching
-- The "Press R to start battle prompt" will now disappear after a player's first battle has been won
+- The "Press R to start battle prompt" will now disappear after a player's first battle has been won.
 - The default number of digits for the Pokédex number in the summary has been increased, from 3 to 4.
+- The pasture block model's screen is now off by default.
+- The Poké Balls creative tab is now named Utility Items as it also encompasses Poké Rod and Pokédex items.
 
 ### Fixes
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating.
 - Fixed Cubone's cry not having a sound.
+- Fixed the sendout sound erronously playing when a wild Pokémon breaks out of a Poké ball.
+- Flamethrower is no longer missing sounds.
 - Fixed the Seafloor spawning context not being a usable context.
 - Fixed Pokemon spawning in non-full blocks like slabs.
 - Fixed Gilded Chests not dropping the chest itself when broken, only the contents.
@@ -183,7 +354,8 @@
 - Pokémon whose current owner is not its Original Trainer now gains extra experience.
 - Fixed Fossil Resurrection advancement not being granted.
 - Fixed village generation caps not applying for berry farms. You were not meant to see more than two berry farms per village!
-- Fixed the Ice Face ability activation being displayed incorrectly in a battle
+- Fixed the Ice Face ability activation being displayed incorrectly in a battle.
+- Fixed edge case of F1 and R locking you in battle with no R functionality (requiring ESC to get out).
 
 ### Developer
 - `SpawnCause` is now an implementation of `SpawningInfluence`.
@@ -196,7 +368,6 @@
 - Serialization of PokemonStores and Pokemon themselves now require registry access, which will break some sidemods. This sucked for us more than it will suck for you! If you have a world or player instance, you can get it from there.
 - ``TeraTypes`` now implements ``Iterable``.
 - PokemonBattle now starts on turn 0.
-- All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.
 - Added `forcedAspects` to Pokémon to make it easier to easily add basic aspects to a Pokémon in a way that persists. We already know that everyone is going to overuse this.
 - Made the `Pokemon.aspects` setter private. This could technically break side-mods but if you are affected by this then you were using it wrong! Use `Pokemon.forcedAspects` to fix it.
 - Cobblemon's main logger is properly static now.
@@ -207,6 +378,16 @@
 - Fixed the placeholder `WingFlapIdle` animation so the wings are not rotating opposite to each other.
 - 'player' type dialogue faces can now be explicitly stated so that NPC mods that use fake players can show in dialogue portraits.
 - Added `isLeftSide` field for dialogue faces. This determines what side of dialogue box the portrait is on.
+- "sounds/attacks" folder has been renamed to "sounds/move"
+- Moves sharing generic sounds now have unique sound events, allowing them to be changed with resource packs.
+- All move sound events have been renamed to "move.NAME.SOURCE" for consistency.
+- Status moves have been moved out of the 'attacks' folder and split into volatile and nonvolatile.
+- 'status.badlypoison.actor' sound event has been renamed to "status.toxpoison.actor"
+- Mulch and berry harvesting sound events have been renamed and moved to their respective folders in "sounds/block."
+- All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.
+- Sound events for all blocks now start with "block."
+- Gimmighoul chest and item interaction sounds have been moved to where its cry is.
+- Unused sound files and sound events have been removed.
 
 ### Localization
 - Updated translations for:
