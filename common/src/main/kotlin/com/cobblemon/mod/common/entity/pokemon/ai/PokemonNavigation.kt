@@ -36,7 +36,7 @@ class PokemonNavigation(val world: Level, val pokemonEntity: PokemonEntity) : Gr
     // Lazy init because navigation is instantiated during entity construction and pokemonEntity.form isn't set yet.
     // (pokemonEntity.behaviour is a shortcut to pokemonEntity.form.behaviour)
     // It's JVM field instantiation order stuff, too niche to explain further.
-    val moving: MoveBehaviour by lazy { pokemonEntity.behaviour.moving }
+    val moving: MoveBehaviour by lazy { pokemonEntity.exposedSpecies.behaviour.moving }
 
     var cachedCurrentNode: Node? = null
     var currentNodeDistance = 0F
@@ -176,7 +176,7 @@ class PokemonNavigation(val world: Level, val pokemonEntity: PokemonEntity) : Gr
         var target = target
 
         var blockPos: BlockPos
-        if (this.world.getBlockState(target).isAir && !pokemonEntity.behaviour.moving.fly.canFly) {
+        if (this.world.getBlockState(target).isAir && !pokemonEntity.exposedSpecies.behaviour.moving.fly.canFly) {
             blockPos = target.below()
             while (blockPos.y > this.world.minBuildHeight && this.world.getBlockState(blockPos).isAir) {
                 blockPos = blockPos.below()
@@ -237,7 +237,7 @@ class PokemonNavigation(val world: Level, val pokemonEntity: PokemonEntity) : Gr
 //            pokemonEntity.discard()
 //            return false
             // If we just started moving and it's to an open node, fly
-            if (node.type == PathType.OPEN && pokemonEntity.form.behaviour.moving.fly.canFly && !pokemonEntity.isFlying()) {
+            if (node.type == PathType.OPEN && pokemonEntity.exposedForm.behaviour.moving.fly.canFly && !pokemonEntity.isFlying()) {
                 pokemonEntity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, true)
             }
         }

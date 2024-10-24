@@ -12,7 +12,6 @@ import com.cobblemon.mod.common.battles.BattleRegistry
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonBehaviourFlag
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.util.toBlockPos
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.phys.Vec3
 
@@ -46,11 +45,11 @@ class PokemonInBattleMovementGoal(val entity: PokemonEntity, val range: Int) : G
 
         if (entity.exposedSpecies.behaviour.moving.fly.canFly) {
             // Flyer logic
-            if (!hasMovedToPos && entity.ticksLived > 10) {
+            if (!hasMovedToPos) {
                 entity.navigation.moveTo(battlePos!!.x, battlePos!!.y, battlePos!!.z, 1.0)
                 hasMovedToPos = true
             }
-            if (!entity.onGround() && !entity.getBehaviourFlag(PokemonBehaviourFlag.FLYING)) {
+            if (entity.ticksLived > 1 && !entity.onGround() && !entity.getBehaviourFlag(PokemonBehaviourFlag.FLYING)) {
                 // Let flyers fly in battle if they're in the air
                 entity.setBehaviourFlag(PokemonBehaviourFlag.FLYING, true)
             }
