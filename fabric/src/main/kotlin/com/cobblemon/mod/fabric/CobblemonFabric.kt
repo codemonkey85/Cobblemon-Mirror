@@ -381,7 +381,9 @@ object CobblemonFabric : CobblemonImplementation {
     }
 
     private fun attemptModCompat() {
-
+        if(isModInstalled("adorn")) {
+            registerBuiltinResourcePack(cobblemonResource("adorncompatibility"), Component.literal("Adorn Compatibility"), ResourcePackActivationBehaviour.ALWAYS_ENABLED)
+        }
     }
 
     private class CobblemonReloadListener(private val identifier: ResourceLocation, private val reloader: PreparableReloadListener, private val dependencies: Collection<ResourceLocation>) : IdentifiableResourceReloadListener {
@@ -395,7 +397,6 @@ object CobblemonFabric : CobblemonImplementation {
         override fun getFabricDependencies(): MutableCollection<ResourceLocation> = this.dependencies.toMutableList()
     }
 
-    @Suppress("UnstableApiUsage")
     private class FabricItemGroupInjector(private val fabricItemGroupEntries: FabricItemGroupEntries) : CobblemonItemGroups.Injector {
         override fun putFirst(item: ItemLike) {
             this.fabricItemGroupEntries.prepend(item)

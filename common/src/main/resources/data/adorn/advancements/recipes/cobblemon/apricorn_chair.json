@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "adorn:cobblemon/apricorn_chair"
+    ]
+  },
+  "criteria": {
+    "has_slab": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:apricorn_slab"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "adorn:cobblemon/apricorn_chair"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_slab",
+      "has_the_recipe"
+    ]
+  ],
+  "fabric:load_conditions": [{
+    "condition": "fabric:all_mods_loaded",
+    "values": ["adorn"]
+  }],
+  "conditions": [{
+    "type": "neoforge:mod_loaded",
+    "modid": "adorn"
+  }]
+}
