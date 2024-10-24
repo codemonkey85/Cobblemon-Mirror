@@ -14,6 +14,15 @@ import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.behavior.BehaviorControl
 
+/**
+ * A configuration for a brain task. Its purpose is to generate a list of tasks to add to the brain of
+ * an entity when it spawns.
+ *
+ * This is essentially a builder for tasks.
+ *
+ * @author Hiroku
+ * @since October 14th, 2024
+ */
 fun interface TaskConfig {
     companion object {
         val types = mutableMapOf<String, Class<out TaskConfig>>(
@@ -51,5 +60,6 @@ fun interface TaskConfig {
     val runtime: MoLangRuntime
         get() = Companion.runtime
 
+    /** Given the entity in construction, returns a list of tasks. */
     fun createTasks(entity: LivingEntity, brainConfigurationContext: BrainConfigurationContext): List<BehaviorControl<in LivingEntity>>
 }

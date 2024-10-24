@@ -20,6 +20,17 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.behavior.BehaviorControl
 import net.minecraft.world.entity.ai.behavior.DoNothing
 
+/**
+ * Randomly chooses one of the possible tasks to add to the brain. This differs from [OneOfTaskConfig] in that
+ * the randomization happens before the brain is created, rather than [OneOfTaskConfig] where the randomization
+ * happens each time the brain is ticked.
+ *
+ * This is most useful when the goal is to apply something like a specialization to an entity where it varies
+ * but once put on the entity, it sticks.
+ *
+ * @author Hiroku
+ * @since October 19th, 2024
+ */
 class RandomTaskConfig : TaskConfig {
     class RandomTaskChoice {
         val weight = 1.0
