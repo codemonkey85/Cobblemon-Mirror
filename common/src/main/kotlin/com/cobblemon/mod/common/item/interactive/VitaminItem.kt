@@ -37,7 +37,7 @@ class VitaminItem(val stat: Stat) : CobblemonItem(Properties()), PokemonSelectin
     ): InteractionResultHolder<ItemStack> {
         val evsGained = pokemon.evs.add(stat, EV_YIELD)
         return if (evsGained > 0) {
-            player.playSound(CobblemonSounds.MEDICINE_PILLS_USE, 1F, 1F)
+            pokemon.entity?.playSound(CobblemonSounds.MEDICINE_PILLS_USE, 1F, 1F)
             if (!player.isCreative) {
                 stack.shrink(1)
             }

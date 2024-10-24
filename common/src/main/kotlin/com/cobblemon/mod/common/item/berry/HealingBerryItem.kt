@@ -18,6 +18,7 @@ import com.cobblemon.mod.common.block.BerryBlock
 import com.cobblemon.mod.common.item.battle.BagItem
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.genericRuntime
+import com.cobblemon.mod.common.util.playSoundServer
 import com.cobblemon.mod.common.util.resolveInt
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
@@ -53,7 +54,7 @@ class HealingBerryItem(block: BerryBlock, val amount: () -> ExpressionLike): Ber
         }
 
         pokemon.currentHealth = Integer.min(pokemon.currentHealth + genericRuntime.resolveInt(amount(), pokemon), pokemon.maxHealth)
-        player.playSound(CobblemonSounds.BERRY_EAT, 1F, 1F)
+        pokemon.entity?.playSound(CobblemonSounds.BERRY_EAT, 1F, 1F)
         if (!player.isCreative) {
             stack.shrink(1)
         }
