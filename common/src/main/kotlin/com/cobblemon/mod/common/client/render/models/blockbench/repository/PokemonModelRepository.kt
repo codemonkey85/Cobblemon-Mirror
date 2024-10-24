@@ -207,8 +207,6 @@ object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
         inbuilt("piplup", ::PiplupModel)
         inbuilt("yanmega", ::YanmegaModel)
         inbuilt("basculin", ::BasculinModel)
-        inbuilt("crustle", ::CrustleModel)
-        inbuilt("dwebble", ::DwebbleModel)
         inbuilt("emolga", ::EmolgaModel)
         inbuilt("maractus", ::MaractusModel)
         inbuilt("bounsweet", ::BounsweetModel)

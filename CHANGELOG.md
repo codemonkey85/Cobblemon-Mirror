@@ -244,6 +244,7 @@
 - Snivy, Servine, Serperior
 - Tepig, Pignite, Emboar
 - Krookodile
+- Dwebble, Crustle
 - Joltik, Galvantula
 - Klink, Klang, Klinglang
 - Golett, Golurk
