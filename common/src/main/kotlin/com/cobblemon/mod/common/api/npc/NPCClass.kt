@@ -47,6 +47,7 @@ class NPCClass {
     var variables = mutableMapOf<String, MoValue>() // Questionable whether this should be here.
     var party: NPCPartyProvider? = null
     var skill: Int = 0
+    var battleTheme: ResourceLocation? = null
     var ai: MutableList<BrainConfig> = mutableListOf()
 
     // If you're adding stuff here, add it to NPCPreset and NPCClassAdapter too
@@ -80,6 +81,7 @@ class NPCClass {
             buffer.writeString(key)
             buffer.writeString(value.asString())
         }
+        buffer.writeNullable(battleTheme) { _, v -> buffer.writeIdentifier(v) }
     }
 
     fun decode(buffer: RegistryFriendlyByteBuf) {
@@ -123,5 +125,6 @@ class NPCClass {
                 return@readMapK key to StringValue(value)
             }
         }
+        battleTheme = buffer.readNullable { buffer.readIdentifier() }
     }
 }

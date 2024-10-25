@@ -8,7 +8,6 @@
 
 package com.cobblemon.mod.common.pokedex.scanner
 
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext.Companion.BLOCK_LENGTH_PER_ZOOM_STAGE
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.phys.AABB
@@ -33,7 +32,7 @@ object PokemonScanner {
         )
 
         // Get all entities within the boundingBox
-        val entities = castingEntity.level().getEntitiesOfClass(Entity::class.java, boundingBox) { it != castingEntity }
+        val entities = castingEntity.level().getEntitiesOfClass(Entity::class.java, boundingBox) { it !== castingEntity }
 
         for (entity in entities) {
             val entityBox: AABB = entity.boundingBox
@@ -77,9 +76,9 @@ object PokemonScanner {
         return closestEntity
     }
 
-    fun findPokemon(castingEntity: Entity, zoomLevel: Int): PokemonEntity? {
+    fun findScannableEntity(castingEntity: Entity, zoomLevel: Int): ScannableEntity? {
         val targetedEntity = detectEntity(castingEntity, zoomLevel * BLOCK_LENGTH_PER_ZOOM_STAGE)
-        return targetedEntity as? PokemonEntity
+        return targetedEntity as? ScannableEntity
     }
 
     fun isEntityInRange(castingEntity: Entity, targetEntity: Entity, zoomLevel: Int): Boolean {

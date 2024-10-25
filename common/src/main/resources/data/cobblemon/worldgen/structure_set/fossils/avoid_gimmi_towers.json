@@ -1,0 +1,27 @@
+{
+    "placement": {
+        "type": "minecraft:random_spread",
+        "exclusion_zone": {
+            "chunk_count": 7,
+            "other_set": "cobblemon:ruins/gimmi_towers"
+        },
+        "spacing": 20,
+        "separation": 10,
+        "salt": 1692720812,
+        "spread_type": "triangular"
+    },
+    "structures": [
+        {
+            "structure": "cobblemon:fossils/prehistoric_eroded_pillar",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:fossils/prehistoric_sunscorched_remains",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:fossils/prehistoric_sunscorched_den",
+            "weight": 1
+        }
+    ]
+}

@@ -54,7 +54,7 @@ class PotionItem(val type: PotionType) : CobblemonItem(Properties()), PokemonSel
         if (type.curesStatus) {
             pokemon.status = null
         }
-        player.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
+        pokemon.entity?.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
         if (!player.isCreative) {
             stack.shrink(1)
             player.giveOrDropItemStack(ItemStack(Items.GLASS_BOTTLE))
@@ -64,7 +64,7 @@ class PotionItem(val type: PotionType) : CobblemonItem(Properties()), PokemonSel
 
     override fun applyToBattlePokemon(player: ServerPlayer, stack: ItemStack, battlePokemon: BattlePokemon) {
         super.applyToBattlePokemon(player, stack, battlePokemon)
-        player.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
+        battlePokemon.entity?.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
     }
 }
 

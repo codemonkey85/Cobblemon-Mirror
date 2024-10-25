@@ -29,6 +29,7 @@ class NPCPreset {
     var hitbox: EntityDimensions? = null
     var ai: List<BrainConfig>? = null
     var skill: Int? = null
+    var battleTheme: ResourceLocation? = null
 
     fun applyTo(npcClass: NPCClass) {
         resourceIdentifier?.let { npcClass.resourceIdentifier = it }
@@ -46,6 +47,7 @@ class NPCPreset {
         names?.let { npcClass.names.addAll(it) }
         hitbox?.let { npcClass.hitbox = it }
         skill?.let { npcClass.skill = it }
+        battleTheme?.let { npcClass.battleTheme = it }
         ai?.let { npcClass.ai.addAll(it) }
     }
 }

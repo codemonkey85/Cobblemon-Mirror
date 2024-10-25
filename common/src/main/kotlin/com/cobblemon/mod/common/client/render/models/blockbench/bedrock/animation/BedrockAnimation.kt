@@ -18,6 +18,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.util.effectiveName
+import com.cobblemon.mod.common.util.genericRuntime
 import com.cobblemon.mod.common.util.getString
 import com.cobblemon.mod.common.util.math.geometry.toRadians
 import com.cobblemon.mod.common.util.resolveDouble
@@ -125,6 +126,20 @@ data class BedrockAnimation(
     val effects: List<BedrockEffectKeyframe>,
     val boneTimelines: Map<String, BedrockBoneTimeline>
 ) {
+    fun checkForErrors() {
+        boneTimelines.forEach { (_, timeline) ->
+            if (!timeline.position.isEmpty()) {
+                timeline.position.resolve(2.0, genericRuntime)
+            }
+            if (!timeline.rotation.isEmpty()) {
+                timeline.rotation.resolve(2.0, genericRuntime)
+            }
+            if (!timeline.scale.isEmpty()) {
+                timeline.scale.resolve(2.0, genericRuntime)
+            }
+        }
+    }
+
     /** Useful to have, gets set after loading the animation. */
     var name: String = ""
 

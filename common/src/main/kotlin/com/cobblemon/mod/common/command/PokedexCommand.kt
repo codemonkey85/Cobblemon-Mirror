@@ -11,8 +11,12 @@ package com.cobblemon.mod.common.command
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.permission.CobblemonPermissions
+import com.cobblemon.mod.common.api.pokedex.CaughtCount
+import com.cobblemon.mod.common.api.pokedex.CaughtPercent
 import com.cobblemon.mod.common.api.pokedex.Dexes
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
+import com.cobblemon.mod.common.api.pokedex.SeenCount
+import com.cobblemon.mod.common.api.pokedex.SeenPercent
 import com.cobblemon.mod.common.api.pokedex.def.PokedexDef
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.command.argument.DexArgumentType
@@ -66,6 +70,11 @@ object PokedexCommand {
         commandArgumentBuilder
             .then(grantCommandBuilder)
             .then(revokeCommandBuilder)
+            .then(Commands.literal("printcalculations")
+                .then(Commands.argument("player", EntityArgument.player())
+                    .executes(::printValuesGlobal)
+                    .then(Commands.argument("dex", DexArgumentType.dex())
+                        .executes(::printValues))))
             .permission(CobblemonPermissions.POKEDEX)
 
 
@@ -88,7 +97,6 @@ object PokedexCommand {
                 }
             }
             entry.addAspects(completeEntry.variations.flatMap { it.aspects }.toSet())
-            it.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreTypes.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"
         context.source.sendSystemMessage(
@@ -114,6 +122,7 @@ object PokedexCommand {
         )
         return Command.SINGLE_SUCCESS
     }
+
     private fun executeGrantAll(context: CommandContext<CommandSourceStack>): Int {
         val players = context.getArgument("player", EntitySelector::class.java).findPlayers(context.source)
         val dexDef = context.getArgument("dex", PokedexDef::class.java)
@@ -130,7 +139,6 @@ object PokedexCommand {
                 }
                 speciesRecord.addAspects(dexEntry.variations.flatMap { it.aspects }.toSet())
             }
-            player.sendPacket(SetClientPlayerDataPacket(PlayerInstancedDataStoreTypes.POKEDEX, dex.toClientData()))
         }
         val selectorStr = if (players.size == 1) players.first().name.string else "${players.size} players"
         context.source.sendSystemMessage(
@@ -156,5 +164,30 @@ object PokedexCommand {
             Component.literal("Cleared dex of $selectorStr")
         )
         return Command.SINGLE_SUCCESS
+    }
+
+    private fun printValuesGlobal(context: CommandContext<CommandSourceStack>): Int {
+        val player = context.getArgument("player", EntitySelector::class.java).findSinglePlayer(context.source)
+        val dex = Cobblemon.playerDataManager.getPokedexData(player)
+        var calculators = listOf(SeenCount, CaughtCount, SeenPercent, CaughtPercent)
+        calculators.forEach {
+            var value = dex.getGlobalCalculatedValue(it)
+            context.source.sendSystemMessage(Component.literal("${it.javaClass.simpleName} result: $value"))
+        }
+
+        return 1
+    }
+
+    private fun printValues(context: CommandContext<CommandSourceStack>): Int {
+        val player = context.getArgument("player", EntitySelector::class.java).findSinglePlayer(context.source)
+        val dex = Cobblemon.playerDataManager.getPokedexData(player)
+        val dexDef = context.getArgument("dex", PokedexDef::class.java)
+        var calculators = listOf(SeenCount, CaughtCount, SeenPercent, CaughtPercent)
+        calculators.forEach {
+            var value = dex.getDexCalculatedValue(dexDef.id, it)
+            context.source.sendSystemMessage(Component.literal("${it.javaClass.simpleName} result: $value"))
+        }
+
+        return 1
     }
 }

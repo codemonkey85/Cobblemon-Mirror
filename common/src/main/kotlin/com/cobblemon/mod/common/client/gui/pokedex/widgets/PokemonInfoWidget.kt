@@ -577,7 +577,7 @@ class PokemonInfoWidget(val pX: Int, val pY: Int, val updateForm: (PokedexForm) 
         }
 
         val seenShinyStates = CobblemonClient.clientPokedexData.getSeenShinyStates(pokedexEntry, pokedexForm)
-        shiny = seenShinyStates.contains("shiny")
+        shiny = seenShinyStates.count() == 1 && seenShinyStates.first() == "shiny"
         shinyButton.resource = if (shiny) buttonShiny else buttonNone
         shinyButton.active = seenShinyStates.size > 1
     }

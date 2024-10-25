@@ -1,0 +1,71 @@
+{
+    "portraitScale": 1.45,
+    "portraitTranslation": [-0.23, -0.47, 0],
+    "profileScale": 0.9,
+    "profileTranslation": [0.0, 0.37, 0.0],
+    "animations": {
+      "faint": "q.bedrock_primary('ivysaur', 'faint', q.curve('one'))",
+      "cry": "q.bedrock_stateful('ivysaur', 'cry')"
+    },
+    "poses": {
+      "standing": {
+        "poseName": "standing",
+        "poseTypes": [
+          "STAND",
+          "FLOAT",
+          "NONE",
+          "PORTRAIT",
+          "PROFILE"
+        ],
+        "animations": [
+          "q.look('head')",
+          "q.look('leaf_front', 1, 0, 0, -28)",
+          "q.bedrock('ivysaur', 'ground_idle')"
+        ],
+        "quirks": [
+          "q.bedrock_quirk('ivysaur', 'blink')"
+        ],
+        "transformedParts": [
+          {
+            "part": "vines",
+            "isVisible": false
+          }
+        ]
+      },
+      "walking": {
+        "poseName": "walking",
+        "poseTypes": [
+          "WALK",
+          "SWIM"
+        ],
+        "animations": [
+          "q.look('head')",
+          "q.look('leaf_front', 1, 0, -10, -45)",
+          "q.bedrock('ivysaur', 'ground_walk')"
+        ],
+        "quirks": [
+          "q.bedrock_quirk('ivysaur', 'blink')"
+        ],
+        "transformedParts": [
+          {
+            "part": "vines",
+            "isVisible": false
+          }
+        ]
+      },
+      "sleep": {
+        "poseTypes": [
+          "SLEEP"
+        ],
+        "animations": [
+          "q.bedrock('ivysaur', 'sleep')"
+        ],
+        "transformedParts": [
+          {
+            "part": "vines",
+            "isVisible": false
+          }
+        ]
+      }
+    }
+  }

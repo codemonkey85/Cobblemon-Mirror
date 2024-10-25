@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Dondozo",
   "nationalPokedexNumber": 977,
   "primaryType": "water",
@@ -32,6 +33,15 @@
   "eggGroups": [
     "water_2"
   ],
+  "behaviour": {
+    "moving": {
+      "swim": {
+        "swimSpeed": 0.2,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true
+      }
+    }
+  },
   "moves": [
     "1:supersonic",
     "1:tackle",
@@ -90,6 +100,12 @@
   "labels": [
     "gen9"
   ],
+  "baseScale": 1,
+  "hitbox": {
+    "width": 3.5,
+    "height": 2,
+    "fixed": false
+  },
   "aspects": [],
   "height": 120,
   "weight": 2200,
