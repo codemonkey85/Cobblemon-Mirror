@@ -1,5 +1,5 @@
 {
-  "head": "head",
+  "rootBone": "alakazam",
   "portraitScale": 1.75,
   "portraitTranslation": [
     -0.25,
@@ -23,7 +23,7 @@
         "PORTRAIT"
       ],
       "animations": [
-        "q.look()",
+        "q.look('head')",
         "q.bedrock('alakazam', 'ground_idle')"
       ],
       "transformTicks": 10,
@@ -39,7 +39,7 @@
         "FLY"
       ],
       "animations": [
-        "q.look()",
+        "q.look('head')",
         "q.bedrock('alakazam', 'ground_idle')",
         "q.biped_walk(0.6, 0.9, 'left_upper_leg', 'right_upper_leg')",
         "q.bimanual_swing(0.6, 0.9, 'left_shoulder', 'right_shoulder')"
