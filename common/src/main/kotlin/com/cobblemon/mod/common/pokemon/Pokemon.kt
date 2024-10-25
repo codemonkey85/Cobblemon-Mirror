@@ -551,14 +551,12 @@ open class Pokemon : ShowdownIdentifiable {
             battleId: UUID? = null,
             doCry: Boolean = true,
             illusion: IllusionEffect? = null,
-            faceSource: Boolean = true,
-            platformType: PlatformType = PlatformType.NONE,
             mutation: (PokemonEntity) -> Unit = {},
     ): CompletableFuture<PokemonEntity> {
 
 
-        // send out raft if over water
-        val (targetPosition, platform) = getAjustedSendoutPosition(position, level, illusion)
+        // If in battle send out raft if over water
+        val (targetPosition, platform) = if (battleId != null) getAjustedSendoutPosition(position, level, illusion) else kotlin.Pair(position, PlatformType.NONE)
 
         // Handle special case of shouldered Cobblemon
         if (this.state is ShoulderedState) {
@@ -579,7 +577,7 @@ open class Pokemon : ShowdownIdentifiable {
                 if (owner is LivingEntity) {
                     owner.swing(InteractionHand.MAIN_HAND, true)
                     val spawnDirection = targetPosition.subtract(owner.position())
-                    val spawnYaw = atan2(spawnDirection.z, spawnDirection.x) * 180.0 / PI + if (faceSource) 102.5F else -90F
+                    val spawnYaw = atan2(spawnDirection.z, spawnDirection.x) * 180.0 / PI + if (battleId == null) 102.5F else -90F
                     it.entityData.set(PokemonEntity.SPAWN_DIRECTION, spawnYaw.toFloat())
                 }
                 if (owner != null) {

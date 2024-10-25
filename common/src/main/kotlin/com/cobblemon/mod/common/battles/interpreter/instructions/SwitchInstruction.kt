@@ -79,7 +79,6 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
                                     level = entity.level() as ServerLevel,
                                     doCry = false,
                                     position = targetPos,
-                                    faceSource = false,
                                     illusion = illusion?.let { IllusionEffect(it.effectedPokemon) }
                             ).thenApply {
                                 actor.stillSendingOutCount--
@@ -165,7 +164,6 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
                         level = world,
                         position = pos,
                         doCry = !imposter,
-                        faceSource = false,
                         illusion = illusion?.let { IllusionEffect(it.effectedPokemon) }
                     ).thenAccept { sendOutFuture.complete(Unit) }
                 }
