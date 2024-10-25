@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
 import net.minecraft.world.entity.ai.behavior.declarative.Trigger
 import net.minecraft.world.entity.schedule.Activity
 
+@Deprecated("Deprecated in favour of the JSON system")
 object ExitSpeakersActivityTask {
     fun create(): OneShot<NPCEntity> {
         return BehaviorBuilder.create {

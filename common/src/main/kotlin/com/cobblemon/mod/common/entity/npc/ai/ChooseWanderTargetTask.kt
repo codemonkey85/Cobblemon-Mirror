@@ -9,7 +9,8 @@
 package com.cobblemon.mod.common.entity.npc.ai
 
 import com.cobblemon.mod.common.CobblemonMemories
-import com.cobblemon.mod.common.entity.npc.NPCEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.behavior.BlockPosTracker
 import net.minecraft.world.entity.ai.behavior.OneShot
 import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
@@ -19,7 +20,7 @@ import net.minecraft.world.entity.ai.memory.WalkTarget
 import net.minecraft.world.entity.ai.util.LandRandomPos
 
 object ChooseWanderTargetTask {
-    fun create(horizontalRange: Int, verticalRange: Int, walkSpeed: Float, completionRange: Int): OneShot<NPCEntity> {
+    fun create(horizontalRange: Int, verticalRange: Int, walkSpeed: Float, completionRange: Int): OneShot<in LivingEntity> {
         return BehaviorBuilder.create {
             it.group(
                 it.absent(MemoryModuleType.WALK_TARGET),
@@ -27,6 +28,10 @@ object ChooseWanderTargetTask {
                 it.absent(CobblemonMemories.NPC_BATTLING)
             ).apply(it) { walkTarget, lookTarget, _ ->
                 Trigger { world, entity, time ->
+                    if (entity !is PathfinderMob) {
+                        return@Trigger false
+                    }
+
                     val targetVec = LandRandomPos.getPos(entity, horizontalRange, verticalRange) ?: return@Trigger false
                     walkTarget.set(WalkTarget(targetVec, walkSpeed, completionRange))
                     lookTarget.set(BlockPosTracker(targetVec.add(0.0, 1.5, 0.0)))
