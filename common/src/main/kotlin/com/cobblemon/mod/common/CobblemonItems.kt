@@ -297,6 +297,18 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     val SACCHARINE_SIGN = this.create("saccharine_sign", SignItem(Item.Properties().stacksTo(16), CobblemonBlocks.SACCHARINE_SIGN, CobblemonBlocks.SACCHARINE_WALL_SIGN))
     @JvmField
     val SACCHARINE_HANGING_SIGN = this.create("saccharine_hanging_sign", HangingSignItem(CobblemonBlocks.SACCHARINE_HANGING_SIGN, CobblemonBlocks.SACCHARINE_WALL_HANGING_SIGN, Item.Properties().stacksTo(16)))
+    //@JvmField
+    //val SACCHARINE_SAPLING = saccharineSaplingItem("saccharine_sapling", SaccharineSaplingItem(CobblemonBlocks.SACCHARINE_SAPLING))
+
+    @JvmField
+    val SWEET_SAP = noSettingsItem("sweet_sap")
+    //@JvmField
+    //val BUGWORT = bugwortItem("bugwort", BugwortItem(CobblemonBlocks.BUGWORT))
+
+    //@JvmField
+    //val SCATTER_BANG = this.create("scatter_bang", ScatterBangItem(Item.Settings()))
+    //@JvmField
+    //val STICKY_GLOB = this.create("sticky_glob", StickyGlobItem(Item.Settings()))
 
 
     @JvmField
@@ -1351,6 +1363,21 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
         compostable(item, .65f)
         return item
     }
+
+    /*private fun saccharineSaplingItem(name: String, saccharineSaplingItem: SaccharineSaplingItem): SaccharineSaplingItem {
+        val finalName = "saccharine_sapling"
+        val item = this.create(finalName, saccharineSaplingItem)
+        compostable(item, .65f)
+        return item
+    }
+
+    private fun bugwortItem(name: String, bugwortItem: BugwortItem): BugwortItem {
+        val finalName = "bugwort"
+        val item = this.create(finalName, bugwortItem)
+        compostable(item, .65f)
+        return item
+    }*/
+
 
     private fun mintSeed(name: String, mintBlock: MintBlock): Item {
         val finalName = "${name}_mint_seeds"
