@@ -246,22 +246,23 @@ open class Pokemon : ShowdownIdentifiable {
             }
             this.healTimer = Cobblemon.config.healTimer
         }
+
     var gender = Gender.GENDERLESS
         set(value) {
+            if (!isClient && value !in species.possibleGenders) {
+                return
+            }
             field = value
-            if (!isClient) {
-                checkGender()
-            }
-            if (field == value) {
-                updateAspects()
-                _gender.emit(value)
-            }
+            updateAspects()
+            _gender.emit(value)
         }
+
     var status: PersistentStatusContainer? = null
         set(value) {
             field = value
             this._status.emit(value?.status)
         }
+
     var experience = 0
         internal set(value) {
             field = value
