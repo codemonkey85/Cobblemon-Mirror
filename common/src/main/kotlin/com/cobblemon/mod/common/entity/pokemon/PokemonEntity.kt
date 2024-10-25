@@ -1202,7 +1202,7 @@ open class PokemonEntity(
         }
         if (isBattling && this.isInWater) {
             // Prevent swimmers from sinking in battle
-            // TODO: check for pokemon that can swim?
+            // I would like a cleaner way to this, but this is the only place to do this that I've found to not have nasty side effects
             this.deltaMovement = Vec3(deltaMovement.x, 0.0, deltaMovement.z)
         }
     }
