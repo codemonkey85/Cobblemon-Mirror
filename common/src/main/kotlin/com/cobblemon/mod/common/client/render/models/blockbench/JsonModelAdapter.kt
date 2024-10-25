@@ -23,9 +23,10 @@ class JsonModelAdapter<T : PosableModel>(private val constructor: (Bone) -> T) :
     var modelPart: Bone? = null
     var model: T? = null
     override fun createInstance(type: Type): T {
-        return constructor(modelPart!!).also {
+        val rootBone = modelPart!!
+        return constructor(rootBone).also {
             model = it
-            it.loadAllNamedChildren(modelPart!!)
+            it.registerPartAndAllNamedChildren("__root", rootBone)
         }
     }
 }

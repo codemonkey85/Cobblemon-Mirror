@@ -18,14 +18,19 @@ import com.cobblemon.mod.common.api.scheduling.afterOnServer
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.block.PastureBlock
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket
 import com.cobblemon.mod.common.net.messages.client.pasture.ClosePasturePacket
 import com.cobblemon.mod.common.net.messages.client.pasture.OpenPasturePacket
 import com.cobblemon.mod.common.net.messages.client.pasture.PokemonPasturedPacket
 import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.DataKeys
+import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
+import com.cobblemon.mod.common.util.server
 import com.cobblemon.mod.common.util.toVec3d
+import java.util.*
+import kotlin.math.ceil
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.HolderLookup
@@ -47,8 +52,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.phys.AABB
-import java.util.*
-import kotlin.math.ceil
 
 class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
     BlockEntity(CobblemonBlockEntities.PASTURE, pos, state) {
@@ -62,7 +65,7 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
         val pcId: UUID,
         val entityId: Int
     ) {
-        fun getPokemon() = Cobblemon.storage.getPC(pcId)[pokemonId]
+        fun getPokemon() = Cobblemon.storage.getPC(pcId, server()!!.registryAccess())[pokemonId]
         val box = AABB(minRoamPos.toVec3d(), maxRoamPos.toVec3d())
         open fun canRoamTo(pos: BlockPos) = box.contains(pos.center)
 
@@ -149,10 +152,16 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
             val fixedPosition = makeSuitableY(world, idealPlace.offset(directionToBehind.normal.multiply(i + 1)), entity, box)
             if (fixedPosition != null) {
                 entity.setPos(fixedPosition.center.subtract(0.0, 0.5, 0.0))
-                val pc = Cobblemon.storage.getPC(player.uuid)
+                val pc = Cobblemon.storage.getPC(player)
                 entity.beamMode = 2
-                afterOnServer(seconds = SendOutPokemonHandler.SEND_OUT_DURATION) {
-                    entity.beamMode = 0
+                afterOnServer(seconds = 0.5F) {
+                    if(entity.pokemon.shiny) {
+                        SpawnSnowstormEntityParticlePacket(cobblemonResource("shiny_ring"), entity.id, listOf("shiny_particles", "middle"))
+                            .sendToPlayersAround(entity.x, entity.y, entity.z, 64.0, entity.level().dimension())
+                    }
+                    entity.after(seconds = SendOutPokemonHandler.SEND_OUT_DURATION) {
+                        entity.beamMode = 0
+                    }
                 }
                 if (world.addFreshEntity(entity)) {
                     val tethering = Tethering(

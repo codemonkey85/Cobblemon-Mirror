@@ -5,7 +5,7 @@
 			"identifier": "cobblemon:evo_particles",
 			"basic_render_parameters": {
 				"material": "particles_alpha",
-				"texture": "textures/particles/glowing_dots_cyan"
+				"texture": "textures/particles/invisible"
 			}
 		},
 		"events": {
@@ -42,7 +42,7 @@
 			"event_sparkleburst": {
 				"particle_effect": {
 					"effect": "cobblemon:evo_sparkleburst",
-					"type": "particle"
+					"type": "emitter_bound"
 				}
 			},
 			"event_godrays": {
@@ -54,7 +54,7 @@
 			"event_implode": {
 				"particle_effect": {
 					"effect": "cobblemon:evo_implode",
-					"type": "particle"
+					"type": "emitter_bound"
 				}
 			},
 			"event_obscuring": {
@@ -72,14 +72,14 @@
 			"event_smokeburst": {
 				"particle_effect": {
 					"effect": "cobblemon:evo_smokeburst",
-					"type": "emitter_bound"
+					"type": "particle"
 				}
 			}
 		},
 		"components": {
 			"minecraft:emitter_local_space": {
 				"position": true,
-				"rotation": false
+				"rotation": true
 			},
 			"minecraft:emitter_rate_instant": {
 				"num_particles": 1

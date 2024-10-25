@@ -10,6 +10,7 @@ package com.cobblemon.mod.common
 
 import com.cobblemon.mod.common.api.apricorn.Apricorn
 import com.cobblemon.mod.common.block.*
+import com.cobblemon.mod.common.block.LecternBlock
 import com.cobblemon.mod.common.block.MintBlock.MintType
 import com.cobblemon.mod.common.block.chest.GildedChestBlock
 import com.cobblemon.mod.common.block.sign.CobblemonHangingSignBlock
@@ -36,8 +37,6 @@ import net.minecraft.world.level.material.PushReaction
 
 @Suppress("SameParameterValue", "HasPlatformType", "MemberVisibilityCanBePrivate", "unused")
 object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<Block>>, Block>() {
-
-
 
     override val registry: Registry<Block> = BuiltInRegistries.BLOCK
     override val resourceKey: ResourceKey<Registry<Block>> = Registries.BLOCK
@@ -158,8 +157,8 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     val APRICORN_FENCE = this.create("apricorn_fence", FenceBlock(BlockBehaviour.Properties.of().mapColor(APRICORN_PLANKS.defaultMapColor()).instrument(NoteBlockInstrument.BASS).strength(2.0f, 3.0f).sound(SoundType.WOOD)))
     @JvmField
     val APRICORN_FENCE_GATE = this.create("apricorn_fence_gate", FenceGateBlock(APRICORN_WOOD_TYPE, BlockBehaviour.Properties.of().mapColor(APRICORN_PLANKS.defaultMapColor()).strength(2.0f, 3.0f).sound(SoundType.WOOD)))
-    @JvmField // Note At the time of 1.20.0 we don't need our own BlockSetType for Apricorn wood
-    val APRICORN_BUTTON = this.create("apricorn_button", BlocksInvoker.createWoodenButtonBlock(BlockSetType.OAK))
+    @JvmField
+    val APRICORN_BUTTON = this.create("apricorn_button", BlocksInvoker.createWoodenButtonBlock(APRICORN_BLOCK_SET_TYPE))
     @JvmField
     val APRICORN_PRESSURE_PLATE = this.create("apricorn_pressure_plate", PressurePlateBlockInvoker.`cobblemon$create`(APRICORN_BLOCK_SET_TYPE, BlockBehaviour.Properties.of().mapColor(APRICORN_PLANKS.defaultMapColor()).noCollission().strength(0.5f).sound(SoundType.WOOD)))
     @JvmField
@@ -232,279 +231,113 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     val SMALL_BUDDING_BLACK_TUMBLESTONE = tumblestoneBlock("small_budding_black_tumblestone", GrowableStoneBlock.STAGE_0, 3, 4, MEDIUM_BUDDING_BLACK_TUMBLESTONE)
 
     @JvmField
-    val TUMBLESTONE_BLOCK = this.create("tumblestone_block", Block(
-        BlockBehaviour.Properties.of()
-            .mapColor(MapColor.TERRACOTTA_ORANGE)
-            .strength(1.0F)
-            .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-            .requiresCorrectToolForDrops()
-            .instrument(NoteBlockInstrument.BASEDRUM)
-    )
-    )
+    val TUMBLESTONE_BLOCK = this.create("tumblestone_block", Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val SKY_TUMBLESTONE_BLOCK = this.create("sky_tumblestone_block",
-        Block(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.COLOR_LIGHT_BLUE)
-                .strength(1.0F)
-                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-                .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
-        )
-    )
+    val SKY_TUMBLESTONE_BLOCK = this.create("sky_tumblestone_block", Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val BLACK_TUMBLESTONE_BLOCK = this.create("black_tumblestone_block",
-        Block(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.TERRACOTTA_BLACK)
-                .strength(1.0F)
-                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-                .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
-        )
-    )
+    val BLACK_TUMBLESTONE_BLOCK = this.create("black_tumblestone_block", Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLACK).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
 
     @JvmField
-    val POLISHED_TUMBLESTONE = this.create("polished_tumblestone",
-        Block(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.TERRACOTTA_ORANGE)
-                .strength(1.0F)
-                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-                .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
-        )
-    )
+    val POLISHED_TUMBLESTONE = this.create("polished_tumblestone", Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
     val POLISHED_TUMBLESTONE_STAIRS = this.create("polished_tumblestone_stairs", StairsBlockInvoker.`cobblemon$create`(POLISHED_TUMBLESTONE.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(POLISHED_TUMBLESTONE)))
     @JvmField
-    val POLISHED_TUMBLESTONE_SLAB = this.create("polished_tumblestone_slab", SlabBlock(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.TERRACOTTA_ORANGE)
-        .strength(1.0F)
-        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-        .requiresCorrectToolForDrops()
-        .instrument(NoteBlockInstrument.BASEDRUM)
-    ))
+    val POLISHED_TUMBLESTONE_SLAB = this.create("polished_tumblestone_slab", SlabBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val POLISHED_TUMBLESTONE_WALL = this.create("polished_tumblestone_wall", WallBlock(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.TERRACOTTA_ORANGE)
-        .strength(1.0F)
-        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-        .requiresCorrectToolForDrops()
-        .instrument(NoteBlockInstrument.BASEDRUM)
-    ))
+    val POLISHED_TUMBLESTONE_WALL = this.create("polished_tumblestone_wall", WallBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val CHISELED_POLISHED_TUMBLESTONE = this.create("chiseled_polished_tumblestone",
-        Block(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.TERRACOTTA_ORANGE)
-                .strength(1.0F)
-                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-                .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
-        )
-    )
+    val CHISELED_POLISHED_TUMBLESTONE = this.create("chiseled_polished_tumblestone", Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val TUMBLESTONE_BRICKS = this.create("tumblestone_bricks", Block(
-        BlockBehaviour.Properties.of()
-            .mapColor(MapColor.TERRACOTTA_ORANGE)
-            .strength(1.0F)
-            .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-            .requiresCorrectToolForDrops()
-            .instrument(NoteBlockInstrument.BASEDRUM)
-    )
-    )
+    val SMOOTH_TUMBLESTONE = this.create("smooth_tumblestone", Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
+    @JvmField
+    val SMOOTH_TUMBLESTONE_STAIRS = this.create("smooth_tumblestone_stairs", StairsBlockInvoker.`cobblemon$create`(SMOOTH_TUMBLESTONE.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(SMOOTH_TUMBLESTONE)))
+    @JvmField
+    val SMOOTH_TUMBLESTONE_SLAB = this.create("smooth_tumblestone_slab", SlabBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
+    @JvmField
+    val TUMBLESTONE_BRICKS = this.create("tumblestone_bricks", Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
     val TUMBLESTONE_BRICK_STAIRS = this.create("tumblestone_brick_stairs", StairsBlockInvoker.`cobblemon$create`(TUMBLESTONE_BRICKS.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(TUMBLESTONE_BRICKS)))
     @JvmField
-    val TUMBLESTONE_BRICK_SLAB = this.create("tumblestone_brick_slab", SlabBlock(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.TERRACOTTA_ORANGE)
-        .strength(1.0F)
-        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-        .requiresCorrectToolForDrops()
-        .instrument(NoteBlockInstrument.BASEDRUM)
-    ))
-@JvmField
-    val TUMBLESTONE_BRICK_WALL = this.create("tumblestone_brick_wall", WallBlock(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.TERRACOTTA_ORANGE)
-        .strength(1.0F)
-        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-        .requiresCorrectToolForDrops()
-        .instrument(NoteBlockInstrument.BASEDRUM)
-    ))
+    val TUMBLESTONE_BRICK_SLAB = this.create("tumblestone_brick_slab", SlabBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val CHISELED_TUMBLESTONE_BRICKS = this.create("chiseled_tumblestone_bricks",
-        Block(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.TERRACOTTA_ORANGE)
-                .strength(1.0F)
-                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-                .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
-        )
-    )
+    val TUMBLESTONE_BRICK_WALL = this.create("tumblestone_brick_wall", WallBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val POLISHED_SKY_TUMBLESTONE = this.create("polished_sky_tumblestone",
-        Block(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.COLOR_LIGHT_BLUE)
-                .strength(1.0F)
-                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-                .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
-        )
-    )
+    val CHISELED_TUMBLESTONE_BRICKS = this.create("chiseled_tumblestone_bricks", Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
+
+    @JvmField
+    val POLISHED_SKY_TUMBLESTONE = this.create("polished_sky_tumblestone", Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
     val POLISHED_SKY_TUMBLESTONE_STAIRS = this.create("polished_sky_tumblestone_stairs", StairsBlockInvoker.`cobblemon$create`(POLISHED_SKY_TUMBLESTONE.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(POLISHED_SKY_TUMBLESTONE)))
     @JvmField
-    val POLISHED_SKY_TUMBLESTONE_SLAB = this.create("polished_sky_tumblestone_slab", SlabBlock(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.COLOR_LIGHT_BLUE)
-        .strength(1.0F)
-        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-        .requiresCorrectToolForDrops()
-        .instrument(NoteBlockInstrument.BASEDRUM)
-    ))
-@JvmField
-    val POLISHED_SKY_TUMBLESTONE_WALL = this.create("polished_sky_tumblestone_wall", WallBlock(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.COLOR_LIGHT_BLUE)
-        .strength(1.0F)
-        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-        .requiresCorrectToolForDrops()
-        .instrument(NoteBlockInstrument.BASEDRUM)
-    ))
+    val POLISHED_SKY_TUMBLESTONE_SLAB = this.create("polished_sky_tumblestone_slab", SlabBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val CHISELED_POLISHED_SKY_TUMBLESTONE = this.create("chiseled_polished_sky_tumblestone",
-        Block(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.COLOR_LIGHT_BLUE)
-                .strength(1.0F)
-                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-                .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
-        )
-    )
+    val POLISHED_SKY_TUMBLESTONE_WALL = this.create("polished_sky_tumblestone_wall", WallBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val SKY_TUMBLESTONE_BRICKS = this.create("sky_tumblestone_bricks",
-        Block(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.COLOR_LIGHT_BLUE)
-                .strength(1.0F)
-                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-                .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
-        )
-    )
+    val CHISELED_POLISHED_SKY_TUMBLESTONE = this.create("chiseled_polished_sky_tumblestone", Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val SKY_TUMBLESTONE_BRICK_STAIRS = this.create("sky_tumblestone_brick_stairs", StairsBlockInvoker.`cobblemon$create`(
-        SKY_TUMBLESTONE_BRICKS.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(SKY_TUMBLESTONE_BRICKS)))
+    val SMOOTH_SKY_TUMBLESTONE = this.create("smooth_sky_tumblestone", Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val SKY_TUMBLESTONE_BRICK_SLAB = this.create("sky_tumblestone_brick_slab", SlabBlock(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.COLOR_LIGHT_BLUE)
-        .strength(1.0F)
-        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-        .requiresCorrectToolForDrops()
-        .instrument(NoteBlockInstrument.BASEDRUM)
-    ))
+    val SMOOTH_SKY_TUMBLESTONE_STAIRS = this.create("smooth_sky_tumblestone_stairs", StairsBlockInvoker.`cobblemon$create`(SMOOTH_SKY_TUMBLESTONE.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(SMOOTH_SKY_TUMBLESTONE)))
     @JvmField
-    val SKY_TUMBLESTONE_BRICK_WALL = this.create("sky_tumblestone_brick_wall", WallBlock(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.COLOR_LIGHT_BLUE)
-        .strength(1.0F)
-        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-        .requiresCorrectToolForDrops()
-        .instrument(NoteBlockInstrument.BASEDRUM)
-    ))
+    val SMOOTH_SKY_TUMBLESTONE_SLAB = this.create("smooth_sky_tumblestone_slab", SlabBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val CHISELED_SKY_TUMBLESTONE_BRICKS = this.create("chiseled_sky_tumblestone_bricks",
-        Block(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.COLOR_LIGHT_BLUE)
-                .strength(1.0F)
-                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-                .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
-        )
-    )
+    val SKY_TUMBLESTONE_BRICKS = this.create("sky_tumblestone_bricks", Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val POLISHED_BLACK_TUMBLESTONE = this.create("polished_black_tumblestone",
-        Block(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.TERRACOTTA_BLACK)
-                .strength(1.0F)
-                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-                .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
-        )
-    )
+    val SKY_TUMBLESTONE_BRICK_STAIRS = this.create("sky_tumblestone_brick_stairs", StairsBlockInvoker.`cobblemon$create`(SKY_TUMBLESTONE_BRICKS.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(SKY_TUMBLESTONE_BRICKS)))
+    @JvmField
+    val SKY_TUMBLESTONE_BRICK_SLAB = this.create("sky_tumblestone_brick_slab", SlabBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
+    @JvmField
+    val SKY_TUMBLESTONE_BRICK_WALL = this.create("sky_tumblestone_brick_wall", WallBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
+    @JvmField
+    val CHISELED_SKY_TUMBLESTONE_BRICKS = this.create("chiseled_sky_tumblestone_bricks", Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
+
+    @JvmField
+    val POLISHED_BLACK_TUMBLESTONE = this.create("polished_black_tumblestone", Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLACK).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
     val POLISHED_BLACK_TUMBLESTONE_STAIRS = this.create("polished_black_tumblestone_stairs", StairsBlockInvoker.`cobblemon$create`(POLISHED_BLACK_TUMBLESTONE.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(POLISHED_BLACK_TUMBLESTONE)))
     @JvmField
-    val POLISHED_BLACK_TUMBLESTONE_SLAB = this.create("polished_black_tumblestone_slab", SlabBlock(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.TERRACOTTA_BLACK)
-        .strength(1.0F)
-        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-        .requiresCorrectToolForDrops()
-        .instrument(NoteBlockInstrument.BASEDRUM)
-    ))
- @JvmField
-    val POLISHED_BLACK_TUMBLESTONE_WALL = this.create("polished_black_tumblestone_wall", WallBlock(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.TERRACOTTA_BLACK)
-        .strength(1.0F)
-        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-        .requiresCorrectToolForDrops()
-        .instrument(NoteBlockInstrument.BASEDRUM)
-    ))
+    val POLISHED_BLACK_TUMBLESTONE_SLAB = this.create("polished_black_tumblestone_slab", SlabBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLACK).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val CHISELED_POLISHED_BLACK_TUMBLESTONE = this.create("chiseled_polished_black_tumblestone",
-        Block(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.TERRACOTTA_BLACK)
-                .strength(1.0F)
-                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-                .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
-        )
-    )
+    val POLISHED_BLACK_TUMBLESTONE_WALL = this.create("polished_black_tumblestone_wall", WallBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLACK).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val BLACK_TUMBLESTONE_BRICKS = this.create("black_tumblestone_bricks",
-        Block(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.TERRACOTTA_BLACK)
-                .strength(1.0F)
-                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-                .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
-        )
-    )
+    val CHISELED_POLISHED_BLACK_TUMBLESTONE = this.create("chiseled_polished_black_tumblestone", Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLACK).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val BLACK_TUMBLESTONE_BRICK_STAIRS = this.create("black_tumblestone_brick_stairs", StairsBlockInvoker.`cobblemon$create`(
-        BLACK_TUMBLESTONE_BRICKS.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(BLACK_TUMBLESTONE_BRICKS)))
+    val SMOOTH_BLACK_TUMBLESTONE = this.create("smooth_black_tumblestone", Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLACK).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val BLACK_TUMBLESTONE_BRICK_SLAB = this.create("black_tumblestone_brick_slab", SlabBlock(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.TERRACOTTA_BLACK)
-        .strength(1.0F)
-        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-        .requiresCorrectToolForDrops()
-        .instrument(NoteBlockInstrument.BASEDRUM)
-    ))
+    val SMOOTH_BLACK_TUMBLESTONE_STAIRS = this.create("smooth_black_tumblestone_stairs", StairsBlockInvoker.`cobblemon$create`(SMOOTH_BLACK_TUMBLESTONE.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(SMOOTH_BLACK_TUMBLESTONE)))
     @JvmField
-    val BLACK_TUMBLESTONE_BRICK_WALL = this.create("black_tumblestone_brick_wall", WallBlock(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.TERRACOTTA_BLACK)
-        .strength(1.0F)
-        .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-        .requiresCorrectToolForDrops()
-        .instrument(NoteBlockInstrument.BASEDRUM)
-    ))
+    val SMOOTH_BLACK_TUMBLESTONE_SLAB = this.create("smooth_black_tumblestone_slab", SlabBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLACK).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
     @JvmField
-    val CHISELED_BLACK_TUMBLESTONE_BRICKS = this.create("chiseled_black_tumblestone_bricks",
-        Block(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.TERRACOTTA_BLACK)
-                .strength(1.0F)
-                .sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS)
-                .requiresCorrectToolForDrops()
-                .instrument(NoteBlockInstrument.BASEDRUM)
-        )
-    )
+    val BLACK_TUMBLESTONE_BRICKS = this.create("black_tumblestone_bricks", Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLACK).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
+    @JvmField
+    val BLACK_TUMBLESTONE_BRICK_STAIRS = this.create("black_tumblestone_brick_stairs", StairsBlockInvoker.`cobblemon$create`(BLACK_TUMBLESTONE_BRICKS.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(BLACK_TUMBLESTONE_BRICKS)))
+    @JvmField
+    val BLACK_TUMBLESTONE_BRICK_SLAB = this.create("black_tumblestone_brick_slab", SlabBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLACK).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
+    @JvmField
+    val BLACK_TUMBLESTONE_BRICK_WALL = this.create("black_tumblestone_brick_wall", WallBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLACK).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
+    @JvmField
+    val CHISELED_BLACK_TUMBLESTONE_BRICKS = this.create("chiseled_black_tumblestone_bricks", Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLACK).strength(1.0F).sound(CobblemonSounds.TUMBLESTONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM)))
+
+    @JvmField
+    val FIRE_STONE_BLOCK = this.create("fire_stone_block", Block(BlockBehaviour.Properties.of().mapColor(MapColor.FIRE).strength(1.0F).sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BIT).lightLevel{13}))
+    @JvmField
+    val WATER_STONE_BLOCK = this.create("water_stone_block", Block(BlockBehaviour.Properties.of().mapColor(MapColor.WATER).strength(1.0F).sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BIT)))
+    @JvmField
+    val THUNDER_STONE_BLOCK = this.create("thunder_stone_block", Block(BlockBehaviour.Properties.of().mapColor(MapColor.GLOW_LICHEN).strength(1.0F).sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BIT).lightLevel{8}))
+    @JvmField
+    val LEAF_STONE_BLOCK = this.create("leaf_stone_block", Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).strength(1.0F).sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BIT)))
+    @JvmField
+    val ICE_STONE_BLOCK = this.create("ice_stone_block", Block(BlockBehaviour.Properties.of().mapColor(MapColor.ICE).strength(1.0F).sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BIT)))
+    @JvmField
+    val SUN_STONE_BLOCK = this.create("sun_stone_block", Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).strength(1.0F).sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BIT).lightLevel{5}))
+    @JvmField
+    val MOON_STONE_BLOCK = this.create("moon_stone_block", Block(BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).strength(1.0F).sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BIT)))
+    @JvmField
+    val SHINY_STONE_BLOCK = this.create("shiny_stone_block", Block(BlockBehaviour.Properties.of().mapColor(MapColor.QUARTZ).strength(1.0F).sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BIT).lightLevel{15}))
+    @JvmField
+    val DAWN_STONE_BLOCK = this.create("dawn_stone_block", Block(BlockBehaviour.Properties.of().mapColor(MapColor.DIAMOND).strength(1.0F).sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BIT).lightLevel{15}))
+    @JvmField
+    val DUSK_STONE_BLOCK = this.create("dusk_stone_block", Block(BlockBehaviour.Properties.of().mapColor(MapColor.WARPED_HYPHAE).strength(1.0F).sound(CobblemonSounds.EVOLUTION_STONE_BLOCK_SOUNDS).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BIT)))
 
     @JvmField
     val BLACK_APRICORN = apricornBlock("black_apricorn", Apricorn.BLACK)
@@ -522,176 +355,48 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     val YELLOW_APRICORN = apricornBlock("yellow_apricorn", Apricorn.YELLOW)
 
     @JvmField
-    val RELIC_COIN_POUCH = create(
-        "relic_coin_pouch",
-        CoinPouchBlock(
-            BlockBehaviour.Properties.of()
-                .sound(CobblemonSounds.RELIC_COIN_POUCH_SOUNDS)
-                .pushReaction(PushReaction.DESTROY)
-                .strength(0.4f)
-                .noOcclusion(), true
-        )
-    )
+    val RELIC_COIN_POUCH = create("relic_coin_pouch", CoinPouchBlock(BlockBehaviour.Properties.of().sound(CobblemonSounds.RELIC_COIN_POUCH_SOUNDS).pushReaction(PushReaction.DESTROY).noOcclusion(), true))
     @JvmField
-    val RELIC_COIN_SACK = create(
-        "relic_coin_sack",
-        CoinPouchBlock(
-            BlockBehaviour.Properties.of()
-                .sound(CobblemonSounds.RELIC_COIN_SACK_SOUNDS)
-                .pushReaction(PushReaction.DESTROY)
-                .strength(0.4f), false
-        ))
+    val RELIC_COIN_SACK = create("relic_coin_sack", CoinPouchBlock(BlockBehaviour.Properties.of().sound(CobblemonSounds.RELIC_COIN_SACK_SOUNDS).pushReaction(PushReaction.DESTROY).strength(0.4f), false))
 
     @JvmField
-    val GILDED_CHEST = create(
-        "gilded_chest",
-        GildedChestBlock(
-            BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS),
-            GildedChestBlock.Type.RED
-        )
-    )
+    val GILDED_CHEST = create("gilded_chest", GildedChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS), GildedChestBlock.Type.RED))
+    @JvmField
+    val BLUE_GILDED_CHEST = create("blue_gilded_chest", GildedChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS), GildedChestBlock.Type.BLUE))
+    @JvmField
+    val BLACK_GILDED_CHEST = create("black_gilded_chest", GildedChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS), GildedChestBlock.Type.BLACK))
+    @JvmField
+    val YELLOW_GILDED_CHEST = create("yellow_gilded_chest", GildedChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS), GildedChestBlock.Type.YELLOW))
+    @JvmField
+    val WHITE_GILDED_CHEST = create("white_gilded_chest", GildedChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS), GildedChestBlock.Type.WHITE))
+    @JvmField
+    val GREEN_GILDED_CHEST = create("green_gilded_chest", GildedChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS), GildedChestBlock.Type.GREEN))
+    @JvmField
+    val PINK_GILDED_CHEST = create("pink_gilded_chest", GildedChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS), GildedChestBlock.Type.PINK))
+    @JvmField
+    val GIMMIGHOUL_CHEST = create("gimmighoul_chest", GildedChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS), GildedChestBlock.Type.FAKE))
 
     @JvmField
-    val BLUE_GILDED_CHEST = create(
-        "blue_gilded_chest",
-        GildedChestBlock(
-            BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS),
-            GildedChestBlock.Type.BLUE
-        )
-    )
+    val MONITOR = create("monitor", MonitorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.METAL).pushReaction(PushReaction.BLOCK).requiresCorrectToolForDrops().strength(5.0F, 6.0F).lightLevel { if (it.getValue(MonitorBlock.SCREEN) != MonitorBlock.MonitorScreen.OFF) 15 else 0 }))
+    @JvmField
+    val FOSSIL_ANALYZER = create("fossil_analyzer", FossilAnalyzerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.METAL).pushReaction(PushReaction.BLOCK).requiresCorrectToolForDrops().strength(5.0F, 6.0F).noOcclusion()))
+    @JvmField
+    val RESTORATION_TANK = create("restoration_tank", RestorationTankBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.GLASS).pushReaction(PushReaction.BLOCK).requiresCorrectToolForDrops().strength(5.0F, 6.0F).noOcclusion()))
 
     @JvmField
-    val BLACK_GILDED_CHEST = create(
-        "black_gilded_chest",
-        GildedChestBlock(
-            BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS),
-            GildedChestBlock.Type.BLACK
-        )
-    )
+    val HEALING_MACHINE = create("healing_machine", HealingMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.METAL).pushReaction(PushReaction.BLOCK).strength(2f).noOcclusion().lightLevel { if (it.getValue(HealingMachineBlock.CHARGE_LEVEL) >= HealingMachineBlock.MAX_CHARGE_LEVEL) 7 else 2 }))
 
     @JvmField
-    val YELLOW_GILDED_CHEST = create(
-        "yellow_gilded_chest",
-        GildedChestBlock(
-            BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS),
-            GildedChestBlock.Type.YELLOW
-        )
-    )
+    val PC = create("pc", PCBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.METAL).pushReaction(PushReaction.BLOCK).strength(2F).noOcclusion().lightLevel { if ((it.getValue(PCBlock.ON) as Boolean) && (it.getValue(PCBlock.PART) == PCBlock.PCPart.TOP)) 10 else 0 }))
 
     @JvmField
-    val WHITE_GILDED_CHEST = create(
-        "white_gilded_chest",
-        GildedChestBlock(
-            BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS),
-            GildedChestBlock.Type.WHITE
-        )
-    )
+    val LECTERN = create("lectern", LecternBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).sound(SoundType.WOOD).strength(2.5F).ignitedByLava()))
 
     @JvmField
-    val GREEN_GILDED_CHEST = create(
-        "green_gilded_chest",
-        GildedChestBlock(
-            BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS),
-            GildedChestBlock.Type.GREEN
-        )
-    )
+    val DISPLAY_CASE = create("display_case", DisplayCaseBlock(BlockBehaviour.Properties.of().sound(CobblemonSounds.DISPLAY_CASE_SOUNDS).noOcclusion().pushReaction(PushReaction.BLOCK).mapColor(MapColor.STONE).strength(0.3F)))
 
     @JvmField
-    val PINK_GILDED_CHEST = create(
-        "pink_gilded_chest",
-        GildedChestBlock(
-            BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS),
-            GildedChestBlock.Type.PINK
-        )
-    )
-
-    @JvmField
-    val GIMMIGHOUL_CHEST = create(
-        "gimmighoul_chest",
-        GildedChestBlock(
-            BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().sound(CobblemonSounds.GILDED_CHEST_SOUNDS),
-            GildedChestBlock.Type.FAKE
-        )
-    )
-
-    @JvmField
-    val MONITOR = create(
-        "monitor",
-        MonitorBlock(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.METAL)
-                .sound(SoundType.METAL)
-                .pushReaction(PushReaction.BLOCK)
-                .requiresCorrectToolForDrops()
-                .strength(5.0F, 6.0F)
-                .lightLevel { if (it.getValue(MonitorBlock.SCREEN) != MonitorBlock.MonitorScreen.OFF) 15 else 0 }
-        )
-    )
-    @JvmField
-    val FOSSIL_ANALYZER = create(
-        "fossil_analyzer",
-        FossilAnalyzerBlock(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.METAL)
-                .sound(SoundType.METAL)
-                .pushReaction(PushReaction.BLOCK)
-                .requiresCorrectToolForDrops()
-                .strength(5.0F, 6.0F)
-                .noOcclusion()
-        )
-    )
-    @JvmField
-    val RESTORATION_TANK = create(
-        "restoration_tank",
-        RestorationTankBlock(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.METAL)
-                .sound(SoundType.GLASS)
-                .pushReaction(PushReaction.BLOCK)
-                .requiresCorrectToolForDrops()
-                .strength(5.0F, 6.0F)
-                .noOcclusion()
-        )
-    )
-    @JvmField
-    val HEALING_MACHINE = create(
-        "healing_machine",
-        HealingMachineBlock(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.METAL)
-                .sound(SoundType.METAL)
-                .pushReaction(PushReaction.BLOCK)
-                .strength(2f)
-                .noOcclusion()
-                .lightLevel { if (it.getValue(HealingMachineBlock.CHARGE_LEVEL) >= HealingMachineBlock.MAX_CHARGE_LEVEL) 7 else 2 }
-        )
-    )
-    @JvmField
-    val PC = create(
-        "pc",
-        PCBlock(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.METAL)
-                .sound(SoundType.METAL)
-                .pushReaction(PushReaction.BLOCK)
-                .strength(2F)
-                .noOcclusion()
-                .lightLevel { if ((it.getValue(PCBlock.ON) as Boolean) && (it.getValue(PCBlock.PART) == PCBlock.PCPart.TOP)) 10 else 0 }
-        )
-    )
-
-    @JvmField
-    val DISPLAY_CASE = create(
-        "display_case",
-        DisplayCaseBlock(
-            BlockBehaviour.Properties.of()
-                .sound(CobblemonSounds.DISPLAY_CASE_SOUNDS)
-                .noOcclusion()
-                .pushReaction(PushReaction.BLOCK)
-                .mapColor(MapColor.STONE)
-                .strength(0.3f)
-        )
-    )
+    val PASTURE = create("pasture", PastureBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).sound(SoundType.WOOD).strength(2F).noOcclusion().pushReaction(PushReaction.BLOCK).lightLevel { if ((it.getValue(PastureBlock.ON) as Boolean) && (it.getValue(PastureBlock.PART) == PastureBlock.PasturePart.TOP)) 10 else 0 }))
 
     val RED_MINT = create("red_mint", MintBlock(MintType.RED, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).noCollission().randomTicks().instabreak().sound(CobblemonSounds.MINT_SOUNDS).pushReaction(PushReaction.DESTROY)))
     @JvmField
@@ -704,20 +409,6 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     val GREEN_MINT = create("green_mint", MintBlock(MintType.GREEN, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).noCollission().randomTicks().instabreak().sound(CobblemonSounds.MINT_SOUNDS).pushReaction(PushReaction.DESTROY)))
     @JvmField
     val WHITE_MINT = create("white_mint", MintBlock(MintType.WHITE, BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).noCollission().randomTicks().instabreak().sound(CobblemonSounds.MINT_SOUNDS).pushReaction(PushReaction.DESTROY)))
-
-    @JvmField
-    val PASTURE = create(
-        "pasture",
-        PastureBlock(
-            BlockBehaviour.Properties.of()
-                .mapColor(MapColor.COLOR_BROWN)
-                .sound(SoundType.WOOD)
-                .strength(2F)
-                .noOcclusion()
-                .pushReaction(PushReaction.BLOCK)
-                .lightLevel { if ((it.getValue(PastureBlock.ON) as Boolean) && (it.getValue(PastureBlock.PART) == PastureBlock.PasturePart.TOP)) 10 else 0 }
-        )
-    )
 
     @JvmField
     val VIVICHOKE_SEEDS = this.create("vivichoke_seeds", VivichokeBlock(BlockBehaviour.Properties.of().pushReaction(PushReaction.DESTROY).ignitedByLava().mapColor(MapColor.PLANT).noCollission().randomTicks().instabreak().sound(CobblemonSounds.VIVICHOKE_SOUNDS)))

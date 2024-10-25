@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.util
 import com.cobblemon.mod.common.api.storage.party.PartyPosition
 import com.cobblemon.mod.common.api.storage.pc.PCPosition
 import com.cobblemon.mod.common.net.IntSize
+import com.google.common.collect.Lists
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufInputStream
 import io.netty.buffer.ByteBufOutputStream
@@ -19,6 +20,7 @@ import net.minecraft.nbt.EndTag
 import net.minecraft.nbt.NbtAccounter
 import net.minecraft.nbt.NbtIo
 import net.minecraft.nbt.Tag
+import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.Utf8String
 import net.minecraft.network.chat.Component
@@ -85,16 +87,7 @@ fun ByteBuf.writeString(string: String): ByteBuf {
     return this
 }
 
-fun <T> ByteBuf.readCollection(reader: (ByteBuf) -> T): List<T> {
-    val numElements = this.readInt()
-    val collection = mutableListOf<T>()
-    repeat(numElements) {
-        collection.add(reader.invoke(this))
-    }
-    return collection
-}
-
-fun <T> ByteBuf.readList(reader: (ByteBuf) -> T) = readCollection(reader)
+fun <T> RegistryFriendlyByteBuf.readList(reader: (FriendlyByteBuf) -> T): List<T> = readCollection(Lists::newArrayListWithCapacity, reader)
 
 fun ByteBuf.readString(): String {
     return Utf8String.read(this, 32767)

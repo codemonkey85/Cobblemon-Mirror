@@ -2,7 +2,9 @@
   "display": {
     "icon": {
 			"id": "cobblemon:pokemon_model",
-			"nbt": "{\"species\":\"cobblemon:accelgor\"}"
+	"components": {
+        "cobblemon:pokemon_item": {"species":"cobblemon:accelgor","aspects":[""]}
+      }
 		},
     "title": {
       "translate": "advancements.cobblemon.trade_shelmet_karrablast"

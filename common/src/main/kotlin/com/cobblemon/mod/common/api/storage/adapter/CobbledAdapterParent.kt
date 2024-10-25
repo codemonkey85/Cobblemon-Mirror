@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.api.storage.adapter
 import com.cobblemon.mod.common.api.storage.PokemonStore
 import com.cobblemon.mod.common.api.storage.StorePosition
 import java.util.UUID
+import net.minecraft.core.RegistryAccess
 
 /**
  * Provides a generic layer for adapters which are expected to allow for children
@@ -26,11 +27,10 @@ abstract class CobblemonAdapterParent<S> : CobblemonAdapter<S> {
         return this
     }
 
-    override fun <E : StorePosition, T : PokemonStore<E>> load(storeClass: Class<T>, uuid: UUID): T? {
-        return this.provide(storeClass, uuid)
-            ?: children.firstNotNullOfOrNull { it.load(storeClass, uuid) }
+    override fun <E : StorePosition, T : PokemonStore<E>> load(storeClass: Class<T>, uuid: UUID, registryAccess: RegistryAccess): T? {
+        return this.provide(storeClass, uuid, registryAccess)
+            ?: children.firstNotNullOfOrNull { it.load(storeClass, uuid, registryAccess) }
     }
 
-    abstract fun <E : StorePosition, T : PokemonStore<E>> provide(storeClass: Class<T>, uuid: UUID): T?
-
+    abstract fun <E : StorePosition, T : PokemonStore<E>> provide(storeClass: Class<T>, uuid: UUID, registryAccess: RegistryAccess): T?
 }

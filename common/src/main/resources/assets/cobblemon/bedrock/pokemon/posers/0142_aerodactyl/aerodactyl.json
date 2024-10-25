@@ -1,0 +1,51 @@
+{
+  "portraitScale": 1.9,
+  "portraitTranslation": [-1.0, -0.65, 0.0],
+  "profileScale": 0.55,
+  "profileTranslation": [0.0, 0.55, 0],
+  "animations": {
+    "cry": "q.bedrock_stateful('aerodactyl', 'cry')"
+  },
+  "poses": {
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('aerodactyl', 'sleep')"]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": ["STAND"],
+      "quirks": ["q.bedrock_quirk('aerodactyl', 'blink')"],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('aerodactyl', 'ground_idle')"
+      ]
+    },
+    "walking": {
+      "poseName": "walk",
+      "poseTypes": ["WALK"],
+      "quirks": ["q.bedrock_quirk('aerodactyl', 'blink')"],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('aerodactyl', 'ground_walk')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": ["FLOAT", "HOVER", "PROFILE", "PORTRAIT"],
+      "quirks": ["q.bedrock_quirk('aerodactyl', 'blink')"],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('aerodactyl', 'air_idle')"
+      ]
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": ["FLY", "SWIM"],
+      "quirks": ["q.bedrock_quirk('aerodactyl', 'blink')"],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('aerodactyl', 'air_fly')"
+      ]
+    }
+  }
+}

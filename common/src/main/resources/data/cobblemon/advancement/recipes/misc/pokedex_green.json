@@ -1,0 +1,45 @@
+{
+  "parent": "cobblemon:recipes/root",
+  "criteria": {
+    "has_apricorn": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:green_apricorn"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+	"has_pokedex": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#cobblemon:pokedex"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "cobblemon:pokedex_green"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_apricorn",
+	  "has_pokedex",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "cobblemon:pokedex_green"
+    ]
+  }
+}

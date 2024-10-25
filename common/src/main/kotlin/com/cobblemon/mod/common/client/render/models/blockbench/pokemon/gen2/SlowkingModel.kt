@@ -84,7 +84,7 @@ class SlowkingModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
             poseTypes = PoseType.STATIONARY_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink, blink2),
-            condition = { it.isBattling && it.isInWater },
+            condition = { it.isBattling },
             animations = arrayOf(
                 singleBoneLook(),
                 bedrock("slowking", "battle_idle")

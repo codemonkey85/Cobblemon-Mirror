@@ -13,12 +13,13 @@ import com.cobblemon.mod.common.CobblemonClientImplementation
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.client.render.atlas.CobblemonAtlases
 import com.cobblemon.mod.common.client.CobblemonClient
+import com.cobblemon.mod.common.client.CobblemonClient.pokedexUsageContext
 import com.cobblemon.mod.common.client.CobblemonClient.reloadCodedAssets
 import com.cobblemon.mod.common.client.keybind.CobblemonKeyBinds
 import com.cobblemon.mod.common.client.render.item.CobblemonModelPredicateRegistry
 import com.cobblemon.mod.common.compat.LambDynamicLightsCompat
 import com.cobblemon.mod.common.client.render.shader.CobblemonShaders
-import com.cobblemon.mod.common.item.group.CobblemonItemGroups
+import com.cobblemon.mod.common.item.PokedexItem
 import com.cobblemon.mod.common.particle.CobblemonParticles
 import com.cobblemon.mod.common.particle.SnowstormParticleType
 import com.cobblemon.mod.common.util.cobblemonResource
@@ -37,8 +38,6 @@ import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.resources.model.ModelResourceLocation
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.Item
-import net.minecraft.world.level.ItemLike
-import net.minecraft.world.item.ItemStack
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleType
 import net.minecraft.server.packs.resources.PreparableReloadListener
@@ -53,8 +52,6 @@ import net.neoforged.neoforge.client.event.RegisterShadersEvent
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers
 import net.neoforged.neoforge.common.NeoForge
-import net.neoforged.neoforge.common.util.MutableHashedLinkedMap
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 import java.util.concurrent.CompletableFuture
 import java.util.function.Supplier
@@ -64,8 +61,10 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.ShaderInstance
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.item.CreativeModeTab.TabVisibility
+import net.neoforged.neoforge.client.event.ClientTickEvent
+import net.neoforged.neoforge.client.event.RenderGuiEvent
 
 object CobblemonNeoForgeClient : CobblemonClientImplementation {
 
@@ -75,11 +74,14 @@ object CobblemonNeoForgeClient : CobblemonClientImplementation {
             addListener(::onKeyMappingRegister)
             addListener(::onRegisterParticleProviders)
             addListener(::register3dPokeballModels)
-            addListener(::onBuildContents)
             addListener(::onRegisterReloadListener)
             addListener(::onShaderRegistration)
         }
-        NeoForge.EVENT_BUS.addListener(this::onRenderGuiOverlayEvent)
+        with(NeoForge.EVENT_BUS) {
+            addListener(::onRenderGuiOverlayEvent)
+            addListener(::afterRenderGuiOverlayEvent)
+            addListener(::afterEndClientTickEvent)
+        }
     }
 
     private fun onClientSetup(event: FMLClientSetupEvent) {
@@ -123,7 +125,6 @@ object CobblemonNeoForgeClient : CobblemonClientImplementation {
         }
     }
 
-    @Suppress("UnstableApiUsage")
     override fun registerLayer(modelLayer: ModelLayerLocation, supplier: Supplier<LayerDefinition>) {
         ClientHooks.registerLayerDefinition(modelLayer, supplier)
     }
@@ -190,13 +191,41 @@ object CobblemonNeoForgeClient : CobblemonClientImplementation {
         }
     }
 
-    internal fun registerResourceReloader(reloader: PreparableReloadListener) {
-        (Minecraft.getInstance().resourceManager as ReloadableResourceManager).registerReloadListener(reloader)
+    private fun afterRenderGuiOverlayEvent(event: RenderGuiEvent.Post) {
+        val client = Minecraft.getInstance()
+        val player = client.player
+        if (player != null) {
+            val itemStack = player.mainHandItem
+            val offhandStack = player.offhandItem
+            if (((itemStack.item is PokedexItem && player.usedItemHand == InteractionHand.MAIN_HAND) ||
+                (offhandStack.item is PokedexItem && player.usedItemHand == InteractionHand.OFF_HAND))
+            ) {
+                pokedexUsageContext.renderUpdate(event.guiGraphics, event.partialTick)
+            } else if (pokedexUsageContext.transitionIntervals > 0) {
+                pokedexUsageContext.resetState()
+            }
+        }
     }
 
-    private fun onBuildContents(e: BuildCreativeModeTabContentsEvent) {
-        val forgeInject = ForgeItemGroupInject(e.entries)
-        CobblemonItemGroups.inject(e.tabKey, forgeInject)
+    private fun afterEndClientTickEvent(event: ClientTickEvent.Post) {
+        val client = Minecraft.getInstance()
+        val player = client.player
+        if (player != null) {
+            val itemStack = player.mainHandItem
+            val offhandStack = player.offhandItem
+            if (((itemStack.item is PokedexItem && player.usedItemHand == InteractionHand.MAIN_HAND) ||
+                        (offhandStack.item is PokedexItem && player.usedItemHand == InteractionHand.OFF_HAND)) &&
+                player.isUsingItem &&
+                pokedexUsageContext.scanningGuiOpen
+            ) {
+                val keyAttack = client.options.keyAttack
+                pokedexUsageContext.attackKeyHeld(keyAttack.isDown)
+            }
+        }
+    }
+
+    internal fun registerResourceReloader(reloader: PreparableReloadListener) {
+        (Minecraft.getInstance().resourceManager as ReloadableResourceManager).registerReloadListener(reloader)
     }
 
     private fun attemptModCompat() {
@@ -205,30 +234,6 @@ object CobblemonNeoForgeClient : CobblemonClientImplementation {
         if (Cobblemon.implementation.isModInstalled("dynamiclightsreforged")) {
             LambDynamicLightsCompat.hookCompat()
             Cobblemon.LOGGER.info("Dynamic Lights Reforged compatibility enabled")
-        }
-    }
-
-    private class ForgeItemGroupInject(private val entries: MutableHashedLinkedMap<ItemStack, TabVisibility>) : CobblemonItemGroups.Injector {
-
-        override fun putFirst(item: ItemLike) {
-            this.entries.putFirst(ItemStack(item), TabVisibility.PARENT_AND_SEARCH_TABS)
-        }
-
-        override fun putBefore(item: ItemLike, target: ItemLike) {
-            this.entries.putBefore(
-                ItemStack(target),
-                ItemStack(item), TabVisibility.PARENT_AND_SEARCH_TABS
-            )
-        }
-
-        override fun putAfter(item: ItemLike, target: ItemLike) {
-            this.entries.putAfter(
-                ItemStack(target),
-                ItemStack(item), TabVisibility.PARENT_AND_SEARCH_TABS)
-        }
-
-        override fun putLast(item: ItemLike) {
-            this.entries.put(ItemStack(item), TabVisibility.PARENT_AND_SEARCH_TABS)
         }
     }
 }

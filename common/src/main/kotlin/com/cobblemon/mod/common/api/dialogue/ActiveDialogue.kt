@@ -22,8 +22,10 @@ import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.asMoLangValue
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.scheduling.ServerRealTimeTaskTracker
+import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.net.messages.client.dialogue.DialogueOpenedPacket
 import java.util.UUID
+import java.util.concurrent.CompletableFuture
 import net.minecraft.server.level.ServerPlayer
 
 /**
@@ -34,19 +36,31 @@ import net.minecraft.server.level.ServerPlayer
  * @since December 27th, 2023
  */
 class ActiveDialogue(var playerEntity: ServerPlayer, var dialogueReference: Dialogue) {
+    var initialized = false
     val dialogueId = UUID.randomUUID()
     val runtime = MoLangRuntime().setup()
+    var npc: NPCEntity? = null
     var currentPage = dialogueReference.pages[0]
     val playerStruct = playerEntity.asMoLangValue()
     var activeInput = ActiveInput(this, currentPage.input)
 
-    init {
+    val completion = CompletableFuture<Unit>()
+
+    fun initialize() {
         runtime.environment.query.addFunctions(
             mapOf(
                 "dialogue" to java.util.function.Function { _ -> toMoLangStruct() },
                 "player" to java.util.function.Function { _ -> playerStruct }
             )
         )
+
+        dialogueReference.initializationAction.invoke(this)
+
+        if (!completion.isDone) {
+            val packet = DialogueOpenedPacket(this, true)
+            playerEntity.sendPacket(packet)
+        }
+        initialized = true
     }
 
     val currentPageIndex
@@ -85,7 +99,9 @@ class ActiveDialogue(var playerEntity: ServerPlayer, var dialogueReference: Dial
                 }
             }
         }
-        playerEntity.sendPacket(DialogueOpenedPacket(this, false))
+        if (initialized) {
+            playerEntity.sendPacket(DialogueOpenedPacket(this, false))
+        }
     }
 
     fun setPage(index: Int) {
@@ -114,7 +130,10 @@ class ActiveDialogue(var playerEntity: ServerPlayer, var dialogueReference: Dial
     }
 
     fun close() {
-        DialogueManager.stopDialogue(playerEntity)
+        if (initialized) {
+            DialogueManager.stopDialogue(playerEntity)
+        }
+        completion.complete(Unit)
     }
 
     fun escape() {

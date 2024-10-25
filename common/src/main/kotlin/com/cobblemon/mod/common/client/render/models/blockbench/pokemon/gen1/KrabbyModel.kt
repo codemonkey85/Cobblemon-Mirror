@@ -42,7 +42,7 @@ class KrabbyModel(root: ModelPart) : PokemonPosableModel(root) {
         val blink = quirk { bedrockStateful("krabby", "blink")}
         val snipLeft = quirk { bedrockStateful("krabby", "snip_left")}
         val snipRight = quirk { bedrockStateful("krabby", "snip_right")}
-        val bubble = quirk(10F to 20F) { bedrockStateful("krabby", "quirk_bubble")}
+        val bubble = quirk(5F to 24F) { bedrockStateful("krabby", "quirk_bubble")}
 
         standing = registerPose(
             poseName = "standing",

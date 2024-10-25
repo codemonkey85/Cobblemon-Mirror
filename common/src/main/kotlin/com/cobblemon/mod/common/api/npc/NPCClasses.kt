@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.api.npc
 import com.bedrockk.molang.runtime.value.MoValue
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.ai.SleepDepth
+import com.cobblemon.mod.common.api.ai.config.BrainConfig
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.drop.DropEntry
@@ -18,6 +19,8 @@ import com.cobblemon.mod.common.api.drop.ItemDropMethod
 import com.cobblemon.mod.common.api.entity.EntityDimensionsAdapter
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.npc.configuration.NPCInteractConfiguration
+import com.cobblemon.mod.common.api.npc.variation.NPCVariationProvider
+import com.cobblemon.mod.common.api.npc.variation.WeightedAspect
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
 import com.cobblemon.mod.common.api.spawning.TimeRange
@@ -30,6 +33,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.mojang.datafixers.util.Either
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.PackType
@@ -57,7 +61,13 @@ object NPCClasses : JsonDataRegistry<NPCClass> {
         .registerTypeAdapter(CompoundTag::class.java, NbtCompoundAdapter)
         .registerTypeAdapter(NPCPartyProvider::class.java, NPCPartyProviderAdapter)
         .registerTypeAdapter(NPCInteractConfiguration::class.java, NPCInteractConfigurationAdapter)
+        .registerTypeAdapter(ExpressionLike::class.java, ExpressionLikeAdapter)
+        .registerTypeAdapter(NPCVariationProvider::class.java, NPCVariationProviderAdapter)
         .registerTypeAdapter(MoValue::class.java, MoValueAdapter)
+        .registerTypeAdapter(NPCClass::class.java, NPCClassAdapter)
+        .registerTypeAdapter(Component::class.java, TextAdapter)
+        .registerTypeAdapter(WeightedAspect::class.java, WeightedAspectAdapter)
+        .registerTypeAdapter(BrainConfig::class.java, BrainConfigAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Biome::class.java).type, BiomeLikeConditionAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Block::class.java).type, BlockLikeConditionAdapter)
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Item::class.java).type, ItemLikeConditionAdapter)
@@ -95,7 +105,7 @@ object NPCClasses : JsonDataRegistry<NPCClass> {
     /**
      * Finds an [NPCClass] by its unique [ResourceLocation].
      *
-     * @param identifier The unique [NPCClass.resourceIdentifier] of the [NPCClass].
+     * @param identifier The unique [NPCClass.id] of the [NPCClass].
      * @return The [NPCClass] if existing.
      */
     fun getByIdentifier(identifier: ResourceLocation) = this.npcClassesByIdentifier[identifier]
@@ -116,10 +126,20 @@ object NPCClasses : JsonDataRegistry<NPCClass> {
      */
     fun random(): NPCClass = this.npcClassesByIdentifier.values.random()
 
+    fun dummy(): NPCClass {
+        val dummy = NPCClass()
+        dummy.id = cobblemonResource("dummy")
+        return dummy
+    }
+
     override fun reload(data: Map<ResourceLocation, NPCClass>) {
         this.npcClassesByIdentifier.clear()
         data.forEach { (identifier, species) ->
-            species.resourceIdentifier = identifier
+            species.id = identifier
+            // shortcut so they don't have to state the resource identifier if they don't wanna
+            if (species.resourceIdentifier.path == "dummy") {
+                species.resourceIdentifier = identifier
+            }
             this.npcClassesByIdentifier[identifier] = species
         }
     }

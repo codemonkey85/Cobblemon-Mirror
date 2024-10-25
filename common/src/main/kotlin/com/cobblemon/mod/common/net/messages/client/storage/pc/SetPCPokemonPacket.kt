@@ -16,6 +16,7 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readPCPosition
 import com.cobblemon.mod.common.util.writePCPosition
 import java.util.UUID
+import net.minecraft.core.RegistryAccess
 import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
@@ -26,19 +27,30 @@ import net.minecraft.network.RegistryFriendlyByteBuf
  * @author Hiroku
  * @since June 18th, 2022
  */
-class SetPCPokemonPacket internal constructor(val storeID: UUID, val storePosition: PCPosition, val pokemon: Pokemon) : NetworkPacket<SetPCPokemonPacket>, UnsplittablePacket {
+class SetPCPokemonPacket internal constructor(val storeID: UUID, val storePosition: PCPosition, val pokemon: (RegistryAccess) -> Pokemon) : NetworkPacket<SetPCPokemonPacket>, UnsplittablePacket {
 
     override val id = ID
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeUUID(this.storeID)
         buffer.writePCPosition(this.storePosition)
-        Pokemon.S2C_CODEC.encode(buffer, this.pokemon)
+        Pokemon.S2C_CODEC.encode(buffer, this.pokemon(buffer.registryAccess()))
     }
 
     companion object {
         val ID = cobblemonResource("set_pc_pokemon")
-        fun decode(buffer: RegistryFriendlyByteBuf) = SetPCPokemonPacket(buffer.readUUID(), buffer.readPCPosition(), Pokemon.S2C_CODEC.decode(buffer))
+        fun decode(buffer: RegistryFriendlyByteBuf): SetPCPokemonPacket {
+            val uuid = buffer.readUUID()
+            val position = buffer.readPCPosition()
+            val bufferCache = buffer.readBytes(buffer.readableBytes())
+            return SetPCPokemonPacket(
+                storeID = uuid,
+                storePosition = position
+            ) {
+                val pokemon = Pokemon.S2C_CODEC.decode(RegistryFriendlyByteBuf(bufferCache, it))
+                bufferCache.release()
+                pokemon
+            }
+        }
     }
-
 }

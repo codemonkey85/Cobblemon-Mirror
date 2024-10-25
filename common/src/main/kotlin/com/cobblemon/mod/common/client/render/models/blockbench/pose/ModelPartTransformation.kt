@@ -73,7 +73,7 @@ class ModelPartTransformation(val modelPart: ModelPart) {
 
     fun withVisibility(visibility: Boolean): ModelPartTransformation {
         if (visibility == true) {
-            this.visibility = null
+            this.visibility = "true".asExpressionLike()
         } else {
             this.visibility = "0.0".asExpressionLike()
         }

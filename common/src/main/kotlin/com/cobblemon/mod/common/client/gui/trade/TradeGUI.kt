@@ -357,6 +357,12 @@ class TradeGUI(
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+        if (minecraft?.options?.keyInventory?.matches(keyCode, scanCode) == true) {
+            CancelTradePacket().sendToServer()
+            Minecraft.getInstance().setScreen(null)
+            return true
+        }
+
         when (keyCode) {
             InputConstants.KEY_ESCAPE -> {
 //                playSound(CobblemonSounds.PC_OFF)
@@ -384,6 +390,10 @@ class TradeGUI(
         CobblemonNetwork.sendToServer(CancelTradePacket())
         super.onClose()
     }
+
+    override fun renderBlurredBackground(delta: Float) {}
+
+    override fun renderMenuBackground(context: GuiGraphics) {}
 
     private fun setOfferedPokemon(pokemon: Pokemon?, isOpposing: Boolean = false) {
         protectiveTicks = 20
@@ -498,8 +508,8 @@ class TradeGUI(
                     texture = Summary.iconShinyResource,
                     x = (x + (if (isOpposing) 214.5 else 71.5)) / SCALE,
                     y = (y + 33.5) / SCALE,
-                    width = 14,
-                    height = 14,
+                    width = 16,
+                    height = 16,
                     scale = SCALE
                 )
             }

@@ -9,7 +9,9 @@
 package com.cobblemon.mod.common.block.multiblock
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.CobblemonSounds
+import com.cobblemon.mod.common.advancement.CobblemonCriteria
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.pokemon.FossilRevivedEvent
 import com.cobblemon.mod.common.api.fossil.Fossil
@@ -24,8 +26,8 @@ import com.cobblemon.mod.common.block.RestorationTankBlock
 import com.cobblemon.mod.common.block.entity.FossilMultiblockEntity
 import com.cobblemon.mod.common.block.entity.RestorationTankBlockEntity
 import com.cobblemon.mod.common.client.render.models.blockbench.fossil.FossilState
-import com.cobblemon.mod.common.client.sound.CancellableSoundController
-import com.cobblemon.mod.common.client.sound.CancellableSoundInstance
+import com.cobblemon.mod.common.client.sound.BlockEntitySoundTracker
+import com.cobblemon.mod.common.client.sound.instances.CancellableSoundInstance
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.item.PokeBallItem
 import com.cobblemon.mod.common.pokemon.Pokemon
@@ -33,7 +35,6 @@ import com.cobblemon.mod.common.util.DataKeys
 import com.cobblemon.mod.common.util.giveOrDropItemStack
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.party
-import com.cobblemon.mod.common.util.readBlockPosWithFallback
 import com.cobblemon.mod.common.util.server
 import java.util.UUID
 import kotlin.math.ceil
@@ -75,7 +76,6 @@ class FossilMultiblockStructure (
 
     override val controllerBlockPos = analyzerPos
 
-
     // TODO: API method for this
     var organicMaterialInside = 0
         private set
@@ -90,6 +90,7 @@ class FossilMultiblockStructure (
     private var machineStartTime: Long = 0
     private var protectionTime: Int = -1
     private var fossilOwnerUUID: UUID? = null
+    private val runningSound = CobblemonSounds.FOSSIL_MACHINE_ACTIVE_LOOP
     val fossilState = FossilState(animAge, animPartialTicks)
     var fossilInventory: MutableList<ItemStack> = mutableListOf<ItemStack>()
     var tankConnectorDirection: Direction? = null
@@ -133,6 +134,7 @@ class FossilMultiblockStructure (
                     this.fossilState.growthState = "Taken"
                     player.playSound(CobblemonSounds.FOSSIL_MACHINE_RETRIEVE_POKEMON, 1.0F, 1.0F)
                     CobblemonEvents.FOSSIL_REVIVED.post(FossilRevivedEvent(pokemon, player))
+                    CobblemonCriteria.RESURRECT_POKEMON.trigger(player, pokemon)
                 }
 
                 // Turn the monitor off
@@ -231,7 +233,7 @@ class FossilMultiblockStructure (
 
         for (i in 0..5) {
             box = box.move(directionToBehind.normal.x.toDouble(), 0.0, directionToBehind.normal.z.toDouble())
-            val fixedPosition = makeSuitableY(world, idealPlace.offset(directionToBehind.normal), entity, box)
+            val fixedPosition = makeSuitableY(world, idealPlace.offset(directionToBehind.normal.multiply(i + 1)), entity, box)
             if (fixedPosition != null) {
                 entity.setPos(fixedPosition.center.subtract(0.0, 0.5, 0.0))
                 // TODO: Find a correct way to set the new entity's Yaw rotation. (Face away from the machine)
@@ -327,9 +329,9 @@ class FossilMultiblockStructure (
         val analyzerEntity = world.getBlockEntity(analyzerPos) as? MultiblockEntity
         val tankBaseEntity = world.getBlockEntity(tankBasePos) as? MultiblockEntity
         val tankTopEntity = world.getBlockEntity(tankBasePos.above()) as? MultiblockEntity
-        val tankBaseBlockState = world.getBlockState(tankBaseEntity?.blockPos)
-        val direction = tankBaseBlockState.getValue(HorizontalDirectionalBlock.FACING).opposite
-        val wildPokemon: Pokemon? = if(hasCreatedPokemon) resultingFossil?.result?.create() else null
+        val tankBaseBlockState =  tankBaseEntity?.blockPos?.let { world.getBlockState(it) }
+        val direction = if (tankBaseBlockState?.block == CobblemonBlocks.RESTORATION_TANK) tankBaseBlockState.getValue(HorizontalDirectionalBlock.FACING).opposite else Direction.UP
+        val wildPokemon: Pokemon? = if (hasCreatedPokemon) resultingFossil?.result?.create() else null
 
         monitorEntity?.multiblockStructure = null
         analyzerEntity?.multiblockStructure = null
@@ -374,7 +376,7 @@ class FossilMultiblockStructure (
 
     override fun setRemoved(world: Level) {
         if(world.isClientSide) {
-            CancellableSoundController.stopSound(this.tankBasePos, CobblemonSounds.FOSSIL_MACHINE_ACTIVE_LOOP.location)
+            BlockEntitySoundTracker.stop(this.tankBasePos, runningSound.location)
         }
     }
 
@@ -393,11 +395,8 @@ class FossilMultiblockStructure (
             return
         }
 
-        if (world.isClientSide && this.isRunning() && (world.gameTime - this.machineStartTime) % 160L == 0L) {
-            if(world.isClientSide) {
-                CancellableSoundController.playSound(CancellableSoundInstance(CobblemonSounds.FOSSIL_MACHINE_ACTIVE_LOOP,
-                        tankBasePos, true, 1.0f, 1.0f, ))
-            }
+        if (world.isClientSide && this.isRunning() && (world.gameTime - this.machineStartTime) % 20L == 0L && !BlockEntitySoundTracker.isActive(tankBasePos, runningSound.location)) {
+            BlockEntitySoundTracker.play(tankBasePos, CancellableSoundInstance(runningSound, tankBasePos, true, 1.0f, 1.0f))
         }
 
         if (this.timeRemaining == -1 && this.organicMaterialInside >= MATERIAL_TO_START && this.resultingFossil != null) {
@@ -458,8 +457,7 @@ class FossilMultiblockStructure (
 
         world.playSound(null, tankBasePos, CobblemonSounds.FOSSIL_MACHINE_ACTIVATE, SoundSource.BLOCKS)
         if(world.isClientSide) {
-            CancellableSoundController.playSound(CancellableSoundInstance(CobblemonSounds.FOSSIL_MACHINE_ACTIVE_LOOP,
-                    tankBasePos, true, 1.0f, 1.0f, ))
+            BlockEntitySoundTracker.play(tankBasePos, CancellableSoundInstance(runningSound, tankBasePos, true, 1.0f, 1.0f))
         }
 
         this.updateOnStatus(world)
@@ -476,7 +474,7 @@ class FossilMultiblockStructure (
         fossilInventory.clear()
 
         if(world.isClientSide) {
-            CancellableSoundController.stopSound(tankBasePos, CobblemonSounds.FOSSIL_MACHINE_ACTIVE_LOOP.location)
+            BlockEntitySoundTracker.stop(tankBasePos, CobblemonSounds.FOSSIL_MACHINE_ACTIVE_LOOP.location)
         }
 
         this.updateOnStatus(world)
@@ -641,9 +639,9 @@ class FossilMultiblockStructure (
         const val PROTECTION_TIME = TICKS_PER_MINUTE * 5
 
         fun fromNbt(nbt: CompoundTag, registryLookup: HolderLookup.Provider, animAge: Int = -1, partialTicks: Float = 0f): FossilMultiblockStructure {
-            val monitorPos = nbt.readBlockPosWithFallback(DataKeys.MONITOR_POS)
-            val compartmentPos = nbt.readBlockPosWithFallback(DataKeys.ANALYZER_POS)
-            val tankBasePos = nbt.readBlockPosWithFallback(DataKeys.TANK_BASE_POS)
+            val monitorPos =  NbtUtils.readBlockPos(nbt, DataKeys.MONITOR_POS).get()
+            val compartmentPos = NbtUtils.readBlockPos(nbt, DataKeys.ANALYZER_POS).get()
+            val tankBasePos = NbtUtils.readBlockPos(nbt, DataKeys.TANK_BASE_POS).get()
 
             val result = FossilMultiblockStructure(monitorPos, compartmentPos, tankBasePos, animAge, partialTicks)
             result.organicMaterialInside = nbt.getInt(DataKeys.ORGANIC_MATERIAL)

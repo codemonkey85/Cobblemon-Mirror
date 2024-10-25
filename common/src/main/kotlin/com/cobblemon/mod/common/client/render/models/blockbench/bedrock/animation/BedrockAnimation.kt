@@ -18,6 +18,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.util.effectiveName
+import com.cobblemon.mod.common.util.genericRuntime
 import com.cobblemon.mod.common.util.getString
 import com.cobblemon.mod.common.util.math.geometry.toRadians
 import com.cobblemon.mod.common.util.resolveDouble
@@ -29,7 +30,6 @@ import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.phys.Vec3
 import java.util.*
@@ -40,7 +40,7 @@ data class BedrockAnimationGroup(
 )
 
 abstract class BedrockEffectKeyframe(val seconds: Float) {
-    abstract fun run(entity: Entity, state: PosableState)
+    abstract fun run(entity: Entity?, state: PosableState)
 }
 
 class BedrockParticleKeyframe(
@@ -63,7 +63,8 @@ class BedrockParticleKeyframe(
         }
     }
 
-    override fun run(entity: Entity, state: PosableState) {
+    override fun run(entity: Entity?, state: PosableState) {
+        entity ?: return
         val world = entity.level() as? ClientLevel ?: return
         val matrixWrapper = state.locatorStates[locator] ?: state.locatorStates["root"]!!
 
@@ -98,21 +99,14 @@ class BedrockSoundKeyframe(
     seconds: Float,
     val sound: ResourceLocation
 ): BedrockEffectKeyframe(seconds) {
-    override fun run(entity: Entity, state: PosableState) {
+    override fun run(entity: Entity?, state: PosableState) {
         val soundEvent = SoundEvent.createVariableRangeEvent(sound) // Means we don't need to setup a sound registry entry for every single thing
         if (soundEvent != null) {
-            Minecraft.getInstance().soundManager.play(
-                SimpleSoundInstance(
-                    soundEvent,
-                    SoundSource.NEUTRAL,
-                    1F,
-                    1F,
-                    entity.level().random,
-                    entity.x,
-                    entity.y,
-                    entity.z
-                )
-            )
+            if (entity != null) {
+                entity.level().playLocalSound(entity, soundEvent, entity.soundSource, 1F, 1F)
+            } else {
+                Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1F))
+            }
         }
     }
 }
@@ -121,8 +115,8 @@ class BedrockInstructionKeyframe(
     seconds: Float,
     val expressions: ExpressionLike
 ): BedrockEffectKeyframe(seconds) {
-    override fun run(entity: Entity, state: PosableState) {
-        expressions.resolve(state.runtime)
+    override fun run(entity: Entity?, state: PosableState) {
+        expressions.resolve(state.runtime) // Risky doing this with a nullable entity
     }
 }
 
@@ -132,6 +126,20 @@ data class BedrockAnimation(
     val effects: List<BedrockEffectKeyframe>,
     val boneTimelines: Map<String, BedrockBoneTimeline>
 ) {
+    fun checkForErrors() {
+        boneTimelines.forEach { (_, timeline) ->
+            if (!timeline.position.isEmpty()) {
+                timeline.position.resolve(2.0, genericRuntime)
+            }
+            if (!timeline.rotation.isEmpty()) {
+                timeline.rotation.resolve(2.0, genericRuntime)
+            }
+            if (!timeline.scale.isEmpty()) {
+                timeline.scale.resolve(2.0, genericRuntime)
+            }
+        }
+    }
+
     /** Useful to have, gets set after loading the animation. */
     var name: String = ""
 
@@ -202,7 +210,7 @@ data class BedrockAnimation(
         return true
     }
 
-    fun applyEffects(entity: Entity, state: PosableState, previousSeconds: Float, newSeconds: Float) {
+    fun applyEffects(entity: Entity?, state: PosableState, previousSeconds: Float, newSeconds: Float) {
         val effectCondition: (effectKeyframe: BedrockEffectKeyframe) -> Boolean =
             if (previousSeconds > newSeconds) {
                 { it.seconds >= previousSeconds || it.seconds <= newSeconds }

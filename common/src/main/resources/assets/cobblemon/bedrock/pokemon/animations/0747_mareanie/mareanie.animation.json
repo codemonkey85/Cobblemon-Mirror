@@ -1,0 +1,41 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.mareanie.ground_idle": {
+			"loop": true,
+			"bones": {
+				"head": {
+					"rotation": [2.5, 0, 0]
+				},
+				"hair_dread_front_angle": {
+					"rotation": [0, 0, -2.5]
+				},
+				"hair_dread_front2": {
+					"rotation": [0, 0, 2.5]
+				},
+				"hair_dread_back2": {
+					"rotation": [0, 0, -2.5]
+				}
+			}
+		},
+		"animation.mareanie.blink": {
+			"animation_length": 0.1667,
+			"bones": {
+				"eyelid_left": {
+					"position": {
+						"0.0": [0.1, 0, -0.1],
+						"0.125": [0.1, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"eyelid_right": {
+					"position": {
+						"0.0": [-0.1, 0, -0.1],
+						"0.125": [-0.1, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				}
+			}
+		}
+	}
+}

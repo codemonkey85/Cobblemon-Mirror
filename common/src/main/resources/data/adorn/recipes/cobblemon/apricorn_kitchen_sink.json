@@ -1,0 +1,24 @@
+{
+  "type": "crafting_shapeless",
+  "group": "adorn:kitchen_sink",
+  "ingredients": [
+    {
+      "item": "adorn:cobblemon/apricorn_kitchen_counter"
+    },
+    {
+      "tag": "c:buckets/empty"
+    }
+  ],
+  "result": {
+    "item": "adorn:cobblemon/apricorn_kitchen_sink",
+    "count": 1
+  },
+  "fabric:load_conditions": [{
+    "condition": "fabric:all_mods_loaded",
+    "values": ["adorn"]
+  }],
+  "conditions": [{
+    "type": "neoforge:mod_loaded",
+    "modid": "adorn"
+  }]
+}

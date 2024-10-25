@@ -8,11 +8,18 @@
 
 package com.cobblemon.mod.common.client.gui.battle.subscreen
 
+import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.battles.ForfeitActionResponse
+import com.cobblemon.mod.common.battles.PassActionResponse
+import com.cobblemon.mod.common.client.CobblemonClient
+import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.battle.SingleActionRequest
 import com.cobblemon.mod.common.client.gui.battle.BattleGUI
-import com.cobblemon.mod.common.client.gui.battle.widgets.BattleOptionTile
+import com.cobblemon.mod.common.client.gui.interact.battleRequest.BattleResponseButton
+import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.battleLang
+import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 
@@ -22,42 +29,78 @@ class ForfeitConfirmationSelection(
 ) : BattleActionSelection(
     battleGUI,
     request,
-    x = 12,
-    y = 12,
-    width = 250,
-    height = 100,
+    x = 0,
+    y = 0,
+    width = WIDTH,
+    height = HEIGHT,
     battleLang("ui.forfeit_confirmation")
 ) {
+    companion object {
+        private const val WIDTH = 113
+        private const val HEIGHT = 45
 
-    val forfeitButton: BattleOptionTile
-    val backButton = BattleBackButton(x - 3F, Minecraft.getInstance().window.guiScaledHeight - 22F )
-
-    init {
-        val x = (Minecraft.getInstance().window.guiScaledWidth / 2) - (BattleOptionTile.OPTION_WIDTH / 2)
-        val y = (Minecraft.getInstance().window.guiScaledHeight / 2) - (BattleOptionTile.OPTION_HEIGHT / 2)
-
-        forfeitButton = BattleOptionTile(battleGUI, x, y, BattleGUI.runResource, battleLang("ui.forfeit")) {
-            battleGUI.selectAction(request, ForfeitActionResponse())
-            playDownSound(Minecraft.getInstance().soundManager)
-        }
+        private val backgroundResource = cobblemonResource("textures/gui/interact/request/confirmation_request.png")
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        if (backButton.isHovered(mouseX, mouseY)) {
-            battleGUI.changeActionSelection(null)
+    var acceptButton: BattleResponseButton
+    var declineButton: BattleResponseButton
+
+    init {
+        val xPos = (Minecraft.getInstance().window.guiScaledWidth / 2) - (WIDTH / 2)
+        val yPos = (Minecraft.getInstance().window.guiScaledHeight / 2) - (HEIGHT / 2)
+
+        acceptButton = BattleResponseButton(xPos + 22, yPos + 18, true) {}
+        declineButton = BattleResponseButton(xPos + 57, yPos + 18, false) {}
+    }
+
+    override fun mousePrimaryClicked(mouseX: Double, mouseY: Double): Boolean {
+        if (declineButton.isHovered(mouseX, mouseY) || acceptButton.isHovered(mouseX, mouseY)) {
+            if (declineButton.isHovered(mouseX, mouseY)) {
+                battleGUI.changeActionSelection(null)
+            } else {
+                battleGUI.selectAction(request, ForfeitActionResponse())
+
+                // Need to fill out any other pending requests
+                var pendingRequest = CobblemonClient.battle?.getFirstUnansweredRequest()
+                while (pendingRequest != null) {
+                    battleGUI.selectAction(pendingRequest, PassActionResponse)
+                    pendingRequest = CobblemonClient.battle?.getFirstUnansweredRequest()
+                }
+            }
             playDownSound(Minecraft.getInstance().soundManager)
             return true
         }
 
-        return forfeitButton.mouseClicked(mouseX, mouseY, button)
+        return false
     }
 
     override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        if (opacity <= 0.05F) {
-            return
-        }
-        forfeitButton.render(context, mouseX, mouseY, delta)
-        backButton.render(context.pose(), mouseX, mouseY, delta)
-    }
+        if (opacity <= 0.05F) return
 
+        val xPos = (Minecraft.getInstance().window.guiScaledWidth / 2) - (WIDTH / 2)
+        val yPos = (Minecraft.getInstance().window.guiScaledHeight / 2) - (HEIGHT / 2)
+
+        blitk(
+            matrixStack = context.pose(),
+            texture = backgroundResource,
+            x = xPos,
+            y = yPos,
+            alpha = opacity,
+            width = WIDTH,
+            height = HEIGHT
+        )
+
+        drawScaledText(
+            context = context,
+            font = CobblemonResources.DEFAULT_LARGE,
+            text = battleLang("ui.forfeit").bold(),
+            x = xPos + 42,
+            y = yPos + 2,
+            centered = true,
+            shadow = true
+        )
+
+        acceptButton.render(context, mouseX, mouseY, delta)
+        declineButton.render(context, mouseX, mouseY, delta)
+    }
 }

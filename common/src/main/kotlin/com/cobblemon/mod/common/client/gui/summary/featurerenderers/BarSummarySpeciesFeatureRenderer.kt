@@ -38,13 +38,13 @@ class BarSummarySpeciesFeatureRenderer(
     val overlay: ResourceLocation,
     val pokemon: Pokemon
 ) : SummarySpeciesFeatureRenderer<IntSpeciesFeature> {
-    override fun render(drawContext: GuiGraphics, x: Float, y: Float, pokemon: Pokemon, feature: IntSpeciesFeature) {
+    override fun render(GuiGraphics: GuiGraphics, x: Float, y: Float, pokemon: Pokemon, feature: IntSpeciesFeature) {
         val value = feature.value
         val barRatio = (value - min) / (max - min).toFloat()
         val barWidth = Mth.ceil(barRatio * 108)
 
         blitk(
-            matrixStack = drawContext.pose(),
+            matrixStack = GuiGraphics.pose(),
             texture = underlay,
             x = x,
             y = y,
@@ -57,7 +57,7 @@ class BarSummarySpeciesFeatureRenderer(
         val blue = colour.z / 255F
 
         blitk(
-            matrixStack = drawContext.pose(),
+            matrixStack = GuiGraphics.pose(),
             texture = CobblemonResources.WHITE,
             x = x + 8,
             y = y + 16,
@@ -69,7 +69,7 @@ class BarSummarySpeciesFeatureRenderer(
         )
 
         blitk(
-            matrixStack = drawContext.pose(),
+            matrixStack = GuiGraphics.pose(),
             texture = overlay,
             x = x / StatWidget.SCALE,
             y = (y + 16) / StatWidget.SCALE,
@@ -80,7 +80,7 @@ class BarSummarySpeciesFeatureRenderer(
 
         // Label
         drawScaledText(
-            context = drawContext,
+            context = GuiGraphics,
             font = CobblemonResources.DEFAULT_LARGE,
             text = displayName.bold(),
             x = x + 62,
@@ -90,7 +90,7 @@ class BarSummarySpeciesFeatureRenderer(
         )
 
         drawScaledText(
-            context = drawContext,
+            context = GuiGraphics,
             text = value.toString().text(),
             x = x + 11,
             y = y + 6,
@@ -99,7 +99,7 @@ class BarSummarySpeciesFeatureRenderer(
         )
 
         drawScaledText(
-            context = drawContext,
+            context = GuiGraphics,
             text = "${Mth.floor(barRatio * 100)}%".text(),
             x = x + 113,
             y = y + 6,

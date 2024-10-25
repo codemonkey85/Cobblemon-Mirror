@@ -15,6 +15,6 @@ import net.minecraft.client.Minecraft
 
 object SetPartyPokemonHandler : ClientNetworkPacketHandler<SetPartyPokemonPacket> {
     override fun handle(packet: SetPartyPokemonPacket, client: Minecraft) {
-        CobblemonClient.storage.setPartyPokemon(packet.storeID, packet.storePosition, packet.pokemon)
+        CobblemonClient.storage.setPartyPokemon(packet.storeID, packet.storePosition, packet.pokemon(client.level!!.registryAccess()))
     }
 }

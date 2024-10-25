@@ -1,18 +1,64 @@
 {
   "hitbox": "player",
+  "presets": [
+
+  ],
+  "variation": {
+    "dirt": [
+      "clean",
+      "slightly_dirty",
+      "dirty",
+      "filthy"
+    ],
+    "net": {
+      "type": "weighted",
+      "options": [
+        {
+          "aspect": "green",
+          "weight": 10
+        },
+        {
+          "aspect": "blue",
+          "weight": 5
+        },
+        {
+          "aspect": "red",
+          "weight": 1
+        }
+      ]
+    }
+  },
+  "config": [
+    {
+      "variableName": "challenge_distance",
+      "displayName": "cobblemon.npc.challenge_distance",
+      "description": "cobblemon.npc.challenge_distance.description",
+      "type": "number",
+      "default": "5"
+    }
+  ],
+  "names": [
+    "Vera",
+    "Hiro",
+    "John Cobblemon"
+  ],
   "interaction": {
     "type": "dialogue",
     "dialogue": "cobblemon:npc-example"
   },
   "battleConfiguration": {
-    "canChallenge": true,
-    "party": {
-      "type": "simple",
-      "pokemon": [
-        "squirtle level=30",
-        "charmander level=20",
-        "bulbasaur level=10"
-      ]
-    }
+    "canChallenge": true
+  },
+  "skill": 5,
+  "party": {
+    "type": "simple",
+    "pokemon": [
+      "spiritomb level=1 moves=splash,firepunch,flamethrower,swift",
+      "porygonz level=1 held_item=cobblemon:life_orb ability=adaptability nature=timid moves=hyperbeam,shadowball,icebeam,thunderbolt hp_iv=31 attack_iv=31 defence_iv=31 special_attack_iv=31 special_defence_iv=31 speed_iv=31 hp_ev=6 special_attack_ev=252 speed_ev=252",
+      "togekiss level=1 held_item=cobblemon:leftovers ability=serenegrace nature=timid moves=airslash,dazzlinggleam,aurasphere,thunderwave hp_iv=31 attack_iv=31 defence_iv=31 special_attack_iv=31 special_defence_iv=31 speed_iv=31 hp_ev=6 special_attack_ev=252 speed_ev=252",
+      "lucario level=1 held_item=cobblemon:focus_sash ability=innerfocus nature=jolly moves=closecombat,meteormash,earthquake,extremespeed hp_iv=31 attack_iv=31 defence_iv=31 special_attack_iv=31 special_defence_iv=31 speed_iv=31 hp_ev=6 attack_ev=252 speed_ev=252",
+      "milotic level=1 held_item=cobblemon:flame_orb ability=marvelscale nature=bold moves=recover,mirrorcoat,icebeam,scald hp_iv=31 attack_iv=31 defence_iv=31 special_attack_iv=31 special_defence_iv=31 speed_iv=31 hp_ev=252 defence_ev=252 special_attack_ev=6",
+      "garchomp level=1 held_item=cobblemon:yache_berry ability=roughskin nature=jolly moves=dragonclaw,earthquake,swordsdance,poisonjab hp_iv=31 attack_iv=31 defence_iv=31 special_attack_iv=31 special_defence_iv=31 speed_iv=31 hp_ev=6 attack_ev=252 speed_ev=252"
+    ]
   }
 }

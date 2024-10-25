@@ -25,6 +25,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 
 /**
@@ -36,6 +37,7 @@ import net.minecraft.world.level.Level
 class HealingBerryItem(block: BerryBlock, val amount: () -> ExpressionLike): BerryItem(block), PokemonSelectingItem {
     override val bagItem = object : BagItem {
         override val itemName: String get() = "item.cobblemon.${this@HealingBerryItem.berry()!!.identifier.path}"
+        override val returnItem = Items.AIR
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "potion ${ genericRuntime.resolveInt(amount(), battlePokemon) }"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) =  target.health < target.maxHealth && target.health > 0
     }
@@ -50,7 +52,7 @@ class HealingBerryItem(block: BerryBlock, val amount: () -> ExpressionLike): Ber
             return InteractionResultHolder.fail(stack)
         }
 
-        pokemon.currentHealth = Integer.min(pokemon.currentHealth + genericRuntime.resolveInt(amount(), pokemon), pokemon.hp)
+        pokemon.currentHealth = Integer.min(pokemon.currentHealth + genericRuntime.resolveInt(amount(), pokemon), pokemon.maxHealth)
         player.playSound(CobblemonSounds.BERRY_EAT, 1F, 1F)
         if (!player.isCreative) {
             stack.shrink(1)

@@ -3,7 +3,9 @@
 	"display": {
 		"icon": {
 			"id": "cobblemon:pokemon_model",
-			"nbt": "{\"species\":\"cobblemon:eevee\",\"aspects\":[\"female\"]}"
+	"components": {
+        "cobblemon:pokemon_item": {"species":"cobblemon:eevee","aspects":["female"]}
+      }
 		},
 		"title": {
 			"translate": "advancements.cobblemon.evolve_veevees"

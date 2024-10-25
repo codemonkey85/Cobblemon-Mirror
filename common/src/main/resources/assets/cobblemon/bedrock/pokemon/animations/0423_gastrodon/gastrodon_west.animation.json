@@ -1,0 +1,79 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.gastrodon_west.ground_idle": {
+			"loop": true,
+			"bones": {
+				"body": {
+					"position": [0, 1, 0]
+				},
+				"chest": {
+					"rotation": [5, 0, 0]
+				},
+				"head_rotation": {
+					"rotation": [5, 0, 0]
+				},
+				"tail": {
+					"rotation": [-5, 0, 0]
+				},
+				"leg_front_left_rotation": {
+					"rotation": [0, 7.5, 27.5]
+				},
+				"leg_middle_left": {
+					"rotation": [0, 0, 25]
+				},
+				"leg_back_left_rotation": {
+					"rotation": [0, -10, 27.5]
+				},
+				"leg_front_right_rotation": {
+					"rotation": [0, -7.5, -27.5]
+				},
+				"leg_middle_right": {
+					"rotation": [0, 0, -25]
+				},
+				"leg_back_right_rotation": {
+					"rotation": [0, 10, -27.5]
+				},
+				"neck_detail_left": {
+					"rotation": [0, -5, 17.5]
+				},
+				"neck_detail_right": {
+					"rotation": [0, 5, -17.5]
+				}
+			}
+		},
+		"animation.gastrodon_west.shock": {
+			"loop": true,
+			"bones": {
+				"mouth_closed": {
+					"position": [0, 0, 0.1]
+				},
+				"mouth_open": {
+					"position": [0, 0, -0.1]
+				}
+			}
+		},
+		"animation.gastrodon_west.happy": {
+			"loop": true,
+			"bones": {
+				"mouth_closed": {
+					"position": [0, 0, 0.1]
+				},
+				"mouth_happy": {
+					"position": [0, 0, -0.1]
+				}
+			}
+		},
+		"animation.gastrodon_west.neutral": {
+			"loop": true,
+			"bones": {
+				"mouth_closed": {
+					"position": [0, 0, 0.1]
+				},
+				"mouth_neutral": {
+					"position": [0, 0, -0.1]
+				}
+			}
+		}
+	}
+}

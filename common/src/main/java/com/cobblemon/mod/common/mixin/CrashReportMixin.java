@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(CrashReport.class)
 public final class CrashReportMixin {
 
-    @Inject(method = "getDetails", at = @At(value = "INVOKE", target = "Lnet/minecraft/SystemReport;appendToCrashReportString(Ljava/lang/StringBuilder;)V"))
+    @Inject(method = "getDetails(Ljava/lang/StringBuilder;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/SystemReport;appendToCrashReportString(Ljava/lang/StringBuilder;)V"))
     public void cobblemon$printCobblemonDetails(StringBuilder builder, CallbackInfo callback) {
         CrashReportCategory cobblemon = new CrashReportCategory("Cobblemon");
         cobblemon.setDetail("Version", CobblemonBuildDetails.VERSION);

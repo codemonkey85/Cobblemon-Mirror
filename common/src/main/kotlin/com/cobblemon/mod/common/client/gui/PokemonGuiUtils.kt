@@ -16,6 +16,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.repository.Pokem
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
+import com.cobblemon.mod.common.util.toHex
 import com.mojang.blaze3d.platform.Lighting
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.PoseStack
@@ -31,61 +32,85 @@ fun drawProfilePokemon(
     renderablePokemon: RenderablePokemon,
     matrixStack: PoseStack,
     rotation: Quaternionf,
+    poseType: PoseType = PoseType.PROFILE,
     state: PosableState,
     partialTicks: Float,
-    scale: Float = 20F
+    scale: Float = 20F,
+    applyProfileTransform: Boolean = true,
+    applyBaseScale: Boolean = false,
+    r: Float = 1F,
+    g: Float = 1F,
+    b: Float = 1F,
+    a: Float = 1F
 ) = drawProfilePokemon(
     species = renderablePokemon.species.resourceIdentifier,
-    aspects = renderablePokemon.aspects,
     matrixStack = matrixStack,
     rotation = rotation,
-    state = state,
+    poseType = poseType,
+    state = state.also { it.currentAspects = renderablePokemon.aspects },
     partialTicks = partialTicks,
-    scale = scale
+    scale = scale,
+    applyProfileTransform = applyProfileTransform,
+    applyBaseScale = applyBaseScale,
+    r = r,
+    g = g,
+    b = b,
+    a = a,
 )
 
 fun drawProfilePokemon(
     species: ResourceLocation,
-    aspects: Set<String>,
     matrixStack: PoseStack,
     rotation: Quaternionf,
+    poseType: PoseType = PoseType.PROFILE,
     state: PosableState,
     partialTicks: Float,
-    scale: Float = 20F
+    scale: Float = 20F,
+    applyProfileTransform: Boolean = true,
+    applyBaseScale: Boolean = false,
+    r: Float = 1F,
+    g: Float = 1F,
+    b: Float = 1F,
+    a: Float = 1F
 ) {
     RenderSystem.applyModelViewMatrix()
     matrixStack.scale(scale, scale, -scale)
 
-    val sprite = PokemonModelRepository.getSprite(species, aspects, SpriteType.PROFILE);
+    val sprite = PokemonModelRepository.getSprite(species, state, SpriteType.PROFILE)
 
-    if(sprite == null) {
+    if (sprite == null) {
 
-        val model = PokemonModelRepository.getPoser(species, aspects)
-        val texture = PokemonModelRepository.getTexture(species, aspects, state.animationSeconds)
+        val model = PokemonModelRepository.getPoser(species, state)
+        val texture = PokemonModelRepository.getTexture(species, state)
 
         val context = RenderContext()
         model.context = context
-        PokemonModelRepository.getTextureNoSubstitute(species, aspects, 0f)
-            .let { context.put(RenderContext.TEXTURE, it) }
-        context.put(RenderContext.SCALE, PokemonSpecies.getByIdentifier(species)!!.getForm(aspects).baseScale)
+        PokemonModelRepository.getTextureNoSubstitute(species, state).let { context.put(RenderContext.TEXTURE, it) }
+        val baseScale = PokemonSpecies.getByIdentifier(species)!!.getForm(state.currentAspects).baseScale
+        context.put(RenderContext.SCALE, baseScale)
         context.put(RenderContext.SPECIES, species)
-        context.put(RenderContext.ASPECTS, aspects)
+        context.put(RenderContext.ASPECTS, state.currentAspects)
         context.put(RenderContext.RENDER_STATE, RenderContext.RenderState.PROFILE)
         context.put(RenderContext.POSABLE_STATE, state)
+        context.put(RenderContext.DO_QUIRKS, false)
 
         state.currentModel = model
-        state.currentAspects = aspects
 
         val renderType = RenderType.entityCutout(texture)
 
-        state.setPoseToFirstSuitable(PoseType.PROFILE)
+        state.setPoseToFirstSuitable(poseType)
         state.updatePartialTicks(partialTicks)
         model.applyAnimations(null, state, 0F, 0F, 0F, 0F, 0F)
-        matrixStack.translate(model.profileTranslation.x, model.profileTranslation.y, model.profileTranslation.z - 4.0)
-        matrixStack.scale(model.profileScale, model.profileScale, 1 / model.profileScale)
-
+        if (applyProfileTransform) {
+            matrixStack.translate(model.profileTranslation.x, model.profileTranslation.y, model.profileTranslation.z - 4.0)
+            matrixStack.scale(model.profileScale, model.profileScale, 1 / model.profileScale)} else {
+            matrixStack.translate(0F, 0F, -4.0F)
+            if (applyBaseScale) {
+                matrixStack.scale(baseScale, baseScale, 1 / baseScale)
+            }
+        }
         matrixStack.mulPose(rotation)
-        Lighting.setupForEntityInInventory() // TODO (techdaan): Does this map correctly?
+        Lighting.setupForEntityInInventory()
         val entityRenderDispatcher = Minecraft.getInstance().entityRenderDispatcher
         rotation.conjugate()
         entityRenderDispatcher.overrideCameraOrientation(rotation)
@@ -98,8 +123,9 @@ fun drawProfilePokemon(
         RenderSystem.setShaderLights(light1, light2)
         val packedLight = LightTexture.pack(11, 7)
 
-        model.withLayerContext(bufferSource, state, PokemonModelRepository.getLayers(species, aspects)) {
-            model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
+        val colour = toHex(r, g, b, a)
+        model.withLayerContext(bufferSource, state, PokemonModelRepository.getLayers(species, state)) {
+            model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, colour)
             bufferSource.endBatch()
         }
         model.setDefault()

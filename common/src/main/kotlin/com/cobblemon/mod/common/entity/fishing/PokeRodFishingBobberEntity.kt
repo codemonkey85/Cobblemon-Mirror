@@ -14,25 +14,28 @@ import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.ModAPI
 import com.cobblemon.mod.common.api.fishing.FishingBait
 import com.cobblemon.mod.common.api.fishing.FishingBaits
+import com.cobblemon.mod.common.api.scheduling.afterOnServer
 import com.cobblemon.mod.common.api.spawning.BestSpawner
 import com.cobblemon.mod.common.api.spawning.SpawnBucket
 import com.cobblemon.mod.common.api.spawning.detail.EntitySpawnResult
 import com.cobblemon.mod.common.api.spawning.fishing.FishingSpawnCause
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.battles.BattleBuilder
+import com.cobblemon.mod.common.client.sound.EntitySoundTracker
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.item.interactive.PokerodItem
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormParticlePacket
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.party
 import com.cobblemon.mod.common.util.toBlockPos
 import kotlin.math.sqrt
 import net.minecraft.advancements.CriteriaTriggers
-import net.minecraft.client.Minecraft
-import net.minecraft.client.resources.sounds.SoundInstance
+import net.minecraft.client.resources.sounds.EntityBoundSoundInstance
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
@@ -46,7 +49,6 @@ import net.minecraft.tags.FluidTags
 import net.minecraft.tags.ItemTags
 import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
-import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ExperienceOrb
@@ -61,7 +63,6 @@ import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
-import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.Vec3
 
@@ -71,15 +72,6 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
     private val velocityRandom = RandomSource.create()
     private var caughtFish = false
     private var outOfOpenWaterTicks = 0
-
-    // todo is this needed?
-    //val HOOK_ENTITY_ID = DataTracker.registerData(PokeRodFishingBobberEntity::class.java, TrackedDataHandlerRegistry.INTEGER)
-    //private val CAUGHT_FISH = DataTracker.registerData(PokeRodFishingBobberEntity::class.java, TrackedDataHandlerRegistry.BOOLEAN)
-
-    // todo if so replace these later
-    //var HOOK_ENTITY_ID = 0
-    //var CAUGHT_FISH = false
-
     private var removalTimer = 0
     private var hookCountdown = 0
     private var waitCountdown = 0
@@ -93,6 +85,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
     private var typeCaught = TypeCaught.ITEM
     private var chosenBucket = Cobblemon.bestSpawner.config.buckets[0] // default to first rarity bucket
     private val pokemonSpawnChance = 85 // chance a Pokemon will be fished up % out of 100
+    private val castingSound = CobblemonSounds.FISHING_ROD_CAST
     var pokeRodId: ResourceLocation? = null
     var lineColor: String = "000000" // default line color is black
     var usedRod: ResourceLocation? = null
@@ -102,13 +95,11 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
     var randomPitch: Float = 0f
     var randomYaw: Float = 0f
     var lastBobberPos: Vec3? = null
-    var castingSound: SoundInstance? = null
     var rodItem: ItemStack? = null
 
-    constructor(thrower: Player, pokeRodId: ResourceLocation, bait: ItemStack, world: Level, luckOfTheSea: Int, lure: Int, castSound: SoundInstance, rodItemStack: ItemStack) : this(CobblemonEntities.POKE_BOBBER, world) {
+    constructor(thrower: Player, pokeRodId: ResourceLocation, bait: ItemStack, world: Level, luckOfTheSea: Int, lure: Int, rodItemStack: ItemStack) : this(CobblemonEntities.POKE_BOBBER, world) {
         owner = thrower
         rodItem = rodItemStack
-        castingSound = castSound
         luckOfTheSeaLevel = luckOfTheSea
         lureLevel = lure
         this.pokeRodId = pokeRodId
@@ -212,23 +203,6 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
         return buckets.first()  // Fallback
     }
 
-    /*// make more generic version for other enchants. Pass in id of enchant
-    fun getEnchantLevel(enchantment: Enchantment): Int {
-        var pokerodEnchantments: NbtList? = null
-        if (owner?.isPlayer == true) {
-            pokerodEnchantments = (owner as PlayerEntity).mainHandStack?.enchantments
-        }
-
-        val luckOfTheSeaEnchantment = pokerodEnchantments?.filter {
-            if (it is NbtCompound)
-                if (it.getString("id") == Registries.ENCHANTMENT.getEntry(enchantment).key.toString())
-                    return@filter true
-            return@filter false
-        }?.first()
-
-        return (luckOfTheSeaEnchantment as? NbtCompound)?.getShort("lvl")?.toInt() ?: 0
-    }*/
-
     fun isOpenOrWaterAround(pos: BlockPos): Boolean {
         var positionType = PositionType.INVALID
         for (i in -1..2) {
@@ -249,10 +223,6 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
         }
         return true
     }
-
-    /*private fun getPositionType(start: BlockPos, end: BlockPos): PokeRodFishingBobberEntity.PositionType? {
-        return BlockPos.stream(start, end).map { pos: BlockPos? -> this.getPositionType(pos!!) }.reduce { positionType: PokeRodFishingBobberEntity.PositionType, positionType2: PokeRodFishingBobberEntity.PositionType -> if (positionType == positionType2) positionType else PokeRodFishingBobberEntity.PositionType.INVALID } as ((PositionType?, PositionType?) -> PositionType?)?.orElse(PokeRodFishingBobberEntity.PositionType.INVALID) as PokeRodFishingBobberEntity.PositionType
-    }*/
 
     private fun getPositionType(start: BlockPos, end: BlockPos): PositionType? {
         return BlockPos.betweenClosedStream(start, end)
@@ -369,10 +339,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
                     this.hookCountdown = Mth.nextInt(random, 20, 40)
 
                 }
-
-                //this.hookCountdown = Mth.nextInt(random, 20, 40)
                 entityData.set(CAUGHT_FISH, true)
-                //this.CAUGHT_FISH = true
             }
         } else if (this.waitCountdown > 0) {
             this.waitCountdown -= i
@@ -425,15 +392,25 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
     }
 
     fun stopCastingAudio () {
-        // stop audio for the rod casting
-        //(MinecraftClient.getInstance().getSoundManager() as SoundManagerDuck).stopSounds(CobblemonSounds.FISHING_ROD_CAST.id, SoundCategory.PLAYERS)
+        if (!this.level().isClientSide) return
+        owner?.let { EntitySoundTracker.stop(it.id, this.castingSound.location) }
+    }
 
-        if (castingSound != null) {
-            (Minecraft.getInstance().soundManager).stop(castingSound)
-
-            // reset casting sound
-            castingSound = null
+    // client instantiation
+    override fun recreateFromPacket(clientboundAddEntityPacket: ClientboundAddEntityPacket) {
+        super.recreateFromPacket(clientboundAddEntityPacket)
+        val owner = this.owner
+        if (this.state == State.FLYING && owner != null) {  // starts casting sound when instantiated on client
+            val rand = this.level().random
+            val toPlay = EntityBoundSoundInstance(this.castingSound, SoundSource.PLAYERS, 1.0F, 1.0f / (rand.nextFloat() * 0.4f + 0.8f), owner, rand.nextLong())
+            EntitySoundTracker.play(owner.id, toPlay)
         }
+    }
+
+    // client destruction
+    override fun onClientRemoval() {
+        stopCastingAudio()
+        super.onClientRemoval()
     }
 
     private fun removeIfInvalid(player: Player): Boolean {
@@ -442,8 +419,6 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
         val bl = BuiltInRegistries.ITEM[this.usedRod] == itemStack.item //(itemStack.item is PokerodItem) // todo make this work again so the line breaks when you swap items
         val bl2 = BuiltInRegistries.ITEM[this.usedRod] == itemStack2.item //(itemStack2.item is PokerodItem) // todo make this work again so the line breaks when you swap items
         if (player.isRemoved || !player.isAlive || !bl && !bl2 || this.distanceToSqr(player) > 1024.0) {
-            if (level().isClientSide)
-                stopCastingAudio() // remove casting audio when user switches to different item in hotbar
             discard()
             isCast = false
             return true
@@ -457,33 +432,19 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
         onHit(hitResult)
     }
 
-    override fun canHitEntity(entity: Entity): Boolean {
-        return super.canHitEntity(entity) || entity.isAlive && entity is ItemEntity
-    }
-
     override fun onHitEntity(entityHitResult: EntityHitResult) {
-        //super.onEntityHit(entityHitResult) // this calls the function in FishingBobberEntity which has null values which causes crash I think
-
-        //        ProjectileEntity.onEntityHit(entityHitResult) // this is protected and cannot be reached
         if (!level().isClientSide) {
             this.updateHookedEntityId(entityHitResult.entity)
         }
     }
 
-    override fun onHitBlock(blockHitResult: BlockHitResult) {
-        super.onHitBlock(blockHitResult)
-        this.deltaMovement = deltaMovement.normalize().scale(blockHitResult.distanceTo(this))
-    }
-
     private fun updateHookedEntityId(entity: Entity?) {
         this.hookedEntity = entity
         entityData.set(HOOK_ENTITY_ID, if (entity == null) 0 else entity.id + 1)
-        //this.HOOK_ENTITY_ID = if (entity == null) 0 else entity.id + 1
     }
 
     override fun tick() {
         velocityRandom.setSeed(getUUID().leastSignificantBits xor level().gameTime)
-        //super.tick()
         val playerEntity = this.playerOwner
         if (playerEntity == null) {
             discard()
@@ -508,8 +469,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
             // pause audio if the bobber is not moving anymore
             if (lastBobberPos == position()) {
                 // stop audio for the rod casting if the position has not changed
-                if (level().isClientSide)
-                    stopCastingAudio()
+                stopCastingAudio()
             }
             lastBobberPos = position()
 
@@ -539,9 +499,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
                 }
                 if (state == State.BOBBING) {
                     // stop casting audio once it lands in water
-                    if (castingSound != null && level().isClientSide) {
-                        stopCastingAudio()
-                    }
+                    stopCastingAudio()
 
                     val vec3d = deltaMovement
                     var d = this.y + vec3d.y - blockPos.y.toDouble() - f.toDouble()
@@ -582,8 +540,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
 
     override fun retrieve(usedItem: ItemStack): Int {
         // when reelimg in prematurely stop casting audio if it is playing
-        if (level().isClientSide)
-            stopCastingAudio()
+        stopCastingAudio()
 
         val playerEntity = this.playerOwner
         isCast = false
@@ -592,7 +549,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
             isCast = false
             var i = 0
             if (this.hookedEntity != null) {
-                pullEntity(this.hookedEntity)
+                pullEntity(this.hookedEntity!!)
                 (playerEntity as ServerPlayer?)?.let { CriteriaTriggers.FISHING_ROD_HOOKED.trigger(it, usedItem, this, emptyList()) }
                 level().broadcastEntityEvent(this, 31.toByte())
                 i = if (this.hookedEntity is ItemEntity) 3 else 5
@@ -701,7 +658,6 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
         
         val spawner = BestSpawner.fishingSpawner
 
-        //val spawnCause = SpawnCause(spawner = spawner, bucket = spawner.chooseBucket(), entity = spawner.getCauseEntity())
         val spawnCause = FishingSpawnCause(
             spawner = spawner,
             bucket = chosenBucket,
@@ -727,20 +683,6 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
                 //pokemon.uuid = it.uuid
                 hookedEntityID = entity.id
                 spawnedPokemon = (entity as PokemonEntity)
-
-                // todo Check if there was a berry used on the bobber and if so then see how it may affect the pokemon
-                if (bobberBait != ItemStack.EMPTY) {
-                    // look up how mints affect the pokemon
-
-                    //modifyPokemonWithBait(spawnedPokemon, bobberBait) // check to see if the spawned pokemon gets modified due to the bait used
-
-                    // remove the bait from the bobber
-                    val playerPokerodItemStack = if (this.playerOwner?.getItemInHand(InteractionHand.MAIN_HAND)?.item is PokerodItem) this.playerOwner!!.getItemInHand(InteractionHand.MAIN_HAND) else this.playerOwner!!.getItemInHand(InteractionHand.OFF_HAND)
-                    val playerPokerod = playerPokerodItemStack.item
-                    /*val baitStack = PokerodItem.getBaitStackOnRod(playerPokerodItemStack)
-                    baitStack.shrink(1)
-                    PokerodItem.setBait(playerPokerodItemStack, baitStack)*/
-                }
 
                 // create accessory splash particle when you fish something up
                 particleEntityHandler(this, ResourceLocation.fromNamespaceAndPath("cobblemon","accessory_fish_splash"))
@@ -769,94 +711,18 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
             hookedEntity = level().getEntity(hookedEntityID)
         }
 
-        //val spawnedPokemon = spawnAction.entity
-        if (spawnedPokemon != null) {
-            BattleBuilder.pve((player as ServerPlayer), spawnedPokemon).ifErrored { it.sendTo(player) { it.red() } }
+        afterOnServer(ticks = 2) {
+            if (player !in player.level().players()) {
+                return@afterOnServer
+            }
+            spawnedPokemon?.forceBattle(player as ServerPlayer)
         }
     }
-
-    /*fun modifyPokemonWithBait(pokemonEntity: PokemonEntity, bait: ItemStack) {
-        val pokemon = pokemonEntity.pokemon
-
-        // check if it attracts a certain nature
-        if (checkNatureAttact(bait)) {
-            // figure out which nature is attracted by the bait and do a calculation to see if it was successful
-            alterNatureAttempt(pokemon, bait)
-        }
-
-        // check if it raises specific IV by +3
-        if (checkIVRaise(bait)) {
-            // try to alter the IVs of the pokemon based on the bait bonus
-            alterIVAttempt(pokemon, bait)
-        }
-
-        // todo check if it attracts certain EV yields? Maybe this needs to be done before the spown conditions are used? This one might be hard
-
-        // Reduce Bite time.... This can be done way earlier (And is currently in place)
-
-        // check if it alters the gender of the pokemon
-        if (checkBetterGenderOdds(bait) && (pokemon.species.maleRatio > 0 && pokemon.species.maleRatio < 1)) {
-            // try to alter the pokemon gender based on the bait bonus
-            alterGenderAttempt(pokemon, bait)
-        }
-
-        // check if it raises the average level
-        if (checkLevelBoost(bait)) {
-            // try to alter the pokemon level based on the bait bonus
-            alterLevelAttempt(pokemon, bait)
-        }
-
-        // check if it alters the tera type
-        if (checkTeraType(bait)) {
-            // try to alter the pokemon level based on the bait bonus
-            alterTeraAttempt(pokemon, bait)
-        }
-
-        // check for shiny odds
-        if (checkShinyOdds(bait)) {
-            // try to alter the pokemon level based on the bait bonus
-            alterShinyAttempt(pokemon, bait)
-        }
-
-        // check for HA
-        if (checkHiddenAbilityOdds(bait)) {
-            // try to alter the pokemon level based on the bait bonus
-            alterHAAttempt(pokemon, bait)
-        }
-
-        // check for friendship increase
-        if (checkFriendshipIncrease(bait)){
-            alterFriendshipAttempt(pokemon, bait)
-        }
-    }*/
 
     fun checkBaitSuccessRate(successChance: Double): Boolean {
         return Math.random() <= successChance
     }
 
-    // function to return true of false if the given bait affects the attraction of certain Natures
-    /*fun checkNatureAttact(stack: ItemStack): Boolean {
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return false
-        return bait.effects.any { it.type == FishingBait.Effects.NATURE }
-    }*/
-
-    // function to return true of false if the given bait affects the raising of IVs of a pokemon via fishing
-    /*fun checkIVRaise(stack: ItemStack): Boolean {
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return false
-        return bait.effects.any { it.type == FishingBait.Effects.IV }
-    }*/
-
-    // function to return true of false if the given bait affects the pokemon with certain EV yields
-    /*fun checkEVAttract(stack: ItemStack): Boolean {
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return false
-        return bait.effects.any { it.type == FishingBait.Effects.EV }
-    }*/
-
-    // function to return true of false if the given bait affects the pokemon gender
-    /*fun checkBetterGenderOdds(stack: ItemStack): Boolean {
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return false
-        return bait.effects.any { it.type == FishingBait.Effects.GENDER_CHANCE }
-    }*/
 
     // function to return true of false if the given bait affects time to expect a bite
     fun checkReduceBiteTime(stack: ItemStack): Boolean {
@@ -864,176 +730,11 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
         return bait.effects.any { it.type == FishingBait.Effects.BITE_TIME }
     }
 
-    // function to return true of false if the given bait affects pokemon's level boost
-    /*fun checkLevelBoost(stack: ItemStack): Boolean {
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return false
-        return bait.effects.any { it.type == FishingBait.Effects.LEVEL_RAISE }
-    }*/
-
-    // function to return true of false if the given bait affects pokemon's tera type
-    /*fun checkTeraType(stack: ItemStack): Boolean {
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return false
-        return bait.effects.any { it.type == FishingBait.Effects.TERA }
-    }*/
-
-    // function to return true of false if the given bait affects pokemon's shiny chance
-    /*fun checkShinyOdds(stack: ItemStack): Boolean {
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return false
-        return bait.effects.any { it.type == FishingBait.Effects.SHINY_REROLL }
-    }*/
-
-    // function to return true of false if the given bait affects pokemon's Hidden Ability
-    /*fun checkHiddenAbilityOdds(stack: ItemStack): Boolean {
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return false
-        return bait.effects.any { it.type == FishingBait.Effects.HIDDEN_ABILITY_CHANCE }
-    }*/
-
     // function to return true of false if the given bait to make it so a Pokemon is always reeled in
     fun checkPokemonFishRate(stack: ItemStack): Boolean {
         val bait = FishingBaits.getFromBaitItemStack(stack) ?: return false
         return bait.effects.any { it.type == FishingBait.Effects.POKEMON_CHANCE }
     }
-
-    // function to return true or false if the given bait will raise friendship of a caught mon
-    /*fun checkFriendshipIncrease(stack: ItemStack): Boolean {
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return false
-        return bait.effects.any { it.type == FishingBait.Effects.FRIENDSHIP }
-    }*/
-
-
-    // try to alter the nature of the spawned pokemon
-    /*fun alterNatureAttempt(pokemon: Pokemon, stack: ItemStack) {
-        // natures for each stat
-        val attNaturesIds = listOf(Natures.LONELY, Natures.ADAMANT, Natures.NAUGHTY, Natures.BRAVE)
-        val spaNaturesIds = listOf(Natures.MODEST, Natures.MILD, Natures.RASH, Natures.QUIET)
-        val defNaturesIds = listOf(Natures.BOLD, Natures.IMPISH, Natures.LAX, Natures.RELAXED)
-        val spdNaturesIds = listOf(Natures.CALM, Natures.GENTLE, Natures.CAREFUL, Natures.SASSY)
-        val speNaturesIds = listOf(Natures.TIMID, Natures.HASTY, Natures.JOLLY, Natures.NAIVE)
-        val neutralNaturesIds = listOf(Natures.HARDY, Natures.DOCILE, Natures.BASHFUL, Natures.QUIRKY, Natures.SERIOUS)
-
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return
-        val natures = bait.effects.filter { it.type == FishingBait.Effects.NATURE }
-        val randomNatureEffect = natures.random()
-
-        if (!checkBaitSuccessRate(randomNatureEffect.chance)) return
-
-        pokemon.nature = when(randomNatureEffect.subcategory) {
-            cobblemonResource("atk") -> attNaturesIds.random()
-            cobblemonResource("spa") -> spaNaturesIds.random()
-            cobblemonResource("def") -> defNaturesIds.random()
-            cobblemonResource("spd") -> spdNaturesIds.random()
-            cobblemonResource("spe") -> speNaturesIds.random()
-            else -> return
-        }
-    }*/
-
-    // alter the IVs based on the bait effect
-    /*fun alterIVAttempt(pokemon: Pokemon, stack: ItemStack) {
-
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return
-
-        // various IV effects
-        val hpIVEffect = bait.effects.firstOrNull { it.type == FishingBait.Effects.IV && it.subcategory == cobblemonResource("hp")}
-        val atkIVEffect = bait.effects.firstOrNull { it.type == FishingBait.Effects.IV && it.subcategory == cobblemonResource("atk")}
-        val defIVEffect = bait.effects.firstOrNull { it.type == FishingBait.Effects.IV && it.subcategory == cobblemonResource("def")}
-        val spaIVEffect = bait.effects.firstOrNull { it.type == FishingBait.Effects.IV && it.subcategory == cobblemonResource("spa")}
-        val spdIVEffect = bait.effects.firstOrNull { it.type == FishingBait.Effects.IV && it.subcategory == cobblemonResource("spd")}
-        val speIVEffect = bait.effects.firstOrNull { it.type == FishingBait.Effects.IV && it.subcategory == cobblemonResource("spe")}
-
-        if (hpIVEffect != null && checkBaitSuccessRate(hpIVEffect.chance)) {
-            if ((pokemon.ivs[com.cobblemon.mod.common.api.pokemon.stats.Stats.HP] ?: 0) + hpIVEffect.value > 31) // if HP IV is already less than 3 away from 31
-                pokemon.ivs.set(com.cobblemon.mod.common.api.pokemon.stats.Stats.HP, 31)
-            else
-                pokemon.ivs.set(com.cobblemon.mod.common.api.pokemon.stats.Stats.HP, (pokemon.ivs[com.cobblemon.mod.common.api.pokemon.stats.Stats.HP] ?: 0) + (hpIVEffect.value).toInt())
-        }
-        if (atkIVEffect != null && checkBaitSuccessRate(atkIVEffect.chance)) {
-            if ((pokemon.ivs[com.cobblemon.mod.common.api.pokemon.stats.Stats.ATTACK] ?: 0) + atkIVEffect.value > 31) // if ATTACK IV is already less than 3 away from 31
-                pokemon.ivs.set(com.cobblemon.mod.common.api.pokemon.stats.Stats.ATTACK, 31)
-            else
-                pokemon.ivs.set(com.cobblemon.mod.common.api.pokemon.stats.Stats.ATTACK, (pokemon.ivs[com.cobblemon.mod.common.api.pokemon.stats.Stats.ATTACK] ?: 0) + (atkIVEffect.value).toInt())
-        }
-        if (defIVEffect != null && checkBaitSuccessRate(defIVEffect.chance)) {
-            if ((pokemon.ivs[com.cobblemon.mod.common.api.pokemon.stats.Stats.DEFENCE] ?: 0) + defIVEffect.value > 31) // if DEFENCE IV is already less than 3 away from 31
-                pokemon.ivs.set(com.cobblemon.mod.common.api.pokemon.stats.Stats.DEFENCE, 31)
-            else
-                pokemon.ivs.set(com.cobblemon.mod.common.api.pokemon.stats.Stats.DEFENCE, (pokemon.ivs[com.cobblemon.mod.common.api.pokemon.stats.Stats.DEFENCE] ?: 0) + (defIVEffect.value).toInt())
-        }
-        if (spaIVEffect != null && checkBaitSuccessRate(spaIVEffect.chance)) {
-            if ((pokemon.ivs[com.cobblemon.mod.common.api.pokemon.stats.Stats.SPECIAL_ATTACK] ?: 0) + spaIVEffect.value > 31) // if SPECIAL_ATTACK IV is already less than 3 away from 31
-                pokemon.ivs.set(com.cobblemon.mod.common.api.pokemon.stats.Stats.SPECIAL_ATTACK, 31)
-            else
-                pokemon.ivs.set(com.cobblemon.mod.common.api.pokemon.stats.Stats.SPECIAL_ATTACK, (pokemon.ivs[com.cobblemon.mod.common.api.pokemon.stats.Stats.SPECIAL_ATTACK] ?: 0) + (spaIVEffect.value).toInt())
-        }
-        if (spdIVEffect != null && checkBaitSuccessRate(spdIVEffect.chance)) {
-            if ((pokemon.ivs[com.cobblemon.mod.common.api.pokemon.stats.Stats.SPECIAL_DEFENCE] ?: 0) + spdIVEffect.value > 31) // if SPECIAL_DEFENCE IV is already less than 3 away from 31
-                pokemon.ivs.set(com.cobblemon.mod.common.api.pokemon.stats.Stats.SPECIAL_DEFENCE, 31)
-            else
-                pokemon.ivs.set(com.cobblemon.mod.common.api.pokemon.stats.Stats.SPECIAL_DEFENCE, (pokemon.ivs[com.cobblemon.mod.common.api.pokemon.stats.Stats.SPECIAL_DEFENCE] ?: 0) + (spdIVEffect.value).toInt())
-        }
-        if (speIVEffect != null && checkBaitSuccessRate(speIVEffect.chance)) {
-            if ((pokemon.ivs[com.cobblemon.mod.common.api.pokemon.stats.Stats.SPEED] ?: 0) + speIVEffect.value > 31) // if SPEED IV is already less than 3 away from 31
-                pokemon.ivs.set(com.cobblemon.mod.common.api.pokemon.stats.Stats.SPEED, 31)
-            else
-                pokemon.ivs.set(com.cobblemon.mod.common.api.pokemon.stats.Stats.SPEED, (pokemon.ivs[com.cobblemon.mod.common.api.pokemon.stats.Stats.SPEED] ?: 0) + (speIVEffect.value).toInt())
-        }
-    }*/
-
-    // try to alter the gender based on the bait effect
-    /*fun alterGenderAttempt(pokemon: Pokemon, stack: ItemStack) {
-
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return
-        val effect = bait.effects.first { it.type == FishingBait.Effects.GENDER_CHANCE }
-        val gender = effect.subcategory ?: return
-        if (!checkBaitSuccessRate(effect.chance))
-
-        if (pokemon.gender != Gender.MALE && gender == cobblemonResource("male")) {
-            pokemon.gender = Gender.MALE
-        }
-        else if (pokemon.gender != Gender.FEMALE && gender == cobblemonResource("female")) {
-            pokemon.gender = Gender.FEMALE
-        }
-    }*/
-
-    // alter the level of the pokemon
-    /*fun alterLevelAttempt(pokemon: Pokemon, stack: ItemStack) {
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return
-        val effect = bait.effects.filter { it.type == FishingBait.Effects.LEVEL_RAISE }.random()
-        if (!checkBaitSuccessRate(effect.chance)) return
-
-        var level = pokemon.level + effect.value.toInt()
-        if (level > Cobblemon.config.maxPokemonLevel) level = Cobblemon.config.maxPokemonLevel
-
-        pokemon.level = level
-    }*/
-
-    // try to reroll for a shiny based on the bait effect
-    /*fun alterTeraAttempt(pokemon: Pokemon, stack: ItemStack) {
-//        if (checkBaitSuccessRate(FishingBaits.getBaitSuccessChance(bait) ?: 0.0)) {
-//            pokemon.teraType = FishingBaits.getBaitSubcategory(bait)?.let { ElementalTypes.get(it.lowercase()) }!!
-//        }
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return
-        val effect = bait.effects.filter { it.type == FishingBait.Effects.TERA }.random()
-        if (!checkBaitSuccessRate(effect.chance)) return
-
-        pokemon.teraType = effect.subcategory?.let { TeraTypes.get(it.path) } ?: return
-    }*/
-
-    // try to reroll for a shiny based on the bait effect
-    /*fun alterShinyAttempt(pokemon: Pokemon, stack: ItemStack) {
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return
-        val effect = bait.effects.filter { it.type == FishingBait.Effects.SHINY_REROLL }.random()
-        if (!checkBaitSuccessRate(effect.chance)) return
-        if (!pokemon.shiny) {
-                //reroll for a shiny using shiny odds
-                val shinyOdds = config.shinyRate.toInt()
-                val randomNumber = kotlin.random.Random.nextInt(0, shinyOdds + 1)
-
-                // Check if the random number indicates a shiny Pokemon
-                if (randomNumber <= (effect.value).toInt()) {
-                    pokemon.shiny = true
-                }
-            }
-    }*/
 
     // check if the bite time is reduced based on the bait bonus
     fun alterBiteTimeAttempt(waitCountdown: Int, stack: ItemStack): Int {
@@ -1045,44 +746,6 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
         else
             (waitCountdown - waitCountdown * (effect.value)).toInt()
     }
-
-    // chance to alter HA based on the berry effect
-    /*fun alterHAAttempt(pokemon: Pokemon, stack: ItemStack) {
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return
-        val effect = bait.effects.filter { it.type == FishingBait.Effects.HIDDEN_ABILITY_CHANCE }.random()
-        if (checkBaitSuccessRate(effect.chance)) {
-            giveHiddenAbility(pokemon)
-        }
-    }*/
-
-    // chance to alter Friendship upon reeling in
-    /*fun alterFriendshipAttempt(pokemon: Pokemon, stack: ItemStack) {
-        val bait = FishingBaits.getFromBaitItemStack(stack) ?: return
-        val effect = bait.effects.filter { it.type == FishingBait.Effects.FRIENDSHIP }.random()
-
-        if (checkBaitSuccessRate(effect.chance)) {
-            if (pokemon.friendship + effect.value > 255)
-                pokemon.setFriendship(255)
-            else
-                pokemon.setFriendship(pokemon.friendship + effect.value.toInt())
-        }
-    }*/
-
-    // give a pokemon a random hidden ability
-    /*private fun giveHiddenAbility(pokemon: Pokemon): Boolean {
-        // This will iterate from highest to lowest priority
-        pokemon.form.abilities.mapping.values.forEach { abilities ->
-            abilities.filterIsInstance<HiddenAbility>()
-                    .randomOrNull ()
-                    ?.let { ability ->
-                        // No need to force, this is legal
-                        pokemon.ability = ability.template.create(false)
-                        return true
-                    }
-        }
-        // There was never a hidden ability :( possible but not by default
-        return false
-    }*/
 
     // check the chance of a pokemon to spawn and if it is affected by bait
     fun getPokemonSpawnChance(stack: ItemStack): Int {

@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.ActorType
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.battles.BattleVictoryEvent
+import com.cobblemon.mod.common.api.events.pokemon.PokemonSeenEvent
 import com.cobblemon.mod.common.api.text.gold
 import com.cobblemon.mod.common.api.text.plus
 import com.cobblemon.mod.common.api.text.red
@@ -41,7 +42,7 @@ class WinInstruction(val message: BattleMessage): InterpreterInstruction {
         val losers = battle.actors.filter { !winners.contains(it) }
         val winnersText = winners.map { it.getName() }.reduce { acc, next -> acc + " & " + next }
         val losersText = losers.map { it.getName() }.reduce { acc, next -> acc + " & " + next }
-        val wasCaught = battle. showdownMessages.any { "capture" in it }
+        val wasCaught = battle.showdownMessages.any { "capture" in it }
 
         battle.dispatch {
             // If the battle was a PvW battle, we need to set the killer of the wild Pokémon to the player
@@ -58,6 +59,8 @@ class WinInstruction(val message: BattleMessage): InterpreterInstruction {
             if (!wasCaught) {
                 val blackedOut = battle.isPvW && losers.any { it is PlayerBattleActor }
                 val lang = if (blackedOut) battleLang("lose", losersText).red() else battleLang("win", winnersText).gold()
+                winners.forEach { winner -> winner.win(winners.filterNot { it == winner }, losers ) }
+                losers.forEach { loser -> loser.lose(winners, losers.filterNot { it == loser }) }
                 battle.broadcastChatMessage(lang)
                 return@dispatch WaitDispatch(2F)
             }
@@ -67,6 +70,11 @@ class WinInstruction(val message: BattleMessage): InterpreterInstruction {
         }
         battle.dispatchGo {
             battle.end()
+            battle.actors.flatMap { it.pokemonList }.map { it.originalPokemon }.forEach { pokemon ->
+                battle.playerUUIDs.forEach { playerUuid ->
+                    CobblemonEvents.POKEMON_SEEN.post(PokemonSeenEvent(playerUuid, pokemon))
+                }
+            }
             CobblemonEvents.BATTLE_VICTORY.post(BattleVictoryEvent(battle, winners, losers, wasCaught))
             ShowdownInterpreter.lastCauser.remove(battle.battleId)
         }

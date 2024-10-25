@@ -1,0 +1,29 @@
+{
+  "portraitScale": 1.04,
+  "portraitTranslation": [-0.25, 0.51, 0],
+  "profileScale": 0.48,
+  "profileTranslation": [-0.05, 1.0, 0.0],
+  "animations": {
+    "recoil": "q.bedrock_stateful('cloyster', 'recoil')"
+  },
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "WALK",
+        "SWIM",
+        "NONE",
+        "PORTRAIT",
+        "PROFILE"
+      ],
+      "animations": [
+        "q.bedrock('cloyster', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('cloyster', 'blink')"
+      ]
+    }
+  }
+}

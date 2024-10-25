@@ -9,10 +9,13 @@
 package com.cobblemon.mod.common.client.battle.animations
 
 import com.cobblemon.mod.common.client.battle.ActiveClientBattlePokemon
-class MoveTileOffscreenAnimation(val duration: Float = 0.75F) : TileAnimation {
+import com.cobblemon.mod.common.client.battle.ClientBattlePokemon
+
+class MoveTileOffscreenAnimation(val duration: Float = 0.75F, val swappedPokemon: ClientBattlePokemon? = null) : TileAnimation {
     var passedSeconds = 0F
     override fun shouldHoldUntilNextAnimation() = true
     override fun invoke(activeBattlePokemon: ActiveClientBattlePokemon, deltaTicks: Float): Boolean {
+        if (passedSeconds == duration) swappedPokemon?.let { activeBattlePokemon.battlePokemon = it }
         passedSeconds += deltaTicks / 20
         passedSeconds = passedSeconds.coerceAtMost(duration)
         val ratio = passedSeconds / duration

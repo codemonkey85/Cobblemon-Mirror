@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Sunflora",
   "nationalPokedexNumber": 192,
   "primaryType": "grass",
@@ -24,6 +25,19 @@
   "eggGroups": [
     "grass"
   ],
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.145
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": true,
+      "depth": "normal",
+      "light": "0-4"
+    }
+  },
   "moves": [
     "1:flowershield",
     "1:growth",
@@ -143,10 +157,10 @@
   ],
   "preEvolution": "sunkern",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.8,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.75,
+    "height": 1.38,
     "fixed": false
   },
   "baseFriendship": 70,

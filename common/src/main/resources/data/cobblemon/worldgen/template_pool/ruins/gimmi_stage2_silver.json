@@ -7,6 +7,7 @@
             "element": {
                 "location": "cobblemon:ruins/gimmi_tower_silver_stage2_long",
                 "element_type": "minecraft:single_pool_element",
+                "override_liquid_settings": "apply_waterlogging",
                 "processors": "cobblemon:ruins/temperate_gimmi_tower_silver",
                 "projection": "rigid"
             }
@@ -16,6 +17,7 @@
             "element": {
                 "location": "cobblemon:ruins/gimmi_tower_silver_stage2_short",
                 "element_type": "minecraft:single_pool_element",
+                "override_liquid_settings": "apply_waterlogging",
                 "processors": "cobblemon:ruins/temperate_gimmi_tower_silver",
                 "projection": "rigid"
             }
@@ -23,8 +25,9 @@
         {
             "weight": 1,
             "element": {
-                "location": "cobblemon:ruins/gimmi_tower_ssilver_stage2_platform",
+                "location": "cobblemon:ruins/gimmi_tower_silver_stage2_platform",
                 "element_type": "minecraft:single_pool_element",
+                "override_liquid_settings": "apply_waterlogging",
                 "processors": "cobblemon:ruins/temperate_gimmi_tower_stage2_silver",
                 "projection": "rigid"
             }

@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Toucannon",
   "nationalPokedexNumber": 733,
   "primaryType": "normal",
@@ -25,6 +26,13 @@
   "eggGroups": [
     "flying"
   ],
+  "behaviour": {
+    "moving": {
+      "fly": {
+        "canFly": true
+      }
+    }
+  },
   "moves": [
     "1:beakblast",
     "1:echoedvoice",
@@ -118,10 +126,10 @@
   ],
   "preEvolution": "trumbeak",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.8,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.6,
+    "height": 2.2,
     "fixed": false
   },
   "baseFriendship": 70,

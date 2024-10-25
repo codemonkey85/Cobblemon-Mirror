@@ -174,8 +174,20 @@ class CobblemonConfig {
     @NodeCategory(Category.Pokemon)
     var displayEntityLevelLabel = true
 
+    @NodeCategory(Category.Pokemon)
+    var displayEntityNameLabel = true
+
+    @NodeCategory(Category.Pokemon)
+    var diplayNameForUnknownPokemon = false
+
+    @NodeCategory(Category.Pokemon)
+    var displayEntityLabelsWhenCrouchingOnly  = true
+
     @NodeCategory(Category.Spawning)
     var shinyRate = 8192F
+
+    @NodeCategory(Category.Pokemon)
+    val shinyNoticeParticlesDistance = 24F
 
     @NodeCategory(Category.Pokemon)
     var captureCalculator: CaptureCalculator = CobblemonCaptureCalculator
@@ -219,6 +231,21 @@ class CobblemonConfig {
 
     @NodeCategory(Category.Battles)
     var walkingInBattleAnimations = false
+
+    @NodeCategory(Category.Battles)
+    var battleWildMaxDistance = 12F
+
+    @NodeCategory(Category.World)
+    var tradeMaxDistance = 12F
+
+    @NodeCategory(Category.Battles)
+    var BattlePvPMaxDistance = 32F
+
+    @NodeCategory(Category.Battles)
+    var battleSpectateMaxDistance = 64F
+
+    @NodeCategory(Category.World)
+    var entityInteractionMaxDistance  = 64F
 
     @NodeCategory(Category.Debug)
     var enableDebugKeys = false

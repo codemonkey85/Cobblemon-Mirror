@@ -27,6 +27,7 @@ import net.minecraft.world.item.Items
 class BerryJuiceItem : CobblemonItem(Properties()), PokemonSelectingItem {
     override val bagItem = object : BagItem {
         override val itemName = "item.cobblemon.berry_juice"
+        override val returnItem = Items.BOWL
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "potion 20"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) =  target.health < target.maxHealth && target.health > 0
     }
@@ -47,7 +48,7 @@ class BerryJuiceItem : CobblemonItem(Properties()), PokemonSelectingItem {
         if (pokemon.isFullHealth()) {
             return InteractionResultHolder.fail(stack)
         }
-        pokemon.currentHealth = Integer.min(pokemon.currentHealth + 20, pokemon.hp)
+        pokemon.currentHealth = Integer.min(pokemon.currentHealth + 20, pokemon.maxHealth)
         player.playSound(CobblemonSounds.BERRY_EAT, 1F, 1F)
         if (!player.isCreative)  {
             stack.shrink(1)

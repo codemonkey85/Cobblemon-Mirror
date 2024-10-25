@@ -3,7 +3,9 @@
 	"display": {
 		"icon": {
 			"id": "cobblemon:pokemon_model",
-			"nbt": "{\"species\":\"cobblemon:magikarp\",\"aspects\":[\"male\"]}"
+	"components": {
+        "cobblemon:pokemon_item": {"species":"cobblemon:magikarp","aspects":["male"]}
+      }
 		},
 		"title": {
 			"translate": "advancements.cobblemon.max_level_baby"

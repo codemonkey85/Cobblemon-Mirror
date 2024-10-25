@@ -125,6 +125,7 @@ class RotateYCameraMode : ParticleCameraMode {
         val i = if (angle == 0F) 0F else Mth.lerp(deltaTicks, prevAngle, angle)
         val q2 = Axis.YP.rotationDegrees(-cameraYaw)
         q2.hamiltonProduct(Axis.ZP.rotationDegrees(i))
+        q2.hamiltonProduct(Axis.YP.rotationDegrees(180F))
         return q2
     }
 
@@ -161,7 +162,7 @@ class LookAtXYZ : ParticleCameraMode {
     ): Quaternionf {
         val i = if (angle == 0F) 0F else Mth.lerp(deltaTicks, prevAngle, angle)
         val rotation = Quaternionf()
-        rotation.hamiltonProduct(Axis.YP.rotationDegrees(-cameraYaw))
+        rotation.hamiltonProduct(Axis.YP.rotationDegrees(-cameraYaw - 180))
         rotation.hamiltonProduct(Axis.XP.rotationDegrees(cameraPitch))
         rotation.hamiltonProduct(Axis.ZP.rotationDegrees(i))
         return rotation
@@ -190,7 +191,7 @@ class LookAtY : ParticleCameraMode {
         viewDirection: Vec3
     ): Quaternionf {
         val i = if (angle == 0F) 0F else Mth.lerp(deltaTicks, prevAngle, angle)
-        val q2 = Axis.YP.rotationDegrees(-cameraYaw)
+        val q2 = Axis.YP.rotationDegrees(-cameraYaw + 180)
         q2.hamiltonProduct(Axis.ZP.rotationDegrees(i))
         return q2
     }
@@ -263,7 +264,6 @@ class EmitterYZPlane : ParticleCameraMode {
         rotation.set(quat)
 
         rotation.hamiltonProduct(Axis.YP.rotationDegrees(180F)) // Don't worry about it.
-
         rotation.hamiltonProduct(Axis.YP.rotationDegrees(90F))
         return rotation
     }
@@ -302,7 +302,6 @@ class EmitterXZPlane : ParticleCameraMode {
         matrixWrapper.matrix.getRotation(quat)
         rotation.set(quat)
         rotation.hamiltonProduct(Axis.YP.rotationDegrees(180F)) // Don't worry about it.
-
         rotation.hamiltonProduct(Axis.XP.rotationDegrees(-90F))
         return rotation
     }
@@ -497,6 +496,9 @@ class LookAtDirection : ParticleCameraMode {
         // Do the regular rotation around Z to spin the particle, same as all other modes.
         val particleAngle = if (angle == 0.0f) 0F else Mth.lerp(deltaTicks, prevAngle, angle)
         rotation.hamiltonProduct(Axis.ZP.rotationDegrees(particleAngle))
+
+        // Minecraft in 1.21 or 1.20.4 or something fucked with vertex draw order, and it flipped everything.
+        rotation.hamiltonProduct(Axis.YP.rotationDegrees(180F))
 
         return rotation
     }

@@ -13,8 +13,7 @@ import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.pokemon.FormData
-import com.cobblemon.mod.common.pokemon.Species
+import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.util.*
 import java.util.UUID
 import net.minecraft.world.entity.Entity
@@ -26,8 +25,10 @@ import net.minecraft.resources.ResourceLocation
 class SpawnPokemonPacket(
     private val ownerId: UUID?,
     private val scaleModifier: Float,
-    private val species: Species,
-    private val form: FormData,
+    private val speciesId: ResourceLocation,
+    private val gender: Gender,
+    private val shiny: Boolean,
+    private val formName: String,
     private val aspects: Set<String>,
     private val battleId: UUID?,
     private val phasingTargetId: Int,
@@ -40,6 +41,7 @@ class SpawnPokemonPacket(
     private val caughtBall: ResourceLocation,
     private val spawnYaw: Float,
     private val friendship: Int,
+    private val freezeFrame: Float,
     vanillaSpawnPacket: ClientboundAddEntityPacket
 ) : SpawnExtraDataEntityPacket<SpawnPokemonPacket, PokemonEntity>(vanillaSpawnPacket) {
 
@@ -48,8 +50,10 @@ class SpawnPokemonPacket(
     constructor(entity: PokemonEntity, vanillaSpawnPacket: ClientboundAddEntityPacket) : this(
         entity.ownerUUID,
         entity.pokemon.scaleModifier,
-        entity.exposedSpecies,
-        entity.pokemon.form,
+        entity.exposedSpecies.resourceIdentifier,
+        entity.pokemon.gender,
+        entity.pokemon.shiny,
+        entity.pokemon.form.formOnlyShowdownId(),
         entity.pokemon.aspects,
         entity.battleId,
         entity.phasingTargetId,
@@ -62,14 +66,17 @@ class SpawnPokemonPacket(
         entity.pokemon.caughtBall.name,
         entity.entityData.get(PokemonEntity.SPAWN_DIRECTION),
         entity.entityData.get(PokemonEntity.FRIENDSHIP),
+        entity.entityData.get(PokemonEntity.FREEZE_FRAME),
         vanillaSpawnPacket
     )
 
     override fun encodeEntityData(buffer: RegistryFriendlyByteBuf) {
         buffer.writeNullable(ownerId) { _, v -> buffer.writeUUID(v) }
         buffer.writeFloat(this.scaleModifier)
-        buffer.writeIdentifier(this.species.resourceIdentifier)
-        buffer.writeString(this.form.formOnlyShowdownId())
+        buffer.writeIdentifier(this.speciesId)
+        buffer.writeEnumConstant(this.gender)
+        buffer.writeBoolean(this.shiny)
+        buffer.writeString(this.formName)
         buffer.writeCollection(this.aspects) { pb, value -> pb.writeString(value) }
         buffer.writeNullable(this.battleId) { pb, value -> pb.writeUUID(value) }
         buffer.writeInt(this.phasingTargetId)
@@ -82,14 +89,17 @@ class SpawnPokemonPacket(
         buffer.writeIdentifier(this.caughtBall)
         buffer.writeFloat(this.spawnYaw)
         buffer.writeInt(this.friendship)
+        buffer.writeFloat(this.freezeFrame)
     }
 
     override fun applyData(entity: PokemonEntity) {
         entity.ownerUUID = ownerId
         entity.pokemon.apply {
             scaleModifier = this@SpawnPokemonPacket.scaleModifier
-            species = this@SpawnPokemonPacket.species
-            form = this@SpawnPokemonPacket.form
+            species = this@SpawnPokemonPacket.speciesId.let { PokemonSpecies.getByIdentifier(it) ?: PokemonSpecies.random() }
+            gender = this@SpawnPokemonPacket.gender
+            shiny = this@SpawnPokemonPacket.shiny
+            form = this@SpawnPokemonPacket.formName.let { formName -> species.forms.find { it.formOnlyShowdownId() == formName }} ?: species.standardForm
             forcedAspects = this@SpawnPokemonPacket.aspects
             nickname = this@SpawnPokemonPacket.nickname
             PokeBalls.getPokeBall(this@SpawnPokemonPacket.caughtBall)?.let { caughtBall = it }
@@ -105,6 +115,7 @@ class SpawnPokemonPacket(
         entity.entityData.set(PokemonEntity.HIDE_LABEL, hideLabel)
         entity.entityData.set(PokemonEntity.SPAWN_DIRECTION, spawnYaw)
         entity.entityData.set(PokemonEntity.FRIENDSHIP, friendship)
+        entity.entityData.set(PokemonEntity.FREEZE_FRAME, freezeFrame)
     }
 
     override fun checkType(entity: Entity): Boolean = entity is PokemonEntity
@@ -114,10 +125,10 @@ class SpawnPokemonPacket(
         fun decode(buffer: RegistryFriendlyByteBuf): SpawnPokemonPacket {
             val ownerId = buffer.readNullable { buffer.readUUID() }
             val scaleModifier = buffer.readFloat()
-            val identifier = buffer.readIdentifier()
-            val species = requireNotNull(PokemonSpecies.getByIdentifier(identifier)) { "received unknown PokemonSpecies: $identifier" }
-            val showdownId = buffer.readString()
-            val form = species.forms.firstOrNull { it.formOnlyShowdownId() == showdownId } ?: species.standardForm
+            val speciesId = buffer.readIdentifier()
+            val gender = buffer.readEnumConstant(Gender::class.java)
+            val shiny = buffer.readBoolean()
+            val formName = buffer.readString()
             val aspects = buffer.readList { it.readString() }.toSet()
             val battleId = buffer.readNullable { buffer.readUUID() }
             val phasingTargetId = buffer.readInt()
@@ -130,9 +141,10 @@ class SpawnPokemonPacket(
             val caughtBall = buffer.readIdentifier()
             val spawnAngle = buffer.readFloat()
             val friendship = buffer.readInt()
+            val freezeFrame = buffer.readFloat()
             val vanillaPacket = decodeVanillaPacket(buffer)
 
-            return SpawnPokemonPacket(ownerId, scaleModifier, species, form, aspects, battleId, phasingTargetId, beamModeEmitter, nickname, labelLevel, poseType, unbattlable, hideLabel, caughtBall, spawnAngle, friendship, vanillaPacket)
+            return SpawnPokemonPacket(ownerId, scaleModifier, speciesId, gender, shiny, formName, aspects, battleId, phasingTargetId, beamModeEmitter, nickname, labelLevel, poseType, unbattlable, hideLabel, caughtBall, spawnAngle, friendship, freezeFrame, vanillaPacket)
         }
     }
 

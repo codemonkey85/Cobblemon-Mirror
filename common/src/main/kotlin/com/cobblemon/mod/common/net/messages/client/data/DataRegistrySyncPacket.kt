@@ -32,9 +32,9 @@ abstract class DataRegistrySyncPacket<T, N : NetworkPacket<N>>(private val regis
     }
 
     /**
-     * Encodes an entry of type [T] to the [PacketByteBuf].
+     * Encodes an entry of type [T] to the [RegistryFriendlyByteBuf].
      *
-     * @param buffer The [PacketByteBuf] being encoded to.
+     * @param buffer The [RegistryFriendlyByteBuf] being encoded to.
      * @param entry The entry of type [T].
      */
     abstract fun encodeEntry(buffer: RegistryFriendlyByteBuf, entry: T)
@@ -43,7 +43,7 @@ abstract class DataRegistrySyncPacket<T, N : NetworkPacket<N>>(private val regis
      * Attempts to decode this entry, if null it will be skipped.
      * Any errors that result in a null entry should be logged.
      *
-     * @param buffer The [PacketByteBuf] being decoded from.
+     * @param buffer The [RegistryFriendlyByteBuf] being decoded from.
      * @return The entry of type [T].
      */
     abstract fun decodeEntry(buffer: RegistryFriendlyByteBuf): T?

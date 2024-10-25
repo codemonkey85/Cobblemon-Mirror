@@ -1,0 +1,47 @@
+{
+    "placement": {
+        "type": "minecraft:random_spread",
+        "exclusion_zone": {
+            "chunk_count": 7,
+            "other_set": "minecraft:villages"
+        },
+        "spacing": 20,
+        "separation": 10,
+        "salt": 1895720816,
+        "spread_type": "triangular"
+    },
+    "structures": [
+        {
+            "structure": "cobblemon:fossils/prehistoric_sandy_den",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:fossils/prehistoric_suspicious_mound",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:fossils/prehistoric_birch_tree",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:fossils/prehistoric_oak_tree",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:fossils/prehistoric_spruce_tree",
+            "weight": 1
+        },
+        {
+            "structure": "cobblemon:fossils/prehistoric_frozen_pond",
+            "weight": 10
+        },
+        {
+            "structure": "cobblemon:fossils/prehistoric_frozen_spike",
+            "weight": 9
+        },
+        {
+            "structure": "cobblemon:fossils/prehistoric_powdered_deposit",
+            "weight": 10
+        }
+    ]
+}

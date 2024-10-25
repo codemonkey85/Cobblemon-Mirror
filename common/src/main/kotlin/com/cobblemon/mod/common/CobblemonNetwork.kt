@@ -24,6 +24,7 @@ import com.cobblemon.mod.common.client.net.effect.RunPosableMoLangHandler
 import com.cobblemon.mod.common.client.net.effect.SpawnSnowstormEntityParticleHandler
 import com.cobblemon.mod.common.client.net.effect.SpawnSnowstormParticleHandler
 import com.cobblemon.mod.common.client.net.gui.InteractPokemonUIPacketHandler
+import com.cobblemon.mod.common.client.net.gui.PokedexUIPacketHandler
 import com.cobblemon.mod.common.client.net.gui.SummaryUIPacketHandler
 import com.cobblemon.mod.common.client.net.npc.CloseNPCEditorHandler
 import com.cobblemon.mod.common.client.net.npc.OpenNPCEditorHandler
@@ -31,6 +32,7 @@ import com.cobblemon.mod.common.client.net.pasture.ClosePastureHandler
 import com.cobblemon.mod.common.client.net.pasture.OpenPastureHandler
 import com.cobblemon.mod.common.client.net.pasture.PokemonPasturedHandler
 import com.cobblemon.mod.common.client.net.pasture.PokemonUnpasturedHandler
+import com.cobblemon.mod.common.client.net.pokedex.ServerConfirmedRegisterHandler
 import com.cobblemon.mod.common.client.net.pokemon.update.PokemonUpdatePacketHandler
 import com.cobblemon.mod.common.client.net.settings.ServerSettingsPacketHandler
 import com.cobblemon.mod.common.client.net.sound.UnvalidatedPlaySoundS2CPacketHandler
@@ -85,22 +87,18 @@ import com.cobblemon.mod.common.net.messages.client.pokemon.update.evolution.Rem
 import com.cobblemon.mod.common.net.messages.client.settings.ServerSettingsPacket
 import com.cobblemon.mod.common.net.messages.client.sound.UnvalidatedPlaySoundS2CPacket
 import com.cobblemon.mod.common.net.messages.client.spawn.SpawnGenericBedrockPacket
+import com.cobblemon.mod.common.net.messages.client.spawn.SpawnNPCPacket
 import com.cobblemon.mod.common.net.messages.client.spawn.SpawnPokeballPacket
 import com.cobblemon.mod.common.net.messages.client.spawn.SpawnPokemonPacket
 import com.cobblemon.mod.common.net.messages.client.starter.OpenStarterUIPacket
-import com.cobblemon.mod.common.net.messages.client.starter.SetClientPlayerDataPacket
+import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.net.messages.client.storage.RemoveClientPokemonPacket
 import com.cobblemon.mod.common.net.messages.client.storage.SwapClientPokemonPacket
 import com.cobblemon.mod.common.net.messages.client.storage.party.InitializePartyPacket
 import com.cobblemon.mod.common.net.messages.client.storage.party.MoveClientPartyPokemonPacket
 import com.cobblemon.mod.common.net.messages.client.storage.party.SetPartyPokemonPacket
 import com.cobblemon.mod.common.net.messages.client.storage.party.SetPartyReferencePacket
-import com.cobblemon.mod.common.net.messages.client.storage.pc.ClosePCPacket
-import com.cobblemon.mod.common.net.messages.client.storage.pc.InitializePCPacket
-import com.cobblemon.mod.common.net.messages.client.storage.pc.MoveClientPCPokemonPacket
-import com.cobblemon.mod.common.net.messages.client.storage.pc.OpenPCPacket
-import com.cobblemon.mod.common.net.messages.client.storage.pc.SetPCBoxPokemonPacket
-import com.cobblemon.mod.common.net.messages.client.storage.pc.SetPCPokemonPacket
+import com.cobblemon.mod.common.net.messages.client.storage.pc.*
 import com.cobblemon.mod.common.net.messages.client.toast.ToastPacket
 import com.cobblemon.mod.common.net.messages.client.trade.TradeAcceptanceChangedPacket
 import com.cobblemon.mod.common.net.messages.client.trade.TradeCancelledPacket
@@ -110,13 +108,9 @@ import com.cobblemon.mod.common.net.messages.client.trade.TradeOfferNotification
 import com.cobblemon.mod.common.net.messages.client.trade.TradeStartedPacket
 import com.cobblemon.mod.common.net.messages.client.trade.TradeUpdatedPacket
 import com.cobblemon.mod.common.net.messages.client.ui.InteractPokemonUIPacket
+import com.cobblemon.mod.common.net.messages.client.ui.PokedexUIPacket
 import com.cobblemon.mod.common.net.messages.client.ui.SummaryUIPacket
-import com.cobblemon.mod.common.net.messages.server.BattleChallengePacket
-import com.cobblemon.mod.common.net.messages.server.BenchMovePacket
-import com.cobblemon.mod.common.net.messages.server.RequestMoveSwapPacket
-import com.cobblemon.mod.common.net.messages.server.RequestPlayerInteractionsPacket
-import com.cobblemon.mod.common.net.messages.server.SelectStarterPacket
-import com.cobblemon.mod.common.net.messages.server.SendOutPokemonPacket
+import com.cobblemon.mod.common.net.messages.server.*
 import com.cobblemon.mod.common.net.messages.server.battle.BattleSelectActionsPacket
 import com.cobblemon.mod.common.net.messages.server.battle.RemoveSpectatorPacket
 import com.cobblemon.mod.common.net.messages.server.battle.SpectateBattlePacket
@@ -132,6 +126,7 @@ import com.cobblemon.mod.common.net.messages.server.npc.SaveNPCPacket
 import com.cobblemon.mod.common.net.messages.server.pasture.PasturePokemonPacket
 import com.cobblemon.mod.common.net.messages.server.pasture.UnpastureAllPokemonPacket
 import com.cobblemon.mod.common.net.messages.server.pasture.UnpasturePokemonPacket
+import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.StartScanningPacket
 import com.cobblemon.mod.common.net.messages.server.pokemon.interact.InteractPokemonPacket
 import com.cobblemon.mod.common.net.messages.server.pokemon.update.SetNicknamePacket
 import com.cobblemon.mod.common.net.messages.server.pokemon.update.evolution.AcceptEvolutionPacket
@@ -151,8 +146,7 @@ import com.cobblemon.mod.common.net.messages.server.trade.CancelTradePacket
 import com.cobblemon.mod.common.net.messages.server.trade.ChangeTradeAcceptancePacket
 import com.cobblemon.mod.common.net.messages.server.trade.OfferTradePacket
 import com.cobblemon.mod.common.net.messages.server.trade.UpdateTradeOfferPacket
-import com.cobblemon.mod.common.net.serverhandling.ChallengeHandler
-import com.cobblemon.mod.common.net.serverhandling.RequestInteractionsHandler
+import com.cobblemon.mod.common.net.serverhandling.*
 import com.cobblemon.mod.common.net.serverhandling.battle.BattleSelectActionsHandler
 import com.cobblemon.mod.common.net.serverhandling.battle.RemoveSpectatorHandler
 import com.cobblemon.mod.common.net.serverhandling.battle.SpectateBattleHandler
@@ -191,6 +185,10 @@ import com.cobblemon.mod.common.net.serverhandling.trade.CancelTradeHandler
 import com.cobblemon.mod.common.net.serverhandling.trade.ChangeTradeAcceptanceHandler
 import com.cobblemon.mod.common.net.serverhandling.trade.OfferTradeHandler
 import com.cobblemon.mod.common.net.serverhandling.trade.UpdateTradeOfferHandler
+import com.cobblemon.mod.common.net.messages.client.pokedex.ServerConfirmedRegisterPacket
+import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.FinishScanningPacket
+import com.cobblemon.mod.common.net.serverhandling.pokedex.scanner.FinishScanningHandler
+import com.cobblemon.mod.common.net.serverhandling.pokedex.scanner.StartScanningHandler
 import com.cobblemon.mod.common.util.server
 import net.minecraft.server.level.ServerPlayer
 
@@ -270,6 +268,7 @@ object CobblemonNetwork {
         list.add(PacketRegisterInfo(SummaryUIPacket.ID, SummaryUIPacket::decode, SummaryUIPacketHandler))
         list.add(PacketRegisterInfo(InteractPokemonUIPacket.ID, InteractPokemonUIPacket::decode, InteractPokemonUIPacketHandler))
         list.add(PacketRegisterInfo(PlayerInteractOptionsPacket.ID, PlayerInteractOptionsPacket::decode, PlayerInteractOptionsHandler))
+        list.add(PacketRegisterInfo(PokedexUIPacket.ID, PokedexUIPacket::decode, PokedexUIPacketHandler))
 
         // Starter packets
         list.add(PacketRegisterInfo(OpenStarterUIPacket.ID, OpenStarterUIPacket::decode, StarterUIPacketHandler))
@@ -284,6 +283,7 @@ object CobblemonNetwork {
         list.add(PacketRegisterInfo(BattleHealthChangePacket.ID, BattleHealthChangePacket::decode, BattleHealthChangeHandler))
         list.add(PacketRegisterInfo(BattleSetTeamPokemonPacket.ID, BattleSetTeamPokemonPacket::decode, BattleSetTeamPokemonHandler))
         list.add(PacketRegisterInfo(BattleSwitchPokemonPacket.ID, BattleSwitchPokemonPacket::decode, BattleSwitchPokemonHandler))
+        list.add(PacketRegisterInfo(BattleSwapPokemonPacket.ID, BattleSwapPokemonPacket::decode, BattleSwapPokemonHandler))
         list.add(PacketRegisterInfo(BattleMessagePacket.ID, BattleMessagePacket::decode, BattleMessageHandler))
         list.add(PacketRegisterInfo(BattleCaptureStartPacket.ID, BattleCaptureStartPacket::decode, BattleCaptureStartHandler))
         list.add(PacketRegisterInfo(BattleCaptureEndPacket.ID, BattleCaptureEndPacket::decode, BattleCaptureEndHandler))
@@ -297,6 +297,12 @@ object CobblemonNetwork {
         list.add(PacketRegisterInfo(BattleChallengeExpiredPacket.ID, BattleChallengeExpiredPacket::decode, BattleChallengeExpiredHandler))
         list.add(PacketRegisterInfo(BattleReplacePokemonPacket.ID, BattleReplacePokemonPacket::decode, BattleReplacePokemonHandler))
         list.add(PacketRegisterInfo(BattleTransformPokemonPacket.ID, BattleTransformPokemonPacket::decode, BattleTransformPokemonHandler))
+
+        // MultiBattleTeam Packets
+        list.add(PacketRegisterInfo(TeamRequestNotificationPacket.ID, TeamRequestNotificationPacket::decode, TeamRequestNotificationHandler))
+        list.add(PacketRegisterInfo(TeamRequestExpiredPacket.ID, TeamRequestExpiredPacket::decode, TeamRequestExpiredHandler))
+        list.add(PacketRegisterInfo(TeamMemberRemoveNotificationPacket.ID, TeamMemberRemoveNotificationPacket::decode, TeamMemberRemoveNotificationHandler))
+        list.add(PacketRegisterInfo(TeamJoinNotificationPacket.ID, TeamJoinNotificationPacket::decode, TeamJoinNotificationHandler))
 
         // Settings packets
         list.add(PacketRegisterInfo(ServerSettingsPacket.ID, ServerSettingsPacket::decode, ServerSettingsPacketHandler))
@@ -316,6 +322,8 @@ object CobblemonNetwork {
         list.add(PacketRegisterInfo(NPCRegistrySyncPacket.ID, NPCRegistrySyncPacket::decode, DataRegistrySyncPacketHandler()))
         list.add(PacketRegisterInfo(PokeRodRegistrySyncPacket.ID, PokeRodRegistrySyncPacket::decode, DataRegistrySyncPacketHandler()))
         list.add(PacketRegisterInfo(ScriptRegistrySyncPacket.ID, ScriptRegistrySyncPacket::decode, DataRegistrySyncPacketHandler()))
+        list.add(PacketRegisterInfo(PokedexDexSyncPacket.ID, PokedexDexSyncPacket::decode, DataRegistrySyncPacketHandler()))
+        list.add(PacketRegisterInfo(DexEntrySyncPacket.ID, DexEntrySyncPacket::decode, DataRegistrySyncPacketHandler()))
         list.add(PacketRegisterInfo(FishingBaitRegistrySyncPacket.ID, FishingBaitRegistrySyncPacket::decode, DataRegistrySyncPacketHandler()))
 
         // Effects
@@ -327,8 +335,9 @@ object CobblemonNetwork {
         list.add(PacketRegisterInfo(UnvalidatedPlaySoundS2CPacket.ID, UnvalidatedPlaySoundS2CPacket::decode, UnvalidatedPlaySoundS2CPacketHandler))
         list.add(PacketRegisterInfo(SpawnPokemonPacket.ID, SpawnPokemonPacket::decode, SpawnExtraDataEntityHandler()))
         list.add(PacketRegisterInfo(SpawnPokeballPacket.ID, SpawnPokeballPacket::decode, SpawnExtraDataEntityHandler()))
-        list.add(PacketRegisterInfo(ToastPacket.ID, ToastPacket::decode, ToastPacketHandler))
         list.add(PacketRegisterInfo(SpawnGenericBedrockPacket.ID, SpawnGenericBedrockPacket::decode, SpawnExtraDataEntityHandler()))
+        list.add(PacketRegisterInfo(SpawnNPCPacket.ID, SpawnNPCPacket::decode, SpawnExtraDataEntityHandler()))
+        list.add(PacketRegisterInfo(ToastPacket.ID, ToastPacket::decode, ToastPacketHandler))
 
         // Trade packets
         list.add(PacketRegisterInfo(TradeAcceptanceChangedPacket.ID, TradeAcceptanceChangedPacket::decode, TradeAcceptanceChangedHandler))
@@ -365,6 +374,8 @@ object CobblemonNetwork {
         list.add(PacketRegisterInfo(CloseNPCEditorPacket.ID, CloseNPCEditorPacket::decode, CloseNPCEditorHandler))
         list.add(PacketRegisterInfo(OpenNPCEditorPacket.ID, OpenNPCEditorPacket::decode, OpenNPCEditorHandler))
 
+        //Pokedex scanning
+        list.add(PacketRegisterInfo(ServerConfirmedRegisterPacket.ID, ServerConfirmedRegisterPacket::decode, ServerConfirmedRegisterHandler))
         return list
     }
 
@@ -385,6 +396,10 @@ object CobblemonNetwork {
         list.add(PacketRegisterInfo(RequestMoveSwapPacket.ID, RequestMoveSwapPacket::decode, RequestMoveSwapHandler))
         list.add(PacketRegisterInfo(BenchMovePacket.ID, BenchMovePacket::decode, BenchMoveHandler))
         list.add(PacketRegisterInfo(BattleChallengePacket.ID, BattleChallengePacket::decode, ChallengeHandler))
+        list.add(PacketRegisterInfo(BattleChallengeResponsePacket.ID, BattleChallengeResponsePacket::decode, ChallengeResponseHandler))
+        list.add(PacketRegisterInfo(BattleTeamRequestPacket.ID, BattleTeamRequestPacket::decode, TeamRequestHandler))
+        list.add(PacketRegisterInfo(BattleTeamResponsePacket.ID, BattleTeamResponsePacket::decode, TeamRequestResponseHandler))
+        list.add(PacketRegisterInfo(BattleTeamLeavePacket.ID, BattleTeamLeavePacket::decode, TeamLeaveHandler))
 
         list.add(PacketRegisterInfo(MovePCPokemonToPartyPacket.ID, MovePCPokemonToPartyPacket::decode, MovePCPokemonToPartyHandler))
         list.add(PacketRegisterInfo(MovePartyPokemonToPCPacket.ID, MovePartyPokemonToPCPacket::decode, MovePartyPokemonToPCHandler))
@@ -415,6 +430,10 @@ object CobblemonNetwork {
         list.add(PacketRegisterInfo(ChangeTradeAcceptancePacket.ID, ChangeTradeAcceptancePacket::decode, ChangeTradeAcceptanceHandler))
         list.add(PacketRegisterInfo(OfferTradePacket.ID, OfferTradePacket::decode, OfferTradeHandler))
         list.add(PacketRegisterInfo(UpdateTradeOfferPacket.ID, UpdateTradeOfferPacket::decode, UpdateTradeOfferHandler))
+
+        // Pokedex scanning
+        list.add(PacketRegisterInfo(StartScanningPacket.ID, StartScanningPacket::decode, StartScanningHandler))
+        list.add(PacketRegisterInfo(FinishScanningPacket.ID, FinishScanningPacket::decode, FinishScanningHandler))
 
         // Pasture
         list.add(PacketRegisterInfo(PasturePokemonPacket.ID, PasturePokemonPacket::decode, PasturePokemonHandler))

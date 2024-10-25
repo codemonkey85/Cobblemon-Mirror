@@ -40,7 +40,7 @@ dependencies {
     modApi(libs.molang)
 
     // Integrations
-//    compileOnlyApi(libs.jei.api)
+    compileOnlyApi(libs.jei.api)
     modCompileOnly(libs.bundles.fabric.integrations.compileOnly) {
         isTransitive = false
     }

@@ -23,10 +23,10 @@ interface SummarySpeciesFeatureRenderer<T : SynchronizedSpeciesFeature> {
     /** The name of the feature (so we know where to look to find it in the [Pokemon]) */
     val name: String
     /** Draws it at a particular position. */
-    fun render(drawContext: GuiGraphics, x: Float, y: Float, pokemon: Pokemon, feature: T)
-    fun render(drawContext: GuiGraphics, x: Float, y: Float, pokemon: Pokemon): Boolean {
+    fun render(GuiGraphics: GuiGraphics, x: Float, y: Float, pokemon: Pokemon, feature: T)
+    fun render(GuiGraphics: GuiGraphics, x: Float, y: Float, pokemon: Pokemon): Boolean {
         val feature = pokemon.getFeature<T>(name) ?: return false
-        render(drawContext, x, y, pokemon, feature)
+        render(GuiGraphics, x, y, pokemon, feature)
         return true
     }
 }

@@ -21,20 +21,18 @@ class PokemonInteractContext(val type: ResourceLocation, val item: ResourceLocat
 
 class PokemonInteractCriterion(
     playerCtx: Optional<ContextAwarePredicate>,
-    val type: Optional<String>,
-    val item: Optional<String>
+    val type: String,
+    val item: String
 ): SimpleCriterionCondition<PokemonInteractContext>(playerCtx) {
     companion object {
         val CODEC: Codec<PokemonInteractCriterion> = RecordCodecBuilder.create { it.group(
             EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(PokemonInteractCriterion::playerCtx),
-            Codec.STRING.optionalFieldOf("type").forGetter(PokemonInteractCriterion::type),
-            Codec.STRING.optionalFieldOf("item").forGetter(PokemonInteractCriterion::item)
+            Codec.STRING.optionalFieldOf("type", "any").forGetter(PokemonInteractCriterion::type),
+            Codec.STRING.optionalFieldOf("item", "any").forGetter(PokemonInteractCriterion::item)
         ).apply(it, ::PokemonInteractCriterion) }
     }
 
     override fun matches(player: ServerPlayer, context: PokemonInteractContext): Boolean {
-        val otherType = this.type.orElse("any")
-        val otherItem = this.item.orElse("any")
-        return (context.type == otherType.asIdentifierDefaultingNamespace() || otherType == "any") && (context.type == otherItem.asIdentifierDefaultingNamespace() || otherItem == "any")
+        return (context.type == this.type.asIdentifierDefaultingNamespace() || this.type == "any") && (context.item == this.item.asIdentifierDefaultingNamespace() || this.item == "any")
     }
 }
