@@ -8,7 +8,6 @@
 
 package com.cobblemon.mod.common.api.berry
 
-import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.berry.spawncondition.BerrySpawnCondition
@@ -119,17 +118,10 @@ class Berry(
         private set
 
     /**
-     * The [VoxelShape] of the tree during the planted mature stages.
+     * The [VoxelShape] of the tree during the mature stages.
      */
     @Transient
     lateinit var matureShape: VoxelShape
-        private set
-
-    /**
-     * The [VoxelShape] of a natural, mature berry tree
-     */
-    @Transient
-    lateinit var naturalMatureShape: VoxelShape
         private set
 
     init {
@@ -262,9 +254,6 @@ class Berry(
         this.shapedFruit = hashMapOf()
         this.sproutShape = this.createAndUniteShapes(this.sproutShapeBoxes)
         this.matureShape = this.createAndUniteShapes(this.matureShapeBoxes)
-        this.naturalMatureShape = this.createAndUniteShapes(this.matureShapeBoxes.map {
-            it.setMinY(0.0)
-        })
     }
 
     internal fun encode(buffer: RegistryFriendlyByteBuf) {

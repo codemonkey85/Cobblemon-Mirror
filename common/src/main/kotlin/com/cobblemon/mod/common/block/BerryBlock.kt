@@ -239,15 +239,7 @@ class BerryBlock(private val berryIdentifier: ResourceLocation, settings: Proper
             0 -> PLANTED_SHAPE
             1 -> PLANTED_SHAPE
             2 -> berry.sproutShape
-            else -> {
-                val underBlockState = world.getBlockState(pos.below())
-                val validSoil = state.getValue(IS_ROOTED) || underBlockState.`is`(CobblemonBlockTags.BERRY_SOIL)
-                if (validSoil) {
-                    return berry.matureShape
-                } else {
-                    return berry.naturalMatureShape
-                }
-            }
+            else -> berry.matureShape
         }
     }
 
@@ -274,7 +266,7 @@ class BerryBlock(private val berryIdentifier: ResourceLocation, settings: Proper
 //            VoxelShapes.cuboid(0.3125, -0.0625, 0.3125, 0.6875, 0.0, 0.6875),
 //            VoxelShapes.cuboid(0.375, 0.0, 0.375, 0.625, 0.0625, 0.625)
 //        )
-        val PLANTED_SHAPE = Shapes.box(0.0, -0.0625, 0.0, 1.0, 0.25, 1.0)
+        val PLANTED_SHAPE = Shapes.box(0.0, -0.1, 0.0, 1.0, 0.25, 1.0)
 
 
         val STANDARD_SPROUT = listOf(AABB(0.0, -1.0, 0.0, 16.0, 16.0, 16.0))
