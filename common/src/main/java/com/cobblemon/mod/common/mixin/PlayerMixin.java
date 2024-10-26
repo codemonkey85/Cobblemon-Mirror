@@ -235,6 +235,7 @@ public abstract class PlayerMixin extends LivingEntity implements Rollable {
     public boolean shouldRoll() {
         LocalPlayer player = Minecraft.getInstance().player;
         if (!this.equals(player)) return false;
+        if (player.isHolding(Items.DIAMOND)) return true;
         if (player.getVehicle() == null) return false;
         if (!(player.getVehicle() instanceof PokemonEntity pokemon)) return false;
         if (player.onGround()) return false;

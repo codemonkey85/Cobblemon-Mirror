@@ -186,7 +186,9 @@ import com.cobblemon.mod.common.net.serverhandling.trade.ChangeTradeAcceptanceHa
 import com.cobblemon.mod.common.net.serverhandling.trade.OfferTradeHandler
 import com.cobblemon.mod.common.net.serverhandling.trade.UpdateTradeOfferHandler
 import com.cobblemon.mod.common.net.messages.client.pokedex.ServerConfirmedRegisterPacket
+import com.cobblemon.mod.common.net.messages.server.orientation.C2SUpdateOrientationPacket
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.FinishScanningPacket
+import com.cobblemon.mod.common.net.serverhandling.orientation.OrientationPacketHandler
 import com.cobblemon.mod.common.net.serverhandling.pokedex.scanner.FinishScanningHandler
 import com.cobblemon.mod.common.net.serverhandling.pokedex.scanner.StartScanningHandler
 import com.cobblemon.mod.common.util.server
@@ -457,6 +459,9 @@ object CobblemonNetwork {
 
         // NPC packets
         list.add(PacketRegisterInfo(SaveNPCPacket.ID, SaveNPCPacket::decode, SaveNPCHandler))
+
+        // Orientation packet(s)
+        list.add(PacketRegisterInfo(C2SUpdateOrientationPacket.ID, C2SUpdateOrientationPacket::decode, OrientationPacketHandler))
 
         return list
     }

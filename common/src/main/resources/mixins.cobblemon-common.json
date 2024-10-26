@@ -5,6 +5,7 @@
   "minVersion": "0.8",
   "client": [
     "BuiltinModelItemRendererMixin",
+    "CameraMixin",
     "EntityRenderDispatcherMixin",
     "GameRendererMixin",
     "ItemInHandRendererMixin",
@@ -23,11 +24,11 @@
     "client.AbstractClientPlayerMixin",
     "client.EntryListWidgetMixin",
     "client.GuiMixin",
+    "client.LocalPlayerMixin",
     "invoker.ClientPlayNetworkHandlerInvoker",
     "renderer.LivingEntityRendererMixin",
     "renderer.PlayerEntityRendererMixin",
-    "riding.JetMixin",
-    "CameraMixin"
+    "riding.JetMixin"
   ],
   "mixins": [
     "ChunkStorageMixin",

@@ -126,6 +126,9 @@ import net.minecraft.world.level.pathfinder.PathType
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
+import org.joml.Matrix4f
+import org.joml.Vector3f
+import org.joml.Vector4f
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import kotlin.math.PI
@@ -1483,21 +1486,21 @@ open class PokemonEntity(
         }
 
         val lookAngle: Vec3 = driver.getLookAngle()
-        if (!driver.isNearGround() || lookAngle.y >= 0.3) {
+//        if (!driver.isNearGround() || lookAngle.y >= 0.3) {
             setBehaviourFlag(PokemonBehaviourFlag.FLYING, true)
             entityData.set(POSE_TYPE, PoseType.HOVER)
 
-            val deltaMovement = this.deltaMovement
-            this.setDeltaMovement(
-                lookAngle.x * 0.1 + (lookAngle.x * 1.5 - deltaMovement.x) * 1,
-                lookAngle.y * 0.1 + (lookAngle.y * 1.5 - deltaMovement.y) * 1,
-                lookAngle.z * 0.1 + (lookAngle.z * 1.5 - deltaMovement.z) * 1
-            )
-        }
-        else {
-            setBehaviourFlag(PokemonBehaviourFlag.FLYING, false)
-            this.setDeltaMovement(0.0, 0.0, 0.0)
-        }
+//            val deltaMovement = this.deltaMovement
+//            this.setDeltaMovement(
+//                lookAngle.x * 0.1 + (lookAngle.x * 1.5 - deltaMovement.x) * 1,
+//                lookAngle.y * 0.1 + (lookAngle.y * 1.5 - deltaMovement.y) * 1,
+//                lookAngle.z * 0.1 + (lookAngle.z * 1.5 - deltaMovement.z) * 1
+//            )
+//        }
+//        else {
+//            setBehaviourFlag(PokemonBehaviourFlag.FLYING, false)
+//            this.setDeltaMovement(0.0, 0.0, 0.0)
+//        }
     }
 
     fun Entity.isNearGround(): Boolean {
@@ -1525,10 +1528,10 @@ open class PokemonEntity(
     }
 
     override fun positionRider(passenger: Entity, positionUpdater: MoveFunction) {
-        if (this.hasPassenger(passenger)) {
+        if (this.hasPassenger(passenger) && passenger is Rollable) {
             val index = passengers.indexOf(passenger).takeIf { it >= 0 && it < seats.size } ?: return
             val seat = seats[index]
-            val offset = Vec3(0.0, 1.4, -0.0).yRot(-this.yRot * (Math.PI.toFloat() / 180))//.rotateX(-this.pitch * (Math.PI.toFloat() / 180))
+            val offset = seat.getOffset(getCurrentPoseType())
             positionUpdater.accept(passenger, this.x + offset.x, this.y + offset.y, this.z + offset.z)
             if (passenger is LivingEntity) {
                 passenger.yRot = this.yRot
