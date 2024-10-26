@@ -19,6 +19,7 @@ import com.cobblemon.mod.common.api.data.DataRegistry
 import com.cobblemon.mod.common.api.pokedex.Dexes
 import com.cobblemon.mod.common.api.dialogue.Dialogues
 import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.fishing.FishingBait
 import com.cobblemon.mod.common.api.fishing.FishingBaits
 import com.cobblemon.mod.common.api.fishing.PokeRods
 import com.cobblemon.mod.common.api.fossil.Fossils
@@ -95,6 +96,7 @@ object CobblemonDataProvider : DataProvider {
         this.register(PokeRods)
         this.register(Berries)
         this.register(FishingBaits)
+        FishingBait.Effects.setupEffects()
 
         PlatformEvents.SERVER_PLAYER_LOGOUT.subscribe {
             synchronizedPlayerIds.remove(it.player.uuid)
