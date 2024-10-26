@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.item.berry
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
+import com.cobblemon.mod.common.api.item.HealingSource
 import com.cobblemon.mod.common.api.item.PokemonSelectingItem
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
@@ -35,7 +36,7 @@ import net.minecraft.world.level.Level
  * @author Hiroku
  * @since August 4th, 2023
  */
-class HealingBerryItem(block: BerryBlock, val amount: () -> ExpressionLike): BerryItem(block), PokemonSelectingItem {
+class HealingBerryItem(block: BerryBlock, val amount: () -> ExpressionLike): BerryItem(block), PokemonSelectingItem, HealingSource {
     override val bagItem = object : BagItem {
         override val itemName: String get() = "item.cobblemon.${this@HealingBerryItem.berry()!!.identifier.path}"
         override val returnItem = Items.AIR

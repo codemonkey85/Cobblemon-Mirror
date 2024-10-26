@@ -13,6 +13,9 @@ import com.cobblemon.mod.common.CobblemonMechanics
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
+import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.events.pokemon.healing.PokemonHealedEvent
+import com.cobblemon.mod.common.api.item.HealingSource
 import com.cobblemon.mod.common.api.item.PokemonSelectingItem
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.item.CobblemonItem
@@ -26,7 +29,7 @@ import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 
-class RemedyItem(val remedyStrength: String) : CobblemonItem(Properties()), PokemonSelectingItem {
+class RemedyItem(val remedyStrength: String) : CobblemonItem(Properties()), PokemonSelectingItem, HealingSource {
     companion object {
         const val NORMAL = "normal"
         const val FINE = "fine"
@@ -51,7 +54,10 @@ class RemedyItem(val remedyStrength: String) : CobblemonItem(Properties()), Poke
         pokemon: Pokemon
     ): InteractionResultHolder<ItemStack> {
         return if (!pokemon.isFullHealth() && pokemon.currentHealth > 0) {
-            val amount = CobblemonMechanics.remedies.getHealingAmount(remedyStrength, runtime, 20)
+            var amount = CobblemonMechanics.remedies.getHealingAmount(remedyStrength, runtime, 20)
+            CobblemonEvents.POKEMON_HEALED.postThen(PokemonHealedEvent(pokemon, amount, this), { cancelledEvent -> return InteractionResultHolder.fail(stack)}) { event ->
+                amount = event.amount
+            }
             pokemon.currentHealth += amount
             pokemon.entity?.playSound(CobblemonSounds.MEDICINE_HERB_USE, 1F, 1F)
             pokemon.decrementFriendship(CobblemonMechanics.remedies.getFriendshipDrop(runtime))

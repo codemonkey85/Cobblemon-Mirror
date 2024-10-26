@@ -13,6 +13,9 @@ import com.cobblemon.mod.common.api.events.battles.BattleFledEvent
 import com.cobblemon.mod.common.api.events.battles.BattleStartedPostEvent
 import com.cobblemon.mod.common.api.events.battles.BattleStartedPreEvent
 import com.cobblemon.mod.common.api.events.battles.BattleVictoryEvent
+import com.cobblemon.mod.common.api.events.battles.instruction.MegaEvolutionEvent
+import com.cobblemon.mod.common.api.events.battles.instruction.TerastallizationEvent
+import com.cobblemon.mod.common.api.events.battles.instruction.ZMoveUsedEvent
 import com.cobblemon.mod.common.api.events.berry.BerryHarvestEvent
 import com.cobblemon.mod.common.api.events.berry.BerryMutationOfferEvent
 import com.cobblemon.mod.common.api.events.berry.BerryMutationResultEvent
@@ -23,6 +26,7 @@ import com.cobblemon.mod.common.api.events.entity.PokemonEntitySaveEvent
 import com.cobblemon.mod.common.api.events.entity.PokemonEntitySaveToWorldEvent
 import com.cobblemon.mod.common.api.events.entity.SpawnEvent
 import com.cobblemon.mod.common.api.events.farming.ApricornHarvestEvent
+import com.cobblemon.mod.common.api.events.fishing.*
 import com.cobblemon.mod.common.api.events.item.LeftoversCreatedEvent
 import com.cobblemon.mod.common.api.events.pokeball.PokeBallCaptureCalculatedEvent
 import com.cobblemon.mod.common.api.events.pokeball.PokemonCatchRateEvent
@@ -33,15 +37,14 @@ import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionAcceptedEv
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionDisplayEvent
 import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionTestedEvent
+import com.cobblemon.mod.common.api.events.pokemon.healing.PokemonHealedEvent
 import com.cobblemon.mod.common.api.events.pokemon.interaction.ExperienceCandyUseEvent
-import com.cobblemon.mod.common.api.events.pokemon.interaction.HeldItemUpdatedEvent
 import com.cobblemon.mod.common.api.events.pokemon.interaction.PokemonInteractionGUICreationEvent
 import com.cobblemon.mod.common.api.events.starter.StarterChosenEvent
 import com.cobblemon.mod.common.api.events.storage.ReleasePokemonEvent
 import com.cobblemon.mod.common.api.events.world.BigRootPropagatedEvent
 import com.cobblemon.mod.common.api.reactive.CancelableObservable
 import com.cobblemon.mod.common.api.reactive.EventObservable
-import com.cobblemon.mod.common.api.reactive.Observable
 import com.cobblemon.mod.common.api.reactive.Observable.Companion.filter
 import com.cobblemon.mod.common.api.reactive.Observable.Companion.map
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
@@ -93,6 +96,14 @@ object CobblemonEvents {
     @JvmField
     val BATTLE_FAINTED = EventObservable<BattleFaintedEvent>()
 
+    // instructions
+    @JvmField
+    val MEGA_EVOLUTON = EventObservable<MegaEvolutionEvent>()
+    @JvmField
+    val TERASTALLIZATION = EventObservable<TerastallizationEvent>()
+    @JvmField
+    val ZPOWER_USED = EventObservable<ZMoveUsedEvent>()
+
     @JvmField
     val POKEMON_SENT_PRE = CancelableObservable<PokemonSentPreEvent>()
     @JvmField
@@ -105,6 +116,9 @@ object CobblemonEvents {
 
     @JvmField
     val LEVEL_UP_EVENT = EventObservable<LevelUpEvent>()
+
+    @JvmField
+    val POKEMON_HEALED = CancelableObservable<PokemonHealedEvent>()
 
     @JvmField
     /** CLIENT ONLY! */
@@ -174,4 +188,28 @@ object CobblemonEvents {
     val POKEMON_GAINED = EventObservable<PokemonGainedEvent>()
     @JvmField
     val POKEMON_SEEN = EventObservable<PokemonSeenEvent>()
+
+    // Fishing
+    @JvmField
+    val BAIT_SET = CancelableObservable<BaitSetEvent>()
+    @JvmField
+    val BAIT_SET_PRE = CancelableObservable<BaitSetEvent>()
+    @JvmField
+    val BAIT_CONSUMED = CancelableObservable<BaitConsumedEvent>()
+    @JvmField
+    val POKEROD_CAST_PRE = CancelableObservable<PokerodCastEvent.Pre>()
+    @JvmField
+    val POKEROD_CAST_POST = EventObservable<PokerodCastEvent.Post>()
+    @JvmField
+    val POKEROD_REEL = CancelableObservable<PokerodReelEvent>()
+    @JvmField
+    val BOBBER_BUCKET_CHOSEN = EventObservable<BobberBucketChosenEvent>()
+    @JvmField
+    val BOBBER_SPAWN_POKEMON_PRE = CancelableObservable<BobberSpawnPokemonEvent.Pre>()
+    @JvmField
+    val BOBBER_SPAWN_POKEMON_MODIFY = EventObservable<BobberSpawnPokemonEvent.Modify>()
+    @JvmField
+    val BOBBER_SPAWN_POKEMON_POST = EventObservable<BobberSpawnPokemonEvent.Post>()
+    @JvmField
+    val BAIT_EFFECT_REGISTRATION = EventObservable<BaitEffectFunctionRegistryEvent>()
 }
