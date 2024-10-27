@@ -10,6 +10,10 @@ package com.cobblemon.mod.common.api.spawning.fishing
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.Cobblemon.LOGGER
+import com.cobblemon.mod.common.api.Priority
+import com.cobblemon.mod.common.api.abilities.Abilities
+import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.events.fishing.BobberSpawnPokemonEvent
 import com.cobblemon.mod.common.api.fishing.FishingBait
 import com.cobblemon.mod.common.api.pokemon.Natures
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
@@ -26,9 +30,9 @@ import com.cobblemon.mod.common.item.interactive.PokerodItem
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.abilities.HiddenAbility
 import com.cobblemon.mod.common.util.cobblemonResource
-import kotlin.random.Random.Default.nextInt
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
+import kotlin.random.Random.Default.nextInt
 
 /**
  * A spawning cause that is embellished with fishing information. Could probably also
@@ -45,6 +49,95 @@ class FishingSpawnCause(
 ) : SpawnCause(spawner, bucket, entity) {
     companion object {
         const val FISHED_ASPECT = "fished"
+        fun shinyReroll(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
+            if (pokemonEntity.pokemon.shiny) return
+
+            val shinyOdds = Cobblemon.config.shinyRate.toInt()
+            if (shinyOdds <= 0) {
+                return
+            }
+            val randomNumber = nextInt(0, shinyOdds + 1)
+
+            if (randomNumber <= effect.value.toInt()) {
+                pokemonEntity.pokemon.shiny = true
+            }
+        }
+
+        fun alterNatureAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
+            val baitStat = effect.subcategory?.let { it1 -> Stats.getStat(it1.path).identifier } ?: run {
+                LOGGER.warn("One of your nature baits is missing a subcategory and failed to effect a fished Pokemon")
+                return
+            }
+            // TIMNOTE: This replaces the static lists. It's less performant because it's being reviewed every time,
+            // but also it's not something that goes off too often.
+            val possibleNatures = Natures.all().filter { it.increasedStat?.identifier == baitStat }
+            if (possibleNatures.isEmpty() || possibleNatures.any { it == pokemonEntity.pokemon.nature }) return
+            val takenNature = possibleNatures.random()
+
+            pokemonEntity.pokemon.nature = Natures.getNature(takenNature.name.path) ?: return
+        }
+
+        fun alterIVAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
+            val iv = effect.subcategory ?: return
+
+            if ((pokemonEntity.pokemon.ivs[Stats.getStat(iv.path)] ?: 0) + effect.value > 31) // if HP IV is already less than 3 away from 31
+                pokemonEntity.pokemon.ivs.set(Stats.getStat(iv.path), 31)
+            else
+                pokemonEntity.pokemon.ivs.set(Stats.getStat(iv.path), (pokemonEntity.pokemon.ivs[Stats.getStat(iv.path)] ?: 0) + (effect.value).toInt())
+        }
+
+        fun alterGenderAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
+            if (pokemonEntity.pokemon.species.maleRatio > 0 && pokemonEntity.pokemon.species.maleRatio < 1) // if the pokemon is allowed to be male or female
+                when (effect.subcategory) {
+                    cobblemonResource("male") -> if (pokemonEntity.pokemon.gender != Gender.MALE) pokemonEntity.pokemon.gender = Gender.MALE
+                    cobblemonResource("female") -> if (pokemonEntity.pokemon.gender != Gender.FEMALE) pokemonEntity.pokemon.gender = Gender.FEMALE
+                }
+        }
+
+        fun alterLevelAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
+            var level = pokemonEntity.pokemon.level + effect.value.toInt()
+            if (level > Cobblemon.config.maxPokemonLevel)
+                level = Cobblemon.config.maxPokemonLevel
+            pokemonEntity.pokemon.level = level
+        }
+
+        fun alterTeraAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
+            if (pokemonEntity.pokemon.teraType == effect.subcategory?.let { TeraTypes.get(it.path) } ||
+                TeraTypes.get(effect.subcategory!!.path) == null) return
+
+            pokemonEntity.pokemon.teraType = TeraTypes.get(effect.subcategory.path)!!
+        }
+
+        fun alterHAAttempt(pokemonEntity: PokemonEntity) {
+            //val species = pokemonEntity.pokemon.species.let { PokemonSpecies.getByName(it.name) } ?: return
+            //val ability = species.abilities.mapping[Priority.LOW]?.first()?.template?.name ?: return
+
+            //pokemonEntity.pokemon.ability = Abilities.get(ability)?.create(false) ?: return
+
+            // Old code from Licious that might be helpful if the above proves to not work
+
+            // This will iterate from highest to lowest priority
+            pokemonEntity.pokemon.form.abilities.mapping.values.forEach { abilities ->
+                abilities.filterIsInstance<HiddenAbility>()
+                    .randomOrNull ()
+                    ?.let { ability ->
+                        // No need to force, this is legal
+                        pokemonEntity.pokemon.ability = ability.template.create(false)
+                        return
+                    }
+            }
+            // There was never a hidden ability :( possible but not by default
+            return
+
+
+        }
+
+        fun alterFriendshipAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
+            if (pokemonEntity.pokemon.friendship + effect.value > 255)
+                pokemonEntity.pokemon.setFriendship(255)
+            else
+                pokemonEntity.pokemon.setFriendship(pokemonEntity.pokemon.friendship + effect.value.toInt())
+        }
     }
 
     val rodItem = rodStack.item as? PokerodItem
@@ -57,16 +150,7 @@ class FishingSpawnCause(
 
             bait?.effects?.forEach { it ->
                 if (Math.random() > it.chance) return
-                when (it.type) {
-                    FishingBait.Effects.SHINY_REROLL -> shinyReroll(entity, it)
-                    FishingBait.Effects.NATURE -> alterNatureAttempt(entity, it)
-                    FishingBait.Effects.IV -> alterIVAttempt(entity, it)
-                    FishingBait.Effects.GENDER_CHANCE -> alterGenderAttempt(entity, it)
-                    FishingBait.Effects.LEVEL_RAISE -> alterLevelAttempt(entity, it)
-                    FishingBait.Effects.TERA -> alterTeraAttempt(entity, it)
-                    FishingBait.Effects.HIDDEN_ABILITY_CHANCE -> alterHAAttempt(entity)
-                    FishingBait.Effects.FRIENDSHIP -> alterFriendshipAttempt(entity, it)
-                }
+                FishingBait.Effects.getEffectFunction(it.type)?.invoke(entity, it)
             }
 
             // Some of the bait actions might have changed the aspects and we need it to be
@@ -74,6 +158,7 @@ class FishingSpawnCause(
             // with the old aspects.
             // New aspects copy into the entity data only on the next tick.
             entity.entityData.set(PokemonEntity.ASPECTS, entity.pokemon.aspects)
+            CobblemonEvents.BOBBER_SPAWN_POKEMON_MODIFY.post(BobberSpawnPokemonEvent.Modify(bucket, rodStack, entity))
         }
     }
 
@@ -97,93 +182,5 @@ class FishingSpawnCause(
         return super.affectWeight(detail, ctx, weight)
     }
 
-    private fun shinyReroll(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
-        if (pokemonEntity.pokemon.shiny) return
 
-        val shinyOdds = Cobblemon.config.shinyRate.toInt()
-        if (shinyOdds <= 0) {
-            return
-        }
-        val randomNumber = nextInt(0, shinyOdds + 1)
-
-        if (randomNumber <= effect.value.toInt()) {
-            pokemonEntity.pokemon.shiny = true
-        }
-    }
-
-    private fun alterNatureAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
-        val baitStat = effect.subcategory?.let { it1 -> Stats.getStat(it1.path).identifier } ?: run {
-            LOGGER.warn("One of your nature baits is missing a subcategory and failed to effect a fished Pokemon")
-            return
-        }
-        // TIMNOTE: This replaces the static lists. It's less performant because it's being reviewed every time,
-        // but also it's not something that goes off too often.
-        val possibleNatures = Natures.all().filter { it.increasedStat?.identifier == baitStat }
-        if (possibleNatures.isEmpty() || possibleNatures.any { it == pokemonEntity.pokemon.nature }) return
-        val takenNature = possibleNatures.random()
-
-        pokemonEntity.pokemon.nature = Natures.getNature(takenNature.name.path) ?: return
-    }
-
-    private fun alterIVAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
-        val iv = effect.subcategory ?: return
-
-        if ((pokemonEntity.pokemon.ivs[Stats.getStat(iv.path)] ?: 0) + effect.value > 31) // if HP IV is already less than 3 away from 31
-            pokemonEntity.pokemon.ivs.set(Stats.getStat(iv.path), 31)
-        else
-            pokemonEntity.pokemon.ivs.set(Stats.getStat(iv.path), (pokemonEntity.pokemon.ivs[Stats.getStat(iv.path)] ?: 0) + (effect.value).toInt())
-    }
-
-    private fun alterGenderAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
-        if (pokemonEntity.pokemon.species.maleRatio > 0 && pokemonEntity.pokemon.species.maleRatio < 1) // if the pokemon is allowed to be male or female
-            when (effect.subcategory) {
-                cobblemonResource("male") -> if (pokemonEntity.pokemon.gender != Gender.MALE) pokemonEntity.pokemon.gender = Gender.MALE
-                cobblemonResource("female") -> if (pokemonEntity.pokemon.gender != Gender.FEMALE) pokemonEntity.pokemon.gender = Gender.FEMALE
-            }
-    }
-
-    private fun alterLevelAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
-        var level = pokemonEntity.pokemon.level + effect.value.toInt()
-        if (level > Cobblemon.config.maxPokemonLevel)
-            level = Cobblemon.config.maxPokemonLevel
-        pokemonEntity.pokemon.level = level
-    }
-
-    private fun alterTeraAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
-        if (pokemonEntity.pokemon.teraType == effect.subcategory?.let { TeraTypes.get(it.path) } ||
-                TeraTypes.get(effect.subcategory!!.path) == null) return
-
-        pokemonEntity.pokemon.teraType = TeraTypes.get(effect.subcategory.path)!!
-    }
-
-    private fun alterHAAttempt(pokemonEntity: PokemonEntity) {
-        //val species = pokemonEntity.pokemon.species.let { PokemonSpecies.getByName(it.name) } ?: return
-        //val ability = species.abilities.mapping[Priority.LOW]?.first()?.template?.name ?: return
-
-        //pokemonEntity.pokemon.ability = Abilities.get(ability)?.create(false) ?: return
-
-        // Old code from Licious that might be helpful if the above proves to not work
-
-        // This will iterate from highest to lowest priority
-        pokemonEntity.pokemon.form.abilities.mapping.values.forEach { abilities ->
-            abilities.filterIsInstance<HiddenAbility>()
-                    .randomOrNull ()
-                    ?.let { ability ->
-                        // No need to force, this is legal
-                        pokemonEntity.pokemon.ability = ability.template.create(false)
-                        return
-                    }
-        }
-        // There was never a hidden ability :( possible but not by default
-        return
-
-
-    }
-
-    private fun alterFriendshipAttempt(pokemonEntity: PokemonEntity, effect: FishingBait.Effect) {
-        if (pokemonEntity.pokemon.friendship + effect.value > 255)
-            pokemonEntity.pokemon.setFriendship(255)
-        else
-            pokemonEntity.pokemon.setFriendship(pokemonEntity.pokemon.friendship + effect.value.toInt())
-    }
 }

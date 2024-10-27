@@ -28,6 +28,7 @@ import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
 import com.cobblemon.mod.common.api.moves.animations.ActionEffects
 import com.cobblemon.mod.common.api.moves.animations.NPCProvider
 import com.cobblemon.mod.common.api.scripting.CobblemonScripts
+import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.WaveFunctions
 import com.cobblemon.mod.common.entity.npc.NPCEntity
@@ -317,6 +318,21 @@ object MoLangFunctions {
             map
         }
     )
+
+    val partyFunctions = mutableListOf<(PartyStore) -> HashMap<String, java.util.function.Function<MoParams, Any>>>(
+        { party ->
+            val map = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
+            map.put("get_pokemon") { params ->
+                val index = params.getInt(0)
+                val pokemon = party.get(index) ?: return@put DoubleValue.ZERO
+                val struct = VariableStruct()
+                pokemon.writeVariables(struct)
+                return@put struct
+            }
+            map.put("healing_remainder_percent") { _ -> DoubleValue(party.getHealingRemainderPercent()) }
+
+            return@mutableListOf map
+        })
 
     fun Holder<Biome>.asBiomeMoLangValue() = asMoLangValue(Registries.BIOME).addFunctions(biomeFunctions)
     fun Holder<Level>.asWorldMoLangValue() = asMoLangValue(Registries.DIMENSION).addFunctions(worldFunctions)

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.npc
 
+import com.cobblemon.mod.common.api.ai.config.BrainConfig
 import com.cobblemon.mod.common.api.npc.configuration.NPCConfigVariable
 import com.cobblemon.mod.common.api.npc.configuration.NPCInteractConfiguration
 import com.cobblemon.mod.common.api.npc.variation.NPCVariationProvider
@@ -26,6 +27,7 @@ class NPCPreset {
     var interaction: NPCInteractConfiguration? = null
     var names: MutableSet<Component>? = null
     var hitbox: EntityDimensions? = null
+    var ai: List<BrainConfig>? = null
     var skill: Int? = null
     var battleTheme: ResourceLocation? = null
 
@@ -46,5 +48,6 @@ class NPCPreset {
         hitbox?.let { npcClass.hitbox = it }
         skill?.let { npcClass.skill = it }
         battleTheme?.let { npcClass.battleTheme = it }
+        ai?.let { npcClass.ai.addAll(it) }
     }
 }

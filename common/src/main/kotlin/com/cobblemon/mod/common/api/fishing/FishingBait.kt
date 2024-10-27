@@ -8,11 +8,16 @@
 
 package com.cobblemon.mod.common.api.fishing
 
+import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.events.fishing.BaitEffectFunctionRegistryEvent
+import com.cobblemon.mod.common.api.spawning.fishing.FishingSpawnCause
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.core.Registry
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 
@@ -75,6 +80,7 @@ data class FishingBait(
     }
 
     object Effects {
+        private val EFFECT_FUNCTIONS: MutableMap<ResourceLocation, (PokemonEntity, Effect) -> Unit> = mutableMapOf()
         val NATURE = cobblemonResource("nature")
         val IV = cobblemonResource("iv")
         val EV = cobblemonResource("ev")
@@ -87,6 +93,28 @@ data class FishingBait(
         val POKEMON_CHANCE = cobblemonResource("pokemon_chance")
         val FRIENDSHIP = cobblemonResource("friendship")
         val INERT = cobblemonResource("inert")
+
+        fun registerEffect(type: ResourceLocation, effect: (PokemonEntity, Effect) -> Unit) {
+            EFFECT_FUNCTIONS[type] = effect
+        }
+
+        fun getEffectFunction(type: ResourceLocation): ((PokemonEntity, Effect) -> Unit)? {
+            return EFFECT_FUNCTIONS[type]
+        }
+
+        fun setupEffects() {
+            EFFECT_FUNCTIONS[NATURE] = { entity, effect -> FishingSpawnCause.alterNatureAttempt(entity, effect) }
+            EFFECT_FUNCTIONS[IV] = { entity, effect -> FishingSpawnCause.alterIVAttempt(entity, effect) }
+            EFFECT_FUNCTIONS[SHINY_REROLL] = { entity, effect -> FishingSpawnCause.shinyReroll(entity, effect) }
+            EFFECT_FUNCTIONS[GENDER_CHANCE] = { entity, effect -> FishingSpawnCause.alterGenderAttempt(entity, effect) }
+            EFFECT_FUNCTIONS[LEVEL_RAISE] = { entity, effect -> FishingSpawnCause.alterLevelAttempt(entity, effect) }
+            EFFECT_FUNCTIONS[TERA] = { entity, effect -> FishingSpawnCause.alterTeraAttempt(entity, effect) }
+            EFFECT_FUNCTIONS[HIDDEN_ABILITY_CHANCE] = { entity, _ -> FishingSpawnCause.alterHAAttempt(entity) }
+            EFFECT_FUNCTIONS[FRIENDSHIP] = { entity, effect -> FishingSpawnCause.alterFriendshipAttempt(entity, effect) }
+            CobblemonEvents.BAIT_EFFECT_REGISTRATION.post(BaitEffectFunctionRegistryEvent()) { event ->
+                EFFECT_FUNCTIONS.putAll(event.functions)
+            }
+        }
     }
 }
 
