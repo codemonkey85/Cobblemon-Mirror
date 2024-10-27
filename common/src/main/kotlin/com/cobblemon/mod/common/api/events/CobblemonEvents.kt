@@ -83,8 +83,6 @@ object CobblemonEvents {
     val POKEMON_CAPTURED = EventObservable<PokemonCapturedEvent>()
     @JvmField
     val FOSSIL_REVIVED = EventObservable<FossilRevivedEvent>()
-//    @JvmField
-//    val EGG_HATCH = EventObservable<HatchEggEvent>()
     @JvmField
     val BATTLE_STARTED_PRE = CancelableObservable<BattleStartedPreEvent>()
     @JvmField
@@ -212,4 +210,11 @@ object CobblemonEvents {
     val BOBBER_SPAWN_POKEMON_POST = EventObservable<BobberSpawnPokemonEvent.Post>()
     @JvmField
     val BAIT_EFFECT_REGISTRATION = EventObservable<BaitEffectFunctionRegistryEvent>()
+
+    @JvmField
+    val COLLECT_EGG = CancelableObservable<CollectEggEvent>()
+    @JvmField
+    val HATCH_EGG_PRE = CancelableObservable<HatchEggEvent.Pre>()
+    @JvmField
+    val HATCH_EGG_POST = EventObservable<HatchEggEvent.Post>()
 }
