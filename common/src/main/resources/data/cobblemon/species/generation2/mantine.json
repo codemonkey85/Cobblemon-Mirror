@@ -27,6 +27,10 @@
   ],
   "behaviour": {
     "moving": {
+      "canLook": false,
+      "walk": {
+        "avoidsLand": true
+      },
       "swim": {
         "swimSpeed": 0.3,
         "canSwimInWater": true,

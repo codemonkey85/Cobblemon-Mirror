@@ -26,6 +26,19 @@
     "water_1",
     "dragon"
   ],
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "canWalk": true,
+        "avoidsLand": true
+      },
+      "swim": {
+        "swimSpeed": 0.1,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true
+      }
+    }
+  },
   "moves": [
     "1:flail",
     "1:refresh",

@@ -176,6 +176,15 @@
     "water_1",
     "water_3"
   ],
+  "behaviour": {
+    "moving": {
+      "swim": {
+        "swimSpeed": 0.1,
+        "canSwimInWater": false,
+        "canBreatheUnderwater": true
+      }
+    }
+  },
   "moves": [
     "1:harden",
     "1:tackle",

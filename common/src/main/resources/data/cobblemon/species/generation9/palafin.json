@@ -32,6 +32,19 @@
     "field",
     "water_2"
   ],
+  "behaviour": {
+    "moving": {
+      "canLook": false,
+      "walk": {
+        "avoidsLand": true
+      },
+      "swim": {
+        "swimSpeed": 0.1,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true
+      }
+    }
+  },
   "moves": [
     "1:jetpunch",
     "1:supersonic",
