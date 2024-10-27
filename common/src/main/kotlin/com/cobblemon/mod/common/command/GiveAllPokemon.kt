@@ -45,7 +45,9 @@ object GiveAllPokemon {
         val orderedSpeces = PokemonSpecies.implemented.sortedBy { it.nationalPokedexNumber }
 
         for (species in orderedSpeces) {
-            pc.add(species.create())//.sendOut(player.level() as ServerWorld, player.pos)
+            val pokemon = species.create()
+            pokemon.setOriginalTrainer(player.uuid)
+            pc.add(pokemon)//.sendOut(player.level() as ServerWorld, player.pos)
         }
 
         return Command.SINGLE_SUCCESS
