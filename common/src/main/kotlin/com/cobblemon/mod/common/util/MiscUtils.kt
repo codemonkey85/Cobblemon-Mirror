@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.util
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.item.HealingSource
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -158,4 +159,10 @@ fun Int.toRGBA(): Vector4f {
     val blue = (this and 255) / 255.0f
     val alpha = (this shr 24 and 255) / 255.0f
     return Vector4f(red, green, blue, alpha)
+}
+
+inline fun <reified T> Any.ifIsType(block: T.() -> Unit) {
+    if (this is T) {
+        block(this)
+    }
 }

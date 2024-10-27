@@ -49,7 +49,7 @@ class StatusCureItem(val itemName: String, vararg val status: Status) : Cobblemo
         val currentStatus = pokemon.status?.status
         return if (currentStatus != null && (status.isEmpty() || currentStatus in status)) {
             pokemon.status = null
-            player.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
+            pokemon.entity?.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
             if (!player.isCreative)  {
                 stack.shrink(1)
                 player.giveOrDropItemStack(ItemStack(bagItem.returnItem))
@@ -62,7 +62,7 @@ class StatusCureItem(val itemName: String, vararg val status: Status) : Cobblemo
 
     override fun applyToBattlePokemon(player: ServerPlayer, stack: ItemStack, battlePokemon: BattlePokemon) {
         super.applyToBattlePokemon(player, stack, battlePokemon)
-        player.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
+        battlePokemon.entity?.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
     }
 
     override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {

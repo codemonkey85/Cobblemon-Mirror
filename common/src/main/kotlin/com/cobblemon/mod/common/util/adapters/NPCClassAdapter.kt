@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.util.adapters
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.ai.config.BrainConfig
 import com.cobblemon.mod.common.api.npc.NPCClass
 import com.cobblemon.mod.common.api.npc.NPCPartyProvider
 import com.cobblemon.mod.common.api.npc.NPCPreset
@@ -68,6 +69,8 @@ object NPCClassAdapter : JsonDeserializer<NPCClass> {
         }
         obj.get("party")?.let { npcClass.party = ctx.deserialize(it, NPCPartyProvider::class.java) }
         obj.get("skill")?.let { npcClass.skill = it.asInt }
+        obj.get("battleTheme")?.let { npcClass.battleTheme = it.asString.asIdentifierDefaultingNamespace() }
+        obj.get("ai")?.let { npcClass.ai.addAll(it.asJsonArray.map<JsonElement, BrainConfig> { ctx.deserialize(it, BrainConfig::class.java) }.toMutableList()) }
 
         return npcClass
     }

@@ -400,10 +400,10 @@ open class PokemonEntity(
         //This is so that pokemon in the pasture block are ALWAYS in sync with the pokemon box
         //Before, pokemon entities in pastures would hold an old ref to a pokemon obj and changes to that would not appear to the underlying file
         if (this.tethering != null) {
-            //Only for online players
-            val player = level().getPlayerByUUID(ownerUUID) as? ServerPlayer
-            if (player != null) {
-                this.ownerUUID?.let {
+            // Only for online players
+            this.ownerUUID?.let { ownerUUID ->
+                val player = level().getPlayerByUUID(ownerUUID) as? ServerPlayer
+                if (player != null) {
                     val actualPokemon = Cobblemon.storage.getPC(player)[this.pokemon.uuid]
                     actualPokemon?.let {
                         if (it !== pokemon) {
@@ -898,7 +898,7 @@ open class PokemonEntity(
     }
 
     override fun shouldBeSaved(): Boolean {
-        if (ownerUUID == null && (Cobblemon.config.savePokemonToWorld || isPersistenceRequired)) {
+        if (ownerUUID == null && !pokemon.isNPCOwned() && (Cobblemon.config.savePokemonToWorld || isPersistenceRequired)) {
             CobblemonEvents.POKEMON_ENTITY_SAVE_TO_WORLD.postThen(PokemonEntitySaveToWorldEvent(this)) {
                 return true
             }

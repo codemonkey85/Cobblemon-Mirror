@@ -75,7 +75,6 @@ class EvolutionSelectScreen(
             buttonHeight = 10,
             clickAction = {
                 Minecraft.getInstance().player?.clientSideCloseContainer()
-                Minecraft.getInstance().player?.sendSystemMessage(lang("ui.evolve.into", pokemon.getDisplayName(), evolution.species.translatedName))
                 playSound(CobblemonSounds.GUI_CLICK)
                 pokemon.evolutionProxy.client().start(this.evolution)
             },

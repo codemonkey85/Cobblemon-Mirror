@@ -52,16 +52,20 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.PackLocationInfo
-import net.minecraft.server.packs.PackResources
 import net.minecraft.server.packs.PackSelectionConfig
 import net.minecraft.server.packs.PackType
 import net.minecraft.server.packs.PathPackResources
+import net.minecraft.server.packs.repository.BuiltInPackSource
+import net.minecraft.server.packs.repository.KnownPack
 import net.minecraft.server.packs.repository.Pack
+import net.minecraft.server.packs.repository.Pack.Position
 import net.minecraft.server.packs.repository.PackSource
 import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.CreativeModeTab
+import net.minecraft.world.item.CreativeModeTab.TabVisibility
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.GameRules
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.biome.Biome
@@ -69,17 +73,18 @@ import net.minecraft.world.level.block.ComposterBlock
 import net.minecraft.world.level.levelgen.GenerationStep
 import net.minecraft.world.level.levelgen.placement.PlacedFeature
 import net.neoforged.api.distmarker.Dist
+import net.neoforged.bus.api.EventPriority
 import net.neoforged.fml.InterModComms
 import net.neoforged.fml.ModList
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
-import net.neoforged.fml.event.lifecycle.FMLDedicatedServerSetupEvent
 import net.neoforged.fml.loading.FMLEnvironment
 import net.neoforged.neoforge.common.ItemAbilities
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.common.NeoForgeMod
 import net.neoforged.neoforge.event.AddPackFindersEvent
 import net.neoforged.neoforge.event.AddReloadListenerEvent
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
 import net.neoforged.neoforge.event.LootTableLoadEvent
 import net.neoforged.neoforge.event.OnDatapackSyncEvent
 import net.neoforged.neoforge.event.RegisterCommandsEvent
@@ -96,6 +101,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries
 import net.neoforged.neoforge.registries.RegisterEvent
 import net.neoforged.neoforge.server.ServerLifecycleHooks
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
+import java.util.Optional
 
 @Mod(Cobblemon.MODID)
 class CobblemonNeoForge : CobblemonImplementation {
@@ -113,12 +119,12 @@ class CobblemonNeoForge : CobblemonImplementation {
         with(MOD_BUS) {
             this@CobblemonNeoForge.commandArgumentTypes.register(this)
             addListener(this@CobblemonNeoForge::initialize)
-            addListener(this@CobblemonNeoForge::serverInit)
             Cobblemon.preInitialize(this@CobblemonNeoForge)
             addListener(CobblemonBiomeModifiers::register)
             addListener(this@CobblemonNeoForge::on)
             addListener(this@CobblemonNeoForge::onAddPackFindersEvent)
             addListener(networkManager::registerMessages)
+            addListener(EventPriority.HIGH, ::onBuildContents)
         }
         with(NeoForge.EVENT_BUS) {
             addListener(this@CobblemonNeoForge::onDataPackSync)
@@ -148,10 +154,6 @@ class CobblemonNeoForge : CobblemonImplementation {
     fun wakeUp(event: PlayerWakeUpEvent) {
         val playerEntity = event.entity as? ServerPlayer ?: return
         playerEntity.didSleep()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    fun serverInit(event: FMLDedicatedServerSetupEvent) {
     }
 
     fun initialize(event: FMLCommonSetupEvent) {
@@ -429,7 +431,6 @@ class CobblemonNeoForge : CobblemonImplementation {
         this.queuedBuiltinResourcePacks += Triple(id, title, activationBehaviour)
     }
 
-    //TODO: I dont really know wtf is happening here, someone needs to check
     //This event gets fired before init, so we need to put resource packs in EARLY
     fun onAddPackFindersEvent(event: AddPackFindersEvent) {
         if (event.packType != PackType.CLIENT_RESOURCES) {
@@ -437,40 +438,24 @@ class CobblemonNeoForge : CobblemonImplementation {
         }
 
         if (this.isModInstalled("adorn")) {
-            //AdornCompatibility.register()
             registerBuiltinResourcePack(cobblemonResource("adorncompatibility"), Component.literal("Adorn Compatibility"), ResourcePackActivationBehaviour.ALWAYS_ENABLED)
         }
 
-        val modFile = ModList.get().getModFileById(Cobblemon.MODID).file
+        val modFile = ModList.get().getModContainerById(Cobblemon.MODID).get().modInfo
         this.queuedBuiltinResourcePacks.forEach { (id, title, activationBehaviour) ->
-            // Fabric expects resourcepacks as the root so we do too here
-            val path = modFile.findResource("resourcepacks/${id.path}")
-            //val factory = PackFactory { name -> PathPackResources(name, true, path) }
+            var packLocation = cobblemonResource("resourcepacks/${id.path}")
+            var resourcePath = modFile.owningFile.file.findResource(packLocation.path)
 
-            //TODO(Deltric)
-            val factory = object : Pack.ResourcesSupplier {
-                override fun openPrimary(info: PackLocationInfo): PackResources {
-                    // Implement the logic here
-                    return PathPackResources(info, path)
-                }
+            var version = modFile.version
 
-                override fun openFull(info: PackLocationInfo, metadata: Pack.Metadata): PackResources {
-                    return PathPackResources(info, path)
-                }
+            var pack = Pack.readMetaAndCreate(PackLocationInfo("mod/$packLocation", title, PackSource.BUILT_IN, Optional.of(KnownPack("neoforge", "mod/$packLocation", version.toString()))),
+            BuiltInPackSource.fromName { path -> PathPackResources(path, resourcePath) }, PackType.CLIENT_RESOURCES,
+            PackSelectionConfig(activationBehaviour == ResourcePackActivationBehaviour.ALWAYS_ENABLED, Position.TOP, false))
+            if (pack == null) {
+                Cobblemon.LOGGER.error("Failed to register built-in resource pack $id. If you are in dev you can ignore this")
+                return@forEach
             }
-
-            val profile = Pack.readMetaAndCreate(
-                PackLocationInfo(
-                    id.toString(),
-                    title,
-                    PackSource.BUILT_IN,
-                    null
-                ),
-                factory,
-                PackType.CLIENT_RESOURCES,
-                PackSelectionConfig(true, Pack.Position.TOP, true)
-            )
-            event.addRepositorySource { consumer -> consumer.accept(profile) }
+            event.addRepositorySource { packConsumer -> packConsumer.accept(pack) }
         }
     }
 
@@ -495,6 +480,11 @@ class CobblemonNeoForge : CobblemonImplementation {
         CobblemonNeoForgeBrewingRegistry.register(e)
     }
 
+    private fun onBuildContents(e: BuildCreativeModeTabContentsEvent) {
+        val forgeInject = ForgeItemGroupInject(e)
+        CobblemonItemGroups.inject(e.tabKey, forgeInject)
+    }
+
     private fun attemptModCompat() {
         // CarryOn has a tag key for this but for some reason Forge version just doesn't work instead we do this :)
         // See https://github.com/Tschipp/CarryOn/wiki/IMC-support-for-Modders
@@ -504,4 +494,27 @@ class CobblemonNeoForge : CobblemonImplementation {
         }
     }
 
+    private class ForgeItemGroupInject(private val entries: BuildCreativeModeTabContentsEvent) : CobblemonItemGroups.Injector {
+
+        override fun putFirst(item: ItemLike) {
+            this.entries.insertFirst(ItemStack(item), TabVisibility.PARENT_AND_SEARCH_TABS)
+        }
+
+        override fun putBefore(item: ItemLike, target: ItemLike) {
+            this.entries.insertBefore(
+                ItemStack(target),
+                ItemStack(item), TabVisibility.PARENT_AND_SEARCH_TABS
+            )
+        }
+
+        override fun putAfter(item: ItemLike, target: ItemLike) {
+            this.entries.insertAfter(
+                ItemStack(target),
+                ItemStack(item), TabVisibility.PARENT_AND_SEARCH_TABS)
+        }
+
+        override fun putLast(item: ItemLike) {
+            this.entries.accept(ItemStack(item), TabVisibility.PARENT_AND_SEARCH_TABS)
+        }
+    }
 }

@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.battles
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.api.storage.party.PartyStore
@@ -272,7 +273,6 @@ object BattleBuilder {
     ): BattleStartResult {
         val playerTeam = party.toBattleTeam(clone = cloneParties, healPokemon = healFirst, leadingPokemon = leadingPokemon)
         val playerActor = PlayerBattleActor(player.uuid, playerTeam)
-
         val npcParty = npcEntity.party?.getParty(player, npcEntity)
         val errors = ErroredBattleStart()
 
@@ -313,8 +313,7 @@ object BattleBuilder {
                 side1 = BattleSide(playerActor),
                 side2 = BattleSide(npcActor)
             ).ifSuccessful { battle ->
-                // TODO NPC battle themes
-//                playerActor.battleTheme = pokemonEntity.getBattleTheme()
+                playerActor.battleTheme = npcEntity.getBattleTheme()
                 npcEntity.entityData.update(NPCEntity.BATTLE_IDS) { it + battle.battleId }
                 result = SuccessfulBattleStart(battle)
             }

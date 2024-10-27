@@ -65,10 +65,11 @@ object PartySendBinding : CobblemonBlockingKeyBinding(
 
         if (player.isSpectator) return
 
+
         val battle = CobblemonClient.battle
         if (battle != null) {
             battle.minimised = !battle.minimised
-            if (!battle.minimised) {
+            if (!battle.minimised && !Minecraft.getInstance().options.hideGui) {
                 Minecraft.getInstance().setScreen(BattleGUI())
             }
             return
