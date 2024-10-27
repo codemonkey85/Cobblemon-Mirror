@@ -13,12 +13,17 @@ import com.cobblemon.mod.common.CobblemonMechanics
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
+import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.events.pokemon.healing.PokemonHealedEvent
+import com.cobblemon.mod.common.api.item.HealingSource
 import com.cobblemon.mod.common.api.item.PokemonSelectingItem
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.block.EnergyRootBlock
 import com.cobblemon.mod.common.item.battle.BagItem
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.genericRuntime
+import com.cobblemon.mod.common.util.resolveInt
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
@@ -28,7 +33,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 
-class EnergyRootItem(block: EnergyRootBlock, settings: Properties) : ItemNameBlockItem(block, settings), PokemonSelectingItem {
+class EnergyRootItem(block: EnergyRootBlock, settings: Properties) : ItemNameBlockItem(block, settings), PokemonSelectingItem, HealingSource {
 
     private val runtime = MoLangRuntime().setup()
 
@@ -48,9 +53,13 @@ class EnergyRootItem(block: EnergyRootBlock, settings: Properties) : ItemNameBlo
 
     override fun applyToPokemon(player: ServerPlayer, stack: ItemStack, pokemon: Pokemon): InteractionResultHolder<ItemStack> {
         return if (this.canUseOnPokemon(pokemon)) {
-            pokemon.currentHealth += this.getHealAmount()
+            var amount = this.getHealAmount()
+            CobblemonEvents.POKEMON_HEALED.postThen(PokemonHealedEvent(pokemon, amount, this), { cancelledEvent -> return InteractionResultHolder.fail(stack)}) { event ->
+                amount = event.amount
+            }
+            pokemon.currentHealth += amount
             pokemon.decrementFriendship(CobblemonMechanics.remedies.getFriendshipDrop(runtime))
-            player.playSound(CobblemonSounds.MEDICINE_HERB_USE, 1F, 1F)
+            pokemon.entity?.playSound(CobblemonSounds.MEDICINE_HERB_USE, 1F, 1F)
             if (!player.isCreative)  {
                 stack.shrink(1)
             }
@@ -62,7 +71,7 @@ class EnergyRootItem(block: EnergyRootBlock, settings: Properties) : ItemNameBlo
 
     override fun applyToBattlePokemon(player: ServerPlayer, stack: ItemStack, battlePokemon: BattlePokemon) {
         super.applyToBattlePokemon(player, stack, battlePokemon)
-        player.playSound(CobblemonSounds.MEDICINE_HERB_USE, 1F, 1F)
+        battlePokemon.entity?.playSound(CobblemonSounds.MEDICINE_HERB_USE, 1F, 1F)
     }
 
     override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {

@@ -1,0 +1,16 @@
+[
+  {
+    "type": "add_tasks_to_activity",
+    "activity": "idle",
+    "tasksByPriority": {
+      "0": ["switch_to_chatting"]
+    }
+  },
+  {
+    "type": "add_tasks_to_activity",
+    "activity": "cobblemon:npc_chatting",
+    "tasksByPriority": {
+      "0": ["switch_from_chatting", "look_at_speaker", "look_at_target"]
+    }
+  }
+]

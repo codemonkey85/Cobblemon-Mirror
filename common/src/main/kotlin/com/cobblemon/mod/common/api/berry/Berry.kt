@@ -172,7 +172,8 @@ class Berry(
         val treeEntity = world.getBlockEntity(pos) as BerryBlockEntity
         if (BerryBlock.getMulch(treeEntity) == MulchVariant.RICH) {
             //I hope the upper bound isnt exclusive, especially when there's a method called nextBetweenExclusive
-            yield += world.random.nextIntBetweenInclusive(1, 3)
+            // update: it was meant to be exclusive, which caused #1124. I've lowered the upper bound from 3 to 2.
+            yield += world.random.nextIntBetweenInclusive(1, 2)
             treeEntity.decrementMulchDuration(world, pos, state)
         }
         val event = BerryYieldCalculationEvent(this, world, state, pos, placer, yield, bonus.second)

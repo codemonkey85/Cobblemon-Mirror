@@ -1,0 +1,17 @@
+{
+  "interaction": {
+    "type": "dialogue",
+    "dialogue": "cobblemon:npc-example"
+  },
+  "battleConfiguration": {
+    "canChallenge": true
+  },
+  "skill": 5,
+  "party": {
+    "type": "simple",
+    "pokemon": [
+      "milotic level=1 held_item=cobblemon:flame_orb ability=marvelscale nature=bold moves=recover,mirrorcoat,icebeam,scald hp_iv=31 attack_iv=31 defence_iv=31 special_attack_iv=31 special_defence_iv=31 speed_iv=31 hp_ev=252 defence_ev=252 special_attack_ev=6",
+      "garchomp level=1 held_item=cobblemon:yache_berry ability=roughskin nature=jolly moves=dragonclaw,earthquake,swordsdance,poisonjab hp_iv=31 attack_iv=31 defence_iv=31 special_attack_iv=31 special_defence_iv=31 speed_iv=31 hp_ev=6 attack_ev=252 speed_ev=252"
+    ]
+  }
+}

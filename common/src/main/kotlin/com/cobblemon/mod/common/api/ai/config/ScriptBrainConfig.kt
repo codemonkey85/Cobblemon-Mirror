@@ -20,19 +20,26 @@ import com.cobblemon.mod.common.api.molang.ObjectValue
 import com.cobblemon.mod.common.api.scripting.CobblemonScripts
 import com.cobblemon.mod.common.entity.PosableEntity
 import com.cobblemon.mod.common.util.activityRegistry
+import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.resolve
+import com.cobblemon.mod.common.util.resolveBoolean
+import com.cobblemon.mod.common.util.withQueryValue
 import com.mojang.datafixers.util.Pair
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.behavior.BehaviorControl
 
 class ScriptBrainConfig : BrainConfig {
+    val condition = "true".asExpressionLike()
     val script = cobblemonResource("dummy")
 
     override fun configure(entity: LivingEntity, context: BrainConfigurationContext) {
-        val struct = createBrainStruct(entity, context)
         val runtime = MoLangRuntime().setup()
+        runtime.withQueryValue("entity", (entity as? PosableEntity)?.struct ?: QueryStruct(hashMapOf()))
+        if (!runtime.resolveBoolean(condition)) return
+
+        val struct = createBrainStruct(entity, context)
         val script = CobblemonScripts.scripts[this.script]
             ?: run {
                 Cobblemon.LOGGER.error("Tried loading script $script as part of an entity brain but that script does not exist")

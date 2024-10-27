@@ -34,7 +34,7 @@ class MintItem(val nature: Nature) : CobblemonItem(Properties()), PokemonSelecti
             if (!player.isCreative) {
                 stack.shrink(1)
             }
-            player.playSound(CobblemonSounds.MEDICINE_HERB_USE, 1F, 1F)
+            pokemon.entity?.playSound(CobblemonSounds.MEDICINE_HERB_USE, 1F, 1F)
             pokemon.mintedNature = nature
             player.sendSystemMessage(lang("mint.interact", pokemon.getDisplayName(), stack.hoverName), true)
             InteractionResultHolder.success(stack)
