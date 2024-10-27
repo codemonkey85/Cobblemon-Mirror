@@ -291,8 +291,10 @@ open class Pokemon : ShowdownIdentifiable {
 
     var state: PokemonState = InactivePokemonState()
         set(value) {
-            field = value
-            _state.emit(value)
+            if (field != value) {
+                field = value
+                _state.emit(value)
+            }
         }
 
     val entity: PokemonEntity?
