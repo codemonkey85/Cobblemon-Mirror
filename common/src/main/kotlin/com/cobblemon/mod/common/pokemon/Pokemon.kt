@@ -672,6 +672,7 @@ open class Pokemon : ShowdownIdentifiable {
 
     /**
      * Adjusts a given sent out position based on the local environment.
+     * Returns the new position and a PlatformType if the pokemon should be placed on one.
      */
     fun getAjustedSendoutPosition(pos: Vec3, level: Level, illusion: IllusionEffect?) : kotlin.Pair<Vec3, PlatformType> {
         var platform = PlatformType.NONE
@@ -683,33 +684,45 @@ open class Pokemon : ShowdownIdentifiable {
         val form = illusion?.exposedForm ?: this.form
         // TODO: Cleanup, Look for a cleaner return var, and perhaps a better parameter for GetPlatformTypeForPokemon()
         if (level.isWaterAt(blockPos)) {
+            // look upward for a water surface
+            var testPos = blockPos
             if (!species.behaviour.moving.swim.canBreatheUnderwater) {
                 // move sendout pos to surface if it's near
                 for (i in 0..blockLookCount) {
                     // Try to find a surface...
-                    val blockState = level.getBlockState(blockPos)
+                    val blockState = level.getBlockState(testPos)
                     if (blockState.fluidState.isEmpty) {
-                        if(blockState.getCollisionShape(level, blockPos).isEmpty) {
+                        if(blockState.getCollisionShape(level, testPos).isEmpty) {
                             foundSurface = true
                         }
                         // No space above the water surface
                         break
                     }
-                    blockPos = blockPos.above()
+                    testPos = testPos.above()
+                }
+                var hasHeadRoom = true
+                var headPos = testPos
+                while (hasHeadRoom && headPos.y <= ceil(testPos.y + species.hitbox.height * species.baseScale) ) {
+                    hasHeadRoom = level.isEmptyBlock(testPos)
+                    headPos = headPos.above()
+                }
+                if (hasHeadRoom) {
+                    newPos = Vec3(newPos.x, blockPos.y.toDouble(), newPos.z)
+                } else {
+                    foundSurface = false
                 }
             } else {
                 newPos =  Vec3(newPos.x, blockPos.y.toDouble() - 0.5, newPos.z)
             }
         } else if (level.isEmptyBlock(blockPos)) {
             // look down for a surface
-            blockLookCount = 64
+            blockLookCount = 64 // Higher because the pokemon is going to fall down to the water
             var testPos =  BlockPos(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
             for (i in 0..blockLookCount) {
                 // Try to find a surface...
                 val blockState = level.getBlockState(testPos)
                 if (!blockState.fluidState.isEmpty) {
                     foundSurface = true
-                    testPos = testPos.below()
                     break
                 }
                 if (!blockState.getCollisionShape(level, testPos).isEmpty) {
@@ -722,7 +735,15 @@ open class Pokemon : ShowdownIdentifiable {
             if (level.isWaterAt(blockPos) || level.isWaterAt(blockPos.below())) {
                 val canFly = species.behaviour.moving.fly.canFly
                 if (canFly) {
-                    newPos = Vec3(newPos.x, blockPos.y.toDouble() + 2.0, newPos.z) // TODO: search for available head space
+                    var hasHeadRoom = true
+                    var testPos = blockPos
+                    while (hasHeadRoom && testPos.y <= ceil(newPos.y + species.hitbox.height * species.baseScale + 2.0)) {
+                        hasHeadRoom = level.isEmptyBlock(testPos)
+                        testPos = testPos.above()
+                    }
+                    if (hasHeadRoom) {
+                        newPos = Vec3(newPos.x, blockPos.y.toDouble() + 2.0, newPos.z)
+                    }
                 } else if (species.behaviour.moving.swim.canBreatheUnderwater && !species.behaviour.moving.swim.canWalkOnWater) {
                     // Use half hitbox height for swimmers
                     val halfHeight = species.hitbox.height * species.baseScale / 2.0
