@@ -176,5 +176,5 @@ object CobblemonEvents {
     @JvmField
     val HATCH_EGG_PRE = CancelableObservable<HatchEggEvent.Pre>()
     @JvmField
-    val HATCH_EGG_POST = CancelableObservable<HatchEggEvent.Post>()
+    val HATCH_EGG_POST = EventObservable<HatchEggEvent.Post>()
 }
