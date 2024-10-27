@@ -11,11 +11,16 @@ package com.cobblemon.mod.common.item.interactive
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
+import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.events.pokemon.healing.PokemonHealedEvent
+import com.cobblemon.mod.common.api.item.HealingSource
 import com.cobblemon.mod.common.api.item.PokemonSelectingItem
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.item.CobblemonItem
 import com.cobblemon.mod.common.item.battle.BagItem
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.genericRuntime
+import com.cobblemon.mod.common.util.resolveFloat
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.server.level.ServerPlayer
@@ -24,7 +29,7 @@ import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.level.Level
 import net.minecraft.world.item.Items
 
-class BerryJuiceItem : CobblemonItem(Properties()), PokemonSelectingItem {
+class BerryJuiceItem : CobblemonItem(Properties()), PokemonSelectingItem, HealingSource {
     override val bagItem = object : BagItem {
         override val itemName = "item.cobblemon.berry_juice"
         override val returnItem = Items.BOWL
@@ -48,7 +53,11 @@ class BerryJuiceItem : CobblemonItem(Properties()), PokemonSelectingItem {
         if (pokemon.isFullHealth()) {
             return InteractionResultHolder.fail(stack)
         }
-        pokemon.currentHealth = Integer.min(pokemon.currentHealth + 20, pokemon.maxHealth)
+        var amount = Integer.min(pokemon.currentHealth + 20, pokemon.maxHealth)
+        CobblemonEvents.POKEMON_HEALED.postThen(PokemonHealedEvent(pokemon, amount, this), { cancelledEvent -> return InteractionResultHolder.fail(stack)}) { event ->
+            amount = event.amount
+        }
+        pokemon.currentHealth = amount
         player.playSound(CobblemonSounds.BERRY_EAT, 1F, 1F)
         if (!player.isCreative)  {
             stack.shrink(1)

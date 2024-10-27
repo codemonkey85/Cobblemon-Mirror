@@ -1,0 +1,26 @@
+[
+  {
+    "type": "add_tasks_to_activity",
+    "activity": "cobblemon:npc_battling",
+    "tasksByPriority": {
+      "0": [
+        "switch_npc_from_battle",
+        {
+          "type": "look_at_target",
+          "minDurationTicks": "90",
+          "maxDurationTicks": "120"
+        },
+        "look_at_battling_pokemon"
+      ]
+    }
+  },
+  {
+    "type": "add_tasks_to_activity",
+    "activity": "idle",
+    "tasksByPriority": {
+      "0": [
+        "switch_npc_to_battle"
+      ]
+    }
+  }
+]
