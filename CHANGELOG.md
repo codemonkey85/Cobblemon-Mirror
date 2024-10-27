@@ -133,6 +133,7 @@
 - Flamigo
 - Veluza
 - Farigiraf
+- Klawf
 - Finizen
 - Palafin
 - Wiglett
@@ -182,6 +183,7 @@
 - Bruxish
 - Hatenna, Hattrem, Hatterene
 - Pincurchin
+- Klawf
 - Finizen, Palafin [Zero], Palafin [Hero]
 - Dondozo
 
@@ -215,6 +217,16 @@
 - Tatsugiri
 - Glimmet
 - Gimmighoul [Roaming]
+
+### Animation updates for the following Pokémon
+- Bellsprout, Weepinbel, Victreebel
+- Porygon, Porygon2, Porygon-Z
+- Skarmory
+- Torkoal
+- Nincada, Ninjask
+- Lunatone
+- Solrock
+- Buneary, Lopunny
 
 ### Model updates for the following Pokémon
 - Bulbasaur, Ivysaur, Venusaur
@@ -338,6 +350,7 @@
 - Fixed Slowking's battle idle. 
 - Fixed Grafaiai's walk speed to prevent model sliding. 
 - Fixed Alolan Exeggutor's tail not showing in the party UI. It will now also stand in front of all Pokémon in the party menu :)
+- Fixed Timburr duplicating its log while fainting.
 - Fixed reviving items throwing an exception when used in battle.
 - Fixed messages for Focus Sash, Confusion, Mummy, Ice Face, Own Tempo, and Revive.
 - Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server.
