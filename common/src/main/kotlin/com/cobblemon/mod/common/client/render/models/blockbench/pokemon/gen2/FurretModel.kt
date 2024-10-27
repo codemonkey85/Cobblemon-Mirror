@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen2
 
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.QuadrupedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
@@ -32,6 +33,8 @@ class FurretModel (root: ModelPart) : PokemonPosableModel(root), QuadrupedFrame 
 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose
+
+    override val cryAnimation = CryProvider { bedrockStateful("furret", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("furret", "blink") }

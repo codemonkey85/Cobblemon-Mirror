@@ -4,6 +4,9 @@
   "profileScale": 0.56,
   "profileTranslation": [-0.27,0.82,0],
   "rootBone": "clawitzer",
+  "animations": {
+    "cry": "q.bedrock_stateful('clawitzer_left', 'cry')"
+  },
   "poses": {
     "standing": {
       "poseTypes": ["STAND", "WALK", "FLOAT", "SWIM", "PORTRAIT", "PROFILE", "NONE"],

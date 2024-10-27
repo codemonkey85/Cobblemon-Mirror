@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen5
 
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
@@ -33,7 +34,7 @@ class HydreigonModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose
 
-//    override val cryAnimation = CryProvider { bedrockStateful("hydreigon", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("hydreigon", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("hydreigon", "blink") }

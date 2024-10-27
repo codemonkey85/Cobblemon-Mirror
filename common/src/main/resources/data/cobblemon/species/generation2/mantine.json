@@ -1,5 +1,4 @@
 {
-  "implemented": true,
   "name": "Mantine",
   "nationalPokedexNumber": 226,
   "primaryType": "water",
@@ -26,6 +25,21 @@
   "eggGroups": [
     "water_1"
   ],
+  "behaviour": {
+    "moving": {
+      "swim": {
+        "swimSpeed": 0.3,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
+  },
   "moves": [
     "1:bubble",
     "1:bulletseed",
@@ -181,10 +195,10 @@
   ],
   "preEvolution": "mantyke",
   "evolutions": [],
-  "baseScale": 1.1,
+  "baseScale": 1,
   "hitbox": {
-    "width": 1.7,
-    "height": 0.8,
+    "width": 1,
+    "height": 1,
     "fixed": false
   },
   "baseFriendship": 50,

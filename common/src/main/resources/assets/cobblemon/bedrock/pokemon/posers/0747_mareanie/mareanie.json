@@ -4,6 +4,9 @@
   "profileScale": 0.65,
   "profileTranslation": [0,0.74,0],
   "rootBone": "mareanie",
+  "animations": {
+    "cry": "q.bedrock_stateful('mareanie', 'cry')"
+  },
   "poses": {
     "standing": {
       "poseTypes": ["STAND", "WALK", "SWIM", "FLOAT", "PORTRAIT", "PROFILE", "NONE"],

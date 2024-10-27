@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
@@ -32,6 +33,8 @@ class GengarModel(root: ModelPart) : PokemonPosableModel(root), BipedFrame {
 
     lateinit var standing: Pose
     lateinit var walk: Pose
+
+    override val cryAnimation = CryProvider { bedrockStateful("gengar", "cry") }
 
     override fun registerPoses() {
         standing = registerPose(
