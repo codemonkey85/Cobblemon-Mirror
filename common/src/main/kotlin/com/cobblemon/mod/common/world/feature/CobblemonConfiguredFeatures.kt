@@ -31,6 +31,9 @@ object CobblemonConfiguredFeatures {
     val YELLOW_APRICORN_TREE_KEY = of("yellow_apricorn_tree")
 
     @JvmField
+    val SACCHARINE_TREE_KEY = of("saccharine_tree")
+
+    @JvmField
     val MINTS_KEY = of("mints")
     @JvmField
     val MEDICINAL_LEEKS_KEY = of("medicinal_leek")

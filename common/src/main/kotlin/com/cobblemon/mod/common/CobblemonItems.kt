@@ -302,8 +302,8 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
 
     @JvmField
     val SWEET_SAP = noSettingsItem("sweet_sap")
-    //@JvmField
-    //val BUGWORT = bugwortItem("bugwort", BugwortItem(CobblemonBlocks.BUGWORT))
+    @JvmField
+    val BUGWORT = bugwortItem("bugwort", BugwortItem(CobblemonBlocks.BUGWORT))
 
     //@JvmField
     //val SCATTER_BANG = this.create("scatter_bang", ScatterBangItem(Item.Settings()))
@@ -1364,7 +1364,7 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
         return item
     }
 
-    /*private fun saccharineSaplingItem(name: String, saccharineSaplingItem: SaccharineSaplingItem): SaccharineSaplingItem {
+    private fun saccharineSaplingItem(name: String, saccharineSaplingItem: SaccharineSaplingItem): SaccharineSaplingItem {
         val finalName = "saccharine_sapling"
         val item = this.create(finalName, saccharineSaplingItem)
         compostable(item, .65f)
@@ -1376,7 +1376,7 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
         val item = this.create(finalName, bugwortItem)
         compostable(item, .65f)
         return item
-    }*/
+    }
 
 
     private fun mintSeed(name: String, mintBlock: MintBlock): Item {
