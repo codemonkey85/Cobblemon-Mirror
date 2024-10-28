@@ -126,6 +126,7 @@ import net.minecraft.world.level.pathfinder.PathType
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
+import org.joml.Matrix3f
 import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.joml.Vector4f
@@ -1532,7 +1533,9 @@ open class PokemonEntity(
             val index = passengers.indexOf(passenger).takeIf { it >= 0 && it < seats.size } ?: return
             val seat = seats[index]
             val offset = seat.getOffset(getCurrentPoseType())
-            positionUpdater.accept(passenger, this.x + offset.x, this.y + offset.y, this.z + offset.z)
+            val orientation = (passengers.first() as? Rollable)?.orientation ?: Matrix3f()
+            val rotatedOffset = orientation.transform(offset.toVector3f())
+            positionUpdater.accept(passenger, this.x + rotatedOffset.x, this.y + rotatedOffset.y, this.z + rotatedOffset.z)
             if (passenger is LivingEntity) {
                 passenger.yRot = this.yRot
             }
