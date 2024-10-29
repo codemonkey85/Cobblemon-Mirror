@@ -220,8 +220,11 @@
 
 ### Animation updates for the following Pokémon
 - Bellsprout, Weepinbel, Victreebel
+- Shellder, Cloyster
 - Porygon, Porygon2, Porygon-Z
+- Furret
 - Skarmory
+- Spinda
 - Torkoal
 - Nincada, Ninjask
 - Lunatone
