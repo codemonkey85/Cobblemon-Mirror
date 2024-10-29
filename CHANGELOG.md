@@ -223,6 +223,8 @@
 - Shellder, Cloyster
 - Porygon, Porygon2, Porygon-Z
 - Furret
+- Swinub, Piloswine, Mamoswine
+- Mantyke, Mantine
 - Skarmory
 - Spinda
 - Torkoal
@@ -230,6 +232,9 @@
 - Lunatone
 - Solrock
 - Buneary, Lopunny
+- Alomomola
+- Dreepy, Drakloak
+- Kleavor
 
 ### Model updates for the following Pokémon
 - Bulbasaur, Ivysaur, Venusaur
@@ -249,6 +254,7 @@
 - Magby, Magmar, Magmortar
 - Magikarp, Gyarados
 - Munchlax, Snorlax
+- Swinub, Piloswine, Mamoswine
 - Mudkip, Marshtomp, Swampert
 - Baltoy, Claydol
 - Carvanha
