@@ -39,54 +39,54 @@
 					]
 				},
 				{
-					"name": "arns",
+					"name": "arms",
 					"parent": "chest",
 					"pivot": [0, 12.5, 0],
 					"rotation": [5, 0, 0]
 				},
 				{
-					"name": "arn_left",
-					"parent": "arns",
+					"name": "arm_left",
+					"parent": "arms",
 					"pivot": [1, 12.5, 0],
 					"cubes": [
 						{"origin": [1, 12.5, -4.5], "size": [3, 0, 9], "uv": [-9, 19]}
 					]
 				},
 				{
-					"name": "arn_left2",
-					"parent": "arn_left",
+					"name": "arm_left2",
+					"parent": "arm_left",
 					"pivot": [4, 12.5, 0],
 					"cubes": [
 						{"origin": [4, 12.5, -4.5], "size": [5, 0, 9], "uv": [3, 19]}
 					]
 				},
 				{
-					"name": "arn_left3",
-					"parent": "arn_left2",
+					"name": "arm_left3",
+					"parent": "arm_left2",
 					"pivot": [9, 12.5, 0],
 					"cubes": [
 						{"origin": [9, 12.5, -3.5], "size": [4, 0, 7], "uv": [7, 12]}
 					]
 				},
 				{
-					"name": "arn_right",
-					"parent": "arns",
+					"name": "arm_right",
+					"parent": "arms",
 					"pivot": [-1, 12.5, 0],
 					"cubes": [
 						{"origin": [-4, 12.5, -4.5], "size": [3, 0, 9], "uv": [-3, 19], "mirror": true}
 					]
 				},
 				{
-					"name": "arn_right2",
-					"parent": "arn_right",
+					"name": "arm_right2",
+					"parent": "arm_right",
 					"pivot": [-4, 12.5, 0],
 					"cubes": [
 						{"origin": [-9, 12.5, -4.5], "size": [5, 0, 9], "uv": [13, 12], "mirror": true}
 					]
 				},
 				{
-					"name": "arn_right3",
-					"parent": "arn_right2",
+					"name": "arm_right3",
+					"parent": "arm_right2",
 					"pivot": [-9, 12.5, 0],
 					"cubes": [
 						{"origin": [-13, 12.5, -3.5], "size": [4, 0, 7], "uv": [15, 21], "mirror": true}
@@ -215,7 +215,7 @@
 					]
 				},
 				{
-					"name": "foor_left_detail",
+					"name": "foot_left_detail",
 					"parent": "foot_front_left",
 					"pivot": [0.5, -0.75, 0.5],
 					"rotation": [-17.5, 0, 0],
@@ -285,7 +285,7 @@
 					]
 				},
 				{
-					"name": "foor_right_detail",
+					"name": "foot_right_detail",
 					"parent": "foot_middle_right",
 					"pivot": [-0.5, -1.25, 0.5],
 					"rotation": [-17.5, 0, 0],
@@ -303,7 +303,7 @@
 					]
 				},
 				{
-					"name": "foor_right_detail2",
+					"name": "foot_right_detail2",
 					"parent": "foot_back_right",
 					"pivot": [-0.5, -0.5, 0.5],
 					"rotation": [-37.5, 0, 0],
