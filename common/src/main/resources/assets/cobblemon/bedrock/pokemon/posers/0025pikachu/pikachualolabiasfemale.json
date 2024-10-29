@@ -1,0 +1,100 @@
+{
+  "rootBone": "pikachu",
+  "portraitScale": 2.1,
+  "portraitTranslation": [
+    -0.1,
+    -0.3,
+    0
+  ],
+  "profileScale": 0.65,
+  "profileTranslation": [
+    0,
+    0.77,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('pikachu', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('pikachu', 'blink')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('pikachu', 'sleep')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('pikachu', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('pikachu', 'blink')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('pikachu', 'shoulder_left')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('pikachu', 'blink')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('pikachu', 'shoulder_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('pikachu', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER"
+      ],
+      "animations": [
+        "q.bedrock('pikachu', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('pikachu', 'blink')"
+      ]
+    }
+  }
+}

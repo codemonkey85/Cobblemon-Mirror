@@ -1,0 +1,73 @@
+{
+  "rootBone": "nidorina",
+  "portraitScale": 1.8,
+  "portraitTranslation": [
+    -0.35,
+    -0.8,
+    0
+  ],
+  "profileScale": 1,
+  "profileTranslation": [
+    0,
+    0.21,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('nidorina', 'idle3')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('nidorina', 'blink')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('nidorina', 'idle2')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('nidorina', 'idle2')",
+        "q.quadruped_walk('null', 'right_upper_arm', 'left_leg', 'right_leg', 0.6662, 1.4)"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('nidorina', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('nidorina', 'idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('nidorina', 'blink')"
+      ]
+    }
+  }
+}

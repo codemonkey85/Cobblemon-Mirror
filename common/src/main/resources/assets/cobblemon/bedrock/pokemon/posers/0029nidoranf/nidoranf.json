@@ -1,0 +1,52 @@
+{
+  "rootBone": "nidoran_f",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.16,
+    -0.85,
+    0
+  ],
+  "profileScale": 1.03,
+  "profileTranslation": [
+    0.02,
+    0.21,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('nidoranf', 'idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('nidoranf', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('nidoranf', 'idle')",
+        "q.quadruped_walk('leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right', 0.6662, 1.4)"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('nidoranf', 'blink')"
+      ]
+    }
+  }
+}

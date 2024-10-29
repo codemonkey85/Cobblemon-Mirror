@@ -1,0 +1,153 @@
+{
+  "rootBone": "squirtle",
+  "portraitScale": 2.02,
+  "portraitTranslation": [
+    -0.12,
+    -0.21,
+    0
+  ],
+  "profileScale": 0.78,
+  "profileTranslation": [
+    -0.04,
+    0.57,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('squirtle', 'sleep')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('squirtle', 'blink')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        null,
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('squirtle', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('squirtle', 'blink')",
+        "q.bedrock_quirk('squirtle', 'quirk_ground_idle')"
+      ]
+    },
+    "stand": {
+      "poseName": "stand",
+      "poseTypes": [
+        "STAND"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('squirtle', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('squirtle', 'blink')",
+        "q.bedrock_quirk('squirtle', 'quirk_ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES - PoseType.FLY"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('squirtle', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('squirtle', 'blink')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "FLOAT"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('squirtle', 'water_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('squirtle', 'blink')",
+        "q.bedrock_quirk('squirtle', 'quirk_water')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('squirtle', 'water_swim')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('squirtle', 'blink')"
+      ]
+    },
+    "surface_idle": {
+      "poseName": "surface_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('squirtle', 'surfacewater_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('squirtle', 'blink')"
+      ]
+    },
+    "surface_swim": {
+      "poseName": "surface_swim",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('squirtle', 'surfacewater_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('squirtle', 'blink')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('squirtle', 'shoulder_left')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('squirtle', 'blink')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('squirtle', 'shoulder_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('squirtle', 'blink')"
+      ]
+    }
+  }
+}
