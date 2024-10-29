@@ -1,0 +1,57 @@
+{
+  "portraitScale": 1,
+  "portraitTranslation": [
+    0.1,
+    0,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.4,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head4')",
+        "q.look('undefined', false, false, 70, -45, 45, -45)",
+        "q.look('undefined', false, false, 70, -45, 45, -45)",
+        "q.look('undefined', false, false, 70, -45, 45, -45)",
+        "q.bedrock('maushold_four', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('maushold_four', 'blink1')",
+        "q.bedrock_quirk('maushold_four', 'blink2')",
+        "q.bedrock_quirk('maushold_four', 'blink3')",
+        "q.bedrock_quirk('maushold_four', 'blink4')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head4')",
+        "q.look('undefined', false, false, 70, -45, 45, -45)",
+        "q.look('undefined', false, false, 70, -45, 45, -45)",
+        "q.look('undefined', false, false, 70, -45, 45, -45)",
+        "q.bedrock('maushold_four', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('maushold_four', 'blink1')",
+        "q.bedrock_quirk('maushold_four', 'blink2')",
+        "q.bedrock_quirk('maushold_four', 'blink3')",
+        "q.bedrock_quirk('maushold_four', 'blink4')"
+      ]
+    }
+  }
+}

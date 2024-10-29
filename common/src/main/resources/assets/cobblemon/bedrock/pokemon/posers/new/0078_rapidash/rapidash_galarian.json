@@ -1,0 +1,57 @@
+{
+  "rootBone": "rapidash_galar",
+  "portraitScale": 1.86,
+  "portraitTranslation": [
+    -0.5,
+    1.3,
+    0
+  ],
+  "profileScale": 0.67,
+  "profileTranslation": [
+    0,
+    0.72,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('rapidash_galar', 'ground_idle')",
+        "q.bedrock('rapidash_galar', 'hair')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('rapidash_galar', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('rapidash_galar', 'ground_walk')",
+        "q.bedrock('rapidash_galar', 'hair')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('rapidash_galar', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('rapidash_galar', 'battle_idle')",
+        "q.bedrock('rapidash_galar', 'hair')"
+      ]
+    }
+  }
+}
