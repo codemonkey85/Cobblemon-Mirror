@@ -1,0 +1,104 @@
+{
+  "rootBone": "wingull",
+  "portraitScale": 3,
+  "portraitTranslation": [
+    -0.2,
+    -2.8,
+    0
+  ],
+  "profileScale": 0.85,
+  "profileTranslation": [
+    0,
+    0.5,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('wingull', 'surfacewater_sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "SHOULDER_POSES",
+        "UI_POSES",
+        "STATIONARY_POSES - PoseType.HOVER"
+      ],
+      "animations": [
+        "q.bedrock('wingull', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('wingull', 'blink')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "HOVER"
+      ],
+      "animations": [
+        "q.bedrock('pelipper', 'air_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('wingull', 'blink')"
+      ]
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('pelipper', 'air_fly')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('wingull', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "MOVING_POSES - PoseType.FLY"
+      ],
+      "animations": [
+        "q.bedrock('wingull', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('wingull', 'blink')"
+      ]
+    },
+    "surface_idle": {
+      "poseName": "surface_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('wingull', 'surfacewater_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wingull', 'blink')"
+      ]
+    },
+    "surface_swim": {
+      "poseName": "surface_swim",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('wingull', 'surfacewater_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wingull', 'blink')"
+      ]
+    }
+  }
+}

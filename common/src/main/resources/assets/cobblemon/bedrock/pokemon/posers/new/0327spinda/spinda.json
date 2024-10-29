@@ -1,0 +1,39 @@
+{
+  "rootBone": "spinda",
+  "portraitScale": 1.9,
+  "portraitTranslation": [
+    -0.5,
+    -0.1,
+    0
+  ],
+  "profileScale": 0.76,
+  "profileTranslation": [
+    0,
+    0.6,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('spinda', 'ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('spinda', 'ground_idle')",
+        "q.biped_walk(0.7, 1.4, 'leg_left', 'leg_right')"
+      ]
+    }
+  }
+}

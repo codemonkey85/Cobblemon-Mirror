@@ -1,0 +1,105 @@
+{
+  "rootBone": "lanturn",
+  "portraitScale": 1.7,
+  "portraitTranslation": [
+    -0.65,
+    -0.7,
+    0
+  ],
+  "profileScale": 0.6,
+  "profileTranslation": [
+    0,
+    0.7,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('lanturn', 'water_sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STAND"
+      ],
+      "animations": [
+        "q.bedrock('lanturn', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('lanturn', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.bedrock('lanturn', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('lanturn', 'blink')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('lanturn', 'water_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('lanturn', 'blink')"
+      ]
+    },
+    "swimming": {
+      "poseName": "swimming",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('lanturn', 'water_swim')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('lanturn', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('lanturn', 'ground_battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('lanturn', 'blink')"
+      ]
+    },
+    "water_battle_idle": {
+      "poseName": "water_battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('lanturn', 'water_battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('lanturn', 'blink')"
+      ]
+    }
+  }
+}

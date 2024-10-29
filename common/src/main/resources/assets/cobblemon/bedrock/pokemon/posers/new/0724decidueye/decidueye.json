@@ -1,0 +1,74 @@
+{
+  "rootBone": "decidueye",
+  "portraitScale": 1.5200002,
+  "portraitTranslation": [
+    -0.28,
+    2.5300000000000047,
+    0
+  ],
+  "profileScale": 0.46999997,
+  "profileTranslation": [
+    0,
+    1.0299999999999998,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        null,
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('decidueye', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('decidueye', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.biped_walk(0.6662, 1.4, 'thigh_left', 'thigh_right')",
+        "q.bedrock('decidueye', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('decidueye', 'blink')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "HOVER"
+      ],
+      "animations": [
+        "q.bedrock('decidueye', 'air_idle')",
+        "q.sine_wing_flap(0.6, 0.9, -10, 'y', 'wing_open_left1', 'wing_open_right1')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('decidueye', 'blink')"
+      ]
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('decidueye', 'air_fly')",
+        "q.sine_wing_flap(0.9, 0.9, -14, 'y', 'wing_open_left1', 'wing_open_right1')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('decidueye', 'blink')"
+      ]
+    }
+  }
+}

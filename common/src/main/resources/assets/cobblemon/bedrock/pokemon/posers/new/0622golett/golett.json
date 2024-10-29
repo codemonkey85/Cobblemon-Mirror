@@ -1,0 +1,53 @@
+{
+  "rootBone": "golett",
+  "portraitScale": 3,
+  "portraitTranslation": [
+    -0.15,
+    -0.45,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.55,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('golett', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('golett', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('golett', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('golett', 'blink')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('golett', 'sleep')"
+      ]
+    }
+  }
+}

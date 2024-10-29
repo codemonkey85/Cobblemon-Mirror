@@ -1,0 +1,61 @@
+{
+  "rootBone": "ninetales",
+  "portraitScale": 1.65,
+  "portraitTranslation": [
+    -0.4,
+    0.7,
+    0
+  ],
+  "profileScale": 0.7,
+  "profileTranslation": [
+    0,
+    0.67,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('ninetales', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('ninetales', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('ninetales', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('ninetales', 'ground_idle')",
+        "q.quadruped_walk('null', 'leg_front_right', 'leg_back_left', 'leg_back_right', 0.5, 1.1)"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('ninetales', 'blink')"
+      ]
+    }
+  }
+}

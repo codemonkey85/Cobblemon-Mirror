@@ -1,0 +1,54 @@
+{
+  "rootBone": "darmanitan",
+  "portraitScale": 1.05,
+  "portraitTranslation": [
+    -0.28,
+    0.48,
+    0
+  ],
+  "profileScale": 0.63,
+  "profileTranslation": [
+    0,
+    0.69,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('darmanitan_zen', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('darmanitan_zen', 'ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('darmanitan_zen', 'ground_walk')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('darmanitan_zen', 'battle_idle')"
+      ]
+    }
+  }
+}

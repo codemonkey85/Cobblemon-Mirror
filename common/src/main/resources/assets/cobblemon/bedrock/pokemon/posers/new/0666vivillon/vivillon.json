@@ -1,0 +1,53 @@
+{
+  "rootBone": "vivillon",
+  "portraitScale": 2.8,
+  "portraitTranslation": [
+    -0.3,
+    0.2,
+    0
+  ],
+  "profileScale": 0.7,
+  "profileTranslation": [
+    0.1,
+    0.8,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('vivillon', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('vivillon', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('vivillon', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('vivillon', 'air_fly')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('vivillon', 'blink')"
+      ]
+    }
+  }
+}

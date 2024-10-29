@@ -1,0 +1,50 @@
+{
+  "rootBone": "blaziken",
+  "portraitScale": 2.4,
+  "portraitTranslation": [
+    -0.1,
+    3,
+    0
+  ],
+  "profileScale": 0.55,
+  "profileTranslation": [
+    0,
+    0.93,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('blaziken', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('blaziken', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('blaziken', 'ground_idle')",
+        "q.biped_walk(0.75, 0.9, 'leg_left', 'leg_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('blaziken', 'blink')"
+      ]
+    }
+  }
+}

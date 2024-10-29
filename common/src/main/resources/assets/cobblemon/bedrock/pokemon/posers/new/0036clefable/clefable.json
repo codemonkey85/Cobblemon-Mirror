@@ -1,0 +1,59 @@
+{
+  "rootBone": "clefable",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.1,
+    -0.7,
+    0
+  ],
+  "profileScale": 1.15,
+  "profileTranslation": [
+    0,
+    0.02,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('clefable', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('clefable', 'blink')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('clefable', 'sleep')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('clefable', 'ground_idle')",
+        "q.bedrock('clefable', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('clefable', 'blink')"
+      ]
+    }
+  }
+}

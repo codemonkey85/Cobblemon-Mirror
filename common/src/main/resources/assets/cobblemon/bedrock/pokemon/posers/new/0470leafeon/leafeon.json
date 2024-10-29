@@ -1,0 +1,45 @@
+{
+  "rootBone": "leafeon",
+  "portraitScale": 2.3,
+  "portraitTranslation": [
+    -0.7,
+    -0.7,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.35,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('leafeon', 'ground_idle')"
+      ],
+      "transformTicks": 10
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('leafeon', 'ground_run')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

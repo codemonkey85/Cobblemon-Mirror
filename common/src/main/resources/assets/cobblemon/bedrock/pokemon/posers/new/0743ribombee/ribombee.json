@@ -1,0 +1,50 @@
+{
+  "rootBone": "ribombee",
+  "portraitScale": 1.8,
+  "portraitTranslation": [
+    0,
+    0.95,
+    0
+  ],
+  "profileScale": 0.5,
+  "profileTranslation": [
+    0.1,
+    0.9,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('ribombee', 'sleep')"
+      ]
+    },
+    "idle": {
+      "poseName": "idle",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('ribombee', 'ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('ribombee', 'ground_walk')"
+      ]
+    }
+  }
+}

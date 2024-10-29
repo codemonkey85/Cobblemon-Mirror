@@ -1,0 +1,66 @@
+{
+  "rootBone": "skeledirge",
+  "portraitScale": 1,
+  "portraitTranslation": [
+    -1.2,
+    0.4,
+    0
+  ],
+  "profileScale": 0.4,
+  "profileTranslation": [
+    0,
+    1,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('skeledirge', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('skeledirge', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('skeledirge', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('skeledirge', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('skeledirge', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('skeledirge', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('skeledirge', 'blink')"
+      ]
+    }
+  }
+}

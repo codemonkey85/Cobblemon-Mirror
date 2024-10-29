@@ -1,0 +1,65 @@
+{
+  "rootBone": "vaporeon",
+  "portraitScale": 2.2,
+  "portraitTranslation": [
+    -0.6,
+    -0.58,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.35,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('vaporeon', 'ground_idle')"
+      ],
+      "transformTicks": 10
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('vaporeon', 'ground_run')"
+      ],
+      "transformTicks": 10
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('vaporeon', 'water_idle')"
+      ],
+      "transformTicks": 10
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('vaporeon', 'water_swim')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

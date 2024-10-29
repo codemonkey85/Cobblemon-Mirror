@@ -1,0 +1,101 @@
+{
+  "rootBone": "frogadier",
+  "portraitScale": 1.9,
+  "portraitTranslation": [
+    -0.1,
+    1.4,
+    0
+  ],
+  "profileScale": 0.7,
+  "profileTranslation": [
+    0,
+    0.7,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('frogadier', 'sleep')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('frogadier', 'blink')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES - PoseType.FLOAT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('frogadier', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('frogadier', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('frogadier', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('frogadier', 'blink')"
+      ]
+    },
+    "swim_idle": {
+      "poseName": "swim_idle",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('frogadier', 'water_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('frogadier', 'blink')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('frogadier', 'water_swim')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('frogadier', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('frogadier', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('frogadier', 'blink')"
+      ]
+    }
+  }
+}

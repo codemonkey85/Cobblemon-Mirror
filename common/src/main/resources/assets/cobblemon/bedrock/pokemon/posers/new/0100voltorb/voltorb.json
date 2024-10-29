@@ -1,0 +1,44 @@
+{
+  "rootBone": "voltorb",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.2,
+    -1.2,
+    0
+  ],
+  "profileScale": 1.1,
+  "profileTranslation": [
+    0,
+    0.1,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('voltorb', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('voltorb', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('voltorb', 'ground_walk')"
+      ]
+    }
+  }
+}

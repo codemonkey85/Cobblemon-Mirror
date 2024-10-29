@@ -1,0 +1,60 @@
+{
+  "rootBone": "meowth_alolan",
+  "portraitScale": 1.6,
+  "portraitTranslation": [
+    0.05,
+    -0.1,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.54,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('meowth_alolan', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('meowth_alolan', 'blink')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('meowth_alolan', 'sleep')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.biped_walk(.7, 1.4, 'leg_left', 'leg_right')",
+        "q.bimanual_swing(0.6662, 1, 'arm_left', 'arm_right')",
+        "q.bedrock('meowth_alolan', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('meowth_alolan', 'blink')"
+      ]
+    }
+  }
+}

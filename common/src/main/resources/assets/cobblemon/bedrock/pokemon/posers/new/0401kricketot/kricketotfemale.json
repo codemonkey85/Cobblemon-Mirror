@@ -1,0 +1,93 @@
+{
+  "rootBone": "kricketot",
+  "portraitScale": 3.3,
+  "portraitTranslation": [
+    -0.1,
+    -2.2,
+    0
+  ],
+  "profileScale": 1,
+  "profileTranslation": [
+    0,
+    0.25,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('kricketot', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('kricketot', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('kricketot', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('kricketot', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('kricketot', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('kricketot', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('kricketot', 'blink')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('kricketot', 'shoulder_left')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('kricketot', 'blink')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('kricketot', 'shoulder_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('kricketot', 'blink')"
+      ]
+    }
+  }
+}

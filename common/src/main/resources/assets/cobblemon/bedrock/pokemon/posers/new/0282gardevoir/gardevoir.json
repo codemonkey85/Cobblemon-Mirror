@@ -1,0 +1,67 @@
+{
+  "rootBone": "gardevoir",
+  "portraitScale": 2.6,
+  "portraitTranslation": [
+    -0.1,
+    1.9,
+    0
+  ],
+  "profileScale": 0.65,
+  "profileTranslation": [
+    0,
+    0.76,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('gardevoir', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('gardevoir', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('gardevoir', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('gardevoir', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('gardevoir', 'blink')"
+      ]
+    },
+    "battleidle": {
+      "poseName": "battleidle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('gardevoir', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('gardevoir', 'blink')"
+      ]
+    }
+  }
+}

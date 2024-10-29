@@ -1,0 +1,42 @@
+{
+  "rootBone": "carbink",
+  "portraitScale": 1.8,
+  "portraitTranslation": [
+    0,
+    0.2,
+    0
+  ],
+  "profileScale": 0.85,
+  "profileTranslation": [
+    0,
+    0.7,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('carbink', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('carbink', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('carbink', 'air_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('carbink', 'blink')"
+      ]
+    }
+  }
+}

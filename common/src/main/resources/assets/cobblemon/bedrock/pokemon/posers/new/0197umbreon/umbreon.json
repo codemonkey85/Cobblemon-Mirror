@@ -1,0 +1,51 @@
+{
+  "rootBone": "umbreon",
+  "portraitScale": 2.2,
+  "portraitTranslation": [
+    -0.6,
+    -0.45,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.35,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('umbreon', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('umbreon', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('umbreon', 'ground_run')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('umbreon', 'blink')"
+      ]
+    }
+  }
+}

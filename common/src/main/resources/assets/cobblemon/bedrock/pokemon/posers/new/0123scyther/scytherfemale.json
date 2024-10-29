@@ -1,0 +1,69 @@
+{
+  "rootBone": "scyther",
+  "portraitScale": 2.2,
+  "portraitTranslation": [
+    -0.4,
+    1.4,
+    0
+  ],
+  "profileScale": 0.64,
+  "profileTranslation": [
+    0,
+    0.7,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('scyther', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('scyther', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.biped_walk(0.7, 0.85, 'left_upper_leg', 'right_upper_leg')",
+        "q.bedrock('scyther', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('scyther', 'blink')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "HOVER"
+      ],
+      "animations": [
+        "q.bedrock('scyther', 'air_idle')",
+        "q.sine_wing_flap(0.6, 0.9, -10, 'y', 'left_wing', 'right_wing')"
+      ],
+      "transformTicks": 10
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('scyther', 'air_idle')",
+        "q.sine_wing_flap(0.9, 0.9, -14, 'y', 'left_wing', 'right_wing')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

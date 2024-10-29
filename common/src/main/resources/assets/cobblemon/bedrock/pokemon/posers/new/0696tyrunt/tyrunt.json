@@ -1,0 +1,66 @@
+{
+  "rootBone": "tyrunt",
+  "portraitScale": 1.08,
+  "portraitTranslation": [
+    -0.43,
+    0.4,
+    0
+  ],
+  "profileScale": 0.56,
+  "profileTranslation": [
+    -0.03,
+    0.89,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('tyrunt', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('tyrunt', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tyrunt', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('tyrunt', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tyrunt', 'blink')"
+      ]
+    },
+    "battleidle": {
+      "poseName": "battleidle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('tyrunt', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tyrunt', 'blink')"
+      ]
+    }
+  }
+}

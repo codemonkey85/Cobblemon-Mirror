@@ -1,0 +1,43 @@
+{
+  "rootBone": "magnezone",
+  "portraitScale": 1.4,
+  "portraitTranslation": [
+    -0.35,
+    -0.28,
+    0
+  ],
+  "profileScale": 0.6,
+  "profileTranslation": [
+    -0.1,
+    0.6,
+    0
+  ],
+  "poses": {
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "ALL_POSES - PoseType.FLY - PoseType.SLEEP - PoseType.SWIM"
+      ],
+      "animations": [
+        "q.bedrock('magnezone', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('magnezone', 'blink')"
+      ]
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.bedrock('magnezone', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('magnezone', 'blink')"
+      ]
+    }
+  }
+}

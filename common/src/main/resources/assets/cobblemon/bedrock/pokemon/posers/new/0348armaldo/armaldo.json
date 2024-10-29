@@ -1,0 +1,152 @@
+{
+  "rootBone": "armaldo",
+  "portraitScale": 1.73,
+  "portraitTranslation": [
+    -0.46,
+    1.5,
+    0
+  ],
+  "profileScale": 0.63,
+  "profileTranslation": [
+    0,
+    0.77,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('armaldo', 'water_sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('armaldo', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('armaldo', 'blink')",
+        "q.bedrock_quirk('armaldo', 'look_quirk')"
+      ]
+    },
+    "water_surface_idle": {
+      "poseName": "water_surface_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('armaldo', 'water_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('armaldo', 'blink')",
+        "q.bedrock_quirk('armaldo', 'look_quirk')"
+      ]
+    },
+    "water_idle": {
+      "poseName": "water_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('armaldo', 'water_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('armaldo', 'blink')",
+        "q.bedrock_quirk('armaldo', 'look_quirk')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('armaldo', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('armaldo', 'blink')",
+        "q.bedrock_quirk('armaldo', 'look_quirk')"
+      ]
+    },
+    "surface_battle_idle": {
+      "poseName": "surface_battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('armaldo', 'water_battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('armaldo', 'blink')",
+        "q.bedrock_quirk('armaldo', 'look_quirk')"
+      ]
+    },
+    "water_battle_idle": {
+      "poseName": "water_battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('armaldo', 'water_battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('armaldo', 'blink')",
+        "q.bedrock_quirk('armaldo', 'look_quirk')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('armaldo', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('armaldo', 'blink')",
+        "q.bedrock_quirk('armaldo', 'look_quirk')"
+      ]
+    },
+    "surface_swim": {
+      "poseName": "surface_swim",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('armaldo', 'water_swim')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('armaldo', 'blink')",
+        "q.bedrock_quirk('armaldo', 'look_quirk')"
+      ]
+    },
+    "water_swim": {
+      "poseName": "water_swim",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('armaldo', 'water_swim')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('armaldo', 'blink')",
+        "q.bedrock_quirk('armaldo', 'look_quirk')"
+      ]
+    }
+  }
+}

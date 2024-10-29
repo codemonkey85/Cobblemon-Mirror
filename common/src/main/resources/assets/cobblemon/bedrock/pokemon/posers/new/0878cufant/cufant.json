@@ -1,0 +1,63 @@
+{
+  "rootBone": "cufant",
+  "portraitScale": 1.5,
+  "portraitTranslation": [
+    -0.32,
+    0.13,
+    0
+  ],
+  "profileScale": 0.62,
+  "profileTranslation": [
+    0.05,
+    0.8,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('cufant', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('cufant', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('cufant', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('cufant', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('cufant', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('cufant', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('cufant', 'blink')"
+      ]
+    }
+  }
+}

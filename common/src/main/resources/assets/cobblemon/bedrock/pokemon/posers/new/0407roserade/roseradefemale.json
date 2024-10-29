@@ -1,0 +1,68 @@
+{
+  "rootBone": "roserade",
+  "portraitScale": 2.64,
+  "portraitTranslation": [
+    -0.29,
+    0.49,
+    0
+  ],
+  "profileScale": 0.65,
+  "profileTranslation": [
+    0,
+    0.76,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('roserade', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('roserade', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('roserade', 'blink')",
+        "q.bedrock_quirk('roserade', 'quirk_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('roserade', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('roserade', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('roserade', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('roserade', 'blink')",
+        "q.bedrock_quirk('roserade', 'quirk_idle')"
+      ]
+    }
+  }
+}

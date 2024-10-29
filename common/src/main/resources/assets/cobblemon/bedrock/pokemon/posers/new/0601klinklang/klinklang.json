@@ -1,0 +1,48 @@
+{
+  "rootBone": "klinklang",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    0.7,
+    0.55,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.5,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('klinklang', 'sleep')"
+      ],
+      "transformTicks": 10
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('klinklang', 'ground_idle')"
+      ],
+      "transformTicks": 10
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('klinklang', 'ground_walk')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

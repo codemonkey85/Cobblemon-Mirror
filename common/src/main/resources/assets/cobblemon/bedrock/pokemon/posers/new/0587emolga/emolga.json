@@ -1,0 +1,74 @@
+{
+  "rootBone": "emolga",
+  "portraitScale": 2.2,
+  "portraitTranslation": [
+    -0.05,
+    -0.8,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.6,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('emolga', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('emolga', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('emolga', 'ground_idle')",
+        "q.biped_walk(1, 0.7, 'leftfoot', 'rightfoot')",
+        "q.bimanual_swing(1, 0.7, 'leftarm', 'rightarm')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('emolga', 'blink')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "HOVER"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('emolga', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('emolga', 'blink')"
+      ]
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('emolga', 'air_fly')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('emolga', 'blink')"
+      ]
+    }
+  }
+}

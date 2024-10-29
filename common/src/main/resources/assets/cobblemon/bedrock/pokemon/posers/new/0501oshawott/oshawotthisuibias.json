@@ -1,0 +1,72 @@
+{
+  "rootBone": "oshawott_hisui_bias",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.2,
+    -0.15,
+    0
+  ],
+  "profileScale": 0.7,
+  "profileTranslation": [
+    0,
+    0.69,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('oshawott_hisui_bias', 'sleep')"
+      ],
+      "transformTicks": 10
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('oshawott_hisui_bias', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('oshawott_hisui_bias', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('oshawott_hisui_bias', 'ground_idle')",
+        "q.biped_walk(0.6, 0.9, 'leg_left', 'leg_right')",
+        "q.bimanual_swing(0.6, 0.9, 'arm_left', 'arm_right')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('oshawott_hisui_bias', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "FLOAT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('oshawott_hisui_bias', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('oshawott_hisui_bias', 'blink')"
+      ]
+    }
+  }
+}

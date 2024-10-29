@@ -1,0 +1,49 @@
+{
+  "rootBone": "mime_jr",
+  "portraitScale": 2.5,
+  "portraitTranslation": [
+    -0.14,
+    -1.25,
+    0
+  ],
+  "profileScale": 0.75,
+  "profileTranslation": [
+    0,
+    0.67,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('mimejr', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('mimejr', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('mimejr', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('mimejr', 'blink')"
+      ]
+    }
+  }
+}

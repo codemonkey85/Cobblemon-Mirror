@@ -1,0 +1,38 @@
+{
+  "rootBone": "pupitar",
+  "portraitScale": 1.01,
+  "portraitTranslation": [
+    0.18,
+    0.54,
+    0
+  ],
+  "profileScale": 0.74,
+  "profileTranslation": [
+    0.09,
+    0.7,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [],
+      "quirks": [
+        "q.bedrock_quirk('pupitar', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [],
+      "quirks": [
+        "q.bedrock_quirk('pupitar', 'blink')"
+      ]
+    }
+  }
+}

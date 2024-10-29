@@ -1,0 +1,40 @@
+{
+  "portraitScale": 1.8,
+  "portraitTranslation": [
+    -1.36,
+    0.86,
+    0
+  ],
+  "profileScale": 0.56,
+  "profileTranslation": [
+    -0.04,
+    0.79,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('neck_left')",
+        "q.look('undefined', false, false, 70, -45, 45, -45)",
+        "q.bedrock('zweilous', 'ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.quadruped_walk('leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right', 1.1, 1.4)",
+        "q.look('neck_left')",
+        "q.look('undefined', false, false, 70, -45, 45, -45)",
+        "q.bedrock('zweilous', 'ground_idle')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "rootBone": "tropius",
+  "portraitScale": 1.31,
+  "portraitTranslation": [
+    -1.23,
+    5.01,
+    0
+  ],
+  "profileScale": 0.28,
+  "profileTranslation": [
+    0,
+    1.26,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('tropius', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('tropius', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('tropius', 'ground_idle')",
+        "q.quadruped_walk('null', 'leg_front_right', 'leg_back_left', 'leg_back_right', 0.7, 0.7)"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('tropius', 'blink')"
+      ]
+    }
+  }
+}

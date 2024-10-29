@@ -1,0 +1,68 @@
+{
+  "rootBone": "pumpkaboo",
+  "portraitScale": 3.5,
+  "portraitTranslation": [
+    0,
+    -1.5,
+    0
+  ],
+  "profileScale": 1,
+  "profileTranslation": [
+    0,
+    0.25,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('pumpkaboo', 'sleep')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('pumpkaboo', 'blink')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('pumpkaboo', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('pumpkaboo', 'blink')",
+        "q.bedrock_quirk('pumpkaboo', 'quirk_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('pumpkaboo', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('pumpkaboo', 'blink')"
+      ]
+    },
+    "battleidle": {
+      "poseName": "battleidle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('pumpkaboo', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('pumpkaboo', 'blink')"
+      ]
+    }
+  }
+}

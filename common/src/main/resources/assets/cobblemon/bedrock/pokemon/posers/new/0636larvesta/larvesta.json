@@ -1,0 +1,46 @@
+{
+  "rootBone": "larvesta",
+  "portraitScale": 1.71,
+  "portraitTranslation": [
+    -0.39,
+    -0.73,
+    0
+  ],
+  "profileScale": 0.67,
+  "profileTranslation": [
+    -0.01,
+    0.72,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('larvesta', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('larvesta', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('larvesta', 'ground_idle')",
+        "q.quadruped_walk('leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right', 0.6, 0.9)",
+        "q.bimanual_swing(0.6, 0.9, 'arm_left', 'arm_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('larvesta', 'blink')"
+      ]
+    }
+  }
+}

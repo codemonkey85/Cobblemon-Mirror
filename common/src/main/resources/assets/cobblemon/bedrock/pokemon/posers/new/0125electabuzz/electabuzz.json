@@ -1,0 +1,71 @@
+{
+  "rootBone": "electabuzz",
+  "portraitScale": 2.5,
+  "portraitTranslation": [
+    -0.3,
+    0.2,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.6,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('electabuzz', 'ambient_sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('electabuzz', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('electabuzz', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('electabuzz', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('electabuzz', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('electabuzz', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('electabuzz', 'blink')"
+      ]
+    }
+  }
+}

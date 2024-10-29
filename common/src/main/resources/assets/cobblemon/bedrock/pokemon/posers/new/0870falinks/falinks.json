@@ -1,0 +1,111 @@
+{
+  "rootBone": "falinks",
+  "portraitScale": 1.9,
+  "portraitTranslation": [
+    -1,
+    -1.2,
+    0
+  ],
+  "profileScale": 0.5,
+  "profileTranslation": [
+    0.1,
+    0.9,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('falinks', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('falinks', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('falinks', 'blink')",
+        "q.bedrock_quirk('falinks', 'blink2')",
+        "q.bedrock_quirk('falinks', 'blink3')",
+        "q.bedrock_quirk('falinks', 'blink4')",
+        "q.bedrock_quirk('falinks', 'blink5')",
+        "q.bedrock_quirk('falinks', 'blink6')"
+      ]
+    },
+    "battlestanding2": {
+      "poseName": "battlestanding2",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('falinks', 'battle_idle2')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('falinks', 'blink')",
+        "q.bedrock_quirk('falinks', 'blink2')",
+        "q.bedrock_quirk('falinks', 'blink3')",
+        "q.bedrock_quirk('falinks', 'blink4')",
+        "q.bedrock_quirk('falinks', 'blink5')",
+        "q.bedrock_quirk('falinks', 'blink6')"
+      ]
+    },
+    "battlestanding": {
+      "poseName": "battlestanding",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('falinks', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('falinks', 'blink')",
+        "q.bedrock_quirk('falinks', 'blink2')",
+        "q.bedrock_quirk('falinks', 'blink3')",
+        "q.bedrock_quirk('falinks', 'blink4')",
+        "q.bedrock_quirk('falinks', 'blink5')",
+        "q.bedrock_quirk('falinks', 'blink6')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('falinks', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('falinks', 'blink')",
+        "q.bedrock_quirk('falinks', 'blink2')",
+        "q.bedrock_quirk('falinks', 'blink3')",
+        "q.bedrock_quirk('falinks', 'blink4')",
+        "q.bedrock_quirk('falinks', 'blink5')",
+        "q.bedrock_quirk('falinks', 'blink6')"
+      ]
+    },
+    "uipose": {
+      "poseName": "uipose",
+      "poseTypes": [
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('falinks', 'summary_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('falinks', 'blink')",
+        "q.bedrock_quirk('falinks', 'blink2')",
+        "q.bedrock_quirk('falinks', 'blink3')",
+        "q.bedrock_quirk('falinks', 'blink4')",
+        "q.bedrock_quirk('falinks', 'blink5')",
+        "q.bedrock_quirk('falinks', 'blink6')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "rootBone": "combusken",
+  "portraitScale": 2.5,
+  "portraitTranslation": [
+    0,
+    0.3,
+    0
+  ],
+  "profileScale": 0.76,
+  "profileTranslation": [
+    0,
+    0.6,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('combusken', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('combusken', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('combusken', 'ground_idle')",
+        "q.biped_walk(0.7, 1.4, 'leg_left', 'leg_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('combusken', 'blink')"
+      ]
+    }
+  }
+}

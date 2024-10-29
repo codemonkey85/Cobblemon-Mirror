@@ -1,0 +1,67 @@
+{
+  "rootBone": "dhelmise",
+  "portraitScale": 1.1,
+  "portraitTranslation": [
+    -0.5,
+    2.7,
+    0
+  ],
+  "profileScale": 0.35,
+  "profileTranslation": [
+    0,
+    1.35,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('dhelmise', 'sleep')"
+      ],
+      "transformTicks": 10
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('dhelmise', 'ground_idle')"
+      ],
+      "transformTicks": 10
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('dhelmise', 'ground_walk')"
+      ],
+      "transformTicks": 10
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "UI_POSES",
+        "FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('dhelmise', 'water_idle')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('dhelmise', 'water_swim')"
+      ]
+    }
+  }
+}

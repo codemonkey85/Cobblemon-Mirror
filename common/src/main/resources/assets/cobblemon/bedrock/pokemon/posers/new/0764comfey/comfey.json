@@ -1,0 +1,79 @@
+{
+  "rootBone": "comfey",
+  "portraitScale": 2.3,
+  "portraitTranslation": [
+    -0.4,
+    2,
+    0
+  ],
+  "profileScale": 0.5,
+  "profileTranslation": [
+    0.1,
+    1,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('comfey', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('spin')",
+        "q.bedrock('comfey', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('comfey', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('spin')",
+        "q.bedrock('comfey', 'ground_walk')"
+      ],
+      "transformTicks": 5,
+      "quirks": [
+        "q.bedrock_quirk('comfey', 'blink')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.bedrock('comfey', 'shoulder_left')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('comfey', 'blink')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.bedrock('comfey', 'shoulder_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('comfey', 'blink')"
+      ]
+    }
+  }
+}

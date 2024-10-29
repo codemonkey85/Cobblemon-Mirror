@@ -1,0 +1,69 @@
+{
+  "rootBone": "aurorus",
+  "portraitScale": 1.29,
+  "portraitTranslation": [
+    -1.11,
+    4.13,
+    0
+  ],
+  "profileScale": 0.27,
+  "profileTranslation": [
+    0,
+    1.41,
+    -6.1
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('aurorus', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('neck1')",
+        "q.bedrock('aurorus', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('aurorus', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('neck1')",
+        "q.bedrock('aurorus', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('aurorus', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('neck1')",
+        "q.bedrock('aurorus', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('aurorus', 'blink')"
+      ]
+    }
+  }
+}

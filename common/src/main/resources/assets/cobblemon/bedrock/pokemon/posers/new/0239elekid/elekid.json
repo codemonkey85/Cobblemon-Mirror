@@ -1,0 +1,56 @@
+{
+  "rootBone": "elekid",
+  "portraitScale": 2.5,
+  "portraitTranslation": [
+    -0.15,
+    -1.4,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.6,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('elekid', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('elekid', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('elekid', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('elekid', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('elekid', 'blink')"
+      ]
+    }
+  }
+}

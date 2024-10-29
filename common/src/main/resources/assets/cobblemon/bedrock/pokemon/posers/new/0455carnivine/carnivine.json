@@ -1,0 +1,93 @@
+{
+  "rootBone": "carnivine",
+  "portraitScale": 1.07,
+  "portraitTranslation": [
+    -0.42,
+    0.9,
+    0
+  ],
+  "profileScale": 0.5,
+  "profileTranslation": [
+    0,
+    0.98,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('carnivine', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('carnivine', 'blink')",
+        "q.bedrock_quirk('carnivine', 'quirk_ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('carnivine', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('carnivine', 'blink')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "HOVER"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('carnivine', 'air_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('carnivine', 'blink')",
+        "q.bedrock_quirk('carnivine', 'quirk_ground_idle')"
+      ]
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('carnivine', 'air_fly')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('carnivine', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('carnivine', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('carnivine', 'blink')"
+      ]
+    }
+  }
+}

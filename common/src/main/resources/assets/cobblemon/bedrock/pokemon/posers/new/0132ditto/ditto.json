@@ -1,0 +1,62 @@
+{
+  "rootBone": "ditto",
+  "portraitScale": 3.2,
+  "portraitTranslation": [
+    0,
+    -2.2,
+    0
+  ],
+  "profileScale": 1.4,
+  "profileTranslation": [
+    0,
+    -0.34,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('ditto', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('ditto', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('ditto', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('ditto', 'blink')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('ditto', 'sleep')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('ditto', 'blink')"
+      ]
+    }
+  }
+}

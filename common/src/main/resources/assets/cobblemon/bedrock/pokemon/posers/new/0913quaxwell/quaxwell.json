@@ -1,0 +1,83 @@
+{
+  "rootBone": "quaxwell",
+  "portraitScale": 1.8,
+  "portraitTranslation": [
+    -0.2,
+    1.8,
+    0
+  ],
+  "profileScale": 0.5,
+  "profileTranslation": [
+    0,
+    1,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('quaxwell', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES - PoseType.FLOAT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('quaxwell', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('quaxwell', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('quaxwell', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('quaxwell', 'blink')"
+      ]
+    },
+    "floating": {
+      "poseName": "floating",
+      "poseTypes": [
+        "SWIMMING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('quaxwell', 'water_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('quaxwell', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('quaxwell', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('quaxwell', 'blink')"
+      ]
+    }
+  }
+}

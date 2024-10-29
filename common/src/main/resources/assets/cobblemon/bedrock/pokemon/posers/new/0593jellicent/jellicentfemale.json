@@ -1,0 +1,44 @@
+{
+  "rootBone": "jellicent",
+  "portraitScale": 1.13,
+  "portraitTranslation": [
+    -0.56,
+    1.64,
+    0
+  ],
+  "profileScale": 0.51,
+  "profileTranslation": [
+    0,
+    1.05,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('jellicent', 'render')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('jellicent', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('jellicent', 'render')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('jellicent', 'blink')"
+      ]
+    }
+  }
+}

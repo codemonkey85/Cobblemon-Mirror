@@ -1,0 +1,72 @@
+{
+  "rootBone": "bonsly",
+  "portraitScale": 2.2,
+  "portraitTranslation": [
+    -0.2,
+    -0.8,
+    0
+  ],
+  "profileScale": 0.72,
+  "profileTranslation": [
+    0,
+    0.65,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('torso')",
+        "q.bedrock('bonsly', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('bonsly', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('torso')",
+        "q.bedrock('bonsly', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('bonsly', 'blink')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('bonsly', 'sleep')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('torso')",
+        "q.bedrock('bonsly', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('bonsly', 'blink')"
+      ]
+    }
+  }
+}

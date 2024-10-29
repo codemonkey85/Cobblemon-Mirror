@@ -1,0 +1,107 @@
+{
+  "rootBone": "wooper_paldean",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.15,
+    -0.65,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.4,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('wooper_paldean', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('wooper_paldean', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wooper_paldean', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('wooper_paldean', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wooper_paldean', 'blink')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "FLOAT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('wooper_paldean', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wooper_paldean', 'blink')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('wooper_paldean', 'water_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wooper_paldean', 'blink')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('wooper_paldean', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wooper_paldean', 'blink')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('wooper_paldean', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wooper_paldean', 'blink')"
+      ]
+    }
+  }
+}

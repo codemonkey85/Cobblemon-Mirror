@@ -1,0 +1,46 @@
+{
+  "rootBone": "sneasel_hisuian",
+  "portraitScale": 2.16,
+  "portraitTranslation": [
+    -0.18,
+    -0.11,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.4,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('sneasel_hisuian', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('sneasel_hisuian', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('sneasel_hisuian', 'ground_idle')",
+        "q.biped_walk(0.6, 0.9, 'leg_left', 'leg_right')",
+        "q.bimanual_swing(0.6, 0.9, 'arm_left', 'arm_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('sneasel_hisuian', 'blink')"
+      ]
+    }
+  }
+}

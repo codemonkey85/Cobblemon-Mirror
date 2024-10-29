@@ -1,0 +1,44 @@
+{
+  "rootBone": "frillish",
+  "portraitScale": 2.14,
+  "portraitTranslation": [
+    -0.2,
+    0.3,
+    0
+  ],
+  "profileScale": 0.73,
+  "profileTranslation": [
+    0,
+    0.62,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('frillish', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('frillish', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('frillish', 'water_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('frillish', 'blink')"
+      ]
+    }
+  }
+}

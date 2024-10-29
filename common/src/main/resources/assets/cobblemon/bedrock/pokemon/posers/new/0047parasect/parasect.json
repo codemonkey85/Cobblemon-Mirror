@@ -1,0 +1,54 @@
+{
+  "rootBone": "parasect",
+  "portraitScale": 1.8,
+  "portraitTranslation": [
+    -0.35,
+    -0.8,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    -0.05,
+    0.45,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('parasect', 'ground_idle')",
+        "q.look('head')"
+      ],
+      "transformTicks": 10
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('parasect', 'sleep')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('parasect', 'ground_walk')",
+        "q.look('head')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "rootBone": "sharpedo",
+  "portraitScale": 1.5,
+  "portraitTranslation": [
+    -0.24,
+    -0.9,
+    0
+  ],
+  "profileScale": 0.6,
+  "profileTranslation": [
+    0,
+    0.61,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('sharpedo', 'water_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('sharpedo', 'water_idle')"
+      ]
+    }
+  }
+}

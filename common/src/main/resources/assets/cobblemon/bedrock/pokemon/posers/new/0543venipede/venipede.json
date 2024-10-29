@@ -1,0 +1,56 @@
+{
+  "rootBone": "venipede",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.5,
+    -1.4,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.5,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('venipede', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('venipede', 'blink')",
+        "q.bedrock_quirk('venipede', 'twitch')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('venipede', 'sleep')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('venipede', 'twitch')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('venipede', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('venipede', 'blink')",
+        "q.bedrock_quirk('venipede', 'twitch')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "rootBone": "lairon",
+  "portraitScale": 1.76,
+  "portraitTranslation": [
+    -0.68,
+    -1.01,
+    0
+  ],
+  "profileScale": 0.72,
+  "profileTranslation": [
+    0,
+    0.59,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('lairon', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lairon', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.quadruped_walk('leg_front_left', 'leg_front_right', 'leg_back_left3', 'leg_back_right3', 0.7, 1.0)",
+        "q.look('head')",
+        "q.bedrock('lairon', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lairon', 'blink')"
+      ]
+    }
+  }
+}

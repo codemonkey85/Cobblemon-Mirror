@@ -1,0 +1,45 @@
+{
+  "rootBone": "linoone_galarian",
+  "portraitScale": 2.5,
+  "portraitTranslation": [
+    -0.45,
+    -2.02,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.38,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STAND"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('linoone_galarian', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('linoone_galarian', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.quadruped_walk('leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right', 1.1, 1.4)",
+        "q.look('head')",
+        "q.bedrock('linoone_galarian', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('linoone_galarian', 'blink')"
+      ]
+    }
+  }
+}

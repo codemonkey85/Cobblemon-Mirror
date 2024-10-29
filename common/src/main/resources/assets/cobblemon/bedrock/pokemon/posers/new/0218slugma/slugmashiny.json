@@ -1,0 +1,58 @@
+{
+  "rootBone": "slugma_shiny",
+  "portraitScale": 1.7,
+  "portraitTranslation": [
+    -0.35,
+    -0.3,
+    0
+  ],
+  "profileScale": 0.75,
+  "profileTranslation": [
+    0,
+    0.575,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('slugma_shiny', 'sleep')"
+      ]
+    },
+    "shiny_standing": {
+      "poseName": "shiny_standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('slugma_shiny', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('slugma_shiny', 'blink')"
+      ]
+    },
+    "shiny_walk": {
+      "poseName": "shiny_walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('slugma_shiny', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('slugma_shiny', 'blink')"
+      ]
+    }
+  }
+}

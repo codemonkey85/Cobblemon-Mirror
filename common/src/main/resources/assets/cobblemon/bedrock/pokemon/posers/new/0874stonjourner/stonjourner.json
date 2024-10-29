@@ -1,0 +1,51 @@
+{
+  "rootBone": "stonjourner",
+  "portraitScale": 1.83,
+  "portraitTranslation": [
+    -0.46,
+    3.17,
+    0
+  ],
+  "profileScale": 0.38,
+  "profileTranslation": [
+    0,
+    1.16,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('stonjourner', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('stonjourner', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('stonjourner', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('stonjourner', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('stonjourner', 'blink')"
+      ]
+    }
+  }
+}

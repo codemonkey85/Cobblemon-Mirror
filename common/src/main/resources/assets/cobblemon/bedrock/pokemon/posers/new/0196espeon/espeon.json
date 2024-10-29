@@ -1,0 +1,51 @@
+{
+  "rootBone": "espeon",
+  "portraitScale": 2.15,
+  "portraitTranslation": [
+    -0.55,
+    -0.43,
+    0
+  ],
+  "profileScale": 0.81,
+  "profileTranslation": [
+    0.07,
+    0.59,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('espeon', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('espeon', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('espeon', 'ground_run')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('espeon', 'blink')"
+      ]
+    }
+  }
+}

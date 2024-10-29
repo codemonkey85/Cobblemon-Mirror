@@ -1,0 +1,64 @@
+{
+  "rootBone": "staryu",
+  "portraitScale": 2.2,
+  "portraitTranslation": [
+    -0.1,
+    -1.25,
+    0
+  ],
+  "profileScale": 1.2,
+  "profileTranslation": [
+    0,
+    0,
+    0
+  ],
+  "poses": {
+    "stand": {
+      "poseName": "stand",
+      "poseTypes": [
+        "STAND"
+      ],
+      "animations": [
+        "q.bedrock('staryu', 'ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.bedrock('staryu', 'ground_walk')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "PROFILE",
+        "PORTRAIT",
+        "FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('staryu', 'water_idle')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('staryu', 'water_swim')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('staryu', 'sleep')"
+      ]
+    }
+  }
+}

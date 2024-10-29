@@ -1,0 +1,45 @@
+{
+  "rootBone": "trapinch",
+  "portraitScale": 1.44,
+  "portraitTranslation": [
+    -0.4,
+    -0.6,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0.12,
+    0.33,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('trapinch', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('trapinch', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.quadruped_walk('leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right', 1.1, 1.4)",
+        "q.look('head')",
+        "q.bedrock('trapinch', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('trapinch', 'blink')"
+      ]
+    }
+  }
+}

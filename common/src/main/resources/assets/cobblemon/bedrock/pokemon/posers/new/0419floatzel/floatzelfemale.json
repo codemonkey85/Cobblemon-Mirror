@@ -1,0 +1,48 @@
+{
+  "rootBone": "floatzel",
+  "portraitScale": 1.9,
+  "portraitTranslation": [
+    -0.3,
+    0.65,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.55,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('floatzel', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('floatzel', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('floatzel', 'ground_idle')",
+        "q.biped_walk(0.6662, 1.4, 'leg_left', 'leg_right')",
+        "q.bimanual_swing(0.6662, 1, 'arm_left', 'arm_right')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('floatzel', 'blink')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "rootBone": "lapras",
+  "portraitScale": 1.14,
+  "portraitTranslation": [
+    -0.66,
+    1.91,
+    0
+  ],
+  "profileScale": 0.48,
+  "profileTranslation": [
+    -0.01,
+    0.99,
+    0
+  ],
+  "poses": {
+    "land_idle": {
+      "poseName": "land_idle",
+      "poseTypes": [
+        "PROFILE",
+        "PORTRAIT",
+        "STAND"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('lapras', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lapras', 'blink')"
+      ]
+    },
+    "land_move": {
+      "poseName": "land_move",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('lapras', 'ground_idle')",
+        "q.quadruped_walk('leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right', 2.5, 0.25)"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lapras', 'blink')"
+      ]
+    },
+    "surface_idle": {
+      "poseName": "surface_idle",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('lapras', 'surfacewater_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lapras', 'blink')"
+      ]
+    },
+    "surface_move": {
+      "poseName": "surface_move",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('lapras', 'surfacewater_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lapras', 'blink')"
+      ]
+    },
+    "underwater_idle": {
+      "poseName": "underwater_idle",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('lapras', 'surfacewater_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lapras', 'blink')"
+      ]
+    },
+    "underwater_move": {
+      "poseName": "underwater_move",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('lapras', 'surfacewater_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lapras', 'blink')"
+      ]
+    }
+  }
+}

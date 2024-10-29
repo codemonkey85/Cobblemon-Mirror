@@ -1,0 +1,93 @@
+{
+  "rootBone": "lotad",
+  "portraitScale": 2.5,
+  "portraitTranslation": [
+    -0.15,
+    -2,
+    0
+  ],
+  "profileScale": 1,
+  "profileTranslation": [
+    0,
+    0.25,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STAND"
+      ],
+      "animations": [
+        "q.bedrock('lotad', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('charmander', 'blink')"
+      ]
+    },
+    "stand": {
+      "poseName": "stand",
+      "poseTypes": [
+        "STAND"
+      ],
+      "animations": [
+        "q.bedrock('lotad', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('charmander', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.bedrock('lotad', 'water_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('charmander', 'blink')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('lotad', 'water_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('charmander', 'blink')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('lotad', 'water_swim')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('charmander', 'blink')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('lotad', 'sleep')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('charmander', 'blink')"
+      ]
+    }
+  }
+}

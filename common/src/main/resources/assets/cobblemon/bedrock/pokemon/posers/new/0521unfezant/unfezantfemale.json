@@ -1,0 +1,73 @@
+{
+  "rootBone": "unfezant",
+  "portraitScale": 2.1,
+  "portraitTranslation": [
+    -0.5,
+    1.5,
+    0
+  ],
+  "profileScale": 0.7,
+  "profileTranslation": [
+    0,
+    0.7,
+    0
+  ],
+  "poses": {
+    "stand": {
+      "poseName": "stand",
+      "poseTypes": [
+        "STATIONARY_POSES - PoseType.HOVER - PoseType.FLOAT",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('unfezant', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('unfezant', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES - PoseType.FLY - PoseType.SWIM"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('unfezant', 'ground_idle')",
+        "q.biped_walk(0.6662, 1.4, 'leg_left', 'leg_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('unfezant', 'blink')"
+      ]
+    },
+    "floating": {
+      "poseName": "floating",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('unfezant', 'air_idle')",
+        "q.sine_wing_flap(0.6, 0.9, -10, 'z', 'wing_left', 'wing_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('unfezant', 'blink')"
+      ]
+    },
+    "flying": {
+      "poseName": "flying",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('unfezant', 'air_idle')",
+        "q.sine_wing_flap(0.9, 0.9, -14, 'z', 'wing_left', 'wing_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('unfezant', 'blink')"
+      ]
+    }
+  }
+}

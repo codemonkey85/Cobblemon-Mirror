@@ -1,0 +1,45 @@
+{
+  "rootBone": "jolteon",
+  "portraitScale": 2.3,
+  "portraitTranslation": [
+    -0.55,
+    -0.6,
+    0
+  ],
+  "profileScale": 1,
+  "profileTranslation": [
+    0,
+    0.2,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('jolteon', 'ground_idle')"
+      ],
+      "transformTicks": 10
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('jolteon', 'ground_run')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

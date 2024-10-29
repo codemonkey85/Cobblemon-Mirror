@@ -1,0 +1,42 @@
+{
+  "rootBone": "goomy",
+  "portraitScale": 1.73,
+  "portraitTranslation": [
+    -0.12,
+    -0.96,
+    0
+  ],
+  "profileScale": 1,
+  "profileTranslation": [
+    -0.03,
+    0.12,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('goomy', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('goomy', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('goomy', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('goomy', 'blink')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "rootBone": "rookidee",
+  "portraitScale": 3,
+  "portraitTranslation": [
+    -0.2,
+    -2.4,
+    0
+  ],
+  "profileScale": 1.2,
+  "profileTranslation": [
+    0,
+    -0.01,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('rookidee', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "SHOULDER_POSES",
+        "UI_POSES",
+        "STAND"
+      ],
+      "animations": [
+        "q.bedrock('rookidee', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('rookidee', 'blink')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "STATIONARY_POSES - PoseType.STAND - PoseType.UI_POSES - PoseType.SHOULDER_POSES"
+      ],
+      "animations": [
+        "q.bedrock('rookidee', 'air_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('rookidee', 'blink')"
+      ]
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        "MOVING_POSES - PoseType.WALK"
+      ],
+      "animations": [
+        "q.bedrock('rookidee', 'air_fly')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('rookidee', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.bedrock('rookidee', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('rookidee', 'blink')"
+      ]
+    }
+  }
+}

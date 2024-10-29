@@ -1,0 +1,41 @@
+{
+  "rootBone": "tangela",
+  "portraitScale": 2.2,
+  "portraitTranslation": [
+    -0.1,
+    -1.6,
+    0
+  ],
+  "profileScale": 1.2,
+  "profileTranslation": [
+    0,
+    -0.09,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [],
+      "transformTicks": 10
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.biped_walk(0.4, 1, 'leftfoot', 'rightfoot')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

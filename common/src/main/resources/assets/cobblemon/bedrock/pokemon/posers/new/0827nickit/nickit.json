@@ -1,0 +1,79 @@
+{
+  "rootBone": "nickit",
+  "portraitScale": 1.8,
+  "portraitTranslation": [
+    -0.3,
+    -0.1,
+    0
+  ],
+  "profileScale": 0.75,
+  "profileTranslation": [
+    0,
+    0.65,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('nickit', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('nickit', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('nickit', 'blink')",
+        "q.bedrock_quirk('nickit', 'quirk_shiftyglance_left')",
+        "q.bedrock_quirk('nickit', 'quirk_shiftyglance_right')",
+        "q.bedrock_quirk('nickit', 'quirk_eartwitch_left')",
+        "q.bedrock_quirk('nickit', 'quirk_eartwitch_right')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('nickit', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('nickit', 'blink')",
+        "q.bedrock_quirk('nickit', 'quirk_eartwitch_left')",
+        "q.bedrock_quirk('nickit', 'quirk_eartwitch_right')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('nickit', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('nickit', 'blink')",
+        "q.bedrock_quirk('nickit', 'quirk_shiftyglance_left')",
+        "q.bedrock_quirk('nickit', 'quirk_shiftyglance_right')",
+        "q.bedrock_quirk('nickit', 'quirk_eartwitch_left')",
+        "q.bedrock_quirk('nickit', 'quirk_eartwitch_right')"
+      ]
+    }
+  }
+}

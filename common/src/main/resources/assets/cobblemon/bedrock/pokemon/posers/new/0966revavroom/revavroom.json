@@ -1,0 +1,53 @@
+{
+  "rootBone": "revavroom",
+  "portraitScale": 3.1,
+  "portraitTranslation": [
+    -1.4,
+    -1.7,
+    1.1
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    -0.2,
+    0.3,
+    1.1
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('revavroom', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('revavroom', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('revavroom', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('revavroom', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('revavroom', 'blink')"
+      ]
+    }
+  }
+}

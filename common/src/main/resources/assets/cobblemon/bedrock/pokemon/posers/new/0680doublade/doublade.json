@@ -1,0 +1,44 @@
+{
+  "rootBone": "doublade",
+  "portraitScale": 3,
+  "portraitTranslation": [
+    -1.8,
+    -0.6,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    -0.2,
+    0.7,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('doublade', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('doublade', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('doublade', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('doublade', 'blink')"
+      ]
+    }
+  }
+}

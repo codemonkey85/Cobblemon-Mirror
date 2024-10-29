@@ -1,0 +1,52 @@
+{
+  "rootBone": "beedrill",
+  "portraitScale": 1.9,
+  "portraitTranslation": [
+    0.05,
+    0.9,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    -0.1,
+    0.9,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('beedrill', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('beedrill', 'air_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('beedrill', 'air_fly')"
+      ]
+    }
+  }
+}

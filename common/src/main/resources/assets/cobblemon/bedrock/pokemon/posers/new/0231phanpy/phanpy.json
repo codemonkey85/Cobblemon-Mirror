@@ -1,0 +1,63 @@
+{
+  "rootBone": "phanpy",
+  "portraitScale": 1.8,
+  "portraitTranslation": [
+    -0.4,
+    -0.8,
+    0
+  ],
+  "profileScale": 0.85,
+  "profileTranslation": [
+    0,
+    0.4,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('phanpy', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('phanpy', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('phanpy', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('phanpy', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('phanpy', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('phanpy', 'battle_idle')"
+      ]
+    }
+  }
+}

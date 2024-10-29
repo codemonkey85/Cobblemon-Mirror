@@ -1,0 +1,87 @@
+{
+  "rootBone": "dratini",
+  "portraitScale": 1.66,
+  "portraitTranslation": [
+    -0.48,
+    0.35,
+    0
+  ],
+  "profileScale": 0.58,
+  "profileTranslation": [
+    0.14,
+    0.83,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('dratini', 'water_sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('dratini', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('dratini', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.bedrock('dratini', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('dratini', 'blink')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('dratini', 'water_idle')"
+      ],
+      "transformTicks": 10
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('dratini', 'water_swim')"
+      ],
+      "transformTicks": 10
+    },
+    "surface_swim": {
+      "poseName": "surface_swim",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('dratini', 'surfacewater_swim')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

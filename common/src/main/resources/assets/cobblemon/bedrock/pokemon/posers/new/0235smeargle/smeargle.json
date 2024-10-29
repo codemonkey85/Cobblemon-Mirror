@@ -1,0 +1,46 @@
+{
+  "rootBone": "smeargle",
+  "portraitScale": 1.29,
+  "portraitTranslation": [
+    -0.03,
+    0.96,
+    0
+  ],
+  "profileScale": 0.67,
+  "profileTranslation": [
+    0.05,
+    0.8,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES",
+        "SLEEP"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('smeargle', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('smeargle', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('smeargle', 'ground_idle')",
+        "q.biped_walk(0.6, 0.9, 'leg_left', 'leg_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('smeargle', 'blink')"
+      ]
+    }
+  }
+}

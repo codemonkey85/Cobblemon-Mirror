@@ -1,0 +1,40 @@
+{
+  "rootBone": "xerneas",
+  "portraitScale": 2.3,
+  "portraitTranslation": [
+    -1.4,
+    4.4,
+    0
+  ],
+  "profileScale": 0.35,
+  "profileTranslation": [
+    0,
+    1.2,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('xerneas', 'ground_idle')"
+      ],
+      "transformTicks": 10
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('xerneas', 'ground_walk')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

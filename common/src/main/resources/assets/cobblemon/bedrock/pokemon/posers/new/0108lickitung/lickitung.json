@@ -1,0 +1,63 @@
+{
+  "rootBone": "lickitung",
+  "portraitScale": 2.1,
+  "portraitTranslation": [
+    -0.1,
+    0,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.55,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('lickitung', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lickitung', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('lickitung', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lickitung', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('lickitung', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('lickitung', 'blink')"
+      ]
+    }
+  }
+}

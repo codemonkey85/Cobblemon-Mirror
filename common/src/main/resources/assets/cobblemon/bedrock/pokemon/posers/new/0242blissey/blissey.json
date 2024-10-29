@@ -1,0 +1,72 @@
+{
+  "rootBone": "blissey",
+  "portraitScale": 1.5,
+  "portraitTranslation": [
+    -0.6,
+    0.9,
+    0
+  ],
+  "profileScale": 0.7,
+  "profileTranslation": [
+    0,
+    0.7,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('blissey', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('blissey', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('blissey', 'blink')",
+        "q.bedrock_quirk('blissey', 'eggadjust_quirk')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('blissey', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('blissey', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER"
+      ],
+      "animations": [
+        "q.bedrock('blissey', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('blissey', 'blink')",
+        "q.bedrock_quirk('blissey', 'eggadjust_quirk')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "rootBone": "dartrix",
+  "portraitScale": 1.26,
+  "portraitTranslation": [
+    -0.23,
+    1.14,
+    0
+  ],
+  "profileScale": 0.55000013,
+  "profileTranslation": [
+    0,
+    0.8800000000000001,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        null,
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('dartrix', 'ground_idle')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "HOVER"
+      ],
+      "animations": [
+        "q.bedrock('dartrix', 'ground_idle')",
+        "q.sine_wing_flap(0.6, 0.9, -10, 'z', 'wing_left_open', 'wing_right_open')"
+      ],
+      "transformTicks": 10
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('dartrix', 'ground_idle')",
+        "q.sine_wing_flap(0.9, 0.9, -14, 'z', 'wing_left_open', 'wing_right_open')"
+      ],
+      "transformTicks": 10
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.bedrock('dartrix', 'ground_idle')",
+        "q.biped_walk(0.75, 0.7, 'leg_left', 'leg_right')"
+      ]
+    }
+  }
+}

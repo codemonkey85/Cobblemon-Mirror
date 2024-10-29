@@ -1,0 +1,43 @@
+{
+  "rootBone": "wooloo",
+  "portraitScale": 3.1,
+  "portraitTranslation": [
+    -0.85,
+    -1.8,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.4,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('wooloo', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wooloo', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('wooloo', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wooloo', 'blink')"
+      ]
+    }
+  }
+}

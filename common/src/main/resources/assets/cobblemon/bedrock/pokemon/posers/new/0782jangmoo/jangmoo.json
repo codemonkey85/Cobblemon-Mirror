@@ -1,0 +1,45 @@
+{
+  "rootBone": "jangmo_o",
+  "portraitScale": 1.75,
+  "portraitTranslation": [
+    -0.22,
+    -0.1,
+    0
+  ],
+  "profileScale": 0.64,
+  "profileTranslation": [
+    0,
+    0.77,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('jangmo-o', 'ground_idle')",
+        "q.look('head')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('jangmo-o', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('jangmo-o', 'ground_idle')",
+        "q.quadruped_walk('leg_front_left1', 'leg_front_right1', 'leg_back_left1', 'leg_back_right1', 1.1, 1.4)",
+        "q.look('head')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('jangmo-o', 'blink')"
+      ]
+    }
+  }
+}

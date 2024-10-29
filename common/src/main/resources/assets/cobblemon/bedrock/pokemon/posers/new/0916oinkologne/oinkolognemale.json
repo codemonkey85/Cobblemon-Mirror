@@ -1,0 +1,47 @@
+{
+  "rootBone": "oinkologne_male",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.65,
+    -0.5,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.35,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('oinkologne_male', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('oinkologne_male', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('oinkologne_male', 'ground_idle')",
+        "q.quadruped_walk('leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right', 0.75, 1)"
+      ],
+      "transformTicks": 5,
+      "quirks": [
+        "q.bedrock_quirk('oinkologne_male', 'blink')"
+      ]
+    }
+  }
+}

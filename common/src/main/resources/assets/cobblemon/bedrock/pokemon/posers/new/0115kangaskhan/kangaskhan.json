@@ -1,0 +1,53 @@
+{
+  "rootBone": "kangaskhan",
+  "portraitScale": 1.7,
+  "portraitTranslation": [
+    -0.15,
+    1.1,
+    0
+  ],
+  "profileScale": 0.7,
+  "profileTranslation": [
+    0,
+    0.65,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('kangaskhan', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('kangaskhan', 'blink')",
+        "q.bedrock_quirk('kangaskhan', 'blink2')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('kangaskhan', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('kangaskhan', 'blink')",
+        "q.bedrock_quirk('kangaskhan', 'blink2')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "rootBone": "aggron",
+  "portraitScale": 1.21,
+  "portraitTranslation": [
+    -0.78,
+    2.25,
+    0
+  ],
+  "profileScale": 0.46,
+  "profileTranslation": [
+    -0.06,
+    0.98,
+    -6
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('aggron', 'ground_idle')"
+      ],
+      "transformTicks": 10
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('aggron', 'ground_idle')",
+        "q.bimanual_swing(0.6, 0.9, 'arm_left', 'arm_right')",
+        "q.biped_walk(0.6, 0.9, 'leg_left', 'leg_right')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

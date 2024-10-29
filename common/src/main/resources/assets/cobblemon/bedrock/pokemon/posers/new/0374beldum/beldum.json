@@ -1,0 +1,116 @@
+{
+  "rootBone": "beldum",
+  "portraitScale": 2.3,
+  "portraitTranslation": [
+    -0.3,
+    -1.2,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.5,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('beldum', 'sleep')"
+      ]
+    },
+    "stand": {
+      "poseName": "stand",
+      "poseTypes": [
+        "STATIONARY_POSES - PoseType.HOVER - PoseType.FLOAT",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('beldum', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('beldum', 'blink')",
+        "q.bedrock_quirk('beldum', 'quirk_spin')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.bedrock('beldum', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('beldum', 'blink')"
+      ]
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.bedrock('beldum', 'air_fly')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('beldum', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES - PoseType.FLY - PoseType.SWIM"
+      ],
+      "animations": [
+        "q.bedrock('beldum', 'ground_walk')"
+      ],
+      "transformTicks": 5,
+      "quirks": [
+        "q.bedrock_quirk('beldum', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('beldum', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('beldum', 'blink')",
+        "q.bedrock_quirk('beldum', 'quirk_spin')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.bedrock('beldum', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('beldum', 'blink')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.bedrock('beldum', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('beldum', 'blink')"
+      ]
+    }
+  }
+}

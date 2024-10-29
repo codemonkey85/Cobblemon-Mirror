@@ -1,0 +1,52 @@
+{
+  "rootBone": "arcanine",
+  "portraitScale": 1.37,
+  "portraitTranslation": [
+    -0.58,
+    1.21,
+    0
+  ],
+  "profileScale": 0.58,
+  "profileTranslation": [
+    0.14,
+    0.92,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('arcanine', 'idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('arcanine', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('arcanine', 'idle')",
+        "q.quadruped_walk('left_shoulder', 'right_shoulder', 'left_thigh', 'right_thigh', 0.6662, 1.4)"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('arcanine', 'blink')"
+      ]
+    }
+  }
+}

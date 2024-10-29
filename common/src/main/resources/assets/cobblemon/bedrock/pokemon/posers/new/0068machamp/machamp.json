@@ -1,0 +1,51 @@
+{
+  "rootBone": "machamp",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.3,
+    1.2,
+    0
+  ],
+  "profileScale": 0.75,
+  "profileTranslation": [
+    -0.1,
+    0.66,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('machamp', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('machamp', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('machamp', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('machamp', 'blink')"
+      ]
+    }
+  }
+}

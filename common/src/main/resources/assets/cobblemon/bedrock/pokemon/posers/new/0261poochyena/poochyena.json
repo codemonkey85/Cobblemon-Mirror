@@ -1,0 +1,50 @@
+{
+  "rootBone": "poochyena",
+  "portraitScale": 2.2,
+  "portraitTranslation": [
+    -0.4,
+    -0.6,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.55,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "PROFILE",
+        "PORTRAIT",
+        "STAND",
+        "FLOAT",
+        "HOVER"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('poochyena', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('poochyena', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.quadruped_walk('shoulder_left', 'shoulder_right', 'leg_left', 'leg_right', 0.8, 0.8)",
+        "q.bedrock('poochyena', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('poochyena', 'blink')"
+      ]
+    }
+  }
+}

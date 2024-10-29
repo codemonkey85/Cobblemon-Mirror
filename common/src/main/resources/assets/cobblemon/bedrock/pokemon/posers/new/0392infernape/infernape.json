@@ -1,0 +1,49 @@
+{
+  "rootBone": "infernape",
+  "portraitScale": 1.8,
+  "portraitTranslation": [
+    -0.65,
+    1.55,
+    0
+  ],
+  "profileScale": 0.5,
+  "profileTranslation": [
+    0,
+    1,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('infernape', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('infernape', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('infernape', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('infernape', 'blink')"
+      ]
+    }
+  }
+}

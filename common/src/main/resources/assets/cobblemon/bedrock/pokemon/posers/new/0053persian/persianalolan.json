@@ -1,0 +1,59 @@
+{
+  "rootBone": "persian_alolan",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.76,
+    -0.11,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.38,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('persian_alolan', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('persian_alolan', 'blink')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('persian_alolan', 'sleep')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.quadruped_walk('null', 'leg_front_right1', 'leg_back_left1', 'leg_back_right1', 0.5, 1.1)",
+        "q.look('head')",
+        "q.bedrock('persian_alolan', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('persian_alolan', 'blink')"
+      ]
+    }
+  }
+}

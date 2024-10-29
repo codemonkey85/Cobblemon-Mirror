@@ -1,0 +1,50 @@
+{
+  "rootBone": "torchic",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.1,
+    -0.45,
+    0
+  ],
+  "profileScale": 0.7,
+  "profileTranslation": [
+    0,
+    0.7,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('torchic', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('torchic', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('torchic', 'ground_idle')",
+        "q.biped_walk(1, 0.9, 'leg_left', 'leg_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('torchic', 'blink')"
+      ]
+    }
+  }
+}

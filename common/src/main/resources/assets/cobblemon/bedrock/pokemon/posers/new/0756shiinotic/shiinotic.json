@@ -1,0 +1,47 @@
+{
+  "rootBone": "shiinotic",
+  "portraitScale": 4.5,
+  "portraitTranslation": [
+    0,
+    -2.3,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.4,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('shiinotic', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('shiinotic', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('shiinotic', 'ground_idle')",
+        "q.biped_walk(0.6, 0.9, 'foot_left', 'foot_right')",
+        "q.bimanual_swing(0.6, 0.9, 'arm_left', 'arm_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('shiinotic', 'blink')"
+      ]
+    }
+  }
+}

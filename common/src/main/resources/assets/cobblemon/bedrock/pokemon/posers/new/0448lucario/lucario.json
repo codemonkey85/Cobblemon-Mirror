@@ -1,0 +1,61 @@
+{
+  "rootBone": "lucario",
+  "portraitScale": 2.2,
+  "portraitTranslation": [
+    -0.2,
+    2.2,
+    0
+  ],
+  "profileScale": 0.6,
+  "profileTranslation": [
+    0,
+    0.83,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('lucario', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lucario', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('lucario', 'ground_idle')",
+        "q.bimanual_swing(0.6662, 1, 'arm_left', 'arm_right')",
+        "q.biped_walk(0.6662, 1.4, 'leg_left', 'leg_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lucario', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('lucario', 'ground_idle')",
+        "q.bedrock('lucario', 'battle_idle_aura_left')",
+        "q.bedrock('lucario', 'battle_idle_aura_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lucario', 'blink')"
+      ]
+    }
+  }
+}

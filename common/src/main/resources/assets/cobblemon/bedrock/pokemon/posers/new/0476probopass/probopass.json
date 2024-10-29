@@ -1,0 +1,56 @@
+{
+  "rootBone": "probopass",
+  "portraitScale": 1,
+  "portraitTranslation": [
+    0,
+    0.425,
+    0
+  ],
+  "profileScale": 0.75,
+  "profileTranslation": [
+    0,
+    0.7,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('probopass', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('probopass', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('probopass', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('probopass', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('probopass', 'blink')"
+      ]
+    }
+  }
+}

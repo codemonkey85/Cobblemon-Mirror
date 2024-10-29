@@ -1,0 +1,72 @@
+{
+  "rootBone": "hypno",
+  "portraitScale": 2.1,
+  "portraitTranslation": [
+    -0.3,
+    0.6,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    -0.05,
+    0.5,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('hypno', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('hypno', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('hypno', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('hypno', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('hypno', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('hypno', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('hypno', 'blink')"
+      ]
+    }
+  }
+}

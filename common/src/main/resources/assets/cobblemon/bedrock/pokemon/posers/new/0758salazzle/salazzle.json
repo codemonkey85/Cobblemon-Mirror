@@ -1,0 +1,57 @@
+{
+  "rootBone": "salazzle",
+  "portraitScale": 1.99,
+  "portraitTranslation": [
+    -0.15,
+    2.15,
+    0
+  ],
+  "profileScale": 0.61,
+  "profileTranslation": [
+    0,
+    0.89,
+    -6
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('salazzle', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('salazzle', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('salazzle', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('salazzle', 'blink')"
+      ]
+    },
+    "battleidle": {
+      "poseName": "battleidle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('salazzle', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('salazzle', 'blink')"
+      ]
+    }
+  }
+}

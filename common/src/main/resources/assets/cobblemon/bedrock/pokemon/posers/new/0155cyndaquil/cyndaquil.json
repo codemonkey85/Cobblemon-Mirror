@@ -1,0 +1,60 @@
+{
+  "rootBone": "cyndaquil",
+  "portraitScale": 1.4,
+  "portraitTranslation": [
+    -0.26,
+    0,
+    0
+  ],
+  "profileScale": 0.65,
+  "profileTranslation": [
+    0,
+    0.8,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('cyndaquil', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('cyndaquil', 'ground_idle')"
+      ],
+      "transformTicks": 10
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('cyndaquil', 'ground_walk')"
+      ],
+      "transformTicks": 10
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('cyndaquil', 'battle_idle')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

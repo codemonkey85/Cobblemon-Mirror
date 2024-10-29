@@ -1,0 +1,68 @@
+{
+  "rootBone": "roselia",
+  "portraitScale": 2.24,
+  "portraitTranslation": [
+    -0.26,
+    -0.07,
+    0
+  ],
+  "profileScale": 0.6,
+  "profileTranslation": [
+    0,
+    0.82,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('roselia', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('roselia', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('roselia', 'blink')",
+        "q.bedrock_quirk('roselia', 'quirk_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('roselia', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('roselia', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('roselia', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('roselia', 'blink')",
+        "q.bedrock_quirk('roselia', 'quirk_idle')"
+      ]
+    }
+  }
+}

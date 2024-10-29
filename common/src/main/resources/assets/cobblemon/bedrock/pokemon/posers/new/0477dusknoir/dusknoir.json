@@ -1,0 +1,57 @@
+{
+  "rootBone": "dusknoir",
+  "portraitScale": 1.65,
+  "portraitTranslation": [
+    -0.9,
+    2.65,
+    0
+  ],
+  "profileScale": 0.5,
+  "profileTranslation": [
+    -0.2,
+    1.25,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('dusknoir', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('eye')",
+        "q.bedrock('dusknoir', 'ground_idle')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('eye')",
+        "q.bedrock('dusknoir', 'ground_walk')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('dusknoir', 'battle_idle')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

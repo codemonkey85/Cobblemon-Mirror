@@ -1,0 +1,42 @@
+{
+  "rootBone": "eldegoss",
+  "portraitScale": 2.6,
+  "portraitTranslation": [
+    -0.25,
+    -1.41,
+    0
+  ],
+  "profileScale": 0.62,
+  "profileTranslation": [
+    0.07,
+    0.85,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('eldegoss', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('eldegoss', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('eldegoss', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('eldegoss', 'blink')"
+      ]
+    }
+  }
+}

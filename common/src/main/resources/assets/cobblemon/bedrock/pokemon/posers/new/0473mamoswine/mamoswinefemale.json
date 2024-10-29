@@ -1,0 +1,56 @@
+{
+  "rootBone": "mamoswine",
+  "portraitScale": 0.67,
+  "portraitTranslation": [
+    -0.67,
+    1.53,
+    0
+  ],
+  "profileScale": 0.35,
+  "profileTranslation": [
+    -0.07,
+    1.1,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('mamoswine', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('mamoswine', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('mamoswine', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('mamoswine', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('mamoswine', 'blink')"
+      ]
+    }
+  }
+}

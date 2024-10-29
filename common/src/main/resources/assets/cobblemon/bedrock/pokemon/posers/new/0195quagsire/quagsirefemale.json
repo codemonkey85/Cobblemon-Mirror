@@ -1,0 +1,51 @@
+{
+  "rootBone": "quagsire",
+  "portraitScale": 2.2,
+  "portraitTranslation": [
+    -0.3,
+    0.2,
+    0
+  ],
+  "profileScale": 0.92,
+  "profileTranslation": [
+    0,
+    0.35,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('quagsire', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('quagsire', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('quagsire', 'ground_idle')",
+        "q.biped_walk(0.6, 0.9, 'leg_left', 'leg_right')",
+        "q.bimanual_swing(0.6, 0.9, 'arm_left', 'arm_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('quagsire', 'blink')"
+      ]
+    }
+  }
+}

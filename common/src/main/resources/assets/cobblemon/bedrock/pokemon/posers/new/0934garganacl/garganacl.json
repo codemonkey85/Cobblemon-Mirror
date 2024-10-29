@@ -1,0 +1,73 @@
+{
+  "rootBone": "garganacl",
+  "portraitScale": 2.6,
+  "portraitTranslation": [
+    -0.4,
+    3,
+    0
+  ],
+  "profileScale": 0.45,
+  "profileTranslation": [
+    0,
+    1,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE"
+      ],
+      "animations": [
+        "q.look('waist')",
+        "q.bedrock('garganacl', 'ground_idle')"
+      ]
+    },
+    "battlestanding": {
+      "poseName": "battlestanding",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER"
+      ],
+      "animations": [
+        "q.look('waist')",
+        "q.bedrock('garganacl', 'battle_idle')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('garganacl', 'sleep')"
+      ]
+    },
+    "portrait": {
+      "poseName": "portrait",
+      "poseTypes": [
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('garganacl', 'ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('waist')",
+        "q.bedrock('garganacl', 'ground_idle')",
+        "q.bedrock('garganacl', 'ground_walk')"
+      ]
+    }
+  }
+}

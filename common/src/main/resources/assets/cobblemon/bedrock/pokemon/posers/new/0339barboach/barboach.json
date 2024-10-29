@@ -1,0 +1,88 @@
+{
+  "rootBone": "barboach",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.55,
+    -1.2,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.4,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('barboach', 'water_sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STANDING_POSES - PoseType.FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('barboach', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('barboach', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "MOVING_POSES - PoseType.SWIM"
+      ],
+      "animations": [
+        "q.bedrock('barboach', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('barboach', 'blink')"
+      ]
+    },
+    "floating": {
+      "poseName": "floating",
+      "poseTypes": [
+        "UI_POSES",
+        "FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('barboach', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('barboach', 'blink')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('barboach', 'water_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('barboach', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('barboach', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('barboach', 'blink')"
+      ]
+    }
+  }
+}

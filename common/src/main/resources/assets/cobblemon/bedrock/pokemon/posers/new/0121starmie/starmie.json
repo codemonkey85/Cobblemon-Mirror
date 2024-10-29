@@ -1,0 +1,74 @@
+{
+  "rootBone": "starmie",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    0,
+    -1,
+    0
+  ],
+  "profileScale": 1.4,
+  "profileTranslation": [
+    0,
+    -0.24,
+    0
+  ],
+  "poses": {
+    "stand": {
+      "poseName": "stand",
+      "poseTypes": [
+        "STAND"
+      ],
+      "animations": [
+        "q.bedrock('starmie', 'ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.bedrock('starmie', 'ground_walk')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "PROFILE",
+        "PORTRAIT",
+        "FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('starmie', 'water_idle')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('starmie', 'water_swim')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('starmie', 'sleep')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('starmie', 'battle_idle')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

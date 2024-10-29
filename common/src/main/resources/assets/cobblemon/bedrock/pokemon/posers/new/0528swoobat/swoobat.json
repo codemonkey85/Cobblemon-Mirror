@@ -1,0 +1,50 @@
+{
+  "rootBone": "swoobat",
+  "portraitScale": 1.88,
+  "portraitTranslation": [
+    -0.6,
+    0.68,
+    0
+  ],
+  "profileScale": 0.63,
+  "profileTranslation": [
+    -0.05,
+    0.75,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES - PoseType.HOVER",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('swoobat', 'ground_idle')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "HOVER"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('swoobat', 'air_idle')",
+        "q.sine_wing_flap(0.6, 0.9, -10, 'y', 'left_wing', 'right_wing')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('swoobat', 'air_fly')",
+        "q.sine_wing_flap(0.9, 0.9, -14, 'y', 'left_wing', 'right_wing')"
+      ]
+    }
+  }
+}

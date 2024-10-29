@@ -1,0 +1,47 @@
+{
+  "rootBone": "tangrowth",
+  "portraitScale": 2.4,
+  "portraitTranslation": [
+    -0.3,
+    -0.8,
+    0
+  ],
+  "profileScale": 1,
+  "profileTranslation": [
+    0,
+    0.25,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('tangrowth', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tangrowth', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('tangrowth', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tangrowth', 'blink')"
+      ]
+    }
+  }
+}

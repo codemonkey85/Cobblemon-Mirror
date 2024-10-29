@@ -1,0 +1,73 @@
+{
+  "rootBone": "dracozolt",
+  "portraitScale": 0.85,
+  "portraitTranslation": [
+    -0.55,
+    1.45,
+    0
+  ],
+  "profileScale": 0.45,
+  "profileTranslation": [
+    0.08,
+    1.12,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('dracozolt', 'sleep')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('dracozolt', 'blink')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('dracozolt', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('dracozolt', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('dracozolt', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('dracozolt', 'blink')"
+      ]
+    },
+    "battleidle": {
+      "poseName": "battleidle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('dracozolt', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('dracozolt', 'blink')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "rootBone": "chimecho",
+  "portraitScale": 3.6,
+  "portraitTranslation": [
+    -0.1,
+    -0.4,
+    0
+  ],
+  "profileScale": 1,
+  "profileTranslation": [
+    0,
+    0.3,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('chimecho', 'sleep')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('chimecho', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('chimecho', 'blink')"
+      ]
+    },
+    "flying": {
+      "poseName": "flying",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('chimecho', 'air_fly')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('chimecho', 'blink')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "rootBone": "wailord",
+  "portraitScale": 0.45,
+  "portraitTranslation": [
+    -0.38,
+    0.8,
+    6.69
+  ],
+  "profileScale": 0.25,
+  "profileTranslation": [
+    0,
+    1.2,
+    -10
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('wailord', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STANDING_POSES - PoseType.FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('wailord', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wailord', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "MOVING_POSES - PoseType.SWIM"
+      ],
+      "animations": [
+        "q.bedrock('wailord', 'ground_idle')",
+        "q.bedrock('wailord', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wailord', 'blink')"
+      ]
+    },
+    "floating": {
+      "poseName": "floating",
+      "poseTypes": [
+        "UI_POSES",
+        "FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('wailord', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wailord', 'blink')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('wailord', 'water_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('wailord', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('wailord', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('wailord', 'blink')"
+      ]
+    }
+  }
+}

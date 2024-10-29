@@ -1,0 +1,46 @@
+{
+  "rootBone": "lilligant",
+  "portraitScale": 2.14,
+  "portraitTranslation": [
+    -0.38,
+    1.35,
+    0
+  ],
+  "profileScale": 0.6,
+  "profileTranslation": [
+    0,
+    0.8,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('lilligant', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lilligant', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('lilligant', 'ground_idle')",
+        "q.biped_walk(0.6, 0.9, 'body_bottom_left', 'body_bottom_right')",
+        "q.bimanual_swing(0.6, 0.9, 'arm_left', 'arm_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lilligant', 'blink')"
+      ]
+    }
+  }
+}

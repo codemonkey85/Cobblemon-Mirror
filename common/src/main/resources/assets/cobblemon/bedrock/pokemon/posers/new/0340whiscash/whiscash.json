@@ -1,0 +1,36 @@
+{
+  "rootBone": "whiscash",
+  "portraitScale": 0.8,
+  "portraitTranslation": [
+    -0.35,
+    0.4,
+    0
+  ],
+  "profileScale": 0.6,
+  "profileTranslation": [
+    -0.1,
+    0.6,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('whiscash', 'water_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('whiscash', 'water_idle')"
+      ]
+    }
+  }
+}

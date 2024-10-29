@@ -1,0 +1,66 @@
+{
+  "rootBone": "cofagrigus",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    0,
+    2.8,
+    0
+  ],
+  "profileScale": 0.35,
+  "profileTranslation": [
+    0,
+    1.3,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('cofagrigus', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('cofagrigus', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('cofagrigus', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES - PoseType.FLYING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('cofagrigus', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('cofagrigus', 'blink')"
+      ]
+    },
+    "flying": {
+      "poseName": "flying",
+      "poseTypes": [
+        "FLYING_POSES - PoseType.HOVER"
+      ],
+      "animations": [
+        "q.bedrock('cofagrigus', 'ground_run')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('cofagrigus', 'blink')"
+      ]
+    }
+  }
+}

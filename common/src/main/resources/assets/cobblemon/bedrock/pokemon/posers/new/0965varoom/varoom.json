@@ -1,0 +1,51 @@
+{
+  "rootBone": "varoom",
+  "portraitScale": 3,
+  "portraitTranslation": [
+    0.5,
+    -2.5,
+    0
+  ],
+  "profileScale": 1.1,
+  "profileTranslation": [
+    0,
+    0,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('varoom', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('varoom', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('varoom', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('varoom', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('varoom', 'blink')"
+      ]
+    }
+  }
+}

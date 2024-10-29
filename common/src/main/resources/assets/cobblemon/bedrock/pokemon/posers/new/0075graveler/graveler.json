@@ -1,0 +1,48 @@
+{
+  "rootBone": "graveler",
+  "portraitScale": 1.4,
+  "portraitTranslation": [
+    -0.1,
+    -0.28,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.37,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('graveler', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('graveler', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.biped_walk(1.1, 1.4, 'leg_left', 'leg_right')",
+        "q.bedrock('graveler', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('graveler', 'blink')"
+      ]
+    }
+  }
+}

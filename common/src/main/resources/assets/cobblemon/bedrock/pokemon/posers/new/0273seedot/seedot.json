@@ -1,0 +1,43 @@
+{
+  "rootBone": "seedot",
+  "portraitScale": 2.8,
+  "portraitTranslation": [
+    -0.1,
+    -2.5,
+    0
+  ],
+  "profileScale": 1,
+  "profileTranslation": [
+    0,
+    0.3,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('seedot', 'idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('seedot', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.biped_walk(1, 0.9, 'foot_left', 'foot_right')",
+        "q.bedrock('seedot', 'idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('seedot', 'blink')"
+      ]
+    }
+  }
+}

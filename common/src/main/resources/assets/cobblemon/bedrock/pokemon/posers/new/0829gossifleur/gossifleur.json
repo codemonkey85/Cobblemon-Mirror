@@ -1,0 +1,42 @@
+{
+  "rootBone": "gossifleur",
+  "portraitScale": 1.7,
+  "portraitTranslation": [
+    -0.22,
+    0.13,
+    0
+  ],
+  "profileScale": 0.52,
+  "profileTranslation": [
+    0,
+    1.04,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('gossifleur', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('gossifleur', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('gossifleur', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('gossifleur', 'blink')"
+      ]
+    }
+  }
+}

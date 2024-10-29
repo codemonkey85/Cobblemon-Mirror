@@ -1,0 +1,120 @@
+{
+  "rootBone": "popplio",
+  "portraitScale": 2.6,
+  "portraitTranslation": [
+    -0.25,
+    -1.5,
+    0
+  ],
+  "profileScale": 1,
+  "profileTranslation": [
+    0,
+    0.2,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('popplio', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "PROFILE",
+        "PORTRAIT",
+        "STAND"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('popplio', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('popplio', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('popplio', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('popplio', 'blink')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "FLOAT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('popplio', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('popplio', 'blink')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('popplio', 'water_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('popplio', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('popplio', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('popplio', 'blink')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('popplio', 'shoulder_left')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('popplio', 'blink')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('popplio', 'shoulder_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('popplio', 'blink')"
+      ]
+    }
+  }
+}

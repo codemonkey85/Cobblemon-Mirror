@@ -1,0 +1,47 @@
+{
+  "rootBone": "ursaluna",
+  "portraitScale": 1.2,
+  "portraitTranslation": [
+    -1.1,
+    0.4,
+    0
+  ],
+  "profileScale": 0.45,
+  "profileTranslation": [
+    0,
+    0.9,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('ursaluna', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('ursaluna', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('ursaluna', 'ground_idle')",
+        "q.quadruped_walk('shoulder_left', 'shoulder_right', 'thigh_left', 'thigh_right', 0.75, 1)"
+      ],
+      "transformTicks": 5,
+      "quirks": [
+        "q.bedrock_quirk('ursaluna', 'blink')"
+      ]
+    }
+  }
+}

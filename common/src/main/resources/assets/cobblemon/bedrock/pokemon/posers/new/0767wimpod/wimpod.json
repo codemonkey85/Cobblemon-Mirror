@@ -1,0 +1,91 @@
+{
+  "rootBone": "wimpod",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.35,
+    -1.6,
+    0
+  ],
+  "profileScale": 0.7,
+  "profileTranslation": [
+    0,
+    0.71,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('wimpod', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STAND"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('wimpod', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('wimpod', 'blink')",
+        "q.bedrock_quirk('wimpod', 'twitch_quirk_left')",
+        "q.bedrock_quirk('wimpod', 'twitch_quirk_right')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('wimpod', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('wimpod', 'blink')",
+        "q.bedrock_quirk('wimpod', 'twitch_quirk_left')",
+        "q.bedrock_quirk('wimpod', 'twitch_quirk_right')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "FLOAT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('wimpod', 'water_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('wimpod', 'blink')",
+        "q.bedrock_quirk('wimpod', 'twitch_quirk_left')",
+        "q.bedrock_quirk('wimpod', 'twitch_quirk_right')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('wimpod', 'water_swim')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('wimpod', 'blink')",
+        "q.bedrock_quirk('wimpod', 'twitch_quirk_left')",
+        "q.bedrock_quirk('wimpod', 'twitch_quirk_right')"
+      ]
+    }
+  }
+}

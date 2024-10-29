@@ -1,0 +1,67 @@
+{
+  "rootBone": "vespiquen",
+  "portraitScale": 1.9,
+  "portraitTranslation": [
+    -0.14,
+    0.8,
+    0
+  ],
+  "profileScale": 0.75,
+  "profileTranslation": [
+    0,
+    0.6,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('vespiquen', 'sleep')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('vespiquen', 'sleep_flap')"
+      ]
+    },
+    "stand": {
+      "poseName": "stand",
+      "poseTypes": [
+        "STAND"
+      ],
+      "animations": [
+        "q.bedrock('vespiquen', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('vespiquen', 'blink')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "UI_POSES",
+        "HOVER",
+        "FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('vespiquen', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('vespiquen', 'blink')"
+      ]
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.bedrock('vespiquen', 'air_fly')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('vespiquen', 'blink')"
+      ]
+    }
+  }
+}

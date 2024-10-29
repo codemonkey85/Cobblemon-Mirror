@@ -1,0 +1,76 @@
+{
+  "rootBone": "tentacruel",
+  "portraitScale": 1.3,
+  "portraitTranslation": [
+    -0.3,
+    1.8,
+    0
+  ],
+  "profileScale": 0.55,
+  "profileTranslation": [
+    0,
+    1.1,
+    0
+  ],
+  "poses": {
+    "stand": {
+      "poseName": "stand",
+      "poseTypes": [
+        "STAND"
+      ],
+      "animations": [
+        "q.bedrock('tentacruel', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tentacruel', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.bedrock('tentacruel', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tentacruel', 'blink')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "PROFILE",
+        "PORTRAIT",
+        "FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('tentacruel', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tentacruel', 'blink')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('tentacruel', 'water_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tentacruel', 'blink')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('tentacruel', 'water_sleep')"
+      ]
+    }
+  }
+}

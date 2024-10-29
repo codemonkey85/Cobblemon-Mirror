@@ -1,0 +1,43 @@
+{
+  "rootBone": "victreebel",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.1,
+    -0.2,
+    0
+  ],
+  "profileScale": 0.92,
+  "profileTranslation": [
+    0,
+    0.35,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('victreebel', 'ground_idle')"
+      ],
+      "transformTicks": 10
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('victreebel', 'ground_idle')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

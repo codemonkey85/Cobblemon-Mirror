@@ -1,0 +1,41 @@
+{
+  "rootBone": "swinub",
+  "portraitScale": 2.6800003,
+  "portraitTranslation": [
+    -0.2,
+    -2.5200000000000102,
+    0
+  ],
+  "profileScale": 1.2300003,
+  "profileTranslation": [
+    0,
+    -0.13999999999999968,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('swinub', 'ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('swinub', 'ground_idle')"
+      ]
+    }
+  }
+}

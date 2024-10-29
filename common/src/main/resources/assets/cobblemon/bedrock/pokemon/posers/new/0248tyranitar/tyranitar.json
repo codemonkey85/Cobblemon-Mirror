@@ -1,0 +1,46 @@
+{
+  "rootBone": "tyranitar",
+  "portraitScale": 1.21,
+  "portraitTranslation": [
+    -0.43,
+    3.73,
+    0
+  ],
+  "profileScale": 0.33,
+  "profileTranslation": [
+    0.02,
+    1.31,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('tyranitar', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tyranitar', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('tyranitar', 'ground_idle')",
+        "q.biped_walk(0.6, 0.9, 'leg_left', 'leg_right')",
+        "q.bimanual_swing(0.6, 0.9, 'arm_left', 'arm_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tyranitar', 'blink')"
+      ]
+    }
+  }
+}

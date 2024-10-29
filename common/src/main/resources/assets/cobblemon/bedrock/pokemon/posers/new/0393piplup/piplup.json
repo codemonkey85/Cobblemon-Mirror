@@ -1,0 +1,94 @@
+{
+  "rootBone": "piplup",
+  "portraitScale": 2.2,
+  "portraitTranslation": [
+    -0.1,
+    -0.65,
+    0
+  ],
+  "profileScale": 0.85,
+  "profileTranslation": [
+    0,
+    0.48,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('piplup', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "PROFILE",
+        "PORTRAIT",
+        "STAND"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('piplup', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('piplup', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('piplup', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('piplup', 'blink')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "FLOAT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('piplup', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('piplup', 'blink')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('piplup', 'water_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('piplup', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('piplup', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('piplup', 'blink')"
+      ]
+    }
+  }
+}

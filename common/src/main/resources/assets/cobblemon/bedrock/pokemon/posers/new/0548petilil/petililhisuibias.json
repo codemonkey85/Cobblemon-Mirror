@@ -1,0 +1,98 @@
+{
+  "rootBone": "petilil_hisui_bias",
+  "portraitScale": 1.52,
+  "portraitTranslation": [
+    0.1,
+    -0.25,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.5,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('petilil', 'sleep')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('petilil', 'blink')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('petilil', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('petilil', 'blink')",
+        "q.bedrock_quirk('petilil', 'idle_quirk')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('petilil', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('petilil', 'blink')",
+        "q.bedrock_quirk('petilil', 'idle_quirk')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('petilil', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('petilil', 'blink')",
+        "q.bedrock_quirk('petilil', 'idle_quirk')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('petilil', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('petilil', 'blink')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('petilil', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('petilil', 'blink')"
+      ]
+    }
+  }
+}

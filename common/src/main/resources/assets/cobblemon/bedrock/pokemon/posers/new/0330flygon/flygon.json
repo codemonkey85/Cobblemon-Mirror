@@ -1,0 +1,59 @@
+{
+  "rootBone": "flygon",
+  "portraitScale": 1.27,
+  "portraitTranslation": [
+    -0.42,
+    2.49,
+    0
+  ],
+  "profileScale": 0.32,
+  "profileTranslation": [
+    0.07,
+    1.21,
+    -6
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES - PoseType.HOVER"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('flygon', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('flygon', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('flygon', 'air_fly')",
+        "q.sine_wing_flap(0.4, 0.7, -10, 'y', 'wing_left', 'wing_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('flygon', 'blink')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "HOVER"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('flygon', 'air_idle')",
+        "q.sine_wing_flap(0.4, 0.9, -10, 'y', 'wing_left', 'wing_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('flygon', 'blink')"
+      ]
+    }
+  }
+}

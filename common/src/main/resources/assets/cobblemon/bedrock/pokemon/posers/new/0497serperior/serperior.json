@@ -1,0 +1,53 @@
+{
+  "rootBone": "serperior",
+  "portraitScale": 2.5,
+  "portraitTranslation": [
+    -0.3,
+    1.25,
+    0
+  ],
+  "profileScale": 0.6,
+  "profileTranslation": [
+    0,
+    0.8,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('serperior', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('serperior', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('serperior', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('serperior', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('serperior', 'blink')"
+      ]
+    }
+  }
+}

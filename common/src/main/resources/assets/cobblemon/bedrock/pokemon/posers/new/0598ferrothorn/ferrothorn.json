@@ -1,0 +1,63 @@
+{
+  "rootBone": "ferrothorn",
+  "portraitScale": 1.07,
+  "portraitTranslation": [
+    -0.41,
+    0.55,
+    0
+  ],
+  "profileScale": 0.39,
+  "profileTranslation": [
+    -0.08,
+    0.9,
+    -6
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('ferrothorn', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('ferrothorn', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('ferrothorn', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('ferrothorn', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('ferrothorn', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('ferrothorn', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('ferrothorn', 'blink')"
+      ]
+    }
+  }
+}

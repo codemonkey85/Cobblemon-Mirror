@@ -1,0 +1,146 @@
+{
+  "rootBone": "hippowdon",
+  "portraitScale": 0.6,
+  "portraitTranslation": [
+    -0.63,
+    0.73,
+    0
+  ],
+  "profileScale": 0.4,
+  "profileTranslation": [
+    -0.1,
+    1,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('hippowdon', 'sand_sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('hippowdon', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('hippowdon', 'blink')",
+        "q.bedrock_quirk('hippowdon', 'quirk_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('hippowdon', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('hippowdon', 'blink')"
+      ]
+    },
+    "standingsand": {
+      "poseName": "standingsand",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('hippowdon', 'sand_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('hippowdon', 'blink')",
+        "q.bedrock_quirk('hippowdon', 'quirk_idle')"
+      ]
+    },
+    "standingredsand": {
+      "poseName": "standingredsand",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('hippowdon', 'sand_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('hippowdon', 'blink')",
+        "q.bedrock_quirk('hippowdon', 'quirk_idle')"
+      ]
+    },
+    "walksand": {
+      "poseName": "walksand",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('hippowdon', 'sand_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('hippowdon', 'blink')"
+      ]
+    },
+    "walkredsand": {
+      "poseName": "walkredsand",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('hippowdon', 'sand_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('hippowdon', 'blink')"
+      ]
+    },
+    "battleidle": {
+      "poseName": "battleidle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('hippowdon', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('hippowdon', 'blink')"
+      ]
+    },
+    "battleidlesand": {
+      "poseName": "battleidlesand",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('hippowdon', 'sand_battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('hippowdon', 'blink')"
+      ]
+    },
+    "battleidleredsand": {
+      "poseName": "battleidleredsand",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('hippowdon', 'sand_battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('hippowdon', 'blink')"
+      ]
+    }
+  }
+}

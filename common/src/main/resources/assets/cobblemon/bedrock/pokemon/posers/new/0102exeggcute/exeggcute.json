@@ -1,0 +1,69 @@
+{
+  "rootBone": "exeggcute",
+  "portraitScale": 2.1,
+  "portraitTranslation": [
+    0,
+    -1.9,
+    0
+  ],
+  "profileScale": 1,
+  "profileTranslation": [
+    -0.15,
+    0,
+    0
+  ],
+  "poses": {
+    "portrait": {
+      "poseName": "portrait",
+      "poseTypes": [
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('exeggcute', 'portrait')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('exeggcute', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE"
+      ],
+      "animations": [
+        "q.bedrock('exeggcute', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('exeggcute', 'blink')",
+        "q.bedrock_quirk('exeggcute', 'blink2')",
+        "q.bedrock_quirk('exeggcute', 'blink3')",
+        "q.bedrock_quirk('exeggcute', 'blink4')",
+        "q.bedrock_quirk('exeggcute', 'blink5')",
+        "q.bedrock_quirk('exeggcute', 'blink6')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('exeggcute', 'ground_idle')",
+        "q.bedrock('exeggcute', 'ground_walk')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

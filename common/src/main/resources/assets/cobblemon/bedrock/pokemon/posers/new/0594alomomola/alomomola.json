@@ -1,0 +1,42 @@
+{
+  "rootBone": "alomomola",
+  "portraitScale": 1.81,
+  "portraitTranslation": [
+    -0.26,
+    -0.38,
+    0
+  ],
+  "profileScale": 0.7,
+  "profileTranslation": [
+    0,
+    0.61,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('alomomola', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('alomomola', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('alomomola', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('alomomola', 'blink')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "rootBone": "samurott",
+  "portraitScale": 1.5,
+  "portraitTranslation": [
+    -0.91,
+    1.62,
+    0
+  ],
+  "profileScale": 0.6,
+  "profileTranslation": [
+    0,
+    0.8,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('samurott', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('samurott', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('samurott', 'battle_pose')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('samurott', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('samurott', 'ground_idle')",
+        "q.quadruped_walk('null', 'leg_front_right', 'leg_back_left', 'leg_back_right', 0.8, 0.8)"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('samurott', 'blink')"
+      ]
+    }
+  }
+}

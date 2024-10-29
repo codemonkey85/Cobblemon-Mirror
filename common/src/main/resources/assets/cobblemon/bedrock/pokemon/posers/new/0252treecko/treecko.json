@@ -1,0 +1,45 @@
+{
+  "rootBone": "treecko",
+  "portraitScale": 2.25,
+  "portraitTranslation": [
+    0.02,
+    0.12,
+    0
+  ],
+  "profileScale": 0.74,
+  "profileTranslation": [
+    0,
+    0.6,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES",
+        "SLEEP"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('treecko', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('treecko', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('treecko', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('treecko', 'blink')"
+      ]
+    }
+  }
+}

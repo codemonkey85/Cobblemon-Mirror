@@ -1,0 +1,90 @@
+{
+  "rootBone": "metagross",
+  "portraitScale": 1.1,
+  "portraitTranslation": [
+    -0.45,
+    0.5,
+    0
+  ],
+  "profileScale": 0.4,
+  "profileTranslation": [
+    0,
+    1,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('metagross', 'sleep')"
+      ]
+    },
+    "stand": {
+      "poseName": "stand",
+      "poseTypes": [
+        "STATIONARY_POSES - PoseType.HOVER - PoseType.FLOAT",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('metagross', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('metagross', 'blink')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.bedrock('metagross', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('metagross', 'blink')"
+      ]
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.bedrock('metagross', 'air_fly')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('metagross', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES - PoseType.FLY - PoseType.SWIM"
+      ],
+      "animations": [
+        "q.bedrock('metagross', 'ground_walk')"
+      ],
+      "transformTicks": 5,
+      "quirks": [
+        "q.bedrock_quirk('metagross', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('metagross', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('metagross', 'blink')"
+      ]
+    }
+  }
+}

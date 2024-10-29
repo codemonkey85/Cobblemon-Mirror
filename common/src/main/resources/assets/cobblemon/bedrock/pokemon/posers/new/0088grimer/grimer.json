@@ -1,0 +1,49 @@
+{
+  "rootBone": "grimer",
+  "portraitScale": 1.8,
+  "portraitTranslation": [
+    -0.15,
+    -0.1,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.48,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('grimer', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('grimer', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('grimer', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('grimer', 'blink')"
+      ]
+    }
+  }
+}

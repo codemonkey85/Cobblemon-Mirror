@@ -1,0 +1,56 @@
+{
+  "rootBone": "geodude",
+  "portraitScale": 1.9,
+  "portraitTranslation": [
+    0,
+    -1.4,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    -0.05,
+    0.3,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('geodude', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('geodude', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('geodude', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('geodude', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('geodude', 'blink')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "rootBone": "naclstack",
+  "portraitScale": 4,
+  "portraitTranslation": [
+    -0.61,
+    -3,
+    0
+  ],
+  "profileScale": 1.05,
+  "profileTranslation": [
+    0.1,
+    0.1,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('naclstack', 'ground_idle')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('naclstack', 'sleep')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('naclstack', 'ground_idle')",
+        "q.bedrock('naclstack', 'ground_walk')"
+      ]
+    }
+  }
+}

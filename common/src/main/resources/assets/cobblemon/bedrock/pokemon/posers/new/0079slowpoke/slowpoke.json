@@ -1,0 +1,81 @@
+{
+  "rootBone": "slowpoke",
+  "portraitScale": 2.2,
+  "portraitTranslation": [
+    -0.6,
+    -1.6,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.52,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('slowpoke', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "PROFILE",
+        "PORTRAIT",
+        "STAND"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('slowpoke', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('slowpoke', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.quadruped_walk('null', 'rightfrontleg', 'leftbackleg', 'rightbackleg', 3.6, 2.2)",
+        "q.look('head')",
+        "q.bedrock('slowpoke', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('slowpoke', 'blink')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "FLOAT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('slowpoke', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('slowpoke', 'blink')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('slowpoke', 'water_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('slowpoke', 'blink')"
+      ]
+    }
+  }
+}

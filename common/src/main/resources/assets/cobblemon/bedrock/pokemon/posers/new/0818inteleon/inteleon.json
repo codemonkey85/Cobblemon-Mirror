@@ -1,0 +1,44 @@
+{
+  "rootBone": "inteleon",
+  "portraitScale": 2.8,
+  "portraitTranslation": [
+    -0.25,
+    3,
+    0
+  ],
+  "profileScale": 0.6,
+  "profileTranslation": [
+    0,
+    0.89,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('inteleon', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('inteleon', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('inteleon', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('inteleon', 'blink')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "rootBone": "poliwhirl",
+  "portraitScale": 1.4,
+  "portraitTranslation": [
+    -0.1,
+    0.2,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.5,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('poliwhirl', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STANDING_POSES",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('poliwhirl', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('poliwhirl', 'blink')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('poliwhirl', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('poliwhirl', 'blink')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('poliwhirl', 'water_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('poliwhirl', 'blink')"
+      ]
+    }
+  }
+}

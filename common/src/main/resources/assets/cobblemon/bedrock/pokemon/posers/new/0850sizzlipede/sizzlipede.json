@@ -1,0 +1,98 @@
+{
+  "rootBone": "sizzlipede",
+  "portraitScale": 3.24,
+  "portraitTranslation": [
+    -0.89,
+    -3.35,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0.07,
+    0.21,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('sizzlipede', 'sleep')"
+      ],
+      "transformTicks": 10
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('sizzlipede', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('sizzlipede', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('sizzlipede', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('sizzlipede', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('sizzlipede', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('sizzlipede', 'blink')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('sizzlipede', 'shoulder_left')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('sizzlipede', 'blink')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('sizzlipede', 'shoulder_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('sizzlipede', 'blink')"
+      ]
+    }
+  }
+}

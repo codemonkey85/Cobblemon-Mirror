@@ -1,0 +1,58 @@
+{
+  "rootBone": "rillaboom",
+  "portraitScale": 2.3,
+  "portraitTranslation": [
+    -0.85,
+    1.65,
+    0
+  ],
+  "profileScale": 0.65,
+  "profileTranslation": [
+    0,
+    0.76,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('rillaboom', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('rillaboom', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('rillaboom', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('rillaboom', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('rillaboom', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('rillaboom', 'blink')"
+      ]
+    }
+  }
+}

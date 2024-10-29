@@ -1,0 +1,39 @@
+{
+  "rootBone": "deino",
+  "portraitScale": 1.82,
+  "portraitTranslation": [
+    -0.58,
+    0.16,
+    0
+  ],
+  "profileScale": 0.66,
+  "profileTranslation": [
+    0,
+    0.73,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('deino', 'ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.quadruped_walk('leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right', 1.1, 1.4)",
+        "q.look('head')",
+        "q.bedrock('deino', 'ground_idle')"
+      ]
+    }
+  }
+}

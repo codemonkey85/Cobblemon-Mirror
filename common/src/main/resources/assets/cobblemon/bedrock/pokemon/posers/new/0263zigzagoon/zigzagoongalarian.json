@@ -1,0 +1,71 @@
+{
+  "rootBone": "zigzagoon_galarian",
+  "portraitScale": 2.55,
+  "portraitTranslation": [
+    -0.5,
+    -2.2,
+    0
+  ],
+  "profileScale": 1,
+  "profileTranslation": [
+    0,
+    0.2,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STAND"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('zigzagoon_galarian', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('zigzagoon_galarian', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.quadruped_walk('leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right', 1.1, 1.4)",
+        "q.look('head')",
+        "q.bedrock('zigzagoon_galarian', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('zigzagoon_galarian', 'blink')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('zigzagoon', 'shoulder_left')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('zigzagoon_galarian', 'blink')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('zigzagoon', 'shoulder_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('zigzagoon_galarian', 'blink')"
+      ]
+    }
+  }
+}

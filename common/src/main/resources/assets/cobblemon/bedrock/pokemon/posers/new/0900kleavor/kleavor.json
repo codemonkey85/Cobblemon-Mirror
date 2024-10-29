@@ -1,0 +1,45 @@
+{
+  "rootBone": "kleavor",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.85,
+    1.3,
+    0
+  ],
+  "profileScale": 0.6,
+  "profileTranslation": [
+    -0.1,
+    0.8,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('kleavor', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('kleavor', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('kleavor', 'ground_idle')",
+        "q.biped_walk(0.7, 0.85, 'left_upper_leg', 'right_upper_leg')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('kleavor', 'blink')"
+      ]
+    }
+  }
+}

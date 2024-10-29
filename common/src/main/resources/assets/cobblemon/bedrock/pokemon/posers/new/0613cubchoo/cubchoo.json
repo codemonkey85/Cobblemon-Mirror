@@ -1,0 +1,46 @@
+{
+  "rootBone": "cubchoo",
+  "portraitScale": 1.98,
+  "portraitTranslation": [
+    -0.23,
+    -0.52,
+    0
+  ],
+  "profileScale": 0.65,
+  "profileTranslation": [
+    0,
+    0.76,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('cubchoo', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('cubchoo', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('cubchoo', 'ground_idle')",
+        "q.biped_walk(0.6, 0.9, 'left_leg', 'right_leg')",
+        "q.bimanual_swing(0.6, 0.9, 'arm_left', 'arm_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('cubchoo', 'blink')"
+      ]
+    }
+  }
+}

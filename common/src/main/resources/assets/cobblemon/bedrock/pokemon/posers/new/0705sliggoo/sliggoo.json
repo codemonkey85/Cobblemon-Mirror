@@ -1,0 +1,45 @@
+{
+  "rootBone": "sliggoo",
+  "portraitScale": 1.72,
+  "portraitTranslation": [
+    -0.38,
+    0.69,
+    0
+  ],
+  "profileScale": 0.56,
+  "profileTranslation": [
+    0.07,
+    0.94,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('sliggoo', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('sliggoo', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('sliggoo', 'ground_idle')",
+        "q.bimanual_swing(0.6662, 1, 'arm_right', 'arm_left')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('sliggoo', 'blink')"
+      ]
+    }
+  }
+}

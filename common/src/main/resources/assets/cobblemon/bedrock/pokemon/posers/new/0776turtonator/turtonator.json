@@ -1,0 +1,60 @@
+{
+  "rootBone": "turtonator",
+  "portraitScale": 1.62,
+  "portraitTranslation": [
+    -1.14,
+    1.92,
+    0
+  ],
+  "profileScale": 0.54,
+  "profileTranslation": [
+    -0.08,
+    0.87,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('turtonator', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('turtonator', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('turtonator', 'ground_idle')",
+        "q.biped_walk(0.6, 0.9, 'leg_left', 'leg_right')",
+        "q.bimanual_swing(0.6, 0.9, 'arm_left', 'arm_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('turtonator', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('turtonator', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('turtonator', 'blink')"
+      ]
+    }
+  }
+}

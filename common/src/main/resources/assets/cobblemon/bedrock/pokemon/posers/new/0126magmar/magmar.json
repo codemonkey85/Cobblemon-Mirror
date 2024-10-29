@@ -1,0 +1,45 @@
+{
+  "rootBone": "magmar",
+  "portraitScale": 2.8,
+  "portraitTranslation": [
+    -0.1,
+    0.3,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.58,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('magmar', 'ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('magmar', 'ground_idle')",
+        "q.biped_walk(0.6, 0.9, 'leftleg', 'rightleg')",
+        "q.bimanual_swing(0.6, 0.9, 'leftarm', 'rightarm')"
+      ]
+    }
+  }
+}

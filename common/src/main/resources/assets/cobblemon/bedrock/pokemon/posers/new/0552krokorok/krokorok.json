@@ -1,0 +1,65 @@
+{
+  "rootBone": "krokorok",
+  "portraitScale": 1.86,
+  "portraitTranslation": [
+    -0.43,
+    0.98,
+    0
+  ],
+  "profileScale": 0.55,
+  "profileTranslation": [
+    0.05,
+    0.93,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('krokorok', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('krokorok', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('krokorok', 'blink')",
+        "q.bedrock_quirk('krokorok', 'look_quirk')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('krokorok', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('krokorok', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('krokorok', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('krokorok', 'blink')",
+        "q.bedrock_quirk('krokorok', 'look_quirk')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "rootBone": "centiskorch",
+  "portraitScale": 1.4,
+  "portraitTranslation": [
+    -0.62,
+    2.01,
+    0
+  ],
+  "profileScale": 0.45,
+  "profileTranslation": [
+    0.02,
+    0.98,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('centiskorch', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('centiskorch', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('centiskorch', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('centiskorch', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('centiskorch', 'blink')"
+      ]
+    },
+    "battleidle": {
+      "poseName": "battleidle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('centiskorch', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('centiskorch', 'blink')"
+      ]
+    }
+  }
+}

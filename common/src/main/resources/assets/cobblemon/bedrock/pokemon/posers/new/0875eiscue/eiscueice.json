@@ -1,0 +1,53 @@
+{
+  "rootBone": "eiscue",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.1,
+    -0.2,
+    0
+  ],
+  "profileScale": 1,
+  "profileTranslation": [
+    0,
+    0.3,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('eiscue_ice', 'sleep')"
+      ],
+      "transformTicks": 10
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('eiscue_ice', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('eiscue_ice', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('eiscue_ice', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('eiscue_ice', 'blink')"
+      ]
+    }
+  }
+}

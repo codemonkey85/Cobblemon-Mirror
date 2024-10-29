@@ -1,0 +1,49 @@
+{
+  "rootBone": "kabuto",
+  "portraitScale": 3.3,
+  "portraitTranslation": [
+    0,
+    -3.3,
+    0
+  ],
+  "profileScale": 1.6,
+  "profileTranslation": [
+    0,
+    -0.6,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('kabuto', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('kabuto', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('kabuto', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('kabuto', 'blink')"
+      ]
+    }
+  }
+}

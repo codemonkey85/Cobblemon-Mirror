@@ -1,0 +1,50 @@
+{
+  "rootBone": "tsareena",
+  "portraitScale": 2.6,
+  "portraitTranslation": [
+    -0.35,
+    2.3,
+    0
+  ],
+  "profileScale": 0.6,
+  "profileTranslation": [
+    0,
+    0.9,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('tsareena', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tsareena', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('tsareena', 'ground_idle')",
+        "q.biped_walk(0.8, 0.6, 'leg_left', 'leg_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tsareena', 'blink')"
+      ]
+    }
+  }
+}

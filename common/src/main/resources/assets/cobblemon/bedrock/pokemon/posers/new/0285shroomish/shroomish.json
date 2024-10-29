@@ -1,0 +1,75 @@
+{
+  "rootBone": "shroomish",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.1,
+    -1.2,
+    0
+  ],
+  "profileScale": 1,
+  "profileTranslation": [
+    0,
+    0.3,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('torso')",
+        "q.bedrock('shroomish', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('shroomish', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('torso')",
+        "q.bedrock('shroomish', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('shroomish', 'blink')"
+      ]
+    },
+    "battlestanding": {
+      "poseName": "battlestanding",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER"
+      ],
+      "animations": [
+        "q.look('torso')",
+        "q.bedrock('shroomish', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('shroomish', 'blink')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('shroomish', 'sleep')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

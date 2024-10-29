@@ -1,0 +1,74 @@
+{
+  "rootBone": "bidoof",
+  "portraitScale": 2.1,
+  "portraitTranslation": [
+    -0.58,
+    -1.4,
+    0
+  ],
+  "profileScale": 0.85,
+  "profileTranslation": [
+    0,
+    0.43,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "PROFILE",
+        "PORTRAIT",
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('bidoof', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('bidoof', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('bidoof', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('bidoof', 'blink')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "SWIM",
+        "FLOAT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('bidoof', 'water_float')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('bidoof', 'blink')"
+      ]
+    },
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('bidoof', 'sleep')"
+      ],
+      "transformTicks": 10
+    }
+  }
+}

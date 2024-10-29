@@ -1,0 +1,44 @@
+{
+  "rootBone": "drakloak",
+  "portraitScale": 2.15,
+  "portraitTranslation": [
+    -0.53,
+    0.73,
+    0
+  ],
+  "profileScale": 0.64,
+  "profileTranslation": [
+    0,
+    0.76,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('drakloak', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('drakloak', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('drakloak', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('drakloak', 'blink')"
+      ]
+    }
+  }
+}

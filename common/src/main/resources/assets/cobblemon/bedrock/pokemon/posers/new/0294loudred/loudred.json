@@ -1,0 +1,40 @@
+{
+  "rootBone": "loudred",
+  "portraitScale": 1.5,
+  "portraitTranslation": [
+    -0.05,
+    0.15,
+    0
+  ],
+  "profileScale": 0.65,
+  "profileTranslation": [
+    0,
+    0.76,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('torso')",
+        "q.bedrock('loudred', 'idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('torso')",
+        "q.bedrock('loudred', 'idle')",
+        "q.biped_walk(0.6, 0.9, 'leg_left', 'leg_right')",
+        "q.bimanual_swing(0.6, 0.9, 'arm_left', 'arm_right')"
+      ]
+    }
+  }
+}

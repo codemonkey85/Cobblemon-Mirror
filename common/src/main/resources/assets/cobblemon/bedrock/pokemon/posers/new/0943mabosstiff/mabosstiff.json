@@ -1,0 +1,45 @@
+{
+  "rootBone": "mabosstiff",
+  "portraitScale": 1.2,
+  "portraitTranslation": [
+    -1,
+    0.75,
+    0
+  ],
+  "profileScale": 0.55,
+  "profileTranslation": [
+    0,
+    0.85,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('mabosstiff', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('mabosstiff', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.quadruped_walk('leg_front_left1', 'leg_front_right1', 'leg_back_left1', 'leg_back_right1', 1.1, 1.4)",
+        "q.look('head')",
+        "q.bedrock('mabosstiff', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('mabosstiff', 'blink')"
+      ]
+    }
+  }
+}

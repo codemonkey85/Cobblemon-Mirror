@@ -1,0 +1,51 @@
+{
+  "rootBone": "sudowoodo",
+  "portraitScale": 1.9,
+  "portraitTranslation": [
+    -0.7,
+    1.6,
+    0
+  ],
+  "profileScale": 0.5,
+  "profileTranslation": [
+    -0.1,
+    0.95,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('sudowoodo', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('sudowoodo', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('sudowoodo', 'ground_idle')",
+        "q.biped_walk(0.6, 0.9, 'leg_left', 'leg_right')",
+        "q.bimanual_swing(0.6, 0.9, 'arm_left', 'arm_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('sudowoodo', 'blink')"
+      ]
+    }
+  }
+}

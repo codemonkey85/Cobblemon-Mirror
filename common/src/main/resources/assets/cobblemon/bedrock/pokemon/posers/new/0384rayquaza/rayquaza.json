@@ -1,0 +1,43 @@
+{
+  "rootBone": "rayquaza",
+  "portraitScale": 1.5,
+  "portraitTranslation": [
+    -1.85,
+    3.5,
+    0
+  ],
+  "profileScale": 0.4,
+  "profileTranslation": [
+    0,
+    1.3,
+    -6
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('rayquaza', 'ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('rayquaza', 'ground_idle')"
+      ]
+    }
+  }
+}

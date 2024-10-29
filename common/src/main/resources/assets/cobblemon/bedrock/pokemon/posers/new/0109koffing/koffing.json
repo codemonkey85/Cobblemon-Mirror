@@ -1,0 +1,47 @@
+{
+  "rootBone": "koffing",
+  "portraitScale": 1.9,
+  "portraitTranslation": [
+    -0.4,
+    -0.2,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.6,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('koffing', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('koffing', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('koffing', 'air_fly')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('koffing', 'blink')"
+      ]
+    }
+  }
+}

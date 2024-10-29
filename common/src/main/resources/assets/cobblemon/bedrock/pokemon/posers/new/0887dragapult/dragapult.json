@@ -1,0 +1,55 @@
+{
+  "rootBone": "dragapult",
+  "portraitScale": 1.79,
+  "portraitTranslation": [
+    -0.62,
+    1.47,
+    0
+  ],
+  "profileScale": 0.45,
+  "profileTranslation": [
+    0,
+    0.73,
+    0
+  ],
+  "poses": {
+    "ui_poses": {
+      "poseName": "ui_poses",
+      "poseTypes": [
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('dragapult', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('dragapult', 'blink')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STANDING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('dragapult', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('dragapult', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('dragapult', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('dragapult', 'blink')"
+      ]
+    }
+  }
+}

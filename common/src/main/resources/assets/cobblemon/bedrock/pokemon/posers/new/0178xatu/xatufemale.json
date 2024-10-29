@@ -1,0 +1,68 @@
+{
+  "rootBone": "xatu",
+  "portraitScale": 1.91,
+  "portraitTranslation": [
+    -0.04,
+    1.16,
+    0
+  ],
+  "profileScale": 0.69,
+  "profileTranslation": [
+    0,
+    0.75,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('xatu', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES - PoseType.HOVER"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('xatu', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('xatu', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('xatu', 'air_idle')",
+        "q.sine_wing_flap(0.6, 0.9, -10, 'y', 'wing_open_left', 'wing_open_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('xatu', 'blink')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "HOVER"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('xatu', 'air_idle')",
+        "q.sine_wing_flap(0.6, 0.9, -10, 'y', 'wing_open_left', 'wing_open_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('xatu', 'blink')"
+      ]
+    }
+  }
+}

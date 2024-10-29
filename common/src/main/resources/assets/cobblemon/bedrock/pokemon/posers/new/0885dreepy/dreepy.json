@@ -1,0 +1,70 @@
+{
+  "rootBone": "dreepy",
+  "portraitScale": 2.66,
+  "portraitTranslation": [
+    -0.27,
+    -1.94,
+    0
+  ],
+  "profileScale": 0.81,
+  "profileTranslation": [
+    0,
+    0.35,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('dreepy', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('dreepy', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('dreepy', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('dreepy', 'blink')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('dreepy', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('dreepy', 'blink')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('dreepy', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('dreepy', 'blink')"
+      ]
+    }
+  }
+}

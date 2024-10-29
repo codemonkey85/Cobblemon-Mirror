@@ -1,0 +1,71 @@
+{
+  "rootBone": "flabebe",
+  "portraitScale": 2.26,
+  "portraitTranslation": [
+    0,
+    -0.14,
+    0
+  ],
+  "profileScale": 0.81,
+  "profileTranslation": [
+    0,
+    0.63,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES",
+        "SLEEP"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('flabebe', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('flabebe', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('flabebe', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('flabebe', 'blink')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('flabebe', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('flabebe', 'blink')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('flabebe', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('flabebe', 'blink')"
+      ]
+    }
+  }
+}

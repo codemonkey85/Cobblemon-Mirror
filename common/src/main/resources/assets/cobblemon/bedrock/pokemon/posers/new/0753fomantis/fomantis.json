@@ -1,0 +1,46 @@
+{
+  "rootBone": "fomantis",
+  "portraitScale": 2.6,
+  "portraitTranslation": [
+    -0.22,
+    -1.6,
+    0
+  ],
+  "profileScale": 0.75,
+  "profileTranslation": [
+    0,
+    0.67,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('fomantis', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('fomantis', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('fomantis', 'ground_idle')",
+        "q.biped_walk(0.6, 0.9, 'left_leg', 'right_leg')",
+        "q.bimanual_swing(0.6, 0.9, 'left_front_arm', 'right_front_arm')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('fomantis', 'blink')"
+      ]
+    }
+  }
+}

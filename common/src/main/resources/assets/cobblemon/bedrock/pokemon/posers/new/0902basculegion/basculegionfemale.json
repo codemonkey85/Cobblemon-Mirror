@@ -1,0 +1,44 @@
+{
+  "rootBone": "basculegion",
+  "portraitScale": 1.4,
+  "portraitTranslation": [
+    -1.1,
+    -0.5,
+    0
+  ],
+  "profileScale": 0.5,
+  "profileTranslation": [
+    0,
+    0.8,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('basculegion', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('basculegion', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('basculegion', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('basculegion', 'blink')"
+      ]
+    }
+  }
+}

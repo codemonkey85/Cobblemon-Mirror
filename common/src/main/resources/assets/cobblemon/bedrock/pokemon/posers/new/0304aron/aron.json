@@ -1,0 +1,44 @@
+{
+  "rootBone": "aron",
+  "portraitScale": 1.55,
+  "portraitTranslation": [
+    -0.28,
+    -0.55,
+    0
+  ],
+  "profileScale": 0.66,
+  "profileTranslation": [
+    0,
+    0.74,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('aron', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('aron', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('aron', 'ground_walk2')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('aron', 'blink')"
+      ]
+    }
+  }
+}

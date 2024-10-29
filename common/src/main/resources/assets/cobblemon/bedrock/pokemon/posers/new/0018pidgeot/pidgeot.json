@@ -1,0 +1,74 @@
+{
+  "rootBone": "pidgeot",
+  "portraitScale": 2.2,
+  "portraitTranslation": [
+    -0.6,
+    0.15,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.4,
+    0
+  ],
+  "poses": {
+    "stand": {
+      "poseName": "stand",
+      "poseTypes": [
+        "STATIONARY_POSES - PoseType.HOVER - PoseType.FLOAT",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('pidgeot', 'ground_idle_PLACEHOLDER')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('pidgeot', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES - PoseType.FLY - PoseType.SWIM"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('pidgeot', 'ground_idle_PLACEHOLDER')",
+        "q.biped_walk(0.6662, 1.4, 'leg_left', 'leg_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('pidgeot', 'blink')"
+      ]
+    },
+    "floating": {
+      "poseName": "floating",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('pidgeot', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('pidgeot', 'blink')"
+      ]
+    },
+    "flying": {
+      "poseName": "flying",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('pidgeot', 'air_fly')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('pidgeot', 'blink')",
+        "q.bedrock_quirk('pidgeot', 'air_fly_quirk')",
+        "q.bedrock_quirk('pidgeot', 'air_fly_quirk2')"
+      ]
+    }
+  }
+}

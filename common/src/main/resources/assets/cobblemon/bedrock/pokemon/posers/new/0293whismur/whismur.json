@@ -1,0 +1,39 @@
+{
+  "rootBone": "whismur",
+  "portraitScale": 2.3,
+  "portraitTranslation": [
+    -0.15,
+    -1.2,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.45,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('torso')",
+        "q.bedrock('whismur', 'ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('torso')",
+        "q.bedrock('whismur', 'ground_idle')",
+        "q.biped_walk(0.6, 0.9, 'foot_left', 'foot_right')"
+      ]
+    }
+  }
+}

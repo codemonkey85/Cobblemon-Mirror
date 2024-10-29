@@ -1,0 +1,67 @@
+{
+  "rootBone": "tyrantrum",
+  "portraitScale": 0.59,
+  "portraitTranslation": [
+    -0.86,
+    2,
+    5
+  ],
+  "profileScale": 0.29,
+  "profileTranslation": [
+    0.02,
+    1.28,
+    -10
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('tyrantrum', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('tyrantrum', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tyrantrum', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('tyrantrum', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tyrantrum', 'blink')",
+        "q.bedrock_quirk('tyrantrum', 'quirk_idle_walk')"
+      ]
+    },
+    "battleidle": {
+      "poseName": "battleidle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('tyrantrum', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tyrantrum', 'blink')"
+      ]
+    }
+  }
+}

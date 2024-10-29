@@ -1,0 +1,93 @@
+{
+  "rootBone": "gholdengo",
+  "portraitScale": 2.6,
+  "portraitTranslation": [
+    -0.3,
+    1.4,
+    0
+  ],
+  "profileScale": 0.65,
+  "profileTranslation": [
+    0,
+    0.76,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('gholdengo', 'surfacewater_sleep')"
+      ],
+      "transformTicks": 10
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('gholdengo', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('gholdengo', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('gholdengo', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('gholdengo', 'blink')"
+      ]
+    },
+    "water_surface_idle": {
+      "poseName": "water_surface_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('gholdengo', 'surfacewater_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('gholdengo', 'blink')"
+      ]
+    },
+    "water_surface_swim": {
+      "poseName": "water_surface_swim",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('gholdengo', 'surfacewater_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('gholdengo', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('gholdengo', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('gholdengo', 'blink')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "rootBone": "yamper",
+  "portraitScale": 2.1,
+  "portraitTranslation": [
+    -0.2,
+    -0.7,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.5,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('yamper', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('yamper', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.quadruped_walk('leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right', 0.6662, 1.4)",
+        "q.look('head')",
+        "q.bedrock('yamper', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('yamper', 'blink')"
+      ]
+    }
+  }
+}

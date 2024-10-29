@@ -1,0 +1,83 @@
+{
+  "rootBone": "combee",
+  "portraitScale": 1.8,
+  "portraitTranslation": [
+    -0.11,
+    -0.77,
+    0
+  ],
+  "profileScale": 0.9,
+  "profileTranslation": [
+    0,
+    0.35,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('combee', 'air_sleep')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('combee', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('combee', 'blink_right')",
+        "q.bedrock_quirk('combee', 'blink_gender')",
+        "q.bedrock_quirk('combee', 'blink_left')"
+      ]
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('combee', 'air_fly')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('combee', 'blink_right')",
+        "q.bedrock_quirk('combee', 'blink_gender')",
+        "q.bedrock_quirk('combee', 'blink_left')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.bedrock('combee', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('combee', 'blink_right')",
+        "q.bedrock_quirk('combee', 'blink_gender')",
+        "q.bedrock_quirk('combee', 'blink_left')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.bedrock('combee', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('combee', 'blink_right')",
+        "q.bedrock_quirk('combee', 'blink_gender')",
+        "q.bedrock_quirk('combee', 'blink_left')"
+      ]
+    }
+  }
+}

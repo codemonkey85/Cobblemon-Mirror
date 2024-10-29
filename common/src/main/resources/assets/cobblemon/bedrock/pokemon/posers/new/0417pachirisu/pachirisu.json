@@ -1,0 +1,76 @@
+{
+  "rootBone": "pachirisu",
+  "portraitScale": 2.3,
+  "portraitTranslation": [
+    -0.2,
+    -1.1,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.55,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('pachirisu', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('pachirisu', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.biped_walk(0.8, 0.7, 'leftfoot', 'rightfoot')",
+        "q.bedrock('pachirisu', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('pachirisu', 'blink')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('pachirisu', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('pachirisu', 'blink')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('pachirisu', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('pachirisu', 'blink')"
+      ]
+    }
+  }
+}

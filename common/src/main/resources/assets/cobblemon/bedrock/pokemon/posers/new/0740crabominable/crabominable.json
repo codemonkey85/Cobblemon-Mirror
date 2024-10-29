@@ -1,0 +1,40 @@
+{
+  "rootBone": "crabominable",
+  "portraitScale": 1,
+  "portraitTranslation": [
+    -0.55,
+    1.65,
+    0
+  ],
+  "profileScale": 0.3,
+  "profileTranslation": [
+    0,
+    1.2,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('crabominable', 'ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('crabominable', 'ground_idle')",
+        "q.bedrock('crabominable', 'ground_walk')"
+      ]
+    }
+  }
+}

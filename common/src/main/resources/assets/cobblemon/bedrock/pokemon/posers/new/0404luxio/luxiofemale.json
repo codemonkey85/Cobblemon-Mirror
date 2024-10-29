@@ -1,0 +1,48 @@
+{
+  "rootBone": "luxio",
+  "portraitScale": 1.8,
+  "portraitTranslation": [
+    -0.6,
+    -0.25,
+    0
+  ],
+  "profileScale": 0.7,
+  "profileTranslation": [
+    0,
+    0.7,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('luxio', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "UI_POSES",
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('luxio', 'idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.quadruped_walk('front_leg_left', 'front_leg_right', 'back_leg_left', 'back_leg_right', 1.1, 1.4)",
+        "q.look('head')",
+        "q.bedrock('luxio', 'idle')"
+      ]
+    }
+  }
+}

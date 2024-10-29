@@ -1,0 +1,67 @@
+{
+  "rootBone": "kirlia",
+  "portraitScale": 2.6,
+  "portraitTranslation": [
+    0,
+    0,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.6,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('kirlia', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('kirlia', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('kirlia', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('kirlia', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('kirlia', 'blink')"
+      ]
+    },
+    "battleidle": {
+      "poseName": "battleidle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('kirlia', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('kirlia', 'blink')"
+      ]
+    }
+  }
+}

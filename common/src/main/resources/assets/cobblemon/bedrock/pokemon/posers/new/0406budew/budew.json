@@ -1,0 +1,65 @@
+{
+  "rootBone": "budew",
+  "portraitScale": 2.57,
+  "portraitTranslation": [
+    -0.24,
+    -1.84,
+    0
+  ],
+  "profileScale": 0.71,
+  "profileTranslation": [
+    0,
+    0.71,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('budew', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES",
+        "SHOULDER_POSES"
+      ],
+      "animations": [
+        "q.bedrock('budew', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('budew', 'blink')",
+        "q.bedrock_quirk('budew', 'quirk_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('budew', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('budew', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('budew', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('budew', 'blink')"
+      ]
+    }
+  }
+}

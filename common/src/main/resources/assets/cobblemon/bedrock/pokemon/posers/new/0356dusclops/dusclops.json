@@ -1,0 +1,89 @@
+{
+  "rootBone": "dusclops",
+  "portraitScale": 1.6,
+  "portraitTranslation": [
+    -0.2,
+    1.1,
+    0
+  ],
+  "profileScale": 0.6,
+  "profileTranslation": [
+    0,
+    0.8,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('dusclops', 'sleep')"
+      ]
+    },
+    "stand": {
+      "poseName": "stand",
+      "poseTypes": [
+        "STAND"
+      ],
+      "animations": [
+        "q.bedrock('dusclops', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('dusclops', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.bedrock('dusclops', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('dusclops', 'blink')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "UI_POSES",
+        "HOVER",
+        "FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('dusclops', 'air_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('dusclops', 'blink')"
+      ]
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.bedrock('dusclops', 'air_fly')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('dusclops', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('dusclops', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('dusclops', 'blink')"
+      ]
+    }
+  }
+}

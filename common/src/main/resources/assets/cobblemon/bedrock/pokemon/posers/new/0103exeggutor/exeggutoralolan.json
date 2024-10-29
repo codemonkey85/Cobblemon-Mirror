@@ -1,0 +1,86 @@
+{
+  "portraitScale": 1,
+  "portraitTranslation": [
+    -1.4,
+    16.55,
+    0
+  ],
+  "profileScale": 0.45,
+  "profileTranslation": [
+    0,
+    1,
+    -30
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('exeggutor_alolan', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head3')",
+        "q.look('undefined', false, false, 70, -45, 45, -45)",
+        "q.look('undefined', false, false, 70, -45, 45, -45)",
+        "q.bedrock('exeggutor_alolan', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('exeggutor_alolan', 'blink')",
+        "q.bedrock_quirk('exeggutor_alolan', 'blink2')",
+        "q.bedrock_quirk('exeggutor_alolan', 'blink3')",
+        "q.bedrock_quirk('exeggutor_alolan', 'blink4')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head3')",
+        "q.look('undefined', false, false, 70, -45, 45, -45)",
+        "q.look('undefined', false, false, 70, -45, 45, -45)",
+        "q.bedrock('exeggutor_alolan', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('exeggutor_alolan', 'blink')",
+        "q.bedrock_quirk('exeggutor_alolan', 'blink2')",
+        "q.bedrock_quirk('exeggutor_alolan', 'blink3')",
+        "q.bedrock_quirk('exeggutor_alolan', 'blink4')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('head3')",
+        "q.look('undefined', false, false, 70, -45, 45, -45)",
+        "q.look('undefined', false, false, 70, -45, 45, -45)",
+        "q.bedrock('exeggutor_alolan', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('exeggutor_alolan', 'blink')",
+        "q.bedrock_quirk('exeggutor_alolan', 'blink2')",
+        "q.bedrock_quirk('exeggutor_alolan', 'blink3')",
+        "q.bedrock_quirk('exeggutor_alolan', 'blink4')"
+      ]
+    }
+  }
+}

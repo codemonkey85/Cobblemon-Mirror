@@ -1,0 +1,84 @@
+{
+  "rootBone": "honchkrow",
+  "portraitScale": 3.4,
+  "portraitTranslation": [
+    -0.35,
+    -1.2,
+    0
+  ],
+  "profileScale": 1.2,
+  "profileTranslation": [
+    0,
+    -0.05,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('honchkrow', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('honchkrow', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('honchkrow', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('honchkrow', 'ground_idle')",
+        "q.biped_walk(0.7, 0.8, 'leg_left', 'leg_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('honchkrow', 'blink')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "HOVER"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('honchkrow', 'air_idle')",
+        "q.sine_wing_flap(0.6, 0.9, -10, 'z', 'wing_left', 'wing_right')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('honchkrow', 'blink')"
+      ]
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('honchkrow', 'air_fly')",
+        "q.sine_wing_flap(0.9, 0.9, -14, 'z', 'wing_left', 'wing_right')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('honchkrow', 'blink')"
+      ]
+    }
+  }
+}

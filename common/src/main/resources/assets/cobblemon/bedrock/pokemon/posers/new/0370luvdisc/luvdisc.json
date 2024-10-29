@@ -1,0 +1,75 @@
+{
+  "rootBone": "luvdisc",
+  "portraitScale": 6,
+  "portraitTranslation": [
+    0.15,
+    -6.5,
+    0
+  ],
+  "profileScale": 2,
+  "profileTranslation": [
+    0,
+    -1.3,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('luvdisc', 'sleep')"
+      ]
+    },
+    "stand": {
+      "poseName": "stand",
+      "poseTypes": [
+        "STAND"
+      ],
+      "animations": [
+        "q.bedrock('luvdisc', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('luvdisc', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.bedrock('luvdisc', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('luvdisc', 'blink')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "UI_POSES",
+        "FLOAT"
+      ],
+      "animations": [
+        "q.bedrock('luvdisc', 'water_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('luvdisc', 'blink')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('luvdisc', 'water_swim')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('luvdisc', 'blink')"
+      ]
+    }
+  }
+}

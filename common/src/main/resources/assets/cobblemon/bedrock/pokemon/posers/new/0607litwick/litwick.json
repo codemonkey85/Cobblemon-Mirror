@@ -1,0 +1,87 @@
+{
+  "rootBone": "litwick",
+  "portraitScale": 2.33,
+  "portraitTranslation": [
+    0.01,
+    -1.9,
+    0
+  ],
+  "profileScale": 0.86,
+  "profileTranslation": [
+    0,
+    0.44,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('litwick', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('litwick', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('litwick', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.bedrock('litwick', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('litwick', 'blink')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.bedrock('litwick', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('litwick', 'blink')"
+      ]
+    },
+    "shoulder_left": {
+      "poseName": "shoulder_left",
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.bedrock('litwick', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('litwick', 'blink')"
+      ]
+    },
+    "shoulder_right": {
+      "poseName": "shoulder_right",
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.bedrock('litwick', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('litwick', 'blink')"
+      ]
+    }
+  }
+}

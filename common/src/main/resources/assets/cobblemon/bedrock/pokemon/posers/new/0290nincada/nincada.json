@@ -1,0 +1,57 @@
+{
+  "rootBone": "nincada",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.26,
+    -1,
+    0
+  ],
+  "profileScale": 0.7,
+  "profileTranslation": [
+    0,
+    0.6,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('nincada', 'sleep')"
+      ],
+      "transformTicks": 10
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('nincada', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('nincada', 'blink')",
+        "q.bedrock_quirk('nincada', 'quirk_wingflutter')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        null
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('nincada', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('nincada', 'blink')",
+        "q.bedrock_quirk('nincada', 'quirk_wingflutter')"
+      ]
+    }
+  }
+}

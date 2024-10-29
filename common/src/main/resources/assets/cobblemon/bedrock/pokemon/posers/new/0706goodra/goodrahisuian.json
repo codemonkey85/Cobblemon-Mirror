@@ -1,0 +1,46 @@
+{
+  "rootBone": "goodra_hisuian",
+  "portraitScale": 1.8,
+  "portraitTranslation": [
+    -1.9,
+    2.02,
+    0
+  ],
+  "profileScale": 0.41,
+  "profileTranslation": [
+    0.04,
+    1.24,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('goodra_hisuian', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('goodra_hisuian', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head_ai')",
+        "q.bedrock('goodra_hisuian', 'ground_idle')",
+        "q.biped_walk(0.6, 0.9, 'leg_left', 'leg_right')",
+        "q.bimanual_swing(0.6, 0.5, 'arm_left', 'arm_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('goodra_hisuian', 'blink')"
+      ]
+    }
+  }
+}

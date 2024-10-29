@@ -1,0 +1,46 @@
+{
+  "rootBone": "shiftry",
+  "portraitScale": 2,
+  "portraitTranslation": [
+    -0.15,
+    0.5,
+    0
+  ],
+  "profileScale": 0.74,
+  "profileTranslation": [
+    0,
+    0.7,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('shiftry', 'idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('shiftry', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('shiftry', 'idle')",
+        "q.biped_walk(0.6, 0.9, 'leg_left', 'leg_right')",
+        "q.bimanual_swing(0.6, 0.9, 'arm_left', 'arm_right')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('shiftry', 'blink')"
+      ]
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "rootBone": "solrock",
+  "portraitScale": 1.6,
+  "portraitTranslation": [
+    -0.08,
+    0.31,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.74,
+    0
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('solrock', 'sleep')"
+      ]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "ALL_POSES - PoseType.SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('solrock', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('solrock', 'blink')"
+      ]
+    }
+  }
+}

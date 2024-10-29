@@ -1,0 +1,132 @@
+{
+  "rootBone": "archeops",
+  "portraitScale": 1.51,
+  "portraitTranslation": [
+    -1.19,
+    1.15,
+    0
+  ],
+  "profileScale": 0.49,
+  "profileTranslation": [
+    -0.04,
+    0.97,
+    -6
+  ],
+  "poses": {
+    "sleep": {
+      "poseName": "sleep",
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('archeops', 'sleep')"
+      ],
+      "transformTicks": 10
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES - PoseType.HOVER"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('archeops', 'ground_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('archeops', 'blink')",
+        "q.bedrock_quirk('archeops', 'quirk')",
+        "q.bedrock_quirk('archeops', 'quirk2')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": [
+        "MOVING_POSES - PoseType.FLY"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('archeops', 'ground_walk')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('archeops', 'blink')"
+      ]
+    },
+    "hover": {
+      "poseName": "hover",
+      "poseTypes": [
+        "HOVER"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('archeops', 'air_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('archeops', 'blink')",
+        "q.bedrock_quirk('archeops', 'quirk')",
+        "q.bedrock_quirk('archeops', 'quirk2')"
+      ]
+    },
+    "fly": {
+      "poseName": "fly",
+      "poseTypes": [
+        "FLY"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('archeops', 'air_fly')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('archeops', 'blink')"
+      ]
+    },
+    "swim": {
+      "poseName": "swim",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('archeops', 'surfacewater_swim')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('archeops', 'blink')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('archeops', 'surfacewater_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('archeops', 'blink')",
+        "q.bedrock_quirk('archeops', 'quirk')"
+      ]
+    },
+    "battle_idle": {
+      "poseName": "battle_idle",
+      "poseTypes": [
+        "STATIONARY_POSES"
+      ],
+      "animations": [
+        "q.look('neck')",
+        "q.bedrock('archeops', 'battle_idle')"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('archeops', 'blink')",
+        "q.bedrock_quirk('archeops', 'quirk2')"
+      ]
+    }
+  }
+}

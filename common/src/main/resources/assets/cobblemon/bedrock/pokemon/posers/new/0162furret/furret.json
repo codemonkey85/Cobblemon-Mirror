@@ -1,0 +1,43 @@
+{
+  "rootBone": "furret",
+  "portraitScale": 2.1,
+  "portraitTranslation": [
+    -0.6,
+    0.2,
+    0
+  ],
+  "profileScale": 0.82,
+  "profileTranslation": [
+    0,
+    0.54,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STATIONARY_POSES",
+        "UI_POSES"
+      ],
+      "animations": [
+        "q.bedrock('furret', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('furret', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "MOVING_POSES"
+      ],
+      "animations": [
+        "q.quadruped_walk('arm_left', 'arm_right', 'leg_left', 'leg_right', 0.6, 0.9)",
+        "q.bedrock('furret', 'pose')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('furret', 'blink')"
+      ]
+    }
+  }
+}

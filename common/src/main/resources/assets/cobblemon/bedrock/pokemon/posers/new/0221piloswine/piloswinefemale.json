@@ -1,0 +1,41 @@
+{
+  "rootBone": "piloswine",
+  "portraitScale": 1.7,
+  "portraitTranslation": [
+    -0.6,
+    -1.03,
+    0
+  ],
+  "profileScale": 0.78,
+  "profileTranslation": [
+    0,
+    0.49,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.bedrock('piloswine', 'ground_idle')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.bedrock('piloswine', 'ground_idle')"
+      ]
+    }
+  }
+}

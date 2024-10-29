@@ -1,0 +1,65 @@
+{
+  "rootBone": "bibarel",
+  "portraitScale": 1.8,
+  "portraitTranslation": [
+    -0.75,
+    -0.5,
+    0
+  ],
+  "profileScale": 0.8,
+  "profileTranslation": [
+    0,
+    0.5,
+    0
+  ],
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": [
+        "STAND",
+        "FLOAT",
+        "HOVER",
+        "PROFILE",
+        "PORTRAIT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('bibarel', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('bibarel', 'blink')"
+      ]
+    },
+    "walk": {
+      "poseName": "walk",
+      "poseTypes": [
+        "WALK",
+        "SWIM",
+        "FLY"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('bibarel', 'ground_idle')",
+        "q.quadruped_walk('null', 'leg_front_right', 'leg_back_left', 'leg_back_right', 0.6, 0.75)"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('bibarel', 'blink')"
+      ]
+    },
+    "float": {
+      "poseName": "float",
+      "poseTypes": [
+        "SWIMMING_POSES"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('bibarel', 'ground_idle')",
+        "q.quadruped_walk('null', 'leg_front_right', 'leg_back_left', 'leg_back_right', 0.6, 0.75)"
+      ],
+      "transformTicks": 10,
+      "quirks": [
+        "q.bedrock_quirk('bibarel', 'blink')"
+      ]
+    }
+  }
+}
