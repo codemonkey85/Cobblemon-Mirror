@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.util
 
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.google.common.collect.ImmutableMap
 import com.mojang.serialization.Dynamic
 import com.mojang.serialization.DynamicOps
@@ -206,6 +207,11 @@ fun Entity.isStandingOnSandOrRedSand(): Boolean {
 fun Entity.isDusk(): Boolean {
     val time = level().dayTime % 24000
     return time in 12000..13000
+}
+
+fun Entity.isWild(): Boolean {
+    if (this !is PokemonEntity) return false
+    return this.ownerUUID == null
 }
 
 fun Entity.isStandingOnSand(): Boolean {

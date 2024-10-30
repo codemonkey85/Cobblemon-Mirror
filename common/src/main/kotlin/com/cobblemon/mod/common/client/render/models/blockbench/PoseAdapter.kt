@@ -17,6 +17,7 @@ import com.cobblemon.mod.common.util.isDusk
 import com.cobblemon.mod.common.util.isStandingOnRedSand
 import com.cobblemon.mod.common.util.isStandingOnSand
 import com.cobblemon.mod.common.util.isStandingOnSandOrRedSand
+import com.cobblemon.mod.common.util.isWild
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -71,6 +72,12 @@ class PoseAdapter(
         val mustBeDusk = json.get("isDusk")?.asBoolean
         if (mustBeDusk != null) {
             conditionsList.add { mustBeDusk == it.getEntity()?.isDusk() }
+        }
+        val mustBeWild = json.get("isWild")?.asBoolean
+        if (mustBeWild != null) {
+            conditionsList.add {
+                mustBeWild == it.getEntity()?.isWild()
+            }
         }
 
         conditionsList.addAll(poseConditionReader(json))
