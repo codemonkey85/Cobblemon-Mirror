@@ -224,7 +224,6 @@
 - Porygon, Porygon2, Porygon-Z
 - Furret
 - Swinub, Piloswine, Mamoswine
-- Mantyke, Mantine
 - Skarmory
 - Spinda
 - Torkoal

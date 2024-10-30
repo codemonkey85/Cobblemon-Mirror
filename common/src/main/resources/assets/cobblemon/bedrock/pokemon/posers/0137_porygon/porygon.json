@@ -35,7 +35,7 @@
       ],
       "quirks": [
         "q.bedrock_quirk('porygon', 'blink')",
-        "q.bedrock_primary_quirk('porygon', 'battle_quirk', 20, 40, 1, q.curve('symmetrical_wide'))"
+        "q.bedrock_primary_quirk('porygon', 'battle_quirk', 20, 40, 1, q.curve('symmetrical'))"
       ]
     },
     "standing": {
@@ -74,6 +74,9 @@
       "poseTypes": [
         "SLEEP"
       ],
+      "namedAnimations": {
+        "cry": "q.bedrock_stateful('dummy', 'cry')"
+      },
       "animations": [
         "q.bedrock('porygon', 'sleep')"
       ]

@@ -184,46 +184,46 @@
 			"loop": true,
 			"bones": {
 				"boulder1": {
-					"rotation": [0, 0, "20*1+q.anim_time*90*0.2"]
+					"rotation": [0, 0, "20+math.mod(q.anim_time*0.05, 1)*360"]
 				},
 				"boulder2": {
-					"rotation": [0, 0, "20*4-q.anim_time*90*0.4"]
+					"rotation": [0, 0, "-20-math.mod(q.anim_time*0.1, 1)*360"]
 				},
 				"boulder3": {
-					"rotation": [0, 0, "20*3+q.anim_time*90*0.2"]
+					"rotation": [0, 0, "-15+math.mod(q.anim_time*0.04, 1)*360"]
 				},
 				"boulder4": {
-					"rotation": [0, 0, "20*1+q.anim_time*90*0.1"]
+					"rotation": [0, 0, "15+math.mod(q.anim_time*0.02, 1)*360"]
 				},
 				"boulder5": {
-					"rotation": [0, 0, "20*0-q.anim_time*90*0.3"]
+					"rotation": [0, 0, "-10-math.mod(q.anim_time*0.06, 1)*360"]
 				},
 				"boulder6": {
-					"rotation": [0, 0, "20*7+q.anim_time*90*0.2"]
+					"rotation": [0, 0, "-15+math.mod(q.anim_time*0.04, 1)*360"]
 				},
 				"boulder7": {
-					"rotation": [0, 0, "20*5+q.anim_time*90*0.5"]
+					"rotation": [0, 0, "-5+math.mod(q.anim_time*0.08, 1)*360"]
 				},
 				"boulder8": {
-					"rotation": [0, 0, "20*3-q.anim_time*90*0.2"]
+					"rotation": [0, 0, "-10-math.mod(q.anim_time*0.05, 1)*360"]
 				},
 				"boulder9": {
-					"rotation": [0, 0, "20*6+q.anim_time*90*0.6"]
+					"rotation": [0, 0, "-5+math.mod(q.anim_time*0.16, 1)*360"]
 				},
 				"boulder10": {
-					"rotation": [0, 0, "20*5+q.anim_time*90*0.2"]
+					"rotation": [0, 0, "-5+math.mod(q.anim_time*0.09, 1)*360"]
 				},
 				"boulder11": {
-					"rotation": [0, 0, "20*1+q.anim_time*90*0.2"]
+					"rotation": [0, 0, "-5-math.mod(q.anim_time*0.09, 1)*360"]
 				},
 				"boulder12": {
-					"rotation": [0, 0, "20*2+q.anim_time*90*0.2"]
+					"rotation": [0, 0, "-16+math.mod(q.anim_time*0.05, 1)*360"]
 				},
 				"boulder13": {
-					"rotation": [0, 0, "20*0-q.anim_time*90*0.8"]
+					"rotation": [0, 0, "-10-math.mod(q.anim_time*0.15, 1)*360"]
 				},
 				"boulder14": {
-					"rotation": [0, 0, "20*5+q.anim_time*90*1"]
+					"rotation": [0, 0, "-10+math.mod(q.anim_time*0.15, 1)*360"]
 				}
 			}
 		},
@@ -231,46 +231,46 @@
 			"loop": true,
 			"bones": {
 				"boulder1": {
-					"rotation": [0, 0, "20*1+q.anim_time*90*0.1"]
+					"rotation": [0, 0, "20+math.mod(q.anim_time*0.05/2, 1)*360"]
 				},
 				"boulder2": {
-					"rotation": [0, 0, "20*4-q.anim_time*90*0.1"]
+					"rotation": [0, 0, "-20-math.mod(q.anim_time*0.1/2, 1)*360"]
 				},
 				"boulder3": {
-					"rotation": [0, 0, "20*3+q.anim_time*90*0.1"]
+					"rotation": [0, 0, "-15+math.mod(q.anim_time*0.04/2, 1)*360"]
 				},
 				"boulder4": {
-					"rotation": [0, 0, "20*1+q.anim_time*90*0.1"]
+					"rotation": [0, 0, "15+math.mod(q.anim_time*0.02/2, 1)*360"]
 				},
 				"boulder5": {
-					"rotation": [0, 0, "20*0-q.anim_time*90*0.1"]
+					"rotation": [0, 0, "-10-math.mod(q.anim_time*0.06/2, 1)*360"]
 				},
 				"boulder6": {
-					"rotation": [0, 0, "20*7+q.anim_time*90*0.2"]
+					"rotation": [0, 0, "-15+math.mod(q.anim_time*0.04/2, 1)*360"]
 				},
 				"boulder7": {
-					"rotation": [0, 0, "20*5+q.anim_time*90*0.1"]
+					"rotation": [0, 0, "-5+math.mod(q.anim_time*0.08/2, 1)*360"]
 				},
 				"boulder8": {
-					"rotation": [0, 0, "20*3-q.anim_time*90*0.2"]
+					"rotation": [0, 0, "-10-math.mod(q.anim_time*0.05/2, 1)*360"]
 				},
 				"boulder9": {
-					"rotation": [0, 0, "20*6+q.anim_time*90*0.1"]
+					"rotation": [0, 0, "-5+math.mod(q.anim_time*0.16/3, 1)*360"]
 				},
 				"boulder10": {
-					"rotation": [0, 0, "20*5+q.anim_time*90*0.2"]
+					"rotation": [0, 0, "-5+math.mod(q.anim_time*0.09/2, 1)*360"]
 				},
 				"boulder11": {
-					"rotation": [0, 0, "20*1+q.anim_time*90*0.2"]
+					"rotation": [0, 0, "-5-math.mod(q.anim_time*0.09/2, 1)*360"]
 				},
 				"boulder12": {
-					"rotation": [0, 0, "20*2+q.anim_time*90*0.2"]
+					"rotation": [0, 0, "-16+math.mod(q.anim_time*0.05/2, 1)*360"]
 				},
 				"boulder13": {
-					"rotation": [0, 0, "20*0-q.anim_time*90*0.4"]
+					"rotation": [0, 0, "-10-math.mod(q.anim_time*0.15/2, 1)*360"]
 				},
 				"boulder14": {
-					"rotation": [0, 0, "20*5+q.anim_time*90*0.1"]
+					"rotation": [0, 0, "-10+math.mod(q.anim_time*0.15/2, 1)*360"]
 				}
 			}
 		},

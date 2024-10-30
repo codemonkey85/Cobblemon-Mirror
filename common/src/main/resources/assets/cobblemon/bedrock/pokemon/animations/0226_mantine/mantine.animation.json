@@ -224,7 +224,7 @@
 					"rotation": [0, 0, "math.sin(q.anim_time*90*2-110)*14"]
 				},
 				"antenna_left": {
-					"rotation": ["-0.1715-math.sin(q.anim_time*90*2-80)*6", -13.86323, 18.24499]
+					"rotation": ["-0.6715-math.sin(q.anim_time*90*2-80)*6", -13.86323, 18.24499]
 				},
 				"tail": {
 					"rotation": ["math.sin(q.anim_time*90*2-170)*13", 0, 0]
@@ -239,11 +239,10 @@
 					"rotation": ["math.sin(q.anim_time*90*2-370)*14", 0, 0]
 				},
 				"antenna_left3": {
-					"rotation": ["-44.9193-math.sin(q.anim_time*90*2-140)*2", 5.33353, -7.58023],
-					"position": [0, -0.15, -0.3]
+					"rotation": ["-math.sin(q.anim_time*90*2-140)*2", 0, -20]
 				},
 				"antenna_left2": {
-					"rotation": ["-30.8516-math.sin(q.anim_time*90*2-110)*2", -0.90379, -3.82742]
+					"rotation": ["-math.sin(q.anim_time*90*2-110)*2", 0, -17.5]
 				},
 				"wing_right": {
 					"rotation": [8.5, 0, "-2-math.sin(q.anim_time*90*2+65)*12"]
@@ -258,14 +257,13 @@
 					"rotation": [0, 0, "-(math.sin(q.anim_time*90*2-110)*14)"]
 				},
 				"antenna_right": {
-					"rotation": ["-0.1715-math.sin(q.anim_time*90*2-80)*6", 13.86323, -18.24499]
+					"rotation": ["-0.6715-math.sin(q.anim_time*90*2-80)*6", 13.86323, -18.24499]
 				},
 				"antenna_right2": {
-					"rotation": ["-30.8516-math.sin(q.anim_time*90*2-110)*2", 0.90379, 3.82742]
+					"rotation": ["-math.sin(q.anim_time*90*2-110)*2", 0, 17.5]
 				},
 				"antenna_right3": {
-					"rotation": ["-44.9193-math.sin(q.anim_time*90*2-140)*2", -5.33353, 7.58023],
-					"position": [0, -0.15, -0.3]
+					"rotation": ["-math.sin(q.anim_time*90*2-140)*2", 0, 20]
 				},
 				"body": {
 					"rotation": ["-1+math.sin(q.anim_time*90*2-90)*7", 0, 0],
@@ -548,7 +546,7 @@
 			}
 		},
 		"animation.mantine.recoil": {
-			"loop": "hold_on_last_frame",
+			"loop": true,
 			"bones": {
 				"mouth_closed": {
 					"position": [0, 0, 0.1]
@@ -587,14 +585,6 @@
 				"eye_emote_right": {
 					"position": [1, 0, 0],
 					"scale": [0.335, 1, 1]
-				}
-			}
-		},
-		"animation.mantine.walkspeedtest": {
-			"loop": true,
-			"bones": {
-				"mantine": {
-					"position": [0, 0, "-q.anim_time*90*0.4"]
 				}
 			}
 		}
