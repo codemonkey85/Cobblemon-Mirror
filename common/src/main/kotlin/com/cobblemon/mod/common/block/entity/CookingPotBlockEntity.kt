@@ -1,59 +1,51 @@
 package com.cobblemon.mod.common.block.entity
 
 import com.cobblemon.mod.common.CobblemonBlockEntities
-import com.cobblemon.mod.common.api.text.Text
 import com.cobblemon.mod.common.block.CookingPotBlock
 import com.cobblemon.mod.common.gui.CookingPotScreenHandler
-import net.minecraft.block.Block
-import net.minecraft.block.BlockState
-import net.minecraft.block.entity.LockableContainerBlockEntity
-import net.minecraft.block.entity.ViewerCountManager
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.inventory.Inventories
-import net.minecraft.inventory.Inventory
-import net.minecraft.inventory.SidedInventory
-import net.minecraft.item.ItemStack
-import net.minecraft.network.listener.ClientPlayPacketListener
-import net.minecraft.network.packet.Packet
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
+import net.minecraft.core.NonNullList
+import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.Packet
-import net.minecraft.screen.ScreenHandler
-import net.minecraft.text.Text
-import net.minecraft.util.collection.DefaultedList
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
-import net.minecraft.world.World
+import net.minecraft.network.protocol.game.ClientGamePacketListener
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
+import net.minecraft.world.*
 import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity
+import net.minecraft.world.level.block.entity.ContainerOpenersCounter
+import net.minecraft.world.level.block.state.BlockState
 
 class CookingPotBlockEntity(
-        val blockPos: BlockPos,
-        val blockState: BlockState
-) : LockableContainerBlockEntity(CobblemonBlockEntities.COOKING_POT, blockPos, blockState) {
+        blockPos: BlockPos,
+        blockState: BlockState
+) : BaseContainerBlockEntity(CobblemonBlockEntities.COOKING_POT, blockPos, blockState) {
 
     var cookingPotInventory = CookingPotBlockInventory(this)
     var automationDelay: Int = AUTOMATION_DELAY
     var partialTicks = 0.0f
 
-    val stateManager: ViewerCountManager = object : ViewerCountManager() {
-        override fun onContainerOpen(world: World, pos: BlockPos, state: BlockState) {
+    val stateManager: ContainerOpenersCounter = object : ContainerOpenersCounter() {
+        override fun onOpen(level: Level, pos: BlockPos, state: BlockState) {
             this@CookingPotBlockEntity.setOpen(state, true)
         }
 
-        override fun onContainerClose(world: World, pos: BlockPos, state: BlockState) {
+        override fun onClose(level: Level, pos: BlockPos, state: BlockState) {
             this@CookingPotBlockEntity.setOpen(state, false)
         }
 
-        override fun onViewerCountUpdate(world: World, pos: BlockPos, state: BlockState, oldViewerCount: Int, newViewerCount: Int) {}
-        override fun isPlayerViewing(player: PlayerEntity): Boolean {
-            if (player.currentScreenHandler is CookingPotScreenHandler) {
-                val inventory = (player.currentScreenHandler as CookingPotScreenHandler).inventory
+        override fun openerCountChanged(level: Level, pos: BlockPos, state: BlockState, oldCount: Int, newCount: Int) {
+            // Implement if needed
+        }
+
+        override fun isOwnContainer(player: Player): Boolean {
+            if (player.containerMenu is CookingPotScreenHandler) {
+                val inventory = (player.containerMenu as CookingPotScreenHandler).inventory
                 return inventory === this@CookingPotBlockEntity
             }
             return false
@@ -65,158 +57,144 @@ class CookingPotBlockEntity(
         const val FILTER_TM_NBT = "FilterTM"
     }
 
-    override fun getPos(): BlockPos {
-        return blockPos
-    }
-
-    override fun getCachedState(): BlockState {
-        return blockState
-    }
-
     fun setOpen(state: BlockState, open: Boolean) {
-        world!!.setBlockState(pos, state.with(CookingPotBlock.COOKING, open), Block.NOTIFY_ALL)
+        level!!.setBlockAndUpdate(worldPosition, state.setValue(CookingPotBlock.COOKING, open))
     }
 
     fun tick() {
-        if (!removed) {
-            stateManager.updateViewerCount(world, pos, cachedState)
+        if (!this.isRemoved) {
+            stateManager.recheckOpeners(level!!, worldPosition, blockState)
         }
     }
 
-    override fun clear() {
-        cookingPotInventory.clear()
+    override fun clearContent() {
+        cookingPotInventory.clearContent()
     }
 
-    override fun size(): Int {
-        return this.cookingPotInventory.size()
+    override fun getContainerSize(): Int {
+        return this.cookingPotInventory.containerSize
     }
 
     override fun isEmpty(): Boolean {
-        return this.cookingPotInventory.isEmpty()
+        return this.cookingPotInventory.isEmpty
     }
 
-    override fun getStack(slot: Int): ItemStack {
-        return this.cookingPotInventory.getStack(slot)
+    override fun getItem(slot: Int): ItemStack {
+        return this.cookingPotInventory.getItem(slot)
     }
 
-    override fun removeStack(slot: Int, amount: Int): ItemStack {
-        return this.cookingPotInventory.removeStack(slot, amount)
+    override fun removeItem(slot: Int, amount: Int): ItemStack {
+        return this.cookingPotInventory.removeItem(slot, amount)
     }
 
-    override fun removeStack(slot: Int): ItemStack {
-        return this.cookingPotInventory.removeStack(slot)
+    override fun removeItemNoUpdate(slot: Int): ItemStack {
+        return this.cookingPotInventory.removeItemNoUpdate(slot)
     }
 
-    override fun setStack(slot: Int, stack: ItemStack?) {
-        return this.cookingPotInventory.setStack(slot, stack)
+    override fun setItem(slot: Int, stack: ItemStack) {
+        this.cookingPotInventory.setItem(slot, stack)
     }
 
-    override fun canPlayerUse(player: PlayerEntity?): Boolean {
-        return this.cookingPotInventory.canPlayerUse(player)
+    override fun stillValid(player: Player): Boolean {
+        return this.cookingPotInventory.stillValid(player)
     }
 
-    override fun getContainerName(): Text {
-        return Text.translatable("container.brewing")
+    override fun getDisplayName(): Component {
+        return Component.translatable("container.cooking_pot")
     }
 
-    override fun createScreenHandler(syncId: Int, playerInventory: PlayerInventory?): ScreenHandler {
-        return CookingPotScreenHandler(syncId, playerInventory!!, this.cookingPotInventory, this)
+    override fun createMenu(syncId: Int, playerInventory: Inventory, player: Player): AbstractContainerMenu {
+        return CookingPotScreenHandler(syncId, playerInventory, this.cookingPotInventory, this)
     }
 
-    override fun toUpdatePacket(): Packet<ClientPlayPacketListener>? {
-        return BlockEntityUpdateS2CPacket.create(this)
+    override fun getUpdatePacket(): Packet<ClientGamePacketListener>? {
+        return ClientboundBlockEntityDataPacket.create(this)
     }
 
-    override fun markDirty() {
-        super.markDirty()
-        if (this.world != null && !this.world!!.isClient) {
-            val currentState = world!!.getBlockState(pos)
-            world!!.setBlockState(pos, currentState, 3) // Flags: 2 | 1 = Block update | Render update
-            this.world!!.updateNeighborsAlways(this.pos, this.cachedState.block)
+    override fun setChanged() {
+        super.setChanged()
+        if (this.level != null && !this.level!!.isClientSide) {
+            val currentState = level!!.getBlockState(worldPosition)
+            level!!.sendBlockUpdated(worldPosition, currentState, currentState, Block.UPDATE_ALL)
+            this.level!!.neighborChanged(this.worldPosition, this.blockState.block, this.worldPosition)
         }
     }
 
-    class CookingPotBlockInventory(val cookingPotBlockEntity: CookingPotBlockEntity) : SidedInventory {
+    class CookingPotBlockInventory(val cookingPotBlockEntity: CookingPotBlockEntity) : WorldlyContainer {
         private val BLANK_DISC_SLOT_INDEX = 0
         private val GEM_SLOT_INDEX = 1
         private val MISC_SLOT_INDEX = 2
         private val OUTPUT_SLOT_INDEX = 3
         private val INPUT_SLOTS = intArrayOf(0, 1, 2, 3)
-        val entityPos = this.cookingPotBlockEntity.pos
-        val entityState = this.cookingPotBlockEntity.cachedState
-        val entityWorld = this.cookingPotBlockEntity.world
+        val entityPos = this.cookingPotBlockEntity.blockPos
+        val entityState = this.cookingPotBlockEntity.blockState
+        val entityWorld = this.cookingPotBlockEntity.level
 
         var filterTM: ItemStack? = null
-        var items: DefaultedList<ItemStack?>? = DefaultedList.ofSize(4, ItemStack.EMPTY)
+        var items: NonNullList<ItemStack> = NonNullList.withSize(4, ItemStack.EMPTY)
 
         fun hasFilterTM(): Boolean {
             return filterTM != null
         }
 
-        override fun clear() {
-            cookingPotBlockEntity.markDirty()
-            this.items?.clear()
+        override fun clearContent() {
+            cookingPotBlockEntity.setChanged()
+            this.items.clear()
         }
 
-        override fun size(): Int {
-            return this.items?.size ?: 0
+        override fun getContainerSize(): Int {
+            return items.size
         }
 
         fun getInvStack(slot: Int): ItemStack {
-            return items?.get(slot) ?: ItemStack.EMPTY
+            return items.getOrNull(slot) ?: ItemStack.EMPTY
         }
 
         override fun isEmpty(): Boolean {
-            for (i in 0 until size()) {
-                val stack: ItemStack = getInvStack(i)
-                if (!stack.isEmpty) {
-                    return false
-                }
-            }
-            return true
+            return items.all { it.isEmpty }
         }
 
-        override fun getStack(slot: Int): ItemStack {
-            return items?.get(slot) ?: ItemStack.EMPTY
+        override fun getItem(slot: Int): ItemStack {
+            return items.getOrNull(slot) ?: ItemStack.EMPTY
         }
 
-        override fun getAvailableSlots(side: Direction?): IntArray? {
+        override fun getSlotsForFace(side: Direction): IntArray {
             return if (side == Direction.DOWN) {
-                return listOf(this.OUTPUT_SLOT_INDEX).toIntArray()
-            } else this.INPUT_SLOTS
+                intArrayOf(this.OUTPUT_SLOT_INDEX)
+            } else INPUT_SLOTS
         }
 
-        override fun removeStack(slot: Int, amount: Int): ItemStack {
-            cookingPotBlockEntity.markDirty()
-            return Inventories.splitStack(items, slot, amount)
+        override fun removeItem(slot: Int, amount: Int): ItemStack {
+            cookingPotBlockEntity.setChanged()
+            return ContainerHelper.removeItem(items, slot, amount)
         }
 
-        override fun removeStack(slot: Int): ItemStack {
-            val slotStack = items?.get(slot)
-            items?.set(slot, ItemStack.EMPTY)
-            cookingPotBlockEntity.markDirty()
+        override fun removeItemNoUpdate(slot: Int): ItemStack {
+            val slotStack = items.getOrNull(slot)
+            items[slot] = ItemStack.EMPTY
+            cookingPotBlockEntity.setChanged()
             return slotStack ?: ItemStack.EMPTY
         }
 
-        override fun setStack(slot: Int, stack: ItemStack?) {
-            items?.set(slot, stack)
-            cookingPotBlockEntity.markDirty()
+        override fun setItem(slot: Int, stack: ItemStack) {
+            items[slot] = stack
+            cookingPotBlockEntity.setChanged()
         }
 
-        override fun markDirty() {
-            if (cookingPotBlockEntity.world != null)
-                cookingPotBlockEntity.markDirty()
+        override fun setChanged() {
+            cookingPotBlockEntity.setChanged()
         }
 
-        override fun canPlayerUse(player: PlayerEntity?): Boolean {
-            return Inventory.canPlayerUse(this.cookingPotBlockEntity, player)
+        override fun stillValid(player: Player): Boolean {
+            return Container.stillValidBlockEntity(cookingPotBlockEntity, player)
         }
 
-        override fun canInsert(slot: Int, stack: ItemStack?, dir: Direction?): Boolean {
+
+        override fun canPlaceItemThroughFace(slot: Int, stack: ItemStack, dir: Direction?): Boolean {
             return false
         }
 
-        override fun canExtract(slot: Int, stack: ItemStack?, dir: Direction?): Boolean {
+        override fun canTakeItemThroughFace(slot: Int, stack: ItemStack, dir: Direction): Boolean {
             return dir == Direction.DOWN && slot == this.OUTPUT_SLOT_INDEX
         }
     }
