@@ -23,6 +23,7 @@ import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.CropBlock
+import net.minecraft.world.level.block.FarmBlock
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BooleanProperty
@@ -98,10 +99,59 @@ class RevivalHerbBlock(settings: Properties) : CropBlock(settings), Mulchable {
         if (world.getRawBrightness(pos, 0) < 9 || this.isMaxAge(state)) {
             return
         }
-        val currentMoisture = getGrowthSpeed(this, world, pos)
+        val currentMoisture = getMoistureAmount(this, world, pos)
         if (random.nextInt((25F / currentMoisture).toInt() + 1) == 0) {
             this.growCrops(world, pos, state, false)
         }
+    }
+
+    /**
+     * This method is a copy pasta of [CropBlock.getGrowthSpeed]. Why? Because neoforge changes the signature of this
+     * vanilla method, breaking us at runtime. To prevent this, we simply avoid using the vanilla method and create our own,
+     * while not ideal, it works....
+     */
+    fun getMoistureAmount(block: Block, level: BlockGetter, pos: BlockPos): Float {
+        var growthSpeed = 1.0F
+        var ground = pos.below()
+
+        for(x in -1..1) {
+            for(z in -1..1) {
+                var nearbyFarmLandBoost = 0.0F
+                var blockState = level.getBlockState(ground.offset(x, 0, z))
+                if (blockState.`is`(Blocks.FARMLAND)) {
+                    nearbyFarmLandBoost = 1.0F
+                    if (blockState.getValue(FarmBlock.MOISTURE) > 0) {
+                        nearbyFarmLandBoost = 3.0F
+                    }
+                }
+
+                if (x != 0 || z != 0) {
+                    nearbyFarmLandBoost /= 4.0F
+                }
+
+                growthSpeed += nearbyFarmLandBoost
+            }
+        }
+
+        var north = pos.north()
+        var south = pos.south()
+        var west = pos.west()
+        var east = pos.east()
+        var sameBlockDirectNeighborXAxis = level.getBlockState(west).`is`(block) || level.getBlockState(east).`is`(block)
+        var sameBlockDirectNeighborZAxis = level.getBlockState(north).`is`(block) || level.getBlockState(south).`is`(block)
+        if (sameBlockDirectNeighborZAxis && sameBlockDirectNeighborXAxis) {
+            growthSpeed /= 2.0F
+        } else {
+            var sameBlockDiagonallyPresent = level.getBlockState(west.north()).`is`(block) ||
+                    level.getBlockState(east.north()).`is`(block) ||
+                    level.getBlockState(east.south()).`is`(block) ||
+                    level.getBlockState(west.south()).`is`(block)
+            if (sameBlockDiagonallyPresent) {
+                growthSpeed /= 2.0F
+            }
+        }
+
+        return growthSpeed
     }
 
     override fun growCrops(world: Level, pos: BlockPos, state: BlockState) {
