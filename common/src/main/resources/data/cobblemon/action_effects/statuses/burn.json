@@ -6,13 +6,13 @@
     },
     {
       "type": "entity_particles",
-      "effect": "cobblemon:statup_actor",
-      "delay": 0.1,
-      "locator": "root"
+      "effect": "cobblemon:burn_actor",
+      "locator": "middle"
     },
     {
-      "type": "pause",
-      "pause": 0.5
+      "type": "entity_particles",
+      "effect": "cobblemon:burn_actorresidual",
+      "locator": "middle"
     },
     {
       "type": "remove_holds",
@@ -20,7 +20,7 @@
     },
     {
       "type": "pause",
-      "pause": 1.2
+      "pause": 1
     }
   ]
 }
