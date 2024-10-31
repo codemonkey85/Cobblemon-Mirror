@@ -9,24 +9,25 @@
 package com.cobblemon.mod.common.command
 
 import com.cobblemon.mod.common.api.permission.CobblemonPermissions
-import com.cobblemon.mod.common.command.argument.PokemonArgumentType
+import com.cobblemon.mod.common.command.argument.SpeciesArgumentType
 import com.cobblemon.mod.common.pokemon.FormData
+import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.permission
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.FloatArgumentType
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
 
 object ChangeWalkSpeed {
 
-    fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
-        val command = CommandManager.literal("changewalkspeed")
+    fun register(dispatcher: CommandDispatcher<CommandSourceStack>) {
+        val command = Commands.literal("changewalkspeed")
             .permission(CobblemonPermissions.CHANGE_WALK_SPEED)
             .then(
-                CommandManager.argument("pokemon", PokemonArgumentType.pokemon())
-                    .then(CommandManager.argument("walkSpeed", FloatArgumentType.floatArg()).executes(::execute))
+                Commands.argument("pokemon", SpeciesArgumentType.species())
+                    .then(Commands.argument("walkSpeed", FloatArgumentType.floatArg()).executes(::execute))
             )
 
             .executes(::execute)
@@ -35,11 +36,11 @@ object ChangeWalkSpeed {
 
 
 
-    private fun execute(context: CommandContext<ServerCommandSource>) : Int {
-        val pkm = PokemonArgumentType.getPokemon(context, "pokemon")
+    private fun execute(context: CommandContext<CommandSourceStack>) : Int {
+        val pkm = SpeciesArgumentType.getPokemon(context, "pokemon")
         val walkSpeed = FloatArgumentType.getFloat(context, "walkSpeed")
 
-        pkm.behaviour.moving.walk.walkSpeed = walkSpeed
+        pkm.behaviour.moving.walk.walkSpeed = walkSpeed.toString().asExpressionLike()
         pkm.forms.clear()
         pkm.forms.add(FormData().also { it.initialize(pkm)})
         return Command.SINGLE_SUCCESS

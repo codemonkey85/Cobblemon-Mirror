@@ -13,28 +13,34 @@ import com.cobblemon.mod.common.block.entity.RestorationTankBlockEntity
 import com.cobblemon.mod.common.block.multiblock.FossilMultiblockStructure
 import com.cobblemon.mod.common.client.CobblemonBakingOverrides
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.FossilModelRepository
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.WaveFunction
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.parabolaFunction
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.rerange
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.timeDilate
 import com.cobblemon.mod.common.util.cobblemonResource
 import kotlin.math.pow
-import net.minecraft.block.HorizontalFacingBlock
-import net.minecraft.client.render.OverlayTexture
-import net.minecraft.client.render.RenderLayer
-import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.block.entity.BlockEntityRenderer
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.util.math.Direction
-import net.minecraft.util.math.RotationAxis
+import net.minecraft.world.level.block.HorizontalDirectionalBlock
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
+import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.math.Axis
+import net.minecraft.core.Direction
 
-class RestorationTankRenderer(ctx: BlockEntityRendererFactory.Context) : BlockEntityRenderer<RestorationTankBlockEntity> {
+class RestorationTankRenderer(ctx: BlockEntityRendererProvider.Context) : BlockEntityRenderer<RestorationTankBlockEntity> {
+    val context = RenderContext().also {
+        it.put(RenderContext.DO_QUIRKS, true)
+        it.put(RenderContext.RENDER_STATE, RenderContext.RenderState.RESURRECTION_MACHINE)
+    }
+
     override fun render(
         entity: RestorationTankBlockEntity,
         tickDelta: Float,
-        matrices: MatrixStack,
-        vertexConsumers: VertexConsumerProvider,
+        matrices: PoseStack,
+        vertexConsumers: MultiBufferSource,
         light: Int,
         overlay: Int
     ) {
@@ -45,68 +51,72 @@ class RestorationTankRenderer(ctx: BlockEntityRendererFactory.Context) : BlockEn
         val connectionDir = struct.tankConnectorDirection
         // FYI, rendering models this way ignores the pivots set in the model, so set the pivots manually
         when (connectionDir) {
-            Direction.NORTH -> matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(0f), 0.5f, 0f, 0.5f)
-            Direction.EAST -> matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(270f), 0.5f, 0f, 0.5f)
-            Direction.SOUTH -> matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f), 0.5f, 0f, 0.5f)
-            Direction.WEST -> matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90f), 0.5f, 0f, 0.5f)
+            Direction.NORTH -> matrices.rotateAround(Axis.YP.rotationDegrees(0f), 0.5f, 0f, 0.5f)
+            Direction.EAST -> matrices.rotateAround(Axis.YP.rotationDegrees(270f), 0.5f, 0f, 0.5f)
+            Direction.SOUTH -> matrices.rotateAround(Axis.YP.rotationDegrees(180f), 0.5f, 0f, 0.5f)
+            Direction.WEST -> matrices.rotateAround(Axis.YP.rotationDegrees(90f), 0.5f, 0f, 0.5f)
             else -> {}
         }
 
-        val cutoutBuffer = vertexConsumers.getBuffer(RenderLayer.getCutout())
+        val cutoutBuffer = vertexConsumers.getBuffer(RenderType.cutout())
         if (connectionDir != null) {
-            matrices.push()
-            CONNECTOR_MODEL.getQuads(entity.cachedState, null, entity.world?.random).forEach { quad ->
-                cutoutBuffer.quad(matrices.peek(), quad, 0.75f, 0.75f, 0.75f, light, OverlayTexture.DEFAULT_UV)
+            matrices.pushPose()
+            CONNECTOR_MODEL.getQuads(entity.blockState, null, entity.level?.random).forEach { quad ->
+                cutoutBuffer.putBulkData(matrices.last(), quad, 0.75f, 0.75f, 0.75f, 1f, light, OverlayTexture.NO_OVERLAY)
             }
-            matrices.pop()
+            matrices.popPose()
         }
         val fillLevel = struct.fillLevel
         if (fillLevel == 0 && !struct.hasCreatedPokemon) {
             return
         }
 
-        if (struct.isRunning() or (struct.hasCreatedPokemon)) renderFetus(entity, tickDelta, matrices, vertexConsumers, light, overlay)
+        if (struct.isRunning() or (struct.hasCreatedPokemon)) {
+            renderFetus(entity, tickDelta, matrices, vertexConsumers, light, overlay)
+        }
 
-        matrices.push()
-        val transparentBuffer = vertexConsumers.getBuffer(RenderLayer.getTranslucent())
+        matrices.pushPose()
+        val transparentBuffer = vertexConsumers.getBuffer(RenderType.translucent())
 
         val fluidModel = if (struct.isRunning()) FLUID_MODELS[8]
         else if (struct.hasCreatedPokemon) FLUID_MODELS[7]
         else FLUID_MODELS[fillLevel.coerceAtMost(FLUID_MODELS.size - 1) - 1]
-        fluidModel.getQuads(entity.cachedState, null, entity.world?.random).forEach { quad ->
-            transparentBuffer?.quad(matrices.peek(), quad, 0.75f, 0.75f, 0.75f, light, OverlayTexture.DEFAULT_UV)
+        fluidModel.getQuads(entity.blockState, null, entity.level!!.random).forEach { quad ->
+            transparentBuffer.putBulkData(matrices.last(), quad, 0.75f, 0.75f, 0.75f, 1f, light, OverlayTexture.NO_OVERLAY)
         }
 
-        matrices.pop()
+        matrices.popPose()
     }
 
     private fun renderFetus(
-            entity: RestorationTankBlockEntity,
-            tickDelta: Float,
-            matrices: MatrixStack,
-            vertexConsumers: VertexConsumerProvider,
-            light: Int,
-            overlay: Int
+        entity: RestorationTankBlockEntity,
+        tickDelta: Float,
+        matrices: PoseStack,
+        vertexConsumers: MultiBufferSource,
+        light: Int,
+        overlay: Int
     ) {
         val struc = entity.multiblockStructure as? FossilMultiblockStructure ?: return
         val fossil = struc.resultingFossil ?: return
         val timeRemaining = struc.timeRemaining
 
-        val tankBlockState = entity.world?.getBlockState(entity.pos) ?: return
+        val tankBlockState = entity.level?.getBlockState(entity.blockPos) ?: return
         if (tankBlockState.block != CobblemonBlocks.RESTORATION_TANK) {
             // Block has been destroyed/replaced
             return
         }
-        val tankDirection = tankBlockState.get(HorizontalFacingBlock.FACING)
+        val tankDirection = tankBlockState.getValue(HorizontalDirectionalBlock.FACING)
         val struct = entity.multiblockStructure as FossilMultiblockStructure
         val connectionDir = struct.tankConnectorDirection
 
         val aspects = emptySet<String>()
         val state = struc.fossilState
         state.updatePartialTicks(tickDelta)
+        state.currentAspects = aspects
 
         val completionPercentage = (1 - timeRemaining / FossilMultiblockStructure.TIME_TO_TAKE.toFloat()).coerceIn(0F, 1F)
-        val fossilFetusModel = FossilModelRepository.getPoser(fossil.identifier, aspects)
+        val fossilFetusModel = FossilModelRepository.getPoser(fossil.identifier, state)
+        fossilFetusModel.context = context
 
         val embryo1Scale = EMBRYO_CURVE_1(completionPercentage)
         val embryo2Scale = EMBRYO_CURVE_2(completionPercentage)
@@ -121,15 +131,13 @@ class RestorationTankRenderer(ctx: BlockEntityRendererFactory.Context) : BlockEn
         )
 
         identifiersAndScales.forEach { (identifier, scale) ->
-            val model = FossilModelRepository.getPoser(identifier, aspects)
-            val texture = FossilModelRepository.getTexture(identifier, aspects, state.animationSeconds)
+            val model = FossilModelRepository.getPoser(identifier, state)
+            val texture = FossilModelRepository.getTexture(identifier, state)
 
             if (scale > 0F) {
-                val vertexConsumer = vertexConsumers.getBuffer(model.getLayer(texture))
-                val pose = model.poses.values.first()
+                val vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutout(texture))
                 state.currentModel = model
-                state.setPose(pose.poseName)
-                state.timeEnteredPose = 0F
+                state.setPoseToFirstSuitable()
 
                 val scale = if (timeRemaining == 0) {
                     model.maxScale
@@ -137,21 +145,27 @@ class RestorationTankRenderer(ctx: BlockEntityRendererFactory.Context) : BlockEn
                     scale * model.maxScale
                 }
 
-                matrices.push()
+                matrices.pushPose()
                 matrices.translate(0.5, 1.0 + fossilFetusModel.yTranslation,  0.5);
-                matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180F))
-                if (tankDirection.rotateCounterclockwise(Direction.Axis.Y) == connectionDir) {
-                    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90F))
+                matrices.mulPose(Axis.ZP.rotationDegrees(180F))
+                if (tankDirection.getCounterClockWise(Direction.Axis.Y) == connectionDir) {
+                    matrices.mulPose(Axis.YP.rotationDegrees(-90F))
                 } else if (tankDirection == connectionDir) {
-                    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180F))
+                    matrices.mulPose(Axis.YP.rotationDegrees(180F))
                 } else if (tankDirection.opposite != connectionDir) {
-                    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90F))
+                    matrices.mulPose(Axis.YP.rotationDegrees(90F))
                 }
 
-                matrices.push()
+                model.context = context
+                context.put(RenderContext.TEXTURE, texture)
+                context.put(RenderContext.SPECIES, fossil.identifier)
+                context.put(RenderContext.RENDER_STATE, RenderContext.RenderState.RESURRECTION_MACHINE)
+                context.put(RenderContext.POSABLE_STATE, state)
+
+                matrices.pushPose()
                 matrices.scale(scale, scale, scale)
                 matrices.translate(0.0, model.yGrowthPoint.toDouble(), 0.0)
-                model.setupAnimStateful(
+                model.applyAnimations(
                     entity = null,
                     state = state,
                     headYaw = 0F,
@@ -160,13 +174,13 @@ class RestorationTankRenderer(ctx: BlockEntityRendererFactory.Context) : BlockEn
                     limbSwingAmount = 0F,
                     ageInTicks = state.animationSeconds * 20
                 )
-                model.render(matrices, vertexConsumer, light, overlay, 1.0f, 1.0f, 1.0f, 1.0f)
-                model.withLayerContext(vertexConsumers, state, FossilModelRepository.getLayers(fossil.identifier, aspects)) {
-                    model.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1F, 1F, 1F, 1F)
+                model.render(context, matrices, vertexConsumer, light, overlay, -0x1)
+                model.withLayerContext(vertexConsumers, state, FossilModelRepository.getLayers(fossil.identifier, state)) {
+                    model.render(context, matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY, -0x1)
                 }
                 model.setDefault()
-                matrices.pop()
-                matrices.pop()
+                matrices.popPose()
+                matrices.popPose()
             }
 
         }

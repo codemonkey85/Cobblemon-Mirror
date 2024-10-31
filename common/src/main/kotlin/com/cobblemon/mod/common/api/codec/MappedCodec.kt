@@ -14,7 +14,7 @@ import com.mojang.serialization.DataResult
 import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class MappedCodec<A : CodecMapped, K>(
     val codecRetriever: (K) -> Codec<out A>,
@@ -32,7 +32,7 @@ class MappedCodec<A : CodecMapped, K>(
                 .apply(instance, ::ThingWithType)
         }
         val thingWithType = thingCodec.decode(ops, input).map { it.first }
-        val key = thingWithType.get().left().get().string
+        val key = thingWithType.getOrThrow().string
         val codec = codecRetriever(keyFromString(key))
         return codec.decode(ops, input).map { Pair(it.first, it.second) }
     }
@@ -42,6 +42,6 @@ private class ThingWithType(val string: String)
 
 interface CodecMapped {
     fun <T> encode(ops: DynamicOps<T>): DataResult<T>
-    fun readFromBuffer(buffer: PacketByteBuf)
-    fun writeToBuffer(buffer: PacketByteBuf)
+    fun readFromBuffer(buffer: RegistryFriendlyByteBuf)
+    fun writeToBuffer(buffer: RegistryFriendlyByteBuf)
 }

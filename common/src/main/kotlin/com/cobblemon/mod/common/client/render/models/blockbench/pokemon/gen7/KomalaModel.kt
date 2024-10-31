@@ -8,24 +8,24 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen7
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class KomalaModel (root: ModelPart) : PokemonPoseableModel() {
+class KomalaModel (root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("komala")
 
     override var portraitScale = 1.8F
-    override var portraitTranslation = Vec3d(0.0, -0.4, 0.0)
+    override var portraitTranslation = Vec3(0.0, -0.4, 0.0)
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.5, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.5, 0.0)
 
-    lateinit var standing: PokemonPose
+    lateinit var standing: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("komala", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("komala", "cry") }
 
     override fun registerPoses() {
         val doze = quirk(secondsBetweenOccurrences = 60F to 120F) { bedrockStateful("komala", "quirk_doze_off")}
@@ -34,12 +34,12 @@ class KomalaModel (root: ModelPart) : PokemonPoseableModel() {
             poseName = "standing",
             quirks = arrayOf(doze),
             poseTypes = PoseType.ALL_POSES,
-            idleAnimations = arrayOf(bedrock("komala", "ground_idle"))
+            animations = arrayOf(bedrock("komala", "ground_idle"))
         )
     }
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing)) bedrockStateful("komala", "faint") else null
 }

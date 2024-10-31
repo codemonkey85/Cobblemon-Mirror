@@ -9,8 +9,8 @@
 package com.cobblemon.mod.common.util
 
 import com.cobblemon.mod.common.CobblemonEntities
-import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.CompoundTag
 
-fun NbtCompound.isPokemonEntity() : Boolean {
+fun CompoundTag.isPokemonEntity() : Boolean {
     return this.getString("id").equals(CobblemonEntities.POKEMON_KEY.toString())
 }

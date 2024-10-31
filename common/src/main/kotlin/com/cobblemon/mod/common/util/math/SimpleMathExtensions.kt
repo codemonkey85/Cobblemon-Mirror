@@ -14,7 +14,7 @@ import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.random.Random
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.phys.Vec3
 import org.joml.Matrix3f
 import org.joml.Quaternionf
 import org.joml.Vector3f
@@ -109,14 +109,15 @@ class DoubleRange(override val start: Double, override val endInclusive: Double)
     override fun toString(): String = "$start..$endInclusive"
 }
 
-fun convertSphericalToCartesian(radius: Double, theta: Double, psi: Double): Vec3d = Vec3d(
-    radius * cos(theta) * sin(psi),
-    radius * sin(theta) * sin(psi),
-    radius * cos(psi)
-)
+fun convertSphericalToCartesian(radius: Double, theta: Double, psi: Double): Vec3 =
+    Vec3(
+        radius * cos(theta) * sin(psi),
+        radius * sin(theta) * sin(psi),
+        radius * cos(psi)
+    )
 
 /** Based on [this answer](https://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d) */
-fun getRotationMatrix(from: Vec3d, to: Vec3d): Matrix3f {
+fun getRotationMatrix(from: Vec3, to: Vec3): Matrix3f {
 
     val q = Quaternionf(0.0, 0.0, 0.0, 1.0)
     q.rotateTo(Vector3f(from.x.toFloat(), from.y.toFloat(), from.z.toFloat()), Vector3f(to.x.toFloat(), to.y.toFloat(), to.z.toFloat()))
@@ -155,10 +156,10 @@ fun getRotationMatrix(from: Vec3d, to: Vec3d): Matrix3f {
     **/
 }
 
-operator fun Matrix3f.times(vec3d: Vec3d): Vec3d {
+operator fun Matrix3f.times(vec3d: Vec3): Vec3 {
     val vec3f = Vector3f()
     this.transform(vec3d.x.toFloat(), vec3d.y.toFloat(), vec3d.z.toFloat(), vec3f)
-    return Vec3d(vec3f.x.toDouble(), vec3f.y.toDouble(), vec3f.z.toDouble())
+    return Vec3(vec3f.x.toDouble(), vec3f.y.toDouble(), vec3f.z.toDouble())
 //    return Vec3d(
 //        a00 * vec3d.x + a01 * vec3d.y + a02 * vec3d.z,
 //        a10 * vec3d.x + a11 * vec3d.y + a12 * vec3d.z,

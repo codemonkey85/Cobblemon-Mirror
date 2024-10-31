@@ -1,0 +1,34 @@
+{
+  "portraitScale": 2.3,
+  "portraitTranslation": [0.0, 1.1, 0.0],
+  "profileScale": 1.0,
+  "profileTranslation": [0.0, -0.5, 0.0],
+  "animations": {
+    "win": "q.bedrock_primary('trainer_generic', 'win', q.curve('symmetrical_wide'))",
+    "lose": "q.bedrock_primary('trainer_generic', 'lose', q.curve('symmetrical_wide'))",
+    "send_out": "q.bedrock_primary('trainer_generic', 'send_out', q.curve('symmetrical'), q.exclude_labels('look'))",
+    "recall": "q.bedrock_primary('trainer_generic', 'send_out', q.curve('symmetrical_wide'), q.exclude_labels('look'))",
+    "punch_left": "q.primary_animation(q.punch('head', 'body', 'arm_left', 'arm_right', false), q.curve('symmetrical_wide'), q.exclude_labels('look'))",
+    "punch_right": "q.primary_animation(q.punch('head', 'body', 'arm_right', 'arm_left', true), q.curve('symmetrical_wide'), q.exclude_labels('look'))"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseTypes": ["STAND", "WALK", "FLOAT", "SWIM", "PORTRAIT", "PROFILE"],
+      "condition": "q.in_battle() == true",
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('trainer_generic', 'idle_battle')"
+      ],
+      "quirks": ["q.bedrock_quirk('trainer_generic', 'blink')"]
+    },
+    "standing": {
+      "poseTypes": ["STAND", "WALK", "FLOAT", "SWIM", "PORTRAIT", "PROFILE"],
+      "condition": "q.in_battle() == false",
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('trainer_generic', 'idle')"
+      ],
+      "quirks": ["q.bedrock_quirk('trainer_generic', 'blink')"]
+    }
+  }
+}

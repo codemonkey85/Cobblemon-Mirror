@@ -39,7 +39,7 @@ abstract class SpawnAction<R>(
             return null
         }
 
-        ctx.influences.forEach { it.affectAction(this) }
+        ctx.applyInfluences { it.affectAction(this) }
         val result = run()
         if (result != null) {
             future.complete(result)

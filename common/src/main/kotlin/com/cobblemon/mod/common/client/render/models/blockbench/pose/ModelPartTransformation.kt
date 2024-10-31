@@ -8,8 +8,13 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pose
 
+import com.bedrockk.molang.runtime.MoLangRuntime
+import com.cobblemon.mod.common.api.molang.ExpressionLike
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
+import com.cobblemon.mod.common.util.resolveBoolean
+import net.minecraft.client.model.geom.ModelPart
 
 /**
  * Represents a [ModelPart] with some changes to position and rotation. This is to take a snapshot
@@ -23,10 +28,11 @@ class ModelPartTransformation(val modelPart: ModelPart) {
         const val X_AXIS = 0
         const val Y_AXIS = 1
         const val Z_AXIS = 2
+        val defaultRuntime = MoLangRuntime()
 
         fun derive(modelPart: ModelPart) = ModelPartTransformation(modelPart)
-            .withPosition(modelPart.pivotX, modelPart.pivotY, modelPart.pivotZ)
-            .withRotation(modelPart.pitch, modelPart.yaw, modelPart.roll)
+            .withPosition(modelPart.x, modelPart.y, modelPart.z)
+            .withRotation(modelPart.xRot, modelPart.yRot, modelPart.zRot)
             .withScale(modelPart.xScale, modelPart.yScale, modelPart.zScale)
             .withVisibility(modelPart.visible)
     }
@@ -35,36 +41,46 @@ class ModelPartTransformation(val modelPart: ModelPart) {
     var rotation = floatArrayOf(0F, 0F, 0F)
     val scale = floatArrayOf(1F, 1F, 1F)
 
-    var visibility: Boolean? = null
+    var visibility: ExpressionLike? = null
 
     /** Applies the transformation to the model part. */
-    fun apply(intensity: Float) {
-        modelPart.pivotX += position[0] * intensity
-        modelPart.pivotY += position[1] * intensity
-        modelPart.pivotZ += position[2] * intensity
-        modelPart.pitch += rotation[0] * intensity
-        modelPart.yaw += rotation[1] * intensity
-        modelPart.roll += rotation[2] * intensity
+    fun apply(state: PosableState, intensity: Float) {
+        modelPart.x += position[0] * intensity
+        modelPart.y += position[1] * intensity
+        modelPart.z += position[2] * intensity
+        modelPart.xRot += rotation[0] * intensity
+        modelPart.yRot += rotation[1] * intensity
+        modelPart.zRot += rotation[2] * intensity
         modelPart.xScale *= (1 - scale[0]) * intensity + 1
         modelPart.yScale *= (1 - scale[1]) * intensity + 1
         modelPart.zScale *= (1 - scale[2]) * intensity + 1
-        visibility?.let { modelPart.visible = it }
+        visibility?.let { modelPart.visible = state.runtime.resolveBoolean(it) }
     }
 
     fun set() {
-        modelPart.pivotX = position[0]
-        modelPart.pivotY = position[1]
-        modelPart.pivotZ = position[2]
-        modelPart.pitch = rotation[0]
-        modelPart.yaw = rotation[1]
-        modelPart.roll = rotation[2]
+        modelPart.x = position[0]
+        modelPart.y = position[1]
+        modelPart.z = position[2]
+        modelPart.xRot = rotation[0]
+        modelPart.yRot = rotation[1]
+        modelPart.zRot = rotation[2]
         modelPart.xScale = scale[0]
         modelPart.yScale = scale[1]
         modelPart.zScale = scale[2]
-        visibility?.let { modelPart.visible = it }
+        // Default runtime is fine because this being run means we're using a default state which is purely a snapshot of the .geo, no complex molang applies
+        visibility?.let { modelPart.visible = defaultRuntime.resolveBoolean(it) }
     }
 
     fun withVisibility(visibility: Boolean): ModelPartTransformation {
+        if (visibility == true) {
+            this.visibility = "true".asExpressionLike()
+        } else {
+            this.visibility = "0.0".asExpressionLike()
+        }
+        return this
+    }
+
+    fun withVisibility(visibility: ExpressionLike): ModelPartTransformation {
         this.visibility = visibility
         return this
     }

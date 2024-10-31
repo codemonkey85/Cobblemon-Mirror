@@ -11,7 +11,6 @@ package com.cobblemon.mod.common.net.messages.client.dialogue.dto
 import com.cobblemon.mod.common.api.dialogue.ActiveDialogue
 import com.cobblemon.mod.common.api.dialogue.ArtificialDialogueFaceProvider
 import com.cobblemon.mod.common.api.dialogue.DialogueFaceProvider
-import com.cobblemon.mod.common.api.dialogue.DialogueSpeaker
 import com.cobblemon.mod.common.api.dialogue.ExpressionLikeDialogueFaceProvider
 import com.cobblemon.mod.common.api.dialogue.PlayerDialogueFaceProvider
 import com.cobblemon.mod.common.api.dialogue.ReferenceDialogueFaceProvider
@@ -21,12 +20,14 @@ import com.cobblemon.mod.common.api.dialogue.input.DialogueTextInput
 import com.cobblemon.mod.common.api.molang.ObjectValue
 import com.cobblemon.mod.common.api.net.Decodable
 import com.cobblemon.mod.common.api.net.Encodable
-import com.cobblemon.mod.common.util.resolve
+import com.cobblemon.mod.common.util.*
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.resources.ResourceLocation
 
 class DialogueDTO : Encodable, Decodable {
     lateinit var dialogueId: UUID
+    lateinit var background: ResourceLocation
     var speakers: Map<String, DialogueSpeakerDTO>? = null
     lateinit var currentPageDTO: DialoguePageDTO
     lateinit var dialogueInput: DialogueInputDTO
@@ -56,8 +57,8 @@ class DialogueDTO : Encodable, Decodable {
         }
     }
 
-    override fun encode(buffer: PacketByteBuf) {
-        buffer.writeUuid(dialogueId)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(dialogueId)
         currentPageDTO.encode(buffer)
         dialogueInput.encode(buffer)
         buffer.writeNullable(speakers) { _, speakers ->
@@ -79,17 +80,20 @@ class DialogueDTO : Encodable, Decodable {
                     buffer.writeString(value.face.modelType)
                     buffer.writeIdentifier(value.face.identifier)
                     buffer.writeCollection(value.face.aspects) { _, aspect -> buffer.writeString(aspect) }
+                    buffer.writeBoolean(value.face.isLeftSide)
                 } else if (value.face is ReferenceDialogueFaceProvider) {
                     buffer.writeInt(value.face.entityId)
+                    buffer.writeBoolean(value.face.isLeftSide)
                 } else if (value.face is PlayerDialogueFaceProvider) {
-                    buffer.writeUuid(value.face.playerId)
+                    buffer.writeUUID(value.face.playerId)
+                    buffer.writeBoolean(value.face.isLeftSide)
                 }
             }
         }
     }
 
-    override fun decode(buffer: PacketByteBuf) {
-        dialogueId = buffer.readUuid()
+    override fun decode(buffer: RegistryFriendlyByteBuf) {
+        dialogueId = buffer.readUUID()
         currentPageDTO = DialoguePageDTO()
         currentPageDTO.decode(buffer)
         dialogueInput = DialogueInputDTO()
@@ -101,14 +105,15 @@ class DialogueDTO : Encodable, Decodable {
                 val name = buffer.readNullable { buffer.readText().copy() }
                 val faceType = buffer.readNullable { buffer.readString() }
                 when (faceType) {
-                    "reference" -> key to DialogueSpeakerDTO(name, ReferenceDialogueFaceProvider(buffer.readInt()))
+                    "reference" -> key to DialogueSpeakerDTO(name, ReferenceDialogueFaceProvider(buffer.readInt(), buffer.readBoolean()))
                     "artificial" -> {
                         val modelType = buffer.readString()
                         val identifier = buffer.readIdentifier()
                         val aspects = buffer.readList { buffer.readString() }.toSet()
-                        key to DialogueSpeakerDTO(name, ArtificialDialogueFaceProvider(modelType, identifier, aspects))
+                        val isLeftSide = buffer.readBoolean()
+                        key to DialogueSpeakerDTO(name, ArtificialDialogueFaceProvider(modelType, identifier, aspects, isLeftSide))
                     }
-                    "player" -> key to DialogueSpeakerDTO(name, PlayerDialogueFaceProvider(buffer.readUuid()))
+                    "player" -> key to DialogueSpeakerDTO(name, PlayerDialogueFaceProvider(buffer.readUUID(), buffer.readBoolean()))
                     else -> key to DialogueSpeakerDTO(name, null)
                 }
             }

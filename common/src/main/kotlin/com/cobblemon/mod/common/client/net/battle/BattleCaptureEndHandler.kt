@@ -12,10 +12,10 @@ import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.battle.animations.MoveTileOffscreenAnimation
 import com.cobblemon.mod.common.net.messages.client.battle.BattleCaptureEndPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object BattleCaptureEndHandler : ClientNetworkPacketHandler<BattleCaptureEndPacket> {
-    override fun handle(packet: BattleCaptureEndPacket, client: MinecraftClient) {
+    override fun handle(packet: BattleCaptureEndPacket, client: Minecraft) {
         val battle = CobblemonClient.battle ?: return
         val overlay = CobblemonClient.battleOverlay
         val (_, activeBattlePokemon) = battle.getPokemonFromPNX(packet.targetPNX)

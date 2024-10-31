@@ -14,41 +14,40 @@ import com.cobblemon.mod.common.item.CobblemonItem
 import com.cobblemon.mod.common.pokemon.Nature
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.lang
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.sound.SoundCategory
-import net.minecraft.util.Hand
-import net.minecraft.util.TypedActionResult
-import net.minecraft.world.World
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.level.Level
 
-class MintItem(val nature: Nature) : CobblemonItem(Settings()), PokemonSelectingItem {
+class MintItem(val nature: Nature) : CobblemonItem(Properties()), PokemonSelectingItem {
 
     override val bagItem = null
     override fun canUseOnPokemon(pokemon: Pokemon) = pokemon.effectiveNature != nature
     override fun applyToPokemon(
-        player: ServerPlayerEntity,
+        player: ServerPlayer,
         stack: ItemStack,
         pokemon: Pokemon
-    ): TypedActionResult<ItemStack> {
+    ): InteractionResultHolder<ItemStack> {
         return if (pokemon.effectiveNature != nature) {
             if (!player.isCreative) {
-                stack.decrement(1)
+                stack.shrink(1)
             }
-            player.playSound(CobblemonSounds.MEDICINE_HERB_USE, SoundCategory.PLAYERS, 1F, 1F)
+            pokemon.entity?.playSound(CobblemonSounds.MEDICINE_HERB_USE, 1F, 1F)
             pokemon.mintedNature = nature
-            player.sendMessage(lang("mint.interact", pokemon.getDisplayName(), stack.name), true)
-            TypedActionResult.success(stack)
+            player.sendSystemMessage(lang("mint.interact", pokemon.getDisplayName(), stack.hoverName), true)
+            InteractionResultHolder.success(stack)
         } else {
-            player.sendMessage(lang("mint.same_nature", pokemon.getDisplayName(), stack.name), true)
-            TypedActionResult.fail(stack)
+            player.sendSystemMessage(lang("mint.same_nature", pokemon.getDisplayName(), stack.hoverName), true)
+            InteractionResultHolder.fail(stack)
         }
     }
 
-    override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
-        if (user is ServerPlayerEntity) {
-            return use(user, user.getStackInHand(hand))
+    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
+        if (user is ServerPlayer) {
+            return use(user, user.getItemInHand(hand))
         }
-        return TypedActionResult.success(user.getStackInHand(hand))
+        return InteractionResultHolder.success(user.getItemInHand(hand))
     }
 }

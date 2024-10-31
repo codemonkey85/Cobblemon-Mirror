@@ -1,0 +1,36 @@
+{
+  "portraitScale": 1.80,
+  "portraitTranslation": [-0.39,2.28,0],
+  "profileScale": 0.51,
+  "profileTranslation": [-0.02,1.02,0],
+  "animations": {},
+  "poses": {
+    "standing": {
+      "poseTypes": [
+        "STAND",
+        "NONE",
+        "PORTRAIT",
+        "PROFILE"
+      ],
+      "isBattle": false,
+      "animations": [
+        "q.bedrock('palafin_hero', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('palafin_hero', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseTypes": [
+        "WALK",
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('palafin_hero', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('palafin_hero', 'blink')"
+      ]
+    }
+  }
+}

@@ -9,10 +9,12 @@
 package com.cobblemon.mod.common.net.messages.client.battle
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
+import com.cobblemon.mod.common.battles.BattleFormat
 import com.cobblemon.mod.common.util.cobblemonResource
-import java.util.UUID
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.text.MutableText
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.ComponentSerialization
+import net.minecraft.network.chat.MutableComponent
+import java.util.*
 
 /**
  * Packet send when a player has challenged to battle. The responsibility
@@ -26,19 +28,23 @@ import net.minecraft.text.MutableText
  * @since August 5th, 2022
  */
 class BattleChallengeNotificationPacket(
-    val battleChallengeId: UUID,
-    val challengerId: UUID,
-    val challengerName: MutableText
+        val battleChallengeId: UUID,
+        val challengerIds: List<UUID>,
+        val challengerNames: List<MutableComponent>,
+        val battleFormat: BattleFormat
 ): NetworkPacket<BattleChallengeNotificationPacket> {
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {
-        buffer.writeUuid(battleChallengeId)
-        buffer.writeUuid(challengerId)
-        buffer.writeText(challengerName)
+
+    constructor(battleChallengeId: UUID, challengerId: UUID, challengerName: MutableComponent, battleFormat: BattleFormat) : this(battleChallengeId, listOf(challengerId), listOf(challengerName), battleFormat)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(battleChallengeId)
+        buffer.writeCollection(challengerIds) { _, value -> buffer.writeUUID(value) }
+        buffer.writeCollection(challengerNames) { _, value -> ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.encode(buffer, value) }
+        battleFormat.saveToBuffer(buffer)
     }
 
     companion object {
         val ID = cobblemonResource("battle_challenge_notification")
-        fun decode(buffer: PacketByteBuf) = BattleChallengeNotificationPacket(buffer.readUuid(), buffer.readUuid(), buffer.readText().copy())
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleChallengeNotificationPacket(buffer.readUUID(), buffer.readList { it.readUUID() }, buffer.readList { ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(it).copy() } , BattleFormat.loadFromBuffer(buffer))
     }
 }

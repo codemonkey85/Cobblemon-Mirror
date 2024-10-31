@@ -1,0 +1,55 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:exp_candy_xl"
+    },
+    "title": {
+      "translate": "advancements.cobblemon.use_candy"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.use_candy.description"
+    },
+	"hidden": false
+  },
+  "parent": "cobblemon:craft_poke_ball",
+  "criteria": {
+    "use_rare_candy": {
+      "trigger": "cobblemon:pokemon_interact",
+      "conditions": {
+        "item": "cobblemon:rare_candy"
+      }
+    },
+	"use_xl_candy": {
+      "trigger": "cobblemon:pokemon_interact",
+      "conditions": {
+        "item": "cobblemon:exp_candy_xl"
+      }
+    },
+	"use_l_candy": {
+      "trigger": "cobblemon:pokemon_interact",
+      "conditions": {
+        "item": "cobblemon:exp_candy_l"
+      }
+    },
+	"use_m_candy": {
+      "trigger": "cobblemon:pokemon_interact",
+      "conditions": {
+        "item": "cobblemon:exp_candy_m"
+      }
+    },
+	"use_s_candy": {
+      "trigger": "cobblemon:pokemon_interact",
+      "conditions": {
+        "item": "cobblemon:exp_candy_s"
+      }
+    },
+	"use_xs_candy": {
+      "trigger": "cobblemon:pokemon_interact",
+      "conditions": {
+        "item": "cobblemon:exp_candy_xs"
+      }
+    }
+  },
+  "requirements": [[ "use_rare_candy", "use_xl_candy", "use_l_candy", "use_m_candy", "use_s_candy", "use_xs_candy" ]],
+  "sends_telemetry_event": false
+}

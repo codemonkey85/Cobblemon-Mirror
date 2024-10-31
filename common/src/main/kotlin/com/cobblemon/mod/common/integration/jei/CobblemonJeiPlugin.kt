@@ -15,7 +15,7 @@ import mezz.jei.api.IModPlugin
 import mezz.jei.api.JeiPlugin
 import mezz.jei.api.registration.IRecipeCategoryRegistration
 import mezz.jei.api.registration.IRecipeRegistration
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 @JeiPlugin
 class CobblemonJeiPlugin : IModPlugin {
@@ -26,7 +26,7 @@ class CobblemonJeiPlugin : IModPlugin {
             BerryMutationProvider()
         )
     }
-    override fun getPluginUid(): Identifier {
+    override fun getPluginUid(): ResourceLocation {
         return ID
     }
 

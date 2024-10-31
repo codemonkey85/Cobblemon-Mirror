@@ -16,8 +16,9 @@ import com.cobblemon.mod.common.api.storage.factory.PokemonStoreFactory
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.google.gson.JsonObject
 import java.util.UUID
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.core.RegistryAccess
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * The base class for all stores of [Pokemon]. A store specifies the kind of coordinate it needs to be given
@@ -39,10 +40,10 @@ abstract class PokemonStore<T : StorePosition> : Iterable<Pokemon> {
     abstract operator fun get(position: T): Pokemon?
     /** Gets the first empty position that a [Pokemon] might be put. */
     abstract fun getFirstAvailablePosition(): T?
-    /** Gets an iterable of all [ServerPlayerEntity]s that should be notified of any changes to the Pokémon in this store. */
-    abstract fun getObservingPlayers(): Iterable<ServerPlayerEntity>
+    /** Gets an iterable of all [ServerPlayer]s that should be notified of any changes to the Pokémon in this store. */
+    abstract fun getObservingPlayers(): Iterable<ServerPlayer>
     /** Sends the contents of this store to a player as if they've never seen it before. This initializes the store then sends each contained Pokémon. */
-    abstract fun sendTo(player: ServerPlayerEntity)
+    abstract fun sendTo(player: ServerPlayer)
 
     /**
      * Runs initialization logic for this store, knowing that it has just been constructed in a [PokemonStoreFactory].
@@ -146,14 +147,14 @@ abstract class PokemonStore<T : StorePosition> : Iterable<Pokemon> {
 
     operator fun get(uuid: UUID) = find { it.uuid == uuid }
 
-    open fun handleInvalidSpeciesNBT(nbt: NbtCompound) {}
-    abstract fun saveToNBT(nbt: NbtCompound): NbtCompound
-    abstract fun loadFromNBT(nbt: NbtCompound): PokemonStore<T>
+    open fun handleInvalidSpeciesNBT(nbt: CompoundTag) {}
+    abstract fun saveToNBT(nbt: CompoundTag, registryAccess: RegistryAccess): CompoundTag
+    abstract fun loadFromNBT(nbt: CompoundTag, registryAccess: RegistryAccess): PokemonStore<T>
     open fun handleInvalidSpeciesJSON(json: JsonObject) {}
-    abstract fun saveToJSON(json: JsonObject): JsonObject
-    abstract fun loadFromJSON(json: JsonObject): PokemonStore<T>
-    abstract fun savePositionToNBT(position: T, nbt: NbtCompound)
-    abstract fun loadPositionFromNBT(nbt: NbtCompound): StoreCoordinates<T>
+    abstract fun saveToJSON(json: JsonObject, registryAccess: RegistryAccess): JsonObject
+    abstract fun loadFromJSON(json: JsonObject, registryAccess: RegistryAccess): PokemonStore<T>
+    abstract fun savePositionToNBT(position: T, nbt: CompoundTag)
+    abstract fun loadPositionFromNBT(nbt: CompoundTag): StoreCoordinates<T>
 
     /**
      * Returns an [Observable] that emits Unit whenever there is a change to this store. This includes any save-worthy

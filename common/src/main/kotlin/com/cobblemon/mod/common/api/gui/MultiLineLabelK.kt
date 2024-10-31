@@ -8,54 +8,61 @@
 
 package com.cobblemon.mod.common.api.gui
 
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
 import java.util.stream.Collectors
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.StringVisitable
-import net.minecraft.text.Style
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.FormattedText
+import net.minecraft.network.chat.Style
+import net.minecraft.resources.ResourceLocation
+
 class MultiLineLabelK(
     private val comps: List<TextWithWidth>,
-    private val font: Identifier? = null
+    private val font: ResourceLocation? = null
 ) {
 
     companion object {
-        private val mcFont = MinecraftClient.getInstance().textRenderer
+        private val mcFont = Minecraft.getInstance().font
 
-        fun create(component: Text, width: Number, maxLines: Number) = create(component, width, maxLines, null)
+        fun create(component: Component, width: Number, maxLines: Number) = create(component, width, maxLines, null)
 
-        fun create(component: Text, width: Number, maxLines: Number, font: Identifier?): MultiLineLabelK {
+        fun create(component: Component, width: Number, maxLines: Number, font: ResourceLocation?): MultiLineLabelK {
             return MultiLineLabelK(
-                mcFont.textHandler.wrapLines(component, width.toInt(), Style.EMPTY).stream()
+                mcFont.splitter.splitLines(component, width.toInt(), Style.EMPTY).stream()
                     .limit(maxLines.toLong())
                     .map {
-                    TextWithWidth(it, mcFont.getWidth(it))
-                }.collect(Collectors.toList()),
+                        TextWithWidth(it, mcFont.width(it))
+                    }.collect(Collectors.toList()),
                 font = font
             )
         }
     }
 
     fun renderLeftAligned(
-        context: DrawContext,
+        context: GuiGraphics,
         x: Number, y: Number,
+        YStartOffset: Number = 0,
         ySpacing: Number,
         colour: Int,
+        scale: Float = 1F,
         shadow: Boolean = true
     ) {
+        context.pose().pushPose()
+        context.pose().scale(scale, scale, 1F)
         comps.forEachIndexed { index, textWithWidth ->
+            val yOffset = if (index == 0) YStartOffset else 0
             drawString(
                 context = context,
-                x = x, y = y.toFloat() + ySpacing.toFloat() * index,
+                x = x.toFloat() / scale,
+                y = (y.toFloat() + yOffset.toFloat() + ySpacing.toFloat() * index) / scale,
                 colour = colour,
                 shadow = shadow,
                 text = textWithWidth.text.string,
                 font = font
             )
         }
+        context.pose().popPose()
     }
 
-    class TextWithWidth internal constructor(val text: StringVisitable, val width: Int)
+    class TextWithWidth internal constructor(val text: FormattedText, val width: Int)
 }

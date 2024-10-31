@@ -9,38 +9,44 @@
 package com.cobblemon.mod.common.net.messages.client.data
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
-import net.minecraft.network.PacketByteBuf
+import io.netty.buffer.Unpooled
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 abstract class DataRegistrySyncPacket<T, N : NetworkPacket<N>>(private val registryEntries: Collection<T>) : NetworkPacket<N> {
 
-    var buffer: PacketByteBuf? = null
+    var buffer: RegistryFriendlyByteBuf? = null
     internal val entries = arrayListOf<T>()
 
-    override fun encode(buffer: PacketByteBuf) {
-        buffer.writeCollection(this.registryEntries, this::encodeEntry)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        val newBuffer = RegistryFriendlyByteBuf(Unpooled.buffer(), buffer.registryAccess())
+        newBuffer.writeCollection(registryEntries) { _, entry -> encodeEntry(newBuffer, entry) }
+        buffer.writeInt(newBuffer.readableBytes())
+        buffer.writeBytes(newBuffer)
+        // TODO (techdaan): should newBuffer be released here? I don't think writeBytes does that for us.
     }
 
-    internal fun decodeBuffer(buffer: PacketByteBuf) {
-        this.buffer = buffer
-        buffer.retain()
+    internal fun decodeBuffer(buffer: RegistryFriendlyByteBuf) {
+        val size = buffer.readInt()
+        val newBuffer = RegistryFriendlyByteBuf(buffer.readBytes(size), buffer.registryAccess())
+        this.buffer = newBuffer
     }
 
     /**
-     * Encodes an entry of type [T] to the [PacketByteBuf].
+     * Encodes an entry of type [T] to the [RegistryFriendlyByteBuf].
      *
-     * @param buffer The [PacketByteBuf] being encoded to.
+     * @param buffer The [RegistryFriendlyByteBuf] being encoded to.
      * @param entry The entry of type [T].
      */
-    abstract fun encodeEntry(buffer: PacketByteBuf, entry: T)
+    abstract fun encodeEntry(buffer: RegistryFriendlyByteBuf, entry: T)
 
     /**
      * Attempts to decode this entry, if null it will be skipped.
      * Any errors that result in a null entry should be logged.
      *
-     * @param buffer The [PacketByteBuf] being decoded from.
+     * @param buffer The [RegistryFriendlyByteBuf] being decoded from.
      * @return The entry of type [T].
      */
-    abstract fun decodeEntry(buffer: PacketByteBuf): T?
+    abstract fun decodeEntry(buffer: RegistryFriendlyByteBuf): T?
 
     /**
      * Synchronizes the final product the final product with the backing registry.

@@ -9,7 +9,7 @@
 package com.cobblemon.mod.common.api.events.entity
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.CompoundTag
 
 /**
  * Event fired when a Pokémon is being saved to NBT. This could be for
@@ -31,4 +31,4 @@ import net.minecraft.nbt.NbtCompound
  * @author Hiroku
  * @since January 6th, 2023
  */
-data class PokemonEntitySaveEvent(val pokemonEntity: PokemonEntity, val nbt: NbtCompound)
+data class PokemonEntitySaveEvent(val pokemonEntity: PokemonEntity, val nbt: CompoundTag)

@@ -16,8 +16,9 @@ import com.cobblemon.mod.common.net.messages.client.storage.pc.SetPCBoxPokemonPa
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.DataKeys
 import com.google.gson.JsonObject
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.core.RegistryAccess
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * A single box of a PC. The list of Pokémon is strictly sized at [POKEMON_PER_BOX] - 30.
@@ -98,32 +99,32 @@ open class PCBox(val pc: PCStore) : Iterable<Pokemon> {
             .subscribe { boxChangeEmitter.emit(Unit) }
     }
 
-    fun sendTo(player: ServerPlayerEntity) {
+    fun sendTo(player: ServerPlayer) {
         SetPCBoxPokemonPacket(this).sendToPlayer(player)
     }
 
-    open fun saveToNBT(nbt: NbtCompound): NbtCompound {
+    open fun saveToNBT(nbt: CompoundTag, registryAccess: RegistryAccess): CompoundTag {
         for (slot in 0 until POKEMON_PER_BOX) {
             val pokemon = pokemon[slot] ?: continue
-            nbt.put(DataKeys.STORE_SLOT + slot, pokemon.saveToNBT(NbtCompound()))
+            nbt.put(DataKeys.STORE_SLOT + slot, pokemon.saveToNBT(registryAccess))
         }
         return nbt
     }
 
-    open fun saveToJSON(json: JsonObject): JsonObject {
+    open fun saveToJSON(json: JsonObject, registryAccess: RegistryAccess): JsonObject {
         for (slot in 0 until POKEMON_PER_BOX) {
             val pokemon = pokemon[slot] ?: continue
-            json.add(DataKeys.STORE_SLOT + slot, pokemon.saveToJSON(JsonObject()))
+            json.add(DataKeys.STORE_SLOT + slot, pokemon.saveToJSON(registryAccess))
         }
         return json
     }
 
-    open fun loadFromJSON(json: JsonObject): PCBox {
+    open fun loadFromJSON(json: JsonObject, registryAccess: RegistryAccess): PCBox {
         for (slot in 0 until POKEMON_PER_BOX) {
             if (json.has(DataKeys.STORE_SLOT + slot)) {
                 val pokemonJson = json.getAsJsonObject(DataKeys.STORE_SLOT + slot)
                 try {
-                    pokemon[slot] = Pokemon().loadFromJSON(pokemonJson)
+                    pokemon[slot] = Pokemon.loadFromJSON(registryAccess, pokemonJson)
                 } catch (_: InvalidSpeciesException) {
                     pc.handleInvalidSpeciesJSON(pokemonJson)
                 }
@@ -132,12 +133,12 @@ open class PCBox(val pc: PCStore) : Iterable<Pokemon> {
         return this
     }
 
-    open fun loadFromNBT(nbt: NbtCompound): PCBox {
+    open fun loadFromNBT(nbt: CompoundTag, registryAccess: RegistryAccess): PCBox {
         for (slot in 0 until POKEMON_PER_BOX) {
             if (nbt.contains(DataKeys.STORE_SLOT + slot)) {
                 val pokemonNBT = nbt.getCompound(DataKeys.STORE_SLOT + slot)
                 try {
-                    pokemon[slot] = Pokemon().loadFromNBT(pokemonNBT)
+                    pokemon[slot] = Pokemon.loadFromNBT(registryAccess, pokemonNBT)
                 } catch (_: InvalidSpeciesException) {
                     pc.handleInvalidSpeciesNBT(pokemonNBT)
                 }
@@ -146,5 +147,6 @@ open class PCBox(val pc: PCStore) : Iterable<Pokemon> {
         return this
     }
 
-    fun getNonEmptySlots() = (0 until POKEMON_PER_BOX).filter { get(it) != null }.associateWith { get(it)!! }
+    open fun getNonEmptySlots() = (0 until POKEMON_PER_BOX).filter { get(it) != null }.associateWith { get(it)!! }
+    open fun getNonEmptySlotsForPackets() = getNonEmptySlots().mapValues { (_, pokemon) -> { _: RegistryAccess -> pokemon } }
 }

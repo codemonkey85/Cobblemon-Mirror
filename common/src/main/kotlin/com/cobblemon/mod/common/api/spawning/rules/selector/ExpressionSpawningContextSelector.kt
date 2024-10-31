@@ -12,12 +12,13 @@ import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.cobblemon.mod.common.util.asExpression
+import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.resolveBoolean
 
 class ExpressionSpawningContextSelector : SpawningContextSelector {
     @Transient
     val runtime = MoLangRuntime().setup()
-    var expression = "true".asExpression()
+    var expression = "true".asExpressionLike()
 
     override fun selects(ctx: SpawningContext): Boolean {
         runtime.environment.setSimpleVariable("context", ctx.getOrSetupStruct())

@@ -1,0 +1,30 @@
+{
+  "parent": "cobblemon:first_evolution",
+  "display": {
+    "icon": {
+      "id": "cobblemon:pokemon_model",
+	"components": {
+        "cobblemon:pokemon_item": {"species":"cobblemon:gholdengo","aspects":["netherite-coating-full"]}
+      }
+    },
+    "title": {
+      "translate": "advancements.cobblemon.evolve_gholdengo_netherite"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.evolve_gholdengo_netherite.description"
+    },
+    "hidden": true,
+    "frame": "challenge"
+  },
+  "criteria": {
+    "evolve_gholdengo_netherite": {
+      "trigger": "cobblemon:aspects_collected",
+      "conditions": {
+        "pokemon": "cobblemon:gholdengo",
+        "aspects": [
+          "netherite-coating-full"
+        ]
+      }
+    }
+  }
+}

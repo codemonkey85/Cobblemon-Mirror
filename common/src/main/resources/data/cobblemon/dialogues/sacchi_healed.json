@@ -1,0 +1,20 @@
+{
+  "initializationAction": "c.npc.set_chatting();",
+  "speakers": {
+    "npc": {
+      "name": {
+        "type": "expression",
+        "expression": "q.npc.name"
+      },
+      "face": "q.npc.face();"
+    }
+  },
+  "pages": [
+    {
+      "id": "greeting",
+      "speaker": "npc",
+      "lines": ["Your Pokémon appear to be in top shape!", "See you next time!"],
+      "input": "q.dialogue.close();"
+    }
+  ]
+}

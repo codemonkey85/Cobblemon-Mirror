@@ -11,7 +11,10 @@ package com.cobblemon.mod.common.battles
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.battles.interpreter.ContextManager
-import net.minecraft.text.Text
+import com.cobblemon.mod.common.client.entity.PokemonClientDelegate
+import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket
+import com.cobblemon.mod.common.util.cobblemonResource
+import net.minecraft.network.chat.Component
 
 /**
  * Unlike the Showdown side.ts, this can represent multiple actors.
@@ -27,7 +30,7 @@ class BattleSide(vararg val actors: BattleActor) {
     val contextManager = ContextManager()
     fun getOppositeSide() = if (this == battle.side1) battle.side2 else battle.side1
 
-    fun broadcastChatMessage(component: Text) {
+    fun broadcastChatMessage(component: Component) {
         return this.actors.forEach { it.sendMessage(component) }
     }
 
@@ -37,6 +40,10 @@ class BattleSide(vararg val actors: BattleActor) {
         activePokemon.forEach {
             val entity = it.battlePokemon?.entity ?: return@forEach
             entity.cry()
+            if(entity.pokemon.shiny) {
+                SpawnSnowstormEntityParticlePacket(cobblemonResource("shiny_ring"), entity.id, listOf("shiny_particles", "middle"))
+                    .sendToPlayersAround(entity.x, entity.y, entity.z, 64.0, entity.level().dimension())
+            }
         }
     }
 }

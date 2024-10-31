@@ -14,7 +14,7 @@ import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readSizedInt
 import com.cobblemon.mod.common.util.writeSizedInt
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Packet sent from the client to the server to send out the Pokémon in the specified
@@ -27,12 +27,12 @@ import net.minecraft.network.PacketByteBuf
  */
 class SendOutPokemonPacket(val slot: Int) : NetworkPacket<SendOutPokemonPacket> {
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeSizedInt(IntSize.U_BYTE, slot)
     }
 
     companion object {
         val ID = cobblemonResource("send_out_pokemon")
-        fun decode(buffer: PacketByteBuf) = SendOutPokemonPacket(buffer.readSizedInt(IntSize.U_BYTE))
+        fun decode(buffer: RegistryFriendlyByteBuf) = SendOutPokemonPacket(buffer.readSizedInt(IntSize.U_BYTE))
     }
 }

@@ -12,13 +12,13 @@ import com.cobblemon.mod.common.client.render.models.blockbench.animation.Quadru
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.SingleBoneLookAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class ZweilousModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, QuadrupedFrame {
+class ZweilousModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, QuadrupedFrame {
     override val rootPart = root.registerChildWithAllChildren("zweilous")
     override val head = getPart("neck_right")
 
@@ -33,22 +33,22 @@ class ZweilousModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qua
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 1.8F
-    override var portraitTranslation = Vec3d(-1.36, 0.86, 0.0)
+    override var portraitTranslation = Vec3(-1.36, 0.86, 0.0)
 
     override var profileScale = 0.56F
-    override var profileTranslation = Vec3d(-0.04, 0.79, 0.0)
+    override var profileTranslation = Vec3(-0.04, 0.79, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-//    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("zweilous", "cry") }
+//    override val cryAnimation = CryProvider { bedrockStateful("zweilous", "cry") }
 
     override fun registerPoses() {
 
         standing = registerPose(
             poseName = "standing",
             poseTypes = PoseType.UI_POSES + PoseType.STATIONARY_POSES,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 SingleBoneLookAnimation(head2, false, false, disableX = false, disableY = false),
                 bedrock("zweilous", "ground_idle")
@@ -58,7 +58,7 @@ class ZweilousModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qua
         walk = registerPose(
             poseName = "walk",
             poseTypes = PoseType.MOVING_POSES,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 QuadrupedWalkAnimation(this, periodMultiplier = 1.1F),
                 singleBoneLook(),
                 SingleBoneLookAnimation(head2, false, false, disableX = false, disableY = false),
@@ -70,6 +70,6 @@ class ZweilousModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Qua
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("zweilous", "faint") else null
 }

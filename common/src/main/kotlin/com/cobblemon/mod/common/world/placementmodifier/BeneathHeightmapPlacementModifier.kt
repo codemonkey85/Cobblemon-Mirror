@@ -8,16 +8,16 @@
 
 package com.cobblemon.mod.common.world.placementmodifier
 
-import com.mojang.serialization.Codec
+import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import java.util.Optional
+import net.minecraft.core.BlockPos
+import net.minecraft.util.RandomSource
+import net.minecraft.world.level.levelgen.Heightmap
+import net.minecraft.world.level.levelgen.placement.PlacementContext
+import net.minecraft.world.level.levelgen.placement.PlacementModifier
+import java.util.*
 import java.util.stream.Stream
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.random.Random
-import net.minecraft.world.Heightmap
-import net.minecraft.world.gen.feature.FeaturePlacementContext
-import net.minecraft.world.gen.placementmodifier.PlacementModifier
 
 /**
  * A placement modifier that returns a stream of positions underneath the given heightmap. It will start at some
@@ -26,12 +26,12 @@ import net.minecraft.world.gen.placementmodifier.PlacementModifier
  * @author Hiroku
  * @since June 4th, 2023
  */
-class BeneathHeightmapPlacementModifier(val heightmap: Heightmap.Type, val offset: Int, val reach: Int?) : PlacementModifier() {
+class BeneathHeightmapPlacementModifier(val heightmap: Heightmap.Types, val offset: Int, val reach: Int?) : PlacementModifier() {
     companion object {
-        val MODIFIER_CODEC: Codec<BeneathHeightmapPlacementModifier> = RecordCodecBuilder.create { instance ->
+        val MODIFIER_CODEC: MapCodec<BeneathHeightmapPlacementModifier> = RecordCodecBuilder.mapCodec { instance ->
             instance
                 .group(
-                    Heightmap.Type.CODEC.fieldOf("heightmap").forGetter { it.heightmap },
+                    Heightmap.Types.CODEC.fieldOf("heightmap").forGetter { it.heightmap },
                     PrimitiveCodec.INT.fieldOf("offset").forGetter { it.offset },
                     PrimitiveCodec.INT.optionalFieldOf("reach").forGetter { Optional.ofNullable(it.reach) }
                 )
@@ -45,15 +45,16 @@ class BeneathHeightmapPlacementModifier(val heightmap: Heightmap.Type, val offse
         }
     }
 
-    override fun getType() = CobblemonPlacementModifierTypes.BENEATH_HEIGHTMAP
-    override fun getPositions(context: FeaturePlacementContext, random: Random, pos: BlockPos): Stream<BlockPos> {
+    override fun type() = CobblemonPlacementModifierTypes.BENEATH_HEIGHTMAP
+
+    override fun getPositions(context: PlacementContext, random: RandomSource, pos: BlockPos): Stream<BlockPos> {
         var z: Int
         val x = pos.x
-        val topY = context.getTopY(heightmap, x, pos.z.also { z = it }) + offset
+        val topY = context.getHeight(heightmap, x, pos.z.also { z = it }) + offset
         val positions = mutableListOf<BlockPos>()
 
         var y = topY
-        while (y > context.bottomY && (reach == null || topY - y < reach)) {
+        while (y > context.minBuildHeight && (reach == null || topY - y < reach)) {
             positions.add(BlockPos(x, y, z))
             y--
         }

@@ -23,8 +23,8 @@ import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.random.Random
-import net.minecraft.entity.LivingEntity
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * An implementation of the capture calculator used in the generation 8 games.
@@ -53,8 +53,8 @@ object Gen8CaptureCalculator : CaptureCalculator, CriticalCaptureProvider {
         val bonusLevel = if (pokemon.level < 20) max((30 - pokemon.level) / 10, 1) else 1
         // ToDo implement difficulty when we have dynamax raids
         val ballBonus = if (validModifier) pokeBall.catchRateModifier.value(thrower, pokemon) else 1F
-        val modifiedCatchRate = (pokeBall.catchRateModifier.behavior(thrower, pokemon).mutator((3F * pokemon.hp - 2F * pokemon.currentHealth) * catchRate, ballBonus) / (3F * pokemon.hp)) * bonusStatus * bonusLevel
-        val critical = if (thrower is ServerPlayerEntity) this.shouldHaveCriticalCapture(thrower, modifiedCatchRate) else false
+        val modifiedCatchRate = (pokeBall.catchRateModifier.behavior(thrower, pokemon).mutator((3F * pokemon.maxHealth - 2F * pokemon.currentHealth) * catchRate, ballBonus) / (3F * pokemon.maxHealth)) * bonusStatus * bonusLevel
+        val critical = if (thrower is ServerPlayer) this.shouldHaveCriticalCapture(thrower, modifiedCatchRate) else false
         val shakeProbability = (65536F / (255F / modifiedCatchRate).pow(0.1875F)).roundToInt()
         var shakes = 0
         repeat(4) {

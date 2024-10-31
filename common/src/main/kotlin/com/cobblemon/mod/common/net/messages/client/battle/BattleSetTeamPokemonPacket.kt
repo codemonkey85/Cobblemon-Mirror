@@ -9,10 +9,10 @@
 package com.cobblemon.mod.common.net.messages.client.battle
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
-import com.cobblemon.mod.common.net.messages.PokemonDTO
+import com.cobblemon.mod.common.api.net.UnsplittablePacket
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 
 /**
@@ -24,17 +24,15 @@ import net.minecraft.network.PacketByteBuf
  * @author Hiroku
  * @since June 6th, 2022
  */
-class BattleSetTeamPokemonPacket(val team: List<PokemonDTO>) : NetworkPacket<BattleSetTeamPokemonPacket> {
+class BattleSetTeamPokemonPacket(val team: List<Pokemon>) : NetworkPacket<BattleSetTeamPokemonPacket>, UnsplittablePacket {
 
     override val id = ID
 
-    constructor(team: Collection<Pokemon>) : this(team.map { PokemonDTO(it, true) })
-
-    override fun encode(buffer: PacketByteBuf) {
-        buffer.writeCollection(this.team) { pb, value -> value.encode(pb) }
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeCollection(this.team) { _, pokemon -> Pokemon.S2C_CODEC.encode(buffer, pokemon) }
     }
     companion object {
         val ID = cobblemonResource("battle_set_team")
-        fun decode(buffer: PacketByteBuf) = BattleSetTeamPokemonPacket(buffer.readList { PokemonDTO().apply { decode(it) } })
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleSetTeamPokemonPacket(buffer.readList { _ -> Pokemon.S2C_CODEC.decode(buffer) })
     }
 }

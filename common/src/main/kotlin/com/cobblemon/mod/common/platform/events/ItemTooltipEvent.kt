@@ -8,12 +8,14 @@
 
 package com.cobblemon.mod.common.platform.events
 
-import net.minecraft.client.item.TooltipContext
-import net.minecraft.item.ItemStack
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.TooltipFlag
 
 data class ItemTooltipEvent(
     val stack: ItemStack,
-    val context: TooltipContext,
-    val lines: MutableList<Text>
+    val context: Item.TooltipContext,
+    val type: TooltipFlag,
+    val lines: MutableList<Component>
 )

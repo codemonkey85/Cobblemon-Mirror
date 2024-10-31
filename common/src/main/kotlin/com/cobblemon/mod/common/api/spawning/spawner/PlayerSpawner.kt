@@ -14,15 +14,15 @@ import com.cobblemon.mod.common.api.spawning.SpawnerManager
 import com.cobblemon.mod.common.api.spawning.detail.SpawnPool
 import com.cobblemon.mod.common.util.getPlayer
 import com.cobblemon.mod.common.util.nextBetween
-import java.util.UUID
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.util.Mth.PI
+import net.minecraft.util.Mth.ceil
+import java.util.*
 import kotlin.math.atan
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.MathHelper.PI
-import net.minecraft.util.math.MathHelper.ceil
 
 /**
  * A spawner that works around a single player. It will do basic tracking of a player's speed
@@ -31,7 +31,7 @@ import net.minecraft.util.math.MathHelper.ceil
  * @author Hiroku
  * @since February 14th, 2022
  */
-class PlayerSpawner(player: ServerPlayerEntity, spawns: SpawnPool, manager: SpawnerManager) : AreaSpawner(player.name.string, spawns, manager) {
+class PlayerSpawner(player: ServerPlayer, spawns: SpawnPool, manager: SpawnerManager) : AreaSpawner(player.name.string, spawns, manager) {
     val uuid: UUID = player.uuid
     override var ticksBetweenSpawns = config.ticksBetweenSpawnAttempts
     override fun getCauseEntity() = uuid.getPlayer()
@@ -42,13 +42,13 @@ class PlayerSpawner(player: ServerPlayerEntity, spawns: SpawnPool, manager: Spaw
 
         val rand = Random.Default
 
-        val center = player.pos
+        val center = player.position()
 
         val r = rand.nextBetween(config.minimumSliceDistanceFromPlayer, config.maximumSliceDistanceFromPlayer)
-        val thetatemp = atan(player.velocity.z / player.velocity.x) + rand.nextBetween(-PI/2, PI/2 )
-        val theta = if (player.velocity.horizontalLength() < 0.1) {
+        val thetatemp = atan(player.deltaMovement.z / player.deltaMovement.x) + rand.nextBetween(-PI/2, PI/2 )
+        val theta = if (player.deltaMovement.horizontalDistance() < 0.1) {
             rand.nextDouble() * 2 * PI
-        } else if (player.velocity.x < 0) {
+        } else if (player.deltaMovement.x < 0) {
             PI - thetatemp
         } else {
             thetatemp
@@ -58,7 +58,7 @@ class PlayerSpawner(player: ServerPlayerEntity, spawns: SpawnPool, manager: Spaw
 
         return SpawningArea(
             cause = cause,
-            world = player.world as ServerWorld,
+            world = player.level() as ServerLevel,
             baseX = ceil(x - sliceDiameter / 2F),
             baseY = ceil(center.y - sliceHeight / 2F),
             baseZ = ceil(z - sliceDiameter / 2F),

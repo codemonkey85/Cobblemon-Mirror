@@ -11,12 +11,13 @@ package com.cobblemon.mod.common.client.render.models.blockbench
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunctions
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.getQueryStruct
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.client.ClientMoLangFunctions.setupClient
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.StatefulAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.StatelessAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.animation.ActiveAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.animation.PoseAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.animation.SingleBoneLookAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.client.render.models.blockbench.quirk.SimpleQuirk
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.asExpressionLike
@@ -27,14 +28,28 @@ import com.cobblemon.mod.common.util.singularToPluralList
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
-import net.minecraft.entity.Entity
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.phys.Vec3
 
-class JsonPose<T : Entity>(model: PoseableEntityModel<T>, json: JsonObject) {
-    class JsonPoseTransition(val from: String, val to: String, val animation: ExpressionLike)
+/**
+ * A contained mechanism for extracting the relevant properties from a JSON object and later compose it
+ * into a [Pose] object.
+ *
+ * @author Hiroku
+ * @since May 28th, 2023
+ */
+class JsonPose(model: PosableModel, json: JsonObject) {
+    companion object {
+        fun registerAnimationFactory(id: String, factory: AnimationReferenceFactory) {
+            ANIMATION_FACTORIES[id] = factory
+        }
+
+        val ANIMATION_FACTORIES = mutableMapOf<String, AnimationReferenceFactory>()
+    }
+
+    class JsonPoseTransition(val to: String, val animation: ExpressionLike)
 
     val runtime = MoLangRuntime().setup().setupClient().also {
-        it.environment.getQueryStruct().addFunctions(model.functions.functions)
+        it.environment.query.addFunctions(model.functions.functions)
     }
 
     val condition: ExpressionLike = json.singularToPluralList("condition").get("conditions")?.normalizeToArray()?.map { it.asString }?.asExpressionLike() ?: "true".asExpressionLike()
@@ -49,53 +64,83 @@ class JsonPose<T : Entity>(model: PoseableEntityModel<T>, json: JsonObject) {
         it as JsonObject
         val partName = it.get("part").asString
         val part = model.getPart(partName).createTransformation()
-        val rotation = it.get("rotation")?.asJsonArray?.let { Vec3d(it[0].asDouble, it[1].asDouble, it[2].asDouble) } ?: Vec3d.ZERO
-        val position = it.get("position")?.asJsonArray?.let { Vec3d(it[0].asDouble, it[1].asDouble, it[2].asDouble) } ?: Vec3d.ZERO
-        val isVisible = it.get("isVisible")?.asBoolean ?: true
-        return@map part.withPosition(position.x, position.y, position.z).withRotationDegrees(rotation.x, rotation.y, rotation.z).withVisibility(isVisible)
+        val rotation = it.get("rotation")?.asJsonArray?.let {
+            Vec3(
+                it[0].asDouble,
+                it[1].asDouble,
+                it[2].asDouble
+            )
+        } ?: Vec3.ZERO
+        val position = it.get("position")?.asJsonArray?.let {
+            Vec3(
+                it[0].asDouble,
+                it[1].asDouble,
+                it[2].asDouble
+            )
+        } ?: Vec3.ZERO
+        val isVisible = it.get("isVisible")?.asString?.asExpressionLike()
+        return@map part.withPosition(position.x, position.y, position.z).withRotationDegrees(rotation.x, rotation.y, rotation.z).also { if (isVisible != null) it.withVisibility(isVisible) }
     }?.toTypedArray() ?: arrayOf()
 
     val idleAnimations = (json.get("animations")?.asJsonArray ?: JsonArray()).asJsonArray.mapNotNull {
-        val animString = it.asString
-        if (animString == "look") {
-            return@mapNotNull if (model is HeadedFrame) {
-                model.singleBoneLook<T>()
+
+        val condition = if (it is JsonObject) {
+            it.get("condition")?.asString?.asExpressionLike() ?: "true".asExpressionLike()
+        } else {
+            "true".asExpressionLike()
+        }
+        val animString = if (it is JsonObject) {
+            it.get("animation")?.asString ?: return@mapNotNull null
+        } else {
+            it.asString
+        }
+
+        val animation = if (animString == "look") {
+            if (model is HeadedFrame) {
+                model.singleBoneLook()
             } else {
-                object : HeadedFrame {
-                    override val rootPart = model.rootPart
-                    override val head = model.getPartFallback("head_ai", "head")
-                }.singleBoneLook()
+                SingleBoneLookAnimation(bone = model.relevantPartsByName["head_ai"] ?: model.relevantPartsByName["head"])
             }
-        } else if (animString.startsWith("bedrock")) {
-            val split = animString.replace("bedrock(", "").replace(")", "").split(",").map(String::trim)
-            return@mapNotNull model.bedrock(animationGroup = split[0], animation = split[1])
         } else {
             try {
                 val expression = animString.asExpressionLike()
-                return@mapNotNull runtime.resolveObject(expression).obj as StatelessAnimation<T, *>
+                runtime.resolveObject(expression).obj as PoseAnimation
             } catch (exception: Exception) {
-                null
+                val animString = it.asString
+                val anim = animString.substringBefore("(")
+                if (ANIMATION_FACTORIES.contains(anim)) {
+                    ANIMATION_FACTORIES[anim]!!.pose(model, animString)
+                } else {
+                    null
+                }
             }
         }
-        return@mapNotNull null
+
+        if (animation == null) {
+            null
+        } else {
+            animation.condition = { it.runtime.resolveBoolean(condition) }
+            animation
+        }
     }.toTypedArray()
 
     val quirks = (json.get("quirks")?.asJsonArray ?: JsonArray()).map { json ->
         if (json is JsonPrimitive) {
-            return@map json.asString.asExpressionLike().resolveObject(runtime).obj as SimpleQuirk<T>
+            return@map json.asString.asExpressionLike().resolveObject(runtime).obj as SimpleQuirk
         }
 
         json as JsonObject
         json.singularToPluralList("animation")
-        val animations: (state: PoseableEntityState<T>) -> List<StatefulAnimation<T, *>> = { _ ->
-            (json.get("animations")?.normalizeToArray()?.asJsonArray ?: JsonArray()).map { animJson ->
+        val animations: (state: PosableState) -> List<ActiveAnimation> = { _ ->
+            // Animations can be as MoLang expression strings or, legacy, shit like bedrock(something, else)
+            (json.get("animations")?.normalizeToArray()?.asJsonArray ?: JsonArray()).mapNotNull { animJson ->
                 try {
                     val expr = animJson.asString.asExpressionLike()
-                    runtime.resolveObject(expr).obj as StatefulAnimation<T, *>
+                    runtime.resolveObject(expr).obj as ActiveAnimation
                 } catch (e: Exception) {
-                    val split =
-                        animJson.asString.replace("bedrock(", "").replace(")", "").split(",").map(String::trim)
-                    model.bedrockStateful(animationGroup = split[0], animation = split[1])
+                    val animString = animJson.asString
+                    val anim = animString.substringBefore("(")
+                    return@mapNotNull ANIMATION_FACTORIES[anim]?.active(model, animString)
                 }
             }
         }
@@ -121,11 +166,7 @@ class JsonPose<T : Entity>(model: PoseableEntityModel<T>, json: JsonObject) {
         map
     } ?: mutableMapOf()
 
-    val transitions = json.get("transitions")?.takeIf { it is JsonArray }?.asJsonArray?.map {
-        it as JsonObject
-        val from = it.get("from").asString
-        val to = it.get("to").asString
-        val animation = it.get("animation").asString.asExpressionLike()
-        JsonPoseTransition(from, to, animation)
+    val transitions = json.get("transitions")?.takeIf { it is JsonObject }?.asJsonObject?.entrySet()?.map { (key, value) ->
+        JsonPoseTransition(key, value.asString.asExpressionLike())
     } ?: emptyList()
 }

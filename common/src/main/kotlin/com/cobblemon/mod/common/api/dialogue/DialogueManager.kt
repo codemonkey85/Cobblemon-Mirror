@@ -9,11 +9,13 @@
 package com.cobblemon.mod.common.api.dialogue
 
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
+import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.net.messages.client.dialogue.DialogueClosedPacket
 import com.cobblemon.mod.common.net.messages.client.dialogue.DialogueOpenedPacket
 import com.cobblemon.mod.common.util.activeDialogue
+import com.cobblemon.mod.common.util.withNPCValue
 import java.util.UUID
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Manages the active dialogues for players. Map is indexed by player UUID.
@@ -26,14 +28,28 @@ import net.minecraft.server.network.ServerPlayerEntity
 object DialogueManager {
     val activeDialogues = mutableMapOf<UUID, ActiveDialogue>()
 
-    fun startDialogue(playerEntity: ServerPlayerEntity, dialogue: Dialogue) {
+    fun startDialogue(playerEntity: ServerPlayer, dialogue: Dialogue): ActiveDialogue {
         val activeDialogue = ActiveDialogue(playerEntity, dialogue)
-        activeDialogues[playerEntity.uuid] = activeDialogue
-        val packet = DialogueOpenedPacket(activeDialogue, includeFaces = true)
-        playerEntity.sendPacket(packet)
+        startDialogue(activeDialogue)
+        return activeDialogue
     }
 
-    fun stopDialogue(playerEntity: ServerPlayerEntity) {
+    fun startDialogue(playerEntity: ServerPlayer, npcEntity: NPCEntity, dialogue: Dialogue): ActiveDialogue {
+        val activeDialogue = ActiveDialogue(playerEntity, dialogue)
+        activeDialogue.runtime.withNPCValue("npc", npcEntity)
+        activeDialogue.npc = npcEntity
+        startDialogue(activeDialogue)
+        return activeDialogue
+    }
+
+    fun startDialogue(activeDialogue: ActiveDialogue) {
+        activeDialogue.initialize()
+        if (!activeDialogue.completion.isDone) {
+            activeDialogues[activeDialogue.playerEntity.uuid] = activeDialogue
+        }
+    }
+
+    fun stopDialogue(playerEntity: ServerPlayer) {
         val activeDialogue = playerEntity.activeDialogue ?: return
         DialogueClosedPacket(activeDialogue.dialogueId).sendToPlayer(playerEntity)
         activeDialogues.remove(activeDialogue.dialogueId)

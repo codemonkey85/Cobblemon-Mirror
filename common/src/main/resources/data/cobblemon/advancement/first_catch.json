@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:pokemon_model",
+	"components": {
+        "cobblemon:pokemon_item": {"species":"cobblemon:rattata","aspects":["male"]}
+      }
+    },
+    "title": {
+      "translate": "advancements.cobblemon.first_catch"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.first_catch.description"
+    }
+  },
+  "parent": "cobblemon:craft_poke_ball",
+  "criteria": {
+    "catch": {
+      "trigger": "cobblemon:catch_pokemon",
+      "conditions": {
+        "count": 1,
+        "type": "any"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

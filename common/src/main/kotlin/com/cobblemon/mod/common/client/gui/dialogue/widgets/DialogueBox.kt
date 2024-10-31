@@ -10,17 +10,18 @@ package com.cobblemon.mod.common.client.gui.dialogue.widgets
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.text.text
+import com.cobblemon.mod.common.client.gui.ScrollingWidget
 import com.cobblemon.mod.common.client.gui.dialogue.DialogueScreen
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.net.messages.client.dialogue.dto.DialogueInputDTO
 import com.cobblemon.mod.common.net.messages.server.dialogue.InputToDialoguePacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget
-import net.minecraft.text.MutableText
-import net.minecraft.text.OrderedText
-import net.minecraft.util.Language
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.locale.Language
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.util.FormattedCharSequence
+import net.minecraft.util.Mth
 
 /**
  * UI element for showing the lines of dialogue text.
@@ -30,51 +31,83 @@ import net.minecraft.util.Language
  */
 class DialogueBox(
     val dialogueScreen: DialogueScreen,
-    val x: Int = 0,
-    val y: Int = 0,
+    val listX: Int = 0,
+    val listY: Int = 0,
     val frameWidth: Int,
     height: Int,
-    messages: List<MutableText>
-): AlwaysSelectedEntryListWidget<DialogueBox.DialogueLine>(
-    MinecraftClient.getInstance(),
-    frameWidth - 14,
-    height, // height
-    1, // top
-    1 + height, // bottom
-    LINE_HEIGHT
+    messages: MutableList<MutableComponent>
+): ScrollingWidget<DialogueBox.DialogueLine>(
+    left = listX,
+    top = listY,
+    width = frameWidth,
+    height = height,
+    slotHeight = LINE_HEIGHT,
+    scrollBarWidth = SCROLL_BAR_WIDTH
 ) {
-    val dialogue = dialogueScreen.dialogueDTO
-    var opacity = 1F
-    private var scrolling = false
+    companion object {
+        const val SCROLL_TRACK_WIDTH = 2
+        const val SCROLL_BAR_WIDTH = 4
+        const val LINE_HEIGHT = 12
+        const val LINE_WIDTH = 168
+        val boxResource = cobblemonResource("textures/gui/dialogue/dialogue_box.png")
+    }
 
-    val appropriateX: Int
-        get() = x
-    val appropriateY: Int
-        get() = y
+    val dialogue = dialogueScreen.dialogueDTO
 
     init {
         correctSize()
-        setRenderHorizontalShadows(false)
-        setRenderBackground(false)
-        setRenderSelection(false)
 
-        val textRenderer = MinecraftClient.getInstance().textRenderer
+        val textRenderer = Minecraft.getInstance().font
 
-        messages
-            .flatMap { Language.getInstance().reorder(textRenderer.textHandler.wrapLines(it, LINE_WIDTH, it.style)) }
+        messages.flatMap { Language.getInstance().getVisualOrder(textRenderer.splitter.splitLines(it, LINE_WIDTH, it.style)) }
             .forEach { addEntry(DialogueLine(it)) }
+
+        // Add empty line for bottom padding if text area height is larger than box height
+        if (maxPosition > (height - 2)) addEntry(DialogueLine(FormattedCharSequence.EMPTY))
+    }
+
+    override fun renderScrollbar(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        val xLeft = this.scrollbarPosition
+        val yStart = y + 2
+
+        val barHeight = this.bottom - yStart
+
+        var yBottom = ((barHeight * barHeight).toFloat() / this.maxPosition.toFloat()).toInt()
+        yBottom = Mth.clamp(yBottom, 32, barHeight - 8)
+        var yTop = scrollAmount.toInt() * (barHeight - yBottom) / this.maxScroll + yStart
+        if (yTop < yStart) yTop = yStart
+
+        // Scroll Track
+        blitk(
+            texture = boxResource,
+            matrixStack = context.pose(),
+            x = xLeft + 1,
+            y = yStart,
+            width = SCROLL_TRACK_WIDTH,
+            height = height - 4,
+            uOffset = DialogueScreen.BOX_WIDTH + DialoguePortraitWidget.DIALOGUE_ARROW_WIDTH,
+            textureHeight = DialogueScreen.BOX_HEIGHT,
+            textureWidth = frameWidth + DialoguePortraitWidget.DIALOGUE_ARROW_WIDTH + SCROLL_BAR_WIDTH + SCROLL_TRACK_WIDTH
+        )
+
+        // Scroll Bar
+        blitk(
+            texture = boxResource,
+            matrixStack = context.pose(),
+            x = xLeft,
+            y = yTop,
+            width = SCROLL_BAR_WIDTH,
+            height = yBottom,
+            uOffset = DialogueScreen.BOX_WIDTH + DialoguePortraitWidget.DIALOGUE_ARROW_WIDTH + SCROLL_TRACK_WIDTH,
+            textureHeight = DialogueScreen.BOX_HEIGHT,
+            textureWidth = frameWidth + DialoguePortraitWidget.DIALOGUE_ARROW_WIDTH + SCROLL_BAR_WIDTH + SCROLL_TRACK_WIDTH
+        )
     }
 
     private fun correctSize() {
-        val textBoxHeight = height
-        updateSize(width, textBoxHeight, appropriateY + 6, appropriateY + 6 + textBoxHeight)
-        setLeftPos(appropriateX + 8)
-    }
-
-    companion object {
-        const val LINE_HEIGHT = 10
-        const val LINE_WIDTH = 142
-        private val boxResource = cobblemonResource("textures/gui/dialogue/dialogue_box.png")
+        setSize(width, height)
+        x = listX
+        y = listY
     }
 
     override fun addEntry(entry: DialogueLine): Int {
@@ -82,57 +115,47 @@ class DialogueBox(
     }
 
     override fun getRowWidth(): Int {
-        return 80
+        return LINE_WIDTH
     }
 
-    override fun getScrollbarPositionX(): Int {
-        return left + 144
+    override fun getScrollbarPosition(): Int {
+        return this.x + 186
     }
 
-    override fun getScrollAmount(): Double {
-        return super.getScrollAmount()
+    override fun getBottom(): Int {
+        return this.y + this.height - 2
     }
 
-    private fun scaleIt(i: Number): Int {
-        return (client.window.scaleFactor * i.toFloat()).toInt()
-    }
-
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
         correctSize()
         blitk(
-            matrixStack = context.matrices,
+            matrixStack = context.pose(),
             texture = boxResource,
-            x = left - 8,
-            y = appropriateY - 1,
-            height = height + 12, // used to be FRAME_HEIGHT as below
+            x = x,
+            y = y,
+            height = height,
             width = frameWidth,
-            alpha = opacity
+            textureWidth = frameWidth + DialoguePortraitWidget.DIALOGUE_ARROW_WIDTH + SCROLL_BAR_WIDTH + SCROLL_TRACK_WIDTH
         )
 
-
-        super.render(context, mouseX, mouseY, partialTicks)
-//        context.disableScissor()
+        super.renderWidget(context, mouseX, mouseY, partialTicks)
     }
 
-    override fun enableScissor(context: DrawContext) {
+    override fun enableScissor(context: GuiGraphics) {
         val textBoxHeight = height
         context.enableScissor(
-            left,
-            appropriateY + 7,
-            left + width - 10,
-            appropriateY + 7 + textBoxHeight
+            this.x,
+            this.y + 1,
+            this.x + width - 1,
+            this.y + textBoxHeight - 1
         )
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        val toggleOffsetY = 92
-
         // TODO change this coordinate check to just be "anywhere the scroll bar isn't"
         if (!dialogueScreen.waitingForServerUpdate &&
-            mouseX > (left) &&
-            mouseX < (left + 160) &&
-            mouseY > (appropriateY) &&
-            mouseY < (appropriateY + height)
+            mouseX > this.x && mouseX < this.scrollbarPosition &&
+            mouseY > this.y && mouseY < this.bottom
         ) {
             if (dialogue.dialogueInput.allowSkip && dialogue.dialogueInput.inputType in listOf(DialogueInputDTO.InputType.NONE, DialogueInputDTO.InputType.AUTO_CONTINUE)) {
                 dialogueScreen.sendToServer(InputToDialoguePacket(dialogue.dialogueInput.inputId, "skip!"))
@@ -140,39 +163,27 @@ class DialogueBox(
             }
         }
 
-        updateScrollingState(mouseX, mouseY)
-        if (scrolling) {
-            focused = getEntryAtPosition(mouseX, mouseY)
-            isDragging = true
-        }
-
         return super.mouseClicked(mouseX, mouseY, button)
     }
 
-    override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, deltaX: Double, deltaY: Double): Boolean {
-        if (scrolling) {
-            if (mouseY < top) {
-                scrollAmount = 0.0
-            } else if (mouseY > bottom) {
-                scrollAmount = maxScroll.toDouble()
-            } else {
-                scrollAmount += deltaY
-            }
-        }
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
-    }
-
-    private fun updateScrollingState(mouseX: Double, mouseY: Double) {
-        scrolling = mouseX >= this.scrollbarPositionX.toDouble()
-                && mouseX < (this.scrollbarPositionX + 3).toDouble()
-                && mouseY >= top
-                && mouseY < bottom
-    }
-
-    class DialogueLine(val line: OrderedText) : Entry<DialogueLine>() {
+    class DialogueLine(val line: FormattedCharSequence) : Entry<DialogueLine>() {
         override fun getNarration() = "".text()
+
+        override fun renderBack(
+            context: GuiGraphics,
+            index: Int,
+            y: Int,
+            x: Int,
+            entryWidth: Int,
+            entryHeight: Int,
+            mouseX: Int,
+            mouseY: Int,
+            hovered: Boolean,
+            tickDelta: Float
+        ) {}
+
         override fun render(
-            context: DrawContext,
+            context: GuiGraphics,
             index: Int,
             rowTop: Int,
             rowLeft: Int,
@@ -186,8 +197,9 @@ class DialogueBox(
             drawScaledText(
                 context,
                 line,
-                rowLeft - 38,
-                rowTop - 2
+                rowLeft + 14,
+                rowTop + 7,
+                colour = 0x4C4C4C
             )
         }
     }

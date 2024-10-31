@@ -8,22 +8,20 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.QuadrupedWalkAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.ModelPartTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.triangleFunction
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class VibravaModel  (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame, HeadedFrame {
+class VibravaModel  (root: ModelPart) : PokemonPosableModel(root), QuadrupedFrame, HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("vibrava")
     override val head = getPart("head")
 
@@ -33,15 +31,15 @@ class VibravaModel  (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame, 
     override val hindRightLeg = getPart("leg_back_right")
 
     override var portraitScale = 1.36F
-    override var portraitTranslation = Vec3d(-0.37, -0.55, 0.0)
+    override var portraitTranslation = Vec3(-0.37, -0.55, 0.0)
 
     override var profileScale = 0.54F
-    override var profileTranslation = Vec3d(-0.01, 0.71, 0.0)
+    override var profileTranslation = Vec3(-0.01, 0.71, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("vibrava", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("vibrava", "cry") }
 
     val wing_front_left = getPart("wing_front_left")
     val wing_front_right = getPart("wing_front_right")
@@ -66,7 +64,7 @@ class VibravaModel  (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame, 
                 poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES - PoseType.HOVER,
                 transformTicks = 30,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(pitchMultiplier = 0.6F, yawMultiplier = 0.3F),
                         bedrock("vibrava", "ground_idle")
                 ),
@@ -81,17 +79,17 @@ class VibravaModel  (root: ModelPart) : PokemonPoseableModel(), QuadrupedFrame, 
                 poseTypes = PoseType.MOVING_POSES + PoseType.HOVER,
                 transformTicks = 10,
                 quirks = arrayOf(blink),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                         singleBoneLook(pitchMultiplier = 0.6F, yawMultiplier = 0.3F),
                         bedrock("vibrava", "ground_idle"),
                         wingFrame1.wingFlap(
                                 flapFunction = triangleFunction( period = 0.08F, amplitude = 0.6F),
-                                timeVariable = { state, _, ageInTicks -> state?.animationSeconds ?: ageInTicks },
+                                timeVariable = { state, _, _ -> state.animationSeconds },
                                 axis = ModelPartTransformation.Z_AXIS
                         ),
                         wingFrame2.wingFlap(
                                 flapFunction = triangleFunction( period = 0.1F, amplitude = 0.4F),
-                                timeVariable = { state, _, ageInTicks -> 0.01F + (state?.animationSeconds ?: (ageInTicks / 20)) },
+                                timeVariable = { state, _, _ -> 0.01F + state.animationSeconds },
                                 axis = ModelPartTransformation.Z_AXIS
                         )
                 ),

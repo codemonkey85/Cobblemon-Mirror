@@ -7,13 +7,14 @@
         "type": "artificial",
         "modelType": "pokemon",
         "identifier": "cobblemon:pikachu",
+        "isLeftSide": false,
         "aspects": [
           "shiny"
         ]
       }
     },
     "player": {
-      "face": "q.player.face();",
+      "face": "q.player.face(true);",
       "name": {
         "type": "expression",
         "expression": "q.player.username"

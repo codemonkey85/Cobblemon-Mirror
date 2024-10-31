@@ -8,32 +8,28 @@
 
 package com.cobblemon.mod.common.item
 
+import com.cobblemon.mod.common.CobblemonItemComponents
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
+import com.cobblemon.mod.common.item.components.PokemonItemComponent
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.pokemon.Species
-import com.cobblemon.mod.common.util.DataKeys
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NbtElement
-import net.minecraft.nbt.NbtList
-import net.minecraft.nbt.NbtString
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
-import net.minecraft.util.InvalidIdentifierException
+import net.minecraft.network.chat.Component
+import net.minecraft.world.item.ItemStack
 import org.joml.Vector4f
 
-class PokemonItem : CobblemonItem(Settings().maxCount(1)) {
+class PokemonItem : CobblemonItem(Properties().stacksTo(1).component(CobblemonItemComponents.POKEMON_ITEM, null)) {
 
-    override fun getName(stack: ItemStack): Text = this.species(stack)?.translatedName ?: super.getName(stack)
+    override fun getName(stack: ItemStack): Component = this.species(stack)?.translatedName ?: super.getName(stack)
 
     fun asPokemon(stack: ItemStack): Pokemon? {
         val species = this.species(stack) ?: return null
         val aspects = this.aspects(stack) ?: setOf()
         return Pokemon().apply {
             this.species = species
-            this.aspects = aspects
+            this.forcedAspects = aspects
         }
     }
 
@@ -44,59 +40,18 @@ class PokemonItem : CobblemonItem(Settings().maxCount(1)) {
     fun asRenderablePokemon(stack: ItemStack): RenderablePokemon? = this.asPokemon(stack)?.asRenderablePokemon()
 
     private fun species(stack: ItemStack): Species? {
-        val nbt = stack.nbt ?: return null
-        if (!nbt.contains(DataKeys.POKEMON_ITEM_SPECIES)) {
-            return null
-        }
-        return try {
-            val identifier = Identifier(nbt.getString(DataKeys.POKEMON_ITEM_SPECIES))
-            PokemonSpecies.getByIdentifier(identifier)
-        } catch (_: InvalidIdentifierException) {
-            null
-        }
+        return stack.get(CobblemonItemComponents.POKEMON_ITEM)?.species?.let(PokemonSpecies::getByIdentifier)
     }
 
     private fun aspects(stack: ItemStack): Set<String>? {
-        val nbt = stack.nbt ?: return null
-        if (!nbt.contains(DataKeys.POKEMON_ITEM_ASPECTS)) {
-            return null
-        }
-        return nbt.getList(DataKeys.POKEMON_ITEM_ASPECTS, NbtElement.STRING_TYPE.toInt())
-            .map { it.asString() }
-            .toSet()
+        return stack.get(CobblemonItemComponents.POKEMON_ITEM)?.aspects
     }
 
     fun tint(stack: ItemStack): Vector4f {
-        val nbt = stack.nbt ?: return Vector4f(1.0F, 1.0F, 1.0F, 1.0F)
-
-        val red = if (nbt.contains(DataKeys.POKEMON_ITEM_TINT_RED)) {
-            nbt.getFloat(DataKeys.POKEMON_ITEM_TINT_RED)
-        } else {
-            1.0F
-        }
-
-        val green = if (nbt.contains(DataKeys.POKEMON_ITEM_TINT_GREEN)) {
-            nbt.getFloat(DataKeys.POKEMON_ITEM_TINT_GREEN)
-        } else {
-            1.0F
-        }
-
-        val blue = if (nbt.contains(DataKeys.POKEMON_ITEM_TINT_BLUE)) {
-            nbt.getFloat(DataKeys.POKEMON_ITEM_TINT_BLUE)
-        } else {
-            1.0F
-        }
-
-        val alpha = if (nbt.contains(DataKeys.POKEMON_ITEM_TINT_ALPHA)) {
-            nbt.getFloat(DataKeys.POKEMON_ITEM_TINT_ALPHA)
-        } else {
-            1.0F
-        }
-        return Vector4f(red, green, blue, alpha)
+        return stack.get(CobblemonItemComponents.POKEMON_ITEM)?.tint ?: Vector4f(1f, 1f, 1f, 1f)
     }
 
     companion object {
-
         @JvmOverloads
         @JvmStatic
         fun from(pokemon: Pokemon, count: Int = 1, tint: Vector4f? = null): ItemStack = from(pokemon.species, pokemon.aspects, count, tint)
@@ -112,24 +67,8 @@ class PokemonItem : CobblemonItem(Settings().maxCount(1)) {
         @JvmStatic
         fun from(species: Species, aspects: Set<String>, count: Int = 1, tint: Vector4f? = null): ItemStack {
             val stack = ItemStack(CobblemonItems.POKEMON_MODEL, count)
-            stack.orCreateNbt.apply {
-                putString(DataKeys.POKEMON_ITEM_SPECIES, species.resourceIdentifier.toString())
-                val list = NbtList()
-                aspects.forEach { aspect ->
-                    list.add(NbtString.of(aspect))
-                }
-                put(DataKeys.POKEMON_ITEM_ASPECTS, list)
-
-                if (tint != null) {
-                    putFloat(DataKeys.POKEMON_ITEM_TINT_RED, tint.x)
-                    putFloat(DataKeys.POKEMON_ITEM_TINT_GREEN, tint.y)
-                    putFloat(DataKeys.POKEMON_ITEM_TINT_BLUE, tint.z)
-                    putFloat(DataKeys.POKEMON_ITEM_TINT_ALPHA, tint.w)
-                }
-            }
+            stack.set(CobblemonItemComponents.POKEMON_ITEM, PokemonItemComponent(species.resourceIdentifier, aspects, tint))
             return stack
         }
-
     }
-
 }

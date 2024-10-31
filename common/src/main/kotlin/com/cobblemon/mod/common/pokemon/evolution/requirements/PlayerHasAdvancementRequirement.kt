@@ -11,22 +11,21 @@ package com.cobblemon.mod.common.pokemon.evolution.requirements
 import com.cobblemon.mod.common.api.pokemon.evolution.requirement.EvolutionRequirement
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.evolution.requirements.template.EntityQueryRequirement
-import net.minecraft.advancement.Advancement
-import net.minecraft.entity.LivingEntity
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.resources.ResourceLocation
 
 /**
  * An [EvolutionRequirement] that checks if the player has a certain [Advancement]
  *
- * @param requiredAdvancement The [Identifier] of the required advancement
+ * @param requiredAdvancement The [ResourceLocation] of the required advancement
  *
  * @author whatsy
  */
-class PlayerHasAdvancementRequirement(val requiredAdvancement: Identifier) : EntityQueryRequirement {
+class PlayerHasAdvancementRequirement(val requiredAdvancement: ResourceLocation) : EntityQueryRequirement {
     override fun check(pokemon: Pokemon, queriedEntity: LivingEntity): Boolean {
-        val player = queriedEntity as? ServerPlayerEntity ?: return false
-        for (entry in player.advancementTracker.progress) {
+        val player = queriedEntity as? ServerPlayer ?: return false
+        for (entry in player.advancements.progress) {
             if (entry.key.id == requiredAdvancement && entry.value.isDone) {
                 return true
             }

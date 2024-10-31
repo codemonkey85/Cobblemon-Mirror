@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.api.storage.player
 import com.google.gson.JsonObject
 
 /**
- * An extension for the [PlayerData] allowing to save custom data to it.
+ * An extension for the [GeneralPlayerData] allowing to save custom data to it.
  * Needs to have an empty constructor for GSON and write the
  *
  * @author Qu

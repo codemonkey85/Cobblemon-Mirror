@@ -10,15 +10,15 @@ package com.cobblemon.mod.common.client.render.models.blockbench.bedrock.animati
 
 import com.cobblemon.mod.common.Cobblemon.LOGGER
 import com.cobblemon.mod.common.client.render.models.blockbench.BedrockAnimationReferenceFactory
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.JsonPokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.JsonPose
 import com.cobblemon.mod.common.util.fromJson
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
-import net.minecraft.resource.ResourceManager
-
+import net.minecraft.server.packs.resources.ResourceManager
 
 /**
- * Handles the loading and retrieval of bedrock animations.
+ * Handles the loading and retrieval of bedrock animations. These animations are agnostic of the type of
+ * model that they are loaded onto.
  *
  * @author landonjw
  * @since January 5, 2022
@@ -34,16 +34,26 @@ object BedrockAnimationRepository {
     private val animationGroups = mutableMapOf<String, BedrockAnimationGroup>()
 
     fun loadAnimations(resourceManager: ResourceManager, directories: List<String>) {
-        JsonPokemonPoseableModel.registerFactory("bedrock", BedrockAnimationReferenceFactory)
+        JsonPose.registerAnimationFactory("bedrock", BedrockAnimationReferenceFactory)
 
         LOGGER.info("Loading animations...")
         var animationCount = 0
         animationGroups.clear()
+        var wereValidationErrors = false
         for (directory in directories) {
-            resourceManager.findResources(directory) { it.path.endsWith(".animation.json") }
+            resourceManager.listResources(directory) { it.path.endsWith(".animation.json") }
                 .forEach { (identifier, resource) ->
                     try {
-                        val animationGroup = gson.fromJson<BedrockAnimationGroup>(resource.inputStream.reader())
+                        val animationGroup = gson.fromJson<BedrockAnimationGroup>(resource.open().reader())
+                        animationGroup.animations.entries.forEach { (name, animation) ->
+                            animation.name = name
+                            try {
+                                animation.checkForErrors()
+                            } catch (e: Throwable) {
+                                LOGGER.error("Failed to load animation $name in group $identifier: ${e.message}")
+                                wereValidationErrors= true
+                            }
+                        }
                         val animationGroupName = identifier.path.substringAfterLast("/").replace(".animation.json", "")
                         animationGroups[animationGroupName] = animationGroup
                         animationCount += animationGroup.animations.size
@@ -51,6 +61,9 @@ object BedrockAnimationRepository {
                         LOGGER.error("Failed to load animation group $identifier", e)
                     }
                 }
+        }
+        if (wereValidationErrors) {
+            LOGGER.error("There were errors in the animations. See above for details. You should fix these or there might be crashes later.")
         }
         LOGGER.info("Loaded $animationCount animations from ${animationGroups.size} animation groups")
     }
@@ -66,5 +79,9 @@ object BedrockAnimationRepository {
 
         return animationGroup.animations[animationName]
             ?: throw IllegalArgumentException("Animation $animationName not found in animation group $fileName")
+    }
+
+    fun getAnimationOrNull(fileName: String, animationName: String): BedrockAnimation? {
+        return animationGroups[fileName]?.animations?.get(animationName)
     }
 }

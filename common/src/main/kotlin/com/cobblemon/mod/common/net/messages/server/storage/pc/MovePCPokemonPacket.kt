@@ -10,12 +10,14 @@ package com.cobblemon.mod.common.net.messages.server.storage.pc
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.api.storage.pc.PCPosition
-import com.cobblemon.mod.common.api.storage.pc.PCPosition.Companion.readPCPosition
-import com.cobblemon.mod.common.api.storage.pc.PCPosition.Companion.writePCPosition
 import com.cobblemon.mod.common.net.serverhandling.storage.pc.MovePCPokemonHandler
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.readPCPosition
+import com.cobblemon.mod.common.util.readUUID
+import com.cobblemon.mod.common.util.writePCPosition
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
-import net.minecraft.network.PacketByteBuf
 
 /**
  * Tells the server to move a PC Pokémon from one position of the player's currently linked PC to another.
@@ -27,13 +29,13 @@ import net.minecraft.network.PacketByteBuf
  */
 class MovePCPokemonPacket(val pokemonID: UUID, val oldPosition: PCPosition, val newPosition: PCPosition) : NetworkPacket<MovePCPokemonPacket> {
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {
-        buffer.writeUuid(pokemonID)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(pokemonID)
         buffer.writePCPosition(oldPosition)
         buffer.writePCPosition(newPosition)
     }
     companion object {
         val ID = cobblemonResource("move_pc_pokemon")
-        fun decode(buffer: PacketByteBuf) = MovePCPokemonPacket(buffer.readUuid(), buffer.readPCPosition(), buffer.readPCPosition())
+        fun decode(buffer: RegistryFriendlyByteBuf) = MovePCPokemonPacket(buffer.readUUID(), buffer.readPCPosition(), buffer.readPCPosition())
     }
 }

@@ -13,10 +13,12 @@ import com.bedrockk.molang.MoLang
 import com.bedrockk.molang.ast.NumberExpression
 import com.cobblemon.mod.common.util.codec.EXPRESSION_CODEC
 import com.cobblemon.mod.common.util.getString
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class ParticleCollision(
     var enabled: Expression = NumberExpression(0.0),
@@ -37,7 +39,7 @@ class ParticleCollision(
         }
     }
 
-    fun writeToBuffer(buffer: PacketByteBuf) {
+    fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(enabled.getString())
         buffer.writeString(radius.getString())
         buffer.writeString(friction.getString())
@@ -45,7 +47,7 @@ class ParticleCollision(
         buffer.writeBoolean(expiresOnContact)
     }
 
-    fun readFromBuffer(buffer: PacketByteBuf) {
+    fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {
         enabled = MoLang.createParser(buffer.readString()).parseExpression()
         radius = MoLang.createParser(buffer.readString()).parseExpression()
         friction = MoLang.createParser(buffer.readString()).parseExpression()

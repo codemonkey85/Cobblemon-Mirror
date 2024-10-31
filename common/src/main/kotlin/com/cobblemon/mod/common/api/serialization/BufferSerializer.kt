@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.common.api.serialization
 
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * A Netty serializer.
@@ -19,18 +19,18 @@ import net.minecraft.network.PacketByteBuf
 interface BufferSerializer {
 
     /**
-     * Saves this object into a [PacketByteBuf].
+     * Saves this object into a [RegistryFriendlyByteBuf].
      *
-     * @param buffer The [PacketByteBuf] the data will be written to.
+     * @param buffer The [RegistryFriendlyByteBuf] the data will be written to.
      * @param toClient If the resulting packet will be client-bound.
      */
-    fun saveToBuffer(buffer: PacketByteBuf, toClient: Boolean)
+    fun saveToBuffer(buffer: RegistryFriendlyByteBuf, toClient: Boolean)
 
     /**
-     * Loads the data from the given [PacketByteBuf].
+     * Loads the data from the given [RegistryFriendlyByteBuf].
      *
-     * @param buffer The [PacketByteBuf] with the received data.
+     * @param buffer The [RegistryFriendlyByteBuf] with the received data.
      */
-    fun loadFromBuffer(buffer: PacketByteBuf)
+    fun loadFromBuffer(buffer: RegistryFriendlyByteBuf)
 
 }

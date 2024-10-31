@@ -9,8 +9,8 @@
 package com.cobblemon.mod.common.api.events.item
 
 import com.cobblemon.mod.common.api.events.Cancelable
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.ItemStack
 
 /**
  * Fired when eating an apple triggers the creation of a Leftovers. The stack that will be given
@@ -19,4 +19,4 @@ import net.minecraft.server.network.ServerPlayerEntity
  * @author Hiroku
  * @since March 11th, 2023
  */
-class LeftoversCreatedEvent(val playerEntity: ServerPlayerEntity, var leftovers: ItemStack) : Cancelable()
+class LeftoversCreatedEvent(val playerEntity: ServerPlayer, var leftovers: ItemStack) : Cancelable()

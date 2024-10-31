@@ -8,21 +8,21 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen9
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.createTransformation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class GarganaclModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame {
+class GarganaclModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("garganacl")
     override val head = getPart("waist")
     override val leftLeg = getPart("leg_left")
@@ -30,18 +30,18 @@ class GarganaclModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
     val shoulder = getPart("shoulder_right")
 
     override var portraitScale = 2.6F
-    override var portraitTranslation = Vec3d(-0.4, 3.0, 0.0)
+    override var portraitTranslation = Vec3(-0.4, 3.0, 0.0)
 
     override var profileScale = 0.45F
-    override var profileTranslation = Vec3d(0.0, 1.0, 0.0)
+    override var profileTranslation = Vec3(0.0, 1.0, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var battlestanding: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var portrait: PokemonPose
+    lateinit var sleep: Pose
+    lateinit var standing: Pose
+    lateinit var battlestanding: Pose
+    lateinit var walk: Pose
+    lateinit var portrait: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("garganacl", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("garganacl", "cry") }
 
     override fun registerPoses() {
         standing = registerPose(
@@ -51,7 +51,7 @@ class GarganaclModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             transformedParts = arrayOf(
                 shoulder.createTransformation().withVisibility(visibility = true)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("garganacl", "ground_idle")
             )
@@ -64,7 +64,7 @@ class GarganaclModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             transformedParts = arrayOf(
                 shoulder.createTransformation().withVisibility(visibility = true)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("garganacl", "battle_idle")
             )
@@ -75,7 +75,7 @@ class GarganaclModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             transformedParts = arrayOf(
                 shoulder.createTransformation().withVisibility(visibility = true)
             ),
-                idleAnimations = arrayOf(bedrock("garganacl", "sleep"))
+                animations = arrayOf(bedrock("garganacl", "sleep"))
         )
 
         portrait = registerPose(
@@ -84,7 +84,7 @@ class GarganaclModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             transformedParts = arrayOf(
                 shoulder.createTransformation().withVisibility(visibility = false)
             ),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("garganacl", "ground_idle")
             )
         )
@@ -96,7 +96,7 @@ class GarganaclModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
             transformedParts = arrayOf(
                 shoulder.createTransformation().withVisibility(visibility = true)
             ),
-                idleAnimations = arrayOf(
+                animations = arrayOf(
                     singleBoneLook(),
                     bedrock("garganacl", "ground_idle"),
                     bedrock("garganacl", "ground_walk")
@@ -104,8 +104,5 @@ class GarganaclModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bip
         )
 
     }
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isNotPosedIn(sleep)) bedrockStateful("garganacl", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = if (state.isNotPosedIn(sleep)) bedrockStateful("garganacl", "faint") else null
 }

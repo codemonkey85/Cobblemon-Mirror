@@ -8,7 +8,15 @@
 
 package com.cobblemon.mod.common.api.events.pokemon
 
-//data class HatchEggEvent (
-//    val pokemon: Pokemon,
-//    val player: ServerPlayerEntity
-//)
+import com.cobblemon.mod.common.api.events.Cancelable
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties
+import net.minecraft.server.level.ServerPlayer
+
+interface HatchEggEvent {
+    val egg: PokemonProperties
+    val player: ServerPlayer
+
+    data class Pre(override var egg : PokemonProperties, override var player: ServerPlayer) : HatchEggEvent, Cancelable()
+
+    data class Post(override var egg : PokemonProperties, override var player: ServerPlayer) : HatchEggEvent
+}

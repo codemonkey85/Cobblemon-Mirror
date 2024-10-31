@@ -11,9 +11,9 @@ package com.cobblemon.mod.common.api.spawning.context
 import com.cobblemon.mod.common.api.spawning.SpawnCause
 import com.cobblemon.mod.common.api.spawning.WorldSlice
 import com.cobblemon.mod.common.api.spawning.influence.SpawningInfluence
-import net.minecraft.block.BlockState
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.BlockPos
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.core.BlockPos
 
 /**
  * A type of area based spawning context with a fluid base block.
@@ -23,7 +23,7 @@ import net.minecraft.util.math.BlockPos
  */
 open class SubmergedSpawningContext(
     cause: SpawnCause,
-    world: ServerWorld,
+    world: ServerLevel,
     position: BlockPos,
     light: Int,
     skyLight: Int,
@@ -36,5 +36,5 @@ open class SubmergedSpawningContext(
 ) : AreaSpawningContext(cause, world, position, light, skyLight, canSeeSky, influences, height, nearbyBlocks, slice) {
     val fluid = slice.getBlockState(position.x, position.y, position.z).fluidState
 
-    override fun isSafeSpace(world: ServerWorld, pos: BlockPos, state: BlockState) = state.fluidState.fluid == fluid.fluid
+    override fun isSafeSpace(world: ServerLevel, pos: BlockPos, state: BlockState) = state.fluidState.type == fluid.type
 }

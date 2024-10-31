@@ -12,10 +12,13 @@ import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.item.CobblemonItem
+import net.minecraft.world.item.Items
 
-class DireHitItem : CobblemonItem(Settings()), SimpleBagItemConvertible {
+
+class DireHitItem : CobblemonItem(Properties()), SimpleBagItemLike {
     override val bagItem = object : BagItem {
         override val itemName = "item.cobblemon.dire_hit"
+        override val returnItem = Items.AIR
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) = target.health > 0
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?): String {
             battlePokemon.effectedPokemon.incrementFriendship(1)

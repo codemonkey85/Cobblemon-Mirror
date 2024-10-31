@@ -9,36 +9,46 @@
 package com.cobblemon.mod.common.client.render.pokeball
 
 import com.cobblemon.mod.common.client.entity.EmptyPokeBallClientDelegate
+import com.cobblemon.mod.common.client.render.models.blockbench.pokeball.PosablePokeBallModel
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokeBallModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
-import net.minecraft.client.render.OverlayTexture
-import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.entity.EntityRenderer
-import net.minecraft.client.render.entity.EntityRendererFactory
-import net.minecraft.client.render.item.ItemRenderer
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.RotationAxis
+import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.math.Axis
+import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.entity.EntityRenderer
+import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.entity.ItemRenderer
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.resources.ResourceLocation
 
-class PokeBallRenderer(context: EntityRendererFactory.Context) : EntityRenderer<EmptyPokeBallEntity>(context) {
+class PokeBallRenderer(context: EntityRendererProvider.Context) : EntityRenderer<EmptyPokeBallEntity>(context) {
+    val model = PosablePokeBallModel()
 
-    override fun getTexture(pEntity: EmptyPokeBallEntity): Identifier {
-        return PokeBallModelRepository.getTexture(pEntity.pokeBall.name, pEntity.aspects, (pEntity.delegate as EmptyPokeBallClientDelegate).animationSeconds)
+    override fun getTextureLocation(pEntity: EmptyPokeBallEntity): ResourceLocation {
+        return PokeBallModelRepository.getTexture(pEntity.pokeBall.name, pEntity.delegate as EmptyPokeBallClientDelegate)
     }
 
-    override fun render(entity: EmptyPokeBallEntity, yaw: Float, partialTicks: Float, poseStack: MatrixStack, buffer: VertexConsumerProvider, packedLight: Int) {
-        val model = PokeBallModelRepository.getPoser(entity.pokeBall.name, entity.aspects)
-        poseStack.push()
-        poseStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(yaw))
-        poseStack.scale(0.7F, -0.7F, -0.7F)
-        val vertexConsumer = ItemRenderer.getDirectItemGlintConsumer(buffer, model.getLayer(getTexture(entity)), false, false)
-
+    override fun render(entity: EmptyPokeBallEntity, yaw: Float, partialTicks: Float, poseStack: PoseStack, buffer: MultiBufferSource, packedLight: Int) {
         val state = entity.delegate as EmptyPokeBallClientDelegate
+        this.model.context.put(RenderContext.POSABLE_STATE, state)
+        this.model.context.put(RenderContext.ASPECTS, entity.aspects)
+        state.currentAspects = entity.aspects
+        val model = PokeBallModelRepository.getPoser(entity.pokeBall.name, state)
+        this.model.posableModel = model
+        this.model.posableModel.context = this.model.context
+        this.model.setupEntityTypeContext(entity)
+        this.model.context.put(RenderContext.RENDER_STATE, RenderContext.RenderState.WORLD)
+        poseStack.pushPose()
+        poseStack.mulPose(Axis.YP.rotationDegrees(yaw))
+        poseStack.scale(0.7F, -0.7F, -0.7F)
+        val vertexConsumer = ItemRenderer.getFoilBufferDirect(buffer, RenderType.entityCutout(getTextureLocation(entity)), false, false)
         state.updatePartialTicks(partialTicks)
-        model.setLayerContext(buffer, state, PokemonModelRepository.getLayers(entity.pokeBall.name, entity.aspects))
-        model.setAngles(entity, 0f, 0f, entity.age + partialTicks, 0F, 0F)
-        model.render(poseStack, vertexConsumer, packedLight, OverlayTexture.DEFAULT_UV, 1.0f, 1.0f, 1.0f, 1.0f)
+        model.setLayerContext(buffer, state, PokemonModelRepository.getLayers(entity.pokeBall.name, state))
+        this.model.setupAnim(entity, 0f, 0f, entity.tickCount + partialTicks, 0F, 0F)
+        this.model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
 
         model.green = 1F
         model.blue = 1F
@@ -46,7 +56,7 @@ class PokeBallRenderer(context: EntityRendererFactory.Context) : EntityRenderer<
 
         model.resetLayerContext()
 
-        poseStack.pop()
+        poseStack.popPose()
         super.render(entity, yaw, partialTicks, poseStack, buffer, packedLight)
     }
 }

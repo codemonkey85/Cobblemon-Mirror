@@ -16,11 +16,11 @@ package com.cobblemon.mod.common.permission
 //        PokemonCobblemon.LOGGER.info("Booting LuckPermsPermissionValidator, permissions will be checked through LuckPerms, see https://luckperms.net/ for more information")
 //    }
 //
-//    override fun hasPermission(player: ServerPlayerEntity, permission: String) = this.luckPerms.userManager.getUser(player.uuid)?.cachedData?.permissionData?.checkPermission(permission)?.asBoolean() ?: false
+//    override fun hasPermission(player: ServerPlayer, permission: String) = this.luckPerms.userManager.getUser(player.uuid)?.cachedData?.permissionData?.checkPermission(permission)?.asBoolean() ?: false
 //
 //    override fun hasPermission(source: CommandSource, permission: String): Boolean {
 //        val serverSource = source as? ServerCommandSource ?: return true
-//        val player = source.entity as? ServerPlayerEntity ?: return true
+//        val player = source.entity as? ServerPlayer ?: return true
 //        return this.hasPermission(player, permission)
 //    }
 //

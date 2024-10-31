@@ -8,31 +8,31 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen4
 
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class MagnezoneModel(root: ModelPart) : PokemonPoseableModel() {
+class MagnezoneModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("magnezone")
 
     override var portraitScale = 1.4F
-    override var portraitTranslation = Vec3d(-0.35, -0.28, 0.0)
+    override var portraitTranslation = Vec3(-0.35, -0.28, 0.0)
 
     override var profileScale = 0.6F
-    override var profileTranslation = Vec3d(-0.1, 0.6, 0.0)
+    override var profileTranslation = Vec3(-0.1, 0.6, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var sleep: Pose
 
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("magnezone", "blink") }
 //        sleep = registerPose(
 //            poseType = PoseType.SLEEP,
-//            idleAnimations = arrayOf(bedrock("magnezone", "sleep"))
+//            animations = arrayOf(bedrock("magnezone", "sleep"))
 //        )
 
         registerPose(
@@ -40,7 +40,7 @@ class MagnezoneModel(root: ModelPart) : PokemonPoseableModel() {
             poseTypes = PoseType.ALL_POSES - PoseType.FLY - PoseType.SLEEP - PoseType.SWIM,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("magnezone", "ground_idle")
             )
         )
@@ -50,7 +50,7 @@ class MagnezoneModel(root: ModelPart) : PokemonPoseableModel() {
             poseTypes = setOf(PoseType.FLY, PoseType.SWIM),
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("magnezone", "ground_idle")
             )
         )
@@ -59,6 +59,6 @@ class MagnezoneModel(root: ModelPart) : PokemonPoseableModel() {
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("magnezone", "faint") else null
 }

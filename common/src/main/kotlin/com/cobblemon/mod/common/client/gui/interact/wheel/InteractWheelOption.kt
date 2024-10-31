@@ -8,11 +8,12 @@
 
 package com.cobblemon.mod.common.client.gui.interact.wheel
 
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import org.joml.Vector3f
 
 data class InteractWheelOption(
-    val iconResource: Identifier,
+    val iconResource: ResourceLocation,
+    val secondaryIconResource: ResourceLocation? = null,
     val tooltipText: String?,
     val colour: () -> Vector3f? = { null },
     val onPress: () -> Unit

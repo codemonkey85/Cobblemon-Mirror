@@ -20,8 +20,8 @@ import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.lang
 import com.google.gson.annotations.SerializedName
+import net.minecraft.network.chat.MutableComponent
 import kotlin.math.ceil
-import net.minecraft.text.MutableText
 
 /**
  * A [SpawnDetail] for spawning a [PokemonEntity].
@@ -48,7 +48,7 @@ class PokemonSpawnDetail : SpawnDetail() {
     /* todo breadcrumbing, ai */
 
 
-    override fun getName(): MutableText {
+    override fun getName(): MutableComponent {
         displayName?.let { return it.asTranslated() }
 
         val speciesString = pokemon.species
@@ -109,7 +109,6 @@ class PokemonSpawnDetail : SpawnDetail() {
     }
 
     override fun doSpawn(ctx: SpawningContext): SingleEntitySpawnAction<PokemonEntity> {
-        // TODO should do more maybe
         return PokemonSpawnAction(ctx, this)
     }
 }

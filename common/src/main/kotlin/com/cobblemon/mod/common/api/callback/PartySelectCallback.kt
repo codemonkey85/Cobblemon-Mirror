@@ -15,13 +15,13 @@ import com.cobblemon.mod.common.api.pokemon.PokemonPropertyExtractor
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.net.messages.client.callback.OpenPartyCallbackPacket
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.util.lang
+import com.cobblemon.mod.common.util.*
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.Component
 import java.util.UUID
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.ItemStack
 
 /**
  * Used for opening party Pokémon selection screens for players and handling their choice. Currently
@@ -35,11 +35,11 @@ object PartySelectCallbacks {
 
     @JvmOverloads
     fun create(
-        player: ServerPlayerEntity,
-        title: Text = lang("ui.party"),
+        player: ServerPlayer,
+        title: Component = lang("ui.party"),
         pokemon: List<PartySelectPokemonDTO>,
-        cancel: (ServerPlayerEntity) -> Unit = {},
-        handler: (ServerPlayerEntity, index: Int) -> Unit
+        cancel: (ServerPlayer) -> Unit = {},
+        handler: (ServerPlayer, index: Int) -> Unit
     ) {
         val callback = PartySelectCallback(
             shownPokemon = pokemon,
@@ -60,11 +60,11 @@ object PartySelectCallbacks {
 
     @JvmOverloads
     fun createBattleSelect(
-        player: ServerPlayerEntity,
-        title: Text = lang("ui.party"),
+        player: ServerPlayer,
+        title: Component = lang("ui.party"),
         pokemon: List<BattlePokemon>,
         canSelect: (BattlePokemon) -> Boolean,
-        cancel: (ServerPlayerEntity) -> Unit = {},
+        cancel: (ServerPlayer) -> Unit = {},
         handler: (BattlePokemon) -> Unit
     ) = create(
         player = player,
@@ -75,11 +75,11 @@ object PartySelectCallbacks {
 
     @JvmOverloads
     fun createFromPokemon(
-        player: ServerPlayerEntity,
-        title: Text = lang("ui.party"),
+        player: ServerPlayer,
+        title: Component = lang("ui.party"),
         pokemon: List<Pokemon>,
         canSelect: (Pokemon) -> Boolean,
-        cancel: (ServerPlayerEntity) -> Unit = {},
+        cancel: (ServerPlayer) -> Unit = {},
         handler: (Pokemon) -> Unit
     ) = create(
         player = player,
@@ -88,7 +88,7 @@ object PartySelectCallbacks {
         pokemon = pokemon.map { pk -> PartySelectPokemonDTO(pk).also { it.enabled = canSelect(pk) } }
     ) { _, index -> handler(pokemon[index]) }
 
-    fun handleCancelled(player: ServerPlayerEntity, uuid: UUID) {
+    fun handleCancelled(player: ServerPlayer, uuid: UUID) {
         val callback = callbacks[player.uuid] ?: return
         if (callback.uuid != uuid) {
             return
@@ -97,7 +97,7 @@ object PartySelectCallbacks {
         callback.cancel(player)
     }
 
-    fun handleCallback(player: ServerPlayerEntity, uuid: UUID, index: Int) {
+    fun handleCallback(player: ServerPlayer, uuid: UUID, index: Int) {
         val callback = callbacks[player.uuid] ?: return
         callbacks.remove(player.uuid)
         if (callback.uuid != uuid) {
@@ -115,8 +115,8 @@ object PartySelectCallbacks {
 class PartySelectCallback(
     val uuid: UUID = UUID.randomUUID(),
     val shownPokemon: List<PartySelectPokemonDTO>,
-    val cancel: (ServerPlayerEntity) -> Unit = {},
-    val handler: (ServerPlayerEntity, index: Int) -> Unit
+    val cancel: (ServerPlayer) -> Unit = {},
+    val handler: (ServerPlayer, index: Int) -> Unit
 )
 
 open class PartySelectPokemonDTO(
@@ -139,12 +139,12 @@ open class PartySelectPokemonDTO(
         aspects = pokemon.aspects,
         heldItem = pokemon.heldItemNoCopy(),
         currentHealth = pokemon.currentHealth,
-        maxHealth = pokemon.hp,
+        maxHealth = pokemon.maxHealth,
         enabled = enabled
     )
 
-    constructor(buffer: PacketByteBuf): this(
-        pokemonProperties = PokemonProperties().loadFromNBT(buffer.readNbt() as NbtCompound),
+    constructor(buffer: RegistryFriendlyByteBuf): this(
+        pokemonProperties = PokemonProperties().loadFromNBT(buffer.readNbt() as CompoundTag, buffer.registryAccess()),
         aspects = buffer.readList { it.readString() }.toSet(),
         heldItem = buffer.readItemStack(),
         currentHealth = buffer.readInt(),
@@ -152,8 +152,8 @@ open class PartySelectPokemonDTO(
         enabled = buffer.readBoolean()
     )
 
-    fun writeToBuffer(buffer: PacketByteBuf) {
-        buffer.writeNbt(pokemonProperties.saveToNBT())
+    fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeNbt(pokemonProperties.saveToNBT(buffer.registryAccess()))
         buffer.writeCollection(aspects) { _, aspect -> buffer.writeString(aspect) }
         buffer.writeItemStack(heldItem)
         buffer.writeInt(currentHealth)
@@ -161,3 +161,4 @@ open class PartySelectPokemonDTO(
         buffer.writeBoolean(enabled)
     }
 }
+

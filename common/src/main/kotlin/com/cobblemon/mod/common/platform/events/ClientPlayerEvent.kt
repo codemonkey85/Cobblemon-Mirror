@@ -8,10 +8,10 @@
 
 package com.cobblemon.mod.common.platform.events
 
-import net.minecraft.client.network.ClientPlayerEntity
+import net.minecraft.client.player.LocalPlayer
 
 /**
- * Events related to a [ClientPlayerEntity].
+ * Events related to a [ClientPlayer].
  * As implied by the name these are fired on the client side.
  * Keep in mind the concept of a login/out is still present in an integrated instance aka a singleplayer world.
  *
@@ -21,18 +21,18 @@ import net.minecraft.client.network.ClientPlayerEntity
 interface ClientPlayerEvent {
 
     /**
-     * The [ClientPlayerEntity] triggering the events.
+     * The [ClientPlayer] triggering the events.
      */
-    val player: ClientPlayerEntity
+    val player: LocalPlayer
 
     /**
      * Fired when the [player] logs in.
      */
-    data class Login(override val player: ClientPlayerEntity) : ClientPlayerEvent
+    data class Login(override val player: LocalPlayer) : ClientPlayerEvent
 
     /**
      * Fired when the [player] logs out.
      */
-    data class Logout(override val player: ClientPlayerEntity) : ClientPlayerEvent
+    data class Logout(override val player: LocalPlayer) : ClientPlayerEvent
 
 }

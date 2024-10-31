@@ -1,0 +1,85 @@
+{
+	"parent": "cobblemon:first_evolution",
+	"display": {
+		"icon": {
+			"id": "cobblemon:pokemon_model",
+	"components": {
+        "cobblemon:pokemon_item": {"species":"cobblemon:eevee","aspects":["female"]}
+      }
+		},
+		"title": {
+			"translate": "advancements.cobblemon.evolve_veevees"
+		},
+		"description": {
+			"translate": "advancements.cobblemon.evolve_veevees.description"
+		}
+	},
+	"criteria": {
+		"evolve_vaporeon": {
+			"trigger": "cobblemon:pokemon_evolved",
+			"conditions": {
+				"species": "cobblemon:eevee",
+				"evolution": "cobblemon:vaporeon"
+			}
+		},
+		"evolve_flareon": {
+			"trigger": "cobblemon:pokemon_evolved",
+			"conditions": {
+				"species": "cobblemon:eevee",
+				"evolution": "cobblemon:flareon"
+			}
+		},
+		"evolve_jolteon": {
+			"trigger": "cobblemon:pokemon_evolved",
+			"conditions": {
+				"species": "cobblemon:eevee",
+				"evolution": "cobblemon:jolteon"
+			}
+		},
+		"evolve_espeon": {
+			"trigger": "cobblemon:pokemon_evolved",
+			"conditions": {
+				"species": "cobblemon:eevee",
+				"evolution": "cobblemon:espeon"
+			}
+		},
+		"evolve_umbreon": {
+			"trigger": "cobblemon:pokemon_evolved",
+			"conditions": {
+				"species": "cobblemon:eevee",
+				"evolution": "cobblemon:umbreon"
+			}
+		},
+		"evolve_leafeon": {
+			"trigger": "cobblemon:pokemon_evolved",
+			"conditions": {
+				"species": "cobblemon:eevee",
+				"evolution": "cobblemon:leafeon"
+			}
+		},
+		"evolve_glaceon": {
+			"trigger": "cobblemon:pokemon_evolved",
+			"conditions": {
+				"species": "cobblemon:eevee",
+				"evolution": "cobblemon:glaceon"
+			}
+		},
+		"evolve_sylveon": {
+			"trigger": "cobblemon:pokemon_evolved",
+			"conditions": {
+				"species": "cobblemon:eevee",
+				"evolution": "cobblemon:sylveon"
+			}
+		}
+	},
+	"requirements": [
+		["evolve_vaporeon"],
+		["evolve_flareon"],
+		["evolve_jolteon"],
+		["evolve_espeon"],
+		["evolve_umbreon"],
+		["evolve_leafeon"],
+		["evolve_glaceon"],
+		["evolve_sylveon"]
+	]
+}

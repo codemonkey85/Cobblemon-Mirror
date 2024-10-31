@@ -8,18 +8,18 @@
 
 package com.cobblemon.mod.common.api.multiblock
 
-import com.cobblemon.mod.common.api.multiblock.MultiblockStructure
 import com.cobblemon.mod.common.api.multiblock.builder.MultiblockStructureBuilder
 import com.cobblemon.mod.common.util.DataKeys
-import net.minecraft.block.BlockState
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.block.entity.BlockEntityType
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.nbt.NbtHelper
-import net.minecraft.network.listener.ClientPlayPacketListener
-import net.minecraft.network.packet.Packet
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
-import net.minecraft.util.math.BlockPos
+import net.minecraft.core.BlockPos
+import net.minecraft.core.HolderLookup
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtUtils
+import net.minecraft.network.protocol.Packet
+import net.minecraft.network.protocol.game.ClientGamePacketListener
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityType
+import net.minecraft.world.level.block.state.BlockState
 
 /**
  * Multiblock entities are kind of complicated. Basically every multiblock entity should have a MultiBlockStructureBuilder
@@ -37,28 +37,30 @@ abstract class MultiblockEntity(
     abstract var multiblockStructure: MultiblockStructure?
     abstract var masterBlockPos: BlockPos?
 
-    override fun toUpdatePacket(): Packet<ClientPlayPacketListener>? {
-        return BlockEntityUpdateS2CPacket.create(this)
+    override fun getUpdatePacket(): Packet<ClientGamePacketListener>? {
+        return ClientboundBlockEntityDataPacket.create(this)
     }
 
-    override fun toInitialChunkDataNbt(): NbtCompound {
-        val result = NbtCompound()
-        writeNbt(result)
+    override fun getUpdateTag(registryLookup: HolderLookup.Provider): CompoundTag {
+        val result = CompoundTag()
+        saveAdditional(result, registryLookup)
         return result
     }
 
-    override fun writeNbt(nbt: NbtCompound) {
-        super.writeNbt(nbt)
+    override fun saveAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
+        super.saveAdditional(nbt, registryLookup)
         //Used for checking build conditions in multiblocks (Dont count a block if it has the FORMED flag)
         nbt.putBoolean(DataKeys.FORMED, masterBlockPos != null)
-        if (multiblockStructure != null && multiblockStructure!!.controllerBlockPos == pos) {
-            nbt.put(DataKeys.MULTIBLOCK_STORAGE, multiblockStructure!!.writeToNbt())
+        if (multiblockStructure != null && multiblockStructure!!.controllerBlockPos == blockPos) {
+            nbt.put(DataKeys.MULTIBLOCK_STORAGE, multiblockStructure!!.writeToNbt(registryLookup))
         }
         else if (masterBlockPos != null) {
-            nbt.put(DataKeys.CONTROLLER_BLOCK, NbtHelper.fromBlockPos(masterBlockPos))
+            nbt.put(DataKeys.CONTROLLER_BLOCK, NbtUtils.writeBlockPos(masterBlockPos))
         }
     }
 
-    abstract override fun readNbt(nbt: NbtCompound)
+    override fun isValidBlockState(blockState: BlockState) = blockState.block is MultiblockBlock
+
+    abstract override fun loadAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider)
 
 }

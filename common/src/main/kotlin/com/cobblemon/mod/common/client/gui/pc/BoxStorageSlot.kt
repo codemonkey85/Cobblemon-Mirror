@@ -17,7 +17,7 @@ class BoxStorageSlot(
     private val parent: StorageWidget,
     private val pc: ClientPC,
     val position: PCPosition,
-    onPress: PressAction
+    onPress: OnPress
 ) : StorageSlot(x, y, parent, onPress) {
 
     override fun getPokemon(): Pokemon? {

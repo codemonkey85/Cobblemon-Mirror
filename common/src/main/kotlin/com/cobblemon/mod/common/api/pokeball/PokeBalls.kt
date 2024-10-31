@@ -15,11 +15,7 @@ import com.cobblemon.mod.common.api.pokeball.catching.CaptureEffect
 import com.cobblemon.mod.common.api.pokeball.catching.CatchRateModifier
 import com.cobblemon.mod.common.api.pokeball.catching.effects.CaptureEffects
 import com.cobblemon.mod.common.api.pokeball.catching.effects.FriendshipEarningBoostEffect
-import com.cobblemon.mod.common.api.pokeball.catching.modifiers.BaseStatModifier
-import com.cobblemon.mod.common.api.pokeball.catching.modifiers.CatchRateModifiers
-import com.cobblemon.mod.common.api.pokeball.catching.modifiers.GuaranteedModifier
-import com.cobblemon.mod.common.api.pokeball.catching.modifiers.LabelModifier
-import com.cobblemon.mod.common.api.pokeball.catching.modifiers.MultiplierModifier
+import com.cobblemon.mod.common.api.pokeball.catching.modifiers.*
 import com.cobblemon.mod.common.api.pokemon.labels.CobblemonPokemonLabels
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.api.pokemon.status.Statuses
@@ -30,10 +26,10 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
 import kotlin.math.roundToInt
-import net.minecraft.resource.ResourceType
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
 
 /**
  * The data registry for [PokeBall]s.
@@ -42,7 +38,7 @@ import net.minecraft.util.Identifier
 object PokeBalls : JsonDataRegistry<PokeBall> {
 
     override val id = cobblemonResource("pokeballs")
-    override val type = ResourceType.SERVER_DATA
+    override val type = PackType.SERVER_DATA
     override val observable = SimpleObservable<PokeBalls>()
 
     // ToDo once datapack pokeball is implemented add required adapters here
@@ -53,9 +49,9 @@ object PokeBalls : JsonDataRegistry<PokeBall> {
     override val typeToken: TypeToken<PokeBall> = TypeToken.get(PokeBall::class.java)
     override val resourcePath = "pokeballs"
 
-    private val defaults = hashMapOf<Identifier, PokeBall>()
+    private val defaults = hashMapOf<ResourceLocation, PokeBall>()
     // ToDo datapack pokeball type here instead
-    private val custom = hashMapOf<Identifier, PokeBall>()
+    private val custom = hashMapOf<ResourceLocation, PokeBall>()
 
     val POKE_BALL
         get() = this.byName("poke_ball")
@@ -167,8 +163,7 @@ object PokeBalls : JsonDataRegistry<PokeBall> {
         createDefault("safari_ball", CatchRateModifiers.SAFARI)
         createDefault("fast_ball", BaseStatModifier(Stats.SPEED, { it >= 100 }, 4F))
         createDefault("level_ball", CatchRateModifiers.LEVEL)
-        // ToDo we will need fishing context here once fishing is implemented for a multiplier
-        createDefault("lure_ball", CatchRateModifiers.typeBoosting(2F, ElementalTypes.WATER))
+        createDefault("lure_ball", CatchRateModifiers.LURE)
         createDefault("heavy_ball", CatchRateModifiers.WEIGHT_BASED)
         createDefault("love_ball", CatchRateModifiers.LOVE)
         createDefault("friend_ball", effects = listOf(CaptureEffects.friendshipSetter(150)))
@@ -177,8 +172,7 @@ object PokeBalls : JsonDataRegistry<PokeBall> {
         createDefault("net_ball", CatchRateModifiers.typeBoosting(3F, ElementalTypes.BUG, ElementalTypes.WATER))
         createDefault("dive_ball", CatchRateModifiers.SUBMERGED_IN_WATER, waterDragValue = 0.99F)
         createDefault("nest_ball", CatchRateModifiers.NEST)
-        // ToDo implement effect once pokedex is implemented, we have a custom multiplier of 2.5 instead of the official pokeball
-        createDefault("repeat_ball")
+        createDefault("repeat_ball", CatchRateModifiers.REPEAT)
         createDefault("timer_ball", CatchRateModifiers.turnBased { turn -> (1F * turn * (1229F / 4096F)).coerceAtMost(4F) })
         createDefault("luxury_ball", effects = listOf(FriendshipEarningBoostEffect(2F)))
         createDefault("premier_ball")
@@ -216,12 +210,12 @@ object PokeBalls : JsonDataRegistry<PokeBall> {
         }
     }
 
-    override fun reload(data: Map<Identifier, PokeBall>) {
+    override fun reload(data: Map<ResourceLocation, PokeBall>) {
         this.custom.clear()
         // ToDo once datapack pokeball is implemented load them here, we will want datapacks to be able to override our default pokeballs too, however they will never be able to disable them
     }
 
-    override fun sync(player: ServerPlayerEntity) {
+    override fun sync(player: ServerPlayer) {
         // ToDo once datapack pokeball is implemented sync them here
     }
 
@@ -229,7 +223,7 @@ object PokeBalls : JsonDataRegistry<PokeBall> {
      * Gets a Pokeball from registry name.
      * @return the pokeball object if found otherwise null.
      */
-    fun getPokeBall(name : Identifier): PokeBall? = this.custom[name] ?: this.defaults[name]
+    fun getPokeBall(name : ResourceLocation): PokeBall? = this.custom[name] ?: this.defaults[name]
 
     fun all() = this.defaults.filterKeys { !this.custom.containsKey(it) }.values + this.custom.values
 
@@ -238,8 +232,8 @@ object PokeBalls : JsonDataRegistry<PokeBall> {
         modifier: CatchRateModifier = MultiplierModifier(1F) { _, _ -> true },
         effects: List<CaptureEffect> = emptyList(),
         waterDragValue: Float = 0.8F,
-        model2d: Identifier = cobblemonResource(name),
-        model3d: Identifier = cobblemonResource("${name}_model"),
+        model2d: ResourceLocation = cobblemonResource(name),
+        model3d: ResourceLocation = cobblemonResource("item/${name}_model"),
         throwPower: Float = 1.25f,
         ancient: Boolean = false
     ): PokeBall {
@@ -254,5 +248,4 @@ object PokeBalls : JsonDataRegistry<PokeBall> {
         val identifier = cobblemonResource(name)
         return this.custom[identifier] ?: this.defaults[identifier]!!
     }
-
 }

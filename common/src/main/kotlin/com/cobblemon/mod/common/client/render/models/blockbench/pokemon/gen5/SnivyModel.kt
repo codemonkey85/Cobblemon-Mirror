@@ -12,13 +12,13 @@ import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFr
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class SnivyModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedFrame, BimanualFrame {
+class SnivyModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BipedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("snivy")
     override val head = getPart("head_ai")
     override val rightArm = getPart("arm_right")
@@ -27,22 +27,22 @@ class SnivyModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedF
     override val leftLeg = getPart("leg_left")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.15, 0.32, 0.0)
+    override var portraitTranslation = Vec3(-0.15, 0.32, 0.0)
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.55, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.55, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var sleep: Pose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("snivy", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("snivy", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("snivy", "blink") }
         sleep = registerPose(
             poseType = PoseType.SLEEP,
             transformTicks = 10,
-            idleAnimations = arrayOf(bedrock("snivy", "sleep"))
+            animations = arrayOf(bedrock("snivy", "sleep"))
         )
 
         standing = registerPose(
@@ -50,7 +50,7 @@ class SnivyModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedF
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("snivy", "ground_idle")
             )
@@ -61,7 +61,7 @@ class SnivyModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BipedF
             poseTypes =  PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("snivy", "ground_walk")
             )

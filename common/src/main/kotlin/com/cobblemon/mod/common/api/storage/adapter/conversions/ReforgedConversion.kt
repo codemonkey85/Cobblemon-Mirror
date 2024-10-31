@@ -26,27 +26,28 @@ import com.cobblemon.mod.common.pokemon.IVs
 import com.cobblemon.mod.common.pokemon.Pokemon
 import java.nio.file.Path
 import java.util.UUID
-import net.minecraft.nbt.NbtCompound
+import net.minecraft.core.RegistryAccess
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtIo
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 const val REFORGED_POKEMON_PER_BOX = 30
-class ReforgedConversion(val base: Path) : CobblemonConverter<NbtCompound> {
+class ReforgedConversion(val base: Path) : CobblemonConverter<CompoundTag> {
 
     override fun root(): Path {
         return this.base.resolve("data").resolve("pokemon")
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <E : StorePosition, T : PokemonStore<E>> load(storeClass: Class<T>, uuid: UUID): T? {
-        val extension = if (storeClass.simpleName.lowercase() == "playerpartystore") "pk" else ("comp")
+    override fun <E : StorePosition, T : PokemonStore<E>> load(storeClass: Class<T>, uuid: UUID, registryAccess: RegistryAccess): T? {
+        val extension = if (storeClass.simpleName.lowercase() == "playerpartystore") "pk" else "comp"
         val target = this.root().resolve("$uuid.$extension")
 
         if (!this.exists(target)) {
             return null
         }
 
-        val nbt = NbtIo.read(target.toFile())
+        val nbt = NbtIo.read(target)
         if(nbt != null) {
             return (if (extension == "pk") party(uuid, nbt) else pc(uuid, nbt)) as T
         }
@@ -54,7 +55,7 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<NbtCompound> {
         return null
     }
 
-    override fun party(user: UUID, nbt: NbtCompound) : PlayerPartyStore {
+    override fun party(user: UUID, nbt: CompoundTag) : PlayerPartyStore {
         val result = PlayerPartyStore(user)
         for (x in 0..5) {
             val key = "party$x"
@@ -66,7 +67,7 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<NbtCompound> {
         return result
     }
 
-    override fun pc(user: UUID, nbt: NbtCompound) : PCStore {
+    override fun pc(user: UUID, nbt: CompoundTag) : PCStore {
         val result = PCStore(user)
         var box = 0
         while (nbt.contains("BoxNumber$box")) {
@@ -86,24 +87,24 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<NbtCompound> {
         return result
     }
 
-    override fun translate(nbt: NbtCompound) : Pokemon {
+    override fun translate(nbt: CompoundTag) : Pokemon {
         val result = Pokemon()
-        result.uuid = nbt.getUuid("UUID")
+        result.uuid = nbt.getUUID("UUID")
         result.species = PokemonSpecies.getByPokedexNumber(nbt.getInt("ndex"))
             ?: throw IllegalStateException("Failed to read a species with pokedex identifier ${nbt.getInt("ndex")}")
         PokemonProperties.parse((result.species.forms.find { it.name == nbt.getString("Variant") } ?: result.species.standardForm).name).apply(result)
 
         result.gender = Gender.values()[nbt.getInt("Gender")]
-        result.shiny = this.find(nbt, "IsShiny", NbtCompound::getBoolean) ?:
-                        this.find(nbt, "palette", NbtCompound::getString)?.equals("shiny") ?: false
+        result.shiny = this.find(nbt, "IsShiny", CompoundTag::getBoolean) ?:
+                        this.find(nbt, "palette", CompoundTag::getString)?.equals("shiny") ?: false
         result.level = nbt.getInt("Level")
         result.addExperience(SidemodExperienceSource("Reforged"), nbt.getInt("EXP"))
         result.setFriendship(nbt.getInt("Friendship"))
         Abilities.get(nbt.getString("Ability"))?.let { template ->
             result.updateAbility(template.create(forced = result.form.abilities.none { it.template == template }))
         }
-        result.nature = Natures.getNature(Identifier(ReforgedNatures.values()[nbt.getInt("Nature")].name.lowercase())) ?: Natures.getRandomNature()
-        result.mintedNature = Natures.getNature(Identifier(ReforgedNatures.values()[nbt.getInt("MintNature")].name.lowercase()))
+        result.nature = Natures.getNature(ResourceLocation.parse(ReforgedNatures.entries[nbt.getInt("Nature")].name.lowercase())) ?: Natures.getRandomNature()
+        result.mintedNature = Natures.getNature(ResourceLocation.parse(ReforgedNatures.entries[nbt.getInt("MintNature")].name.lowercase()))
         result.currentHealth = nbt.getInt("Health")
 
         // Stats
@@ -131,7 +132,7 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<NbtCompound> {
         }
 
         for (move in nbt.getList("Moveset", 10)) {
-            val compound = move as NbtCompound
+            val compound = move as CompoundTag
             val id = compound.getString("MoveID").replace(Regex("[-\\s]", RegexOption.IGNORE_CASE), "")
             val pp = compound.getInt("MovePP")
             val level = compound.getInt("MovePPLevel")
@@ -143,13 +144,13 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<NbtCompound> {
         // TODO - Nicknames and Original Trainer Data
         // result.nickname = this.find(nbt, "Nickname", NbtCompound::getString)
 
-        val ball = this.find(nbt, "CaughtBall", NbtCompound::getString)
-        result.caughtBall = if(ball != null) PokeBalls.getPokeBall(Identifier(ball)) ?: PokeBalls.POKE_BALL else PokeBalls.POKE_BALL
+        val ball = this.find(nbt, "CaughtBall", CompoundTag::getString)
+        result.caughtBall = if(ball != null) PokeBalls.getPokeBall(ResourceLocation.parse(ball)) ?: PokeBalls.POKE_BALL else PokeBalls.POKE_BALL
 
         return result
     }
 
-    fun <T> find(nbt: NbtCompound, key: String, translator: Translator<T?>) : T? {
+    fun <T> find(nbt: CompoundTag, key: String, translator: Translator<T?>) : T? {
         if (nbt.contains(key)) {
             return translator.from(nbt, key)
         }
@@ -158,7 +159,7 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<NbtCompound> {
     }
 
     fun interface Translator<out R> {
-        fun from(nbt: NbtCompound, key: String) : R?
+        fun from(nbt: CompoundTag, key: String) : R?
     }
 
     enum class ReforgedNatures {

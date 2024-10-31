@@ -8,7 +8,9 @@
 
 package com.cobblemon.mod.common.api.pokeball.catching.calculators
 
-import net.minecraft.server.network.ServerPlayerEntity
+import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.pokedex.CaughtCount
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * A provider for multiplier in the catch rate formula based on the number of species caught and registered to the Pokédex.
@@ -21,12 +23,11 @@ interface PokedexProgressCaptureMultiplierProvider {
     /**
      * Resolves the multiplier based on the Pokedex progression of the given [player].
      *
-     * @param player The [ServerPlayerEntity] being queried.
+     * @param player The [ServerPlayer] being queried.
      * @return The multiplier based on the caught count.
      */
-    fun caughtMultiplierFor(player: ServerPlayerEntity): Float {
-        // ToDo once pokedex is implemented change number here
-        val caughtCount = 0
+    fun caughtMultiplierFor(player: ServerPlayer): Float {
+        val caughtCount = Cobblemon.playerDataManager.getPokedexData(player).getGlobalCalculatedValue(CaughtCount)
         return when {
             caughtCount < 30 -> 1229F / 4096F
             // This one is exact

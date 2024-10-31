@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.battle.ClientBattlePokemon
 import com.cobblemon.mod.common.net.messages.client.battle.BattleTransformPokemonPacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 /**
  * The handler for [BattleTransformPokemonPacket]s. Updates the [ClientBattlePokemon] after a transformation.
@@ -21,7 +21,7 @@ import net.minecraft.client.MinecraftClient
  * @since April 22nd, 2023
  */
 object BattleTransformPokemonHandler : ClientNetworkPacketHandler<BattleTransformPokemonPacket> {
-    override fun handle(packet: BattleTransformPokemonPacket, client: MinecraftClient) {
+    override fun handle(packet: BattleTransformPokemonPacket, client: Minecraft) {
         val battle = CobblemonClient.battle ?: return
         val (_, activeBattlePokemon) = battle.getPokemonFromPNX(packet.pnx)
         val update = packet.updatedPokemon
@@ -29,7 +29,7 @@ object BattleTransformPokemonHandler : ClientNetworkPacketHandler<BattleTransfor
         activeBattlePokemon.battlePokemon?.apply {
             displayName = update.displayName
             properties = update.properties
-            aspects = update.aspects
+            updateAspects(update.aspects)
             hpValue = update.hpValue
             maxHp = update.maxHp
             isHpFlat = update.isFlatHp

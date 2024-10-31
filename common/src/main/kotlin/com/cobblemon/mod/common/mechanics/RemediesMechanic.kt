@@ -8,14 +8,14 @@
 
 package com.cobblemon.mod.common.mechanics
 
-import com.bedrockk.molang.Expression
 import com.bedrockk.molang.runtime.MoLangRuntime
-import com.cobblemon.mod.common.util.asExpression
+import com.cobblemon.mod.common.api.molang.ExpressionLike
+import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.resolveInt
 
 class RemediesMechanic {
-    val healingAmounts = mutableMapOf<String, Expression>()
-    val friendshipDrop = "10".asExpression()
+    val healingAmounts = mutableMapOf<String, ExpressionLike>()
+    val friendshipDrop: ExpressionLike = "10".asExpressionLike()
 
     fun getHealingAmount(type: String, runtime: MoLangRuntime, default: Int = 20) = healingAmounts[type]?.let { runtime.resolveInt(it) } ?: default
     fun getFriendshipDrop(runtime: MoLangRuntime) = runtime.resolveInt(friendshipDrop)

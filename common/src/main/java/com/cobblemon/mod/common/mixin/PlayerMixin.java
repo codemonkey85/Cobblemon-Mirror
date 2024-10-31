@@ -12,72 +12,88 @@ import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.CobblemonItems;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
 import com.cobblemon.mod.common.api.events.item.LeftoversCreatedEvent;
-import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
+import com.cobblemon.mod.common.api.pokemon.PokemonSpecies;
 import com.cobblemon.mod.common.api.storage.party.PartyStore;
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags;
+import com.cobblemon.mod.common.pokedex.scanner.PokedexEntityData;
+import com.cobblemon.mod.common.pokedex.scanner.ScannableEntity;
+import com.cobblemon.mod.common.pokemon.FormData;
+import com.cobblemon.mod.common.pokemon.Gender;
 import com.cobblemon.mod.common.pokemon.Pokemon;
+import com.cobblemon.mod.common.pokemon.Species;
 import com.cobblemon.mod.common.util.CompoundTagExtensionsKt;
+import com.cobblemon.mod.common.util.CompoundTagUtilities;
 import com.cobblemon.mod.common.util.DataKeys;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
+import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-@Mixin(PlayerEntity.class)
-public abstract class PlayerMixin extends LivingEntity {
+@Mixin(Player.class)
+public abstract class PlayerMixin extends LivingEntity implements ScannableEntity {
 
-    @Shadow public abstract NbtCompound getShoulderEntityLeft();
+    @Shadow public abstract CompoundTag getShoulderEntityLeft();
 
-    @Shadow public abstract NbtCompound getShoulderEntityRight();
+    @Shadow public abstract CompoundTag getShoulderEntityRight();
 
-    @Shadow public abstract void dropShoulderEntity(NbtCompound entityNbt);
+    @Shadow public abstract void respawnEntityOnShoulder(CompoundTag entityNbt);
 
-    @Shadow public abstract void setShoulderEntityRight(NbtCompound entityNbt);
+    @Shadow public abstract void setShoulderEntityRight(CompoundTag entityNbt);
 
-    @Shadow public abstract void setShoulderEntityLeft(NbtCompound entityNbt);
+    @Shadow public abstract void setShoulderEntityLeft(CompoundTag entityNbt);
 
     @Shadow public abstract boolean isSpectator();
 
-    @Shadow public abstract boolean giveItemStack(ItemStack stack);
+    @Shadow public abstract boolean addItem(ItemStack stack);
 
-    @Shadow public abstract void sendMessage(Text message, boolean overlay);
+    @Shadow public abstract void displayClientMessage(Component message, boolean overlay);
 
 
-    protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, World p_20967_) {
+    protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
     }
 
-    @Inject(method = "dropShoulderEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityType;getEntityFromNbt(Lnet/minecraft/nbt/NbtCompound;Lnet/minecraft/world/World;)Ljava/util/Optional;"), cancellable = true)
-    private void cobblemon$removePokemon(NbtCompound nbt, CallbackInfo ci) {
+    @Inject(method = "respawnEntityOnShoulder", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;create(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/world/level/Level;)Ljava/util/Optional;"), cancellable = true)
+    private void cobblemon$removePokemon(CompoundTag nbt, CallbackInfo ci) {
         if (CompoundTagExtensionsKt.isPokemonEntity(nbt)) {
-            final UUID uuid = this.getPokemonID(nbt);
-            if (this.isShoulderPokemon(this.getShoulderEntityRight())) {
-                final UUID uuidRight = this.getPokemonID(this.getShoulderEntityRight());
+            final UUID uuid = CompoundTagUtilities.getPokemonID(nbt);
+            if (CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityRight())) {
+                final UUID uuidRight = CompoundTagUtilities.getPokemonID(this.getShoulderEntityRight());
                 if (uuid.equals(uuidRight)) {
                     this.recallPokemon(uuidRight);
-                    this.setShoulderEntityRight(new NbtCompound());
+                    this.setShoulderEntityRight(new CompoundTag());
                 }
             }
-            if (this.isShoulderPokemon(this.getShoulderEntityLeft())) {
-                final UUID uuidLeft = this.getPokemonID(this.getShoulderEntityLeft());
+            if (CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityLeft())) {
+                final UUID uuidLeft = CompoundTagUtilities.getPokemonID(this.getShoulderEntityLeft());
                 if (uuid.equals(uuidLeft)) {
                     this.recallPokemon(uuidLeft);
-                    this.setShoulderEntityLeft(new NbtCompound());
+                    this.setShoulderEntityLeft(new CompoundTag());
                 }
             }
             ci.cancel();
@@ -85,7 +101,7 @@ public abstract class PlayerMixin extends LivingEntity {
     }
 
     @Inject(
-        method = "dropShoulderEntities",
+        method = "removeEntitiesOnShoulder",
         at = @At(
             value = "JUMP",
             opcode = Opcodes.IFGE,
@@ -96,66 +112,112 @@ public abstract class PlayerMixin extends LivingEntity {
     )
     private void cobblemon$preventPokemonDropping(CallbackInfo ci) {
         // We want to allow both of these to forcefully remove the entities
-        if (this.isSpectator() || this.isDead())
+        if (this.isSpectator() || this.isDeadOrDying())
             return;
-        if (!this.isShoulderPokemon(this.getShoulderEntityLeft())) {
-            this.dropShoulderEntity(this.getShoulderEntityLeft());
-            this.setShoulderEntityLeft(new NbtCompound());
+        if (!CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityLeft())) {
+            this.respawnEntityOnShoulder(this.getShoulderEntityLeft());
+            this.setShoulderEntityLeft(new CompoundTag());
         }
-        if (!this.isShoulderPokemon(this.getShoulderEntityRight())) {
-            this.dropShoulderEntity(this.getShoulderEntityRight());
-            this.setShoulderEntityRight(new NbtCompound());
+        if (!CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityRight())) {
+            this.respawnEntityOnShoulder(this.getShoulderEntityRight());
+            this.setShoulderEntityRight(new CompoundTag());
         }
         ci.cancel();
     }
 
-    private UUID getPokemonID(NbtCompound nbt) {
-        return nbt.getCompound(DataKeys.POKEMON)
-                .getUuid(DataKeys.POKEMON_UUID);
-    }
-
     private void recallPokemon(UUID uuid) {
         // We need to do this cause the Entity doesn't store a reference to its storage
-        try {
-            final PartyStore party = Cobblemon.INSTANCE.getStorage().getParty(this.uuid);
-            for (Pokemon pokemon : party) {
-                if (pokemon.getUuid().equals(uuid)) {
-                    pokemon.recall();
-                }
+        final PartyStore party = Cobblemon.INSTANCE.getStorage().getParty(this.getUUID(), this.registryAccess());
+        for (Pokemon pokemon : party) {
+            if (pokemon.getUuid().equals(uuid)) {
+                pokemon.recall();
             }
-        } catch (NoPokemonStoreException ignored) {}
-    }
-
-    private boolean isShoulderPokemon(NbtCompound nbt) {
-        return CompoundTagExtensionsKt.isPokemonEntity(nbt);
+        }
     }
 
     @Inject(
-        method = "eatFood",
+        method = "eat",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/entity/player/PlayerEntity;getHungerManager()Lnet/minecraft/entity/player/HungerManager;",
+            target = "Lnet/minecraft/world/entity/player/Player;getFoodData()Lnet/minecraft/world/food/FoodData;",
             shift = At.Shift.AFTER
         )
     )
-    public void onEatFood(World world, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
-        if (!getWorld().isClient) {
-            if (stack.isIn(CobblemonItemTags.LEAVES_LEFTOVERS) && getWorld().random.nextDouble() < Cobblemon.config.getAppleLeftoversChance()) {
+    public void onEatFood(Level world, ItemStack stack, FoodProperties foodComponent, CallbackInfoReturnable<ItemStack> cir) {
+        if (!level().isClientSide) {
+            if (stack.is(CobblemonItemTags.LEAVES_LEFTOVERS) && level().random.nextDouble() < Cobblemon.config.getAppleLeftoversChance()) {
                 ItemStack leftovers = new ItemStack(CobblemonItems.LEFTOVERS);
-                ServerPlayerEntity player = Objects.requireNonNull(getServer()).getPlayerManager().getPlayer(uuid);
+                ServerPlayer player = Objects.requireNonNull(getServer()).getPlayerList().getPlayer(uuid);
                 assert player != null;
                 CobblemonEvents.LEFTOVERS_CREATED.postThen(
                     new LeftoversCreatedEvent(player, leftovers),
                     leftoversCreatedEvent -> null,
                     leftoversCreatedEvent -> {
-                        if(!player.giveItemStack(leftoversCreatedEvent.getLeftovers())) {
-                            var itemPos = player.getRotationVector().multiply(0.5).add(getPos());
-                            getWorld().spawnEntity(new ItemEntity(getWorld(), itemPos.getX(), itemPos.getY(), itemPos.getZ(), leftoversCreatedEvent.getLeftovers()));
+                        if(!player.addItem(leftoversCreatedEvent.getLeftovers())) {
+                            var itemPos = player.getLookAngle().scale(0.5f).add(position());
+                            level().addFreshEntity(new ItemEntity(level(), itemPos.x(), itemPos.y(), itemPos.z(), leftoversCreatedEvent.getLeftovers()));
                         }
                         return null;
                     }
                 );
             }
         }
+    }
+
+    @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
+    public void isInvulnerableTo(DamageSource source, CallbackInfoReturnable<Boolean> ci) {
+        if (!level().isClientSide) {
+            ServerPlayer player = (ServerPlayer)(Object)this;
+            boolean invulnerableInBattle = this.level().getGameRules().getBoolean(CobblemonGameRules.BATTLE_INVULNERABILITY);
+            boolean inBattle = Cobblemon.INSTANCE.getBattleRegistry().getBattleByParticipatingPlayer(player) != null;
+            if (invulnerableInBattle && inBattle) {
+                ci.setReturnValue(true);
+            }
+        }
+    }
+
+    @Override @Nullable
+    public PokedexEntityData resolvePokemonScan() {
+        if(CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityRight())){
+            return getDataFromShoulderPokemon(this.getShoulderEntityRight());
+        }
+        if(CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityLeft())){
+            return getDataFromShoulderPokemon(this.getShoulderEntityLeft());
+        }
+        return null;
+    }
+
+    @Nullable @Unique
+    private PokedexEntityData getDataFromShoulderPokemon(CompoundTag shoulderTag) {
+        CompoundTag pokemonTag = shoulderTag.getCompound(DataKeys.POKEMON);
+        if(pokemonTag.isEmpty()) return null;
+        Species species = PokemonSpecies.INSTANCE.getByIdentifier(ResourceLocation.parse(pokemonTag.getString(DataKeys.POKEMON_SPECIES_IDENTIFIER)));
+        if(species == null) return null;
+        String formId = pokemonTag.getString(DataKeys.POKEMON_FORM_ID);
+        FormData form = species.getStandardForm();
+        List<FormData> formList = species.getForms().stream().filter(it -> it.formOnlyShowdownId().equals(formId)).toList();
+        if(!formList.isEmpty()) form = formList.getFirst();
+        if(form == null) return null;
+        String genderString = pokemonTag.getString(DataKeys.POKEMON_GENDER);
+        if(genderString.isEmpty()) return null;
+        Gender gender = Gender.valueOf(genderString);
+        boolean shiny = pokemonTag.getBoolean(DataKeys.POKEMON_SHINY);
+        int level = pokemonTag.getInt(DataKeys.POKEMON_LEVEL);
+        Set<String> aspects = shoulderTag.getList(DataKeys.SHOULDER_ASPECTS, Tag.TAG_STRING).stream().map(Tag::getAsString).collect(Collectors.toSet());
+
+        return new PokedexEntityData(
+                species,
+                form,
+                gender,
+                aspects,
+                shiny,
+                level,
+                this.getUUID()
+        );
+    }
+
+    @Override
+    public LivingEntity resolveEntityScan() {
+        return this;
     }
 }

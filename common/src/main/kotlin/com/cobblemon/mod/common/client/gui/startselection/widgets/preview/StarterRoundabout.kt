@@ -10,11 +10,11 @@ package com.cobblemon.mod.common.client.gui.startselection.widgets.preview
 
 import com.cobblemon.mod.common.client.gui.drawProfilePokemon
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
+import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.Text
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
@@ -32,20 +32,20 @@ class StarterRoundabout(
     var pokemon: RenderablePokemon,
     private val clickAction: (mouseX: Double, mouseY: Double) -> Unit = { _, _ -> },
     private val rotationVector: Vector3f
-): SoundlessWidget(pX, pY, pWidth, pHeight, Text.literal("StarterRoundabout")) {
-
+): SoundlessWidget(pX, pY, pWidth, pHeight, Component.literal("StarterRoundabout")) {
+    val state = FloatingState()
     companion object {
         const val MODEL_WIDTH = 30
         const val MODEL_HEIGHT = 30
     }
 
-    override fun renderButton(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (!this.visible) {
             return
         }
-        val matrices = context.matrices
-        this.hovered = mouseX >= this.x && mouseX < this.x + this.width && mouseY >= (this.y - MODEL_HEIGHT) && mouseY < this.y
-        matrices.push()
+        val matrices = context.pose()
+        this.isHovered = mouseX >= this.x && mouseX < this.x + this.width && mouseY >= (this.y - MODEL_HEIGHT) && mouseY < this.y
+        matrices.pushPose()
         /*
          * This correction term is due to where scaling comes from in a render. We are giving the drawProfilePokemon
          * a different scale to usual, which means our position offsets that were used in the summary GUI (which is
@@ -69,14 +69,14 @@ class StarterRoundabout(
             renderablePokemon = pokemon,
             matrixStack = matrices,
             rotation = Quaternionf().fromEulerXYZDegrees(rotationVector),
-            state = null,
+            state = state,
             scale = 18F,
             partialTicks = delta
         )
 
         context.disableScissor()
 
-        matrices.pop()
+        matrices.popPose()
     }
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
@@ -87,7 +87,7 @@ class StarterRoundabout(
     }
 
     override fun clicked(mouseX: Double, mouseY: Double): Boolean {
-        return this.active && this.visible && this.hovered
+        return this.active && this.visible && this.isHovered()
     }
 
     override fun onClick(mouseX: Double, mouseY: Double) {

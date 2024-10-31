@@ -8,14 +8,8 @@
   "battle.pvw.default": {
     "sounds": []
   },
-  "healing_machine.active": {
-    "sounds": [ "cobblemon:block/healing_machine_active" ]
-  },
-  "mulch.place": {
-    "sounds": [ "cobblemon:block/mulch_place_1", "cobblemon:block/mulch_place_2", "cobblemon:block/mulch_place_3" ]
-  },
-  "mulch.remove": {
-    "sounds": [ "cobblemon:block/mulch_remove_1", "cobblemon:block/mulch_remove_2", "cobblemon:block/mulch_remove_3" ]
+  "entity.villager.work_nurse": {
+    "sounds": [ { "name":  "cobblemon:entity/villager/work_nurse", "volume":  0.8 } ]
   },
   "pc.on": {
     "sounds": [ "cobblemon:pc/pc_on" ]
@@ -24,10 +18,10 @@
     "sounds": [ "cobblemon:pc/pc_off" ]
   },
   "pc.grab": {
-    "sounds": [ "cobblemon:pc/pc_grab" ]
+    "sounds": [ { "name":  "cobblemon:pc/pc_grab", "volume":  0.7 }  ]
   },
   "pc.drop": {
-    "sounds": [ "cobblemon:pc/pc_drop" ]
+    "sounds": [ { "name": "cobblemon:pc/pc_drop", "volume":  0.7 } ]
   },
   "pc.release": {
     "sounds": [ "cobblemon:pc/pc_release" ]
@@ -48,87 +42,179 @@
   "poke_ball.open": {
     "sounds": [ "cobblemon:pokeball/open" ]
   },
+  "poke_ball.shiny_open": {
+    "sounds": [ "cobblemon:pokeball/shiny_open" ]
+  },
   "poke_ball.recall": {
-    "sounds": [ "cobblemon:pokeball/recall" ]
+    "sounds": [ { "name": "cobblemon:pokeball/recall", "volume":  0.7 } ]
   },
   "poke_ball.send_out": {
-    "sounds": [ "cobblemon:pokeball/send_out" ]
+    "sounds": [ { "name": "cobblemon:pokeball/send_out", "volume":  0.7 } ]
+  },
+  "poke_ball.shiny_send_out": {
+    "sounds": [ { "name": "cobblemon:pokeball/send_out_shiny", "volume":  0.7 } ]
   },
   "poke_ball.hit": {
     "sounds": [ "cobblemon:pokeball/hit" ]
   },
   "poke_ball.throw": {
     "sounds": [
-      "cobblemon:pokeball/throw_1",
-        "cobblemon:pokeball/throw_2",
-        "cobblemon:pokeball/throw_3",
-        "cobblemon:pokeball/throw_4"
+      { "name": "cobblemon:pokeball/throw_1", "volume": 0.8 },
+      { "name": "cobblemon:pokeball/throw_2", "volume": 0.8 },
+      { "name": "cobblemon:pokeball/throw_3", "volume": 0.8 },
+      { "name": "cobblemon:pokeball/throw_4", "volume": 0.8 }
     ]
   },
   "poke_ball.trail": {
-    "sounds": [ "cobblemon:pokeball/trail" ]
+    "sounds": [ { "name": "cobblemon:pokeball/trail", "volume":  0.8 } ]
   },
   "item.use": {
     "sounds": [ "cobblemon:use_item" ]
   },
-  "pokemon.can_evolve": {
-    "sounds": [ "cobblemon:pokemon/evolution_notification"]
+  "item.pokedex.open": {
+    "sounds": [ { "name": "cobblemon:item/pokedex/pokedex_open", "volume": 1.0 } ]
   },
-  "evolution.evolve": {
-    "sounds": []
+  "item.pokedex.close": {
+    "sounds": [ { "name": "cobblemon:item/pokedex/pokedex_close", "volume": 1.0 } ]
   },
-  "evolution.evolving": {
-    "sounds": ["cobblemon:evolution/evolve_full"]
+  "item.pokedex.click": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_click" ]
+  },
+  "item.pokedex.click_short": {
+    "sounds": [ "cobblemon:item/pokedex/pokedex_click_short" ]
+  },
+  "item.pokedex.scan_open": {
+    "sounds": [ { "name": "cobblemon:item/pokedex/pokedex_scan_open", "volume": 1.0 } ]
+  },
+  "item.pokedex.scan_close": {
+    "sounds": [ { "name": "cobblemon:item/pokedex/pokedex_scan_close", "volume": 1.0 } ]
+  },
+  "item.pokedex.scan_loop": {
+    "sounds": [ { "name": "cobblemon:item/pokedex/pokedex_scan_loop", "volume": 0.2 } ]
+  },
+  "item.pokedex.scan_detail": {
+    "sounds": [ { "name": "cobblemon:item/pokedex/pokedex_scan_detail", "volume": 1.0 } ]
+  },
+  "item.pokedex.scan_register_pokemon": {
+    "sounds": [ { "name": "cobblemon:item/pokedex/pokedex_scan_register_pokemon", "volume": 1.0 } ]
+  },
+  "item.pokedex.scan_register_aspect": {
+    "sounds": [ { "name": "cobblemon:item/pokedex/pokedex_scan_register_aspect", "volume": 1.0 } ]
+  },
+  "item.pokedex.scan_zoom_increment": {
+    "sounds": [ { "name": "cobblemon:item/pokedex/pokedex_scan_zoom_increment", "volume": 0.6 } ]
+  },
+  "evolution.notification": {
+    "sounds": [ { "name": "cobblemon:evolution/evolution_notification", "volume": 0.7 } ]
+  },
+  "evolution.full": {
+    "sounds": [ "cobblemon:evolution/evolution_full" ]
+  },
+  "evolution.ui": {
+    "sounds": [ { "name": "cobblemon:evolution/evolution_ui", "volume": 0.2 } ]
   },
   "gui.click": {
     "sounds": [ "cobblemon:click" ]
   },
-  "medicine_herb.use": {
-    "sounds": [ "cobblemon:medicine_herb_use" ]
+  "item.medicine.herb.use": {
+    "sounds": [ "cobblemon:item/medicine/medicine_herb_use" ]
   },
-  "medicine_liquid.use": {
-    "sounds": [ "cobblemon:medicine_liquid_use" ]
+  "item.medicine.liquid.use": {
+    "sounds": [ "cobblemon:item/medicine/medicine_liquid_use" ]
   },
-  "medicine_pills.use": {
-    "sounds": [ "cobblemon:medicine_pills_use" ]
+  "item.medicine.pills.use": {
+    "sounds": [ "cobblemon:item/medicine/medicine_pills_use" ]
   },
-  "medicine_spray.use": {
-    "sounds": [ "cobblemon:medicine_spray_use" ]
+  "item.medicine.spray.use": {
+    "sounds": [ "cobblemon:item/medicine/medicine_spray_use" ]
   },
-  "medicine_feather.use": {
-    "sounds": [ "cobblemon:medicine_feather_use" ]
+  "item.medicine.feather.use": {
+    "sounds": [ "cobblemon:item/medicine/medicine_feather_use" ]
   },
-  "berry.harvest": {
-    "sounds": [ "cobblemon:block/berry_harvest_1", "cobblemon:block/berry_harvest_2", "cobblemon:block/berry_harvest_3" ]
+  "item.berry.eat": {
+    "sounds": [ "cobblemon:item/berry/berry_eat" ]
   },
-  "berry.eat": {
-    "sounds": [ "cobblemon:berry_eat" ]
+  "fishing.notification": {
+    "sounds": [
+      "cobblemon:fishing/fishing_notification_1",
+      "cobblemon:fishing/fishing_notification_2",
+      "cobblemon:fishing/fishing_notification_3",
+      "cobblemon:fishing/fishing_notification_4"
+    ]
   },
-  "fossil_machine.activate": {
+  "fishing.splash_small": {
+    "sounds": [
+      "cobblemon:fishing/fishing_splash_small_1",
+      "cobblemon:fishing/fishing_splash_small_2",
+      "cobblemon:fishing/fishing_splash_small_3"
+    ]
+  },
+  "fishing.splash_big": {
+    "sounds": [
+      "cobblemon:fishing/fishing_splash_big_1",
+      "cobblemon:fishing/fishing_splash_big_2",
+      "cobblemon:fishing/fishing_splash_big_3"
+    ]
+  },
+  "fishing.rod_cast": {
+    "sounds": [
+      "cobblemon:fishing/fishing_rod_cast_1",
+      "cobblemon:fishing/fishing_rod_cast_2",
+      "cobblemon:fishing/fishing_rod_cast_3"
+    ]
+  },
+  "fishing.rod_reel_in": {
+    "sounds": [
+      "cobblemon:fishing/fishing_rod_reel_in_1",
+      "cobblemon:fishing/fishing_rod_reel_in_2",
+      "cobblemon:fishing/fishing_rod_reel_in_3"
+    ]
+  },
+  "fishing.bobber_land": {
+    "sounds": [
+      { "name": "cobblemon:fishing/fishing_bobber_land_1", "volume": 0.5 },
+      { "name": "cobblemon:fishing/fishing_bobber_land_2", "volume": 0.5 },
+      { "name": "cobblemon:fishing/fishing_bobber_land_3", "volume": 0.5 }
+    ]
+  },
+  "fishing.bait_attach": {
+    "sounds": [
+      "cobblemon:fishing/fishing_rod_attach_bait"
+    ]
+  },
+  "fishing.bait_detach": {
+    "sounds": [
+      "cobblemon:fishing/fishing_rod_remove_bait"
+    ]
+  },
+  "block.healing_machine.active": {
+    "sounds": [ "cobblemon:block/healing_machine/healing_machine_active" ]
+  },
+  "block.fossil_machine.activate": {
     "subtitle": "cobblemon.subtitle.fossilmachine.activate",
     "sounds": [ { "name": "cobblemon:block/fossil_machine/fossil_machine_activate", "volume": 0.8 } ]
   },
-  "fossil_machine.active_loop": {
+  "block.fossil_machine.active_loop": {
     "subtitle": "cobblemon.subtitle.fossilmachine.active_loop",
     "sounds": [ { "name": "cobblemon:block/fossil_machine/fossil_machine_active_loop", "volume": 0.6 } ]
   },
-  "fossil_machine.assemble": {
+  "block.fossil_machine.assemble": {
     "subtitle": "cobblemon.subtitle.fossilmachine.assemble",
     "sounds": [ { "name": "cobblemon:block/fossil_machine/fossil_machine_assemble", "volume": 0.3 } ]
   },
-  "fossil_machine.dna_full": {
+  "block.fossil_machine.dna_full": {
     "subtitle": "cobblemon.subtitle.fossilmachine.dna_full",
     "sounds": [ "cobblemon:block/fossil_machine/fossil_machine_dna_full" ]
   },
-  "fossil_machine.finished": {
+  "block.fossil_machine.finished": {
     "subtitle": "cobblemon.subtitle.fossilmachine.finished",
     "sounds": [ "cobblemon:block/fossil_machine/fossil_machine_finished" ]
   },
-  "fossil_machine.insert_dna": {
+  "block.fossil_machine.insert_dna": {
     "subtitle": "cobblemon.subtitle.fossilmachine.insert_dna",
     "sounds": [ "cobblemon:block/fossil_machine/fossil_machine_insert_dna" ]
   },
-  "fossil_machine.insert_dna_small": {
+  "block.fossil_machine.insert_dna_small": {
     "subtitle": "cobblemon.subtitle.fossilmachine.insert_dna_small",
     "sounds": [
       { "name": "cobblemon:block/fossil_machine/fossil_machine_insert_dna_small_1", "volume": 0.7 },
@@ -137,29 +223,29 @@
       { "name": "cobblemon:block/fossil_machine/fossil_machine_insert_dna_small_4", "volume": 0.7 }
     ]
   },
-  "fossil_machine.insert_fossil": {
+  "block.fossil_machine.insert_fossil": {
     "subtitle": "cobblemon.subtitle.fossilmachine.insert_fossil",
     "sounds": [ "cobblemon:block/fossil_machine/fossil_machine_insert_fossil" ]
   },
-  "fossil_machine.retrieve_fossil": {
+  "block.fossil_machine.retrieve_fossil": {
     "subtitle": "cobblemon.subtitle.fossilmachine.retrieve_fossil",
     "sounds": [ "cobblemon:block/fossil_machine/fossil_machine_retrieve_fossil" ]
   },
-  "fossil_machine.retrieve_pokemon": {
+  "block.fossil_machine.retrieve_pokemon": {
     "subtitle": "cobblemon.subtitle.fossilmachine.retrieve_pokemon",
     "sounds": [ "cobblemon:block/fossil_machine/fossil_machine_retrieve_pokemon" ]
   },
-  "fossil_machine.unprotected": {
+  "block.fossil_machine.unprotected": {
     "subtitle": "cobblemon.subtitle.fossilmachine.unprotected",
     "sounds": [ "cobblemon:block/fossil_machine/fossil_machine_unprotected" ]
   },
-  "gimmighoul.give_item_small": {
-    "sounds": [ "cobblemon:gimmighoul_give_item_small" ]
+  "pokemon.gimmighoul.give_item": {
+    "sounds": [ "cobblemon:pokemon/gimmighoul/gimmighoul_give_item" ]
   },
-  "gimmighoul.reveal": {
-    "sounds": [ "cobblemon:gimmighoul_reveal" ]
+  "pokemon.gimmighoul.reveal": {
+    "sounds": [ "cobblemon:pokemon/gimmighoul/gimmighoul_reveal" ]
   },
-  "relic_coin_sack.break": {
+  "block.relic_coin_sack.break": {
     "sounds": [
       "cobblemon:block/relic_coin_sack/relic_coin_sack_break_1",
       "cobblemon:block/relic_coin_sack/relic_coin_sack_break_2",
@@ -167,7 +253,7 @@
       "cobblemon:block/relic_coin_sack/relic_coin_sack_break_4"
     ]
   },
-  "relic_coin_sack.hit": {
+  "block.relic_coin_sack.hit": {
     "sounds": [
       { "name": "cobblemon:block/relic_coin_sack/relic_coin_sack_hit_1", "volume": 0.5 },
       { "name": "cobblemon:block/relic_coin_sack/relic_coin_sack_hit_2", "volume": 0.5 },
@@ -175,7 +261,7 @@
       { "name": "cobblemon:block/relic_coin_sack/relic_coin_sack_hit_4", "volume": 0.5 }
     ]
   },
-  "relic_coin_sack.place": {
+  "block.relic_coin_sack.place": {
     "sounds": [
       "cobblemon:block/relic_coin_sack/relic_coin_sack_place_1",
       "cobblemon:block/relic_coin_sack/relic_coin_sack_place_2",
@@ -183,7 +269,7 @@
       "cobblemon:block/relic_coin_sack/relic_coin_sack_place_4"
     ]
   },
-  "relic_coin_sack.step": {
+  "block.relic_coin_sack.step": {
     "sounds": [
       "cobblemon:block/relic_coin_sack/relic_coin_sack_step_1",
       "cobblemon:block/relic_coin_sack/relic_coin_sack_step_2",
@@ -191,7 +277,7 @@
       "cobblemon:block/relic_coin_sack/relic_coin_sack_step_4"
     ]
   },
-  "tumblestone.break": {
+  "block.tumblestone.break": {
     "sounds": [
       "cobblemon:block/tumblestone/tumblestone_break_1",
       "cobblemon:block/tumblestone/tumblestone_break_2",
@@ -199,7 +285,7 @@
       "cobblemon:block/tumblestone/tumblestone_break_4"
     ]
   },
-  "relic_coin_pouch.break": {
+  "block.relic_coin_pouch.break": {
     "sounds": [
       "cobblemon:block/relic_coin_pouch/relic_coin_pouch_break_1",
       "cobblemon:block/relic_coin_pouch/relic_coin_pouch_break_2",
@@ -207,7 +293,7 @@
       "cobblemon:block/relic_coin_pouch/relic_coin_pouch_break_4"
     ]
   },
-  "relic_coin_pouch.place": {
+  "block.relic_coin_pouch.place": {
     "sounds": [
       "cobblemon:block/relic_coin_pouch/relic_coin_pouch_place_1",
       "cobblemon:block/relic_coin_pouch/relic_coin_pouch_place_2",
@@ -215,7 +301,7 @@
       "cobblemon:block/relic_coin_pouch/relic_coin_pouch_place_4"
     ]
   },
-  "tumblestone.block_break": {
+  "block.tumblestone.block_break": {
     "sounds": [
       "cobblemon:block/tumblestone/tumblestone_block_break_1",
       "cobblemon:block/tumblestone/tumblestone_block_break_2",
@@ -223,7 +309,7 @@
       "cobblemon:block/tumblestone/tumblestone_block_break_4"
     ]
   },
-  "tumblestone.hit": {
+  "block.tumblestone.hit": {
     "sounds": [
       { "name": "cobblemon:block/tumblestone/tumblestone_hit_1", "volume": 0.8 },
       { "name": "cobblemon:block/tumblestone/tumblestone_hit_2", "volume": 0.8 },
@@ -231,15 +317,15 @@
       { "name": "cobblemon:block/tumblestone/tumblestone_hit_4", "volume": 0.8 }
     ]
   },
-  "tumblestone.place": {
+  "block.tumblestone.place": {
     "sounds": [
-      "cobblemon:block/tumblestone/tumblestone_place_1",
-      "cobblemon:block/tumblestone/tumblestone_place_2",
-      "cobblemon:block/tumblestone/tumblestone_place_3",
-      "cobblemon:block/tumblestone/tumblestone_place_4"
+      { "name": "cobblemon:block/tumblestone/tumblestone_place_1", "volume": 0.7 },
+      { "name": "cobblemon:block/tumblestone/tumblestone_place_2", "volume": 0.7 },
+      { "name": "cobblemon:block/tumblestone/tumblestone_place_3", "volume": 0.7 },
+      { "name": "cobblemon:block/tumblestone/tumblestone_place_4", "volume": 0.7 }
     ]
   },
-  "tumblestone.step": {
+  "block.tumblestone.step": {
     "sounds": [
       "cobblemon:block/tumblestone/tumblestone_step_1",
       "cobblemon:block/tumblestone/tumblestone_step_2",
@@ -247,29 +333,58 @@
       "cobblemon:block/tumblestone/tumblestone_step_4"
     ]
   },
-  "display_case.break": {
+  "block.evolution_stone_block.break": {
+    "sounds": [
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_break_1",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_break_2",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_break_3"
+    ]
+  },
+  "block.evolution_stone_block.hit": {
+    "sounds": [
+      { "name": "cobblemon:block/evolution_stone_block/evolution_stone_block_hit_1", "volume": 0.8 },
+      { "name": "cobblemon:block/evolution_stone_block/evolution_stone_block_hit_2", "volume": 0.8 },
+      { "name": "cobblemon:block/evolution_stone_block/evolution_stone_block_hit_3", "volume": 0.8 }
+    ]
+  },
+  "block.evolution_stone_block.place": {
+    "sounds": [
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_place_1",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_place_2",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_place_3"
+    ]
+  },
+  "block.evolution_stone_block.step": {
+    "sounds": [
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_step_1",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_step_2",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_step_3",
+      "cobblemon:block/evolution_stone_block/evolution_stone_block_step_4"
+    ]
+  },
+  "block.display_case.break": {
     "sounds": [
       "cobblemon:block/display_case/display_case_break_1",
       "cobblemon:block/display_case/display_case_break_2",
       "cobblemon:block/display_case/display_case_break_3"
     ]
   },
-  "display_case.hit": {
+  "block.display_case.hit": {
     "sounds": [
-      "cobblemon:block/display_case/display_case_hit_1",
-      "cobblemon:block/display_case/display_case_hit_2",
-      "cobblemon:block/display_case/display_case_hit_3",
-      "cobblemon:block/display_case/display_case_hit_4"
+      { "name": "cobblemon:block/display_case/display_case_hit_1", "volume": 0.8 },
+      { "name": "cobblemon:block/display_case/display_case_hit_2", "volume": 0.8 },
+      { "name": "cobblemon:block/display_case/display_case_hit_3", "volume": 0.8 },
+      { "name": "cobblemon:block/display_case/display_case_hit_4", "volume": 0.8 }
     ]
   },
-  "display_case.place": {
+  "block.display_case.place": {
     "sounds": [
       "cobblemon:block/display_case/display_case_place_1",
       "cobblemon:block/display_case/display_case_place_2",
       "cobblemon:block/display_case/display_case_place_3"
     ]
   },
-  "display_case.step": {
+  "block.display_case.step": {
     "sounds": [
       "cobblemon:block/display_case/display_case_step_1",
       "cobblemon:block/display_case/display_case_step_2",
@@ -277,129 +392,150 @@
       "cobblemon:block/display_case/display_case_step_4"
     ]
   },
-  "display_case.add_item": {
+  "block.display_case.add_item": {
     "sounds": [ "cobblemon:block/display_case/display_case_add_item" ]
   },
-  "display_case.remove_item": {
+  "block.display_case.remove_item": {
     "sounds": [ "cobblemon:block/display_case/display_case_remove_item" ]
   },
-  "berry_bush.break": {
+  "block.mulch.place": {
     "sounds": [
-      "cobblemon:block/plants/berry/berry_bush_break_1",
-      "cobblemon:block/plants/berry/berry_bush_break_2",
-      "cobblemon:block/plants/berry/berry_bush_break_3"
+      "cobblemon:block/mulch/mulch_place_1",
+      "cobblemon:block/mulch/mulch_place_2",
+      "cobblemon:block/mulch/mulch_place_3"
     ]
   },
-  "berry_bush.place": {
+  "block.mulch.remove": {
     "sounds": [
-      "cobblemon:block/plants/berry/berry_bush_place_1",
-      "cobblemon:block/plants/berry/berry_bush_place_2",
-      "cobblemon:block/plants/berry/berry_bush_place_3"
+      "cobblemon:block/mulch/mulch_remove_1",
+      "cobblemon:block/mulch/mulch_remove_2",
+      "cobblemon:block/mulch/mulch_remove_3"
     ]
   },
-  "big_root.break": {
+  "block.berry_bush.break": {
     "sounds": [
-      "cobblemon:block/plants/big_root/big_root_break_1",
-      "cobblemon:block/plants/big_root/big_root_break_2",
-      "cobblemon:block/plants/big_root/big_root_break_3"
+      "cobblemon:block/berry/berry_bush_break_1",
+      "cobblemon:block/berry/berry_bush_break_2",
+      "cobblemon:block/berry/berry_bush_break_3"
     ]
   },
-  "energy_root.place": {
+  "block.berry_bush.place": {
     "sounds": [
-      "cobblemon:block/plants/energy_root/energy_root_place_1",
-      "cobblemon:block/plants/energy_root/energy_root_place_2",
-      "cobblemon:block/plants/energy_root/energy_root_place_3"
+      { "name": "cobblemon:block/berry/berry_bush_place_1", "volume": 0.7 },
+      { "name": "cobblemon:block/berry/berry_bush_place_2", "volume": 0.7 },
+      { "name": "cobblemon:block/berry/berry_bush_place_3", "volume": 0.7 }
     ]
   },
-  "medicinal_leek.break": {
+  "block.berry_bush.harvest": {
     "sounds": [
-      "cobblemon:block/plants/medicinal_leek/medicinal_leek_break_1",
-      "cobblemon:block/plants/medicinal_leek/medicinal_leek_break_2",
-      "cobblemon:block/plants/medicinal_leek/medicinal_leek_break_3"
+      "cobblemon:block/berry/berry_bush_harvest_1",
+      "cobblemon:block/berry/berry_bush_harvest_2",
+      "cobblemon:block/berry/berry_bush_harvest_3"
     ]
   },
-  "medicinal_leek.plant": {
+  "block.big_root.break": {
     "sounds": [
-      "cobblemon:block/plants/medicinal_leek/medicinal_leek_plant_1",
-      "cobblemon:block/plants/medicinal_leek/medicinal_leek_plant_2",
-      "cobblemon:block/plants/medicinal_leek/medicinal_leek_plant_3"
+      "cobblemon:block/big_root/big_root_break_1",
+      "cobblemon:block/big_root/big_root_break_2",
+      "cobblemon:block/big_root/big_root_break_3"
     ]
   },
-  "vivichoke.break": {
+  "block.energy_root.place": {
     "sounds": [
-      "cobblemon:block/plants/vivichoke/vivichoke_break_1",
-      "cobblemon:block/plants/vivichoke/vivichoke_break_2",
-      "cobblemon:block/plants/vivichoke/vivichoke_break_3"
+      { "name": "cobblemon:block/energy_root/energy_root_place_1", "volume": 0.7 },
+      { "name": "cobblemon:block/energy_root/energy_root_place_2", "volume": 0.7 },
+      { "name": "cobblemon:block/energy_root/energy_root_place_3", "volume": 0.7 }
     ]
   },
-  "vivichoke.place": {
+  "block.medicinal_leek.break": {
     "sounds": [
-      "cobblemon:block/plants/vivichoke/vivichoke_place_1",
-      "cobblemon:block/plants/vivichoke/vivichoke_place_2",
-      "cobblemon:block/plants/vivichoke/vivichoke_place_3"
+      "cobblemon:block/medicinal_leek/medicinal_leek_break_1",
+      "cobblemon:block/medicinal_leek/medicinal_leek_break_2",
+      "cobblemon:block/medicinal_leek/medicinal_leek_break_3"
     ]
   },
-  "mint.break": {
+  "block.medicinal_leek.plant": {
     "sounds": [
-      "cobblemon:block/plants/mint/mint_break_1",
-      "cobblemon:block/plants/mint/mint_break_2",
-      "cobblemon:block/plants/mint/mint_break_3"
+      { "name": "cobblemon:block/medicinal_leek/medicinal_leek_plant_1", "volume": 0.6 },
+      { "name": "cobblemon:block/medicinal_leek/medicinal_leek_plant_2", "volume": 0.6 },
+      { "name": "cobblemon:block/medicinal_leek/medicinal_leek_plant_3", "volume": 0.6 }
     ]
   },
-  "mint.place": {
+  "block.vivichoke.break": {
     "sounds": [
-      "cobblemon:block/plants/mint/mint_place_1",
-      "cobblemon:block/plants/mint/mint_place_2",
-      "cobblemon:block/plants/mint/mint_place_3"
+      "cobblemon:block/vivichoke/vivichoke_break_1",
+      "cobblemon:block/vivichoke/vivichoke_break_2",
+      "cobblemon:block/vivichoke/vivichoke_break_3"
     ]
   },
-  "revival_herb.break": {
+  "block.vivichoke.place": {
     "sounds": [
-      "cobblemon:block/plants/revival_herb/revival_herb_break_1",
-      "cobblemon:block/plants/revival_herb/revival_herb_break_2",
-      "cobblemon:block/plants/revival_herb/revival_herb_break_3"
+      { "name": "cobblemon:block/vivichoke/vivichoke_place_1", "volume": 0.7 },
+      { "name": "cobblemon:block/vivichoke/vivichoke_place_2", "volume": 0.7 },
+      { "name": "cobblemon:block/vivichoke/vivichoke_place_3", "volume": 0.7 }
     ]
   },
-  "revival_herb.place": {
+  "block.mint.break": {
     "sounds": [
-      "cobblemon:block/plants/revival_herb/revival_herb_place_1",
-      "cobblemon:block/plants/revival_herb/revival_herb_place_2",
-      "cobblemon:block/plants/revival_herb/revival_herb_place_3"
+      { "name": "cobblemon:block/mint/mint_break_1", "volume": 0.6 },
+      { "name": "cobblemon:block/mint/mint_break_2", "volume": 0.6 },
+      { "name": "cobblemon:block/mint/mint_break_3", "volume": 0.6 }
     ]
   },
-  "gilded_chest.break": {
+  "block.mint.place": {
+    "sounds": [
+      { "name": "cobblemon:block/mint/mint_place_1", "volume": 0.4 },
+      { "name": "cobblemon:block/mint/mint_place_2", "volume": 0.4 },
+      { "name": "cobblemon:block/mint/mint_place_3", "volume": 0.4 }
+    ]
+  },
+  "block.revival_herb.break": {
+    "sounds": [
+      { "name": "cobblemon:block/revival_herb/revival_herb_break_1", "volume": 0.5 },
+      { "name": "cobblemon:block/revival_herb/revival_herb_break_2", "volume": 0.5 },
+      { "name": "cobblemon:block/revival_herb/revival_herb_break_3", "volume": 0.5 }
+    ]
+  },
+  "block.revival_herb.place": {
+    "sounds": [
+      { "name": "cobblemon:block/revival_herb/revival_herb_place_1", "volume": 0.4 },
+      { "name": "cobblemon:block/revival_herb/revival_herb_place_2", "volume": 0.4 },
+      { "name": "cobblemon:block/revival_herb/revival_herb_place_3", "volume": 0.4 }
+    ]
+  },
+  "block.gilded_chest.break": {
     "sounds": [
       "cobblemon:block/gilded_chest/gilded_chest_break_1",
       "cobblemon:block/gilded_chest/gilded_chest_break_2",
       "cobblemon:block/gilded_chest/gilded_chest_break_3"
     ]
   },
-  "gilded_chest.close": {
+  "block.gilded_chest.close": {
     "sounds": [
       "cobblemon:block/gilded_chest/gilded_chest_close"
     ]
   },
-  "gilded_chest.open": {
+  "block.gilded_chest.open": {
     "sounds": [
       "cobblemon:block/gilded_chest/gilded_chest_open"
     ]
   },
-  "gilded_chest.hit": {
+  "block.gilded_chest.hit": {
     "sounds": [
-      "cobblemon:block/gilded_chest/gilded_chest_hit_1",
-      "cobblemon:block/gilded_chest/gilded_chest_hit_2",
-      "cobblemon:block/gilded_chest/gilded_chest_hit_3",
-      "cobblemon:block/gilded_chest/gilded_chest_hit_4"
+      { "name": "cobblemon:block/gilded_chest/gilded_chest_hit_1", "volume": 0.8 },
+      { "name": "cobblemon:block/gilded_chest/gilded_chest_hit_2", "volume": 0.8 },
+      { "name": "cobblemon:block/gilded_chest/gilded_chest_hit_3", "volume": 0.8 },
+      { "name": "cobblemon:block/gilded_chest/gilded_chest_hit_4", "volume": 0.8 }
     ]
   },
-  "gilded_chest.place": {
+  "block.gilded_chest.place": {
     "sounds": [
       "cobblemon:block/gilded_chest/gilded_chest_place_1",
       "cobblemon:block/gilded_chest/gilded_chest_place_2",
       "cobblemon:block/gilded_chest/gilded_chest_place_3"
     ]
   },
-  "gilded_chest.step": {
+  "block.gilded_chest.step": {
     "sounds": [
       "cobblemon:block/gilded_chest/gilded_chest_step_1",
       "cobblemon:block/gilded_chest/gilded_chest_step_2",
@@ -408,297 +544,332 @@
     ]
   },
   "move.flamethrower.actor": {
-    "sounds": [ { "name": "cobblemon:attacks/flamethrower/flamethrower_cast", "volume": 0.8 } ]
+    "sounds": [ { "name": "cobblemon:move/flamethrower/flamethrower_actor", "volume": 0.8 } ]
   },
-  "move.flamethrower.impact": {
-    "sounds": [ { "name": "cobblemon:attacks/flamethrower/flamethrower_impact", "volume": 0.8 } ]
+  "move.flamethrower.target": {
+    "sounds": [ { "name": "cobblemon:move/flamethrower/flamethrower_target", "volume": 0.8 } ]
   },
   "move.sandattack.actor": {
-    "sounds": [ { "name": "cobblemon:attacks/sandattack/sand_attack_actor", "volume": 0.8 } ]
+    "sounds": [ { "name": "cobblemon:move/sandattack/sand_attack_actor", "volume": 0.8 } ]
   },
   "move.sandattack.target": {
-    "sounds": [ { "name": "cobblemon:attacks/sandattack/sand_attack_target", "volume": 0.8 } ]
+    "sounds": [ { "name": "cobblemon:move/sandattack/sand_attack_target", "volume": 0.8 } ]
   },
   "move.confusion.actor": {
-    "sounds": [ { "name": "cobblemon:attacks/confusion/confusion_actor", "volume": 0.9 } ]
+    "sounds": [ { "name": "cobblemon:move/confusion/confusion_actor", "volume": 0.9 } ]
   },
   "move.confusion.target": {
-      "sounds": [ { "name": "cobblemon:attacks/confusion/confusion_target", "volume": 0.8 } ]
+      "sounds": [ { "name": "cobblemon:move/confusion/confusion_target", "volume": 0.8 } ]
   },
   "move.swordsdance.actor": {
-    "sounds": [ { "name": "cobblemon:attacks/swordsdance/swords_dance_actor", "volume": 0.8 } ]
+    "sounds": [ { "name": "cobblemon:move/swordsdance/swords_dance_actor", "volume": 0.8 } ]
   },
   "move.thunderwave.actor": {
-    "sounds": [ { "name": "cobblemon:attacks/thunderwave/thunder_wave_actor", "volume": 0.8 } ]
+    "sounds": [ { "name": "cobblemon:move/thunderwave/thunder_wave_actor", "volume": 0.8 } ]
   },
   "move.thunderwave.target": {
-      "sounds": [ { "name": "cobblemon:attacks/thunderwave/thunder_wave_target", "volume": 0.8 } ]
+      "sounds": [ { "name": "cobblemon:move/thunderwave/thunder_wave_target", "volume": 0.8 } ]
   },
   "move.protect.actor": {
-    "sounds": [ { "name": "cobblemon:attacks/protect/protect_actor", "volume": 0.8 } ]
+    "sounds": [ { "name": "cobblemon:move/protect/protect_actor", "volume": 0.8 } ]
   },
-  "move.mudsport.actor": {
-    "sounds": [ { "name": "cobblemon:attacks/mudsport/mud_sport_actor", "volume": 0.8 } ]
+  "move.powder.actor": {
+    "sounds": [ { "name": "cobblemon:move/powder/powder_actor", "volume": 1.0 } ]
   },
-  "move.watersport.actor": {
-    "sounds": [ { "name": "cobblemon:attacks/watersport/water_sport_actor", "volume": 0.8 } ]
+  "move.powder.target": {
+    "sounds": [ { "name": "cobblemon:move/powder/powder_target", "volume": 1.0 } ]
   },
-  "effective": {
-    "sounds": [ "cobblemon:effective" ]
+  "move.poisonpowder.actor": {
+    "sounds": [ { "name": "cobblemon:move/poison_powder/poison_powder_actor", "volume": 1.0 } ]
   },
-  "notveryeffective": {
-    "sounds": [ "cobblemon:notveryeffective" ]
+  "move.poisonpowder.target": {
+    "sounds": [ { "name": "cobblemon:move/powder/powder_target", "volume": 1.0 } ]
   },
-  "supereffective": {
-      "sounds": [ "cobblemon:supereffective" ]
+  "move.sleeppowder.actor": {
+    "sounds": [ { "name": "cobblemon:move/sleep_powder/sleep_powder_actor", "volume": 1.0 } ]
+  },
+  "move.sleeppowder.target": {
+    "sounds": [ { "name": "cobblemon:move/powder/powder_target", "volume": 1.0 } ]
+  },
+  "move.stunspore.actor": {
+    "sounds": [ { "name": "cobblemon:move/stun_spore/stun_spore_actor", "volume": 1.0 } ]
+  },
+  "move.stunspore.target": {
+    "sounds": [ { "name": "cobblemon:move/powder/powder_target", "volume": 1.0 } ]
+  },
+  "move.ragepowder.actor": {
+    "sounds": [ { "name": "cobblemon:move/powder/powder_actor", "volume": 1.0 } ]
+  },
+  "move.ragepowder.target": {
+    "sounds": [ { "name": "cobblemon:move/powder/powder_target", "volume": 1.0 } ]
+  },
+  "move.spore.actor": {
+    "sounds": [ { "name": "cobblemon:move/sleep_powder/sleep_powder_actor", "volume": 1.0 } ]
+  },
+  "move.spore.target": {
+    "sounds": [ { "name": "cobblemon:move/powder/powder_target", "volume": 1.0 } ]
+  },
+  "move.spore.mushroom": {
+    "sounds": [
+      { "name": "cobblemon:move/spore/spore_mushroom_1", "volume": 0.3 },
+      { "name": "cobblemon:move/spore/spore_mushroom_2", "volume": 0.1 },
+      { "name": "cobblemon:move/spore/spore_mushroom_3", "volume": 0.1 },
+      { "name": "cobblemon:move/spore/spore_mushroom_4", "volume": 0.1 }
+    ]
   },
   "impact.normal": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_8", "volume": 0.8 }
     ]
   },
   "impact.ice": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ice_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ice_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ice_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ice_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ice_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ice_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ice_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ice_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_ice_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ice_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ice_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ice_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ice_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ice_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ice_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ice_8", "volume": 0.8 }
     ]
   },
   "impact.water": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_water_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_water_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_water_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_water_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_water_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_water_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_water_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_water_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_water_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_water_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_water_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_water_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_water_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_water_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_water_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_water_8", "volume": 0.8 }
     ]
   },
   "impact.fire": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fire_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fire_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fire_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fire_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fire_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fire_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fire_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fire_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_fire_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fire_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fire_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fire_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fire_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fire_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fire_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fire_8", "volume": 0.8 }
     ]
   },
   "impact.electric": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_electric_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_electric_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_electric_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_electric_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_electric_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_electric_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_electric_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_electric_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_electric_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_electric_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_electric_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_electric_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_electric_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_electric_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_electric_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_electric_8", "volume": 0.8 }
     ]
   },
   "impact.grass": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_grass_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_grass_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_grass_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_grass_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_grass_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_grass_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_grass_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_grass_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_grass_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_grass_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_grass_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_grass_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_grass_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_grass_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_grass_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_grass_8", "volume": 0.8 }
     ]
   },
   "impact.fighting": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fighting_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fighting_8", "volume": 0.8 }
     ]
   },
   "impact.poison": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_poison_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_poison_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_poison_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_poison_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_poison_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_poison_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_poison_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_poison_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_poison_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_poison_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_poison_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_poison_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_poison_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_poison_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_poison_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_poison_8", "volume": 0.8 }
     ]
   },
   "impact.ground": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ground_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ground_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ground_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ground_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ground_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ground_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ground_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ground_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_ground_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ground_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ground_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ground_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ground_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ground_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ground_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ground_8", "volume": 0.8 }
     ]
   },
   "impact.flying": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_flying_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_flying_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_flying_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_flying_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_flying_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_flying_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_flying_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_flying_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_flying_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_flying_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_flying_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_flying_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_flying_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_flying_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_flying_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_flying_8", "volume": 0.8 }
     ]
   },
   "impact.psychic": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_psychic_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_psychic_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_psychic_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_psychic_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_psychic_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_psychic_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_psychic_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_psychic_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_psychic_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_psychic_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_psychic_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_psychic_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_psychic_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_psychic_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_psychic_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_psychic_8", "volume": 0.8 }
     ]
   },
   "impact.bug": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_bug_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_bug_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_bug_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_bug_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_bug_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_bug_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_bug_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_bug_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_bug_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_bug_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_bug_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_bug_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_bug_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_bug_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_bug_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_bug_8", "volume": 0.8 }
     ]
   },
   "impact.rock": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_rock_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_rock_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_rock_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_rock_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_rock_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_rock_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_rock_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_rock_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_rock_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_rock_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_rock_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_rock_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_rock_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_rock_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_rock_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_rock_8", "volume": 0.8 }
     ]
   },
   "impact.ghost": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ghost_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ghost_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ghost_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ghost_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ghost_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ghost_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ghost_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_ghost_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_ghost_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ghost_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ghost_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ghost_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ghost_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ghost_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ghost_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_ghost_8", "volume": 0.8 }
     ]
   },
   "impact.dragon": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dragon_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dragon_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dragon_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dragon_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dragon_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dragon_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dragon_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dragon_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_dragon_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_dragon_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_dragon_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_dragon_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_dragon_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_dragon_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_dragon_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_dragon_8", "volume": 0.8 }
     ]
   },
   "impact.dark": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dark_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dark_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dark_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dark_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dark_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dark_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dark_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_dark_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_dark_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_dark_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_dark_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_dark_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_dark_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_dark_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_dark_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_dark_8", "volume": 0.8 }
     ]
   },
   "impact.steel": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_steel_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_steel_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_steel_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_steel_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_steel_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_steel_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_steel_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_steel_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_steel_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_steel_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_steel_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_steel_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_steel_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_steel_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_steel_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_steel_8", "volume": 0.8 }
     ]
   },
   "impact.fairy": {
     "sounds": [
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fairy_1", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fairy_2", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fairy_3", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fairy_4", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fairy_5", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fairy_6", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fairy_7", "volume": 0.8 },
-      { "name": "cobblemon:attacks/impact_generic/impact_generic_fairy_8", "volume": 0.8 }
+      { "name": "cobblemon:move/impact_generic/impact_generic_fairy_1", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fairy_2", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fairy_3", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fairy_4", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fairy_5", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fairy_6", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fairy_7", "volume": 0.8 },
+      { "name": "cobblemon:move/impact_generic/impact_generic_fairy_8", "volume": 0.8 }
     ]
   },
-  "status.paralysis.actor": {
-    "sounds": [ { "name": "cobblemon:attacks/status/status_paralysis_actor", "volume": 0.8 } ]
+  "status.nonvolatile.paralysis.actor": {
+    "sounds": [ { "name": "cobblemon:status/nonvolatile/status_paralysis_actor", "volume": 0.8 } ]
   },
-  "status.poison.actor": {
-    "sounds": [ { "name": "cobblemon:attacks/status/status_poison_actor", "volume": 0.8 } ]
+  "status.nonvolatile.poison.actor": {
+    "sounds": [ { "name": "cobblemon:status/nonvolatile/status_poison_actor", "volume": 0.8 } ]
   },
-  "status.badlypoison.actor": {
-    "sounds": [ { "name": "cobblemon:attacks/status/status_toxpoison_actor", "volume": 0.8 } ]
+  "status.nonvolatile.toxpoison.actor": {
+    "sounds": [ { "name": "cobblemon:status/nonvolatile/status_toxpoison_actor", "volume": 0.8 } ]
   },
-  "powder.poison.actor": {
-    "sounds": [ { "name": "cobblemon:attacks/powder_attacks/poison_powder_actor", "volume": 1.0 } ]
+  "particle.shiny_chime": {
+    "subtitle": "cobblemon.subtitle.pokemon.shiny_shine",
+    "sounds": [
+      { "name": "cobblemon:shiny/shiny_appear_chime", "volume": 0.6 }
+    ]
   },
-  "powder.sleep.actor": {
-      "sounds": [ { "name": "cobblemon:attacks/powder_attacks/sleep_powder_actor", "volume": 1.0 } ]
+  "particle.wild_shiny_chime": {
+    "subtitle": "cobblemon.subtitle.pokemon.wild_shiny_shine",
+    "sounds": [
+      { "name": "cobblemon:shiny/wild_shiny_appear_chime", "volume": 2.0 }
+    ]
   },
-  "powder.stun.actor": {
-      "sounds": [ { "name": "cobblemon:attacks/powder_attacks/stun_spore_actor", "volume": 1.0 } ]
+  "particle.shiny_ambient_chime": {
+    "sounds": [
+      { "name": "cobblemon:shiny/shiny_ambient_chime_1", "volume": 0.05 },
+      { "name": "cobblemon:shiny/shiny_ambient_chime_2", "volume": 0.05 },
+      { "name": "cobblemon:shiny/shiny_ambient_chime_3", "volume": 0.05 },
+      { "name": "cobblemon:shiny/shiny_ambient_chime_4", "volume": 0.05 }
+    ]
   },
-  "powder.generic.actor": {
-      "sounds": [ { "name": "cobblemon:attacks/powder_attacks/generic_powder_actor", "volume": 1.0 } ]
-  },
-  "powder.generic.target": {
-      "sounds": [ { "name": "cobblemon:attacks/powder_attacks/generic_powder_target", "volume": 1.0 } ]
-  },
-  "powder.spore.mushroom": {
-      "sounds": [
-        { "name": "cobblemon:attacks/powder_attacks/spore_mushroom_1", "volume": 0.3 },
-        { "name": "cobblemon:attacks/powder_attacks/spore_mushroom_2", "volume": 0.1 },
-        { "name": "cobblemon:attacks/powder_attacks/spore_mushroom_3", "volume": 0.1 },
-        { "name": "cobblemon:attacks/powder_attacks/spore_mushroom_4", "volume": 0.1 }
-      ]
+  "particle.wild_shiny_ambient_chime": {
+    "subtitle": "cobblemon.subtitle.pokemon.shiny_ambient",
+    "sounds": [
+      { "name": "cobblemon:shiny/wild_shiny_ambient_chime_1", "volume": 1.5 },
+      { "name": "cobblemon:shiny/wild_shiny_ambient_chime_2", "volume": 1.5 },
+      { "name": "cobblemon:shiny/wild_shiny_ambient_chime_3", "volume": 1.5 },
+      { "name": "cobblemon:shiny/wild_shiny_ambient_chime_4", "volume": 1.5 }
+    ]
   },
   "pokemon.bulbasaur.ambient": {
     "sounds": [ "cobblemon:pokemon/bulbasaur/bulbasaur_ambient" ]

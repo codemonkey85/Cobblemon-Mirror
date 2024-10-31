@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.api.moves.animations.keyframes
 import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
 import com.cobblemon.mod.common.api.moves.animations.ActionEffects
 import java.util.concurrent.CompletableFuture
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 
 /**
  * An action effect keyframe that simply runs another action effect based on an identifier. This action
@@ -22,7 +22,7 @@ import net.minecraft.util.Identifier
  * @since January 21st, 2024
  */
 class RunActionEffectKeyframe : ConditionalActionEffectKeyframe() {
-    val actionEffect: Identifier? = null
+    val actionEffect: ResourceLocation? = null
     val waitForActionEffect = true
     override fun playWhenTrue(context: ActionEffectContext): CompletableFuture<Unit> {
         return if (actionEffect != null) {

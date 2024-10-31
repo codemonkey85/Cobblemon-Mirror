@@ -9,85 +9,67 @@
 package com.cobblemon.mod.common.client.render
 
 import com.cobblemon.mod.common.api.gui.drawText
+import com.cobblemon.mod.common.api.gui.drawTextJustifiedRight
 import com.cobblemon.mod.common.api.text.font
 import com.cobblemon.mod.common.client.CobblemonResources
 import com.mojang.blaze3d.platform.GlStateManager
+import com.mojang.blaze3d.platform.Lighting
 import com.mojang.blaze3d.systems.RenderSystem
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.render.DiffuseLighting
-import net.minecraft.client.render.OverlayTexture
-import net.minecraft.client.render.RenderLayer
-import net.minecraft.client.render.Tessellator
-import net.minecraft.client.render.VertexConsumer
-import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.VertexFormat
-import net.minecraft.client.render.VertexFormats
-import net.minecraft.client.render.model.json.ModelTransformationMode
-import net.minecraft.client.texture.SpriteAtlasTexture
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.item.ItemStack
-import net.minecraft.text.MutableText
-import net.minecraft.text.OrderedText
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.RotationAxis
-import org.joml.Matrix3f
-import org.joml.Matrix4f
+import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.blaze3d.vertex.VertexConsumer
+import com.mojang.math.Axis
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.client.renderer.texture.TextureAtlas
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.FormattedCharSequence
+import net.minecraft.world.item.ItemDisplayContext
+import net.minecraft.world.item.ItemStack
 
-fun renderImage(texture: Identifier, x: Double, y: Double, height: Double, width: Double) {
-    val textureManager = MinecraftClient.getInstance().textureManager
-
-    val buffer = Tessellator.getInstance().buffer
-    buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE)
-    textureManager.bindTexture(texture)
-
-    buffer.vertex(x, y + height, 0.0).texture(0f, 1f).next()
-    buffer.vertex(x + width, y + height, 0.0).texture(1f, 1f).next()
-    buffer.vertex(x + width, y, 0.0).texture(1f, 0f).next()
-    buffer.vertex(x, y, 0.0).texture(0f, 0f).next()
-
-    Tessellator.getInstance().draw()
-}
-
-fun renderScaledGuiItemIcon(itemStack: ItemStack, x: Double, y: Double, scale: Double = 1.0, zTranslation: Float = 100.0F, matrixStack: MatrixStack? = null) {
-    val itemRenderer = MinecraftClient.getInstance().itemRenderer
-    val textureManager = MinecraftClient.getInstance().textureManager
+fun renderScaledGuiItemIcon(itemStack: ItemStack, x: Double, y: Double, scale: Double = 1.0, zTranslation: Float = 100.0F, matrixStack: PoseStack? = null) {
+    val itemRenderer = Minecraft.getInstance().itemRenderer
+    val textureManager = Minecraft.getInstance().textureManager
     val model = itemRenderer.getModel(itemStack, null, null, 0)
 
-    textureManager.getTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).setFilter(false, false)
-    RenderSystem.setShaderTexture(0, SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE)
+    textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false)
+    RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS)
     RenderSystem.enableBlend()
-    RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA)
+    RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA)
     RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F)
-    val modelViewStack = matrixStack ?: RenderSystem.getModelViewStack()
-    modelViewStack.push()
+    //TODO Make sure this doesnt break anything
+    val modelViewStack = matrixStack ?: PoseStack()
+    modelViewStack.pushPose()
     modelViewStack.translate(x, y, (zTranslation + 0).toDouble())
     modelViewStack.translate(8.0 * scale, 8.0 * scale, 0.0)
     modelViewStack.scale(1.0F, -1.0F, 1.0F)
     modelViewStack.scale(16.0F * scale.toFloat(), 16.0F * scale.toFloat(), 16.0F * scale.toFloat())
     RenderSystem.applyModelViewMatrix()
 
-    val stack = matrixStack ?: MatrixStack()
-    val immediate = MinecraftClient.getInstance().bufferBuilders.entityVertexConsumers
-    val bl = !model.isSideLit
-    if (bl) DiffuseLighting.disableGuiDepthLighting()
+    val stack = matrixStack ?: PoseStack()
+    val immediate = Minecraft.getInstance().renderBuffers().bufferSource()
+    val bl = !model.usesBlockLight()
+    if (bl) Lighting.setupForFlatItems()
 
-    itemRenderer.renderItem(
+    itemRenderer.render(
         itemStack,
-        ModelTransformationMode.GUI,
+        ItemDisplayContext.GUI,
         false,
         stack,
         immediate,
         15728880,
-        OverlayTexture.DEFAULT_UV,
+        OverlayTexture.NO_OVERLAY,
         model
     )
 
-    immediate.draw()
+    immediate.endBatch()
     RenderSystem.enableDepthTest()
-    if (bl) DiffuseLighting.enableGuiDepthLighting()
+    if (bl) Lighting.setupFor3DItems()
 
-    modelViewStack.pop()
+    modelViewStack.popPose()
     RenderSystem.applyModelViewMatrix()
 }
 
@@ -117,9 +99,9 @@ fun getDepletableRedGreen(
 
 
 fun drawScaledText(
-    context: DrawContext,
-    font: Identifier? = null,
-    text: MutableText,
+    context: GuiGraphics,
+    font: ResourceLocation? = null,
+    text: MutableComponent,
     x: Number,
     y: Number,
     scale: Float = 1F,
@@ -135,34 +117,34 @@ fun drawScaledText(
         return
     }
 
-    val textWidth = MinecraftClient.getInstance().textRenderer.getWidth(if (font != null) text.font(font) else text)
+    val textWidth = Minecraft.getInstance().font.width(if (font != null) text.font(font) else text)
     val extraScale = if (textWidth < maxCharacterWidth) 1F else (maxCharacterWidth / textWidth.toFloat())
-    val fontHeight = if (font == null) 5 else 6
-    val matrices = context.matrices
-    matrices.push()
+    val fontHeight = if (font == null) 5F else 6F
+    val matrices = context.pose()
+    matrices.pushPose()
     matrices.scale(scale * extraScale, scale * extraScale, 1F)
     val isHovered = drawText(
         context = context,
         font = font,
         text = text,
         x = x.toFloat() / (scale * extraScale),
-        y = y.toFloat() / (scale * extraScale) + (1 - extraScale) * fontHeight * scale,
+        y = y.toFloat() / (scale * extraScale) + (1F - extraScale) * fontHeight * scale,
         centered = centered,
         colour = colour,
         shadow = shadow,
         pMouseX = pMouseX?.toFloat()?.div((scale * extraScale)),
-        pMouseY = pMouseY?.toFloat()?.div(scale * extraScale)?.plus((1 - extraScale) * fontHeight * scale)
+        pMouseY = pMouseY?.toFloat()?.div(scale * extraScale)?.plus((1F - extraScale) * fontHeight * scale)
     )
-    matrices.pop()
-    // Draw tooltip that was created with onHover and is attached to the MutableText
+    matrices.popPose()
+    // Draw tooltip that was created with onHover and is attached to the MutableComponent
     if (isHovered) {
-        context.drawHoverEvent(MinecraftClient.getInstance().textRenderer, text.style, pMouseX!!, pMouseY!!)
+        context.renderComponentHoverEffect(Minecraft.getInstance().font, text.style, pMouseX!!, pMouseY!!)
     }
 }
 
 fun drawScaledText(
-    context: DrawContext,
-    text: OrderedText,
+    context: GuiGraphics,
+    text: FormattedCharSequence,
     x: Number,
     y: Number,
     scaleX: Float = 1F,
@@ -175,8 +157,8 @@ fun drawScaledText(
     if (opacity.toFloat() < 0.05F) {
         return
     }
-    val matrixStack = context.matrices
-    matrixStack.push()
+    val matrixStack = context.pose()
+    matrixStack.pushPose()
     matrixStack.scale(scaleX, scaleY, 1F)
     drawText(
         context = context,
@@ -187,13 +169,74 @@ fun drawScaledText(
         colour = colour,
         shadow = shadow
     )
-    matrixStack.pop()
+    matrixStack.popPose()
+}
+
+fun drawScaledTextJustifiedRight(
+    context: GuiGraphics,
+    font: ResourceLocation? = null,
+    text: MutableComponent,
+    x: Number,
+    y: Number,
+    scale: Float = 1F,
+    opacity: Number = 1F,
+    maxCharacterWidth: Int = Int.MAX_VALUE,
+    colour: Int = 0x00FFFFFF + ((opacity.toFloat() * 255).toInt() shl 24),
+    shadow: Boolean = false
+) {
+    if (opacity.toFloat() < 0.05F) {
+        return
+    }
+    val textWidth = Minecraft.getInstance().font.width(if (font != null) text.font(font) else text)
+    val extraScale = if (textWidth < maxCharacterWidth) 1F else (maxCharacterWidth / textWidth.toFloat())
+    val fontHeight = if (font == null) 5F else 6F
+    val matrixStack = context.pose()
+    matrixStack.pushPose()
+    matrixStack.scale(scale * extraScale, scale * extraScale, 1F)
+    drawTextJustifiedRight(
+        context = context,
+        font = font,
+        text = text,
+        x = x.toFloat() / (scale * extraScale),
+        y = y.toFloat() / (scale * extraScale) + (1F - extraScale) * fontHeight * scale,
+        colour = colour,
+        shadow = shadow
+    )
+    matrixStack.popPose()
+}
+
+fun drawScaledTextJustifiedRight(
+    context: GuiGraphics,
+    text: MutableComponent,
+    x: Number,
+    y: Number,
+    scaleX: Float = 1F,
+    scaleY: Float = 1F,
+    opacity: Number = 1F,
+    colour: Int = 0x00FFFFFF + ((opacity.toFloat() * 255).toInt() shl 24),
+    shadow: Boolean = false
+) {
+    if (opacity.toFloat() < 0.05F) {
+        return
+    }
+    val matrixStack = context.pose()
+    matrixStack.pushPose()
+    matrixStack.scale(scaleX, scaleY, 1F)
+    drawTextJustifiedRight(
+        context = context,
+        text = text,
+        x = x.toFloat() / scaleX,
+        y = y.toFloat() / scaleY,
+        colour = colour,
+        shadow = shadow
+    )
+    matrixStack.popPose()
 }
 
 fun renderBeaconBeam(
-    matrixStack: MatrixStack,
-    buffer: VertexConsumerProvider,
-    textureLocation: Identifier = CobblemonResources.PHASE_BEAM,
+    matrixStack: PoseStack,
+    buffer: MultiBufferSource,
+    textureLocation: ResourceLocation = CobblemonResources.PHASE_BEAM,
     partialTicks: Float,
     totalLevelTime: Long,
     yOffset: Float = 0F,
@@ -208,13 +251,13 @@ fun renderBeaconBeam(
 ) {
     val i = yOffset + height
     val beamRotation = Math.floorMod(totalLevelTime, 40).toFloat() + partialTicks
-    matrixStack.push()
-    matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(beamRotation * 2.25f - 45.0f))
+    matrixStack.pushPose()
+    matrixStack.mulPose(Axis.YP.rotationDegrees(beamRotation * 2.25f - 45.0f))
     var f9 = -beamRadius
     val f12 = -beamRadius
     renderPart(
         matrixStack,
-        buffer.getBuffer(RenderLayer.getBeaconBeam(textureLocation, false)),
+        buffer.getBuffer(RenderType.beaconBeam(textureLocation, false)),
         red,
         green,
         blue,
@@ -231,14 +274,14 @@ fun renderBeaconBeam(
         f12
     )
     // Undo the rotation so that the glow is at a rotated offset
-    matrixStack.pop()
+    matrixStack.popPose()
     val f6 = -glowRadius
     val f7 = -glowRadius
     val f8 = -glowRadius
     f9 = -glowRadius
     renderPart(
         matrixStack,
-        buffer.getBuffer(RenderLayer.getBeaconBeam(textureLocation, true)),
+        buffer.getBuffer(RenderType.beaconBeam(textureLocation, true)),
         red,
         green,
         blue,
@@ -257,7 +300,7 @@ fun renderBeaconBeam(
 }
 
 fun renderPart(
-    matrixStack: MatrixStack,
+    matrixStack: PoseStack,
     vertexBuffer: VertexConsumer,
     red: Float,
     green: Float,
@@ -274,12 +317,11 @@ fun renderPart(
     p_112170_: Float,
     p_112171_: Float
 ) {
-    val pose = matrixStack.peek()
-    val matrix4f = pose.positionMatrix
-    val matrix3f = pose.normalMatrix
+    val pose = matrixStack.last()
+    val matrix4f = pose.pose()
+    val matrix3f = pose.normal()
     renderQuad(
-        matrix4f,
-        matrix3f,
+        pose,
         vertexBuffer,
         red,
         green,
@@ -293,8 +335,7 @@ fun renderPart(
         p_112167_
     )
     renderQuad(
-        matrix4f,
-        matrix3f,
+        pose,
         vertexBuffer,
         red,
         green,
@@ -308,8 +349,7 @@ fun renderPart(
         p_112169_
     )
     renderQuad(
-        matrix4f,
-        matrix3f,
+        pose,
         vertexBuffer,
         red,
         green,
@@ -323,8 +363,7 @@ fun renderPart(
         p_112171_
     )
     renderQuad(
-        matrix4f,
-        matrix3f,
+        pose,
         vertexBuffer,
         red,
         green,
@@ -340,8 +379,7 @@ fun renderPart(
 }
 
 fun renderQuad(
-    matrixPos: Matrix4f,
-    matrixNormal: Matrix3f,
+    matrixEntry: PoseStack.Pose,
     buffer: VertexConsumer,
     red: Float,
     green: Float,
@@ -354,15 +392,14 @@ fun renderQuad(
     x2: Float,
     z2: Float
 ) {
-    addVertex(matrixPos, matrixNormal, buffer, red, green, blue, alpha, yMax, x1, z1, 1F, 0F)
-    addVertex(matrixPos, matrixNormal, buffer, red, green, blue, alpha, yMin, x1, z1, 1F, 1F)
-    addVertex(matrixPos, matrixNormal, buffer, red, green, blue, alpha, yMin, x2, z2, 0F, 1F)
-    addVertex(matrixPos, matrixNormal, buffer, red, green, blue, alpha, yMax, x2, z2, 0F, 0F)
+    addVertex(matrixEntry, buffer, red, green, blue, alpha, yMax, x1, z1, 1F, 0F)
+    addVertex(matrixEntry, buffer, red, green, blue, alpha, yMin, x1, z1, 1F, 1F)
+    addVertex(matrixEntry, buffer, red, green, blue, alpha, yMin, x2, z2, 0F, 1F)
+    addVertex(matrixEntry, buffer, red, green, blue, alpha, yMax, x2, z2, 0F, 0F)
 }
 
 fun addVertex(
-    matrixPos: Matrix4f,
-    matrixNormal: Matrix3f,
+    matrixEntry: PoseStack.Pose,
     buffer: VertexConsumer,
     red: Float,
     green: Float,
@@ -375,11 +412,10 @@ fun addVertex(
     texV: Float
 ) {
     buffer
-        .vertex(matrixPos, x, y, z)
-        .color(red, green, blue, alpha)
-        .texture(texU, texV)
-        .overlay(OverlayTexture.DEFAULT_UV)
-        .light(15728880)
-        .normal(matrixNormal, 0.0f, 1.0f, 0.0f)
-        .next()
+        .addVertex(matrixEntry.pose(), x, y, z)
+        .setColor(red, green, blue, alpha)
+        .setUv(texU, texV)
+        .setOverlay(OverlayTexture.NO_OVERLAY)
+        .setLight(15728880)
+        .setNormal(matrixEntry, 0.0f, 1.0f, 0.0f)
 }

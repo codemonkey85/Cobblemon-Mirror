@@ -9,80 +9,74 @@
 package com.cobblemon.mod.common.api.multiblock
 
 import com.cobblemon.mod.common.block.entity.FossilMultiblockEntity
-import net.minecraft.block.*
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.ActionResult
-import net.minecraft.util.Hand
-import net.minecraft.util.hit.BlockHitResult
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.BlockView
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.level.LevelReader
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.BaseEntityBlock
+import net.minecraft.world.level.block.RenderShape
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.phys.BlockHitResult
 
 /**
  * A block that can be part of a [MultiblockStructure]
  */
-abstract class MultiblockBlock(properties: Settings) : BlockWithEntity(properties) {
+abstract class MultiblockBlock(properties: Properties) : BaseEntityBlock(properties) {
 
-    override fun onPlaced(
-        world: World,
+    override fun setPlacedBy(
+        world: Level,
         pos: BlockPos,
         state: BlockState,
         placer: LivingEntity?,
-        itemStack: ItemStack?
+        itemStack: ItemStack
     ) {
-        if (world is ServerWorld) {
+        if (world is ServerLevel) {
             val multiblockEntity = world.getBlockEntity(pos) as? MultiblockEntity
             multiblockEntity?.multiblockBuilder?.validate(world)
         }
-        super.onPlaced(world, pos, state, placer, itemStack)
+        super.setPlacedBy(world, pos, state, placer, itemStack)
     }
 
-    override fun onUse(
+    override fun useWithoutItem(
         state: BlockState,
-        world: World,
+        world: Level,
         pos: BlockPos,
-        player: PlayerEntity,
-        hand: Hand,
+        player: Player,
         hit: BlockHitResult
-    ): ActionResult {
-        if(hand == Hand.OFF_HAND) {
-            return ActionResult.SUCCESS
-        }
+    ): InteractionResult {
         val entity = world.getBlockEntity(pos) as MultiblockEntity?
         if (entity?.multiblockStructure != null) {
-            return entity.multiblockStructure!!.onUse(state, world, pos, player, hand, hit)
+            return entity.multiblockStructure!!.useWithoutItem(state, world, pos, player, hit)
         }
-        return super.onUse(state, world, pos, player, hand, hit)
+        return super.useWithoutItem(state, world, pos, player, hit)
     }
 
-    override fun onBreak(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity?) {
-        if (!world.isClient) {
-            val entity = world.getBlockEntity(pos)
-            if (entity is MultiblockEntity && entity.multiblockStructure != null) {
-                entity.multiblockStructure!!.onBreak(world, pos, state, player)
-            }
-            entity?.markRemoved()
+    override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, movedByPiston: Boolean) {
+        val entity = level.getBlockEntity(pos)
+        if (entity is MultiblockEntity && entity.multiblockStructure != null && state.block != newState.block) {
+            entity.multiblockStructure!!.playerWillDestroy(level, pos, state, null)
         }
-        super.onBreak(world, pos, state, player)
+        super.onRemove(state, level, pos, newState, movedByPiston)
     }
 
-    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? {
+    override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? {
         return createMultiBlockEntity(pos, state)
     }
 
     @Deprecated("Deprecated in Java")
-    override fun getRenderType(state: BlockState?): BlockRenderType {
-        return BlockRenderType.MODEL
+    override fun getRenderShape(state: BlockState): RenderShape {
+        return RenderShape.MODEL
     }
 
     //This is done so a block picked with NBT doesnt absolutely DESTROY multiblocks
-    override fun getPickStack(world: BlockView, pos: BlockPos, state: BlockState): ItemStack {
+    override fun getCloneItemStack(world: LevelReader, pos: BlockPos, state: BlockState): ItemStack {
         val blockEntity = world.getBlockEntity(pos) as? MultiblockEntity ?: return ItemStack.EMPTY
-        return if (blockEntity.multiblockStructure == null) super.getPickStack(world, pos, state) else ItemStack.EMPTY
+        return if (blockEntity.multiblockStructure == null) super.getCloneItemStack(world, pos, state) else ItemStack.EMPTY
     }
 
     abstract fun createMultiBlockEntity(pos: BlockPos, state: BlockState): FossilMultiblockEntity

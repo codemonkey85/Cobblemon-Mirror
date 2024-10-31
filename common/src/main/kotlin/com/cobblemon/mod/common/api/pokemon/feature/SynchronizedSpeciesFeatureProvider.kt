@@ -8,11 +8,10 @@
 
 package com.cobblemon.mod.common.api.pokemon.feature
 
-import com.cobblemon.mod.common.api.net.Decodable
-import com.cobblemon.mod.common.api.net.Encodable
+import com.cobblemon.mod.common.api.serialization.BufferSerializer
 import com.cobblemon.mod.common.client.gui.summary.featurerenderers.SummarySpeciesFeatureRenderer
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * A species feature provider that will be synchronized to the client. For it to be renderable in the summary
@@ -23,9 +22,9 @@ import net.minecraft.network.PacketByteBuf
  * @author Hiroku
  * @since November 13th, 2023
  */
-interface SynchronizedSpeciesFeatureProvider<T : SynchronizedSpeciesFeature> : SpeciesFeatureProvider<T>, Encodable, Decodable {
+interface SynchronizedSpeciesFeatureProvider<T : SynchronizedSpeciesFeature> : SpeciesFeatureProvider<T>, BufferSerializer {
     var visible: Boolean
-    operator fun invoke(buffer: PacketByteBuf, name: String): T?
+    operator fun invoke(buffer: RegistryFriendlyByteBuf, name: String): T?
     /** Gets the feature from this Pokémon, if it has been created yet. */
     fun get(pokemon: Pokemon): T?
     /** Only run this from the client. */

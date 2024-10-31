@@ -9,17 +9,5 @@
 package com.cobblemon.mod.common.api.storage.pc
 
 import com.cobblemon.mod.common.api.storage.StorePosition
-import com.cobblemon.mod.common.net.IntSize
-import com.cobblemon.mod.common.util.readSizedInt
-import com.cobblemon.mod.common.util.writeSizedInt
-import net.minecraft.network.PacketByteBuf
 
-data class PCPosition(val box: Int, val slot: Int) : StorePosition {
-    companion object {
-        fun PacketByteBuf.writePCPosition(position: PCPosition) {
-            writeSizedInt(IntSize.U_BYTE, position.box)
-            writeSizedInt(IntSize.U_BYTE, position.slot)
-        }
-        fun PacketByteBuf.readPCPosition() = PCPosition(readSizedInt(IntSize.U_BYTE), readSizedInt(IntSize.U_BYTE))
-    }
-}
+data class PCPosition(val box: Int, val slot: Int) : StorePosition

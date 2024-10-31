@@ -1,28 +1,39 @@
 {
   "required": true,
   "package": "com.cobblemon.mod.common.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
     "BuiltinModelItemRendererMixin",
     "EntityRenderDispatcherMixin",
     "GameRendererMixin",
+    "ItemInHandRendererMixin",
+    "ItemRendererMixin",
     "ModelLoaderMixin",
     "ModelPartMixin",
-    "MusicTrackerMixin",
+    "MusicManagerMixin",
     "ParticleManagerMixin",
-    "PartyScrollMixin",
+    "MouseHandlerMixin",
+    "PlayerRendererMixin",
+    "SoundEngineMixin",
     "SoundManagerMixin",
-    "SoundSystemMixin",
+    "VillagerProfessionLayerMixin",
+    "accessor.EntryListWidgetAccessor",
     "accessor.KeyBindingAccessor",
-    "invoker.ClientPlayNetworkHandlerInvoker",
-    "pokeball.ItemRendererMixin"
+    "client.AbstractClientPlayerMixin",
+    "client.EntryListWidgetMixin",
+    "client.GuiMixin",
+    "invoker.ClientPlayNetworkHandlerInvoker"
   ],
   "mixins": [
+    "ChunkStorageMixin",
     "CrashReportMixin",
     "DecoratedPotPatternsMixin",
+    "EntityStorageMixin",
     "EntityVillagerMixin",
     "ExplosionMixin",
+    "ItemStackComponentizationFixMixin",
+    "LecternBlockMixin",
     "LivingEntityMixin",
     "MinecraftDedicatedServerMixin",
     "PiglinBarterMixin",
@@ -33,8 +44,11 @@
     "StructurePoolAccessor",
     "StructurePoolGeneratorMixin",
     "StructureProcessorListMixin",
+    "TargetingConditionsMixin",
     "accessor.AccessorEntity",
+    "accessor.BiomeAccessor",
     "accessor.BoatEntityAccessor",
+    "accessor.EntryListWidgetAccessor",
     "accessor.StatusEffectInstanceAccessor",
     "entity.TameableEntityMixin",
     "invoker.AdornRegisterInvoker",
@@ -46,8 +60,5 @@
     "invoker.StairsBlockInvoker",
     "invoker.TrapdoorBlockInvoker",
     "pokeball.ThrownEntityMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+  ]
 }

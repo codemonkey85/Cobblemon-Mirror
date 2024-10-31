@@ -8,13 +8,13 @@
 
 package com.cobblemon.mod.common.duck;
 
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import org.jetbrains.annotations.Nullable;
 
 public interface SoundManagerDuck {
 
-    void pauseSounds(@Nullable Identifier id, @Nullable SoundCategory category);
+    void pauseSounds(@Nullable ResourceLocation id, @Nullable SoundSource category);
 
-    void resumeSounds(@Nullable Identifier id, @Nullable SoundCategory category);
+    void resumeSounds(@Nullable ResourceLocation id, @Nullable SoundSource category);
 }

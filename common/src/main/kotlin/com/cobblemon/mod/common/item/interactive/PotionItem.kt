@@ -8,90 +8,102 @@
 
 package com.cobblemon.mod.common.item.interactive
 
-import com.bedrockk.molang.Expression
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
+import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.events.pokemon.healing.PokemonHealedEvent
+import com.cobblemon.mod.common.api.item.HealingSource
 import com.cobblemon.mod.common.api.item.PokemonSelectingItem
+import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.item.CobblemonItem
 import com.cobblemon.mod.common.item.battle.BagItem
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.util.asExpression
+import com.cobblemon.mod.common.util.asExpressionLike
 import com.cobblemon.mod.common.util.genericRuntime
 import com.cobblemon.mod.common.util.giveOrDropItemStack
 import com.cobblemon.mod.common.util.resolveInt
 import java.lang.Integer.min
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.sound.SoundCategory
-import net.minecraft.util.Hand
-import net.minecraft.util.TypedActionResult
-import net.minecraft.world.World
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.level.Level
 
-class PotionItem(val type: PotionType) : CobblemonItem(Settings()), PokemonSelectingItem {
+class PotionItem(val type: PotionType) : CobblemonItem(Properties()), PokemonSelectingItem, HealingSource {
     override val bagItem = type
     override fun canUseOnPokemon(pokemon: Pokemon) = !pokemon.isFullHealth() && pokemon.currentHealth > 0
-    override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
-        if (user is ServerPlayerEntity) {
-            return use(user, user.getStackInHand(hand))
+    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
+        if (user is ServerPlayer) {
+            return use(user, user.getItemInHand(hand))
         }
-        return TypedActionResult.success(user.getStackInHand(hand))
+        return InteractionResultHolder.success(user.getItemInHand(hand))
     }
 
     override fun applyToPokemon(
-        player: ServerPlayerEntity,
+        player: ServerPlayer,
         stack: ItemStack,
         pokemon: Pokemon
-    ): TypedActionResult<ItemStack>? {
+    ): InteractionResultHolder<ItemStack>? {
         if (pokemon.isFullHealth()) {
-            return TypedActionResult.fail(stack)
+            return InteractionResultHolder.fail(stack)
         }
+        var amount = genericRuntime.resolveInt(type.amountToHeal())
+        CobblemonEvents.POKEMON_HEALED.postThen(PokemonHealedEvent(pokemon, amount, this), { cancelledEvent -> return InteractionResultHolder.fail(stack)}) { event ->
+            amount = event.amount
+        }
+        pokemon.currentHealth = min(pokemon.currentHealth + amount, pokemon.maxHealth)
 
         val healthToRestore = genericRuntime.resolveInt(type.amountToHeal())
-        pokemon.currentHealth = min(pokemon.currentHealth + healthToRestore, pokemon.hp)
+        pokemon.currentHealth = min(pokemon.currentHealth + healthToRestore, pokemon.maxHealth)
         if (type.curesStatus) {
             pokemon.status = null
         }
-        player.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, SoundCategory.PLAYERS, 1F, 1F)
+        pokemon.entity?.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
         if (!player.isCreative) {
-            stack.decrement(1)
+            stack.shrink(1)
             player.giveOrDropItemStack(ItemStack(Items.GLASS_BOTTLE))
         }
-        return TypedActionResult.success(stack)
+        return InteractionResultHolder.success(stack)
     }
 
-    override fun applyToBattlePokemon(player: ServerPlayerEntity, stack: ItemStack, battlePokemon: BattlePokemon) {
+    override fun applyToBattlePokemon(player: ServerPlayer, stack: ItemStack, battlePokemon: BattlePokemon) {
         super.applyToBattlePokemon(player, stack, battlePokemon)
-        player.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, SoundCategory.PLAYERS, 1F, 1F)
+        battlePokemon.entity?.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
     }
 }
 
-enum class PotionType(val amountToHeal: () -> Expression, val curesStatus: Boolean) : BagItem {
+enum class PotionType(val amountToHeal: () -> ExpressionLike, val curesStatus: Boolean) : BagItem {
     POTION({ com.cobblemon.mod.common.CobblemonMechanics.potions.potionRestoreAmount }, false) {
         override val itemName = "item.cobblemon.potion"
+        override val returnItem = Items.GLASS_BOTTLE
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "potion ${genericRuntime.resolveInt(amountToHeal(), battlePokemon)}"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) =  target.health < target.maxHealth && target.health > 0
     },
     SUPER_POTION({ com.cobblemon.mod.common.CobblemonMechanics.potions.superPotionRestoreAmount }, false) {
         override val itemName = "item.cobblemon.super_potion"
+        override val returnItem = Items.GLASS_BOTTLE
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "potion ${genericRuntime.resolveInt(amountToHeal(), battlePokemon)}"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) =  target.health < target.maxHealth && target.health > 0
     },
     HYPER_POTION({ com.cobblemon.mod.common.CobblemonMechanics.potions.hyperPotionRestoreAmount }, false) {
         override val itemName = "item.cobblemon.hyper_potion"
+        override val returnItem = Items.GLASS_BOTTLE
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "potion ${genericRuntime.resolveInt(amountToHeal(), battlePokemon)}"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) =  target.health < target.maxHealth && target.health > 0
     },
-    MAX_POTION({ 999999.0.asExpression() }, false) {
+    MAX_POTION({ 999999.0.asExpressionLike() }, false) {
         override val itemName = "item.cobblemon.max_potion"
+        override val returnItem = Items.GLASS_BOTTLE
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "potion ${battlePokemon.maxHealth - battlePokemon.health}"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) =  target.health < target.maxHealth && target.health > 0
     },
-    FULL_RESTORE({ 999999.0.asExpression() }, true) {
+    FULL_RESTORE({ 999999.0.asExpressionLike() }, true) {
         override val itemName = "item.cobblemon.full_restore"
+        override val returnItem = Items.GLASS_BOTTLE
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "full_restore"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) =  target.health < target.maxHealth && target.health > 0
     }

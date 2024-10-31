@@ -10,17 +10,17 @@ package com.cobblemon.mod.common.net.messages.server
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 class RequestMoveSwapPacket(val move1: Int, val move2: Int, val slot: Int): NetworkPacket<RequestMoveSwapPacket> {
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeInt(move1)
         buffer.writeInt(move2)
         buffer.writeInt(slot)
     }
     companion object {
         val ID = cobblemonResource("request_move_swap")
-        fun decode(buffer: PacketByteBuf) = RequestMoveSwapPacket(buffer.readInt(), buffer.readInt(), buffer.readInt())
+        fun decode(buffer: RegistryFriendlyByteBuf) = RequestMoveSwapPacket(buffer.readInt(), buffer.readInt(), buffer.readInt())
     }
 }

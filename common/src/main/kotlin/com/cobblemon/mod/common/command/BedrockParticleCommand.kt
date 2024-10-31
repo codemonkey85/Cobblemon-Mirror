@@ -19,50 +19,50 @@ import com.cobblemon.mod.common.util.toBlockPos
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.StringArgumentType
-import net.minecraft.command.argument.DimensionArgumentType
-import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.command.argument.IdentifierArgumentType
-import net.minecraft.command.argument.Vec3ArgumentType
-import net.minecraft.entity.Entity
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.Vec3d
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.world.entity.Entity
+import net.minecraft.commands.Commands
+import net.minecraft.commands.arguments.DimensionArgument
+import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.commands.arguments.ResourceLocationArgument
+import net.minecraft.commands.arguments.coordinates.Vec3Argument
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.phys.Vec3
 
 object BedrockParticleCommand {
-    fun register(dispatcher : CommandDispatcher<ServerCommandSource>) {
-        val command = dispatcher.register(CommandManager.literal("bedrockparticle")
+    fun register(dispatcher : CommandDispatcher<CommandSourceStack>) {
+        val command = dispatcher.register(Commands.literal("bedrockparticle")
             .permission(CobblemonPermissions.BEDROCK_PARTICLE)
             .then(
-                CommandManager.argument("effect", IdentifierArgumentType.identifier())
+                Commands.argument("effect", ResourceLocationArgument.id())
                     .then(
-                        CommandManager.argument("target", EntityArgumentType.entities())
+                        Commands.argument("target", EntityArgument.entities())
                             .executes {
-                                val effectId = IdentifierArgumentType.getIdentifier(it, "effect")
-                                val entities = EntityArgumentType.getEntities(it, "target")
-                                return@executes entities.sumOf { entity -> execute(it.source, effectId, entity.world as ServerWorld, entity.pos) }
+                                val effectId = ResourceLocationArgument.getId(it, "effect")
+                                val entities = EntityArgument.getEntities(it, "target")
+                                return@executes entities.sumOf { entity -> execute(it.source, effectId, entity.level() as ServerLevel, entity.position()) }
                             }
                             .then(
-                                CommandManager.argument("locator", StringArgumentType.word())
+                                Commands.argument("locator", StringArgumentType.word())
                                     .executes {
-                                        val effectId = IdentifierArgumentType.getIdentifier(it, "effect")
-                                        val entities = EntityArgumentType.getEntities(it, "target")
+                                        val effectId = ResourceLocationArgument.getId(it, "effect")
+                                        val entities = EntityArgument.getEntities(it, "target")
                                         val locator = StringArgumentType.getString(it, "locator")
 
-                                        return@executes entities.sumOf { entity -> execute(it.source, effectId, entity.world as ServerWorld, entity, locator) }
+                                        return@executes entities.sumOf { entity -> execute(it.source, effectId, entity.level() as ServerLevel, entity, listOf(locator)) }
                                     }
                             )
                     )
                     .then(
-                        CommandManager.argument("world", DimensionArgumentType.dimension())
+                        Commands.argument("world", DimensionArgument.dimension())
                             .then(
-                                CommandManager.argument("pos", Vec3ArgumentType.vec3())
+                                Commands.argument("pos", Vec3Argument.vec3())
                                     .executes {
-                                        val effectId = IdentifierArgumentType.getIdentifier(it, "effect")
-                                        val world = DimensionArgumentType.getDimensionArgument(it, "world")
-                                        val pos = Vec3ArgumentType.getVec3(it, "pos")
-                                        return@executes execute(it.source, effectId, world as ServerWorld, pos)
+                                        val effectId = ResourceLocationArgument.getId(it, "effect")
+                                        val world = DimensionArgument.getDimension(it, "world")
+                                        val pos = Vec3Argument.getVec3(it, "pos")
+                                        return@executes execute(it.source, effectId, world as ServerLevel, pos)
                                     }
                             )
                     )
@@ -71,15 +71,15 @@ object BedrockParticleCommand {
         dispatcher.register(command.alias("bedrockparticle"))
     }
 
-    private fun execute(source: ServerCommandSource, effectId: Identifier, world: ServerWorld, target: Vec3d): Int {
+    private fun execute(source: CommandSourceStack, effectId: ResourceLocation, world: ServerLevel, target: Vec3): Int {
         val pos = target.toBlockPos()
         val nearbyPlayers = world.getPlayers { it.distanceTo(pos) < 1000 }
         nearbyPlayers.forEach { player -> player.sendPacket(SpawnSnowstormParticlePacket(effectId, target)) }
         return Command.SINGLE_SUCCESS
     }
 
-    private fun execute(source: ServerCommandSource, effectId: Identifier, world: ServerWorld, target: Entity, locator: String): Int {
-        val pos = target.blockPos
+    private fun execute(source: CommandSourceStack, effectId: ResourceLocation, world: ServerLevel, target: Entity, locator: List<String>): Int {
+        val pos = target.blockPosition()
         val nearbyPlayers = world.getPlayers { it.distanceTo(pos) < 1000 }
         nearbyPlayers.forEach { player -> player.sendPacket(SpawnSnowstormEntityParticlePacket(effectId, target.id, locator)) }
         return Command.SINGLE_SUCCESS

@@ -14,10 +14,11 @@ import com.cobblemon.mod.common.util.DataKeys
 import com.cobblemon.mod.common.util.readSizedInt
 import com.cobblemon.mod.common.util.writeSizedInt
 import com.google.gson.JsonObject
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.nbt.NbtElement
-import net.minecraft.nbt.NbtList
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.Tag
+import net.minecraft.network.RegistryFriendlyByteBuf
+import com.mojang.serialization.Codec
 import kotlin.math.min
 
 class MoveSet : Iterable<Move> {
@@ -34,10 +35,8 @@ class MoveSet : Iterable<Move> {
     /**
      * Gets all Moves from the Pokémon but skips null Moves
      */
-    fun getMoves(): List<Move> {
-        return moves.filterNotNull()
-    }
-
+    fun getMoves() = moves.filterNotNull()
+    fun getMovesWithNulls() = moves.toList()
     fun hasSpace() = moves.any { it == null }
 
     /**
@@ -55,7 +54,7 @@ class MoveSet : Iterable<Move> {
     fun copyFrom(other: MoveSet) {
         doWithoutEmitting {
             clear()
-            other.getMoves().forEach { add(it) }
+            other.getMoves().forEach { add(it.copy()) }
         }
         update()
     }
@@ -93,16 +92,16 @@ class MoveSet : Iterable<Move> {
     /**
      * Returns a NbtList containing all the Moves
      */
-    fun getNBT(): NbtList {
-        val listTag = NbtList()
-        listTag.addAll(getMoves().map { it.saveToNBT(NbtCompound()) })
+    fun getNBT(): ListTag {
+        val listTag = ListTag()
+        listTag.addAll(getMoves().map { it.saveToNBT(CompoundTag()) })
         return listTag
     }
 
     /**
      * Writes the MoveSet to Buffer
      */
-    fun saveToBuffer(buffer: PacketByteBuf) {
+    fun saveToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeSizedInt(IntSize.U_BYTE, getMoves().size)
         getMoves().forEach {
             it.saveToBuffer(buffer)
@@ -124,6 +123,7 @@ class MoveSet : Iterable<Move> {
         for (i in 0 until MOVE_COUNT) {
             if (moves[i] == null) {
                 moves[i] = move
+                move.observable.subscribe { this.update() }
                 update()
                 return
             }
@@ -147,11 +147,11 @@ class MoveSet : Iterable<Move> {
     /**
      * Returns a MoveSet built from given NBT
      */
-    fun loadFromNBT(nbt: NbtCompound): MoveSet {
+    fun loadFromNBT(nbt: CompoundTag): MoveSet {
         doWithoutEmitting {
             clear()
-            nbt.getList(DataKeys.POKEMON_MOVESET, NbtElement.COMPOUND_TYPE.toInt()).forEachIndexed { index, tag ->
-                setMove(index, Move.loadFromNBT(tag as NbtCompound))
+            nbt.getList(DataKeys.POKEMON_MOVESET, Tag.TAG_COMPOUND.toInt()).forEachIndexed { index, tag ->
+                setMove(index, Move.loadFromNBT(tag as CompoundTag))
             }
         }
         update()
@@ -161,7 +161,7 @@ class MoveSet : Iterable<Move> {
     /**
      * Returns a MoveSet build from given Buffer
      */
-    fun loadFromBuffer(buffer: PacketByteBuf): MoveSet {
+    fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): MoveSet {
         doWithoutEmitting {
             clear()
             val amountMoves = buffer.readSizedInt(IntSize.U_BYTE)
@@ -188,5 +188,15 @@ class MoveSet : Iterable<Move> {
 
     companion object {
         const val MOVE_COUNT = 4
+        @JvmStatic
+        val CODEC: Codec<MoveSet> = Codec.list(Move.CODEC, 0, MOVE_COUNT)
+            .xmap(
+                { moveList ->
+                    val moveSet = MoveSet()
+                    moveList.forEach(moveSet::add)
+                    return@xmap moveSet
+                },
+                { moveSet -> moveSet.toList() }
+            )
     }
 }

@@ -8,9 +8,11 @@
 
 package com.cobblemon.mod.common.api.pokeball.catching.calculators
 
+import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.pokedex.CaughtCount
+import net.minecraft.server.level.ServerPlayer
 import kotlin.math.roundToInt
 import kotlin.random.Random
-import net.minecraft.server.network.ServerPlayerEntity
 
 /**
  * A provider for the possibility at a critical capture.
@@ -24,13 +26,12 @@ interface CriticalCaptureProvider {
     /**
      * Checks if the critical capture should occur based on the Pokedex progression of the given [player].
      *
-     * @param player The [ServerPlayerEntity] being queried.
+     * @param player The [ServerPlayer] being queried.
      * @param modifiedCatchRate The resulting catch rate calculated inside the [CaptureCalculator].
      * @return If the critical capture should occur
      */
-    fun shouldHaveCriticalCapture(player: ServerPlayerEntity, modifiedCatchRate: Float): Boolean {
-        // ToDo once pokedex is implemented change number here
-        val caughtCount = 0
+    fun shouldHaveCriticalCapture(player: ServerPlayer, modifiedCatchRate: Float): Boolean {
+        val caughtCount = Cobblemon.playerDataManager.getPokedexData(player).getGlobalCalculatedValue(CaughtCount)
         val caughtMultiplier = when {
             caughtCount <= 30 -> 0F
             // This one is exact

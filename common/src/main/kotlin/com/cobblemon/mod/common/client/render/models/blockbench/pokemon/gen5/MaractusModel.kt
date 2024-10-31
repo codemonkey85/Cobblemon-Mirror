@@ -8,19 +8,19 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen5
 
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.BimanualSwingAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class MaractusModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, BimanualFrame {
+class MaractusModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, BimanualFrame {
     override val rootPart = root.registerChildWithAllChildren("maractus")
     override val head = getPart("head")
 
@@ -28,15 +28,15 @@ class MaractusModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bima
     override val rightArm = getPart("arm_right1")
 
     override var portraitScale = 2.4F
-    override var portraitTranslation = Vec3d(-0.05, -0.7, 0.0)
+    override var portraitTranslation = Vec3(-0.05, -0.7, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.55, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.55, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("maractus", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("maractus", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("maractus", "blink") }
@@ -44,7 +44,7 @@ class MaractusModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bima
             poseName = "standing",
             poseTypes = STATIONARY_POSES + UI_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("maractus", "ground_idle")
             )
@@ -54,7 +54,7 @@ class MaractusModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bima
             poseName = "walk",
             poseTypes = MOVING_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("maractus", "ground_idle"),
                 BimanualSwingAnimation(this, swingPeriodMultiplier = 0.75F)
@@ -65,6 +65,6 @@ class MaractusModel(root: ModelPart) : PokemonPoseableModel(), HeadedFrame, Bima
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("maractus", "faint") else null
 }

@@ -12,32 +12,29 @@ import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.getQueryStruct
 import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
+import com.cobblemon.mod.common.api.moves.animations.ActionEffects
 import com.cobblemon.mod.common.api.moves.animations.UsersProvider
 import com.cobblemon.mod.common.api.pokemon.status.Statuses
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.battles.ShowdownInterpreter
-import com.cobblemon.mod.common.battles.ShowdownInterpreter.lastCauser
 import com.cobblemon.mod.common.battles.dispatch.ActionEffectInstruction
 import com.cobblemon.mod.common.battles.dispatch.GO
 import com.cobblemon.mod.common.battles.dispatch.InstructionSet
 import com.cobblemon.mod.common.battles.dispatch.UntilDispatch
-import com.cobblemon.mod.common.battles.dispatch.WaitDispatch
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
-import com.cobblemon.mod.common.net.messages.client.animation.PlayPoseableAnimationPacket
+import com.cobblemon.mod.common.net.messages.client.animation.PlayPosableAnimationPacket
 import com.cobblemon.mod.common.net.messages.client.battle.BattleHealthChangePacket
 import com.cobblemon.mod.common.net.messages.client.effect.RunPosableMoLangPacket
 import com.cobblemon.mod.common.pokemon.evolution.progress.DamageTakenEvolutionProgress
 import com.cobblemon.mod.common.pokemon.evolution.progress.RecoilEvolutionProgress
 import com.cobblemon.mod.common.pokemon.status.statuses.persistent.PoisonStatus
+import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import java.util.concurrent.CompletableFuture
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
 
 /**
  * Format: |-damage|POKEMON|HP STATUS
@@ -105,7 +102,12 @@ class DamageInstruction(
             if (status is PoisonStatus) {
                 status = pokemon.effectedPokemon.status?.status ?: status
             }
-            val actionEffect = status?.getActionEffect() ?: return@dispatch GO
+
+            // Damage effects without a action effect receive the generic damage effect
+            val actionEffect = status?.getActionEffect() ?: effect?.let {
+                ActionEffects.actionEffects["generic_damage".asIdentifierDefaultingNamespace()]
+            } ?: return@dispatch GO
+
             val providers = mutableListOf<Any>(battle)
             battlePokemon.effectedPokemon.entity?.let { UsersProvider(it) }?.let(providers::add)
 
@@ -133,22 +135,12 @@ class DamageInstruction(
             val pokemonEntity = battlePokemon.entity
             //Play recoil animation if the pokemon recoiling isnt dead
             if (!causedFaint && pokemonEntity != null) {
-                val pkt = PlayPoseableAnimationPacket(pokemonEntity.id, setOf("recoil"), emptySet())
+                val pkt = PlayPosableAnimationPacket(pokemonEntity.id, setOf("recoil"), emptyList())
                 pkt.sendToPlayersAround(
                     x = pokemonEntity.x,
                     y = pokemonEntity.y,
                     z = pokemonEntity.z,
-                    worldKey = pokemonEntity.world.registryKey,
-                    distance = 50.0
-                )
-            }
-            //Play hit particle
-            if (pokemonEntity != null) {
-                RunPosableMoLangPacket(pokemonEntity.id, setOf("q.particle('cobblemon:hit', 'target')")).sendToPlayersAround(
-                    x = pokemonEntity.x,
-                    y = pokemonEntity.y,
-                    z = pokemonEntity.z,
-                    worldKey = pokemonEntity.world.registryKey,
+                    worldKey = pokemonEntity.level().dimension(),
                     distance = 50.0
                 )
             }
@@ -166,7 +158,7 @@ class DamageInstruction(
                     "aftermath" -> battleLang("damage.generic", pokemonName)
                     "chloroblast", "steelbeam" -> battleLang("damage.mindblown", pokemonName)
                     "jumpkick" -> battleLang("damage.highjumpkick", pokemonName)
-                    else -> battleLang("damage.${effect.id}", pokemonName, source?.getName() ?: Text.literal("UNKOWN"))
+                    else -> battleLang("damage.${effect.id}", pokemonName, source?.getName() ?: Component.literal("UNKOWN"))
                 }
                 battle.broadcastChatMessage(lang.red())
             }
@@ -200,6 +192,16 @@ class DamageInstruction(
             privateMessage.pnxAndUuid(0)?.let { (pnx, _) -> battle.sendSidedUpdate(actor, BattleHealthChangePacket(pnx, remainingHealth.toFloat()), BattleHealthChangePacket(pnx, newHealthRatio)) }
 
             battle.minorBattleActions[battlePokemon.uuid] = privateMessage
+            if (lastCauser is MoveInstruction) {
+                if (lastCauser.spreadTargets.size > 1) {
+                    val subsequentInstructions = instructionSet.findInstructionsCausedBy(lastCauser)
+                    // Only wait on the last target of a multitarget attack
+                    if (subsequentInstructions.filterIsInstance<DamageInstruction>().last() != this) {
+                        // TODO: Dragon darts?
+                        return@dispatch GO
+                    }
+                }
+            }
 
             // If they faint from this damage then don't bother waiting for the damage to be applied.
             if (lastCauser is MoveInstruction && lastCauser.actionEffect != null && !causedFaint) {

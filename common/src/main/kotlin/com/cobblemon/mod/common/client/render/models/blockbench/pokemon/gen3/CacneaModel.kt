@@ -11,13 +11,14 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen3
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BimanualFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import com.cobblemon.mod.common.util.isBattling
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class CacneaModel (root: ModelPart) : PokemonPoseableModel(), BimanualFrame, BipedFrame {
+class CacneaModel (root: ModelPart) : PokemonPosableModel(root), BimanualFrame, BipedFrame {
     override val rootPart = root.registerChildWithAllChildren("cacnea")
 
     override val leftLeg = getPart("leg_left")
@@ -26,23 +27,23 @@ class CacneaModel (root: ModelPart) : PokemonPoseableModel(), BimanualFrame, Bip
     override val rightArm = getPart("arm_right")
 
     override var portraitScale = 2.0F
-    override var portraitTranslation = Vec3d(-0.2, -1.0, 0.0)
+    override var portraitTranslation = Vec3(-0.2, -1.0, 0.0)
 
     override var profileScale = 0.85F
-    override var profileTranslation = Vec3d(0.0, 0.5, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.5, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
-    lateinit var battleidle: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var sleep: CobblemonPose
+    lateinit var battleidle: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("cacnea", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("cacnea", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("cacnea", "blink") }
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("cacnea", "sleep"))
+            animations = arrayOf(bedrock("cacnea", "sleep"))
         )
 
         standing = registerPose(
@@ -51,7 +52,7 @@ class CacneaModel (root: ModelPart) : PokemonPoseableModel(), BimanualFrame, Bip
             quirks = arrayOf(blink),
             condition = { !it.isBattling },
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("cacnea", "ground_idle")
             )
         )
@@ -61,7 +62,7 @@ class CacneaModel (root: ModelPart) : PokemonPoseableModel(), BimanualFrame, Bip
             poseTypes = PoseType.MOVING_POSES,
             quirks = arrayOf(blink),
             transformTicks = 10,
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("cacnea", "ground_walk")
             )
         )
@@ -72,7 +73,7 @@ class CacneaModel (root: ModelPart) : PokemonPoseableModel(), BimanualFrame, Bip
             transformTicks = 10,
             quirks = arrayOf(blink),
             condition = { it.isBattling },
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("cacnea", "battle_idle")
             )
         )
@@ -80,6 +81,6 @@ class CacneaModel (root: ModelPart) : PokemonPoseableModel(), BimanualFrame, Bip
 
 //    override fun getFaintAnimation(
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("cacnea", "faint") else null
 }

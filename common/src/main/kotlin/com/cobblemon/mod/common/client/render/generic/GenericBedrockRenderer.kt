@@ -9,35 +9,43 @@
 package com.cobblemon.mod.common.client.render.generic
 
 import com.cobblemon.mod.common.client.entity.GenericBedrockClientDelegate
+import com.cobblemon.mod.common.client.render.models.blockbench.generic.PosableGenericEntityModel
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.GenericBedrockEntityModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository
 import com.cobblemon.mod.common.entity.generic.GenericBedrockEntity
-import net.minecraft.client.render.OverlayTexture
-import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.entity.EntityRenderer
-import net.minecraft.client.render.entity.EntityRendererFactory
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.util.math.RotationAxis
+import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.math.Axis
+import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.entity.EntityRenderer
+import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.resources.ResourceLocation
 
-class GenericBedrockRenderer(context: EntityRendererFactory.Context) : EntityRenderer<GenericBedrockEntity>(context) {
-    override fun getTexture(entity: GenericBedrockEntity) = GenericBedrockEntityModelRepository.getTexture(entity.category, entity.aspects, (entity.delegate as GenericBedrockClientDelegate).animationSeconds)
-    override fun render(entity: GenericBedrockEntity, yaw: Float, partialTicks: Float, poseStack: MatrixStack, buffer: VertexConsumerProvider, packedLight: Int) {
+class GenericBedrockRenderer(context: EntityRendererProvider.Context) : EntityRenderer<GenericBedrockEntity>(context) {
+    val model = PosableGenericEntityModel()
+    override fun getTextureLocation(entity: GenericBedrockEntity) = GenericBedrockEntityModelRepository.getTexture(entity.category, (entity.delegate as GenericBedrockClientDelegate))
+    override fun render(entity: GenericBedrockEntity, yaw: Float, partialTicks: Float, poseStack: PoseStack, buffer: MultiBufferSource, packedLight: Int) {
         if (entity.isInvisible) {
             return
         }
 
-        val model = GenericBedrockEntityModelRepository.getPoser(entity.category, entity.aspects)
-        poseStack.push()
+        val state = entity.delegate as GenericBedrockClientDelegate
+        state.currentAspects = entity.aspects
+        val model = GenericBedrockEntityModelRepository.getPoser(entity.category, state)
+        this.model.posableModel = model
+        model.context = this.model.context
+        this.model.setupEntityTypeContext(entity)
+        poseStack.pushPose()
         poseStack.scale(1.0F, -1.0F, 1.0F)
         poseStack.scale(entity.scale, entity.scale, entity.scale)
-        poseStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(yaw))
-        val vertexConsumer = buffer.getBuffer(model.getLayer(getTexture(entity)))
+        poseStack.mulPose(Axis.YP.rotationDegrees(yaw))
+        val vertexConsumer = buffer.getBuffer(RenderType.entityCutout(getTextureLocation(entity)))
 
-        val state = entity.delegate as GenericBedrockClientDelegate
         state.updatePartialTicks(partialTicks)
-        model.setLayerContext(buffer, state, PokemonModelRepository.getLayers(entity.category, entity.aspects))
-        model.setAngles(entity, 0f, 0f, entity.age + partialTicks, 0F, 0F)
-        model.render(poseStack, vertexConsumer, packedLight, OverlayTexture.DEFAULT_UV, 1.0f, 1.0f, 1.0f, 1.0f)
+        model.setLayerContext(buffer, state, PokemonModelRepository.getLayers(entity.category, state))
+        this.model.setupAnim(entity, 0f, 0f, entity.tickCount + partialTicks, 0F, 0F)
+        this.model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
 
         model.green = 1F
         model.blue = 1F
@@ -45,7 +53,7 @@ class GenericBedrockRenderer(context: EntityRendererFactory.Context) : EntityRen
 
         model.resetLayerContext()
 
-        poseStack.pop()
+        poseStack.popPose()
         super.render(entity, yaw, partialTicks, poseStack, buffer, packedLight)
     }
 }

@@ -9,14 +9,15 @@
 package com.cobblemon.mod.common.net.messages.client.storage.pc
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
+import com.cobblemon.mod.common.api.net.UnsplittablePacket
 import com.cobblemon.mod.common.api.storage.pc.PCPosition
-import com.cobblemon.mod.common.api.storage.pc.PCPosition.Companion.readPCPosition
-import com.cobblemon.mod.common.api.storage.pc.PCPosition.Companion.writePCPosition
-import com.cobblemon.mod.common.net.messages.PokemonDTO
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.readPCPosition
+import com.cobblemon.mod.common.util.writePCPosition
 import java.util.UUID
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.core.RegistryAccess
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Sets a specific Pokémon in a specific slot of the client-side representation of a PC.
@@ -26,21 +27,30 @@ import net.minecraft.network.PacketByteBuf
  * @author Hiroku
  * @since June 18th, 2022
  */
-class SetPCPokemonPacket internal constructor(val storeID: UUID, val storePosition: PCPosition, val pokemonDTO: PokemonDTO) : NetworkPacket<SetPCPokemonPacket> {
+class SetPCPokemonPacket internal constructor(val storeID: UUID, val storePosition: PCPosition, val pokemon: (RegistryAccess) -> Pokemon) : NetworkPacket<SetPCPokemonPacket>, UnsplittablePacket {
 
     override val id = ID
 
-    constructor(storeID: UUID, storePosition: PCPosition, pokemon: Pokemon) : this(storeID, storePosition, PokemonDTO(pokemon, true))
-
-    override fun encode(buffer: PacketByteBuf) {
-        buffer.writeUuid(this.storeID)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(this.storeID)
         buffer.writePCPosition(this.storePosition)
-        this.pokemonDTO.encode(buffer)
+        Pokemon.S2C_CODEC.encode(buffer, this.pokemon(buffer.registryAccess()))
     }
 
     companion object {
         val ID = cobblemonResource("set_pc_pokemon")
-        fun decode(buffer: PacketByteBuf) = SetPCPokemonPacket(buffer.readUuid(), buffer.readPCPosition(), PokemonDTO().apply { decode(buffer) })
+        fun decode(buffer: RegistryFriendlyByteBuf): SetPCPokemonPacket {
+            val uuid = buffer.readUUID()
+            val position = buffer.readPCPosition()
+            val bufferCache = buffer.readBytes(buffer.readableBytes())
+            return SetPCPokemonPacket(
+                storeID = uuid,
+                storePosition = position
+            ) {
+                val pokemon = Pokemon.S2C_CODEC.decode(RegistryFriendlyByteBuf(bufferCache, it))
+                bufferCache.release()
+                pokemon
+            }
+        }
     }
-
 }

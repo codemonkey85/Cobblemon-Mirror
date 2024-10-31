@@ -16,11 +16,11 @@ import com.cobblemon.mod.common.client.battle.ClientBattleActor
 import com.cobblemon.mod.common.client.battle.ClientBattlePokemon
 import com.cobblemon.mod.common.client.gui.battle.BattleGUI
 import com.cobblemon.mod.common.net.messages.client.battle.BattleInitializePacket
-import net.minecraft.client.MinecraftClient
+import net.minecraft.client.Minecraft
 
 object BattleInitializeHandler : ClientNetworkPacketHandler<BattleInitializePacket> {
-    override fun handle(packet: BattleInitializePacket, client: MinecraftClient) {
-        val playerUUID = MinecraftClient.getInstance().player?.uuid
+    override fun handle(packet: BattleInitializePacket, client: Minecraft) {
+        val playerUUID = Minecraft.getInstance().player?.uuid
         CobblemonClient.battle = ClientBattle(
             packet.battleId,
             packet.battleFormat
@@ -33,7 +33,7 @@ object BattleInitializeHandler : ClientNetworkPacketHandler<BattleInitializePack
 
             val otherSide = if (mySide == packet.side1) packet.side2 else packet.side1
             val sides = listOf(packet.side1, packet.side2)
-            spectating = !sides.any { it.actors.any { it.uuid == MinecraftClient.getInstance().player?.uuid } }
+            spectating = !sides.any { it.actors.any { it.uuid == Minecraft.getInstance().player?.uuid } }
             side1.actors.addAll(mySide.actors.map{ actorFromDTO(it, !spectating) })
             side2.actors.addAll(otherSide.actors.map{ actorFromDTO(it, false) })
             for (side in listOf(side1, side2)) {
@@ -46,9 +46,10 @@ object BattleInitializeHandler : ClientNetworkPacketHandler<BattleInitializePack
                 }
             }
             minimised = false
+            this.wildActor = this.findWildActor()
         }
 
-        MinecraftClient.getInstance().setScreen(BattleGUI())
+        Minecraft.getInstance().setScreen(BattleGUI())
     }
 
     fun actorFromDTO(actorDTO: BattleInitializePacket.BattleActorDTO, isAlly: Boolean): ClientBattleActor {

@@ -1,0 +1,27 @@
+{
+	"parent": "cobblemon:first_evolution",
+	"display": {
+		"icon": {
+			"id": "cobblemon:pokemon_model",
+	"components": {
+        "cobblemon:pokemon_item": {"species":"cobblemon:shedinja","aspects":[""]}
+      }
+		},
+		"title": {
+			"translate": "advancements.cobblemon.evolve_shedinja"
+		},
+		"description": {
+			"translate": "advancements.cobblemon.evolve_shedinja.description"
+		},
+		"hidden": true
+	},
+	"criteria": {
+		"evolve_shedinja": {
+			"trigger": "cobblemon:pokemon_evolved",
+			"conditions": {
+				"species": "cobblemon:nincada",
+				"evolution": "cobblemon:shedinja"
+			}
+		}
+	}
+}

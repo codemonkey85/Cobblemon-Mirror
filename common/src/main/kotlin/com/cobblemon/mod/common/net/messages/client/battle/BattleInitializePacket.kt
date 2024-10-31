@@ -16,20 +16,23 @@ import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.PokemonPropertyExtractor
 import com.cobblemon.mod.common.api.pokemon.stats.Stat
 import com.cobblemon.mod.common.api.pokemon.status.Statuses
-import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.battles.BattleFormat
 import com.cobblemon.mod.common.battles.BattleSide
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.pokemon.status.PersistentStatus
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.readIdentifier
 import com.cobblemon.mod.common.util.readMapK
 import com.cobblemon.mod.common.util.readSizedInt
+import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeMapK
 import com.cobblemon.mod.common.util.writeSizedInt
+import com.cobblemon.mod.common.util.writeString
 import java.util.UUID
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.text.MutableText
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.ComponentSerialization
+import net.minecraft.network.chat.MutableComponent
 
 /**
  * Initializes the client's understanding of a battle. This can be for a participant or for a spectator.
@@ -75,14 +78,14 @@ class BattleInitializePacket() : NetworkPacket<BattleInitializePacket> {
         side2 = sides[1]
     }
 
-    override fun encode(buffer: PacketByteBuf) {
-        buffer.writeUuid(battleId)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(battleId)
         battleFormat.saveToBuffer(buffer)
         for (side in arrayOf(side1, side2)) {
             buffer.writeSizedInt(IntSize.U_BYTE, side.actors.size)
             for (actor in side.actors) {
-                buffer.writeUuid(actor.uuid)
-                buffer.writeText(actor.displayName)
+                buffer.writeUUID(actor.uuid)
+                ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.encode(buffer, actor.displayName)
                 buffer.writeString(actor.showdownId)
                 buffer.writeSizedInt(IntSize.U_BYTE, actor.activePokemon.size)
                 for (activePokemon in actor.activePokemon) {
@@ -94,15 +97,15 @@ class BattleInitializePacket() : NetworkPacket<BattleInitializePacket> {
         }
     }
 
-    private fun decode(buffer: PacketByteBuf) {
-        battleId = buffer.readUuid()
+    private fun decode(buffer: RegistryFriendlyByteBuf) {
+        battleId = buffer.readUUID()
         battleFormat = BattleFormat.loadFromBuffer(buffer)
         val sides = mutableListOf<BattleSideDTO>()
         repeat(times = 2) {
             val actors = mutableListOf<BattleActorDTO>()
             repeat(times = buffer.readSizedInt(IntSize.U_BYTE)) {
-                val uuid = buffer.readUuid()
-                val displayName = buffer.readText().copy()
+                val uuid = buffer.readUUID()
+                val displayName = ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buffer) as MutableComponent
                 val showdownId = buffer.readString()
                 val activePokemon = mutableListOf<ActiveBattlePokemonDTO?>()
                 repeat(times = buffer.readSizedInt(IntSize.U_BYTE)) {
@@ -131,22 +134,22 @@ class BattleInitializePacket() : NetworkPacket<BattleInitializePacket> {
 
     companion object {
         val ID = cobblemonResource("battle_initialize")
-        fun decode(buffer: PacketByteBuf) = BattleInitializePacket().apply { decode(buffer) }
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleInitializePacket().apply { decode(buffer) }
     }
 
     data class BattleSideDTO(val actors: List<BattleActorDTO>)
 
     data class BattleActorDTO(
         val uuid: UUID,
-        val displayName: MutableText,
+        val displayName: MutableComponent,
         val showdownId: String,
         val activePokemon: List<ActiveBattlePokemonDTO?>,
-        val type: ActorType
+        val type: ActorType,
     )
 
     data class ActiveBattlePokemonDTO(
         val uuid: UUID,
-        val displayName: MutableText,
+        val displayName: MutableComponent,
         val properties: PokemonProperties,
         val aspects: Set<String>,
         val status: PersistentStatus?,
@@ -159,18 +162,20 @@ class BattleInitializePacket() : NetworkPacket<BattleInitializePacket> {
             fun fromPokemon(battlePokemon: BattlePokemon, isAlly: Boolean, illusion: BattlePokemon? = null): ActiveBattlePokemonDTO {
                 val pokemon = battlePokemon.effectedPokemon
                 val exposed = if (isAlly) pokemon else illusion?.effectedPokemon ?: pokemon
-                val hpValue = if (isAlly) pokemon.currentHealth.toFloat() else pokemon.currentHealth.toFloat() / pokemon.hp
+                val hpValue = if (isAlly) pokemon.currentHealth.toFloat() else pokemon.currentHealth.toFloat() / pokemon.maxHealth
                 return ActiveBattlePokemonDTO(
                     uuid = exposed.uuid,
                     displayName = exposed.getDisplayName(),
                     properties = exposed.createPokemonProperties(
                         PokemonPropertyExtractor.SPECIES,
-                        PokemonPropertyExtractor.GENDER
+                        PokemonPropertyExtractor.GENDER,
+                        PokemonPropertyExtractor.FORM,
+                        PokemonPropertyExtractor.SHINY
                     ).apply { level = pokemon.level },
                     aspects = exposed.aspects,
                     status = pokemon.status?.status,
                     hpValue = hpValue,
-                    maxHp = pokemon.hp.toFloat(),
+                    maxHp = pokemon.maxHealth.toFloat(),
                     isFlatHp = isAlly,
                     statChanges = battlePokemon.statChanges
                 )
@@ -178,7 +183,7 @@ class BattleInitializePacket() : NetworkPacket<BattleInitializePacket> {
 
             fun fromMock(battlePokemon: BattlePokemon, isAlly: Boolean, mock: PokemonProperties): ActiveBattlePokemonDTO {
                 val pokemon = battlePokemon.effectedPokemon
-                val hpValue = if (isAlly) pokemon.currentHealth.toFloat() else pokemon.currentHealth.toFloat() / pokemon.hp
+                val hpValue = if (isAlly) pokemon.currentHealth.toFloat() else pokemon.currentHealth.toFloat() / pokemon.maxHealth
                 return ActiveBattlePokemonDTO(
                     uuid = battlePokemon.uuid,
                     displayName = pokemon.getDisplayName(),
@@ -186,15 +191,15 @@ class BattleInitializePacket() : NetworkPacket<BattleInitializePacket> {
                     aspects = mock.aspects,
                     status = pokemon.status?.status,
                     hpValue = hpValue,
-                    maxHp = pokemon.hp.toFloat(),
+                    maxHp = pokemon.maxHealth.toFloat(),
                     isFlatHp = isAlly,
                     statChanges = battlePokemon.statChanges
                 )
             }
 
-            fun loadFromBuffer(buffer: PacketByteBuf): ActiveBattlePokemonDTO {
-                val uuid = buffer.readUuid()
-                val pokemonDisplayName = buffer.readText().copy()
+            fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): ActiveBattlePokemonDTO {
+                val uuid = buffer.readUUID()
+                val pokemonDisplayName = ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buffer).copy()
                 val properties = PokemonProperties.parse(buffer.readString(), delimiter = " ")
                 val aspects = buffer.readList { buffer.readString() }.toSet()
                 val status = if (buffer.readBoolean()) {
@@ -225,9 +230,9 @@ class BattleInitializePacket() : NetworkPacket<BattleInitializePacket> {
             }
         }
 
-        fun saveToBuffer(buffer: PacketByteBuf): ActiveBattlePokemonDTO {
-            buffer.writeUuid(uuid)
-            buffer.writeText(displayName)
+        fun saveToBuffer(buffer: RegistryFriendlyByteBuf): ActiveBattlePokemonDTO {
+            buffer.writeUUID(uuid)
+            ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.encode(buffer, displayName)
             buffer.writeString(properties.asString())
             buffer.writeCollection(aspects) { buf, it -> buf.writeString(it) }
             buffer.writeBoolean(status != null)

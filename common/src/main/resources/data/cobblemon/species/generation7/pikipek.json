@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Pikipek",
   "nationalPokedexNumber": 731,
   "primaryType": "normal",
@@ -25,6 +26,13 @@
   "eggGroups": [
     "flying"
   ],
+  "behaviour": {
+    "moving": {
+      "fly": {
+        "canFly": true
+      }
+    }
+  },
   "moves": [
     "1:peck",
     "3:growl",
@@ -124,8 +132,8 @@
   ],
   "baseScale": 1,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.4,
+    "height": 0.6,
     "fixed": false
   },
   "baseFriendship": 70,

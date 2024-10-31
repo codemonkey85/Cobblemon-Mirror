@@ -13,9 +13,10 @@ import com.cobblemon.mod.common.Cobblemon.config
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnAction
 import com.cobblemon.mod.common.api.spawning.detail.SpawnAction
 import com.cobblemon.mod.common.util.math.intersection
+import com.cobblemon.mod.common.util.server
 import kotlin.math.max
 import kotlin.math.min
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * A [SpawningInfluence] that tends spawns around a player to be within their level range.
@@ -27,7 +28,7 @@ import net.minecraft.server.network.ServerPlayerEntity
  * @since February 14th, 2022
  */
 open class PlayerLevelRangeInfluence(
-    player: ServerPlayerEntity,
+    player: ServerPlayer,
     val variation: Int,
     val noPokemonRange: IntRange = 1 .. config.minimumLevelRangeMax,
     val recalculationMillis: Long = 5000L
@@ -40,7 +41,7 @@ open class PlayerLevelRangeInfluence(
         return if (System.currentTimeMillis() - lastCalculatedTime > recalculationMillis) {
             lastCalculatedTime = System.currentTimeMillis()
 
-            val party = Cobblemon.storage.getParty(uuid)
+            val party = Cobblemon.storage.getParty(uuid, server()!!.registryAccess())
             previousRange = if (party.any()) {
                 //val minimumLevel = party.minOf { it.level }
                 val maximumLevel = party.maxOf { it.level }

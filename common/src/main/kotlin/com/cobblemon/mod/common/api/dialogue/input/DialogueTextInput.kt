@@ -20,7 +20,7 @@ import com.cobblemon.mod.common.api.dialogue.FunctionDialogueAction
  */
 class DialogueTextInput : DialogueInput {
     override var timeout: DialogueTimeout? = null
-    val action: DialogueAction = FunctionDialogueAction { dialogue, _ -> dialogue.setPage(dialogue.currentPageIndex + 1) }
+    var action: DialogueAction = FunctionDialogueAction { dialogue, _ -> dialogue.setPage(dialogue.currentPageIndex + 1) }
     override fun toMoLangStruct(activeInput: ActiveInput) = QueryStruct(hashMapOf())
 
     override fun handle(activeInput: ActiveInput, value: String) {

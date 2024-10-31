@@ -9,9 +9,8 @@
 package com.cobblemon.mod.common.api.tags
 
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.registry.Registries
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.registry.tag.TagKey
+import net.minecraft.core.registries.Registries
+import net.minecraft.tags.TagKey
 
 /**
  * A collection of the Cobblemon [TagKey]s related to the [Registries.ENTITY_TYPE].
@@ -32,6 +31,6 @@ object CobblemonEntityTypeTags {
     @JvmField
     val BOATS = create("boats")
 
-    private fun create(path: String) = TagKey.of(RegistryKeys.ENTITY_TYPE, cobblemonResource(path))
+    private fun create(path: String) = TagKey.create(Registries.ENTITY_TYPE, cobblemonResource(path))
 
 }

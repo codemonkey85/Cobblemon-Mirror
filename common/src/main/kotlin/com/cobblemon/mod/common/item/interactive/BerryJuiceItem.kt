@@ -11,64 +11,73 @@ package com.cobblemon.mod.common.item.interactive
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
+import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.events.pokemon.healing.PokemonHealedEvent
+import com.cobblemon.mod.common.api.item.HealingSource
 import com.cobblemon.mod.common.api.item.PokemonSelectingItem
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.item.CobblemonItem
 import com.cobblemon.mod.common.item.battle.BagItem
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.sound.SoundCategory
-import net.minecraft.util.Hand
-import net.minecraft.util.TypedActionResult
-import net.minecraft.world.World
-import net.minecraft.item.Items
+import com.cobblemon.mod.common.util.genericRuntime
+import com.cobblemon.mod.common.util.resolveFloat
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.level.Level
+import net.minecraft.world.item.Items
 
-class BerryJuiceItem : CobblemonItem(Settings()), PokemonSelectingItem {
+class BerryJuiceItem : CobblemonItem(Properties()), PokemonSelectingItem, HealingSource {
     override val bagItem = object : BagItem {
         override val itemName = "item.cobblemon.berry_juice"
+        override val returnItem = Items.BOWL
         override fun getShowdownInput(actor: BattleActor, battlePokemon: BattlePokemon, data: String?) = "potion 20"
         override fun canUse(battle: PokemonBattle, target: BattlePokemon) =  target.health < target.maxHealth && target.health > 0
     }
 
     override fun canUseOnPokemon(pokemon: Pokemon) = !pokemon.isFullHealth() && pokemon.currentHealth > 0
-    override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
-        if (user is ServerPlayerEntity) {
-            return use(user, user.getStackInHand(hand))
+    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
+        if (user is ServerPlayer) {
+            return use(user, user.getItemInHand(hand))
         }
-        return TypedActionResult.success(user.getStackInHand(hand))
+        return InteractionResultHolder.success(user.getItemInHand(hand))
     }
 
     override fun applyToPokemon(
-        player: ServerPlayerEntity,
+        player: ServerPlayer,
         stack: ItemStack,
         pokemon: Pokemon
-    ): TypedActionResult<ItemStack>? {
+    ): InteractionResultHolder<ItemStack>? {
         if (pokemon.isFullHealth()) {
-            return TypedActionResult.fail(stack)
+            return InteractionResultHolder.fail(stack)
         }
-        pokemon.currentHealth = Integer.min(pokemon.currentHealth + 20, pokemon.hp)
-        player.playSound(CobblemonSounds.BERRY_EAT, SoundCategory.PLAYERS, 1F, 1F)
+        var amount = Integer.min(pokemon.currentHealth + 20, pokemon.maxHealth)
+        CobblemonEvents.POKEMON_HEALED.postThen(PokemonHealedEvent(pokemon, amount, this), { cancelledEvent -> return InteractionResultHolder.fail(stack)}) { event ->
+            amount = event.amount
+        }
+        pokemon.currentHealth = amount
+        player.playSound(CobblemonSounds.BERRY_EAT, 1F, 1F)
         if (!player.isCreative)  {
-            stack.decrement(1)
+            stack.shrink(1)
             val woodenBowlItemStack = ItemStack(Items.BOWL)
-            if (!player.inventory.insertStack(woodenBowlItemStack)) {
+            if (!player.inventory.add(woodenBowlItemStack)) {
                 // Drop the item into the world if the inventory is full
-                player.dropItem(woodenBowlItemStack, false)
+                player.drop(woodenBowlItemStack, false)
             }
         }
-        return TypedActionResult.success(stack)
+        return InteractionResultHolder.success(stack)
     }
 
-    override fun applyToBattlePokemon(player: ServerPlayerEntity, stack: ItemStack, battlePokemon: BattlePokemon) {
+    override fun applyToBattlePokemon(player: ServerPlayer, stack: ItemStack, battlePokemon: BattlePokemon) {
         super.applyToBattlePokemon(player, stack, battlePokemon)
-        player.playSound(CobblemonSounds.BERRY_EAT, SoundCategory.PLAYERS, 1F, 1F)
+        player.playSound(CobblemonSounds.BERRY_EAT, 1F, 1F)
         if (!player.isCreative)  {
             val woodenBowlItemStack = ItemStack(Items.BOWL)
-            if (!player.inventory.insertStack(woodenBowlItemStack)) {
+            if (!player.inventory.add(woodenBowlItemStack)) {
                 // Drop the item into the world if the inventory is full
-                player.dropItem(woodenBowlItemStack, false)
+                player.drop(woodenBowlItemStack, false)
             }
         }
     }

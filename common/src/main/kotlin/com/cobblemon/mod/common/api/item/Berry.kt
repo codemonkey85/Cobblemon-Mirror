@@ -8,9 +8,9 @@
 
 package com.cobblemon.mod.common.api.item
 
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 class Berry(
-    val name: Identifier,
+    val name: ResourceLocation,
     val spicy: Int,
     val dry: Int,
     val sweet: Int,

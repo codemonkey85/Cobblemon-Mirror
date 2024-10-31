@@ -1,0 +1,178 @@
+{
+	"display": {
+		"icon": {
+			"id": "cobblemon:pokemon_model",
+	"components": {
+        "cobblemon:pokemon_item": {"species":"cobblemon:vivillon","aspects":["vivillon-wings-meadow"]}
+      }
+		},
+		"title": {
+			"translate": "advancements.cobblemon.catch_all_vivillon"
+		},
+		"description": {
+			"translate": "advancements.cobblemon.catch_all_vivillon.description"
+		},
+		"frame": "challenge"
+	},
+	"parent": "cobblemon:first_catch",
+	"criteria": {
+		"archipelago": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-archipelago"]
+			}
+		},
+		"continental": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-continental"]
+			}
+		},
+		"elegant": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-elegant"]
+			}
+		},
+		"fancy": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-fancy"]
+			}
+		},
+		"garden": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-garden"]
+			}
+		},
+		"high_plains": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-high-plains"]
+			}
+		},
+		"icy_snow": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-icy-snow"]
+			}
+		},
+		"jungle": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-jungle"]
+			}
+		},
+		"marine": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-marine"]
+			}
+		},
+		"meadow": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-meadow"]
+			}
+		},
+		"modern": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-modern"]
+			}
+		},
+		"monsoon": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-monsoon"]
+			}
+		},
+		"ocean": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-ocean"]
+			}
+		},
+		"polar": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-polar"]
+			}
+		},
+		"river": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-river"]
+			}
+		},
+		"sandstorm": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-sandstorm"]
+			}
+		},
+		"savanna": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-savanna"]
+			}
+		},
+		"sun": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-sun"]
+			}
+		},
+		"tundra": {
+			"trigger": "cobblemon:aspects_collected",
+			"conditions": {
+				"pokemon": "cobblemon:vivillon",
+				"aspects": ["vivillon-wings-tundra"]
+			}
+		}
+	},
+	"requirements": [
+		["archipelago"],
+		["continental"],
+		["elegant"],
+		["fancy"],
+		["garden"],
+		["high_plains"],
+		["icy_snow"],
+		["jungle"],
+		["marine"],
+		["meadow"],
+		["modern"],
+		["monsoon"],
+		["ocean"],
+		["polar"],
+		["river"],
+		["sandstorm"],
+		["savanna"],
+		["sun"],
+		["tundra"]
+	],
+  "rewards": {
+    "experience": 100
+  },
+  "sends_telemetry_event": false
+}

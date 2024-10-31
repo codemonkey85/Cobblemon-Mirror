@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Sunkern",
   "nationalPokedexNumber": 191,
   "primaryType": "grass",
@@ -24,6 +25,19 @@
   "eggGroups": [
     "grass"
   ],
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.3
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": true,
+      "depth": "normal",
+      "light": "0-4"
+    }
+  },
   "moves": [
     "1:growth",
     "1:tackle",
@@ -154,10 +168,10 @@
       "requiredContext": "cobblemon:sun_stone"
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.75,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.4,
+    "height": 0.5,
     "fixed": false
   },
   "baseFriendship": 70,

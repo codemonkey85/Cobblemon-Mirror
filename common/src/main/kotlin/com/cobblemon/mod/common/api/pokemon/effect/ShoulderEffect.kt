@@ -9,7 +9,7 @@
 package com.cobblemon.mod.common.api.pokemon.effect
 
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * Interface for all ShoulderEffects
@@ -18,6 +18,6 @@ import net.minecraft.server.network.ServerPlayerEntity
  * @since 2022-01-26
  */
 interface ShoulderEffect {
-    fun applyEffect(pokemon: Pokemon, player: ServerPlayerEntity, isLeft: Boolean)
-    fun removeEffect(pokemon: Pokemon, player: ServerPlayerEntity, isLeft: Boolean)
+    fun applyEffect(pokemon: Pokemon, player: ServerPlayer, isLeft: Boolean)
+    fun removeEffect(pokemon: Pokemon, player: ServerPlayer, isLeft: Boolean)
 }

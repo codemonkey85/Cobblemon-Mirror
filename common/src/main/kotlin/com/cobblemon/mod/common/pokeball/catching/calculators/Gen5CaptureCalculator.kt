@@ -24,8 +24,8 @@ import com.cobblemon.mod.common.pokemon.status.statuses.persistent.SleepStatus
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 import kotlin.random.Random
-import net.minecraft.entity.LivingEntity
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.server.level.ServerPlayer
 
 /**
  * An implementation of the capture calculator used in the generation 5 games.
@@ -56,7 +56,7 @@ object Gen5CaptureCalculator : CaptureCalculator, CriticalCaptureProvider, Poked
             return CaptureContext(numberOfShakes = 3, isSuccessfulCapture = true, isCriticalCapture = false)
         }
         // We don't have dark grass so we're just gonna pretend everything is that.
-        val darkGrass = if (thrower is ServerPlayerEntity) this.caughtMultiplierFor(thrower).roundToInt() else 1
+        val darkGrass = if (thrower is ServerPlayer) this.caughtMultiplierFor(thrower).roundToInt() else 1
         val catchRate = getCatchRate(thrower, pokeBallEntity, target, pokemon.form.catchRate.toFloat())
         val validModifier = pokeBall.catchRateModifier.isValid(thrower, pokemon)
         val bonusStatus = when (pokemon.status?.status) {
@@ -74,8 +74,8 @@ object Gen5CaptureCalculator : CaptureCalculator, CriticalCaptureProvider, Poked
             rate = catchRate
             ballBonus = if (validModifier) pokeBall.catchRateModifier.value(thrower, pokemon) else 1F
         }
-        val modifiedCatchRate = (pokeBall.catchRateModifier.behavior(thrower, pokemon).mutator((3F * pokemon.hp - 2F * pokemon.currentHealth) * darkGrass * rate, ballBonus.toFloat()) / (3F * pokemon.hp)) * bonusStatus
-        val critical = if (thrower is ServerPlayerEntity) this.shouldHaveCriticalCapture(thrower, modifiedCatchRate) else false
+        val modifiedCatchRate = (pokeBall.catchRateModifier.behavior(thrower, pokemon).mutator((3F * pokemon.maxHealth - 2F * pokemon.currentHealth) * darkGrass * rate, ballBonus.toFloat()) / (3F * pokemon.maxHealth)) * bonusStatus
+        val critical = if (thrower is ServerPlayer) this.shouldHaveCriticalCapture(thrower, modifiedCatchRate) else false
         if (modifiedCatchRate >= 1044480) {
             return CaptureContext.successful(critical)
         }

@@ -1,0 +1,34 @@
+{
+  "parent": "cobblemon:recipes/root",
+  "rewards": {
+    "recipes": [
+      "cobblemon:ice_stone_block"
+    ]
+  },
+  "criteria": {
+    "has_ice_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:ice_stone"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "cobblemon:ice_stone_block"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_ice_stone",
+      "has_the_recipe"
+    ]
+  ]
+}

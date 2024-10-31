@@ -24,7 +24,7 @@ import com.cobblemon.mod.common.pokemon.Nature
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.battleLang
 import java.util.UUID
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
 
 open class BattlePokemon(
     val originalPokemon: Pokemon,
@@ -53,7 +53,7 @@ open class BattlePokemon(
     val health: Int
         get() = effectedPokemon.currentHealth
     val maxHealth: Int
-        get() = effectedPokemon.hp
+        get() = effectedPokemon.maxHealth
     val ivs: IVs
         get() = effectedPokemon.ivs
     val nature: Nature
@@ -76,10 +76,10 @@ open class BattlePokemon(
      * The [HeldItemManager] backing this [BattlePokemon].
      */
     val heldItemManager: HeldItemManager by lazy { HeldItemProvider.provide(this) }
-
+    
     val contextManager = ContextManager()
 
-    open fun getName(): MutableText {
+    open fun getName(): MutableComponent {
         val displayPokemon = getIllusion()?.effectedPokemon ?: effectedPokemon
         return if (actor is PokemonBattleActor || actor is MultiPokemonBattleActor) {
             displayPokemon.getDisplayName()
@@ -94,7 +94,7 @@ open class BattlePokemon(
 
     fun isSentOut() = actor.battle.activePokemon.any { it.battlePokemon == this }
     fun canBeSentOut() =
-            if (actor.request?.side?.pokemon?.get(0)?.reviving == true) {
+            if (actor.request?.side?.pokemon?.any{ it.reviving } == true) {
                 !isSentOut() && !willBeSwitchedIn && health <= 0
             } else {
                 !isSentOut() && !willBeSwitchedIn && health > 0

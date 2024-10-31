@@ -13,36 +13,35 @@ import com.cobblemon.mod.common.api.item.PokemonAndMoveSelectingItem
 import com.cobblemon.mod.common.api.moves.Move
 import com.cobblemon.mod.common.item.CobblemonItem
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.sound.SoundCategory
-import net.minecraft.util.Hand
-import net.minecraft.util.TypedActionResult
-import net.minecraft.world.World
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.level.Level
 
-class PPUpItem(val amount: Int) : CobblemonItem(Settings()), PokemonAndMoveSelectingItem {
+class PPUpItem(val amount: Int) : CobblemonItem(Properties()), PokemonAndMoveSelectingItem {
     override val bagItem = null
     override fun canUseOnPokemon(pokemon: Pokemon) = pokemon.moveSet.any(::canUseOnMove)
     override fun canUseOnMove(move: Move) = move.raisedPpStages < 3
     override fun applyToPokemon(
-        player: ServerPlayerEntity,
+        player: ServerPlayer,
         stack: ItemStack,
         pokemon: Pokemon,
         move: Move
     ) {
         if (move.raiseMaxPP(amount)) {
             if (!player.isCreative) {
-                stack.decrement(1)
+                stack.shrink(1)
             }
-            player.playSound(CobblemonSounds.MEDICINE_PILLS_USE, SoundCategory.PLAYERS, 1F, 1F)
+            pokemon.entity?.playSound(CobblemonSounds.MEDICINE_PILLS_USE, 1F, 1F)
         }
     }
 
-    override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
-        if (user is ServerPlayerEntity) {
-            use(user, user.getStackInHand(hand))?.let { return it }
+    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
+        if (user is ServerPlayer) {
+            use(user, user.getItemInHand(hand))?.let { return it }
         }
-        return TypedActionResult.success(user.getStackInHand(hand))
+        return InteractionResultHolder.success(user.getItemInHand(hand))
     }
 }

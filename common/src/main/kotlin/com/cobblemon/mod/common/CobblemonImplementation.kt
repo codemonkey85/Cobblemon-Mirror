@@ -9,31 +9,24 @@
 package com.cobblemon.mod.common
 
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
-import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.api.net.NetworkPacket
-import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.mojang.brigadier.arguments.ArgumentType
-import kotlin.reflect.KClass
-import net.minecraft.advancement.criterion.Criterion
-import net.minecraft.block.ComposterBlock
-import net.minecraft.command.argument.serialize.ArgumentSerializer
-import net.minecraft.item.ItemConvertible
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.network.listener.ClientPlayPacketListener
-import net.minecraft.network.packet.Packet
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.tag.TagKey
-import net.minecraft.resource.ResourceManager
-import net.minecraft.resource.ResourceReloader
-import net.minecraft.resource.ResourceType
+import net.minecraft.commands.synchronization.ArgumentTypeInfo
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
-import net.minecraft.world.GameRules
-import net.minecraft.world.biome.Biome
-import net.minecraft.world.gen.GenerationStep
-import net.minecraft.world.gen.feature.PlacedFeature
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
+import net.minecraft.server.packs.resources.PreparableReloadListener
+import net.minecraft.server.packs.resources.ResourceManager
+import net.minecraft.tags.TagKey
+import net.minecraft.world.level.GameRules
+import net.minecraft.world.level.ItemLike
+import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.levelgen.GenerationStep
+import net.minecraft.world.level.levelgen.placement.PlacedFeature
+import kotlin.reflect.KClass
 
 interface CobblemonImplementation {
     val modAPI: ModAPI
@@ -70,6 +63,10 @@ interface CobblemonImplementation {
      */
     fun registerSoundEvents()
 
+    fun registerDataComponents()
+
+    fun registerEntityDataSerializers()
+
     /**
      * TODO
      *
@@ -104,9 +101,18 @@ interface CobblemonImplementation {
      * TODO
      *
      */
+    fun registerVillagers()
+
+    /**
+     * TODO
+     *
+     */
     fun registerWorldGenFeatures()
 
     fun registerParticles()
+
+    fun registerEntitySubPredicates()
+
 
     /**
      * Add a feature to the current platform implementation.
@@ -115,7 +121,7 @@ interface CobblemonImplementation {
      * @param step The [GenerationStep.Feature] of this feature.
      * @param validTag The [TagKey] required by the [Biome] for this feature to generate in, if null all biomes are valid.
      */
-    fun addFeatureToWorldGen(feature: RegistryKey<PlacedFeature>, step: GenerationStep.Feature, validTag: TagKey<Biome>?)
+    fun addFeatureToWorldGen(feature: ResourceKey<PlacedFeature>, step: GenerationStep.Decoration, validTag: TagKey<Biome>?)
 
     /**
      * TODO
@@ -126,7 +132,7 @@ interface CobblemonImplementation {
      * @param argumentClass
      * @param serializer
      */
-    fun <A : ArgumentType<*>, T : ArgumentSerializer.ArgumentTypeProperties<A>> registerCommandArgument(identifier: Identifier, argumentClass: KClass<A>, serializer: ArgumentSerializer<A, T>)
+    fun <A : ArgumentType<*>, T : ArgumentTypeInfo.Template<A>> registerCommandArgument(identifier: ResourceLocation, argumentClass: KClass<A>, serializer: ArgumentTypeInfo<A, T>)
 
     /**
      * TODO
@@ -137,7 +143,7 @@ interface CobblemonImplementation {
      * @param type
      * @return
      */
-    fun <T : GameRules.Rule<T>> registerGameRule(name: String, category: GameRules.Category, type: GameRules.Type<T>): GameRules.Key<T>
+    fun <T : GameRules.Value<T>> registerGameRule(name: String, category: GameRules.Category, type: GameRules.Type<T>): GameRules.Key<T>
 
     /**
      * TODO
@@ -146,7 +152,7 @@ interface CobblemonImplementation {
      * @param criteria
      * @return
      */
-    fun <T : Criterion<*>> registerCriteria(criteria: T): T
+    fun registerCriteria()
 
     /**
      * TODO
@@ -156,7 +162,7 @@ interface CobblemonImplementation {
      * @param type
      * @param dependencies
      */
-    fun registerResourceReloader(identifier: Identifier, reloader: ResourceReloader, type: ResourceType, dependencies: Collection<Identifier>)
+    fun registerResourceReloader(identifier: ResourceLocation, reloader: PreparableReloadListener, type: PackType, dependencies: Collection<ResourceLocation>)
 
     /**
      * TODO
@@ -171,24 +177,24 @@ interface CobblemonImplementation {
      * @param registry The [JsonDataRegistry] to reload.
      * @param manager The [ResourceManager] to reload from.
      */
-    fun <T> reloadJsonRegistry(registry: JsonDataRegistry<T>, manager: ResourceManager): HashMap<Identifier, T>
+    fun <T> reloadJsonRegistry(registry: JsonDataRegistry<T>, manager: ResourceManager): HashMap<ResourceLocation, T>
 
     /**
      * Registers an item to the [ComposterBlock].
      *
-     * @param item The [ItemConvertible] being registered.
+     * @param item The [ItemLike] being registered.
      * @param chance The chance % of increasing the composter level, 0 to 1 expected.
      */
-    fun registerCompostable(item: ItemConvertible, chance: Float)
+    fun registerCompostable(item: ItemLike, chance: Float)
 
     /**
      * Registers a builtin resource pack.
      *
-     * @param id The unique [Identifier] of this pack.
+     * @param id The unique [ResourceLocation] of this pack.
      * @param title The title displayed in the resource pack GUI, the description is still a part of the pack metadata.
      * @param activationBehaviour The [ResourcePackActivationBehaviour] for this pack.
      */
-    fun registerBuiltinResourcePack(id: Identifier, title: Text, activationBehaviour: ResourcePackActivationBehaviour)
+    fun registerBuiltinResourcePack(id: ResourceLocation, title: Component, activationBehaviour: ResourcePackActivationBehaviour)
 
 }
 
@@ -214,30 +220,17 @@ enum class ResourcePackActivationBehaviour {
 
 enum class ModAPI {
     FABRIC,
-    FORGE
+    FORGE,
+    NEOFORGE
 }
 
 interface NetworkManager {
+    fun sendPacketToPlayer(player: ServerPlayer, packet: NetworkPacket<*>)
 
-    fun registerClientBound()
-
-    fun registerServerBound()
-
-    fun <T: NetworkPacket<T>> createClientBound(identifier: Identifier, kClass: KClass<T>, encoder: (T, PacketByteBuf) -> Unit, decoder: (PacketByteBuf) -> T, handler: ClientNetworkPacketHandler<T>)
-
-    fun <T: NetworkPacket<T>> createServerBound(identifier: Identifier, kClass: KClass<T>, encoder: (T, PacketByteBuf) -> Unit, decoder: (PacketByteBuf) -> T, handler: ServerNetworkPacketHandler<T>)
-
-    fun sendPacketToPlayer(player: ServerPlayerEntity, packet: NetworkPacket<*>)
-
-    fun sendPacketToServer(packet: NetworkPacket<*>)
-
-    fun <T : NetworkPacket<*>> asVanillaClientBound(packet: T): Packet<ClientPlayPacketListener>
-
+    fun sendToServer(packet: NetworkPacket<*>)
 }
 
 enum class Environment {
-
     CLIENT,
     SERVER
-
 }

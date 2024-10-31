@@ -13,12 +13,12 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import java.lang.reflect.Type
-import net.minecraft.util.math.Box
+import net.minecraft.world.phys.AABB
 
-object BoxAdapter : JsonDeserializer<Box> {
-    override fun deserialize(json: JsonElement, type: Type, ctx: JsonDeserializationContext): Box {
+object BoxAdapter : JsonDeserializer<AABB> {
+    override fun deserialize(json: JsonElement, type: Type, ctx: JsonDeserializationContext): AABB {
         json as JsonObject
-        return Box(
+        return AABB(
             json.get("minX")?.asDouble ?: -9999999.0,
             json.get("minY")?.asDouble ?: 0.0,
             json.get("minZ")?.asDouble ?: -9999999.0,

@@ -2,19 +2,19 @@
   "maxScale": 1.0,
   "yTranslation": 0.2,
   "yGrowthPoint": 0,
-
-  "animations": [
-    "bedrock(embryo_stage3, gooping)"
-  ],
-  "quirks": [
-    {
-      "name": "quirk",
-      "animations": [
-        "bedrock(embryo_stage3, pulse)"
-      ],
-      "loopTimes": 1,
-      "minSeconds": 30,
-      "maxSeconds": 60
+  "poses": {
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('embryo_stage3', 'gooping')"],
+      "quirks": [
+        {
+          "name": "quirk",
+          "animations": ["q.bedrock_stateful('embryo_stage3', 'pulse')"],
+          "loopTimes": 1,
+          "minSecondsBetweenOccurrences": 30,
+          "maxSecondsBetweenOccurrences": 60
+        }
+      ]
     }
-  ]
+  }
 }

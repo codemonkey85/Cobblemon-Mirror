@@ -10,7 +10,8 @@ package com.cobblemon.mod.common.api.storage.party
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.advancement.CobblemonCriteria
-import com.cobblemon.mod.common.advancement.criterion.PartyCheckContext
+import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.events.pokemon.PokemonGainedEvent
 import com.cobblemon.mod.common.api.pokemon.evolution.Evolution
 import com.cobblemon.mod.common.api.pokemon.evolution.PassiveEvolution
 import com.cobblemon.mod.common.api.storage.pc.PCStore
@@ -20,13 +21,14 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.activestate.ShoulderedState
 import com.cobblemon.mod.common.pokemon.evolution.variants.LevelUpEvolution
 import com.cobblemon.mod.common.util.*
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.network.chat.Component
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.round
 import kotlin.random.Random
+import net.minecraft.core.RegistryAccess
 
 /**
  * A [PartyStore] used for a single player. This uses the player's UUID as the store's UUID, and is declared as its own
@@ -52,8 +54,8 @@ open class PlayerPartyStore(
         observerUUIDs.add(playerUUID)
     }
 
-    open fun getOverflowPC(): PCStore? {
-        return Cobblemon.storage.getPC(playerUUID)
+    open fun getOverflowPC(registryAccess: RegistryAccess): PCStore? {
+        return Cobblemon.storage.getPC(playerUUID, registryAccess)
     }
 
     override fun add(pokemon: Pokemon): Boolean {
@@ -62,32 +64,38 @@ open class PlayerPartyStore(
         }
         pokemon.refreshOriginalTrainer()
 
-        return if (super.add(pokemon)) {
-            pokemon.getOwnerPlayer()?.let { CobblemonCriteria.PARTY_CHECK.trigger(it, PartyCheckContext(this)) }
+        val added = if (super.add(pokemon)) {
+            pokemon.getOwnerPlayer()?.let { CobblemonCriteria.PARTY_CHECK.trigger(it, this) }
             true
         } else {
             val player = playerUUID.getPlayer()
-            val pc = getOverflowPC()
+            val pc = getOverflowPC(player?.server?.registryAccess() ?: server()!!.registryAccess())
 
             if (pc == null || !pc.add(pokemon)) {
                 if (pc == null) {
-                    player?.sendMessage(lang("overflow_no_pc"))
+                    player?.sendSystemMessage(lang("overflow_no_pc"))
                 } else {
-                    player?.sendMessage(lang("overflow_no_space", pc.name))
+                    player?.sendSystemMessage(lang("overflow_no_space", pc.name))
                 }
                 false
             } else {
-                player?.sendMessage(lang("overflow_to_pc", pokemon.species.translatedName, pc.name))
+                player?.sendSystemMessage(lang("overflow_to_pc", pokemon.species.translatedName, pc.name))
                 true
             }
         }
+
+        if (added) {
+            CobblemonEvents.POKEMON_GAINED.post(PokemonGainedEvent(playerUUID, pokemon))
+        }
+
+        return added
     }
 
     /**
      * Called on the party every second for routine party updates
      * ex: Passive healing, statuses, etc
      */
-    fun onSecondPassed(player: ServerPlayerEntity) {
+    fun onSecondPassed(player: ServerPlayer) {
         // Passive healing and passive statuses require the player be out of battle
         if (BattleRegistry.getBattleByParticipatingPlayer(player) == null) {
             val random = Random.Default
@@ -96,17 +104,17 @@ open class PlayerPartyStore(
                 if (pokemon.isFainted()) {
                     pokemon.faintedTimer -= 1
                     if (pokemon.faintedTimer <= -1) {
-                        val php = ceil(pokemon.hp * Cobblemon.config.faintAwakenHealthPercent)
+                        val php = ceil(pokemon.maxHealth * Cobblemon.config.faintAwakenHealthPercent)
                         pokemon.currentHealth = php.toInt()
-                        player.sendMessage(Text.translatable("cobblemon.party.faintRecover", pokemon.getDisplayName()))
+                        player.sendSystemMessage(Component.translatable("cobblemon.party.faintRecover", pokemon.getDisplayName()))
                     }
                 }
                 // Passive healing while less than full health
-                else if (pokemon.currentHealth < pokemon.hp) {
+                else if (pokemon.currentHealth < pokemon.maxHealth) {
                     pokemon.healTimer--
                     if (pokemon.healTimer <= -1) {
                         pokemon.healTimer = Cobblemon.config.healTimer
-                        val healAmount = 1.0.coerceAtLeast(pokemon.hp.toDouble() * Cobblemon.config.healPercent)
+                        val healAmount = 1.0.coerceAtLeast(pokemon.maxHealth.toDouble() * Cobblemon.config.healPercent)
                         pokemon.currentHealth = pokemon.currentHealth + round(healAmount).toInt()
                     }
                 }
@@ -148,10 +156,10 @@ open class PlayerPartyStore(
 
         // Shoulder validation code
         if (player.shoulderEntityLeft.isPokemonEntity() && !validateShoulder(player.shoulderEntityLeft, true)) {
-            player.dropShoulderEntity(player.shoulderEntityLeft)
+            player.respawnEntityOnShoulder(player.shoulderEntityLeft)
         }
         if (player.shoulderEntityRight.isPokemonEntity() && !validateShoulder(player.shoulderEntityRight, false)) {
-            player.dropShoulderEntity(player.shoulderEntityRight)
+            player.respawnEntityOnShoulder(player.shoulderEntityRight)
         }
 
         forEach {
@@ -162,8 +170,8 @@ open class PlayerPartyStore(
         }
     }
 
-    fun validateShoulder(shoulderEntity: NbtCompound, isLeft: Boolean): Boolean {
-        val pokemon = find { it.uuid == shoulderEntity.getCompound("Pokemon").getUuid(DataKeys.POKEMON_UUID) }
+    fun validateShoulder(shoulderEntity: CompoundTag, isLeft: Boolean): Boolean {
+        val pokemon = find { it.uuid == shoulderEntity.getCompound("Pokemon").getUUID(DataKeys.POKEMON_UUID) }
         if (pokemon == null || (pokemon.state as? ShoulderedState)?.isLeftShoulder != isLeft) {
             return false
         }
@@ -179,21 +187,21 @@ open class PlayerPartyStore(
         if (pokemon1 != null && pokemon2 != null) {
             val player = pokemon1.getOwnerPlayer()
             if (player != null) {
-                CobblemonCriteria.PARTY_CHECK.trigger(player, PartyCheckContext(this))
+                CobblemonCriteria.PARTY_CHECK.trigger(player, this)
             }
         } else if (pokemon1 != null || pokemon2 != null) {
             var player = pokemon1?.getOwnerPlayer()
             if (player != null) {
-                CobblemonCriteria.PARTY_CHECK.trigger(player, PartyCheckContext(this))
+                CobblemonCriteria.PARTY_CHECK.trigger(player, this)
             } else {
                 player = pokemon2!!.getOwnerPlayer()
-                CobblemonCriteria.PARTY_CHECK.trigger(player!!, PartyCheckContext(this))
+                CobblemonCriteria.PARTY_CHECK.trigger(player!!, this)
             }
         }
     }
 
     override fun set(position: PartyPosition, pokemon: Pokemon) {
         super.set(position, pokemon)
-        pokemon.getOwnerPlayer()?.let { CobblemonCriteria.PARTY_CHECK.trigger(it, PartyCheckContext(this)) }
+        pokemon.getOwnerPlayer()?.let { CobblemonCriteria.PARTY_CHECK.trigger(it, this) }
     }
 }

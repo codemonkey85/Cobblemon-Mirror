@@ -12,11 +12,12 @@ import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.net.messages.server.pokemon.update.evolution.AcceptEvolutionPacket
 import com.cobblemon.mod.common.util.party
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object AcceptEvolutionHandler : ServerNetworkPacketHandler<AcceptEvolutionPacket> {
-    override fun handle(packet: AcceptEvolutionPacket, server: MinecraftServer, player: ServerPlayerEntity) {
+    override fun handle(packet: AcceptEvolutionPacket, server: MinecraftServer, player: ServerPlayer) {
         val pokemon = player.party()[packet.pokemonUUID] ?: return
+        if (pokemon.entity?.isBusy == true) return
         val evolution = pokemon.evolutionProxy.server().firstOrNull { evolution -> evolution.id.equals(packet.evolutionId, true) } ?: return
         pokemon.evolutionProxy.server().start(evolution)
     }

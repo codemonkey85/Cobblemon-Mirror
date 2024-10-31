@@ -14,6 +14,7 @@ import com.cobblemon.mod.common.item.berry.BerryItem
 data class BerryMutationRecipe(
     val berryOne: BerryItem,
     val berryTwo: BerryItem,
-    val berryResult: BerryItem)  {
+    val berryResult: BerryItem
+)  {
 
 }

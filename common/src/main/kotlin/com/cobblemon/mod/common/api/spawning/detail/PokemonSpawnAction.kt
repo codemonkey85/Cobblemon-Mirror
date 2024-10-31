@@ -45,6 +45,7 @@ class PokemonSpawnAction(
             null
         }?.createStack(ctx)
         val entity = props.createEntity(ctx.world)
+        entity.spawnCause = ctx.cause
         SeasonFeatureHandler.updateSeason(entity.pokemon, Cobblemon.seasonResolver(ctx.world, ctx.position))
         if (heldItem != null) {
             entity.pokemon.swapHeldItem(heldItem)

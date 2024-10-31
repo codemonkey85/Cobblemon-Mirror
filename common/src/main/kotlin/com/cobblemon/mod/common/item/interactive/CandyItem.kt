@@ -15,12 +15,12 @@ import com.cobblemon.mod.common.api.pokemon.experience.CandyExperienceSource
 import com.cobblemon.mod.common.item.CobblemonItem
 import com.cobblemon.mod.common.item.interactive.CandyItem.Calculator
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Hand
-import net.minecraft.util.TypedActionResult
-import net.minecraft.world.World
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.level.Level
 
 /**
  * An experience candy item.
@@ -31,17 +31,17 @@ import net.minecraft.world.World
  * @author Licious
  * @since May 5th, 2022
  */
-class CandyItem(val calculator: Calculator) : CobblemonItem(Settings()), PokemonSelectingItem {
+class CandyItem(val calculator: Calculator) : CobblemonItem(Properties()), PokemonSelectingItem {
     override val bagItem = null
 
-    override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
-        if (user is ServerPlayerEntity) {
-            return use(user, user.getStackInHand(hand))
+    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
+        if (user is ServerPlayer) {
+            return use(user, user.getItemInHand(hand))
         }
-        return TypedActionResult.success(user.getStackInHand(hand))
+        return InteractionResultHolder.success(user.getItemInHand(hand))
     }
 
-    override fun applyToPokemon(player: ServerPlayerEntity, stack: ItemStack, pokemon: Pokemon): TypedActionResult<ItemStack>? {
+    override fun applyToPokemon(player: ServerPlayer, stack: ItemStack, pokemon: Pokemon): InteractionResultHolder<ItemStack>? {
         val experience = this.calculator.calculate(player, pokemon)
         CobblemonEvents.EXPERIENCE_CANDY_USE_PRE.postThen(
                 event = ExperienceCandyUseEvent.Pre(player, pokemon, this, experience, experience),
@@ -53,19 +53,19 @@ class CandyItem(val calculator: Calculator) : CobblemonItem(Settings()), Pokemon
                     var returnValue = false
                     if (result.experienceAdded > 0) {
                         if (!player.isCreative) {
-                            stack.decrement(1)
+                            stack.shrink(1)
                         }
                         returnValue = true
                     }
                     CobblemonEvents.EXPERIENCE_CANDY_USE_POST.post(ExperienceCandyUseEvent.Post(player, pokemon, this, result))
 
                     return if (returnValue)
-                        TypedActionResult.success(stack)
+                        InteractionResultHolder.success(stack)
                     else
-                        TypedActionResult.fail(stack)
+                        InteractionResultHolder.fail(stack)
                 }
         )
-        return TypedActionResult.fail(stack)
+        return InteractionResultHolder.fail(stack)
     }
 
     override fun canUseOnPokemon(pokemon: Pokemon): Boolean {
@@ -83,11 +83,11 @@ class CandyItem(val calculator: Calculator) : CobblemonItem(Settings()), Pokemon
         /**
          * Resolves the experience the [CandyItem] will give.
          *
-         * @param player The [ServerPlayerEntity] using the candy.
+         * @param player The [ServerPlayer] using the candy.
          * @param pokemon The [Pokemon] receiving experience.
          * @return The experience that will be received
          */
-        fun calculate(player: ServerPlayerEntity, pokemon: Pokemon): Int
+        fun calculate(player: ServerPlayer, pokemon: Pokemon): Int
 
     }
 

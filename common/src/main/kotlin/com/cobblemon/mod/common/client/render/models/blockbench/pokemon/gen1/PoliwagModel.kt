@@ -8,27 +8,27 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen1
 
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.PoseType.Companion.STANDING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.UI_POSES
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class PoliwagModel(root: ModelPart) : PokemonPoseableModel() {
+class PoliwagModel(root: ModelPart) : PokemonPosableModel(root) {
     override val rootPart = root.registerChildWithAllChildren("poliwag")
 
     override var portraitScale = 1.8F
-    override var portraitTranslation = Vec3d(0.0, -0.7, 0.0)
+    override var portraitTranslation = Vec3(0.0, -0.7, 0.0)
 
     override var profileScale = 0.9F
-    override var profileTranslation = Vec3d(0.0, 0.38, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.38, 0.0)
 
-    lateinit var sleep: PokemonPose
-    lateinit var standing: PokemonPose
-    lateinit var float: PokemonPose
-    lateinit var swim: PokemonPose
+    lateinit var sleep: Pose
+    lateinit var standing: Pose
+    lateinit var float: Pose
+    lateinit var swim: Pose
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("poliwag", "blink")}
@@ -36,21 +36,21 @@ class PoliwagModel(root: ModelPart) : PokemonPoseableModel() {
             poseName = "standing",
             poseTypes = STANDING_POSES + UI_POSES,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("poliwag", "ground_idle")
             )
         )
 
         sleep = registerPose(
                 poseType = PoseType.SLEEP,
-                idleAnimations = arrayOf(bedrock("poliwag", "sleep"))
+                animations = arrayOf(bedrock("poliwag", "sleep"))
         )
 
         float = registerPose(
             poseName = "float",
             poseType = PoseType.FLOAT,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("poliwag", "water_idle")
             )
         )
@@ -59,7 +59,7 @@ class PoliwagModel(root: ModelPart) : PokemonPoseableModel() {
             poseName = "swim",
             poseType = PoseType.SWIM,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("poliwag", "water_swim")
             )
         )
@@ -68,5 +68,5 @@ class PoliwagModel(root: ModelPart) : PokemonPoseableModel() {
 //    override fun getFaintAnimation(
 //    ) = if (state.isPosedIn(standing, walk)) bedrockStateful("poliwag", "faint") else null
 //        pokemonEntity: PokemonEntity,
-//        state: PoseableEntityState<PokemonEntity>
+//        state: PosableState<PokemonEntity>
 }

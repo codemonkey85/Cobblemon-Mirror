@@ -13,45 +13,46 @@ import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.cobblemon.mod.common.pokeball.PokeBall
 import com.cobblemon.mod.common.util.isServerSide
 import com.cobblemon.mod.common.util.math.geometry.toRadians
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Hand
-import net.minecraft.util.TypedActionResult
-import net.minecraft.world.World
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.level.Level
 import kotlin.math.cos
 
 class PokeBallItem(
-    val pokeBall : PokeBall
-) : CobblemonItem(Settings()) {
+        val pokeBall: PokeBall
+) : CobblemonItem(Properties().apply {
+    if (pokeBall.name == PokeBalls.MASTER_BALL.name) {
+        // Master balls are a netherite product and should be fire immune
+        fireResistant()
+    }
+}) {
 
-    override fun use(world: World, player: PlayerEntity, usedHand: Hand): TypedActionResult<ItemStack> {
-        val itemStack = player.getStackInHand(usedHand)
+    override fun use(world: Level, player: Player, usedHand: InteractionHand): InteractionResultHolder<ItemStack> {
+        val itemStack = player.getItemInHand(usedHand)
         if (world.isServerSide()) {
-            throwPokeBall(world, player as ServerPlayerEntity)
+            throwPokeBall(world, player as ServerPlayer)
         }
-        if (!player.abilities.creativeMode) {
-            itemStack.decrement(1)
+        if (!player.abilities.instabuild) {
+            itemStack.shrink(1)
         }
-        return TypedActionResult.success(itemStack, world.isClient)
+        return InteractionResultHolder.sidedSuccess(itemStack, world.isClientSide)
     }
 
-    private fun throwPokeBall(world: World, player: ServerPlayerEntity) {
-        val pokeBallEntity = EmptyPokeBallEntity(pokeBall, player.world, player).apply {
-            val overhandFactor: Float = if (player.pitch < 0) {
-                5f * cos(player.pitch.toRadians())
+    private fun throwPokeBall(world: Level, player: ServerPlayer) {
+        val pokeBallEntity = EmptyPokeBallEntity(pokeBall, player.level(), player).apply {
+            val overhandFactor: Float = if (player.xRot < 0) {
+                5f * cos(player.xRot.toRadians())
             } else {
                 5f
             }
-            setVelocity(player, player.pitch - overhandFactor, player.yaw, 0.0f, pokeBall.throwPower, 1.0f)
-            setPosition(pos.add(velocity.normalize().multiply(1.0)))
+
+            shootFromRotation(player, player.xRot - overhandFactor, player.yRot, 0.0f, pokeBall.throwPower, 1.0f)
+            setPos(position().add(deltaMovement.normalize().scale(1.0)))
             owner = player
         }
-        world.spawnEntity(pokeBallEntity)
+        world.addFreshEntity(pokeBallEntity)
     }
-
-    override fun isFireproof(): Boolean {
-        return pokeBall.name == PokeBalls.MASTER_BALL.name || super.isFireproof()
-    }
-
 }

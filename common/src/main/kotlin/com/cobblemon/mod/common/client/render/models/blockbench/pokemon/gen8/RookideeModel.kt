@@ -11,13 +11,13 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen8
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BiWingedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class RookideeModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWingedFrame {
+class RookideeModel (root: ModelPart) : PokemonPosableModel(root), BipedFrame, BiWingedFrame {
     override val rootPart = root.registerChildWithAllChildren("rookidee")
     override val leftWing = getPart("wing_left")
     override val rightWing = getPart("wing_right")
@@ -26,25 +26,25 @@ class RookideeModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWi
 
 
     override var portraitScale = 3.0F
-    override var portraitTranslation = Vec3d(-0.2, -2.4, 0.0)
+    override var portraitTranslation = Vec3(-0.2, -2.4, 0.0)
 
     override var profileScale = 1.2F
-    override var profileTranslation = Vec3d(0.0, -0.01, 0.0)
+    override var profileTranslation = Vec3(0.0, -0.01, 0.0)
 
 
-    lateinit var stand: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var hover: PokemonPose
-    lateinit var fly: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var stand: Pose
+    lateinit var walk: Pose
+    lateinit var hover: Pose
+    lateinit var fly: Pose
+    lateinit var sleep: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("rookidee", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("rookidee", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("rookidee", "blink") }
         sleep = registerPose(
             poseType = PoseType.SLEEP,
-            idleAnimations = arrayOf(bedrock("rookidee", "sleep"))
+            animations = arrayOf(bedrock("rookidee", "sleep"))
         )
 
         stand = registerPose(
@@ -52,7 +52,7 @@ class RookideeModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWi
             poseTypes = PoseType.SHOULDER_POSES + PoseType.UI_POSES + PoseType.STAND,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("rookidee", "ground_idle")
             )
         )
@@ -62,7 +62,7 @@ class RookideeModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWi
             poseTypes = PoseType.STATIONARY_POSES - PoseType.STAND - PoseType.UI_POSES - PoseType.SHOULDER_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("rookidee", "air_idle")
             )
         )
@@ -72,7 +72,7 @@ class RookideeModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWi
             poseTypes = PoseType.MOVING_POSES - PoseType.WALK,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("rookidee", "air_fly")
             )
         )
@@ -82,7 +82,7 @@ class RookideeModel (root: ModelPart) : PokemonPoseableModel(), BipedFrame, BiWi
             poseType = PoseType.WALK,
             transformTicks = 10,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("rookidee", "ground_walk")
             )
         )

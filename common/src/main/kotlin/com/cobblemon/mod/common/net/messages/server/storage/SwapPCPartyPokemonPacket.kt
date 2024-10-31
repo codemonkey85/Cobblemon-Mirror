@@ -10,15 +10,17 @@ package com.cobblemon.mod.common.net.messages.server.storage
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.api.storage.party.PartyPosition
-import com.cobblemon.mod.common.api.storage.party.PartyPosition.Companion.readPartyPosition
-import com.cobblemon.mod.common.api.storage.party.PartyPosition.Companion.writePartyPosition
 import com.cobblemon.mod.common.api.storage.pc.PCPosition
-import com.cobblemon.mod.common.api.storage.pc.PCPosition.Companion.readPCPosition
-import com.cobblemon.mod.common.api.storage.pc.PCPosition.Companion.writePCPosition
 import com.cobblemon.mod.common.net.serverhandling.storage.SwapPCPartyPokemonHandler
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.readPCPosition
+import com.cobblemon.mod.common.util.readPartyPosition
+import com.cobblemon.mod.common.util.readUUID
+import com.cobblemon.mod.common.util.writePCPosition
+import com.cobblemon.mod.common.util.writePartyPosition
+import com.cobblemon.mod.common.util.writeUUID
+import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
-import net.minecraft.network.PacketByteBuf
 
 /**
  * Tells the server to swap Pokémon between the party and the currently linked PC. The positions are sent
@@ -31,15 +33,15 @@ import net.minecraft.network.PacketByteBuf
  */
 class SwapPCPartyPokemonPacket(val partyPokemonID: UUID, val partyPosition: PartyPosition, val pcPokemonID: UUID, val pcPosition: PCPosition) : NetworkPacket<SwapPCPartyPokemonPacket> {
     override val id = ID
-    override fun encode(buffer: PacketByteBuf) {
-        buffer.writeUuid(partyPokemonID)
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeUUID(partyPokemonID)
         buffer.writePartyPosition(partyPosition)
-        buffer.writeUuid(pcPokemonID)
+        buffer.writeUUID(pcPokemonID)
         buffer.writePCPosition(pcPosition)
     }
 
     companion object {
         val ID = cobblemonResource("swap_pc_party_pokemon")
-        fun decode(buffer: PacketByteBuf): SwapPCPartyPokemonPacket = SwapPCPartyPokemonPacket(buffer.readUuid(), buffer.readPartyPosition(), buffer.readUuid(), buffer.readPCPosition())
+        fun decode(buffer: RegistryFriendlyByteBuf): SwapPCPartyPokemonPacket = SwapPCPartyPokemonPacket(buffer.readUUID(), buffer.readPartyPosition(), buffer.readUUID(), buffer.readPCPosition())
     }
 }

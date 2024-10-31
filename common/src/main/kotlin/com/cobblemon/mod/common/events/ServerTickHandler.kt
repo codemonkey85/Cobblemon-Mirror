@@ -26,7 +26,7 @@ object ServerTickHandler {
             secondsTick = 0
 
             // Party tick
-            for (player in server.playerManager.playerList) {
+            for (player in server.playerList.players) {
                 player.party().onSecondPassed(player)
             }
         }

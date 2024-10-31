@@ -13,38 +13,40 @@ import com.cobblemon.mod.common.advancement.CobblemonCriteria
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.starter.StarterChosenEvent
 import com.cobblemon.mod.common.api.starter.StarterHandler
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
+import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.net.messages.client.starter.OpenStarterUIPacket
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 open class CobblemonStarterHandler : StarterHandler {
 
-    override fun getStarterList(player: ServerPlayerEntity) = Cobblemon.starterConfig.starters
+    override fun getStarterList(player: ServerPlayer) = Cobblemon.starterConfig.starters
 
-    override fun handleJoin(player: ServerPlayerEntity) {}
+    override fun handleJoin(player: ServerPlayer) {}
 
-    override fun requestStarterChoice(player: ServerPlayerEntity) {
-        val playerData = Cobblemon.playerData.get(player)
+    override fun requestStarterChoice(player: ServerPlayer) {
+        val playerData = Cobblemon.playerDataManager.getGenericData(player)
         if (playerData.starterSelected) {
             playerData.sendToPlayer(player)
-            player.sendMessage(lang("ui.starter.alreadyselected").red(), true)
+            player.sendSystemMessage(lang("ui.starter.alreadyselected").red(), true)
         } else if (playerData.starterLocked) {
-            player.sendMessage(lang("ui.starter.cannotchoose").red(), true)
+            player.sendSystemMessage(lang("ui.starter.cannotchoose").red(), true)
         } else {
             OpenStarterUIPacket(getStarterList(player)).sendToPlayer(player)
             playerData.starterPrompted = true
-            Cobblemon.playerData.saveSingle(playerData)
+            Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreTypes.GENERAL)
         }
     }
 
-    override fun chooseStarter(player: ServerPlayerEntity, categoryName: String, index: Int) {
-        val playerData = Cobblemon.playerData.get(player)
+    override fun chooseStarter(player: ServerPlayer, categoryName: String, index: Int) {
+        val playerData = Cobblemon.playerDataManager.getGenericData(player)
         if (playerData.starterSelected) {
-            return player.sendMessage(lang("ui.starter.alreadyselected").red(), true)
+            return player.sendSystemMessage(lang("ui.starter.alreadyselected").red(), true)
         } else if (playerData.starterLocked) {
-            return player.sendMessage(lang("ui.starter.cannotchoose").red(), true)
+            return player.sendSystemMessage(lang("ui.starter.cannotchoose").red(), true)
         }
 
         val category = getStarterList(player).find { it.name == categoryName } ?: return
@@ -61,11 +63,11 @@ open class CobblemonStarterHandler : StarterHandler {
                 it.pokemon.also {
                     playerData.starterSelected = true
                     playerData.starterUUID = it.uuid
-                    if (player.world.gameRules.getBoolean(CobblemonGameRules.SHINY_STARTERS)) { pokemon.shiny = true }
+                    if (player.level().gameRules.getBoolean(CobblemonGameRules.SHINY_STARTERS)) { pokemon.shiny = true }
                 }
             )
             CobblemonCriteria.PICK_STARTER.trigger(player, pokemon)
-            Cobblemon.playerData.saveSingle(playerData)
+            Cobblemon.playerDataManager.saveSingle(playerData, PlayerInstancedDataStoreTypes.GENERAL)
             playerData.sendToPlayer(player)
         }
     }

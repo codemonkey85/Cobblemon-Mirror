@@ -1,0 +1,27 @@
+{
+	"display": {
+		"icon": {
+			"id": "cobblemon:link_cable",
+			"components": {
+        "minecraft:custom_model_data": 6
+      }
+		},
+		"title": {
+			"translate": "advancements.cobblemon.first_shiny_catch"
+		},
+		"description": {
+			"translate": "advancements.cobblemon.first_shiny_catch.description"
+		},
+		"frame": "challenge"
+	},
+	"parent": "cobblemon:first_catch",
+	"criteria": {
+		"catch": {
+			"trigger": "cobblemon:catch_shiny_pokemon",
+			"conditions": {
+				"count": 1
+			}
+		}
+	},
+  "sends_telemetry_event": false
+}

@@ -12,9 +12,9 @@ import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.molang.ExpressionLike
-import com.cobblemon.mod.common.api.molang.MoLangFunctions.getQueryStruct
 import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
-import net.minecraft.entity.Entity
+import com.cobblemon.mod.common.entity.PosableEntity
+import net.minecraft.world.entity.Entity
 
 /**
  * An action effect keyframe that plays for all entities for which the condition is true.
@@ -25,12 +25,16 @@ import net.minecraft.entity.Entity
 interface EntityConditionalActionEffectKeyframe {
     val entityCondition: ExpressionLike
     fun test(context: ActionEffectContext, entity: Entity, isUser: Boolean): Boolean {
-        // TODO this should use the entity's own query struct
-        context.runtime.environment.getQueryStruct().addFunction("entity") {
-            QueryStruct(hashMapOf())
-                .addFunction("uuid") { StringValue(entity.uuidAsString) }
-                .addFunction("is_user") { DoubleValue(isUser) }
-        }
+        context.runtime.environment.query
+            .addFunction("entity") {
+                if (entity is PosableEntity) {
+                    entity.struct
+                } else {
+                    QueryStruct(hashMapOf())
+                }.addFunction("is_user") { DoubleValue(isUser) } // Deprecated tbh
+            }
+            .addFunction("is_user") { DoubleValue(isUser) }
+
         return entityCondition.resolveBoolean(context.runtime)
     }
 }

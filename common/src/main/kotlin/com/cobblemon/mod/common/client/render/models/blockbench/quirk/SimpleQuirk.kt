@@ -8,21 +8,27 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.quirk
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
+import com.cobblemon.mod.common.client.render.models.blockbench.animation.ActiveAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.PrimaryAnimation
-import com.cobblemon.mod.common.client.render.models.blockbench.animation.StatefulAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.util.math.random
-import kotlin.random.Random
-import net.minecraft.entity.Entity
 
-class SimpleQuirk<T : Entity>(
+/**
+ * An easy-to-understand [ModelQuirk]. Has a condition, has a loop range, has a time range for how long between
+ * occurrences, and has a list of animations to apply. Follows those instructions.
+ *
+ * @author Hiroku
+ * @since September 30th, 2022
+ */
+class SimpleQuirk(
     private val secondsBetweenOccurrences: Pair<Float, Float>,
-    val condition: (state: PoseableEntityState<T>) -> Boolean = { true },
+    val condition: (context: PosableState) -> Boolean = { true },
     val loopTimes: IntRange = 1..1,
-    val animations: (state: PoseableEntityState<T>) -> Iterable<StatefulAnimation<T, *>>
-) : ModelQuirk<T, SimpleQuirkData<T>>() {
-    override fun createData(): SimpleQuirkData<T> = SimpleQuirkData()
-    override fun tick(state: PoseableEntityState<T>, data: SimpleQuirkData<T>) {
+    val animations: (state: PosableState) -> Iterable<ActiveAnimation>
+) : ModelQuirk<SimpleQuirkData>() {
+    override fun createData(): SimpleQuirkData = SimpleQuirkData()
+    override fun apply(context: RenderContext, state: PosableState, data: SimpleQuirkData) {
         if (data.animations.isNotEmpty() || data.primaryAnimation != null) {
             return
         }
@@ -50,11 +56,11 @@ class SimpleQuirk<T : Entity>(
         }
     }
 
-    private fun applyAnimations(state: PoseableEntityState<T>, data: SimpleQuirkData<T>) {
+    private fun applyAnimations(state: PosableState, data: SimpleQuirkData) {
         val (primary, stateful) = animations(state).partition { it is PrimaryAnimation }
         data.animations.addAll(stateful)
         if (primary.isNotEmpty()) {
-            val primaryAnimation = primary.first() as PrimaryAnimation<T>
+            val primaryAnimation = primary.first() as PrimaryAnimation
             data.primaryAnimation = primaryAnimation
             state.addPrimaryAnimation(primaryAnimation)
         }

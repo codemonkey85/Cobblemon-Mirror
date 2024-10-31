@@ -10,29 +10,29 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen6
 
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class GourgeistModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class GourgeistModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("gourgeist")
     override val head = getPart("head")
 
     override var portraitScale = 4.0F
-    override var portraitTranslation = Vec3d(-0.1, 0.6, 0.0)
+    override var portraitTranslation = Vec3(-0.1, 0.6, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.55, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.55, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var hovering: PokemonPose
-    lateinit var fly: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var standing: Pose
+    lateinit var walk: Pose
+    lateinit var hovering: Pose
+    lateinit var fly: Pose
+    lateinit var sleep: Pose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("gourgeist", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("gourgeist", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("gourgeist", "blink") }
@@ -40,7 +40,7 @@ class GourgeistModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "standing",
             poseTypes = PoseType.UI_POSES + PoseType.STAND,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 bedrock("gourgeist", "ground_idle")
             )
@@ -50,7 +50,7 @@ class GourgeistModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "walk",
             poseType = PoseType.WALK,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("gourgeist", "ground_walk")
             )
         )
@@ -59,7 +59,7 @@ class GourgeistModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "hovering",
             poseType = PoseType.HOVER,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("gourgeist", "air_idle")
             )
         )
@@ -68,7 +68,7 @@ class GourgeistModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "fly",
             poseType = PoseType.FLY,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("gourgeist", "air_fly")
             )
         )
@@ -77,7 +77,7 @@ class GourgeistModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
             poseName = "sleep",
             poseType = PoseType.SLEEP,
             quirks = arrayOf(blink),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 bedrock("gourgeist", "sleep")
             )
         )

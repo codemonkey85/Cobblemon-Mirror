@@ -22,7 +22,7 @@ import com.cobblemon.mod.common.pokemon.status.statuses.persistent.PoisonStatus
 import com.cobblemon.mod.common.pokemon.status.statuses.persistent.SleepStatus
 import kotlin.math.roundToInt
 import kotlin.random.Random
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
 
 /**
  * An implementation of the capture calculator used in the generation 1 games.
@@ -51,6 +51,8 @@ object Gen1CaptureCalculator : CaptureCalculator {
             else -> 150
         }
         val n = Random.nextInt(nBound + 1)
+        // Hiro note: usedThreshold makes no sense here, it's never actually used because
+        // we return in both places that it was set. What the hell was the point? Someone figure this out.
         var usedThreshold = 0
         val status = pokemon.status?.status
         if ((status is FrozenStatus || status is SleepStatus) && n < FRZ_SLEEP_THRESHOLD) {
@@ -69,7 +71,7 @@ object Gen1CaptureCalculator : CaptureCalculator {
             PokeBalls.GREAT_BALL -> 8F
             else -> 12F
         }
-        val f = ((pokemon.hp * 255F * 4F) / (pokemon.currentHealth * ballValue)).coerceIn(1F, 255F).roundToInt()
+        val f = ((pokemon.maxHealth * 255F * 4F) / (pokemon.currentHealth * ballValue)).coerceIn(1F, 255F).roundToInt()
         if (f >= m) {
             return CaptureContext.successful()
         }

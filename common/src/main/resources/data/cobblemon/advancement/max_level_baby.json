@@ -1,0 +1,31 @@
+{
+	"parent": "cobblemon:first_evolution",
+	"display": {
+		"icon": {
+			"id": "cobblemon:pokemon_model",
+	"components": {
+        "cobblemon:pokemon_item": {"species":"cobblemon:magikarp","aspects":["male"]}
+      }
+		},
+		"title": {
+			"translate": "advancements.cobblemon.max_level_baby"
+		},
+		"description": {
+			"translate": "advancements.cobblemon.max_level_baby.description"
+		},
+		"frame": "challenge"
+	},
+	"criteria": {
+		"level": {
+			"trigger": "cobblemon:level_up",
+			"conditions": {
+				"level": 100,
+				"has_evolved": false
+			}
+		}
+	},
+  "rewards": {
+    "experience": 100
+  },
+  "sends_telemetry_event": false
+}

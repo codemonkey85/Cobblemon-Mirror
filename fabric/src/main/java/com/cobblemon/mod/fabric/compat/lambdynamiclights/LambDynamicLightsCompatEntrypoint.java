@@ -11,14 +11,14 @@ package com.cobblemon.mod.fabric.compat.lambdynamiclights;
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.compat.LambDynamicLightsCompat;
 import dev.lambdaurora.lambdynlights.api.DynamicLightsInitializer;
+import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 
 // Java class due to relying on entrypoint
 public class LambDynamicLightsCompatEntrypoint implements DynamicLightsInitializer {
 
     @Override
-    public void onInitializeDynamicLights() {
+    public void onInitializeDynamicLights(ItemLightSourceManager itemLightSourceManager) {
         LambDynamicLightsCompat.hookCompat();
-        Cobblemon.INSTANCE.getLOGGER().info("Lamb Dynamic Lights compatibility enabled");
+        Cobblemon.LOGGER.info("Lamb Dynamic Lights compatibility enabled");
     }
-
 }

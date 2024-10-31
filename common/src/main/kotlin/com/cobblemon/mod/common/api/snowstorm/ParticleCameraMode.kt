@@ -13,18 +13,18 @@ import com.cobblemon.mod.common.api.data.ArbitrarilyMappedSerializableCompanion
 import com.cobblemon.mod.common.client.render.MatrixWrapper
 import com.cobblemon.mod.common.util.math.hamiltonProduct
 import com.cobblemon.mod.common.util.set
+import com.mojang.math.Axis
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.util.Mth
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.pow
 import kotlin.math.sqrt
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.math.MathHelper
-import net.minecraft.util.math.RotationAxis
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.phys.Vec3
 import org.joml.AxisAngle4d
 import org.joml.Quaternionf
 import org.joml.Vector3f
@@ -56,12 +56,12 @@ interface ParticleCameraMode : CodecMapped {
         prevAngle: Float,
         angle: Float,
         deltaTicks: Float,
-        particlePosition: Vec3d,
-        cameraPosition: Vec3d,
+        particlePosition: Vec3,
+        cameraPosition: Vec3,
         cameraAngle: Quaternionf,
         cameraYaw: Float,
         cameraPitch: Float,
-        viewDirection: Vec3d
+        viewDirection: Vec3
     ): Quaternionf
 }
 
@@ -81,22 +81,22 @@ class RotateXYZCameraMode : ParticleCameraMode {
         prevAngle: Float,
         angle: Float,
         deltaTicks: Float,
-        particlePosition: Vec3d,
-        cameraPosition: Vec3d,
+        particlePosition: Vec3,
+        cameraPosition: Vec3,
         cameraAngle: Quaternionf,
         cameraYaw: Float,
         cameraPitch: Float,
-        viewDirection: Vec3d
+        viewDirection: Vec3
     ): Quaternionf {
-        val i = if (angle == 0.0f) 0F else MathHelper.lerp(deltaTicks, prevAngle, angle)
+        val i = if (angle == 0.0f) 0F else Mth.lerp(deltaTicks, prevAngle, angle)
         val q = Quaternionf(cameraAngle)
-        q.hamiltonProduct(RotationAxis.POSITIVE_Z.rotationDegrees(i))
+        q.hamiltonProduct(Axis.ZP.rotationDegrees(i))
         return q
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {}
-    override fun writeToBuffer(buffer: PacketByteBuf) {}
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {}
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {}
 }
 
 class RotateYCameraMode : ParticleCameraMode {
@@ -115,22 +115,23 @@ class RotateYCameraMode : ParticleCameraMode {
         prevAngle: Float,
         angle: Float,
         deltaTicks: Float,
-        particlePosition: Vec3d,
-        cameraPosition: Vec3d,
+        particlePosition: Vec3,
+        cameraPosition: Vec3,
         cameraAngle: Quaternionf,
         cameraYaw: Float,
         cameraPitch: Float,
-        viewDirection: Vec3d
+        viewDirection: Vec3
     ): Quaternionf {
-        val i = if (angle == 0F) 0F else MathHelper.lerp(deltaTicks, prevAngle, angle)
-        val q2 = RotationAxis.POSITIVE_Y.rotationDegrees(-cameraYaw)
-        q2.hamiltonProduct(RotationAxis.POSITIVE_Z.rotationDegrees(i))
+        val i = if (angle == 0F) 0F else Mth.lerp(deltaTicks, prevAngle, angle)
+        val q2 = Axis.YP.rotationDegrees(-cameraYaw)
+        q2.hamiltonProduct(Axis.ZP.rotationDegrees(i))
+        q2.hamiltonProduct(Axis.YP.rotationDegrees(180F))
         return q2
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {}
-    override fun writeToBuffer(buffer: PacketByteBuf) {}
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {}
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {}
 }
 
 class LookAtXYZ : ParticleCameraMode {
@@ -144,26 +145,26 @@ class LookAtXYZ : ParticleCameraMode {
 
     override val type = ParticleCameraModeType.LOOK_AT_XYZ
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {}
-    override fun writeToBuffer(buffer: PacketByteBuf) {}
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {}
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {}
 
     override fun getRotation(
         matrixWrapper: MatrixWrapper,
         prevAngle: Float,
         angle: Float,
         deltaTicks: Float,
-        particlePosition: Vec3d,
-        cameraPosition: Vec3d,
+        particlePosition: Vec3,
+        cameraPosition: Vec3,
         cameraAngle: Quaternionf,
         cameraYaw: Float,
         cameraPitch: Float,
-        viewDirection: Vec3d
+        viewDirection: Vec3
     ): Quaternionf {
-        val i = if (angle == 0F) 0F else MathHelper.lerp(deltaTicks, prevAngle, angle)
+        val i = if (angle == 0F) 0F else Mth.lerp(deltaTicks, prevAngle, angle)
         val rotation = Quaternionf()
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_Y.rotationDegrees(-cameraYaw))
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_X.rotationDegrees(cameraPitch))
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_Z.rotationDegrees(i))
+        rotation.hamiltonProduct(Axis.YP.rotationDegrees(-cameraYaw - 180))
+        rotation.hamiltonProduct(Axis.XP.rotationDegrees(cameraPitch))
+        rotation.hamiltonProduct(Axis.ZP.rotationDegrees(i))
         return rotation
     }
 }
@@ -182,22 +183,22 @@ class LookAtY : ParticleCameraMode {
         prevAngle: Float,
         angle: Float,
         deltaTicks: Float,
-        particlePosition: Vec3d,
-        cameraPosition: Vec3d,
+        particlePosition: Vec3,
+        cameraPosition: Vec3,
         cameraAngle: Quaternionf,
         cameraYaw: Float,
         cameraPitch: Float,
-        viewDirection: Vec3d
+        viewDirection: Vec3
     ): Quaternionf {
-        val i = if (angle == 0F) 0F else MathHelper.lerp(deltaTicks, prevAngle, angle)
-        val q2 = RotationAxis.POSITIVE_Y.rotationDegrees(-cameraYaw)
-        q2.hamiltonProduct(RotationAxis.POSITIVE_Z.rotationDegrees(i))
+        val i = if (angle == 0F) 0F else Mth.lerp(deltaTicks, prevAngle, angle)
+        val q2 = Axis.YP.rotationDegrees(-cameraYaw + 180)
+        q2.hamiltonProduct(Axis.ZP.rotationDegrees(i))
         return q2
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {}
-    override fun writeToBuffer(buffer: PacketByteBuf) {}
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {}
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {}
 }
 class DirectionZ : ParticleCameraMode {
     override val type: ParticleCameraModeType = ParticleCameraModeType.DIRECTION_Z
@@ -214,24 +215,24 @@ class DirectionZ : ParticleCameraMode {
         prevAngle: Float,
         angle: Float,
         deltaTicks: Float,
-        particlePosition: Vec3d,
-        cameraPosition: Vec3d,
+        particlePosition: Vec3,
+        cameraPosition: Vec3,
         cameraAngle: Quaternionf,
         cameraYaw: Float,
         cameraPitch: Float,
-        viewDirection: Vec3d
+        viewDirection: Vec3
     ): Quaternionf {
         val rotation = Quaternionf(0F, 0F, 0F, 1F)
         val y = atan2(viewDirection.x, viewDirection.z)
         val x = atan2(viewDirection.y, sqrt(viewDirection.x.pow(2.0) + viewDirection.z.pow(2.0)))
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_X.rotationDegrees(-x.toFloat()))
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_Y.rotationDegrees(y.toFloat()))
+        rotation.hamiltonProduct(Axis.XP.rotationDegrees(-x.toFloat()))
+        rotation.hamiltonProduct(Axis.YP.rotationDegrees(y.toFloat()))
         return rotation
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {}
-    override fun writeToBuffer(buffer: PacketByteBuf) {}
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {}
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {}
 }
 
 class EmitterYZPlane : ParticleCameraMode {
@@ -249,12 +250,12 @@ class EmitterYZPlane : ParticleCameraMode {
         prevAngle: Float,
         angle: Float,
         deltaTicks: Float,
-        particlePosition: Vec3d,
-        cameraPosition: Vec3d,
+        particlePosition: Vec3,
+        cameraPosition: Vec3,
         cameraAngle: Quaternionf,
         cameraYaw: Float,
         cameraPitch: Float,
-        viewDirection: Vec3d
+        viewDirection: Vec3
     ): Quaternionf {
         val rotation = Quaternionf(0F, 0F, 0F, 1F)
 
@@ -262,15 +263,14 @@ class EmitterYZPlane : ParticleCameraMode {
         matrixWrapper.matrix.getRotation(quat)
         rotation.set(quat)
 
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_Y.rotationDegrees(180F)) // Don't worry about it.
-
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_Y.rotationDegrees(90F))
+        rotation.hamiltonProduct(Axis.YP.rotationDegrees(180F)) // Don't worry about it.
+        rotation.hamiltonProduct(Axis.YP.rotationDegrees(90F))
         return rotation
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {}
-    override fun writeToBuffer(buffer: PacketByteBuf) {}
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {}
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {}
 
 }
 
@@ -289,27 +289,26 @@ class EmitterXZPlane : ParticleCameraMode {
         prevAngle: Float,
         angle: Float,
         deltaTicks: Float,
-        particlePosition: Vec3d,
-        cameraPosition: Vec3d,
+        particlePosition: Vec3,
+        cameraPosition: Vec3,
         cameraAngle: Quaternionf,
         cameraYaw: Float,
         cameraPitch: Float,
-        viewDirection: Vec3d
+        viewDirection: Vec3
     ): Quaternionf {
         val rotation = Quaternionf(0F, 0F, 0F, 1F)
 
         val quat = AxisAngle4d(rotation)
         matrixWrapper.matrix.getRotation(quat)
         rotation.set(quat)
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_Y.rotationDegrees(180F)) // Don't worry about it.
-
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_X.rotationDegrees(-90F))
+        rotation.hamiltonProduct(Axis.YP.rotationDegrees(180F)) // Don't worry about it.
+        rotation.hamiltonProduct(Axis.XP.rotationDegrees(-90F))
         return rotation
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {}
-    override fun writeToBuffer(buffer: PacketByteBuf) {}
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {}
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {}
 
 }
 
@@ -328,12 +327,12 @@ class EmitterXYPlane : ParticleCameraMode {
         prevAngle: Float,
         angle: Float,
         deltaTicks: Float,
-        particlePosition: Vec3d,
-        cameraPosition: Vec3d,
+        particlePosition: Vec3,
+        cameraPosition: Vec3,
         cameraAngle: Quaternionf,
         cameraYaw: Float,
         cameraPitch: Float,
-        viewDirection: Vec3d
+        viewDirection: Vec3
     ): Quaternionf {
         val rotation = Quaternionf(0F, 0F, 0F, 1F)
 
@@ -341,14 +340,14 @@ class EmitterXYPlane : ParticleCameraMode {
         matrixWrapper.matrix.getRotation(quat)
         rotation.set(quat)
 
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_Y.rotationDegrees(180F)) // Don't worry about it.
+        rotation.hamiltonProduct(Axis.YP.rotationDegrees(180F)) // Don't worry about it.
 
         return rotation
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {}
-    override fun writeToBuffer(buffer: PacketByteBuf) {}
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {}
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {}
 
 }
 class DirectionY : ParticleCameraMode {
@@ -366,24 +365,24 @@ class DirectionY : ParticleCameraMode {
         prevAngle: Float,
         angle: Float,
         deltaTicks: Float,
-        particlePosition: Vec3d,
-        cameraPosition: Vec3d,
+        particlePosition: Vec3,
+        cameraPosition: Vec3,
         cameraAngle: Quaternionf,
         cameraYaw: Float,
         cameraPitch: Float,
-        viewDirection: Vec3d
+        viewDirection: Vec3
     ): Quaternionf {
         val rotation = Quaternionf(0F, 0F, 0F, 1F)
         val y = atan2(viewDirection.x, viewDirection.z)
         val x = atan2(viewDirection.y, sqrt(viewDirection.x.pow(2.0) + viewDirection.z.pow(2.0)))
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_X.rotationDegrees(x.toFloat() - PI.toFloat()/2f))
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_Y.rotationDegrees(y.toFloat() - PI.toFloat()))
+        rotation.hamiltonProduct(Axis.XP.rotationDegrees(x.toFloat() - PI.toFloat()/2f))
+        rotation.hamiltonProduct(Axis.YP.rotationDegrees(y.toFloat() - PI.toFloat()))
         return rotation
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {}
-    override fun writeToBuffer(buffer: PacketByteBuf) {}
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {}
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {}
 }
 
 class DirectionX : ParticleCameraMode {
@@ -401,24 +400,24 @@ class DirectionX : ParticleCameraMode {
         prevAngle: Float,
         angle: Float,
         deltaTicks: Float,
-        particlePosition: Vec3d,
-        cameraPosition: Vec3d,
+        particlePosition: Vec3,
+        cameraPosition: Vec3,
         cameraAngle: Quaternionf,
         cameraYaw: Float,
         cameraPitch: Float,
-        viewDirection: Vec3d
+        viewDirection: Vec3
     ): Quaternionf {
         val rotation = Quaternionf(0F, 0F, 0F, 1F)
         val y = atan2(viewDirection.x, viewDirection.z)
         val z = atan2(viewDirection.y, sqrt(viewDirection.x.pow(2.0) + viewDirection.z.pow(2.0)))
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_Y.rotationDegrees(y.toFloat() - PI.toFloat()/2f))
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_Z.rotationDegrees(z.toFloat()))
+        rotation.hamiltonProduct(Axis.YP.rotationDegrees(y.toFloat() - PI.toFloat()/2f))
+        rotation.hamiltonProduct(Axis.ZP.rotationDegrees(z.toFloat()))
         return rotation
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {}
-    override fun writeToBuffer(buffer: PacketByteBuf) {}
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {}
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {}
 }
 
 /**
@@ -465,12 +464,12 @@ class LookAtDirection : ParticleCameraMode {
         prevAngle: Float,
         angle: Float,
         deltaTicks: Float,
-        particlePosition: Vec3d,
-        cameraPosition: Vec3d,
+        particlePosition: Vec3,
+        cameraPosition: Vec3,
         cameraAngle: Quaternionf,
         cameraYaw: Float,
         cameraPitch: Float,
-        viewDirection: Vec3d
+        viewDirection: Vec3
     ): Quaternionf {
         viewDirectionF.set(viewDirection)
         particlePositionF.set(particlePosition)
@@ -495,15 +494,18 @@ class LookAtDirection : ParticleCameraMode {
         rotation.premul(Quaternionf().rotateTo(currentY, correctY))
 
         // Do the regular rotation around Z to spin the particle, same as all other modes.
-        val particleAngle = if (angle == 0.0f) 0F else MathHelper.lerp(deltaTicks, prevAngle, angle)
-        rotation.hamiltonProduct(RotationAxis.POSITIVE_Z.rotationDegrees(particleAngle))
+        val particleAngle = if (angle == 0.0f) 0F else Mth.lerp(deltaTicks, prevAngle, angle)
+        rotation.hamiltonProduct(Axis.ZP.rotationDegrees(particleAngle))
+
+        // Minecraft in 1.21 or 1.20.4 or something fucked with vertex draw order, and it flipped everything.
+        rotation.hamiltonProduct(Axis.YP.rotationDegrees(180F))
 
         return rotation
     }
 
     override fun <T> encode(ops: DynamicOps<T>) = CODEC.encodeStart(ops, this)
-    override fun readFromBuffer(buffer: PacketByteBuf) {}
-    override fun writeToBuffer(buffer: PacketByteBuf) {}
+    override fun readFromBuffer(buffer: RegistryFriendlyByteBuf) {}
+    override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {}
 }
 enum class ParticleCameraModeType {
     ROTATE_XYZ,

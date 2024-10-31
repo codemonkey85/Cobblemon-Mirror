@@ -10,23 +10,24 @@ package com.cobblemon.mod.common.entity.boat
 
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.CobblemonItems
-import net.minecraft.block.Block
-import net.minecraft.block.WoodType
-import net.minecraft.item.Item
-import net.minecraft.util.StringIdentifiable
+import net.minecraft.util.StringRepresentable
+import net.minecraft.world.item.Item
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.state.properties.WoodType
 
 /**
  * Represents the various wooden boats in Cobblemon.
  *
  */
-enum class CobblemonBoatType(val mountedOffset: Double) : StringIdentifiable {
+enum class CobblemonBoatType(val mountedOffset: Float) : StringRepresentable {
 
-    APRICORN(-0.1);
+    APRICORN(-0.1f);
 
     /**
      * The base [Item] form of this [CobblemonBoatType].
      */
-    val boatItem: Item get() = when (this) {
+    val boatItem: Item
+        get() = when (this) {
         APRICORN -> CobblemonItems.APRICORN_BOAT
     }
 
@@ -51,11 +52,12 @@ enum class CobblemonBoatType(val mountedOffset: Double) : StringIdentifiable {
         APRICORN -> CobblemonBlocks.APRICORN_WOOD_TYPE
     }
 
-    override fun asString(): String = this.name.lowercase()
+
+    override fun getSerializedName(): String = this.name.lowercase()
 
     companion object {
 
-        internal fun ofOrdinal(ordinal: Int) = CobblemonBoatType.values()[ordinal]
+        internal fun ofOrdinal(ordinal: Int) = entries[ordinal]
 
     }
 

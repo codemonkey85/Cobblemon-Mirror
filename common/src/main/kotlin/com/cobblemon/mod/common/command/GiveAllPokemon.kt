@@ -16,18 +16,18 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
 
 object GiveAllPokemon {
-    fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
+    fun register(dispatcher: CommandDispatcher<CommandSourceStack>) {
         dispatcher.register(
-            CommandManager.literal("giveallpokemon")
+            Commands.literal("giveallpokemon")
                 .requiresWithPermission(CobblemonPermissions.GIVE_ALL_POKEMON) { it.player != null }
                 .then(
-                    CommandManager.argument("min", IntegerArgumentType.integer(1))
+                    Commands.argument("min", IntegerArgumentType.integer(1))
                         .then(
-                            CommandManager.argument("max", IntegerArgumentType.integer(1))
+                            Commands.argument("max", IntegerArgumentType.integer(1))
                                 .executes {
                                     execute(it, IntegerArgumentType.getInteger(it, "min")..IntegerArgumentType.getInteger(it, "max"))
                                 }
@@ -38,14 +38,16 @@ object GiveAllPokemon {
         )
     }
 
-    private fun execute(context: CommandContext<ServerCommandSource>, range: IntRange) : Int {
-        val player = context.source.playerOrThrow
-        val pc = player.party().getOverflowPC() ?: return 0
+    private fun execute(context: CommandContext<CommandSourceStack>, range: IntRange) : Int {
+        val player = context.source.playerOrException
+        val pc = player.party().getOverflowPC(player.registryAccess()) ?: return 0
 
         val orderedSpeces = PokemonSpecies.implemented.sortedBy { it.nationalPokedexNumber }
 
         for (species in orderedSpeces) {
-            pc.add(species.create())//.sendOut(player.world as ServerWorld, player.pos)
+            val pokemon = species.create()
+            pokemon.setOriginalTrainer(player.uuid)
+            pc.add(pokemon)//.sendOut(player.level() as ServerWorld, player.pos)
         }
 
         return Command.SINGLE_SUCCESS

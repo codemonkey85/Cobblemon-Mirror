@@ -1,0 +1,36 @@
+{
+  "display": {
+    "icon": {
+			"id": "cobblemon:pokemon_model",
+	"components": {
+        "cobblemon:pokemon_item": {"species":"cobblemon:accelgor","aspects":[""]}
+      }
+		},
+    "title": {
+      "translate": "advancements.cobblemon.trade_shelmet_karrablast"
+    },
+    "description": {
+      "translate": "advancements.cobblemon.trade_shelmet_karrablast.description"
+    },
+	"hidden": true
+  },
+  "parent": "cobblemon:trade_pokemon",
+  "criteria": {
+    "trade_sk": {
+      "trigger": "cobblemon:trade_pokemon",
+	  "conditions": {
+		  "traded": "cobblemon:shelmet",
+		  "received": "cobblemon:karrablast"
+	  }
+    },
+	"trade_ks": {
+      "trigger": "cobblemon:trade_pokemon",
+	  "conditions": {
+		  "received": "cobblemon:shelmet",
+		  "traded": "cobblemon:karrablast"
+	  }
+    }
+  },
+  "requirements": [[ "trade_sk", "trade_ks" ]],
+  "sends_telemetry_event": false
+}

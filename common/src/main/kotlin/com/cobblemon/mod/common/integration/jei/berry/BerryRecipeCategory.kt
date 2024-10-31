@@ -18,9 +18,8 @@ import mezz.jei.api.recipe.RecipeIngredientRole
 import mezz.jei.api.recipe.RecipeType
 import mezz.jei.api.recipe.category.IRecipeCategory
 import mezz.jei.api.registration.IRecipeCategoryRegistration
-import net.minecraft.recipe.Ingredient
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.world.item.crafting.Ingredient
 
 class BerryRecipeCategory(private val registration: IRecipeCategoryRegistration) : IRecipeCategory<BerryMutationRecipe> {
     private var background: IDrawable
@@ -28,14 +27,14 @@ class BerryRecipeCategory(private val registration: IRecipeCategoryRegistration)
     init {
         val guiHelper = registration.jeiHelpers.guiHelper
         background = guiHelper.createDrawable(GUI_TEXTURE_ID, 0, 0, WIDTH, HEIGHT)
-        icon = guiHelper.createDrawableItemStack(CobblemonItems.SURPRISE_MULCH.defaultStack)
+        icon = guiHelper.createDrawableItemStack(CobblemonItems.SURPRISE_MULCH.defaultInstance)
     }
     override fun getRecipeType(): RecipeType<BerryMutationRecipe> {
         return RECIPE_TYPE
     }
 
-    override fun getTitle(): Text {
-        return Text.of("Berry Mutation")
+    override fun getTitle(): Component {
+        return Component.literal("Berry Mutation")
     }
 
     override fun getBackground(): IDrawable {
@@ -48,9 +47,9 @@ class BerryRecipeCategory(private val registration: IRecipeCategoryRegistration)
 
     override fun setRecipe(p0: IRecipeLayoutBuilder, p1: BerryMutationRecipe, p2: IFocusGroup) {
         //These magic numbers are where the items should be positioned on the gui texture
-        p0.addSlot(RecipeIngredientRole.INPUT, 1, 1).addIngredients(Ingredient.ofStacks(p1.berryOne.defaultStack))
-        p0.addSlot(RecipeIngredientRole.INPUT, 50, 1).addIngredients(Ingredient.ofStacks(p1.berryTwo.defaultStack))
-        p0.addSlot(RecipeIngredientRole.OUTPUT, 108, 1).addIngredients(Ingredient.ofStacks(p1.berryResult.defaultStack))
+        p0.addSlot(RecipeIngredientRole.INPUT, 1, 1).addIngredients(Ingredient.of(p1.berryOne.defaultInstance))
+        p0.addSlot(RecipeIngredientRole.INPUT, 50, 1).addIngredients(Ingredient.of(p1.berryTwo.defaultInstance))
+        p0.addSlot(RecipeIngredientRole.OUTPUT, 108, 1).addIngredients(Ingredient.of(p1.berryResult.defaultInstance))
     }
 
     companion object {

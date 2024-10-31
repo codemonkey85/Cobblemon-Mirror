@@ -10,8 +10,10 @@ package com.cobblemon.mod.common.battles
 
 import com.cobblemon.mod.common.net.IntSize
 import com.cobblemon.mod.common.util.readSizedInt
+import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeSizedInt
-import net.minecraft.network.PacketByteBuf
+import com.cobblemon.mod.common.util.writeString
+import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
  * Rules around how a battle is going to work.
@@ -33,15 +35,25 @@ data class BattleFormat(
 
         val GEN_9_DOUBLES = BattleFormat(
             battleType = BattleTypes.DOUBLES,
-            ruleSet = setOf(BattleRules.OBTAINABLE)
+            ruleSet = setOf(BattleRules.OBTAINABLE, BattleRules.PAST, BattleRules.UNOBTAINABLE)
+        )
+
+        val GEN_9_TRIPLES = BattleFormat(
+                battleType = BattleTypes.TRIPLES,
+                ruleSet = setOf(BattleRules.OBTAINABLE, BattleRules.PAST, BattleRules.UNOBTAINABLE)
         )
 
         val GEN_9_MULTI = BattleFormat(
             battleType = BattleTypes.MULTI,
-            ruleSet = setOf(BattleRules.OBTAINABLE)
+            ruleSet = mutableSetOf(BattleRules.OBTAINABLE, BattleRules.PAST, BattleRules.UNOBTAINABLE)
         )
 
-        fun loadFromBuffer(buffer: PacketByteBuf): BattleFormat {
+        val GEN_9_ROYAL = BattleFormat(
+                battleType = BattleTypes.ROYAL,
+                ruleSet = mutableSetOf(BattleRules.OBTAINABLE, BattleRules.PAST, BattleRules.UNOBTAINABLE)
+        )
+
+        fun loadFromBuffer(buffer: RegistryFriendlyByteBuf): BattleFormat {
             val mod = buffer.readString()
             val battleType = BattleType.loadFromBuffer(buffer)
             val ruleSet = mutableSetOf<String>()
@@ -54,7 +66,7 @@ data class BattleFormat(
         }
     }
 
-    fun saveToBuffer(buffer: PacketByteBuf): PacketByteBuf {
+    fun saveToBuffer(buffer: RegistryFriendlyByteBuf): RegistryFriendlyByteBuf {
         buffer.writeString(mod)
         battleType.saveToBuffer(buffer)
         buffer.writeSizedInt(IntSize.U_BYTE, ruleSet.size)

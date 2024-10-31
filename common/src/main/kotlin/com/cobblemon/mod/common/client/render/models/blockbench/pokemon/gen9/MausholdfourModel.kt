@@ -8,32 +8,31 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen9
 
-import com.cobblemon.mod.common.client.render.models.blockbench.PoseableEntityState
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.SingleBoneLookAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPose
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPoseableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
+import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import net.minecraft.client.model.ModelPart
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.world.phys.Vec3
 
-class MausholdfourModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame {
+class MausholdfourModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
     override val rootPart = root.registerChildWithAllChildren("maushold")
     override val head = getPart("head")
 
     override var portraitScale = 1.0F
-    override var portraitTranslation = Vec3d(0.1, 0.0, 0.0)
+    override var portraitTranslation = Vec3(0.1, 0.0, 0.0)
 
     override var profileScale = 0.8F
-    override var profileTranslation = Vec3d(0.0, 0.4, 0.0)
+    override var profileTranslation = Vec3(0.0, 0.4, 0.0)
 
-    lateinit var standing: PokemonPose
-    lateinit var walk: PokemonPose
-    lateinit var sleep: PokemonPose
+    lateinit var standing: CobblemonPose
+    lateinit var walk: CobblemonPose
+    lateinit var sleep: CobblemonPose
 
-    override val cryAnimation = CryProvider { _, _ -> bedrockStateful("maushold_four", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("maushold_four", "cry") }
 
     override fun registerPoses() {
 
@@ -62,7 +61,7 @@ class MausholdfourModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame 
             poseTypes = PoseType.STATIONARY_POSES + PoseType.UI_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink1, blink2, blink3, blink4),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 SingleBoneLookAnimation(head2, false, false, disableX = false, disableY = false),
                 SingleBoneLookAnimation(head3, false, false, disableX = false, disableY = false),
@@ -76,7 +75,7 @@ class MausholdfourModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame 
             poseTypes = PoseType.MOVING_POSES,
             transformTicks = 10,
             quirks = arrayOf(blink1, blink2, blink3, blink4),
-            idleAnimations = arrayOf(
+            animations = arrayOf(
                 singleBoneLook(),
                 SingleBoneLookAnimation(head2, false, false, disableX = false, disableY = false),
                 SingleBoneLookAnimation(head3, false, false, disableX = false, disableY = false),
@@ -89,13 +88,10 @@ class MausholdfourModel (root: ModelPart) : PokemonPoseableModel(), HeadedFrame 
         //    poseName = "sleep",
         //    poseType = PoseType.SLEEP,
         //    transformTicks = 10,
-        //    idleAnimations = arrayOf(
+        //    animations = arrayOf(
         //        bedrock("maushold_four", "sleep")
         //    )
         //)
     }
-    override fun getFaintAnimation(
-        pokemonEntity: PokemonEntity,
-        state: PoseableEntityState<PokemonEntity>
-    ) = if (state.isNotPosedIn(sleep)) bedrockStateful("maushold_four", "faint") else null
+    override fun getFaintAnimation(state: PosableState) = bedrockStateful("maushold_four", "faint")
 }

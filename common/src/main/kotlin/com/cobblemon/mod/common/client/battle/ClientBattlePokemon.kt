@@ -11,13 +11,13 @@ package com.cobblemon.mod.common.client.battle
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.stats.Stat
-import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonFloatingState
+import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.pokemon.status.PersistentStatus
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import java.util.UUID
-import net.minecraft.text.MutableText
+import net.minecraft.network.chat.MutableComponent
 
 /**
  * The client side representation of a Pokémon in battle.
@@ -34,9 +34,9 @@ import net.minecraft.text.MutableText
  */
 class ClientBattlePokemon(
     val uuid: UUID,
-    var displayName: MutableText,
+    var displayName: MutableComponent,
     var properties: PokemonProperties,
-    var aspects: Set<String>,
+    private var aspects: Set<String>,
     var hpValue: Float,
     var maxHp: Float,
     var isHpFlat: Boolean,
@@ -52,6 +52,12 @@ class ClientBattlePokemon(
     val gender: Gender
         get() = properties.gender ?: Gender.GENDERLESS
 
-    var state = PokemonFloatingState()
+    var state = FloatingState().also {
+        it.currentAspects = aspects
+    }
 
+    fun updateAspects(aspects: Set<String>) {
+        this.aspects = aspects
+        state.currentAspects = aspects
+    }
 }

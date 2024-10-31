@@ -57,7 +57,7 @@ interface CustomPokemonProperty {
             val server = server() ?: return
             if (!server.isSingleplayer) {
                 PropertiesCompletionProvider.reload()
-                server.playerManager.playerList.forEach { player -> PropertiesCompletionProvider.sync(player) }
+                server.playerList.players.forEach { player -> PropertiesCompletionProvider.sync(player) }
             }
         }
     }

@@ -13,7 +13,6 @@ import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.battles.ShowdownInterpreter
 import com.cobblemon.mod.common.battles.dispatch.InterpreterInstruction
-import net.minecraft.text.Text
 
 /**
  * Format: |-item|POKEMON|ITEM|(from)EFFECT
@@ -32,8 +31,8 @@ class ItemInstruction(val message: BattleMessage): InterpreterInstruction {
         val source = message.battlePokemonFromOptional(battle)
         source?.let { ShowdownInterpreter.broadcastOptionalAbility(battle, message.effect(), source) }
 
-        battle.dispatchGo {
-            val battlePokemon = message.battlePokemon(0, battle) ?: return@dispatchGo
+        battle.dispatchWaiting(1.5F) {
+            val battlePokemon = message.battlePokemon(0, battle) ?: return@dispatchWaiting
             battlePokemon.heldItemManager.handleStartInstruction(battlePokemon, battle, message)
             battle.minorBattleActions[battlePokemon.uuid] = message
             battlePokemon.contextManager.add(ShowdownInterpreter.getContextFromAction(message, BattleContext.Type.ITEM, battle))

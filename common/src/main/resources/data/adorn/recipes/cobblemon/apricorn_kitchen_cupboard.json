@@ -3,7 +3,7 @@
   "group": "adorn:kitchen_cupboard",
   "ingredients": [
     {
-      "tag": "c:wooden_chests"
+      "tag": "c:chests/wooden"
     },
     {
       "item": "adorn:cobblemon/apricorn_kitchen_counter"
@@ -21,7 +21,7 @@
     "values": ["adorn"]
   }],
   "conditions": [{
-    "type": "forge:mod_loaded",
+    "type": "neoforge:mod_loaded",
     "modid": "adorn"
   }]
 }
