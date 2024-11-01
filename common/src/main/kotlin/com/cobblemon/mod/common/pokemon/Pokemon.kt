@@ -247,22 +247,23 @@ open class Pokemon : ShowdownIdentifiable {
             }
             this.healTimer = Cobblemon.config.healTimer
         }
+
     var gender = Gender.GENDERLESS
         set(value) {
+            if (!isClient && value !in species.possibleGenders) {
+                return
+            }
             field = value
-            if (!isClient) {
-                checkGender()
-            }
-            if (field == value) {
-                updateAspects()
-                _gender.emit(value)
-            }
+            updateAspects()
+            _gender.emit(value)
         }
+
     var status: PersistentStatusContainer? = null
         set(value) {
             field = value
             this._status.emit(value?.status)
         }
+
     var experience = 0
         internal set(value) {
             field = value
@@ -931,7 +932,7 @@ open class Pokemon : ShowdownIdentifiable {
         this.currentHealth = other.currentHealth
         this.gender = other.gender
         this.moveSet.copyFrom(other.moveSet)
-        this.benchedMoves = other.benchedMoves
+        this.benchedMoves.copyFrom(other.benchedMoves)
         this.scaleModifier = other.scaleModifier
         this.shiny = other.shiny
         this.state = other.state
@@ -1108,6 +1109,9 @@ open class Pokemon : ShowdownIdentifiable {
 
     val allAccessibleMoves: Set<MoveTemplate>
         get() = form.moves.getLevelUpMovesUpTo(level) + benchedMoves.map { it.moveTemplate } + form.moves.evolutionMoves
+
+    val relearnableMoves: Iterable<MoveTemplate>
+        get() = allAccessibleMoves.filter { accessibleMove -> moveSet.none { it.template == accessibleMove } }
 
     fun updateAspects() {
         aspects = emptySet()
