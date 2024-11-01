@@ -20,10 +20,7 @@ class BenchedMovesUpdatePacket(pokemon: () -> Pokemon, value: BenchedMoves): Sin
     }
 
     override fun set(pokemon: Pokemon, value: BenchedMoves) {
-        pokemon.benchedMoves.doThenEmit {
-            pokemon.benchedMoves.clear()
-            pokemon.benchedMoves.addAll(value)
-        }
+        pokemon.benchedMoves.copyFrom(value)
     }
 
     companion object {

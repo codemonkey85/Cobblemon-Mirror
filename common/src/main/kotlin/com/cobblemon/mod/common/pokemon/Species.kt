@@ -111,6 +111,19 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
     var labels = hashSetOf<String>()
         private set
 
+    val possibleGenders: Set<Gender>
+        get() = forms.flatMap {
+            if (it.maleRatio == -1F) {
+                setOf(Gender.GENDERLESS)
+            } else if (it.maleRatio == 0F) {
+                setOf(Gender.FEMALE)
+            } else if (it.maleRatio == 1F) {
+                setOf(Gender.MALE)
+            } else {
+                setOf(Gender.FEMALE)
+            }
+        }.toSet()
+
     /**
      * Contains the evolutions of this species.
      * If you're trying to find out the possible evolutions of a Pokémon you should always work with their [FormData].
