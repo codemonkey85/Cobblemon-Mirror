@@ -932,7 +932,7 @@ open class Pokemon : ShowdownIdentifiable {
         this.currentHealth = other.currentHealth
         this.gender = other.gender
         this.moveSet.copyFrom(other.moveSet)
-        this.benchedMoves = other.benchedMoves
+        this.benchedMoves.copyFrom(other.benchedMoves)
         this.scaleModifier = other.scaleModifier
         this.shiny = other.shiny
         this.state = other.state
@@ -1109,6 +1109,9 @@ open class Pokemon : ShowdownIdentifiable {
 
     val allAccessibleMoves: Set<MoveTemplate>
         get() = form.moves.getLevelUpMovesUpTo(level) + benchedMoves.map { it.moveTemplate } + form.moves.evolutionMoves
+
+    val relearnableMoves: Iterable<MoveTemplate>
+        get() = allAccessibleMoves.filter { accessibleMove -> moveSet.none { it.template == accessibleMove } }
 
     fun updateAspects() {
         aspects = emptySet()

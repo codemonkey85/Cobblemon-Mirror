@@ -58,7 +58,7 @@ internal class PokemonP1(
         other.currentHealth = this.currentHealth
         other.gender = this.gender
         other.moveSet.copyFrom(this.moveSet)
-        other.benchedMoves = this.benchedMoves
+        other.benchedMoves.copyFrom(this.benchedMoves)
         other.scaleModifier = this.scaleModifier
         other.shiny = this.shiny
         return other
