@@ -49,6 +49,17 @@
     "special_defence": 0,
     "speed": 0
   },
+  "behaviour": {
+    "moving": {
+      "fly": {
+        "canFly": true
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "times": "night"
+    }
+  },
   "experienceGroup": "medium_slow",
   "eggCycles": 20,
   "eggGroups": [

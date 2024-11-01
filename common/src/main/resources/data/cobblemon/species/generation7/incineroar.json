@@ -25,6 +25,16 @@
   "eggGroups": [
     "field"
   ],
+  "behaviour": {
+    "walking": {
+      "walkSpeed": 0.28
+    },
+    "resting": {
+      "canSleep": true,
+      "times": "night",
+      "willSleepOnBed": true
+    }
+  },
   "drops": {
     "amount": 2,
     "entries": [

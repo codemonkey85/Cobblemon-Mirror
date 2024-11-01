@@ -210,9 +210,11 @@
 - Fletchling
 - Skrelp
 - Klefki
+- Litten
 - Fomantis
 - Morelull
 - Dreepy
+- Sprigatito
 - Shroodle
 - Tatsugiri
 - Glimmet
@@ -231,14 +233,19 @@
 - Lunatone
 - Solrock
 - Buneary, Lopunny
+- Magnezone
 - Alomomola
+- Flabebe, Floette, Florges
+- Litten, Torracat, Incineroar
 - Dreepy, Drakloak
 - Kleavor
+- Gimmighoul [Roaming]
 
 ### Model updates for the following Pokémon
 - Bulbasaur, Ivysaur, Venusaur
 - Charmander, Charmeleon, Charizard
 - Kakuna, Beedrill
+- Lapras
 - Porygon, Porygon2, Porygon-Z
 - Igglybuff, Jigglypuff, Wigglytuff
 - Poliwhirl, Poliwrath
