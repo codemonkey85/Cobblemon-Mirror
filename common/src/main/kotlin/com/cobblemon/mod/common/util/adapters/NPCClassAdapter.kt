@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.util.adapters
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.ai.config.BrainConfig
 import com.cobblemon.mod.common.api.npc.NPCClass
 import com.cobblemon.mod.common.api.npc.NPCPartyProvider
 import com.cobblemon.mod.common.api.npc.NPCPreset
@@ -58,8 +59,18 @@ object NPCClassAdapter : JsonDeserializer<NPCClass> {
         obj.get("hitbox")?.let { npcClass.hitbox = ctx.deserialize(it, EntityDimensions::class.java) }
         obj.get("battleConfiguration")?.let { npcClass.battleConfiguration = ctx.deserialize(it, NPCBattleConfiguration::class.java) }
         obj.get("interaction")?.let { npcClass.interaction = ctx.deserialize(it, NPCInteractConfiguration::class.java) }
+        obj.get("canDespawn")?.let { npcClass.canDespawn = it.asBoolean }
+        obj.get("variations")?.let {
+            val obj = it.asJsonObject
+            obj.entrySet().forEach { (key, value) ->
+                val provider = ctx.deserialize<NPCVariationProvider>(value, NPCVariationProvider::class.java)
+                npcClass.variations[key] = provider
+            }
+        }
         obj.get("party")?.let { npcClass.party = ctx.deserialize(it, NPCPartyProvider::class.java) }
         obj.get("skill")?.let { npcClass.skill = it.asInt }
+        obj.get("battleTheme")?.let { npcClass.battleTheme = it.asString.asIdentifierDefaultingNamespace() }
+        obj.get("ai")?.let { npcClass.ai.addAll(it.asJsonArray.map<JsonElement, BrainConfig> { ctx.deserialize(it, BrainConfig::class.java) }.toMutableList()) }
 
         return npcClass
     }

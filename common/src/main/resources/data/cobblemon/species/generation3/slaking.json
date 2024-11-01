@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Slaking",
   "nationalPokedexNumber": 289,
   "primaryType": "normal",
@@ -12,6 +13,24 @@
     "special_attack": 95,
     "special_defence": 65,
     "speed": 100
+  },
+  "behaviour": {
+    "moving": {
+      "wanderChance": "750",
+      "walk": {
+        "walkSpeed": 0.3
+      },
+      "swim": {
+        "avoidsWater": true
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "sleepChance": "0.0023",
+      "light": "0-14"
+    }
   },
   "catchRate": 45,
   "maleRatio": 0.5,
@@ -187,10 +206,10 @@
   ],
   "preEvolution": "vigoroth",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 1.25,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 1.2,
+    "height": 2.75,
     "fixed": false
   },
   "baseFriendship": 70,

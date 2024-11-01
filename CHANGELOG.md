@@ -9,7 +9,7 @@
 - Added property chaining support for duplicate CustomPokemonPropertyType elements.
 - Added `aspect` and `unaspect` PokemonProperty arguments (which also includes commands such as `/pokemonedit`, `/spawnpokemon`, and `/givepokemon`) to allow forcing or un-forcing an aspect on a Pokémon.
 - Added `type` alternatively `elemental_type` PokemonProperty argument, this is only used for filtering and is not applied to Pokémon. Example `type=fire` would be true for Charmander but false for Squirtle.
-- Added support for Double Battles, Triple Battles, and Multi-battles. 
+- Added support for Double Battles, Triple Battles, and Multi-battles.
 - CriticalCaptures and Pokédex progress capture multiplier now work with the Pokédex.
 - Added extra visuals to early berry growth stages.
 - Hidden Power now displays its effective typing.
@@ -30,6 +30,8 @@
 - New config setting `displayEntityNameLabel` and `displayEntityLabelsWhenCrouchingOnly` to control what and when is displayed for the pokemon label
 - `/freezepokemon` command to pause a Pokémon's animation at a specific point in time.
 - Added `no_ai` and `freeze_frame` options to the `/spawnpokemon` command.
+- Added shiny Pokémon particles with sound effects.
+- Added animation for trading.
 
 ### Pokémon Added
 #### Gen 2
@@ -39,15 +41,52 @@
 - Sunflora
 - Wobbuffet
 - Girafarig
+- Remoraid
+- Octillery
+- Mantine
+- Corsola
 
 #### Gen 3
 - Wynaut
+- Feebas
+- Milotic
+- Spheal
+- Sealeo
+- Walrein
+- Kecleon
+
+#### Gen 4
+- Mantyke
+- Finneon
+- Lumineon
+- Shellos
+- Gastrodon
+- Rotom
+
+#### Gen 5
+- Purrloin
+- Liepard
+
+#### Gen 6
+- Clauncher
+- Clawitzer
+
+#### Gen 7
+- Bruxish
+- Mareanie
+- Toxapex
 
 #### Gen 8
 - Cramorant
+- Pincurchin
 
 #### Gen 9
 - Farigiraf
+- Finizen
+- Palafin
+- Wiglett
+- Wugtrio
+- Flamigo
 
 ### Added cries to the following Pokémon
 - Timburr, Gurdurr, Conkeldurr
@@ -65,8 +104,9 @@
 - Link Cable recipe has been redesigned.
 - Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs.
 - Updated UI sounds for clicking and evolving Pokémon.
+- Updated cries for Chansey, Crobat, Hoothoot, Noctowl.
 - Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users.
-- Kakuna, Beedrill, Snorlax, Munchlax, Krabby, Kingler, and Lurantis received model updates.
+- Bulbasaur, Ivysaur, Venusaur, Kakuna, Beedrill, Snorlax, Munchlax, Krabby, Kingler, Lurantis, Horsea, Seadra, Kingdra, Litten, Torracat, Incineroar, Mudkip, Marshtomp, Swampert, Scorbunny, Cinderace, Prinplup, Empoleon, Relicanth, Goldeen, Seaking, Shellder, Cloyster, Tatsugiri, Igglybuff, Jigglypuff, Wigglytuff, Krookodile, Gible, Gabite, Garchomp, Rhyhorn, Rhydon, Rhyperior, and Carvanha received model updates.
 - Vivillon wings will stop being clear when you remove any Vivillon related resourcepacks. The default pattern will be the meadow wings.
 - Adjusted Pokémon sendout positions for single battles.
 - Wild Pokémon interaction range increased to 12 blocks (from 10 blocks).
@@ -78,13 +118,17 @@
 - Updated dialogue GUI assets with proper assets.
 - Updated party switching interface when in battle.
 - Relic coin pouches can now be waterlogged.
-- Pokemon Name (and level) labels are now only visible when crouching by default, set the `displayEntityLabelsWhenCrouchingOnly` to `false` to always them even when not crouching
-- The "Press R to start battle prompt" will now disappear after a player's first battle has been won
+- Pokémon name and level labels are now only visible when crouching by default. Set the `displayEntityLabelsWhenCrouchingOnly` config to `false` to always have them displayed.
+- The "Press R to start battle prompt" will now disappear after a player's first battle has been won.
 - The default number of digits for the Pokédex number in the summary has been increased, from 3 to 4.
+- The pasture block model's screen is now off by default.
+- The Poké Balls creative tab is now named Utility Items as it also encompasses Poké Rod and Pokédex items.
 
 ### Fixes
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating.
 - Fixed Cubone's cry not having a sound.
+- Fixed the sendout sound erronously playing when a wild Pokémon breaks out of a Poké ball.
+- Flamethrower is no longer missing sounds.
 - Fixed the Seafloor spawning context not being a usable context.
 - Fixed Pokemon spawning in non-full blocks like slabs.
 - Fixed Gilded Chests not dropping the chest itself when broken, only the contents.
@@ -93,9 +137,10 @@
 - Fixed Chimchar and Monferno T-posing whenever they sleep.
 - Fixed the Magby line not having any placeholder walk animations.
 - Fixed Duskull and Dusclops using skylight levels for their nether spawn data. There is no sun in the Nether!
-- Fixed Hisuian Zoroark using base Zoroark stats. 
+- Fixed Hisuian Zoroark using base Zoroark stats.
 - Fixed Bellossom clipping into the player head when shoulder mounted.
-- Fixed Shroomish's look range to prevent it from looking higher than it should. 
+- Fixed Shroomish's look range to prevent it from looking higher than it should.
+- Fixed Cetitan's cry breaking its walk and sleep animations. 
 - Fixed Crumbling Arch not blending in with the world.
 - Fixed Energy Root applying being usable on a fainted Pokémon.
 - Fixed Pokémon entity not spawning when starting a battle while recalling said Pokémon.
@@ -126,9 +171,13 @@
 - Fixed Hisuian Zoroark using base Zoroark stats.
 - Fixed Bellossom clipping into the player head when shoulder mounted.
 - Fixed Shroomish's look range to prevent it from looking higher than it should.
+- Fixed Maushold's faint animations not playing. It's sadder than Tandemaus!
+- Fixed Slowking's battle idle.
+- Fixed Grafaiai's walk speed to prevent model sliding.
 - Fixed Maushold's faint animations not playing. It's sadder than Tandemaus! 
 - Fixed Slowking's battle idle. 
 - Fixed Grafaiai's walk speed to prevent model sliding. 
+- Fixed Alolan Exeggutor's tail not showing in the party UI. It will now also stand in front of all Pokémon in the party menu :)
 - Fixed reviving items throwing an exception when used in battle.
 - Fixed messages for Focus Sash, Confusion, Mummy, Ice Face, Own Tempo, and Revive.
 - Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server.
@@ -143,7 +192,9 @@
 - Pokémon whose current owner is not its Original Trainer now gains extra experience.
 - Fixed Fossil Resurrection advancement not being granted.
 - Fixed village generation caps not applying for berry farms. You were not meant to see more than two berry farms per village!
-- Fixed the Ice Face ability activation being displayed incorrectly in a battle
+- Fixed the Ice Face ability activation being displayed incorrectly in a battle.
+- Fixed edge case of F1 and R locking you in battle with no R functionality (requiring ESC to get out).
+- Fixed Poké Ball render orientation in battle interface when capturing.
 
 ### Developer
 - `SpawnCause` is now an implementation of `SpawningInfluence`.
@@ -156,17 +207,46 @@
 - Serialization of PokemonStores and Pokemon themselves now require registry access, which will break some sidemods. This sucked for us more than it will suck for you! If you have a world or player instance, you can get it from there.
 - ``TeraTypes`` now implements ``Iterable``.
 - PokemonBattle now starts on turn 0.
-- All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.
 - Added `forcedAspects` to Pokémon to make it easier to easily add basic aspects to a Pokémon in a way that persists. We already know that everyone is going to overuse this.
 - Made the `Pokemon.aspects` setter private. This could technically break side-mods but if you are affected by this then you were using it wrong! Use `Pokemon.forcedAspects` to fix it.
 - Cobblemon's main logger is properly static now.
 - PokemonEntity.enablePoseTypeRecalculation can be used to disable automatic pose type recalculation.
+- Added CollectEggEvent and HatchEggEvent for compatibility usage.
+- Added events for:
+  - Showdown Instructions
+  - Mega Showdown Instruction
+  - Terastallize Showdown Instruction
+  - ZPower Showdown Instruction
+  - Bait Consumed, Bait Set, and an event to register custom BaitEffect Functions
+  - Bobber Bucket Chosen
+  - Bobber Spawn Pokémon
+  - Pokérod Cast
+  - Pokérod Reel
+  - Pokémon Heal (with context)
+    - Added HealingSource, an interface applied to all sources of healing from player actions, for easier tracking of healing sources.
+  - Move Change
 
 ### Data Pack & Resource Pack Creators
 - Added support for "shedders" similar to Shedinja's evolution logic.
 - Fixed the placeholder `WingFlapIdle` animation so the wings are not rotating opposite to each other.
 - 'player' type dialogue faces can now be explicitly stated so that NPC mods that use fake players can show in dialogue portraits.
 - Added `isLeftSide` field for dialogue faces. This determines what side of dialogue box the portrait is on.
+- "sounds/attacks" folder has been renamed to "sounds/move"
+- Moves sharing generic sounds now have unique sound events, allowing them to be changed with resource packs.
+- All move sound events have been renamed to "move.NAME.SOURCE" for consistency.
+- Status moves have been moved out of the 'attacks' folder and split into volatile and nonvolatile.
+- 'status.badlypoison.actor' sound event has been renamed to "status.toxpoison.actor"
+- Mulch and berry harvesting sound events have been renamed and moved to their respective folders in "sounds/block."
+- All sounds related to evolving Pokémon have been moved to the "sounds/evolution" folder.
+- Sound events for all blocks now start with "block."
+- Gimmighoul chest and item interaction sounds have been moved to where its cry is.
+- Unused sound files and sound events have been removed.
+
+### Localization
+- Updated translations for:
+  - Czech, German, Greek, Spanish, Mexican Spanish, French, Canadian French, Hungarian, Italian, Japanese, Korean, Dutch, Polish, Portuguese, Brazilian Portuguese, Russian, Ukrainian, Simplified Chinese, and Traditional Chinese
+- Migrated translation project to Weblate at https://lang.cobblemon.com/projects/cobblemon/mod/
+
 
 ## [1.5.2 (May 27th, 2024)](#1-5-2)
 ### Fixes
@@ -204,7 +284,7 @@
 ### Changes
 - Sounds for Relic Coin Sacks have been correctly renamed. Relic Coin Pouches received new sounds for breaking and placing.
 - Readjusted Petilil portraits so they fit a bit better.
-- Improved handling of Pokémon taken from the Restoration Tank block to be a bit more stable. 
+- Improved handling of Pokémon taken from the Restoration Tank block to be a bit more stable.
 - Made Mulch cheaper to craft.
 
 ### Fixes
@@ -216,19 +296,19 @@
 - Fixed Supplementaries incompatibility.
 - Fixed Fossil Compartment crash with Jade / WAILA forks.
 - Fixed pasture block PC lookups when the player is offline.
-- Fixed an untranslated battle message that occurs when using a move that just ran out of PP (e.g. Fire Blast that just got spited mid-turn). 
+- Fixed an untranslated battle message that occurs when using a move that just ran out of PP (e.g. Fire Blast that just got spited mid-turn).
 - Fixed held items being eaten even when the held item evolutions are already unlocked.
 - Fixed Hisuian Decidueye not being Grass/Fighting.
 - Fixed both Decidueye forms learning both Triple Arrows and Spirit Shackle.
 - Fixed Pineco being unable to evolve into Shulker Forretress.
-- Fixed Kabutops T-posing when underwater. It doesn't have proper swimming animations yet, though. 
+- Fixed Kabutops T-posing when underwater. It doesn't have proper swimming animations yet, though.
 - Fixed Pidgey's missing walk animation.
 - Fixed Cyndaquil's hidden flames clipping if it was swimming.
 - Fixed Chimecho and Chingling being unable to spawn near bells. They are meant to!
 - Fixed Tyrantrum and Wailord Party Overlay models peeking through the chat box. It was kinda funny though.
 - Fixed hitbox sizes for Seedot, Nuzleaf, and Shiftry.
-- Fixed Budew and Lechonk sliding if they walked for too long. 
-- Fixed Shedinja T-posing in battle. 
+- Fixed Budew and Lechonk sliding if they walked for too long.
+- Fixed Shedinja T-posing in battle.
 - Fixed recoil evolution condition not working, making things like Basculegion unobtainable.
 - Fixed issue where poser debug tools didn't work on JSON posers.
 - Fixed issue where gilded chests don't close when going far away.
@@ -246,7 +326,7 @@
 - Fixed generic battle effect sounds not sounding the way they were intended to.
 - Fixed particle effects often not having access to some specific entity functions from MoLang.
 - Fixed particles sometimes lasting a single tick too long, causing (very quick) visual glitches.
-- Fixed particle rotations being inverted. 
+- Fixed particle rotations being inverted.
 - Fixed particle events not spawning at the instigating particle's location.
 - Fixed a bunch of spam during world generation.
 - Fixed a bug in which throwing a Poké Ball at a player owned Pokémon with the ability Illusion would reveal its true species. Hilarious meta strategy.
@@ -265,13 +345,13 @@
 - Added parametric motion and rotation support to particle effects.
 - Added entity_scale as a molang var for particles (likely only applicable to Pokemon)
 - Added support for primary quirk animations using the following format:
-`JSON
-{
-  "quirks": [
-    "q.bedrock_primary_quirk('<pokemon>', '<animation>', <minSeconds>, <maxSeconds>, <loopTimes>, '<excludedLabels>', q.curve('<waveFunction>'))"
-  ]
-}
-`
+  `JSON
+  {
+    "quirks": [
+      "q.bedrock_primary_quirk('<pokemon>', '<animation>', <minSeconds>, <maxSeconds>, <loopTimes>, '<excludedLabels>', q.curve('<waveFunction>'))"
+    ]
+  }
+  `
 - Added support for custom stashes, similar to Gimmighoul's coin and scrap stashes.
 
 ### Localization
@@ -571,7 +651,7 @@ These are our compromise for having both regular and Hisuian forms of these Pok�
 - Fixed thrown Poké Balls technically having no name.
 - Fixed very many issues with Bedrock particle effects. There are probably many more. Life goes on.
 - Fixed Arbok patterns not being as specific in spawning as they were intended to be.
-- Fixed Pokémon not avoiding danger at all when pathfinding. 
+- Fixed Pokémon not avoiding danger at all when pathfinding.
 - Fixed Pokémon pathing over snow layers and carpets.
 - Fixed the Sobble line not being able to swim or breathe underwater.
 - Fixed mod incompatibility with [Just Enough Resources](https://modrinth.com/mod/just-enough-resources-jer).
@@ -580,7 +660,7 @@ These are our compromise for having both regular and Hisuian forms of these Pok�
 - Fixed the data set on Pokémon when abilities are given via properties such as in `/spawnpokemon`.
 - Fixed Pokémon sometimes losing hidden abilities when evolving. This fix will only take effect for newly created Pokémon because of technical reasons that were explained to me but which I then forgot.
 - Fixed capture messages not displaying in battle.
-- Fixed the Illusion ability causing the wrong Pokémon to be targeted in battle. 
+- Fixed the Illusion ability causing the wrong Pokémon to be targeted in battle.
 - Fixed battles started with fainted party members causing a soft-lock on defeat.
 - Fixed some issues with eyes in the faint animations of Hitmonlee and Phantump
 - Fixed missing evolution moves, for example Stone Axe for Kleavor.
@@ -595,7 +675,7 @@ These are our compromise for having both regular and Hisuian forms of these Pok�
 - Added a new "advancement" evolution variant that takes an advancement identifier and succeeds if the player has the advancement.
 - Made the spawning API capable of non-entity spawning. You can make it 'spawn' commands if you want. Go nuts.
 - Made `PokemonProperties.parse` more interoperable with Java. Save yourself and stop using Java.
-- Added the `HeldItemEvent`, this comes with 2 implementation `HeldItemEvent.Pre` and `HeldItemEvent.Post`. 
+- Added the `HeldItemEvent`, this comes with 2 implementation `HeldItemEvent.Pre` and `HeldItemEvent.Post`.
 - Corrections to the ability implementation have been made that make `Ability.forced` function as intended and never reroll an ability for a Pokémon, please check your implementations to ensure the corrected behavior is intended for your use case.
 - `Pokemon.ability` no longer has a public setter. Please migrate to using `Pokemon#updateAbility`, this handles the ability coordinate storage for you when necessary.
 - `Ability.forced`, `Ability.index` and `Ability.priority` have all had their setters internalized, there is no longer any need to manually adjust these migrate to the method mentioned above to handle that process for you.
@@ -609,14 +689,14 @@ These are our compromise for having both regular and Hisuian forms of these Pok�
 ### Datapack & Resourcepack Creators
 - The maximum amount of fossils that can fit in the Fossil Analyzer can be adjusted in the config.
 - Custom fossils can be defined using a list of items and the resulting Pokémon. An example of `aerodactyl.json`:
-`JSON
-{
-  "result": "aerodactyl",
-  "fossils": [
-    "cobblemon:old_amber_fossil"
-  ]
-}
-`
+  `JSON
+  {
+    "result": "aerodactyl",
+    "fossils": [
+      "cobblemon:old_amber_fossil"
+    ]
+  }
+  `
 - Fetus models can be defined in `bedrock/fossils`.
 - Fetus textures can be defined in `textures/fossils`.
 - Fuel for the Restoration Machine is registered inside the `natural_materials` folder. To register more fuels, create a JSON file containing an array of objects. Each object supports the following fields:
@@ -628,16 +708,16 @@ These are our compromise for having both regular and Hisuian forms of these Pok�
 - Added dialogue datapack folder and `/opendialogue` command.
 - Added the item tag `cobblemon:held/leaves_leftovers` this can be used to flag apple-like items that can create leftovers when eaten.
 - You can now add support for dynamic lighting implementations, Cobblemon ships with a default implementation for [LambDynamicLights](https://modrinth.com/mod/lambdynamiclights) and the [Dynamic Lights Reforged](https://www.curseforge.com/minecraft/mc-mods/dynamiclights-reforged), add the following to any species or form:
-`JSON
-{
-  "lightingData": {
-    "lightLevel": 14,
-    "_lightLevelCommentRemoveMe": "Above supports 0 to 15",
-    "liquidGlowMode": "LAND",
-    "_liquidGlowModeCommentRemoveMe": "Above supports LAND, UNDERWATER or BOTH"
+  `JSON
+  {
+    "lightingData": {
+      "lightLevel": 14,
+      "_lightLevelCommentRemoveMe": "Above supports 0 to 15",
+      "liquidGlowMode": "LAND",
+      "_liquidGlowModeCommentRemoveMe": "Above supports LAND, UNDERWATER or BOTH"
+    }
   }
-}
-`
+  `
 - Following up on this change `light_source` was removed as a possible shoulder effect due to becoming unnecessary and never having had a default implementation.
 - Added the item tag `cobblemon:ability_changers`, contains the `cobblemon:ability_capsule` & `cobblemon:ability_patch` by default.
 - Added the item tag `cobblemon:held/is_friendship_booster`, allows items to give the Soothe Bell effect of a boost of 1.5x Friendship gained, contains `cobblemon:soothe_bell` by default.
@@ -724,7 +804,7 @@ These are our compromise for having both regular and Hisuian forms of these Pok�
 - Fixed an exploit that could convert a single piece of Blaze Powder into an extra Medicinal Brew on the Forge version.
 - Fixed an issue where health percentages would show incorrectly after healing
 - Fixed the move Revival Blessing not allowing you to select from fainted party members.
-- Fixed villagers not being able to pick up and plant mint seeds, vivichoke seeds, and revival herbs. 
+- Fixed villagers not being able to pick up and plant mint seeds, vivichoke seeds, and revival herbs.
 - Fixed Exeggcute faint.
 - Fixed various spawn configuration issues across the board.
 - Fixed a possible visual duplication of sent out Pokémon.
@@ -744,7 +824,7 @@ These are our compromise for having both regular and Hisuian forms of these Pok�
 ### Developer
 - Fixed the `SpawnEvent` not respecting usage of `Cancelable#cancel`.
 - Added the `EvolutionTestedEvent`, this allows listening and overriding the final result of evolution requirement tests.
-- Rebuilt the scheduling API to more clearly force side choices and allow more local temporal frames of reference for tasks. 
+- Rebuilt the scheduling API to more clearly force side choices and allow more local temporal frames of reference for tasks.
 - Added utility script that can be used to generate all Spawn JSONS for all pokemon from the spawning spreadsheet in 1 click ([cobblemon_spawn_csv_to_json.py](utilityscripts%2Fcobblemon_spawn_csv_to_json.py)).
 - The `HeldItemManager` has a new method `shouldConsumeItem`, this will return false by default to prevent breaking changes, see the documentation and update your implementations as needed.
 - Added and implemented minSkyLight and maxSkyLight as config options for SpawnConditions
@@ -770,7 +850,7 @@ These are our compromise for having both regular and Hisuian forms of these Pok�
   - Dutch
   - Ukrainian
   - Russian
-  
+
 Thank you so much to all of our community translators that bring the mod to the rest of the world!
 
 ## [1.4.0 - The Friends and Farms Update (October 13th, 2023)](#1-4-0)
@@ -1181,7 +1261,7 @@ Thank you so much to all of our community translators that bring the mod to the 
 - Species and FormData have had their evolutions, pre-evolution and labels properties exposed. It is still recommended to work using a Pokémon instance when possible.
 - Added capture check to BattleVictoryEvent.
 - The various hardcoded potion shoulder effects have been removed, make use of PotionBaseEffect.
-- Added ContextManager for tracking causes and contexts of conditions created during a battle. See BattleContext for types of conditions that are tracked. 
+- Added ContextManager for tracking causes and contexts of conditions created during a battle. See BattleContext for types of conditions that are tracked.
 - Added MongoDB support for storing Pokémon and Player data. Must be enabled in config, requires MongoDB core and sync drivers (4.10.0+).
 - CobblemonShowdown updated to version 10.
 - Generation of a battle can be set in BattleFormat.
@@ -1580,3 +1660,4 @@ Thank you so much to all of our community translators that bring the mod to the 
 
 ## [1.0.0 (November 12th, 2022)](#1-0-0)
 - Initial release.
+

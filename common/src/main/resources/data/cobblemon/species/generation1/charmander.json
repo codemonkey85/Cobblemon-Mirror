@@ -19,6 +19,11 @@
     "moving": {
       "walk": {
         "walkSpeed": 0.3
+      },
+      "swim": {
+        "swimSpeed": 0.1,
+        "canSwimInWater": true,
+        "canWalkOnWater": true
       }
     },
     "resting": {
@@ -259,8 +264,8 @@
   ],
   "baseScale": 0.7,
   "hitbox": {
-    "width": 0.7,
-    "height": 1.1,
+    "width": 0.75,
+    "height": 1.3,
     "fixed": false
   },
   "baseFriendship": 50,

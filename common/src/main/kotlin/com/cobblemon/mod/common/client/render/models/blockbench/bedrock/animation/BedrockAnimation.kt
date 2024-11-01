@@ -18,6 +18,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.util.effectiveName
+import com.cobblemon.mod.common.util.genericRuntime
 import com.cobblemon.mod.common.util.getString
 import com.cobblemon.mod.common.util.math.geometry.toRadians
 import com.cobblemon.mod.common.util.resolveDouble
@@ -29,9 +30,7 @@ import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.phys.Vec3
 import java.util.*
 
@@ -104,18 +103,7 @@ class BedrockSoundKeyframe(
         val soundEvent = SoundEvent.createVariableRangeEvent(sound) // Means we don't need to setup a sound registry entry for every single thing
         if (soundEvent != null) {
             if (entity != null) {
-                Minecraft.getInstance().soundManager.play(
-                    SimpleSoundInstance(
-                        soundEvent,
-                        SoundSource.NEUTRAL,
-                        1F,
-                        1F,
-                        entity.level().random,
-                        entity.x,
-                        entity.y,
-                        entity.z
-                    )
-                )
+                entity.level().playLocalSound(entity, soundEvent, entity.soundSource, 1F, 1F)
             } else {
                 Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1F))
             }
@@ -138,6 +126,20 @@ data class BedrockAnimation(
     val effects: List<BedrockEffectKeyframe>,
     val boneTimelines: Map<String, BedrockBoneTimeline>
 ) {
+    fun checkForErrors() {
+        boneTimelines.forEach { (_, timeline) ->
+            if (!timeline.position.isEmpty()) {
+                timeline.position.resolve(2.0, genericRuntime)
+            }
+            if (!timeline.rotation.isEmpty()) {
+                timeline.rotation.resolve(2.0, genericRuntime)
+            }
+            if (!timeline.scale.isEmpty()) {
+                timeline.scale.resolve(2.0, genericRuntime)
+            }
+        }
+    }
+
     /** Useful to have, gets set after loading the animation. */
     var name: String = ""
 

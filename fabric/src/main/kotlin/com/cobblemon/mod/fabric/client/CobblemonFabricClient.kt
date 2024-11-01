@@ -110,7 +110,7 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
                 if (((itemStack.item is PokedexItem && player.usedItemHand == InteractionHand.MAIN_HAND) ||
                     (offhandStack.item is PokedexItem && player.usedItemHand == InteractionHand.OFF_HAND))
                 ) {
-                    pokedexUsageContext.renderUpdate(player, graphics, tickDelta)
+                    pokedexUsageContext.renderUpdate(graphics, tickDelta)
                 } else if (pokedexUsageContext.transitionIntervals > 0) {
                     pokedexUsageContext.resetState()
                 }
@@ -128,7 +128,7 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
                     pokedexUsageContext.scanningGuiOpen
                 ) {
                     val keyAttack = client.options.keyAttack
-                    pokedexUsageContext.attackKeyHeld(player, keyAttack.isDown)
+                    pokedexUsageContext.attackKeyHeld(keyAttack.isDown)
                 }
             }
         })

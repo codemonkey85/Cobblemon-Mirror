@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.api.npc
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.bedrockk.molang.runtime.value.MoValue
 import com.bedrockk.molang.runtime.value.StringValue
+import com.cobblemon.mod.common.api.ai.config.BrainConfig
 import com.cobblemon.mod.common.api.npc.configuration.NPCBattleConfiguration
 import com.cobblemon.mod.common.api.npc.configuration.NPCConfigVariable
 import com.cobblemon.mod.common.api.npc.configuration.NPCInteractConfiguration
@@ -39,13 +40,15 @@ class NPCClass {
     var aspects: MutableSet<String> = mutableSetOf() // These only make sense when applied via presets
     var hitbox = EntityDimensions.scalable(0.6F, 1.8F)
     var battleConfiguration = NPCBattleConfiguration()
-    var aiScripts: MutableList<ResourceLocation> = mutableListOf()
     var interaction: NPCInteractConfiguration? = null
+    var canDespawn = true
     var variations: MutableMap<String, NPCVariationProvider> = mutableMapOf()
     var config: MutableList<NPCConfigVariable> = mutableListOf()
     var variables = mutableMapOf<String, MoValue>() // Questionable whether this should be here.
     var party: NPCPartyProvider? = null
     var skill: Int = 0
+    var battleTheme: ResourceLocation? = null
+    var ai: MutableList<BrainConfig> = mutableListOf()
 
     // If you're adding stuff here, add it to NPCPreset and NPCClassAdapter too
 
@@ -56,7 +59,6 @@ class NPCClass {
         buffer.writeFloat(this.hitbox.height)
         buffer.writeBoolean(this.hitbox.fixed)
         battleConfiguration.encode(buffer)
-        buffer.writeCollection(aiScripts) { _, v -> buffer.writeString(v.toString()) }
         buffer.writeNullable(interaction) { _, value ->
             buffer.writeString(value.type)
             value.encode(buffer)
@@ -79,10 +81,11 @@ class NPCClass {
             buffer.writeString(key)
             buffer.writeString(value.asString())
         }
+        buffer.writeNullable(battleTheme) { _, v -> buffer.writeIdentifier(v) }
     }
 
     fun decode(buffer: RegistryFriendlyByteBuf) {
-        resourceIdentifier = ResourceLocation.parse(buffer.readText().toString())
+        resourceIdentifier = ResourceLocation.parse(buffer.readString().toString())
         names = buffer.readList { buffer.readText().copy() }.toMutableList()
         val length = buffer.readFloat()
         val width = buffer.readFloat()
@@ -90,7 +93,6 @@ class NPCClass {
         hitbox = if (fixed) EntityDimensions.fixed(length, width) else EntityDimensions.scalable(length, width)
         battleConfiguration = NPCBattleConfiguration()
         battleConfiguration.decode(buffer)
-        aiScripts = buffer.readList { ResourceLocation.parse(buffer.readString()) }.toMutableList()
         interaction = buffer.readNullable {
             val type = buffer.readString()
             val configType = NPCInteractConfiguration.types[type] ?: return@readNullable null
@@ -123,5 +125,6 @@ class NPCClass {
                 return@readMapK key to StringValue(value)
             }
         }
+        battleTheme = buffer.readNullable { buffer.readIdentifier() }
     }
 }

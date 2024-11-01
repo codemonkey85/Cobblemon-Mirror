@@ -30,6 +30,14 @@
     "speed": 65
   },
   "behaviour": {
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.3
+      },
+      "swim": {
+        "avoidsWater": true
+      }
+    },
     "resting": {
       "canSleep": true,
       "willSleepOnBed": false,
@@ -181,7 +189,7 @@
   ],
   "preEvolution": "pignite",
   "evolutions": [],
-  "baseScale": 1.25,
+  "baseScale": 1.15,
   "hitbox": {
     "width": 1.35,
     "height": 2,

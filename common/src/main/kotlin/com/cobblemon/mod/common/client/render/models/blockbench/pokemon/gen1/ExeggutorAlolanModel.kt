@@ -41,7 +41,7 @@ class ExeggutorAlolanModel(root: ModelPart) : PokemonPosableModel(root), HeadedF
     override var portraitTranslation = Vec3(-1.4, 16.55, 0.0)
 
     override var profileScale = 0.45F
-    override var profileTranslation = Vec3(0.0, 1.0, 0.0)
+    override var profileTranslation = Vec3(0.0, 1.0, -30.0)
 
     lateinit var standing: Pose
     lateinit var walk: Pose

@@ -18,7 +18,9 @@ import com.cobblemon.mod.common.util.readMapK
 import com.cobblemon.mod.common.util.readSizedInt
 import com.cobblemon.mod.common.util.writeMapK
 import com.cobblemon.mod.common.util.writeSizedInt
+import io.netty.buffer.Unpooled
 import java.util.UUID
+import net.minecraft.core.RegistryAccess
 import net.minecraft.network.RegistryFriendlyByteBuf
 
 /**
@@ -31,18 +33,22 @@ import net.minecraft.network.RegistryFriendlyByteBuf
  * @author Hiroku
  * @since June 18th, 2022
  */
-class SetPCBoxPokemonPacket internal constructor(val storeID: UUID, val boxNumber: Int, val pokemon: Map<Int, Pokemon>) : NetworkPacket<SetPCBoxPokemonPacket>, UnsplittablePacket {
+class SetPCBoxPokemonPacket internal constructor(val storeID: UUID, val boxNumber: Int, val pokemon: Map<Int, (RegistryAccess) -> Pokemon>) : NetworkPacket<SetPCBoxPokemonPacket>, UnsplittablePacket {
 
     override val id = ID
 
-    constructor(box: PCBox): this(box.pc.uuid, box.boxNumber, box.getNonEmptySlots())
+    constructor(box: PCBox): this(box.pc.uuid, box.boxNumber, box.getNonEmptySlotsForPackets())
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeUUID(storeID)
         buffer.writeSizedInt(IntSize.U_BYTE, boxNumber)
         buffer.writeMapK(map = pokemon) { (slot, pokemon) ->
             buffer.writeSizedInt(IntSize.U_BYTE, slot)
-            Pokemon.S2C_CODEC.encode(buffer, pokemon)
+            val subBuffer = RegistryFriendlyByteBuf(Unpooled.buffer(), buffer.registryAccess())
+            Pokemon.S2C_CODEC.encode(subBuffer, pokemon(buffer.registryAccess()))
+            buffer.writeInt(subBuffer.readableBytes())
+            buffer.writeBytes(subBuffer)
+            subBuffer.release()
         }
     }
 
@@ -51,8 +57,16 @@ class SetPCBoxPokemonPacket internal constructor(val storeID: UUID, val boxNumbe
         fun decode(buffer: RegistryFriendlyByteBuf): SetPCBoxPokemonPacket {
             val storeID = buffer.readUUID()
             val boxNumber = buffer.readSizedInt(IntSize.U_BYTE)
-            val pokemonMap = mutableMapOf<Int, Pokemon>()
-            buffer.readMapK(map = pokemonMap) { buffer.readSizedInt(IntSize.U_BYTE) to Pokemon.S2C_CODEC.decode(buffer) }
+            val pokemonMap = mutableMapOf<Int, (RegistryAccess) -> Pokemon>()
+            buffer.readMapK(map = pokemonMap) {
+                val key = buffer.readSizedInt(IntSize.U_BYTE)
+                val subBuffer = buffer.readBytes(buffer.readInt())
+                key to {
+                    val pokemon = Pokemon.S2C_CODEC.decode(RegistryFriendlyByteBuf(subBuffer, buffer.registryAccess()))
+                    subBuffer.release()
+                    pokemon
+                }
+            }
             return SetPCBoxPokemonPacket(storeID, boxNumber, pokemonMap)
         }
     }

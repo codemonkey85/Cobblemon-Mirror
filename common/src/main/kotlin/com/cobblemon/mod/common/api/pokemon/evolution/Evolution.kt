@@ -31,6 +31,7 @@ import com.cobblemon.mod.common.pokemon.evolution.variants.LevelUpEvolution
 import com.cobblemon.mod.common.pokemon.evolution.variants.TradeEvolution
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.party
+import net.minecraft.client.Minecraft
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.sounds.SoundSource
@@ -154,10 +155,13 @@ interface Evolution : EvolutionLike {
             pokemon.tryRecallWithAnimation()
         }
 
+        val preEvoName = pokemon.getDisplayName()
+        val evolveMessage = lang("ui.evolve.into", preEvoName, pokemon.species.translatedName)
         val pokemonEntity = pokemon.entity
         if (pokemonEntity == null || !useEvolutionEffect) {
             pokemon.getOwnerPlayer()?.playNotifySound(CobblemonSounds.EVOLUTION_UI, SoundSource.PLAYERS, 1F, 1F)
             evolutionMethod(pokemon)
+            pokemon.getOwnerPlayer()?.sendSystemMessage(evolveMessage)
         } else {
             pokemonEntity.busyLocks.add("evolving")
             pokemonEntity.navigation.stop()
@@ -170,6 +174,7 @@ interface Evolution : EvolutionLike {
             pokemonEntity.after( seconds = 12F ) {
                 cryAnimation(pokemonEntity)
                 pokemonEntity.busyLocks.remove("evolving")
+                pokemon.getOwnerPlayer()?.sendSystemMessage(evolveMessage)
             }
         }
     }

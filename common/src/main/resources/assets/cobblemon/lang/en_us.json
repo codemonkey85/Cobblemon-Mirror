@@ -469,7 +469,7 @@
   "cobblemon.fossilmachine.protected": "This fossil belongs to %s!",
 
   "itemGroup.cobblemon.blocks": "Blocks",
-  "itemGroup.cobblemon.pokeball": "Poké Balls",
+  "itemGroup.cobblemon.utility_item": "Utility Items",
   "itemGroup.cobblemon.agriculture": "Agriculture",
   "itemGroup.cobblemon.consumables": "Consumables",
   "itemGroup.cobblemon.held_item": "Held Items",
@@ -632,7 +632,6 @@
 
   "cobblemon.ui.generic.yes": "Yes",
   "cobblemon.ui.generic.no": "No",
-  "cobblemon.ui.generic.trainer": "Trainer",
 
   "cobblemon.ui.pokenav.title": "PokéNav",
   "cobblemon.ui.pokenav.narrator.backbutton": "Poke Nav button pressed",
@@ -714,7 +713,8 @@
   "cobblemon.ui.interact.team_request": "Team up",
   "cobblemon.ui.interact.too_far": "Target is too far away",
 
-  "cobblemon.ui.pokedex.registered_suffix": "%1$s Registered",
+  "cobblemon.ui.pokedex.scan.registered_suffix": "%1$s Registered",
+  "cobblemon.ui.pokedex.scan.trainer_owned": "Trainer Owned",
 
   "cobblemon.ui.pokedex.region.national": "National",
   "cobblemon.ui.pokedex.region.alola": "Alola",
@@ -886,6 +886,7 @@
   "cobblemon.pokedex.variation.region_bias": "Region Bias",
   "cobblemon.pokedex.variation.variant": "Variant",
   "cobblemon.pokedex.variation.season": "Season",
+  "cobblemon.pokedex.variation.snake_pattern": "Snake Pattern",
 
   "key.cobblemon.upshiftparty": "Party Shift Up",
   "key.cobblemon.downshiftparty": "Party Shift Down",
@@ -906,6 +907,10 @@
   "key.cobblemon.categories.cobblemon.debug": "Cobblemon Debug",
 
   "cobblemon.subtitle.poke_ball.capture_succeeded": "Poké Ball capture succeeds",
+  "cobblemon.subtitle.pokemon.shiny_shine": "Owned shiny Pokémon shines",
+  "cobblemon.subtitle.pokemon.wild_shiny_shine": "Wild shiny Pokémon shines!",
+  "cobblemon.subtitle.pokemon.owned_shiny_ambient": "Ambient shiny Pokémon sparkles",
+  "cobblemon.subtitle.pokemon.shiny_ambient": "Wild shiny Pokémon sparkles!",
   "cobblemon.subtitle.fossilmachine.activate": "Restoration Machine activates",
   "cobblemon.subtitle.fossilmachine.active_loop": "Restoration Machine hums",
   "cobblemon.subtitle.fossilmachine.dna_full": "Restoration Tank reaches capacity",
@@ -1149,6 +1154,7 @@
   "cobblemon.command.friendship": "%1$s has %2$s friendship.",
   "cobblemon.command.givepokemon.nospecies": "Error: You need to include a Pokémon name or 'random'",
   "cobblemon.command.spawnpokemon.nospecies": "Error: You need to include a Pokémon name or 'random'",
+  "cobblemon.command.error.nonpc": "Error: You need to include a valid NPC identifier.",
   "cobblemon.command.held_item": "%1$s's %2$s was given the %3$s to hold.",
   "cobblemon.command.pokeheal.in_battle": "You cannot heal your party while in a battle!",
   "cobblemon.command.spawnpokemonfrompool": "A %1$s has spawned in the area.",
@@ -1292,6 +1298,7 @@
   "cobblemon.battle.clearallboost": "All stat changes were eliminated!",
   "cobblemon.battle.clearallnegativeboost": "%1$s's negative stat changes were removed!",
   "cobblemon.battle.clearallnegativeboost.zeffect": "%1$s's returned its decreased stats to normal using its Z-Power!",
+  "cobblemon.battle.clearboost": "%1$s's stat changes were removed!",
   "cobblemon.battle.unboost.slight": "%1$s's %2$s fell.",
   "cobblemon.battle.unboost.sharp": "%1$s's %2$s harshly fell.",
   "cobblemon.battle.unboost.severe": "%1$s's %2$s severely fell.",
@@ -1528,6 +1535,7 @@
   "cobblemon.battle.activate.tidyup": "Tidying up complete!",
   "cobblemon.battle.activate.mummy": "%1$s's ability became Mummy!",
   "cobblemon.battle.activate.allyswitch": "%1$s and %2$s switched places!",
+  "cobblemon.battle.activate.custapberry": "%1$s can act faster than normal, thanks to its Custap Berry!",
 
   "cobblemon.battle.prepare.bounce": "%1$s sprang up!",
   "cobblemon.battle.prepare.dig": "%1$s burrowed its way under the ground!",
@@ -1638,6 +1646,7 @@
   "cobblemon.battle.end.healblock": "%1$s's Heal Block wore off!",
   "cobblemon.battle.end.skydrop": "%1$s was freed from the Sky Drop!",
   "cobblemon.battle.end.illusion": "%1$s's illusion wore off!",
+  "cobblemon.battle.end.neutralizinggas": "The effects of the neutralizing gas wore off!",
 
   "cobblemon.battle.block.uproar": "But the uproar kept %1$s awake!",
 
@@ -2622,10 +2631,12 @@
   "cobblemon.move.gmaxcuddle.desc": "A Normal-type attack that Gigantamax Eevee use. This move infatuates opponents.",
   "cobblemon.move.gmaxdepletion": "G-Max Depletion",
   "cobblemon.move.gmaxdepletion.desc": "A Dragon-type attack that Gigantamax Duraludon use. Reduces the PP of the last move used.",
+  "cobblemon.move.gmaxdrumsolo": "G-Max Drum Solo",
+  "cobblemon.move.gmaxdrumsolo.desc": "A Grass-type attack that Gigantamax Rillaboom use. This move ignores the effects of opponents' abilities.",
   "cobblemon.move.gmaxfinale": "G-Max Finale",
   "cobblemon.move.gmaxfinale.desc": "A Fairy-type attack that Gigantamax Alcremie use. This move heals the HP of allies.",
   "cobblemon.move.gmaxfireball": "G-Max Fireball",
-  "cobblemon.move.gmaxfireball.desc": "A Fire-type attack that Gigantamax Cinderace use. This move ignores the effects of opponents abilities.",
+  "cobblemon.move.gmaxfireball.desc": "A Fire-type attack that Gigantamax Cinderace use. This move ignores the effects of opponents' abilities.",
   "cobblemon.move.gmaxfoamburst": "G-Max Foam Burst",
   "cobblemon.move.gmaxfoamburst.desc": "A Water-type attack that Gigantamax Kingler use. This move harshly lowers the Speed of opponents.",
   "cobblemon.move.gmaxgoldrush": "G-Max Gold Rush",
@@ -2633,7 +2644,7 @@
   "cobblemon.move.gmaxgravitas": "G-Max Gravitas",
   "cobblemon.move.gmaxgravitas.desc": "A Psychic-type attack that Gigantamax Orbeetle use. This move changes gravity for five turns.",
   "cobblemon.move.gmaxhydrosnipe": "G-Max Hydrosnipe",
-  "cobblemon.move.gmaxhydrosnipe.desc": "A Grass-type attack that Gigantamax Rillaboom use. This move ignores the effects of opponents abilities.",
+  "cobblemon.move.gmaxhydrosnipe.desc": "A Water-type attack that Gigantamax Inteleon use. This move ignores the effects of opponents' abilities.",
   "cobblemon.move.gmaxmalodor": "G-Max Malodor",
   "cobblemon.move.gmaxmalodor.desc": "A Poison-type attack that Gigantamax Garbodor use. This move poisons opponents.",
   "cobblemon.move.gmaxmeltdown": "G-Max Meltdown",
@@ -3739,6 +3750,8 @@
   "cobblemon.move.twister.desc": "The user whips up a vicious tornado to tear at opposing Pokémon. This may also make them flinch.",
   "cobblemon.move.uproar": "Uproar",
   "cobblemon.move.uproar.desc": "The user attacks in an uproar for three turns. During that time, no Pokémon can fall asleep.",
+  "cobblemon.move.upperhand": "Upper Hand",
+  "cobblemon.move.upperhand.desc": "The user reacts to the target's movement and strikes with the heel of its palm, making the target flinch. This move fails if the target is not readying a priority move.",
   "cobblemon.move.uturn": "U-turn",
   "cobblemon.move.uturn.desc": "After making its attack, the user rushes back to switch places with a party Pokémon in waiting.",
   "cobblemon.move.vacuumwave": "Vacuum Wave",

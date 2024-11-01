@@ -25,6 +25,7 @@ import com.cobblemon.mod.common.api.interaction.PokemonEntityInteraction
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
 import com.cobblemon.mod.common.api.net.serializers.PoseTypeDataSerializer
 import com.cobblemon.mod.common.api.net.serializers.StringSetDataSerializer
+import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.feature.ChoiceSpeciesFeatureProvider
 import com.cobblemon.mod.common.api.pokemon.feature.FlagSpeciesFeature
 import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatures
@@ -58,6 +59,8 @@ import com.cobblemon.mod.common.net.messages.client.sound.UnvalidatedPlaySoundS2
 import com.cobblemon.mod.common.net.messages.client.spawn.SpawnPokemonPacket
 import com.cobblemon.mod.common.net.messages.client.ui.InteractPokemonUIPacket
 import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler.SEND_OUT_DURATION
+import com.cobblemon.mod.common.pokedex.scanner.PokedexEntityData
+import com.cobblemon.mod.common.pokedex.scanner.ScannableEntity
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.Species
@@ -66,7 +69,6 @@ import com.cobblemon.mod.common.pokemon.activestate.InactivePokemonState
 import com.cobblemon.mod.common.pokemon.activestate.ShoulderedState
 import com.cobblemon.mod.common.pokemon.ai.FormPokemonBehaviour
 import com.cobblemon.mod.common.pokemon.evolution.variants.ItemInteractionEvolution
-import com.cobblemon.mod.common.pokemon.misc.GimmighoulStashHandler
 import com.cobblemon.mod.common.pokemon.properties.UncatchableProperty
 import com.cobblemon.mod.common.pokemon.feature.StashHandler
 import com.cobblemon.mod.common.util.*
@@ -128,7 +130,7 @@ open class PokemonEntity(
     world: Level,
     pokemon: Pokemon = Pokemon().apply { isClient = world.isClientSide },
     type: EntityType<out PokemonEntity> = CobblemonEntities.POKEMON,
-) : ShoulderRidingEntity(type, world), PosableEntity, Shearable, Schedulable {
+) : ShoulderRidingEntity(type, world), PosableEntity, Shearable, Schedulable, ScannableEntity {
     companion object {
         @JvmStatic val SPECIES = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.STRING)
         @JvmStatic val NICKNAME = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.COMPONENT)
@@ -390,10 +392,10 @@ open class PokemonEntity(
         //This is so that pokemon in the pasture block are ALWAYS in sync with the pokemon box
         //Before, pokemon entities in pastures would hold an old ref to a pokemon obj and changes to that would not appear to the underlying file
         if (this.tethering != null) {
-            //Only for online players
-            val player = level().getPlayerByUUID(ownerUUID) as? ServerPlayer
-            if (player != null) {
-                this.ownerUUID?.let {
+            // Only for online players
+            this.ownerUUID?.let { ownerUUID ->
+                val player = level().getPlayerByUUID(ownerUUID) as? ServerPlayer
+                if (player != null) {
                     val actualPokemon = Cobblemon.storage.getPC(player)[this.pokemon.uuid]
                     actualPokemon?.let {
                         if (it !== pokemon) {
@@ -861,7 +863,9 @@ open class PokemonEntity(
 
     override fun getDimensions(pose: Pose): EntityDimensions {
         val scale = effects.mockEffect?.scale ?: (form.baseScale * pokemon.scaleModifier)
-        return this.exposedForm.hitbox.scale(scale)
+        var result = this.exposedForm.hitbox.scale(scale)
+        result = result.withEyeHeight(this.exposedForm.eyeHeight(this) * result.height)
+        return result
     }
 
     override fun canBeSeenAsEnemy() = super.canBeSeenAsEnemy() && !isBusy
@@ -879,7 +883,7 @@ open class PokemonEntity(
     }
 
     override fun shouldBeSaved(): Boolean {
-        if (ownerUUID == null && (Cobblemon.config.savePokemonToWorld || isPersistenceRequired)) {
+        if (ownerUUID == null && !pokemon.isNPCOwned() && (Cobblemon.config.savePokemonToWorld || isPersistenceRequired)) {
             CobblemonEvents.POKEMON_ENTITY_SAVE_TO_WORLD.postThen(PokemonEntitySaveToWorldEvent(this)) {
                 return true
             }
@@ -892,22 +896,6 @@ open class PokemonEntity(
             discard()
         }
     }
-
-    //override fun getEyeHeight(pose: EntityPose): Float = this.exposedForm.eyeHeight(this)
-
-    /*
-    @Suppress("SENSELESS_COMPARISON")
-    override fun getActiveEyeHeight(pose: EntityPose, dimensions: EntityDimensions): Float {
-        // DO NOT REMOVE
-        // LivingEntity#getActiveEyeHeight is called in the constructor of Entity
-        // Pokémon param is not available yet
-        if (this.pokemon == null) {
-            return super.getActiveEyeHeight(pose, dimensions)
-        }
-        return this.exposedForm.eyeHeight(this)
-    }
-
-     */
 
     fun setBehaviourFlag(flag: PokemonBehaviourFlag, on: Boolean) {
         entityData.set(BEHAVIOUR_FLAGS, setBitForByte(entityData.get(BEHAVIOUR_FLAGS), flag.bit, on))
@@ -1421,4 +1409,22 @@ open class PokemonEntity(
      * @return The [Codec].
      */
     private fun sidedCodec(): Codec<Pokemon> = if (this.level().isClientSide) Pokemon.CLIENT_CODEC else Pokemon.CODEC
+
+    override fun resolvePokemonScan(): PokedexEntityData? {
+        return PokemonSpecies.getByIdentifier(this.exposedSpecies.resourceIdentifier)?.let { species ->
+            PokedexEntityData(
+                species = species,
+                form = this.form,
+                gender = this.pokemon.gender,
+                aspects = this.aspects,
+                shiny = this.pokemon.shiny,
+                level = this.labelLevel(),
+                ownerUUID = this.ownerUUID ?: UUID.randomUUID()
+            )
+        }
+    }
+
+    override fun resolveEntityScan(): LivingEntity {
+        return this
+    }
 }

@@ -23,12 +23,12 @@ fabric-loader = "0.16.5"
 fabric-api = "0.104.0+1.21.1"
 fabric-kotlin = "1.11.0+kotlin.2.0.0"
 fabric-permissions-api = "0.2-SNAPSHOT"
-lambDynamicLights = "2.3.4+1.20.4"
+lambDynamicLights = "3.0.1+1.21.1"
 debugutils-fabric = "1.21-1.0.6-fabric"
 
 # NeoForge
-neoforge = "21.1.51"
-neo-kotlin-for-forge = "5.4.0"
+neoforge = "21.1.66"
+neo-kotlin-for-forge = "5.5.0"
 debugutils-forge = "1.21-1.0.6-neoforge"
 
 # Data Storage
@@ -65,7 +65,7 @@ fabric-loader = { group = "net.fabricmc", name = "fabric-loader", version.ref = 
 fabric-api = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.ref = "fabric-api" }
 fabric-kotlin = { group = "net.fabricmc", name = "fabric-language-kotlin", version.ref = "fabric-kotlin" }
 fabric-permissions = { group = "me.lucko", name = "fabric-permissions-api", version.ref = "fabric-permissions-api" }
-adorn-fabric = { group = "maven.modrinth", name = "adorn", version = "5.3.0-neoforge"}
+adorn-fabric = { group = "maven.modrinth", name = "adorn", version = "6.0.0-neoforge"}
 lambDynamicLights = { group = "maven.modrinth", name = "lambdynamiclights", version.ref = "lambDynamicLights"}
 jei-api-fabric = { group = "mezz.jei", name = "jei-1.21-fabric-api", version.ref = "jei-api" }
 jei-fabric = { group = "mezz.jei", name = "jei-1.21-fabric", version.ref = "jei-api"}
