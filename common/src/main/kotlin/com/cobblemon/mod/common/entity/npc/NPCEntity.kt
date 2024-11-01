@@ -105,7 +105,9 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
             field = value
             if (valueChanged) {
                 customName = value.names.randomOrNull() ?: "NPC".text()
-                brain = makeBrain(brainDynamic ?: makeEmptyBrainDynamic())
+                if (!level().isClientSide) {
+                    brain = makeBrain(brainDynamic ?: makeEmptyBrainDynamic())
+                }
             }
         }
 
@@ -162,13 +164,16 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
         runtime.environment.query.addFunctions(struct.functions)
         refreshDimensions()
         navigation.setCanFloat(true)
-        makeBrain(brainDynamic ?: makeEmptyBrainDynamic())
+        if (!world.isClientSide) {
+            brain = makeBrain(brainDynamic ?: makeEmptyBrainDynamic())
+        }
     }
 
     // This has to be below constructor and entity tracker fields otherwise initialization order is weird and breaks them syncing
     companion object {
         fun createAttributes(): AttributeSupplier.Builder = createMobAttributes()
             .add(Attributes.ATTACK_DAMAGE, 1.0)
+            .add(Attributes.ATTACK_KNOCKBACK)
 
         val NPC_CLASS = SynchedEntityData.defineId(NPCEntity::class.java, IdentifierDataSerializer)
         val ASPECTS = SynchedEntityData.defineId(NPCEntity::class.java, StringSetDataSerializer)
@@ -235,6 +240,7 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
     override fun makeBrain(dynamic: Dynamic<*>): Brain<NPCEntity> {
         this.brainDynamic = dynamic
         val brain = brainProvider().makeBrain(dynamic)
+        this.brain = brain
         if (npc != null) {
             NPCBrain.configure(this, npc, brain)
         }
@@ -242,8 +248,12 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
     }
 
     override fun doHurtTarget(target: Entity): Boolean {
-        target as ServerPlayer
-        return target.hurt(this.damageSources().mobAttack(this), attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat() * 5F)
+        val source = this.damageSources().mobAttack(this)
+        val hurt = target.hurt(source, attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat() * 5F)
+        if (hurt) {
+            playAttackSound()
+        }
+        return hurt
     }
 
     override fun getBrain() = super.getBrain() as Brain<NPCEntity>

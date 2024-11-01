@@ -22,11 +22,11 @@ import net.minecraft.world.entity.schedule.Activity
  * @since February 24th, 2024
  */
 object SwitchFromBattleTask {
-    fun create(): OneShot<LivingEntity> {
+    fun create(activity: Activity): OneShot<LivingEntity> {
         return BehaviorBuilder.create {
             it.group(it.absent(CobblemonMemories.NPC_BATTLING)).apply(it) { _ ->
                 Trigger { _, entity, _ ->
-                    entity.brain.setActiveActivityIfPossible(Activity.IDLE)
+                    entity.brain.setActiveActivityIfPossible(activity)
                     true
                 }
             }

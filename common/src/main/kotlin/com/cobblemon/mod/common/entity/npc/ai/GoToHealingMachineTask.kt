@@ -8,10 +8,17 @@
 
 package com.cobblemon.mod.common.entity.npc.ai
 
+import com.bedrockk.molang.Expression
+import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonMemories
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.setup
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.util.getNearbyBlockEntities
+import com.cobblemon.mod.common.util.resolveDouble
+import com.cobblemon.mod.common.util.resolveFloat
+import com.cobblemon.mod.common.util.resolveInt
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.behavior.BlockPosTracker
 import net.minecraft.world.entity.ai.behavior.OneShot
 import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder
@@ -21,7 +28,15 @@ import net.minecraft.world.entity.ai.memory.WalkTarget
 import net.minecraft.world.phys.AABB
 
 object GoToHealingMachineTask {
-    fun create(horizontalRange: Int, verticalRange: Int, walkSpeed: Float, completionRange: Int): OneShot<NPCEntity> {
+    @JvmStatic
+    val runtime = MoLangRuntime().setup()
+
+    fun create(
+        horizontalSearchRange: Expression,
+        verticalSearchRange: Expression,
+        speedMultiplier: Expression,
+        completionRange: Expression
+    ): OneShot<in LivingEntity> {
         return BehaviorBuilder.create {
             it.group(
                 it.absent(MemoryModuleType.WALK_TARGET),
@@ -29,15 +44,32 @@ object GoToHealingMachineTask {
                 it.absent(CobblemonMemories.NPC_BATTLING)
             ).apply(it) { walkTarget, lookTarget, _ ->
                 Trigger { world, entity, time ->
+                    if (entity !is NPCEntity) {
+                        return@Trigger false
+                    }
+
+                    val horizontalSearchRange = runtime.resolveDouble(horizontalSearchRange)
+                    val verticalSearchRange = runtime.resolveDouble(verticalSearchRange)
+                    val speedMultiplier = runtime.resolveFloat(speedMultiplier)
+                    val completionRange = runtime.resolveInt(completionRange)
+
                     if ((entity.staticParty?.getHealingRemainderPercent() ?: 0F) > 0F) {
                         val npcPos = entity.blockPosition()
                         val nearestFreeHealer = world
-                            .getNearbyBlockEntities(AABB.ofSize(entity.position(), horizontalRange.toDouble(), verticalRange.toDouble(), horizontalRange.toDouble()), CobblemonBlockEntities.HEALING_MACHINE)
+                            .getNearbyBlockEntities(
+                                box = AABB.ofSize(
+                                    entity.position(),
+                                    horizontalSearchRange,
+                                    verticalSearchRange,
+                                    horizontalSearchRange
+                                ),
+                                blockEntityType = CobblemonBlockEntities.HEALING_MACHINE
+                            )
                             .filterNot { it.second.isInUse }
                             .minByOrNull { it.first.distSqr(npcPos) }
                             ?.first
                         if (nearestFreeHealer != null) {
-                            walkTarget.set(WalkTarget(nearestFreeHealer, walkSpeed, completionRange))
+                            walkTarget.set(WalkTarget(nearestFreeHealer, speedMultiplier, completionRange))
                             lookTarget.set(BlockPosTracker(nearestFreeHealer))
                             return@Trigger true
                         }

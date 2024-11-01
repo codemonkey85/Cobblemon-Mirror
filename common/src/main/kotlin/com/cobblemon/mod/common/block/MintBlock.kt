@@ -24,14 +24,12 @@ import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.BonemealableBlock
 import net.minecraft.world.level.block.CropBlock
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.IntegerProperty
-import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
@@ -73,13 +71,7 @@ class MintBlock(private val mintType: MintType, settings: Properties) : CropBloc
 
     override fun getBonemealAgeIncrease(world: Level): Int = 1
 
-    override fun getShape(state: BlockState, world: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
-        var box = AGE_TO_SHAPE_BOX[this.getAge(state)]
-        val floor = world.getBlockState(pos.below())
-        if (floor.`is`(Blocks.FARMLAND)) { box = box.setMinY(-0.0625) }
-        // if IS_WILD ever gets set properly by using block tags or wahtever in the world gen we can get rid of this (or at least make it nicer)
-        return Shapes.create(box)
-    }
+    override fun getShape(state: BlockState, world: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape = AGE_TO_SHAPE[this.getAge(state)]
 
     fun isWild(state: BlockState): Boolean = state.getValue(IS_WILD)
 
@@ -147,15 +139,15 @@ class MintBlock(private val mintType: MintType, settings: Properties) : CropBloc
         const val MATURE_AGE = MAX_AGE
         val IS_WILD: BooleanProperty = BooleanProperty.create("is_wild")
 
-        private val AGE_0_SHAPE = AABB(0.0, 0.0, 0.0, 1.0, 0.1, 1.0)
-        private val AGE_1_TO_2_SHAPE = AABB(0.0, 0.0, 0.0, 1.0, 0.2, 1.0)
-        private val AGE_3_SHAPE = AABB(0.0, 0.0, 0.0, 1.0, 0.3, 1.0)
-        private val AGE_4_SHAPE = AABB(0.0, 0.0, 0.0, 1.0, 0.4, 1.0)
-        private val AGE_5_SHAPE = AABB(0.0, 0.0, 0.0, 1.0, 0.5, 1.0)
-        private val AGE_6_SHAPE = AABB(0.0, 0.0, 0.0, 1.0, 0.6, 1.0)
-        private val AGE_7_SHAPE = AABB(0.0, 0.0, 0.0, 1.0, 0.7, 1.0)
+        private val AGE_0_SHAPE = Shapes.box(0.0, -0.9, 0.0, 1.0, 0.1, 1.0)
+        private val AGE_1_TO_2_SHAPE = Shapes.box(0.0, -0.9, 0.0, 1.0, 0.2, 1.0)
+        private val AGE_3_SHAPE = Shapes.box(0.0, -0.9, 0.0, 1.0, 0.3, 1.0)
+        private val AGE_4_SHAPE = Shapes.box(0.0, -0.9, 0.0, 1.0, 0.4, 1.0)
+        private val AGE_5_SHAPE = Shapes.box(0.0, -0.9, 0.0, 1.0, 0.5, 1.0)
+        private val AGE_6_SHAPE = Shapes.box(0.0, -0.9, 0.0, 1.0, 0.6, 1.0)
+        private val AGE_7_SHAPE = Shapes.box(0.0, -0.9, 0.0, 1.0, 0.7, 1.0)
 
-        val AGE_TO_SHAPE_BOX = arrayOf(
+        val AGE_TO_SHAPE = arrayOf(
             AGE_0_SHAPE,
             AGE_1_TO_2_SHAPE,
             AGE_1_TO_2_SHAPE,

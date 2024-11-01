@@ -36,7 +36,7 @@ class TradeButton(
     }
 
     override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        val enabled = parent.offeredPokemon != null && parent.opposingOfferedPokemon != null && parent.protectiveTicks <= 0
+        val enabled = parent.offeredPokemon != null && parent.opposingOfferedPokemon != null && parent.protectiveTicks <= 0 && !parent.tradeProcessing
         val active = parent.trade.acceptedOppositeOffer && !parent.trade.oppositeAcceptedMyOffer.get()
 
         val texture = if (!enabled) buttonDisabledResource
@@ -52,14 +52,13 @@ class TradeButton(
             textureHeight = HEIGHT * 2
         )
 
-
         val label = if (active) ".".repeat(parent.readyProgress).text() else lang("ui.trade")
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
             text = label.bold(),
             x = x + (WIDTH / 2),
-            y = y + 2.5,
+            y = y + (if (active) 1 else 3),
             centered = true,
             shadow = true
         )

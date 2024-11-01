@@ -69,7 +69,8 @@ sealed class PokemonState {
 }
 class InactivePokemonState : PokemonState() {
     override fun writeToNBT(nbt: CompoundTag) = null
-
+    override fun equals(other: Any?) = other === this || other is InactivePokemonState
+    override fun hashCode() = 0
     companion object {
         @JvmStatic
         val CODEC: Codec<InactivePokemonState> = Codec.unit { InactivePokemonState() }
