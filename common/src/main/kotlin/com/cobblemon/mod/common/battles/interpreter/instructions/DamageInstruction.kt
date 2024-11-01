@@ -209,7 +209,7 @@ class DamageInstruction(
             } else if (causedFaint) {
                 GO
             } else {
-                UntilDispatch {"effects" !in holds}
+                UntilDispatch { "effects" !in holds}
             }
         }
     }

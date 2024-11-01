@@ -32,6 +32,7 @@ import net.minecraft.world.entity.Entity
 class SpawnNPCPacket(
     private val npcClass: ResourceLocation,
     private val aspects: Set<String>,
+    private val level: Int,
     private val battleIds: Set<UUID>,
     private val name: Component,
     private val poseType: PoseType,
@@ -44,6 +45,7 @@ class SpawnNPCPacket(
     constructor(entity: NPCEntity, vanillaSpawnPacket: ClientboundAddEntityPacket) : this(
         entity.npc.id,
         entity.aspects,
+        entity.level,
         entity.battleIds,
         entity.name,
         entity.entityData.get(NPCEntity.POSE_TYPE),
@@ -54,6 +56,7 @@ class SpawnNPCPacket(
     override fun encodeEntityData(buffer: RegistryFriendlyByteBuf) {
         buffer.writeIdentifier(this.npcClass)
         buffer.writeCollection(this.aspects) { pb, value -> pb.writeString(value) }
+        buffer.writeInt(this.level)
         buffer.writeCollection(this.battleIds) { pb, value -> pb.writeUUID(value) }
         buffer.writeText(name)
         buffer.writeEnumConstant(this.poseType)
@@ -66,6 +69,7 @@ class SpawnNPCPacket(
     override fun applyData(entity: NPCEntity) {
         entity.npc = NPCClasses.getByIdentifier(this.npcClass) ?: error("received unknown NPCClass: $npcClass")
         entity.customName = name
+        entity.entityData.set(NPCEntity.LEVEL, this.level)
         entity.entityData.set(NPCEntity.BATTLE_IDS, this.battleIds.toMutableSet())
         entity.entityData.set(NPCEntity.ASPECTS, aspects)
         entity.entityData.set(NPCEntity.POSE_TYPE, poseType)
@@ -79,6 +83,7 @@ class SpawnNPCPacket(
         fun decode(buffer: RegistryFriendlyByteBuf): SpawnNPCPacket {
             val npc = buffer.readIdentifier()
             val aspects = buffer.readList { buffer.readString() }.toSet()
+            val level = buffer.readInt()
             val battleIds = buffer.readList { buffer.readUUID() }.toSet()
             val name = buffer.readText()
             val poseType = buffer.readEnumConstant(PoseType::class.java)
@@ -90,7 +95,7 @@ class SpawnNPCPacket(
             }
             val vanillaPacket = decodeVanillaPacket(buffer)
 
-            return SpawnNPCPacket(npc, aspects, battleIds, name, poseType, texture, vanillaPacket)
+            return SpawnNPCPacket(npc, aspects, level, battleIds, name, poseType, texture, vanillaPacket)
         }
     }
 

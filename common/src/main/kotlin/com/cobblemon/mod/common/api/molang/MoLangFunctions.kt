@@ -239,6 +239,7 @@ object MoLangFunctions {
             val map = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
             map.put("class") { StringValue(npc.npc.id.toString()) }
             map.put("name") { StringValue(npc.name.string) }
+            map.put("level") { DoubleValue(npc.level) }
             map.put("face") { params -> ObjectValue(ReferenceDialogueFaceProvider(npc.id, params.getBooleanOrNull(0) != false)) }
             map.put("in_battle") { DoubleValue(npc.isInBattle()) }
             map.put("run_script_on_client") { params ->

@@ -61,6 +61,7 @@ import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.IntTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.StringTag
 import net.minecraft.nbt.Tag
@@ -69,6 +70,7 @@ import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
 import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerEntity
@@ -110,6 +112,9 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
                 }
             }
         }
+
+    val level: Int
+        get() = entityData.get(LEVEL)
 
     var skill: Int? = npc.skill ?: 0 // range from 0 - 5
 
@@ -180,6 +185,7 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
         val POSE_TYPE = SynchedEntityData.defineId(NPCEntity::class.java, PoseTypeDataSerializer)
         val BATTLE_IDS = SynchedEntityData.defineId(NPCEntity::class.java, UUIDSetDataSerializer)
         val NPC_PLAYER_TEXTURE = SynchedEntityData.defineId(NPCEntity::class.java, NPCPlayerTextureSerializer)
+        val LEVEL = SynchedEntityData.defineId(NPCEntity::class.java, EntityDataSerializers.INT)
 
 
 //        val BATTLING = Activity.register("npc_battling")
@@ -228,6 +234,7 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
         builder.define(POSE_TYPE, PoseType.STAND)
         builder.define(BATTLE_IDS, setOf())
         builder.define(NPC_PLAYER_TEXTURE, NPCPlayerTexture(ByteArray(1), NPCPlayerModelType.NONE))
+        builder.define(LEVEL, 1)
     }
 
     override fun getAddEntityPacket(serverEntity: ServerEntity) = ClientboundCustomPayloadPacket(
@@ -283,6 +290,7 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
         super.saveWithoutId(nbt)
         nbt.put(DataKeys.NPC_DATA, MoLangFunctions.writeMoValueToNBT(data))
         nbt.put(DataKeys.NPC_CONFIG, MoLangFunctions.writeMoValueToNBT(config))
+        nbt.put(DataKeys.NPC_LEVEL, IntTag.valueOf(level))
         nbt.putString(DataKeys.NPC_CLASS, npc.id.toString())
         nbt.put(DataKeys.NPC_ASPECTS, ListTag().also { list -> appliedAspects.forEach { list.add(StringTag.valueOf(it)) } })
         interaction?.let {
@@ -320,6 +328,7 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
 
     override fun load(nbt: CompoundTag) {
         npc = NPCClasses.getByIdentifier(ResourceLocation.parse(nbt.getString(DataKeys.NPC_CLASS))) ?: NPCClasses.classes.first()
+        entityData.set(LEVEL, nbt.getInt(DataKeys.NPC_LEVEL).takeIf { it != 0 } ?: 1)
         super.load(nbt)
         data = MoLangFunctions.readMoValueFromNBT(nbt.getCompound(DataKeys.NPC_DATA)) as VariableStruct
         config = if (nbt.contains(DataKeys.NPC_CONFIG)) MoLangFunctions.readMoValueFromNBT(nbt.getCompound(DataKeys.NPC_CONFIG)) as VariableStruct else VariableStruct()
@@ -338,7 +347,7 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
         if (!partyNBT.isEmpty) {
             val isStatic = partyNBT.getBoolean(DataKeys.NPC_PARTY_IS_STATIC)
             this.party = if (isStatic) {
-                    StaticNPCParty(NPCPartyStore(this)).also { it.loadFromNBT(partyNBT, registryAccess()) }
+                StaticNPCParty(NPCPartyStore(this)).also { it.loadFromNBT(partyNBT, registryAccess()) }
             } else {
                 val type = partyNBT.getString(DataKeys.NPC_PARTY_TYPE)
                 val clazz = DynamicNPCParty.types[type]
@@ -393,6 +402,7 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
 
     fun initialize(level: Int) {
         appliedAspects.clear()
+        entityData.set(LEVEL, level)
         npc.config.forEach { it.applyDefault(this) }
         npc.variations.values.forEach { this.appliedAspects.addAll(it.provideAspects(this)) }
         party = npc.party?.provide(this, level)
