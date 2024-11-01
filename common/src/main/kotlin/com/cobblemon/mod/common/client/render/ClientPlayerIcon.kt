@@ -43,8 +43,8 @@ abstract class ClientPlayerIcon(expiryTime: Int? = null) {
     open val SCALE = 0.75F
     private val FADE_RATIO = 0.25F
 
-    private val tickCount get() = Minecraft.getInstance().player!!.tickCount    // icon is only ticked when tracked, so derive lifetime from player tick - startTick
-    private val startTick = Minecraft.getInstance().player!!.tickCount
+    private val tickCount get() = Minecraft.getInstance().player?.tickCount ?: 0    // icon is only ticked when tracked, so derive lifetime from player tick - startTick
+    private val startTick = Minecraft.getInstance().player?.tickCount ?: 0
     private val tickRateManager = Minecraft.getInstance().level!!.tickRateManager()
     /** The tick at which the icon begins fading. */
     private val fadeTickStamp = expiryTime?.let { it * tickRateManager.tickrate() * (1 - FADE_RATIO) + startTick}?.toInt() ?: Int.MAX_VALUE // TODO is server expiration based on epoc going to cause a problem?

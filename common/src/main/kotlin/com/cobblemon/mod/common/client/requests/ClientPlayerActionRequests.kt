@@ -14,9 +14,9 @@ import com.cobblemon.mod.common.client.trade.ClientTradeRequest
 import java.util.*
 
 class ClientPlayerActionRequests {
-    val battleChallenges = mutableMapOf<UUID, ClientBattleChallenge>()
-    val multiBattleTeamRequests = mutableMapOf<UUID, ClientTeamRequest>()
-    val tradeOffers = mutableMapOf<UUID, ClientTradeRequest>()
+    val battleChallenges = mutableMapOf<UUID, ClientBattleChallenge>()      // Player to challenge
+    val multiBattleTeamRequests = mutableMapOf<UUID, ClientTeamRequest>()   // Player to team up invite
+    val tradeOffers = mutableMapOf<UUID, ClientTradeRequest>()              // Player to trade offer
 
     fun getRequestsFrom(player: UUID): List<ClientPlayerActionRequest> = buildList {
         battleChallenges[player]?.let { add(it) }

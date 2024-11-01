@@ -18,6 +18,7 @@ import com.cobblemon.mod.common.api.drop.DropEntry
 import com.cobblemon.mod.common.api.drop.ItemDropEntry
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.CobblemonEvents.DATA_SYNCHRONIZED
+import com.cobblemon.mod.common.api.interaction.RequestManager
 import com.cobblemon.mod.common.api.permission.PermissionValidator
 import com.cobblemon.mod.common.api.pokeball.catching.calculators.CaptureCalculator
 import com.cobblemon.mod.common.api.pokeball.catching.calculators.CaptureCalculators
@@ -209,7 +210,7 @@ object Cobblemon {
             BattleRegistry.onPlayerDisconnect(it.player)
             storage.onPlayerDisconnect(it.player)
             playerDataManager.onPlayerDisconnect(it.player)
-            TradeManager.onLogoff(it.player)
+            RequestManager.onLogoff(it.player)
         }
         PlatformEvents.PLAYER_DEATH.subscribe {
             PCLinkManager.removeLink(it.player.uuid)

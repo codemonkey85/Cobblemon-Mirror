@@ -33,9 +33,9 @@ fun delayedFuture(ticks: Int = 0, seconds: Float = 0F, serverThread: Boolean = f
  * being completed after the delay does things like entity removal or other thread-unsafe actions.
  */
 @JvmOverloads
-fun afterOnServer(ticks: Int = 0, seconds: Float = 0F, action: () -> Unit) = ServerTaskTracker.after(seconds + ticks / 20F, action)
+fun afterOnServer(ticks: Int = 0, seconds: Float = 0F, action: () -> Unit) = ServerTaskTracker.after(seconds + ticks / 20F, action) // TODO this won't work with recent tickmanager changes
 @JvmOverloads
-fun afterOnClient(ticks: Int = 0, seconds: Float, action: () -> Unit) = ClientTaskTracker.after(seconds + ticks / 20F, action)
+fun afterOnClient(ticks: Int = 0, seconds: Float, action: () -> Unit) = ClientTaskTracker.after(seconds + ticks / 20F, action)  // TODO this won't work with recent tickmanager changes
 
 @Deprecated("Use lerpOnServer or lerpOnClient, side-ambiguity causes problems now")
 fun lerp(seconds: Float = 0F, serverThread: Boolean = false, action: (Float) -> Unit) = (if (serverThread) ServerTaskTracker else ClientTaskTracker).lerp(seconds, action = action)

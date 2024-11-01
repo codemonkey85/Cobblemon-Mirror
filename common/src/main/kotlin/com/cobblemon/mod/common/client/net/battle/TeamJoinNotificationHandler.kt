@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.net.battle
 
+import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.ClientMultiBattleTeamMember
 import com.cobblemon.mod.common.client.CobblemonClient
@@ -16,7 +17,7 @@ import net.minecraft.client.Minecraft
 
 object TeamJoinNotificationHandler : ClientNetworkPacketHandler<TeamJoinNotificationPacket> {
     override fun handle(packet: TeamJoinNotificationPacket, client: Minecraft) {
-
+        Cobblemon.LOGGER.error("team join")
         CobblemonClient.teamData.multiBattleTeamMembers = packet.teamMemberUUIDs.mapIndexed { index, uuid -> ClientMultiBattleTeamMember(uuid, packet.teamMemberNames[index]) }.toMutableList()
 
         // TODO: print something to the client

@@ -16,7 +16,7 @@ import net.minecraft.client.Minecraft
 
 object TradeOfferExpiredHandler : ClientNetworkPacketHandler<TradeOfferExpiredPacket> {
     override fun handle(packet: TradeOfferExpiredPacket, client: Minecraft) {
-        CobblemonClient.requests.tradeOffers.remove(packet.traderId)
-        ClientPlayerIcon.update(packet.traderId)
+        CobblemonClient.requests.tradeOffers.remove(packet.senderID)
+        ClientPlayerIcon.update(packet.senderID)
     }
 }

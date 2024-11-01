@@ -8,14 +8,10 @@
 
 package com.cobblemon.mod.common.net.messages.client.battle
 
-import com.cobblemon.mod.common.api.callback.PartySelectPokemonDTO
 import com.cobblemon.mod.common.api.net.NetworkPacket
-import com.cobblemon.mod.common.net.messages.client.callback.OpenPartyCallbackPacket
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readText
-import com.cobblemon.mod.common.util.writeBox
 import com.cobblemon.mod.common.util.writeText
-import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 import net.minecraft.network.chat.MutableComponent

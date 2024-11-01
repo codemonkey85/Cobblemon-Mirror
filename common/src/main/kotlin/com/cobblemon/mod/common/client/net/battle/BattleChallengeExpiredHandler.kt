@@ -20,7 +20,7 @@ object BattleChallengeExpiredHandler : ClientNetworkPacketHandler<BattleChalleng
         while(iter.hasNext()) {
             val entry = iter.next()
             val player = entry.key
-            if (entry.value.requestID == packet.battleChallengeId) {
+            if (entry.value.requestID == packet.requestID) {
                 iter.remove()
                 ClientPlayerIcon.update(player)
             }

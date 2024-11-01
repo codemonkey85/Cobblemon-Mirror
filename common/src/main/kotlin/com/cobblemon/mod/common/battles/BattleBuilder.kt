@@ -102,22 +102,22 @@ object BattleBuilder {
 
     @JvmOverloads
     fun pvp2v2(
-            players: List<ServerPlayer> = emptyList(),
-            leadingPokemon: List<UUID> = emptyList(),
-            battleFormat: BattleFormat = BattleFormat.GEN_9_MULTI,
-            cloneParties: Boolean = false,
-            healFirst: Boolean = false,
-            partyAccessor: (ServerPlayer) -> PartyStore = { it.party() }
+        players: List<ServerPlayer> = emptyList(),
+        leadingPokemon: List<UUID> = emptyList(),
+        battleFormat: BattleFormat = BattleFormat.GEN_9_MULTI,
+        cloneParties: Boolean = false,
+        healFirst: Boolean = false,
+        partyAccessor: (ServerPlayer) -> PartyStore = { it.party() }
     ): BattleStartResult {
         val teams = players.mapIndexed { index, it -> partyAccessor(it).toBattleTeam(clone = cloneParties, checkHealth = !healFirst, leadingPokemon[index]) }
         val playerActors = teams.mapIndexed { index, team -> PlayerBattleActor(players[index].uuid, team)}.toMutableList()
 
         val errors = ErroredBattleStart()
 
-        if (players.size != BattleRegistry.MAX_TEAM_MEMBER_COUNT * 2) {
+        if (players.size != TeamManager.MAX_TEAM_MEMBER_COUNT * 2) {
             playerActors.forEach {actor ->
                 errors.participantErrors[actor] += BattleStartError.incorrectActorCount(
-                    requiredCount = BattleRegistry.MAX_TEAM_MEMBER_COUNT * 2,
+                    requiredCount = TeamManager.MAX_TEAM_MEMBER_COUNT * 2,
                     hadCount = players.size
                 )
             }
@@ -431,6 +431,10 @@ open class ErroredBattleStart(
     inline fun <reified T : BattleStartError> forError(action: (T) -> Unit): ErroredBattleStart {
         errors.filterIsInstance<T>().forEach { action(it) }
         return this
+    }
+
+    fun sendTo(entities: Collection<Entity>, transformer: (MutableComponent) -> (MutableComponent) = { it }) {
+        entities.forEach { this.sendTo(it, transformer) }
     }
 
     fun sendTo(entity: Entity, transformer: (MutableComponent) -> (MutableComponent) = { it }) {

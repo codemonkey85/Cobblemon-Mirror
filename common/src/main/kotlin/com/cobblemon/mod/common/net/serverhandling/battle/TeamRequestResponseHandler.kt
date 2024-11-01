@@ -6,24 +6,24 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.cobblemon.mod.common.net.serverhandling
+package com.cobblemon.mod.common.net.serverhandling.battle
 
-import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
-import com.cobblemon.mod.common.battles.ChallengeManager
+import com.cobblemon.mod.common.battles.TeamManager
+import com.cobblemon.mod.common.battles.TeamManager.TeamRequest
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.net.messages.server.BattleChallengeResponsePacket
+import com.cobblemon.mod.common.net.messages.server.battle.BattleTeamResponsePacket
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 
 /**
- * Processes a player's response to a [BattleChallenge].
+ * Processes a player's response to a [TeamRequest].
  *
  * @author JazzMcNade
- * @since March 12th, 2024
+ * @since April 15th, 2024
  */
-object ChallengeResponseHandler : ServerNetworkPacketHandler<BattleChallengeResponsePacket> {
-    override fun handle(packet: BattleChallengeResponsePacket, server: MinecraftServer, player: ServerPlayer) {
+object TeamRequestResponseHandler : ServerNetworkPacketHandler<BattleTeamResponsePacket> {
+    override fun handle(packet: BattleTeamResponsePacket, server: MinecraftServer, player: ServerPlayer) {
         val targetedEntity = player.level().getEntity(packet.targetedEntityId)?.let {
             when (it) {
                 is PokemonEntity -> it.owner
@@ -32,13 +32,11 @@ object ChallengeResponseHandler : ServerNetworkPacketHandler<BattleChallengeResp
             }
         } ?: return
 
-        ChallengeManager.setLead(player, packet.selectedPokemonId)
         if (targetedEntity !is ServerPlayer)
             return
         else if (packet.accept)
-            ChallengeManager.acceptRequest(player, packet.requestID)
+            TeamManager.acceptRequest(player, packet.requestID)
         else
-            ChallengeManager.declineRequest(player, packet.requestID)
-
+            TeamManager.declineRequest(player, packet.requestID)
     }
 }

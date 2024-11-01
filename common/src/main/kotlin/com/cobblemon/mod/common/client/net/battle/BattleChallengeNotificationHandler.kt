@@ -12,22 +12,15 @@ import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.battle.ClientBattleChallenge
 import com.cobblemon.mod.common.client.render.ClientPlayerIcon
-import com.cobblemon.mod.common.client.requests.ClientPlayerActionRequest
 import com.cobblemon.mod.common.net.messages.client.battle.BattleChallengeNotificationPacket
-import com.cobblemon.mod.common.util.lang
 import net.minecraft.client.Minecraft
 
 object BattleChallengeNotificationHandler : ClientNetworkPacketHandler<BattleChallengeNotificationPacket> {
     override fun handle(packet: BattleChallengeNotificationPacket, client: Minecraft) {
-        val clientBattleChallenge = ClientBattleChallenge(packet.battleChallengeId, packet.expiryTime, packet.battleFormat)
-        packet.challengerIds.forEach {
+        val clientBattleChallenge = ClientBattleChallenge(packet.challengeID, packet.senderID, packet.expiryTime, packet.battleFormat)
+        packet.challengerIDs.forEach {
             CobblemonClient.requests.battleChallenges[it] = clientBattleChallenge
             ClientPlayerIcon.update(it)
         }
-        ClientPlayerActionRequest.notify(
-            "challenge.receiver",
-            packet.challengerNames.first(),
-            lang("battle.types.${packet.battleFormat.battleType.name}")
-        )
     }
 }

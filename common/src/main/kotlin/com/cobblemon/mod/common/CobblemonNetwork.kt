@@ -110,9 +110,6 @@ import com.cobblemon.mod.common.net.messages.client.ui.InteractPokemonUIPacket
 import com.cobblemon.mod.common.net.messages.client.ui.PokedexUIPacket
 import com.cobblemon.mod.common.net.messages.client.ui.SummaryUIPacket
 import com.cobblemon.mod.common.net.messages.server.*
-import com.cobblemon.mod.common.net.messages.server.battle.BattleSelectActionsPacket
-import com.cobblemon.mod.common.net.messages.server.battle.RemoveSpectatorPacket
-import com.cobblemon.mod.common.net.messages.server.battle.SpectateBattlePacket
 import com.cobblemon.mod.common.net.messages.server.callback.move.MoveSelectCancelledPacket
 import com.cobblemon.mod.common.net.messages.server.callback.move.MoveSelectedPacket
 import com.cobblemon.mod.common.net.messages.server.callback.party.PartyPokemonSelectedPacket
@@ -146,9 +143,6 @@ import com.cobblemon.mod.common.net.messages.server.trade.ChangeTradeAcceptanceP
 import com.cobblemon.mod.common.net.messages.server.trade.OfferTradePacket
 import com.cobblemon.mod.common.net.messages.server.trade.UpdateTradeOfferPacket
 import com.cobblemon.mod.common.net.serverhandling.*
-import com.cobblemon.mod.common.net.serverhandling.battle.BattleSelectActionsHandler
-import com.cobblemon.mod.common.net.serverhandling.battle.RemoveSpectatorHandler
-import com.cobblemon.mod.common.net.serverhandling.battle.SpectateBattleHandler
 import com.cobblemon.mod.common.net.serverhandling.callback.move.MoveSelectCancelledHandler
 import com.cobblemon.mod.common.net.serverhandling.callback.move.MoveSelectedHandler
 import com.cobblemon.mod.common.net.serverhandling.callback.party.PartyPokemonSelectedHandler
@@ -185,7 +179,9 @@ import com.cobblemon.mod.common.net.serverhandling.trade.ChangeTradeAcceptanceHa
 import com.cobblemon.mod.common.net.serverhandling.trade.OfferTradeHandler
 import com.cobblemon.mod.common.net.serverhandling.trade.UpdateTradeOfferHandler
 import com.cobblemon.mod.common.net.messages.client.pokedex.ServerConfirmedScanPacket
+import com.cobblemon.mod.common.net.messages.server.battle.*
 import com.cobblemon.mod.common.net.messages.server.pokedex.scanner.FinishScanningPacket
+import com.cobblemon.mod.common.net.serverhandling.battle.*
 import com.cobblemon.mod.common.net.serverhandling.pokedex.scanner.FinishScanningHandler
 import com.cobblemon.mod.common.net.serverhandling.pokedex.scanner.StartScanningHandler
 import com.cobblemon.mod.common.util.server
