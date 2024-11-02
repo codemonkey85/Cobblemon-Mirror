@@ -3,6 +3,9 @@
   "package": "com.cobblemon.mod.common.mixin",
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
+  "injectors": {
+    "maxShiftBy": 2
+  },
   "client": [
     "BuiltinModelItemRendererMixin",
     "EntityRenderDispatcherMixin",
