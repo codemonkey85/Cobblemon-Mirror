@@ -1,0 +1,26 @@
+{
+  "timeline": [
+    {
+      "type": "add_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:burn_actor",
+      "locator": "middle"
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:burn_actorresidual",
+      "locator": "middle"
+    },
+    {
+      "type": "remove_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "pause",
+      "pause": 1
+    }
+  ]
+}

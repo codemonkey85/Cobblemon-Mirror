@@ -18,7 +18,7 @@
 			},
 			"minecraft:emitter_shape_sphere": {
 				"offset": [0, 0, 0],
-				"radius": "math.clamp(q.entity_radius*0.95,0.75,1.55)",
+				"radius": "(q.entity_radius*(0.95+v.emitter_age))/math.clamp(q.entity_scale*1.1-0.1,1,2)",
 				"surface_only": true,
 				"direction": ["(math.random(-2,2))*math.random(2,4)", "math.random(12,15)", "(math.random(-2,2))*math.random(2,4)"]
 			},
@@ -31,7 +31,7 @@
 			"minecraft:particle_initial_speed": "math.random(0.55,0.85)*1",
 			"minecraft:particle_motion_dynamic": {},
 			"minecraft:particle_appearance_billboard": {
-				"size": ["(0.3-(variable.particle_random_3*0.085))*math.clamp(q.entity_height,1,1.25)", "(0.3-(variable.particle_random_3*0.085))*math.clamp(q.entity_height,1,1.25)"],
+				"size": ["0.125+(v.particle_random_2*0.1)*math.clamp(q.entity_height,1,1.25)", "0.125+(v.particle_random_2*0.1)*math.clamp(q.entity_height,1,1.25)"],
 				"facing_camera_mode": "rotate_xyz",
 				"uv": {
 					"texture_width": 32,
