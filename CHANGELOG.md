@@ -35,6 +35,10 @@
 - Added animation for trading.
 
 ### Pokémon Added
+#### Gen 1
+- Alola Bias Cubone
+- Alolan Marowak
+
 #### Gen 2
 - Ledyba
 - Ledian
@@ -42,13 +46,39 @@
 - Sunflora
 - Wobbuffet
 - Girafarig
+- Corsola
+- Remoraid
+- Octillery
+- Mantine
+- Smeargle
 - Remoraid
 - Octillery
 - Mantine
 - Corsola
 
 #### Gen 3
+- Slakoth
+- Vigoroth
+- Slaking
+- Corphish
+- Crawdaunt
+- Feebas
+- Milotic
 - Wynaut
+- Absol
+- Spheal
+- Sealeo
+- Walrein
+- Bagon
+- Shelgon
+- Salamence
+
+#### Gen 4
+- Shellos [East Sea form]
+- Gastrodon [East Sea form]
+- Finneon
+- Lumineon
+- Mantyke
 - Feebas
 - Milotic
 - Spheal
@@ -67,12 +97,28 @@
 #### Gen 5
 - Purrloin
 - Liepard
+- Scraggy
+- Scrafty
 
 #### Gen 6
 - Clauncher
 - Clawitzer
 
 #### Gen 7
+- Pikipek
+- Trumbeak
+- Toucannon
+- Mareanie
+- Toxapex
+- Sandygast
+- Palossand
+- Bruxish
+
+#### Gen 8
+- Cramorant
+- Hatenna
+- Hattrem
+- Hatterene
 - Bruxish
 - Mareanie
 - Toxapex
@@ -82,16 +128,168 @@
 - Pincurchin
 
 #### Gen 9
+- Wattrel
+- Kilowattrel
+- Wiglett
+- Wugtrio
+- Flamigo
+- Veluza
 - Farigiraf
+- Klawf
 - Finizen
 - Palafin
 - Wiglett
 - Wugtrio
 - Flamigo
 
+#### Unique Forms
+- Magikarp Jump Variants
+- Gyarados Jump Variants
+
 ### Added cries to the following Pokémon
+- Sandshrew, Sandslash
+- Magnemite, Magneton, Magnezone
+- Gastly, Haunter, Gengar
+- Rhyhorn, Rhydon, Rhyperior
+- Happiny, Chansey
+- Horsea, Seadra, Kingdra
+- Magby, Magmar, Magmortar
+- Porygon, Porygon2, Porygon-Z
+- Sentret, Furret
+- Misdreavus, Mismagius
+- Corsola
+- Mantyke, Mantine
+- Girafarig, Farigiraf
+- Wynaut, Wobbuffet
+- Lunatone
+- Solrock
+- Corphish, Crawdaunt
+- Feebas, Milotic
+- Kecleon
+- Absol
+- Spheal, Sealeo, Walrein
+- Relicanth
+- Bagon, Shelgon, Salamence
+- Munchlax
+- Finneon, Lumineon
+- Purrloin, Liepard
 - Timburr, Gurdurr, Conkeldurr
+- Joltik, Galvantula
+- Elgyem, Beheeyem
 - Golett, Golurk
+- Deino, Zweilous, Hydreigon
+- Flabébé, Floette, Florges
+- Clauncher, Clawitzer
+- Mareanie, Toxapex
+- Wimpod, Golisopod
+- Bruxish
+- Hatenna, Hattrem, Hatterene
+- Pincurchin
+- Klawf
+- Finizen, Palafin [Zero], Palafin [Hero]
+- Dondozo
+
+### Added shoulder mounts for the following Pokémon
+- Weedle
+- Caterpie
+- Spearow
+- Mew
+- Murkrow
+- Smoochum
+- Larvitar
+- Tailow
+- Plusle
+- Minun
+- Beldum
+- Starly
+- Buneary
+- Combee
+- Pachirisu
+- Tepig
+- Pidove
+- Petilil, Hisui Bias Petilil
+- Zorua, Hisui Bias Zorua
+- Elgyem
+- Fletchling
+- Skrelp
+- Klefki
+- Litten
+- Fomantis
+- Morelull
+- Dreepy
+- Sprigatito
+- Shroodle
+- Tatsugiri
+- Glimmet
+- Gimmighoul [Roaming]
+
+### Animation updates for the following Pokémon
+- Bellsprout, Weepinbel, Victreebel
+- Shellder, Cloyster
+- Porygon, Porygon2, Porygon-Z
+- Furret
+- Swinub, Piloswine, Mamoswine
+- Skarmory
+- Tyrogue
+- Spinda
+- Torkoal
+- Nincada, Ninjask
+- Lunatone
+- Solrock
+- Buneary, Lopunny
+- Magnezone
+- Alomomola
+- Tepig, Pignite, Emboar
+- Flabebe, Floette, Florges
+- Litten, Torracat, Incineroar
+- Fomantis, Lurantis
+- Dreepy, Drakloak
+- Kleavor
+- Scorbunny
+- Gimmighoul [Roaming]
+
+### Model updates for the following Pokémon
+- Bulbasaur, Ivysaur, Venusaur
+- Charmander, Charmeleon, Charizard
+- Kakuna, Beedrill
+- Lapras
+- Porygon, Porygon2, Porygon-Z
+- Igglybuff, Jigglypuff, Wigglytuff
+- Poliwhirl, Poliwrath
+- Bellsprout, Weepinbell, Victreebel
+- Shellder, Cloyster
+- Gastly, Haunter
+- Onix
+- Krabby, Kingler
+- Rhyhorn, Rhydon, Rhyperior
+- Horsea, Seadra, Kingdra
+- Goldeen, Seaking
+- Magby, Magmar, Magmortar
+- Magikarp, Gyarados
+- Munchlax, Snorlax
+- Swinub, Piloswine, Mamoswine
+- Mudkip, Marshtomp, Swampert
+- Baltoy, Claydol
+- Carvanha
+- Relicanth
+- Prinplup, Empoleon
+- Gible, Gabite, Garchomp
+- Riolu, Lucario
+- Snivy, Servine, Serperior
+- Tepig, Pignite, Emboar
+- Krookodile
+- Dwebble, Crustle
+- Joltik, Galvantula
+- Klink, Klang, Klinglang
+- Golett, Golurk
+- Fennekin, Braixen, Delphox
+- Phantump, Trevenant
+- Litten, Torracat, Incineroar
+- Popplio, Brionne, Primarina
+- Lurantis
+- Scorbunny, Cinderace
+- Quaxly
+- Tatsugiri
 
 ### Changes
 - Buffed Dusk Ball catch multipliers: Increased multiplier to 3.5 (from 3.0) in light level 0. Increased multiplier to 3.0 (from 1.5) in light levels 1-7.
@@ -99,9 +297,7 @@
 - Adjusted some berry balance values like yield and growth times.
 - Adjusted volumes of sounds made by Display Cases, Berry Bushes, Energy Root, Medicinal Leek, Vivichoke, Mints, Revival Herbs and Gilded Chests.
 - Changes to mulch buffs/durations.
-- Dreepy is now shoulder mountable.
 - Updated potion sprites.
-- Weedle, Caterpie, Spearow, Smoochum, Mew, Murkrow, Larvitar, Taillow, Plusle, Minun, Beldum, Starly, Buneary, Combee, Pachirisu, Pidove, Petilil, Hisui Bias Petilil, Zorua, Hisuian Zorua, Elgyem, Fletchling, Skrelp, Klefki, Fomantis, Morelull, Dreepy, Shroodle, Tatsugiri, Glimmet, and Roaming Gimmighoul are now shoulder mountable.
 - Link Cable recipe has been redesigned.
 - Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs.
 - Updated UI sounds for clicking and evolving Pokémon.
@@ -179,6 +375,7 @@
 - Fixed Slowking's battle idle. 
 - Fixed Grafaiai's walk speed to prevent model sliding. 
 - Fixed Alolan Exeggutor's tail not showing in the party UI. It will now also stand in front of all Pokémon in the party menu :)
+- Fixed Timburr duplicating its log while fainting.
 - Fixed reviving items throwing an exception when used in battle.
 - Fixed messages for Focus Sash, Confusion, Mummy, Ice Face, Own Tempo, and Revive.
 - Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server.

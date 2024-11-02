@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen4
 
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
@@ -35,6 +36,8 @@ class HappinyModel(root: ModelPart) : PokemonPosableModel(root), BipedFrame {
     lateinit var walk: CobblemonPose
     lateinit var sleep: CobblemonPose
     lateinit var battle_idle: CobblemonPose
+
+    override val cryAnimation = CryProvider { bedrockStateful("happiny", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("happiny", "blink") }

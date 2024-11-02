@@ -3,7 +3,10 @@
   "portraitTranslation": [-0.39,2.28,0],
   "profileScale": 0.51,
   "profileTranslation": [-0.02,1.02,0],
-  "animations": {},
+  "rootBone": "palafin_hero",
+  "animations": {
+    "cry": "q.bedrock_stateful('palafin_hero', 'cry')"
+  },
   "poses": {
     "standing": {
       "poseTypes": [

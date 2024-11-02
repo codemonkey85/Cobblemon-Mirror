@@ -1,59 +1,41 @@
 {
-    "portraitScale": 1.1,
-    "portraitTranslation": [0.1,-0.01,0],
-    "profileScale": 0.77,
-    "profileTranslation": [0,0.45,0],
-    "animations": {
-      "faint": "q.bedrock_primary('klink', 'faint', q.curve('one'))",
-      "cry": "q.bedrock_stateful('klink', 'cry')",
-      "recoil": "q.bedrock_stateful('klink', 'recoil')",
-      "physical": "q.bedrock_primary('klink', 'physical', q.curve('symmetrical_wide'))",
-      "special": "q.bedrock_primary('klink', 'special', q.curve('symmetrical_wide'))",
-      "status": "q.bedrock_primary('klink', 'status', q.curve('symmetrical_wide'))"
+  "portraitScale": 1.1,
+  "portraitTranslation": [0.1,-0.01,0],
+  "profileScale": 0.77,
+  "profileTranslation": [0,0.45,0],
+  "rootBone": "klink",
+  "animations": {
+    "faint": "q.bedrock_primary('klink', 'faint', q.curve('one'))",
+    "cry": "q.bedrock_stateful('klink', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseTypes": [
+        "STAND",
+        "NONE",
+        "PORTRAIT",
+        "PROFILE"
+      ],
+      "isBattle": false,
+      "animations": [
+        "q.bedrock('klink', 'ground_idle')"
+      ]
     },
-    "poses": {
-      "battle-standing": {
-        "poseTypes": [
-          "STAND"
-        ],
-        "isBattle": true,
-        "animations": [
-          "q.look('head bone')",
-          "q.bedrock('klink', 'battle_idle')"
-        ]
-      },
-      "standing": {
-        "poseTypes": [
-          "STAND",
-          "NONE",
-          "PORTRAIT",
-          "PROFILE"
-        ],
-        "isBattle": false,
-        "animations": [
-          "q.look('head bone')",
-          "q.bedrock('klink', 'ground_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('klink', 'idle_quirk', 20, 60, 1)"
-        ]
-      },
-      "walking": {
-        "poseTypes": [
-          "WALK"
-        ],
-        "animations": [
-          "q.look('head bone')",
-          "q.bedrock('klink', 'ground_walk')"
-        ]
-      },
-      "sleep": {
-        "poseTypes": [
-          "SLEEP"
-        ],
-        "animations": [
-          "q.bedrock('klink', 'sleep')"
-        ]
-      }
+    "walking": {
+      "poseTypes": [
+        "WALK"
+      ],
+      "animations": [
+        "q.bedrock('klink', 'ground_walk')"
+      ]
+    },
+    "sleep": {
+      "poseTypes": [
+        "SLEEP"
+      ],
+      "animations": [
+        "q.bedrock('klink', 'sleep')"
+      ]
     }
   }
+}

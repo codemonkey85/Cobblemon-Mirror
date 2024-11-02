@@ -3,55 +3,54 @@
   "portraitTranslation": [-0.31, 0.12, 0],
   "profileScale": 0.47,
   "profileTranslation": [0.07, 0.98, 0.0],
+  "rootBone": "venusaur",
   "animations": {
-    "faint": "q.bedrock_primary('venusaur', 'faint', q.curve('one'))",
-    "cry": "q.bedrock_stateful('venusaur', 'cry')"
+    "cry": "q.bedrock_stateful('venusaur', 'cry')",
+    "recoil": "q.bedrock_stateful('venusaur', 'recoil')"
   },
   "poses": {
+    "battle-standing": {
+      "poseTypes": [
+        "STAND"
+      ],
+      "isBattle": true,
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('venusaur', 'battle_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('venusaur', 'blink')",
+        "q.bedrock_quirk('venusaur', 'look_quirk')"
+      ]
+    },
     "standing": {
-      "poseName": "standing",
       "poseTypes": [
         "STAND",
-        "FLOAT",
         "NONE",
         "PORTRAIT",
         "PROFILE"
       ],
+      "isBattle": false,
       "animations": [
-        "q.look('head', 1, 0, 10, -35)",
-        "q.look('leaf_front', 1, 0, 3, -23)",
+        "q.look('head')",
         "q.bedrock('venusaur', 'ground_idle')"
       ],
       "quirks": [
-        "q.bedrock_quirk('venusaur', 'blink')"
-      ],
-      "transformedParts": [
-        {
-          "part": "vines",
-          "isVisible": false
-        }
+        "q.bedrock_quirk('venusaur', 'blink')",
+        "q.bedrock_quirk('venusaur', 'look_quirk')"
       ]
     },
     "walking": {
-      "poseName": "walking",
       "poseTypes": [
-        "WALK",
-        "SWIM"
+        "WALK"
       ],
       "animations": [
-        "q.look('head', 1, 0, 10, -35)",
-        "q.look('leaf_front', 1, 0, 0, -23)",
-        "q.quadruped_walk(0.66, 0.6, 'leg_front_left', 'leg_front_right', 'leg_left', 'leg_right')",
-        "q.bedrock('venusaur', 'ground_idle')"
+        "q.look('head')",
+        "q.bedrock('venusaur', 'ground_walk')"
       ],
       "quirks": [
-        "q.bedrock_quirk('venusaur', 'blink')"
-      ],
-      "transformedParts": [
-        {
-          "part": "vines",
-          "isVisible": false
-        }
+        "q.bedrock_quirk('venusaur', 'blink')",
+        "q.bedrock_quirk('venusaur', 'look_quirk')"
       ]
     },
     "sleep": {
@@ -60,12 +59,7 @@
       ],
       "animations": [
         "q.bedrock('venusaur', 'sleep')"
-      ],
-      "transformedParts": [
-        {
-          "part": "vines",
-          "isVisible": false
-        }
+
       ]
     }
   }
