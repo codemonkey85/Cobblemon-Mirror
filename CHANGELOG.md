@@ -13,13 +13,12 @@
 - Added support for Double Battles, Triple Battles, and Multi-battles.
 - CriticalCaptures and Pokédex progress capture multiplier now work with the Pokédex.
 - Added extra visuals to early berry growth stages.
-- Hidden Power now displays its effective typing.
 - Moves impacted by the abilities Pixelate, Refrigerate, Aerilate, Galvanize, and Normalize now display as their altered typing.
 - Added Polished Tumblestone and Tumblestone Brick block sets from Tumblestone, Black Tumblestone, and Sky Tumblestone.
+- Added Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
+- Added particles for moves: Watersport, Mud Sport, and Psychic.
 - Added Fire, Water, Thunder, Leaf, Ice, Sun, Moon, Shiny, Dawn, and Dusk Stone storage blocks.
 - Added Eject Pack, Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
-- Moves can now be benched without specifying a replacement move, allowing for empty move slots.
-- Moves learned via Sketch now persist after battle.
 - Added `stonjourner_henge_ruins`, `luna_henge_ruins`, and `sol_henge_ruins` structures.
 - Added a `battleInvulnerability` gamerule to make players invulnerable to any damage during a battle.
 - Added a `mobTargetInBattle` gamerule to exclude players from being targeted by mobs during a battle.
@@ -33,6 +32,10 @@
 - Added `no_ai` and `freeze_frame` options to the `/spawnpokemon` command.
 - Added shiny Pokémon particles with sound effects.
 - Added animation for trading.
+- Added shiny Pokémon effects.
+- Added effects for the burn status effect.
+- Added effects for the moves: Psychic, Water Sport, and Mud Sport.
+- Added a new universal locator called "top".
 
 ### Pokémon Added
 #### Gen 2
@@ -124,6 +127,15 @@
 - The default number of digits for the Pokédex number in the summary has been increased, from 3 to 4.
 - The pasture block model's screen is now off by default.
 - The Poké Balls creative tab is now named Utility Items as it also encompasses Poké Rod and Pokédex items.
+- Moves can now be benched without specifying a replacement move, allowing for empty move slots.
+- Moves learned via Sketch now persist after battle.
+- Updated potion sprites
+- Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users.
+- Hidden Power now displays its effective typing.
+- Updated particles for moves: Confusion, Protect, Sand Attack, and Quick Attack.
+- Updated particles for status effects: Paralysis, Poison, and Sleep.
+- Updated particles on Gastly.
+- Revamped stat buff and de-buff particles.
 
 ### Fixes
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating.

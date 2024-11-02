@@ -6,15 +6,9 @@
     },
     {
       "type": "entity_particles",
-      "effect": "cobblemon:stat_up_circles",
-      "delay": 0.05,
-      "locator": "middle"
-    },
-    {
-      "type": "entity_particles",
-      "effect": "cobblemon:stat_up_lines",
-      "delay": 0.05,
-      "locator": "middle"
+      "effect": "cobblemon:statup_actor",
+      "delay": 0.1,
+      "locator": "root"
     },
     {
       "type": "pause",
@@ -23,6 +17,10 @@
     {
       "type": "remove_holds",
       "holds": ["effects"]
+    },
+    {
+      "type": "pause",
+      "pause": 1.2
     }
   ]
 }
