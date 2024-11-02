@@ -1,0 +1,22 @@
+{
+    "biomes": "#cobblemon:is_cold_ocean",
+    "spawn_overrides": {},
+    "type": "minecraft:jigsaw",
+    "start_pool": "cobblemon:shipwreck_coves/cove1/starting_cave",
+    "dimension_padding": 1,
+    "liquid_settings": "apply_waterlogging",
+    "size": 20,
+    "step": "top_layer_modification",
+    "start_height": {
+        "type": "minecraft:uniform",
+        "max_inclusive": {
+            "absolute": 23
+        },
+        "min_inclusive": {
+            "absolute": 23
+        }
+    },
+    "max_distance_from_center": 128,
+    "use_expansion_hack": true,
+    "terrain_adaptation": "none"
+}

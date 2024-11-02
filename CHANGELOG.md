@@ -7,6 +7,7 @@
 - Added Lure Ball functionality, increasing the catch rate of Pokémon that were caught on a fishing rod.
 - Added Repeat Ball functionality, increasing the catch rate of Pokémon that are already registered as caught in a player's Pokédex.
 - Added property chaining support for duplicate CustomPokemonPropertyType elements.
+- Added flat level battling with options to set all Pokemon to level 50, 100, or 5 for the duration of a battle. No experience or EVs are granted for a flat battle.
 - Added `aspect` and `unaspect` PokemonProperty arguments (which also includes commands such as `/pokemonedit`, `/spawnpokemon`, and `/givepokemon`) to allow forcing or un-forcing an aspect on a Pokémon.
 - Added `type` alternatively `elemental_type` PokemonProperty argument, this is only used for filtering and is not applied to Pokémon. Example `type=fire` would be true for Charmander but false for Squirtle.
 - Added support for Double Battles, Triple Battles, and Multi-battles.
@@ -31,6 +32,7 @@
 - `/freezepokemon` command to pause a Pokémon's animation at a specific point in time.
 - Added `no_ai` and `freeze_frame` options to the `/spawnpokemon` command.
 - Added shiny Pokémon particles with sound effects.
+- Added animation for trading.
 
 ### Pokémon Added
 #### Gen 2
@@ -117,7 +119,7 @@
 - Updated dialogue GUI assets with proper assets.
 - Updated party switching interface when in battle.
 - Relic coin pouches can now be waterlogged.
-- Pokemon Name (and level) labels are now only visible when crouching by default, set the `displayEntityLabelsWhenCrouchingOnly` to `false` to always them even when not crouching
+- Pokémon name and level labels are now only visible when crouching by default. Set the `displayEntityLabelsWhenCrouchingOnly` config to `false` to always have them displayed.
 - The "Press R to start battle prompt" will now disappear after a player's first battle has been won.
 - The default number of digits for the Pokédex number in the summary has been increased, from 3 to 4.
 - The pasture block model's screen is now off by default.
@@ -193,6 +195,7 @@
 - Fixed village generation caps not applying for berry farms. You were not meant to see more than two berry farms per village!
 - Fixed the Ice Face ability activation being displayed incorrectly in a battle.
 - Fixed edge case of F1 and R locking you in battle with no R functionality (requiring ESC to get out).
+- Fixed Poké Ball render orientation in battle interface when capturing.
 
 ### Developer
 - `SpawnCause` is now an implementation of `SpawningInfluence`.

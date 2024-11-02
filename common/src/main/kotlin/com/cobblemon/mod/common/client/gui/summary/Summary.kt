@@ -314,26 +314,26 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         when (screen) {
             INFO -> {
                 mainScreen = InfoWidget(
-                        pX = x + 77,
-                        pY = y + 12,
-                        pokemon = this.selectedPokemon
+                    pX = x + 77,
+                    pY = y + 12,
+                    pokemon = this.selectedPokemon
                 )
             }
 
             MOVES -> {
                 mainScreen = MovesWidget(
-                        pX = x + 77,
-                        pY = y + 12,
-                        summary = this
+                    pX = x + 77,
+                    pY = y + 12,
+                    summary = this
                 )
             }
 
             STATS -> {
                 mainScreen = StatWidget(
-                        pX = x + 77,
-                        pY = y + 12,
-                        pokemon = this.selectedPokemon,
-                        tabIndex = subIndex
+                    pX = x + 77,
+                    pY = y + 12,
+                    pokemon = this.selectedPokemon,
+                    tabIndex = subIndex
                 )
             }
         }
@@ -365,19 +365,16 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
                 val movesWidget = mainScreen
                 if (movesWidget is MovesWidget) {
                     sideScreen = MoveSwapScreen(
-                            x + 216,
-                            y + 24,
-                            movesWidget = movesWidget,
-                            replacedMove = move
+                        x + 216,
+                        y + 24,
+                        movesWidget = movesWidget,
+                        replacedMove = move
                     ).also { switchPane ->
                         val pokemon = selectedPokemon
-                        var moveSlotList = (pokemon.allAccessibleMoves
-                                .filter { template -> pokemon.moveSet.none { it.template == template } }
-                                .map { template ->
-                                    val benched = pokemon.benchedMoves.find { it.moveTemplate == template }
-                                    MoveSwapScreen.MoveSlot(switchPane, template, benched?.ppRaisedStages
-                                            ?: 0, pokemon)
-                                })
+                        var moveSlotList = pokemon.relearnableMoves.map { template ->
+                            val benched = pokemon.benchedMoves.find { it.moveTemplate == template }
+                            MoveSwapScreen.MoveSlot(switchPane, template, benched?.ppRaisedStages ?: 0, pokemon)
+                        }
                         if (pokemon.moveSet.getMoves().size > 1 && move != null) {
                             // Adds the "Forget" slot
                             moveSlotList += MoveSwapScreen.MoveSlot(switchPane, null, 0, pokemon)
