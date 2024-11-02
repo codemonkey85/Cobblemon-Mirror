@@ -9,25 +9,23 @@
 package com.cobblemon.mod.common.api.storage.player.adapter
 
 import com.cobblemon.mod.common.api.pokedex.PokedexManager
-import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
 import com.cobblemon.mod.common.util.adapters.CodecBackedAdapter
-import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import net.minecraft.resources.ResourceLocation
+import com.mongodb.client.MongoClient
 import java.util.UUID
 
 /**
  * A [PlayerDataStoreBackend] for [PokedexManager]
  *
- * @author Apion
- * @since February 22, 2024
+ * @author Pebbles
+ * @since October 26, 2024
  */
-class DexDataJsonBackend: JsonBackedPlayerDataStoreBackend<PokedexManager>("pokedex", PlayerInstancedDataStoreTypes.POKEDEX) {
+
+class DexDataMongoBackend(mongoClient: MongoClient, databaseName: String, collectionName: String) :
+    MongoBackedPlayerDataStoreBackend<PokedexManager>(mongoClient, databaseName, collectionName, PlayerInstancedDataStoreTypes.POKEDEX) {
     override val gson = GsonBuilder()
-        .setPrettyPrinting()
-        .disableHtmlEscaping()
         .registerTypeAdapter(PokedexManager::class.java, CodecBackedAdapter(PokedexManager.CODEC))
         .create()
     override val classToken = TypeToken.get(PokedexManager::class.java)
