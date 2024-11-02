@@ -457,7 +457,7 @@ class TradeGUI(
         ticksElapsed++
         if (protectiveTicks > 0) protectiveTicks--
         if (tradeProcessing) {
-            if (tradeAnimationProgress == 0) tradeSoundInstance = playSound(CobblemonSounds.TRADE)
+            if (tradeAnimationProgress == 0) tradeSoundInstance = playSound(CobblemonSounds.GUI_TRADE)
 
             tradeAnimationProgress++
 
