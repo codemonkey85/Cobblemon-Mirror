@@ -9,8 +9,6 @@
 package com.cobblemon.mod.common.entity.pokemon
 
 import com.bedrockk.molang.runtime.struct.QueryStruct
-import com.bedrockk.molang.runtime.value.DoubleValue
-import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.*
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.drop.DropTable
@@ -22,6 +20,9 @@ import com.cobblemon.mod.common.api.events.entity.PokemonEntitySaveEvent
 import com.cobblemon.mod.common.api.events.entity.PokemonEntitySaveToWorldEvent
 import com.cobblemon.mod.common.api.events.pokemon.ShoulderMountEvent
 import com.cobblemon.mod.common.api.interaction.PokemonEntityInteraction
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.addEntityFunctions
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.addPokemonEntityFunctions
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.addPokemonFunctions
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
 import com.cobblemon.mod.common.api.net.serializers.PoseTypeDataSerializer
 import com.cobblemon.mod.common.api.net.serializers.StringSetDataSerializer
@@ -253,25 +254,10 @@ open class PokemonEntity(
 
     override val struct: QueryStruct = QueryStruct(hashMapOf())
         .addStandardFunctions()
-        .addFunction("uuid") { StringValue(uuid.toString()) }
-        .addFunction("in_battle") { DoubleValue(isBattling) }
-        .addFunction("is_wild") { DoubleValue(pokemon.isWild()) }
-        .addFunction("is_shiny") { DoubleValue(pokemon.shiny) }
-        .addFunction("form") { StringValue(pokemon.form.name) }
-        .addFunction("width") { DoubleValue(boundingBox.xsize) }
-        .addFunction("height") { DoubleValue(boundingBox.ysize) }
-        .addFunction("horizontal_velocity") { DoubleValue(deltaMovement.horizontalDistance()) }
-        .addFunction("vertical_velocity") { DoubleValue(deltaMovement.y) }
-        .addFunction("weight") { DoubleValue(pokemon.species.weight.toDouble()) }
-        .addFunction("is_moving") { DoubleValue((moveControl as? PokemonMoveControl)?.hasWanted() == true) }
-        .addFunction("is_underwater") { DoubleValue(getIsSubmerged()) }
-        .addFunction("is_flying") { DoubleValue(getBehaviourFlag(PokemonBehaviourFlag.FLYING)) }
-        .addFunction("is_passenger") { DoubleValue(isPassenger()) }
-        .addFunction("entity_width") { DoubleValue(boundingBox.xsize) }
-        .addFunction("entity_height") { DoubleValue(boundingBox.ysize) }
-        .addFunction("entity_size") { DoubleValue(boundingBox.run { if (xsize > ysize) xsize else ysize }) }
-        .addFunction("entity_radius") { DoubleValue(boundingBox.run { if (xsize > ysize) xsize else ysize } / 2) }
-        .addFunction("has_aspect") { DoubleValue(it.getString(0) in aspects) }
+        .addEntityFunctions(this)
+        .addPokemonFunctions(pokemon)
+        .addPokemonEntityFunctions(this)
+
 
     init {
         delegate.initialize(this)
