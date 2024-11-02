@@ -68,7 +68,7 @@
       "poseTypes": [
         "FLOAT"
       ],
-      "isSubmergedInWater": true,
+      "isUnderWater": true,
       "animations": [
         "q.look('head')",
         "q.bedrock('gyarados', 'water_idle')"
@@ -81,7 +81,7 @@
       "poseTypes": [
         "SWIM"
       ],
-      "isSubmergedInWater": true,
+      "isUnderWater": true,
       "animations": [
         "q.look('head')",
         "q.bedrock('gyarados', 'water_idle')"
@@ -104,7 +104,7 @@
         "STAND"
       ],
       "isTouchingWater": true,
-      "isSubmergedInWater": false,
+      "isUnderWater": false,
       "animations": [
         "q.look('head')",
         "q.bedrock('gyarados', 'surfacewater_idle')"
@@ -118,7 +118,7 @@
         "WALK"
       ],
       "isTouchingWater": true,
-      "isSubmergedInWater": false,
+      "isUnderWater": false,
       "animations": [
         "q.look('head')",
         "q.bedrock('gyarados', 'surfacewater_swim')"
