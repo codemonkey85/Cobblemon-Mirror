@@ -8,7 +8,7 @@
 					"rotation": [-7.5, 0, 0]
 				},
 				"torso": {
-					"rotation": [2.5, 0, 0]
+					"rotation": [7.5, 0, 0]
 				},
 				"arm_right": {
 					"rotation": [-6.94294, -1.45883, -54.63571],
@@ -17,6 +17,32 @@
 				"arm_left": {
 					"rotation": [-4.72003, -1.21858, 52.34282],
 					"position": [-8, -1, -1]
+				}
+			}
+		},
+		"animation.regidrago.ground_walk": {
+			"loop": true,
+			"bones": {
+				"body": {
+					"rotation": [2.5, 0, 0],
+					"position": [0, 1, "Math.cos((query.anim_time) * 90 * 2) * 1"]
+				},
+				"torso": {
+					"rotation": [7.5, 0, 0]
+				},
+				"arm_right": {
+					"rotation": [-4.57926, 9.30005, -45.46198],
+					"position": [7, -1, 0]
+				},
+				"arm_left": {
+					"rotation": [-4.57926, -9.30005, 45.46198],
+					"position": [-8, -1, -1]
+				},
+				"leg_left": {
+					"rotation": [17.5, 0, 0]
+				},
+				"leg_right": {
+					"rotation": [17.5, 0, 0]
 				}
 			}
 		},

@@ -8,8 +8,6 @@
     "standing": {
       "poseTypes": [
         "STAND",
-        "WALK",
-        "SWIM",
         "FLOAT",
         "PORTRAIT",
         "PROFILE",
@@ -17,6 +15,19 @@
       ],
       "animations": [
         "q.bedrock('regieleki', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('regieleki', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseTypes": [
+        "WALK",
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('regieleki', 'ground_idle')",
+        "q.bimanual_swing(0.66, 0.6, 'arm_left', 'arm_right')"
       ],
       "quirks": [
         "q.bedrock_quirk('regieleki', 'blink')"

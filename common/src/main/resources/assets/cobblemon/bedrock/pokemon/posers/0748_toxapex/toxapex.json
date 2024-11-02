@@ -8,16 +8,7 @@
     "cry": "q.bedrock_stateful('toxapex', 'cry')"
   },
   "poses": {
-    "standing": {
-      "poseTypes": ["STAND", "WALK", "SWIM", "FLOAT", "NONE"],
-      "animations": [
-        "q.bedrock('toxapex', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('toxapex', 'blink')"
-      ]
-    },
-    "profile": {
+    "portrait": {
       "poseTypes": [
         "PORTRAIT",
         "PROFILE"
@@ -28,6 +19,35 @@
       "quirks": [
         "q.bedrock_quirk('toxapex', 'blink')"
       ]
-    }
+    },
+    "standing": {
+      "poseTypes": ["STAND","FLOAT", "NONE"],
+      "animations": [
+        "q.bedrock('toxapex', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('toxapex', 'blink')"
+      ]
+    },
+    "walking": {
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": [
+        "q.bedrock('toxapex', 'ground_walk')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('toxapex', 'blink')"
+      ]
+    },
+    "sleep": {
+        "poseTypes": [
+          "SLEEP"
+        ],
+        "namedAnimations": { 
+        "cry": "q.bedrock_stateful('dummy', 'cry')" 
+        },
+        "animations": [
+           "q.bedrock('toxapex', 'sleep')"
+        ]
+      }
   }
 }

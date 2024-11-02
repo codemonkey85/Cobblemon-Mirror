@@ -5,7 +5,7 @@
 			"loop": true,
 			"bones": {
 				"body": {
-					"position": [0, -5, 0]
+					"position": [0, -5, -6]
 				},
 				"neck": {
 					"rotation": [37.5, 10, 0.00001]
@@ -120,14 +120,200 @@
 				},
 				"vine_right": {
 					"scale": 0
+				},
+				"vines": {
+					"scale": 0
 				}
 			}
 		},
-		"animation.serperior.cry": {
-			"animation_length": 1.2,
-			"sound_effects": {
-				"0.04": {
-					"effect": "pokemon.serperior.cry"
+		"animation.serperior.ground_walk": {
+			"loop": true,
+			"bones": {
+				"body": {
+					"position": [0, -3, "-13+Math.cos((query.anim_time) * 90 * 2) * 1"]
+				},
+				"neck": {
+					"rotation": [17.5, 0, 0]
+				},
+				"neck2": {
+					"rotation": [-35, 0, 0]
+				},
+				"arm_left": {
+					"rotation": [24.51604, -45.05075, 57.20219]
+				},
+				"arm_left2": {
+					"rotation": [-0.21865, -4.99523, 12.50954]
+				},
+				"arm_left3": {
+					"rotation": [0, 0, 52.5]
+				},
+				"arm_right": {
+					"rotation": [24.51604, 45.05075, -57.20219]
+				},
+				"arm_right2": {
+					"rotation": [-0.21865, 4.99523, -12.50954]
+				},
+				"arm_right3": {
+					"rotation": [0, 0, -52.5]
+				},
+				"neck3": {
+					"rotation": [-2.5, 0, 0]
+				},
+				"neck_leaves": {
+					"rotation": [-7.5, 0, 0]
+				},
+				"neck4": {
+					"rotation": [20, 0, 0]
+				},
+				"head_angle": {
+					"rotation": [17.5, 0, 0]
+				},
+				"ear_left": {
+					"rotation": [-5, 0, 7.5]
+				},
+				"ear_left2": {
+					"rotation": [-7.5, 0, 0]
+				},
+				"ear_left3": {
+					"rotation": [-7.5, 0, 0]
+				},
+				"ear_right": {
+					"rotation": [-5, 0, -7.5]
+				},
+				"ear_right2": {
+					"rotation": [-7.5, 0, 0]
+				},
+				"ear_right3": {
+					"rotation": [-7.5, 0, 0]
+				},
+				"vines": {
+					"scale": 0
+				},
+				"segment1": {
+					"rotation": [70, 0, "math.sin(q.anim_time*90*4+50)*2"]
+				},
+				"segment2": {
+					"rotation": [20, 0, "math.sin(q.anim_time*90*4)*3"]
+				},
+				"segment3": {
+					"rotation": [-2.5, 0, "math.sin(q.anim_time*90*4-60)*4"]
+				},
+				"segment4": {
+					"rotation": [0, 0, "math.sin(q.anim_time*90*4-120)*6"]
+				},
+				"segment5": {
+					"rotation": [0, 0, "math.sin(q.anim_time*90*4-180)*10"]
+				},
+				"segment6": {
+					"rotation": [0, 0, "math.sin(q.anim_time*90*4-240)*10"]
+				},
+				"segment7": {
+					"rotation": [0, 0, "math.sin(q.anim_time*90*4-360)*8"]
+				},
+				"segment8": {
+					"rotation": [0, 0, "math.sin(q.anim_time*90*4-420)*5"]
+				},
+				"segment9": {
+					"rotation": [0, 0, "math.sin(q.anim_time*90*4-460)*5"]
+				}
+			}
+		},
+		"animation.serperior.sleep": {
+			"loop": true,
+			"bones": {
+				"body": {
+					"rotation": [90, 50, 0],
+					"position": [-4, 0, 9]
+				},
+				"neck": {
+					"rotation": [-7.5, 0, 30]
+				},
+				"neck2": {
+					"rotation": [5, 0, 47.5]
+				},
+				"arm_left": {
+					"rotation": [0, 10, 67.5]
+				},
+				"arm_left2": {
+					"rotation": [0, 0, -25]
+				},
+				"arm_right": {
+					"rotation": [-10, -25, -85]
+				},
+				"arm_right2": {
+					"rotation": [7.5, 0, 0]
+				},
+				"neck3": {
+					"rotation": [-11.57518, 4.75113, 22.01816]
+				},
+				"neck_leave_left": {
+					"rotation": [0, 0, 17.5]
+				},
+				"neck4": {
+					"rotation": [0, 0, 20]
+				},
+				"head_angle": {
+					"rotation": [-73.59513, -11.73845, 4.25916]
+				},
+				"eyelid_left": {
+					"position": [0.1, 0, -0.1]
+				},
+				"eyelid_right": {
+					"position": [-0.1, 0, -0.1]
+				},
+				"ear_left": {
+					"rotation": [22.5, 0, 12.5]
+				},
+				"ear_left2": {
+					"rotation": [15, 0, 0]
+				},
+				"ear_left3": {
+					"rotation": [17.5, 0, 0]
+				},
+				"ear_right": {
+					"rotation": [0, 0, -20]
+				},
+				"ear_right2": {
+					"rotation": [-5, 0, 0]
+				},
+				"ear_right3": {
+					"rotation": [-10, 0, 0]
+				},
+				"vines": {
+					"scale": 0
+				},
+				"segment1": {
+					"rotation": [-12.5, 0, -15]
+				},
+				"segment2": {
+					"rotation": [2.30991, 0.95645, -52.48072]
+				},
+				"segment3": {
+					"rotation": [0, 10, -45]
+				},
+				"segment4": {
+					"rotation": [0, 0, -47.5]
+				},
+				"segment5": {
+					"rotation": [0, 0, -47.5]
+				},
+				"segment6": {
+					"rotation": [0, 0, -32.5]
+				},
+				"segment7": {
+					"rotation": [0, 0, -17.5]
+				},
+				"segment8": {
+					"rotation": [0, 0, -35]
+				},
+				"tail_leaf2": {
+					"rotation": [0, -12.5, 0]
+				},
+				"segment9": {
+					"rotation": [0, 0, -42.5]
+				},
+				"tail_leaf3": {
+					"rotation": [0, -10, 0]
 				}
 			}
 		},
@@ -211,7 +397,7 @@
 				}
 			}
 		},
-		"animation.serperior.recoil": {
+		"animation.serperior.hurt": {
 			"loop": true,
 			"bones": {
 				"eyelid_recoil_left": {
@@ -242,6 +428,14 @@
 				},
 				"pupil_right": {
 					"position": [0, 0, 2.5]
+				}
+			}
+		},
+		"animation.serperior.cry": {
+			"animation_length": 1.2,
+			"sound_effects": {
+				"0.04": {
+					"effect": "pokemon.serperior.cry"
 				}
 			}
 		}

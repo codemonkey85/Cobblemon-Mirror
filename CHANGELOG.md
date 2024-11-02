@@ -228,6 +228,7 @@
 - Furret
 - Swinub, Piloswine, Mamoswine
 - Skarmory
+- Tyrogue
 - Spinda
 - Torkoal
 - Nincada, Ninjask
@@ -238,8 +239,10 @@
 - Alomomola
 - Flabebe, Floette, Florges
 - Litten, Torracat, Incineroar
+- Fomantis, Lurantis
 - Dreepy, Drakloak
 - Kleavor
+- Scorbunny
 - Gimmighoul [Roaming]
 
 ### Model updates for the following Pokémon

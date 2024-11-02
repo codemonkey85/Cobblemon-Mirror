@@ -21,10 +21,9 @@
     "standing": {
       "poseName": "standing",
       "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
-      "isBattle": false,
       "animations": [
         "q.look('head')",
-        "q.bedrock('liepard', 'pose')"
+        "q.bedrock('liepard', 'ground_idle')"
       ],
       "quirks": ["q.bedrock_quirk('liepard', 'blink')"]
     },
@@ -33,8 +32,8 @@
       "poseTypes": ["WALK"],
       "animations": [
         "q.look('head')",
-        "q.bedrock('liepard', 'pose')",
-        "q.quadruped_walk(1, 1, 'leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right')"
+        "q.bedrock('liepard', 'ground_idle')",
+        "q.quadruped_walk(0.8, 0.8, 'leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right')"
       ],
       "quirks": ["q.bedrock_quirk('liepard', 'blink')"]
     }

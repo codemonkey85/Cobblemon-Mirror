@@ -30,10 +30,21 @@
         ],
         "animations": [
           "q.look('head')",
-          "q.bedrock('serperior', 'ground_idle')"
+          "q.bedrock('serperior', 'ground_walk')"
         ],
         "quirks": [
           "q.bedrock_quirk('serperior', 'blink')"
+        ]
+      },
+      "sleep": {
+        "poseTypes": [
+          "SLEEP"
+        ],
+        "namedAnimations": { 
+        "cry": "q.bedrock_stateful('dummy', 'cry')" 
+        },
+        "animations": [
+           "q.bedrock('serperior', 'sleep')"
         ]
       }
     }

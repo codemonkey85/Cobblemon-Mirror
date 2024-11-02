@@ -23,8 +23,7 @@
     "walking": {
       "poseTypes": ["WALK", "SWIM"],
       "animations": [
-        "q.biped_walk(0.4, 0.7, 'leg_left', 'leg_right')",
-        "q.bedrock('regidrago', 'ground_idle')"
+        "q.bedrock('regidrago', 'ground_walk')"
       ],
       "quirks": [
         "q.bedrock_quirk('regidrago', 'blink')"

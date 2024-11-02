@@ -166,7 +166,6 @@ object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
         inbuilt("elekid", ::ElekidModel)
         inbuilt("pichu", ::PichuModel)
         inbuilt("smoochum", ::SmoochumModel)
-        inbuilt("tyrogue", ::TyrogueModel)
         inbuilt("hitmontop", ::HitmontopModel)
         inbuilt("electivire", ::ElectivireModel)
         inbuilt("glaceon", ::GlaceonModel)
@@ -505,7 +504,6 @@ object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
         inbuilt("litwick", ::LitwickModel)
         inbuilt("lampent", ::LampentModel)
         inbuilt("chandelure", ::ChandelureModel)
-        inbuilt("gimmighoulroaming", ::GimmighoulRoamingModel)
         inbuilt("gimmighoulchest", ::GimmighoulChestModel)
         inbuilt("gholdengo", ::GholdengoModel)
         inbuilt("drifloon", ::DrifloonModel)
@@ -578,8 +576,6 @@ object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
         inbuilt("hydreigon", ::HydreigonModel)
         inbuilt("larvesta", ::LarvestaModel)
         inbuilt("volcarona", ::VolcaronaModel)
-        inbuilt("fomantis", ::FomantisModel)
-        inbuilt("lurantis", ::LurantisModel)
         inbuilt("dreepy", ::DreepyModel)
         inbuilt("drakloak", ::DrakloakModel)
         inbuilt("dragapult", ::DragapultModel)
@@ -622,7 +618,6 @@ object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
         inbuilt("rowlet_hisui_bias", ::RowletHisuiBiasModel)
         inbuilt("dartrix_hisui_bias", ::DartrixHisuiBiasModel)
         inbuilt("decidueye_hisuian", ::DecidueyeHisuianModel)
-        inbuilt("smeargle", ::SmeargleModel)
     }
 
     override fun conditionParser(json: JsonObject): List<(PosableState) -> Boolean> {
