@@ -44,17 +44,13 @@ class SwapInstruction(val message: BattleMessage, val instructionSet: Instructio
 
                 val posA = ShowdownInterpreter.getSendoutPosition(battle, activePokemonA, battlePokemonA.actor) ?: activePokemonA.position?.second
                 if (posA != null && battlePokemonA.entity != null) {
-                    val (newPosA, platformA) = battlePokemonA.effectedPokemon.getAjustedSendoutPosition(posA, activePokemonA.position!!.first, battlePokemonA.entity?.effects?.mockEffect as IllusionEffect?)
-                    battlePokemonA.entity?.setPositionSafely(newPosA)
-                    activePokemonA.battlePokemon?.entity?.platform = platformA
+                    battlePokemonA.entity?.setPositionSafely(battlePokemonA.entity!!.getAjustedSendoutPosition(posA))
                 }
 
                 val posB = ShowdownInterpreter.getSendoutPosition(battle, activePokemonB, battlePokemonA.actor) ?: activePokemonB.position?.second
                 val battlePokemonB = activePokemonB.battlePokemon
                 if (posB != null && battlePokemonB?.entity != null) {
-                    val (newPosB, platformB) = activePokemonB.battlePokemon!!.effectedPokemon.getAjustedSendoutPosition(posB, activePokemonB.position!!.first, battlePokemonB.entity?.effects?.mockEffect as IllusionEffect?)
-                    activePokemonB.battlePokemon?.entity?.setPositionSafely(newPosB)
-                    activePokemonB.battlePokemon?.entity?.platform = platformB
+                    activePokemonB.battlePokemon?.entity?.setPositionSafely(battlePokemonB.entity!!.getAjustedSendoutPosition(posB))
                 }
 
                 // Notify clients of the swap

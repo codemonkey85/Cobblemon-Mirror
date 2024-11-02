@@ -348,7 +348,7 @@ open class PokemonEntity(
         return if (state.`is`(FluidTags.WATER) && !isEyeInFluid(FluidTags.WATER)) {
             behaviour.moving.swim.canWalkOnWater || platform != PlatformType.NONE
         } else if (state.`is`(FluidTags.LAVA) && !isEyeInFluid(FluidTags.LAVA)) {
-            behaviour.moving.swim.canWalkOnLava || platform != PlatformType.NONE
+            behaviour.moving.swim.canWalkOnLava
         } else {
             super.canStandOnFluid(state)
         }
@@ -1119,6 +1119,89 @@ open class PokemonEntity(
         nbt.put(DataKeys.SHOULDER_ASPECTS, this.pokemon.aspects.map(StringTag::valueOf).toNbtList())
         nbt.putFloat(DataKeys.SHOULDER_SCALE_MODIFIER, this.pokemon.scaleModifier)
         return true
+    }
+
+    /**
+     * Adjusts a given sent out position based on the local environment.
+     * Returns the new position and a PlatformType if the pokemon should be placed on one.
+     */
+    fun getAjustedSendoutPosition(pos: Vec3) : Vec3 {
+        var platform = PlatformType.NONE
+        var blockPos = BlockPos(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
+        var blockLookCount = 5
+        var foundSurface = false
+        val species = this.exposedSpecies
+        val form = this.exposedForm
+        var result = pos
+        if (this.level().isWaterAt(blockPos)) {
+            // look upward for a water surface
+            var testPos = blockPos
+            if (!species.behaviour.moving.swim.canBreatheUnderwater) {
+                // move sendout pos to surface if it's near
+                for (i in 0..blockLookCount) {
+                    // Try to find a surface...
+                    val blockState = this.level().getBlockState(testPos)
+                    if (blockState.fluidState.isEmpty) {
+                        if(blockState.getCollisionShape(this.level(), testPos).isEmpty) {
+                            foundSurface = true
+                        }
+                        // No space above the water surface
+                        break
+                    }
+                    testPos = testPos.above()
+                }
+                val hasHeadRoom = !collidesWithBlock(Vec3(blockPos.x.toDouble(), (blockPos.y).toDouble(), (blockPos.z).toDouble()))
+                if (hasHeadRoom) {
+                    result = Vec3(result.x, testPos.y.toDouble(), result.z)
+                } else {
+                    foundSurface = false
+                }
+            }
+        } else if (this.level().isEmptyBlock(blockPos)) {
+            // look down for a surface
+            blockLookCount = 64 // Higher because the pokemon is going to fall down to the water
+            var testPos =  BlockPos(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
+            for (i in 0..blockLookCount) {
+                // Try to find a surface...
+                val blockState = this.level().getBlockState(testPos)
+                if (!blockState.fluidState.isEmpty) {
+                    foundSurface = true
+                    break
+                }
+                if (!blockState.getCollisionShape(this.level(), testPos).isEmpty) {
+                    break
+                }
+                testPos = testPos.below()
+            }
+        }
+        if (foundSurface) {
+            val canFly = species.behaviour.moving.fly.canFly
+            if (canFly) {
+                val hasHeadRoom = !collidesWithBlock(Vec3(blockPos.x.toDouble(), (result.y + 1), (blockPos.z).toDouble()))
+                if (hasHeadRoom) {
+                    result = Vec3(result.x, result.y + 1.0, result.z)
+                }
+            } else if (species.behaviour.moving.swim.canBreatheUnderwater && !species.behaviour.moving.swim.canWalkOnWater) {
+                // Use half hitbox height for swimmers
+                val halfHeight = species.hitbox.height * species.baseScale / 2.0
+                for (i in 1..halfHeight.toInt()) {
+                    blockPos = blockPos.below()
+                    if (!this.level().isWaterAt(blockPos) || !this.level().getBlockState(blockPos).getCollisionShape(this.level(), blockPos).isEmpty) {
+                        break
+                    }
+                }
+                result = Vec3(result.x, result.y + halfHeight - halfHeight.toInt(), result.z)
+            } else {
+                platform = if (species.behaviour.moving.swim.canWalkOnWater || collidesWithBlock(Vec3(result.x, result.y, result.z))) PlatformType.NONE else PlatformType.GetPlatformTypeForPokemon(form)
+            }
+        }
+        this.platform = platform
+
+        return result
+    }
+
+    private fun Entity.collidesWithBlock(pos: Vec3) : Boolean {
+        return level().getBlockCollisions(this, boundingBox.move(pos)).iterator().hasNext()
     }
 
     override fun remove(reason: RemovalReason) {

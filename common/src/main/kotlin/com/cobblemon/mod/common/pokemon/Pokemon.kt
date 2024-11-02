@@ -534,10 +534,11 @@ open class Pokemon : ShowdownIdentifiable {
             SeasonFeatureHandler.updateSeason(this, level, position.toBlockPos())
             val entity = PokemonEntity(level, this)
             illusion?.start(entity)
-            val sentOut = entity.setPositionSafely(position)
+            val adjustedPosition = entity.getAjustedSendoutPosition(position)
+            val sentOut = entity.setPositionSafely(adjustedPosition)
             //If sendout failed, fall back
             if (!sentOut) {
-                entity.setPos(position.x, position.y, position.z)
+                entity.setPos(adjustedPosition.x, adjustedPosition.y, adjustedPosition.z)
             }
             mutation(entity)
             level.addFreshEntity(entity)
@@ -558,12 +559,9 @@ open class Pokemon : ShowdownIdentifiable {
     ): CompletableFuture<PokemonEntity> {
 
 
-        // If in battle send out raft if over water
-        val (targetPosition, platform) = if (battleId != null) getAjustedSendoutPosition(position, level, illusion) else kotlin.Pair(position, PlatformType.NONE)
-
         // Handle special case of shouldered Cobblemon
         if (this.state is ShoulderedState) {
-            return sendOutFromShoulder(source as ServerPlayer, level, targetPosition, battleId, doCry, illusion, mutation)
+            return sendOutFromShoulder(source as ServerPlayer, level, position, battleId, doCry, illusion, mutation)
         }
 
         // Proceed as normal for non-shouldered Cobblemon
@@ -575,11 +573,11 @@ open class Pokemon : ShowdownIdentifiable {
         }
 
         preamble.thenApply {
-            sendOut(level, targetPosition, illusion) {
+            sendOut(level, position, illusion) {
                 val owner = getOwnerEntity()
                 if (owner is LivingEntity) {
                     owner.swing(InteractionHand.MAIN_HAND, true)
-                    val spawnDirection = targetPosition.subtract(owner.position())
+                    val spawnDirection = position.subtract(owner.position())
                     val spawnYaw = atan2(spawnDirection.z, spawnDirection.x) * 180.0 / PI + if (battleId == null) 102.5F else -90F
                     it.entityData.set(PokemonEntity.SPAWN_DIRECTION, spawnYaw.toFloat())
                 }
@@ -590,7 +588,10 @@ open class Pokemon : ShowdownIdentifiable {
                 it.phasingTargetId = source.id
                 it.beamMode = 1
                 it.battleId = battleId
-                it.platform = platform
+
+                if (it.battleId == null) {
+                   it.platform = PlatformType.NONE
+                }
 
 
                 it.after(seconds = THROW_DURATION) {
@@ -668,99 +669,6 @@ open class Pokemon : ShowdownIdentifiable {
             mutation(it)
         }
         return future
-    }
-
-    /**
-     * Adjusts a given sent out position based on the local environment.
-     * Returns the new position and a PlatformType if the pokemon should be placed on one.
-     */
-    fun getAjustedSendoutPosition(pos: Vec3, level: Level, illusion: IllusionEffect?) : kotlin.Pair<Vec3, PlatformType> {
-        var platform = PlatformType.NONE
-        var newPos = pos
-        var blockPos = BlockPos(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
-        var blockLookCount = 5
-        var foundSurface = false
-        val species = illusion?.exposedSpecies ?: this.species
-        val form = illusion?.exposedForm ?: this.form
-        // TODO: Cleanup, Look for a cleaner return var, and perhaps a better parameter for GetPlatformTypeForPokemon()
-        if (level.isWaterAt(blockPos)) {
-            // look upward for a water surface
-            var testPos = blockPos
-            if (!species.behaviour.moving.swim.canBreatheUnderwater) {
-                // move sendout pos to surface if it's near
-                for (i in 0..blockLookCount) {
-                    // Try to find a surface...
-                    val blockState = level.getBlockState(testPos)
-                    if (blockState.fluidState.isEmpty) {
-                        if(blockState.getCollisionShape(level, testPos).isEmpty) {
-                            foundSurface = true
-                        }
-                        // No space above the water surface
-                        break
-                    }
-                    testPos = testPos.above()
-                }
-                var hasHeadRoom = true
-                var headPos = testPos
-                while (hasHeadRoom && headPos.y <= ceil(testPos.y + species.hitbox.height * species.baseScale) ) {
-                    hasHeadRoom = level.isEmptyBlock(testPos)
-                    headPos = headPos.above()
-                }
-                if (hasHeadRoom) {
-                    newPos = Vec3(newPos.x, blockPos.y.toDouble(), newPos.z)
-                } else {
-                    foundSurface = false
-                }
-            } else {
-                newPos =  Vec3(newPos.x, blockPos.y.toDouble() - 0.5, newPos.z)
-            }
-        } else if (level.isEmptyBlock(blockPos)) {
-            // look down for a surface
-            blockLookCount = 64 // Higher because the pokemon is going to fall down to the water
-            var testPos =  BlockPos(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
-            for (i in 0..blockLookCount) {
-                // Try to find a surface...
-                val blockState = level.getBlockState(testPos)
-                if (!blockState.fluidState.isEmpty) {
-                    foundSurface = true
-                    break
-                }
-                if (!blockState.getCollisionShape(level, testPos).isEmpty) {
-                    break
-                }
-                testPos = testPos.below()
-            }
-        }
-        if (foundSurface) {
-            if (level.isWaterAt(blockPos) || level.isWaterAt(blockPos.below())) {
-                val canFly = species.behaviour.moving.fly.canFly
-                if (canFly) {
-                    var hasHeadRoom = true
-                    var testPos = blockPos
-                    while (hasHeadRoom && testPos.y <= ceil(newPos.y + species.hitbox.height * species.baseScale + 2.0)) {
-                        hasHeadRoom = level.isEmptyBlock(testPos)
-                        testPos = testPos.above()
-                    }
-                    if (hasHeadRoom) {
-                        newPos = Vec3(newPos.x, blockPos.y.toDouble() + 2.0, newPos.z)
-                    }
-                } else if (species.behaviour.moving.swim.canBreatheUnderwater && !species.behaviour.moving.swim.canWalkOnWater) {
-                    // Use half hitbox height for swimmers
-                    val halfHeight = species.hitbox.height * species.baseScale / 2.0
-                    for (i in 1..halfHeight.toInt()) {
-                        blockPos = blockPos.below()
-                        if (!level.isWaterAt(blockPos) || !level.getBlockState(blockPos).getCollisionShape(level, blockPos).isEmpty) {
-                            break
-                        }
-                    }
-                    newPos = Vec3(newPos.x, blockPos.y.toDouble() + halfHeight - halfHeight.toInt(), newPos.z)
-                } else {
-                    newPos = Vec3(newPos.x, blockPos.y.toDouble(), newPos.z)
-                    platform = if (species.behaviour.moving.swim.canWalkOnWater) PlatformType.NONE else PlatformType.GetPlatformTypeForPokemon(form)
-                }
-            }
-        }
-        return kotlin.Pair(newPos, platform)
     }
 
 
