@@ -32,6 +32,9 @@ import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.WaveFunctions
 import com.cobblemon.mod.common.entity.npc.NPCEntity
+import com.cobblemon.mod.common.entity.pokemon.PokemonBehaviourFlag
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.cobblemon.mod.common.entity.pokemon.ai.PokemonMoveControl
 import com.cobblemon.mod.common.net.messages.client.effect.RunPosableMoLangPacket
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.*
@@ -53,6 +56,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.tags.TagKey
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
@@ -192,6 +196,7 @@ object MoLangFunctions {
             map.put("is_in_water") { _ -> DoubleValue(entity.isUnderWater) }
             map.put("is_touching_water_or_rain") { _ -> DoubleValue(entity.isInWaterRainOrBubble) }
             map.put("is_touching_water") { _ -> DoubleValue(entity.isInWater) }
+            map.put("is_underwater") { DoubleValue(entity.getIsSubmerged()) }
             map.put("is_in_lava") { _ -> DoubleValue(entity.isInLava) }
             map.put("is_on_fire") { _ -> DoubleValue(entity.isOnFire) }
             map.put("is_invisible") { _ -> DoubleValue(entity.isInvisible) }
@@ -208,10 +213,18 @@ object MoLangFunctions {
             map.put("velocity_x") { _ -> DoubleValue(entity.deltaMovement.x) }
             map.put("velocity_y") { _ -> DoubleValue(entity.deltaMovement.y) }
             map.put("velocity_z") { _ -> DoubleValue(entity.deltaMovement.z) }
+            map.put("width") { DoubleValue(entity.boundingBox.xsize) }
+            map.put("height") { DoubleValue(entity.boundingBox.ysize) }
+            map.put("entity_size") { DoubleValue(entity.boundingBox.run { if (xsize > ysize) xsize else ysize }) }
+            map.put("entity_width") { DoubleValue(entity.boundingBox.xsize) }
+            map.put("entity_height") { DoubleValue(entity.boundingBox.ysize) }
+
             map.put("horizontal_velocity") { _ -> DoubleValue(entity.deltaMovement.horizontalDistance()) }
+            map.put("vertical_velocity") { DoubleValue(entity.deltaMovement.y) }
             map.put("is_on_ground") { _ -> DoubleValue(entity.onGround()) }
             map.put("world") { _ -> entity.level().worldRegistry.wrapAsHolder(entity.level()).asWorldMoLangValue() }
             map.put("biome") { _ -> entity.level().getBiome(entity.blockPosition()).asBiomeMoLangValue() }
+            map.put("is_passenger") { DoubleValue(entity.isPassenger) }
             map.put("is_healer_in_use") { params ->
                 val pos = params.get<ArrayStruct>(0).asBlockPos()
                 val healer = entity.level().getBlockEntity(pos, CobblemonBlockEntities.HEALING_MACHINE).orElse(null) ?: return@put DoubleValue.ONE
@@ -319,6 +332,28 @@ object MoLangFunctions {
         }
     )
 
+    val pokemonFunctions = mutableListOf<(Pokemon) -> HashMap<String, java.util.function.Function<MoParams, Any>>>(
+        { pokemon ->
+            val map = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
+            map.put("is_wild") { DoubleValue(pokemon.isWild()) }
+            map.put("is_shiny") { DoubleValue(pokemon.shiny) }
+            map.put("form") { StringValue(pokemon.form.name) }
+            map.put("weight") { DoubleValue(pokemon.species.weight.toDouble()) }
+            map
+        }
+    )
+
+    val pokemonEntityFunctions = mutableListOf<(PokemonEntity) -> HashMap<String, java.util.function.Function<MoParams, Any>>>(
+        { pokemonEntity ->
+            val map = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
+            map.put("in_battle") { DoubleValue(pokemonEntity.isBattling) }
+            map.put("is_moving") { DoubleValue((pokemonEntity.moveControl as? PokemonMoveControl)?.hasWanted() == true) }
+            map.put("is_flying") { DoubleValue(pokemonEntity.getBehaviourFlag(PokemonBehaviourFlag.FLYING)) }
+            map.put("has_aspect") { DoubleValue(it.getString(0) in pokemonEntity.aspects) }
+            map
+        }
+    )
+
     val partyFunctions = mutableListOf<(PartyStore) -> HashMap<String, java.util.function.Function<MoParams, Any>>>(
         { party ->
             val map = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
@@ -385,6 +420,30 @@ object MoLangFunctions {
 
     fun QueryStruct.addStandardFunctions(): QueryStruct {
         functions.putAll(generalFunctions)
+        return this
+    }
+
+    fun QueryStruct.addEntityFunctions(entity: LivingEntity): QueryStruct {
+        val addedFunctions = entityFunctions
+            .flatMap { it.invoke(entity).entries }
+            .associate { it.key to it.value }
+        functions.putAll(addedFunctions)
+        return this
+    }
+
+    fun QueryStruct.addPokemonFunctions(pokemon: Pokemon): QueryStruct {
+        val addedFunctions = pokemonFunctions
+            .flatMap { it.invoke(pokemon).entries }
+            .associate { it.key to it.value }
+        functions.putAll(addedFunctions)
+        return this
+    }
+
+    fun QueryStruct.addPokemonEntityFunctions(pokemonEntity: PokemonEntity): QueryStruct {
+        val addedFunctions = pokemonEntityFunctions
+            .flatMap { it.invoke(pokemonEntity).entries }
+            .associate { it.key to it.value }
+        functions.putAll(addedFunctions)
         return this
     }
 
