@@ -75,6 +75,10 @@ class NicknameEntryWidget(
     }
 
     private fun updateNickname(newNickname: String) {
+        if (newNickname.length > MAX_NAME_LENGTH) {
+            return
+        }
+
         if (pokemon.nickname == null || pokemon.nickname?.string != newNickname) {
             val effectiveNickname = if (newNickname == pokemonName) null else newNickname
             CobblemonNetwork.sendToServer(
