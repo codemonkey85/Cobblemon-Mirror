@@ -6,8 +6,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.cobblemon.mod.common.block
 
+package com.cobblemon.mod.common.block
+/*
 import com.cobblemon.mod.common.block.entity.CookingPotBlockEntity
 import com.cobblemon.mod.common.gui.CookingPotScreenHandler
 import net.minecraft.block.*
@@ -203,7 +204,9 @@ class CookingPotBlock(settings: Settings?) : BlockWithEntity(settings), Waterlog
             return
         }
 
-        /*//this.onTriggerEvent(state, world, pos, random)
+        */
+/*//*
+/this.onTriggerEvent(state, world, pos, random)
         // todo if the output slot is empty then try to craft a TM to that slot
         if (ItemStack.areItemsEqual(inventory.items!!.get(3), ItemStack.EMPTY)) {
             if (state?.let { getInventory(it, world, pos) } != null) {
@@ -224,7 +227,8 @@ class CookingPotBlock(settings: Settings?) : BlockWithEntity(settings), Waterlog
                     world.playSoundServer(cookingPotEntity.blockPos.toVec3d(), CobblemonSounds.TMM_CRAFT, SoundCategory.BLOCKS)
                 }
             }
-        }*/
+        }*//*
+
         // todo if there is an item in the output slot then spit it out
         else {
             if (state?.let { getInventory(it, world, pos) } != null) {
@@ -256,7 +260,8 @@ class CookingPotBlock(settings: Settings?) : BlockWithEntity(settings), Waterlog
             }
         }
 
-        /*if (state?.let { getInventory(it, world, pos) } != null) {
+        */
+/*if (state?.let { getInventory(it, world, pos) } != null) {
             val itemStack: ItemStack
             itemStack = if (inventory.filterTM != null)
                 inventory.filterTM!!
@@ -287,7 +292,8 @@ class CookingPotBlock(settings: Settings?) : BlockWithEntity(settings), Waterlog
                 inventory.items?.clear()
                 //getInventory(state, world, pos).clear()
                 }
-            }*/
+            }*//*
+
     }override fun getRenderType(blockState: BlockState): BlockRenderType {
         return BlockRenderType.MODEL
     }
@@ -312,3 +318,4 @@ class CookingPotBlock(settings: Settings?) : BlockWithEntity(settings), Waterlog
         }
     }
 }
+*/

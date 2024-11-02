@@ -9,13 +9,13 @@
 package com.cobblemon.mod.common.item
 
 import com.cobblemon.mod.common.block.SaccharineSaplingBlock
-import net.minecraft.block.BlockState
-import net.minecraft.item.AliasedBlockItem
-import net.minecraft.item.ItemPlacementContext
+import net.minecraft.world.item.ItemNameBlockItem
+import net.minecraft.world.item.context.BlockPlaceContext
+import net.minecraft.world.level.block.state.BlockState
 
-class SaccharineSaplingItem(block: SaccharineSaplingBlock) : AliasedBlockItem(block, Settings()) {
+class SaccharineSaplingItem(block: SaccharineSaplingBlock) : ItemNameBlockItem(block, Properties()) {
 
-    override fun getPlacementState(context: ItemPlacementContext): BlockState? {
+    override fun getPlacementState(context: BlockPlaceContext): BlockState? {
 
         return super.getPlacementState(context)
     }

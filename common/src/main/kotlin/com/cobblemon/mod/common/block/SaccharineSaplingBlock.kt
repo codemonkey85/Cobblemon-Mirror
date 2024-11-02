@@ -8,8 +8,7 @@
 
 package com.cobblemon.mod.common.block
 
-import com.cobblemon.mod.common.api.apricorn.Apricorn
-import com.cobblemon.mod.common.block.grower.ApricornTreeGrower
 import com.cobblemon.mod.common.block.grower.SaccharineTreeGrower
-import net.minecraft.block.SaplingBlock
-class SaccharineSaplingBlock(properties : Settings) : SaplingBlock(SaccharineTreeGrower(), properties)
+import net.minecraft.world.level.block.SaplingBlock
+
+class SaccharineSaplingBlock(properties : Properties) : SaplingBlock(SaccharineTreeGrower(), properties)

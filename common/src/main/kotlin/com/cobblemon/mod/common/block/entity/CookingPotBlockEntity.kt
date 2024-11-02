@@ -1,5 +1,5 @@
 package com.cobblemon.mod.common.block.entity
-
+/*
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.block.CookingPotBlock
 import com.cobblemon.mod.common.gui.CookingPotScreenHandler
@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter
 import net.minecraft.world.level.block.state.BlockState
+
 
 class CookingPotBlockEntity(
         blockPos: BlockPos,
@@ -199,3 +200,4 @@ class CookingPotBlockEntity(
         }
     }
 }
+*/

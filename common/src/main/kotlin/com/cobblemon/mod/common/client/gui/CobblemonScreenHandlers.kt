@@ -7,6 +7,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.ContainerLevelAccess
 import net.minecraft.world.inventory.MenuType
 
+/*
 object CobblemonScreenHandlers {
     //val TMM_SCREEN = register(cobblemonResource("tmm_screen"), ::TMMScreenHandler)
     val COOKING_POT_SCREEN = register(cobblemonResource("cooking_pot_screen")) { syncId, playerInventory ->
@@ -20,4 +21,4 @@ object CobblemonScreenHandlers {
         return result
     }
 
-}
+}*/

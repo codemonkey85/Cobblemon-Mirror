@@ -4,7 +4,8 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- */
+ *//*
+
 
 package com.cobblemon.mod.common.block
 
@@ -33,14 +34,16 @@ import net.minecraft.world.WorldAccess
 
 @Suppress("OVERRIDE_DEPRECATION")
 class SweetIncenseBlock(settings: Settings) : BlockWithEntity(settings), Waterloggable {
-    /*
+    */
+/*
     This item, when placed, acts like a candle. It must be lit with a Flint n Steel or Fire Charge, and it can be “put out” by right-clicking on it. Small blue smoke particles will rise from the nub on the top of the block when lit.
 
     This incense block has special effects on Pokémon spawns, but only when lit. When lit, Sweet Incense increases Pokémon spawn & despawn rates by 1.5x and raises spawn density by 25% in a 16 block radius (32 block diameter) (this number will need to be playtested).
 
     This essentially means that the player will see a larger number of Pokémon at once, and a higher variety of Pokémon in a given span of time.
 
-     */
+     *//*
+
 
     init {
         this.defaultState = this.stateManager.defaultState
@@ -138,7 +141,8 @@ class SweetIncenseBlock(settings: Settings) : BlockWithEntity(settings), Waterlo
                 )
             }
 
-            /*if (random.nextInt(5) == 0) {
+            */
+/*if (random.nextInt(5) == 0) {
                 for (i in 0 until random.nextInt(1) + 1) {
                     world.addParticle(
                         ParticleTypes.LAVA, pos.x.toDouble() + 0.5, pos.y.toDouble() + 0.5, pos.z.toDouble() + 0.5,
@@ -146,7 +150,8 @@ class SweetIncenseBlock(settings: Settings) : BlockWithEntity(settings), Waterlo
                         (random.nextFloat() / 2.0f).toDouble()
                     )
                 }
-            }*/
+            }*//*
+
         }
     }
 
@@ -178,11 +183,13 @@ class SweetIncenseBlock(settings: Settings) : BlockWithEntity(settings), Waterlo
     }
 
     override fun onBreak(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity) {
-        /*val entity = world.getBlockEntity(pos) as DisplayCaseBlockEntity
+        */
+/*val entity = world.getBlockEntity(pos) as DisplayCaseBlockEntity
         if (!entity.getStack().isEmpty && !player.isCreative) {
             ItemScatterer.spawn(world, pos, entity.inv)
         }
-        super.onBreak(world, pos, state, player)*/
+        super.onBreak(world, pos, state, player)*//*
+
     }
 
     override fun getRenderType(state: BlockState?) = BlockRenderType.MODEL
@@ -191,4 +198,4 @@ class SweetIncenseBlock(settings: Settings) : BlockWithEntity(settings), Waterlo
 
     override fun canPathfindThrough(state: BlockState, world: BlockView, pos: BlockPos, type: NavigationType) = false
 
-}
+}*/

@@ -1,3 +1,4 @@
+/*
 package com.cobblemon.mod.common.gui
 
 import net.minecraft.entity.player.PlayerEntity
@@ -113,15 +114,19 @@ abstract class AbstractCookingPotScreenHandler(
 
                 slot2.onQuickTransfer(itemStack2, itemStack)
             } else if (slot != 1 && slot != 0) {
-                /*if (this.isSmeltable(itemStack2)) {
+                */
+/*if (this.isSmeltable(itemStack2)) {
                     if (!this.insertItem(itemStack2, 0, 1, false)) {
                         return ItemStack.EMPTY
                     }
-                }*/ /*else if (this.isFuel(itemStack2)) {
+                }*//*
+ */
+/*else if (this.isFuel(itemStack2)) {
                     if (!this.insertItem(itemStack2, 1, 2, false)) {
                         return ItemStack.EMPTY
                     }
-                }*/ if (slot >= 3 && slot < 30) {
+                }*//*
+ if (slot >= 3 && slot < 30) {
                     if (!this.insertItem(itemStack2, 30, 39, false)) {
                         return ItemStack.EMPTY
                     }
@@ -148,16 +153,20 @@ abstract class AbstractCookingPotScreenHandler(
         return itemStack
     }
 
-    /*fun isSmeltable(itemStack: ItemStack): Boolean {
+    */
+/*fun isSmeltable(itemStack: ItemStack): Boolean {
         return world.recipeManager.getFirstMatch(
             this.recipeType, SimpleInventory(*arrayOf(itemStack)),
             this.world
         ).isPresent
-    }*/
+    }*//*
 
-    /*protected fun isFuel(itemStack: ItemStack?): Boolean {
+
+    */
+/*protected fun isFuel(itemStack: ItemStack?): Boolean {
         return AbstractFurnaceBlockEntity.canUseAsFuel(itemStack)
-    }*/
+    }*//*
+
 
     val cookProgress: Int
         get() {
@@ -198,4 +207,4 @@ abstract class AbstractCookingPotScreenHandler(
         private const val field_30745 = 30
         private const val field_30746 = 39
     }
-}
+}*/

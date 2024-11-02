@@ -8,11 +8,13 @@
 
 package com.cobblemon.mod.common.block.grower
 
-import com.cobblemon.mod.common.api.apricorn.Apricorn
 import com.cobblemon.mod.common.world.feature.CobblemonConfiguredFeatures
-import net.minecraft.block.sapling.SaplingGenerator
-import net.minecraft.util.math.random.Random
+import net.minecraft.world.level.block.grower.TreeGrower
+import java.util.*
 
-class SaccharineTreeGrower() : SaplingGenerator() {
-    override fun getTreeFeature(random: Random, bl: Boolean) = CobblemonConfiguredFeatures.SACCHARINE_TREE_KEY
-}
+class SaccharineTreeGrower() : TreeGrower(
+        "saccharine_tree",
+        Optional.empty(),
+        Optional.of(CobblemonConfiguredFeatures.SACCHARINE_TREE_KEY),
+        Optional.empty()
+)

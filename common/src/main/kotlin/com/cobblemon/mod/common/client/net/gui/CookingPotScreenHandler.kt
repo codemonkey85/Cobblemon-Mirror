@@ -1,21 +1,19 @@
 package com.cobblemon.mod.common.gui
 
-import com.cobblemon.mod.common.CobblemonBlocks
+/*import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.block.entity.CookingPotBlockEntity
+import net.minecraft.core.NonNullList
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.Container
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.player.StackedContents
 import net.minecraft.world.inventory.*
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.crafting.Recipe
 import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.Level
-import com.cobblemon.mod.common.gui.CobblemonScreenHandlers
-import net.minecraft.world.Container
-import net.minecraft.world.entity.player.StackedContents
-import net.minecraft.world.item.crafting.CraftingRecipe
-import net.minecraft.world.item.crafting.Recipe
-import net.minecraft.world.inventory.CraftingContainer
 
 class CookingPotScreenHandler : RecipeBookMenu<CraftingContainer> {
     val input: CraftingContainer
@@ -23,6 +21,7 @@ class CookingPotScreenHandler : RecipeBookMenu<CraftingContainer> {
     val context: ContainerLevelAccess
     val player: Player
     var inventory: Inventory? = null
+    val slots: NonNullList<Slot> = NonNullList.create()
 
 
     companion object {
@@ -83,6 +82,14 @@ class CookingPotScreenHandler : RecipeBookMenu<CraftingContainer> {
         initializeSlots(playerInventory)
     }
 
+    private fun addSlot(slot: Slot): Slot {
+        slot.index = this.slots.size
+        this.slots.add(slot)
+        this.lastSlots.add(ItemStack.EMPTY)
+        this.remoteSlots.add(ItemStack.EMPTY)
+        return slot
+    }
+
 
     private fun initializeSlots(playerInventory: Inventory) {
         val craftingGridOffsetX = 14
@@ -108,7 +115,7 @@ class CookingPotScreenHandler : RecipeBookMenu<CraftingContainer> {
         for (i in 0..8) {
             addSlot(Slot(playerInventory, i, 8 + playerInventoryOffsetX + i * 18, 142 + playerInventoryOffsetY))
         }
-    }ResultSlot
+    }
 
 
     override fun slotsChanged(container: Container) {
@@ -205,4 +212,4 @@ class CookingPotScreenHandler : RecipeBookMenu<CraftingContainer> {
     override fun shouldMoveToInventory(index: Int): Boolean {
         return index != resultSlotIndex
     }
-}
+}*/
