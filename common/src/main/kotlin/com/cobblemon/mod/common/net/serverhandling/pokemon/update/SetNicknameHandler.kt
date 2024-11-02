@@ -23,7 +23,15 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.network.chat.Component
 
 object SetNicknameHandler : ServerNetworkPacketHandler<SetNicknamePacket> {
+
+    const val MAX_NAME_LENGTH = 12
+
     override fun handle(packet: SetNicknamePacket, server: MinecraftServer, player: ServerPlayer) {
+        val nickname = packet.nickname
+        if (nickname != null && nickname.length > MAX_NAME_LENGTH) {
+            return
+        }
+
         val pokemonStore: PokemonStore<*> = if (packet.isParty) {
             player.party()
         } else {
