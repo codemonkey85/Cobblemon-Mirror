@@ -46,6 +46,11 @@
 					"effect": "cobblemon:confused_bird6",
 					"type": "particle"
 				}
+			},
+			"event_sound": {
+				"sound_effect": {
+					"event_name": "status.nonvolatile.confused.actor"
+				}
 			}
 		},
 		"components": {
@@ -56,7 +61,7 @@
 				"active_time": 1.5
 			},
 			"minecraft:emitter_lifetime_events": {
-				"creation_event": ["event_bird2", "event_bird3", "event_bird4", "event_bird5", "event_bird6"]
+				"creation_event": ["event_bird2", "event_bird3", "event_bird4", "event_bird5", "event_bird6", "event_sound"]
 			},
 			"minecraft:emitter_shape_point": {},
 			"minecraft:particle_lifetime_expression": {

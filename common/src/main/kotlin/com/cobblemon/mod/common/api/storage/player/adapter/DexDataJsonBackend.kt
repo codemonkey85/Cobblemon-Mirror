@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.api.storage.player.adapter
 import com.cobblemon.mod.common.api.pokedex.PokedexManager
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
+import com.cobblemon.mod.common.util.adapters.CodecBackedAdapter
 import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -27,7 +28,7 @@ class DexDataJsonBackend: JsonBackedPlayerDataStoreBackend<PokedexManager>("poke
     override val gson = GsonBuilder()
         .setPrettyPrinting()
         .disableHtmlEscaping()
-        .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
+        .registerTypeAdapter(PokedexManager::class.java, CodecBackedAdapter(PokedexManager.CODEC))
         .create()
     override val classToken = TypeToken.get(PokedexManager::class.java)
     override val defaultData = defaultDataFunc
