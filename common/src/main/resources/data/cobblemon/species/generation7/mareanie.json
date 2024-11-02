@@ -26,6 +26,15 @@
   "eggGroups": [
     "water_1"
   ],
+  "behaviour": {
+    "moving": {
+      "swim": {
+        "swimSpeed": 0.1,
+        "canSwimInWater": false,
+        "canBreatheUnderwater": true
+      }
+    }
+  },
   "moves": [
     "1:peck",
     "1:poisonsting",

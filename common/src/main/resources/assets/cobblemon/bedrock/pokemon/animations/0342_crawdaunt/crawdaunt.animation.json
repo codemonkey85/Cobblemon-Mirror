@@ -61,10 +61,15 @@
 			}
 		},
 		"animation.crawdaunt.cry": {
-			"loop": true,
+			"animation_length": 1.2,
 			"bones": {
 				"mouth_open": {
 					"position": [0, 0, -0.1]
+				}
+			},
+			"sound_effects": {
+				"0.04": {
+					"effect": "pokemon.crawdaunt.cry"
 				}
 			}
 		},

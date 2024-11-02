@@ -23,14 +23,14 @@
 				{
 					"name": "waist",
 					"parent": "body",
-					"pivot": [0, 14, 15.5]
+					"pivot": [0, 13, 17.5]
 				},
 				{
 					"name": "torso",
 					"parent": "waist",
-					"pivot": [0, 14, 5.5],
+					"pivot": [0, 12, 18.5],
 					"cubes": [
-						{"origin": [-15, 4, 4.5], "size": [30, 17, 15], "inflate": 0.01, "uv": [0, 0]},
+						{"origin": [-15, 4, 4.5], "size": [30, 17, 15], "inflate": 0.02, "uv": [0, 0]},
 						{"origin": [-12, 5.5, 19.5], "size": [24, 14, 4], "inflate": 0.01, "uv": [80, 35]},
 						{"origin": [-12, 5.5, 19.5], "size": [24, 14, 4], "inflate": 0.25, "uv": [68, 76]}
 					]
@@ -38,7 +38,7 @@
 				{
 					"name": "torso2",
 					"parent": "torso",
-					"pivot": [-2, 16, 5.5],
+					"pivot": [-2, 21, 5.5],
 					"cubes": [
 						{"origin": [-14, 4, -6.5], "size": [28, 17, 12], "inflate": 0.01, "uv": [0, 32]}
 					]
@@ -685,8 +685,13 @@
 					]
 				},
 				{
-					"name": "petals_left",
+					"name": "petals",
 					"parent": "flower",
+					"pivot": [0, 34.5, 3]
+				},
+				{
+					"name": "petals_left",
+					"parent": "petals",
 					"pivot": [0, 34.5, 3]
 				},
 				{
@@ -703,7 +708,7 @@
 					"parent": "petal_left_front",
 					"pivot": [0, 34.5, -4],
 					"cubes": [
-						{"origin": [-5, 34.5, -11], "size": [10, 0, 7], "inflate": 0.01, "uv": [163, 12]}
+						{"origin": [-5, 34.5, -11], "size": [10, 0, 7], "uv": [163, 12]}
 					]
 				},
 				{
@@ -736,7 +741,7 @@
 					"parent": "petal_left_mid",
 					"pivot": [0, 34.5, -4],
 					"cubes": [
-						{"origin": [-5, 34.5, -11], "size": [10, 0, 7], "inflate": 0.02, "uv": [161, 75]}
+						{"origin": [-5, 34.5, -11], "size": [10, 0, 7], "uv": [161, 75]}
 					]
 				},
 				{
@@ -790,7 +795,7 @@
 				},
 				{
 					"name": "petals_right",
-					"parent": "flower",
+					"parent": "petals",
 					"pivot": [0, 34.5, 3]
 				},
 				{
@@ -893,8 +898,13 @@
 					]
 				},
 				{
-					"name": "leg_front_left",
+					"name": "front_legs",
 					"parent": "waist",
+					"pivot": [0, 14, 0.5]
+				},
+				{
+					"name": "leg_front_left",
+					"parent": "front_legs",
 					"pivot": [14, 14, 0.5],
 					"cubes": [
 						{"origin": [10.5, 8, -4.5], "size": [9, 10, 10], "uv": [132, 3]},
@@ -921,7 +931,7 @@
 				{
 					"name": "left_toes",
 					"parent": "foot_front_left",
-					"pivot": [19, 0, -3.5]
+					"pivot": [15, 2, -3.5]
 				},
 				{
 					"name": "left_toe_out",
@@ -951,7 +961,7 @@
 				},
 				{
 					"name": "leg_front_right",
-					"parent": "waist",
+					"parent": "front_legs",
 					"pivot": [-14, 14, 0.5],
 					"cubes": [
 						{"origin": [-19.5, 8, -4.5], "size": [9, 10, 10], "uv": [0, 132]},
@@ -970,7 +980,7 @@
 				{
 					"name": "foot_front_right",
 					"parent": "leg_front_right2",
-					"pivot": [-13, 2, 3],
+					"pivot": [-15, 3, 3],
 					"cubes": [
 						{"origin": [-18.5, 0, -3.5], "size": [7, 3, 9], "inflate": 0.01, "uv": [160, 0]}
 					]
@@ -978,7 +988,7 @@
 				{
 					"name": "right_toes",
 					"parent": "foot_front_right",
-					"pivot": [-19, 0, -3.5]
+					"pivot": [-15, 2, -3.5]
 				},
 				{
 					"name": "right_toe_out",
@@ -1007,8 +1017,13 @@
 					]
 				},
 				{
-					"name": "leg_right",
+					"name": "back_legs",
 					"parent": "body",
+					"pivot": [0, 12.5, 18.5]
+				},
+				{
+					"name": "leg_right",
+					"parent": "back_legs",
 					"pivot": [-11, 12.5, 18.5],
 					"cubes": [
 						{"origin": [-17, 8, 7.5], "size": [10, 9, 14], "uv": [96, 94]},
@@ -1027,7 +1042,7 @@
 				{
 					"name": "foot_back_right",
 					"parent": "knee_right",
-					"pivot": [-10, 2, 13],
+					"pivot": [-12, 2.5, 13],
 					"cubes": [
 						{"origin": [-16, 0, 6.5], "size": [8, 3, 10], "inflate": 0.01, "uv": [148, 38]}
 					]
@@ -1065,7 +1080,7 @@
 				},
 				{
 					"name": "leg_left",
-					"parent": "body",
+					"parent": "back_legs",
 					"pivot": [11, 12.5, 18.5],
 					"cubes": [
 						{"origin": [7, 8, 7.5], "size": [10, 9, 14], "uv": [0, 109]},
@@ -1092,7 +1107,7 @@
 				{
 					"name": "left_toes_back",
 					"parent": "foot_back_left",
-					"pivot": [16, 0, 6.5]
+					"pivot": [12, 2, 6.5]
 				},
 				{
 					"name": "left_toe_out_back",

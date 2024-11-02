@@ -47,17 +47,17 @@
 				{
 					"name": "head",
 					"parent": "neck",
-					"pivot": [0.5, -5, 0.75]
+					"pivot": [0, 10.5, -3.25]
 				},
 				{
 					"name": "head_correction",
 					"parent": "head",
-					"pivot": [0.5, -5, 0.75]
+					"pivot": [0, 10.5, -3.25]
 				},
 				{
 					"name": "head_ai",
 					"parent": "head_correction",
-					"pivot": [0.5, -5, 0.75]
+					"pivot": [0, 10.5, -3.25]
 				},
 				{
 					"name": "head_angle",
@@ -76,9 +76,9 @@
 				{
 					"name": "mouth_open",
 					"parent": "mouth",
-					"pivot": [0, 10.5, -4.25],
+					"pivot": [0, 10.6, -4.15],
 					"cubes": [
-						{"origin": [-1, 10.5, -8.25], "size": [2, 1, 1], "inflate": 0.02, "uv": [6, 17]}
+						{"origin": [-1, 10.6, -8.15], "size": [2, 1, 1], "inflate": 0.02, "uv": [6, 17]}
 					]
 				},
 				{

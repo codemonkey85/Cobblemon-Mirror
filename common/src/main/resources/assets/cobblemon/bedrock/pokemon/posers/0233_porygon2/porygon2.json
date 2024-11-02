@@ -3,12 +3,25 @@
   "portraitTranslation": [-0.45,0.58,0],
   "profileScale": 0.75,
   "profileTranslation": [0,0.68,0],
+  "rootBone": "porygon2",
   "animations": {
     "faint": "q.bedrock_primary('porygon2', 'faint', q.curve('one'))",
     "recoil": "q.bedrock_stateful('porygon2', 'recoil')",
     "cry": "q.bedrock_stateful('porygon2', 'cry')"
   },
   "poses": {
+    "portrait": {
+      "poseTypes": [
+        "PORTRAIT",
+        "PROFILE"
+      ],
+      "animations": [
+        "q.bedrock('porygon2', 'portrait_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('porygon2', 'blink')"
+      ]
+    },
     "battle-standing": {
       "poseTypes": [
         "STAND"
@@ -19,16 +32,16 @@
         "q.bedrock('porygon2', 'battle_idle')"
       ],
       "quirks": [
-        "q.bedrock_quirk('porygon2', 'blink')"
+        "q.bedrock_quirk('porygon2', 'blink')",
+        "q.bedrock_primary_quirk('porygon2', 'battle_quirk', 20, 40, 1, q.curve('symmetrical_wide'))"
       ]
     },
     "standing": {
       "poseTypes": [
         "STAND",
         "FLOAT",
-        "NONE",
-        "PORTRAIT",
-        "PROFILE"
+        "HOVER",
+        "NONE"
       ],
       "isBattle": false,
       "animations": [
@@ -37,12 +50,15 @@
       ],
       "quirks": [
         "q.bedrock_quirk('porygon2', 'blink')",
-        "q.bedrock_quirk('porygon2', 'quirk')"
+        "q.bedrock_quirk('porygon2', 'quirk')",
+        "q.bedrock_primary_quirk('porygon2', q.array('idle_quirk', 'idle_quirk2'), 20, 40, 1, q.curve('symmetrical_wide'))"
       ]
     },
     "walking": {
       "poseTypes": [
-        "WALK"
+        "WALK",
+        "FLY",
+        "SWIM"
       ],
       "animations": [
         "q.look('head')",
@@ -56,6 +72,9 @@
       "poseTypes": [
         "SLEEP"
       ],
+      "namedAnimations": {
+        "cry": "q.bedrock_stateful('dummy', 'cry')"
+      },
       "animations": [
         "q.bedrock('porygon2', 'sleep')"
       ]

@@ -3,7 +3,10 @@
   "portraitTranslation": [-0.06,-0.74,0],
   "profileScale": 0.54,
   "profileTranslation": [-0.01,0.97,0],
-  "animations": {},
+  "rootBone": "hatenna",
+  "animations": {
+    "cry": "q.bedrock_stateful('hatenna', 'cry')"
+  },
   "poses": {
     "standing": {
       "poseTypes": [
