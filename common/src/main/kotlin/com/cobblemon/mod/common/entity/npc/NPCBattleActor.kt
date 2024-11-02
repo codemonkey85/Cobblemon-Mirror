@@ -34,7 +34,7 @@ class NPCBattleActor(
 ) : AIBattleActor(
     gameId = npc.uuid,
     pokemonList = party.toBattleTeam(),
-    battleAI = StrongBattleAI(skill)
+    battleAI = RandomBattleAI()
 ), EntityBackedBattleActor<NPCEntity> {
     override val entity = npc
     override val type = ActorType.NPC

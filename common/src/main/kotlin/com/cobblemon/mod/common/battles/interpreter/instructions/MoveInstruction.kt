@@ -9,12 +9,18 @@
 package com.cobblemon.mod.common.battles.interpreter.instructions
 
 import com.bedrockk.molang.runtime.MoLangRuntime
+import com.bedrockk.molang.runtime.struct.QueryStruct
+import com.bedrockk.molang.runtime.struct.VariableStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.interpreter.Effect
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.addEntityFunctions
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.addPokemonEntityFunctions
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.addPokemonFunctions
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
+import com.cobblemon.mod.common.api.molang.ObjectValue
 import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
 import com.cobblemon.mod.common.api.moves.animations.TargetsProvider
@@ -96,6 +102,13 @@ class MoveInstruction(
             }
             val runtime = MoLangRuntime().also {
                 battle.addQueryFunctions(it.environment.query).addStandardFunctions()
+            }
+            userPokemon.effectedPokemon.entity?.let {
+                val queryStruct = QueryStruct(hashMapOf())
+                queryStruct.addEntityFunctions(it)
+                queryStruct.addPokemonEntityFunctions(it)
+                queryStruct.addPokemonFunctions(it.pokemon)
+                runtime.environment.variable.setDirectly("user", queryStruct)
             }
 
             actionEffect ?: return@dispatch GO
