@@ -48,8 +48,7 @@ object RequestInteractionsHandler : ServerNetworkPacketHandler<RequestPlayerInte
             val isTargetBattling = BattleRegistry.getBattleByParticipatingPlayerId(packet.targetId) != null
             if (isTargetBattling and Cobblemon.config.allowSpectating && squaredDistance <= Cobblemon.config.battleSpectateMaxDistance.pow(2)) {
                 options[PlayerInteractOptionsPacket.Options.SPECTATE_BATTLE] = PlayerInteractOptionsPacket.OptionStatus.AVAILABLE
-            }
-            else if (squaredDistance <= Cobblemon.config.BattlePvPMaxDistance.pow(2)) {
+            } else if (squaredDistance <= Cobblemon.config.BattlePvPMaxDistance.pow(2)) {
                 // LOS and distance checks passed, now check parties and add appropriate options
                 val playerPartyCount = player.party().count { pokemon -> !pokemon.isFainted() }
                 val targetPartyCount = (targetPlayerEntity as ServerPlayer).party().count { pokemon -> !pokemon.isFainted() }

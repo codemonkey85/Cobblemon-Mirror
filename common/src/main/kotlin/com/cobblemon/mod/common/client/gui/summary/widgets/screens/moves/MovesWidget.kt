@@ -49,7 +49,7 @@ class MovesWidget(
 
     private var index = -1
     private val moves = (
-            if (summary.selectedPokemon.benchedMoves.count() > 0)
+            if (summary.selectedPokemon.relearnableMoves.count() > 0)
                 summary.selectedPokemon.moveSet.getMovesWithNulls()
             else summary.selectedPokemon.moveSet
         ).map { move ->
