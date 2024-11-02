@@ -31,6 +31,7 @@
 - `/freezepokemon` command to pause a Pokémon's animation at a specific point in time.
 - Added `no_ai` and `freeze_frame` options to the `/spawnpokemon` command.
 - Added shiny Pokémon particles with sound effects.
+- Added animation for trading.
 
 ### Pokémon Added
 #### Gen 1
@@ -308,7 +309,7 @@
 - Updated dialogue GUI assets with proper assets.
 - Updated party switching interface when in battle.
 - Relic coin pouches can now be waterlogged.
-- Pokemon Name (and level) labels are now only visible when crouching by default, set the `displayEntityLabelsWhenCrouchingOnly` to `false` to always them even when not crouching
+- Pokémon name and level labels are now only visible when crouching by default. Set the `displayEntityLabelsWhenCrouchingOnly` config to `false` to always have them displayed.
 - The "Press R to start battle prompt" will now disappear after a player's first battle has been won.
 - The default number of digits for the Pokédex number in the summary has been increased, from 3 to 4.
 - The pasture block model's screen is now off by default.
@@ -385,6 +386,7 @@
 - Fixed village generation caps not applying for berry farms. You were not meant to see more than two berry farms per village!
 - Fixed the Ice Face ability activation being displayed incorrectly in a battle.
 - Fixed edge case of F1 and R locking you in battle with no R functionality (requiring ESC to get out).
+- Fixed Poké Ball render orientation in battle interface when capturing.
 
 ### Developer
 - `SpawnCause` is now an implementation of `SpawningInfluence`.
