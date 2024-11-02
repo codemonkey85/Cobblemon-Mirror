@@ -24,6 +24,14 @@
   "eggGroups": [
     "field"
   ],
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.25
+      }
+    }
+  },
+
   "moves": [
     "1:astonish",
     "1:lick",
@@ -174,7 +182,7 @@
     "cobblemon.species.kecleon.desc"
   ],
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.75,
   "hitbox": {
     "width": 0.75,
     "height": 1.4,

@@ -3,6 +3,7 @@
   "portraitTranslation": [-0.09,0,0],
   "profileScale": 0.61,
   "profileTranslation": [-0.01, 0.86, 0],
+  "rootBone": "charmander",
   "animations": {
     "cry": "q.bedrock_stateful('charmander', 'cry')",
     "special": "q.bedrock_primary('charmander', 'special', q.curve('symmetrical_wide'))"
@@ -13,8 +14,7 @@
         "PORTRAIT",
         "PROFILE"
       ],
-      "isBattle": false,
-      "isTouchingWater": false,
+      "conditions": ["!q.is_touching_water && !q.in_battle"],
       "animations": [
         "q.look('head')",
         "q.bedrock('charmander', 'ground_idle')"
@@ -27,7 +27,7 @@
       "poseTypes": [
         "STAND"
       ],
-      "isBattle": true,
+      "conditions": ["q.in_battle"],
       "animations": [
         "q.look('head')",
         "q.bedrock('charmander', 'battle_idle')"
@@ -42,8 +42,7 @@
         "NONE",
         "FLOAT"
       ],
-      "isBattle": false,
-      "isTouchingWater": false,
+      "conditions": ["!q.is_touching_water && !q.in_battle"],
       "animations": [
         "q.look('head')",
         "q.bedrock('charmander', 'ground_idle')"
@@ -57,7 +56,7 @@
         "WALK",
         "SWIM"
       ],
-      "isTouchingWater": false,
+      "conditions": ["!q.is_touching_water"],
       "animations": [
         "q.look('head')",
         "q.bedrock('charmander', 'ground_walk')"
@@ -70,7 +69,7 @@
       "poseTypes": [
         "SLEEP"
       ],
-      "isTouchingWater": false,
+      "conditions": ["!q.is_touching_water"],
       "animations": [
         "q.bedrock('charmander', 'sleep')"
       ]
@@ -79,8 +78,7 @@
       "poseTypes": [
         "STAND"
       ],
-      "isTouchingWater": true,
-      "isSubmergedInWater": false,
+      "conditions": ["q.is_touching_water && !q.is_underwater"],
       "animations": [
         "q.look('head')",
         "q.bedrock('charmander', 'surfacewater_idle')"
@@ -99,8 +97,7 @@
       "poseTypes": [
         "WALK"
       ],
-      "isTouchingWater": true,
-      "isSubmergedInWater": false,
+      "conditions": ["q.is_touching_water && !q.is_underwater"],
       "animations": [
         "q.look('head')",
         "q.bedrock('charmander', 'surfacewater_swim')"

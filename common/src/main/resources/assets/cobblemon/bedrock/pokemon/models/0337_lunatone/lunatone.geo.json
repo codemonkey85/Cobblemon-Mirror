@@ -7,25 +7,30 @@
 				"texture_width": 128,
 				"texture_height": 64,
 				"visible_bounds_width": 3,
-				"visible_bounds_height": 2.5,
-				"visible_bounds_offset": [0, 0.75, 0]
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
 			},
 			"bones": [
 				{
 					"name": "lunatone",
-					"pivot": [0, 1, 0]
+					"pivot": [0, 0, 0]
 				},
 				{
 					"name": "body",
 					"parent": "lunatone",
-					"pivot": [0, 11.5, 1],
+					"pivot": [0, 11.5, 1]
+				},
+				{
+					"name": "torso",
+					"parent": "body",
+					"pivot": [0, 11.5, 3],
 					"cubes": [
 						{"origin": [-4.5, 3, 2], "size": [9, 17, 10], "uv": [0, 0]}
 					]
 				},
 				{
 					"name": "eyes",
-					"parent": "body",
+					"parent": "torso",
 					"pivot": [0, -0.5, -0.4]
 				},
 				{
@@ -78,7 +83,7 @@
 				},
 				{
 					"name": "eye_holes",
-					"parent": "body",
+					"parent": "torso",
 					"pivot": [0, 0, 0]
 				},
 				{
@@ -111,7 +116,7 @@
 				},
 				{
 					"name": "mouth",
-					"parent": "body",
+					"parent": "torso",
 					"pivot": [0, 11.42693, 0.54887],
 					"cubes": [
 						{"origin": [-3.5, 11, -5.67], "size": [7, 1, 8], "inflate": 0.01, "uv": [28, 35]},
@@ -121,7 +126,7 @@
 				},
 				{
 					"name": "body_top",
-					"parent": "body",
+					"parent": "torso",
 					"pivot": [0, 20, 9],
 					"cubes": [
 						{"origin": [-3.5, 15.8, 2.2], "size": [7, 3, 4], "pivot": [0, 20, 3], "rotation": [-45, 0, 0], "uv": [44, 6]},
@@ -131,7 +136,7 @@
 				},
 				{
 					"name": "body_bottom",
-					"parent": "body",
+					"parent": "torso",
 					"pivot": [0, 3, 9],
 					"cubes": [
 						{"origin": [-3.5, 4.2, 2.2], "size": [7, 3, 4], "pivot": [0, 3, 3], "rotation": [45, 0, 0], "uv": [2, 27]},

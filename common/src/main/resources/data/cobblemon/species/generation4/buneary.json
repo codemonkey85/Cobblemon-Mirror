@@ -42,7 +42,7 @@
   },
   "catchRate": 190,
   "maleRatio": 0.5,
-  "shoulderMountable": true,
+  "shoulderMountable": false,
   "baseExperienceYield": 70,
   "experienceGroup": "medium_fast",
   "eggCycles": 20,
@@ -50,6 +50,19 @@
     "field",
     "human_like"
   ],
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.25
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
+  },
   "moves": [
     "1:defensecurl",
     "1:foresight",

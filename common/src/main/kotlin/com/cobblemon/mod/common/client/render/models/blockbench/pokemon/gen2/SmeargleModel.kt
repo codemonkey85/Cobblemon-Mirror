@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen2
 
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.BipedWalkAnimation
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.BipedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
@@ -34,7 +35,7 @@ class SmeargleModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame, B
     lateinit var standing: Pose
     lateinit var walk: Pose
 
-    //override val cryAnimation = CryProvider { _, _ -> bedrockStateful("smeargle", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("smeargle", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("smeargle", "blink") }

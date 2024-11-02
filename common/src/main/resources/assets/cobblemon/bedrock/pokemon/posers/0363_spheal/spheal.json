@@ -3,6 +3,10 @@
   "portraitTranslation": [-0.15,-0.26,0],
   "profileScale": 0.73,
   "profileTranslation": [0,0.59,0],
+  "rootBone": "spheal",
+  "animations": {
+    "cry": "q.bedrock_stateful('spheal', 'cry')"
+  },
   "poses": {
     "standing": {
       "poseTypes": ["STAND", "WALK", "SWIM", "FLOAT", "PORTRAIT", "PROFILE", "NONE"],

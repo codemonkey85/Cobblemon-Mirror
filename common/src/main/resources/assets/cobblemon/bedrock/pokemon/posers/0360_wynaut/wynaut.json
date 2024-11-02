@@ -3,7 +3,10 @@
     "portraitTranslation": [0.02, -0.76, 0],
     "profileScale": 0.89,
     "profileTranslation": [0, 0.37, 0],
-    "animations": {},
+    "rootBone": "wynaut",
+    "animations": {
+      "cry": "q.bedrock_stateful('wynaut', 'cry')"
+    },
     "poses": {
       "standing": {
         "poseName": "standing",

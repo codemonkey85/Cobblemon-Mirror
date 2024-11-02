@@ -3,7 +3,8 @@
     "portraitTranslation": [-0.1, -0.35, 0.0],
     "profileScale": 1,
     "profileTranslation": [0.0, 0.3, 0.0],
-    "animations": {
+    "rootBone": "tinkaton",
+  "animations": {
         "faint": "q.bedrock_primary('tinkaton', 'faint', q.curve('one'))",
         "cry": "q.bedrock_stateful('tinkaton', 'cry')"
     },
