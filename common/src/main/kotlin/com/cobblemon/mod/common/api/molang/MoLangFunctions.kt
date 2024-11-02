@@ -240,6 +240,7 @@ object MoLangFunctions {
             map.put("class") { StringValue(npc.npc.id.toString()) }
             map.put("name") { StringValue(npc.name.string) }
             map.put("level") { DoubleValue(npc.level) }
+            map.put("has_aspect") { params -> DoubleValue(npc.aspects.contains(params.getString(0))) }
             map.put("face") { params -> ObjectValue(ReferenceDialogueFaceProvider(npc.id, params.getBooleanOrNull(0) != false)) }
             map.put("in_battle") { DoubleValue(npc.isInBattle()) }
             map.put("run_script_on_client") { params ->

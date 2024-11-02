@@ -15,8 +15,8 @@ import com.cobblemon.mod.common.api.npc.NPCPartyProvider
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.storage.party.NPCPartyStore
 import com.cobblemon.mod.common.entity.npc.NPCEntity
-import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.asExpression
+import com.cobblemon.mod.common.util.resolveFloat
 import com.cobblemon.mod.common.util.resolveInt
 import com.cobblemon.mod.common.util.weightedSelection
 import com.cobblemon.mod.common.util.withQueryValue
@@ -37,19 +37,7 @@ class StaticPoolPartyProvider : NPCPartyProvider {
         const val TYPE = "static_pool"
     }
 
-    class DynamicPokemon(
-        val pokemon: PokemonProperties,
-        val levelVariation: IntRange,
-        val npcLevels: IntRange,
-        val selectableTimes: Expression,
-        val weight: Float = 1F
-    )
-
     override val type = TYPE
-    var minPokemon: Expression = "1".asExpression()
-    var maxPokemon: Expression = "6".asExpression()
-    var pool = mutableListOf<DynamicPokemon>()
-    var static = true // TODO implement
 
     override fun loadFromJSON(json: JsonElement) {
         json as JsonObject
@@ -62,10 +50,31 @@ class StaticPoolPartyProvider : NPCPartyProvider {
                 it.getAsJsonPrimitive("levelVariation").asString?.split("..")?.let { it[0].toInt()..it[1].toInt() } ?: 0..0,
                 it.getAsJsonPrimitive("npcLevels").asString?.split("..")?.let { it[0].toInt()..it[1].toInt() } ?: 0..100,
                 it.getAsJsonPrimitive("selectableTimes").asString?.asExpression() ?: "1".asExpression(),
-                it.getAsJsonPrimitive("weight").asFloat
+                it.getAsJsonPrimitive("weight").asString?.asExpression() ?: "1".asExpression()
             )
         }.toMutableList()
         static = json.getAsJsonPrimitive("static").asBoolean
+    }
+
+    var minPokemon: Expression = "1".asExpression()
+    var maxPokemon: Expression = "6".asExpression()
+    var pool = mutableListOf<DynamicPokemon>()
+    var static = true // TODO implement
+
+    class DynamicPokemon(
+        val pokemon: PokemonProperties,
+        val levelVariation: IntRange,
+        val npcLevels: IntRange,
+        val selectableTimes: Expression,
+        val weight: Expression = "1".asExpression()
+    ) {
+        fun getWeight(runtime: MoLangRuntime): Float {
+            return runtime.resolveFloat(weight)
+        }
+
+        fun hasWeight(runtime: MoLangRuntime): Boolean {
+            return runtime.resolveFloat(weight) != 0F
+        }
     }
 
     fun formulateParty(npc: NPCEntity, level: Int, party: NPCPartyStore) {
@@ -77,21 +86,21 @@ class StaticPoolPartyProvider : NPCPartyProvider {
         val workingPool = pool.filter { level in it.npcLevels }.toMutableList()
         val useCounts = mutableMapOf<DynamicPokemon, Int>()
 
-        fun composePokemon(pokemon: DynamicPokemon): Pokemon {
-            // If the Pokémon's props specifies a level then use that, otherwise choose a random level within the range
-            val randomLevel = (level + pokemon.levelVariation.random())
-            return pokemon.pokemon.copy().also { it.level = it.level ?: randomLevel }.create()
-        }
-
-        while (desiredPokemonCount > 0 && workingPool.isNotEmpty()) {
-            val selected = workingPool.weightedSelection(DynamicPokemon::weight) ?: break
+        while (desiredPokemonCount > 0 && workingPool.filter { it.hasWeight(runtime) }.isNotEmpty()) {
+            val selected = workingPool.filter { it.getWeight(runtime) == -1F }.randomOrNull()
+                ?: workingPool.weightedSelection { it.getWeight(runtime) }
+                ?: break
             useCounts[selected] = useCounts.getOrDefault(selected, 0) + 1
             val allowedSelections = runtime.resolveInt(selected.selectableTimes)
             if (useCounts[selected]!! >= allowedSelections) {
                 workingPool.remove(selected)
             }
             desiredPokemonCount--
-            party.add(composePokemon(selected))
+
+            // If the Pokémon's props specifies a level then use that, otherwise choose a random level within the range
+            val randomLevel = (level + selected.levelVariation.random())
+            val instance = selected.pokemon.copy().also { it.level = it.level ?: randomLevel }.create()
+            party.add(instance)
         }
     }
 
@@ -100,10 +109,8 @@ class StaticPoolPartyProvider : NPCPartyProvider {
             val party = NPCPartyStore(npc)
             formulateParty(npc, level, party)
             return StaticNPCParty(party)
-//        } else { TODO figure out dynamic saving and loading - we saving the entire logic in? Lose referential integrity?
+//        } else {
 //            return DynamicNPCParty(this, npc, level)
 //        }
-
     }
-
 }
