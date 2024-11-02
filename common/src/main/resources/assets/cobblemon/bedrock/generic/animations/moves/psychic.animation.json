@@ -1,0 +1,29 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.psychic.target": {
+			"animation_length": 1.70833,
+			"bones": {
+				"root_part": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.5": [0, "math.sin(q.anim_time*90*5-90)*5", 0],
+						"0.9583": [0, "math.sin(q.anim_time*90*12-90)*5", 0],
+						"1.0833": [0, 0, 0]
+					},
+					"scale": {
+						"0.0": [1, 1, 1],
+						"0.5": ["1+math.sin(q.anim_time*90*7-135)*0.15", "1+math.sin(q.anim_time*90*7)*0.15", 1],
+						"0.9583": ["1+math.sin(q.anim_time*90*7-135)*0.15", "1+math.sin(q.anim_time*90*7)*0.15", 1],
+						"1.0833": [
+							"1.2+math.sin(q.anim_time*90*7-135)*0.2+math.sin(q.anim_time*90*350)*0.4",
+							"1.2+math.sin(q.anim_time*90*7)*0.2+math.sin(q.anim_time*90*350)*0.25",
+							1.2
+						],
+						"1.3333": [1, 1, 1]
+					}
+				}
+			}
+		}
+	}
+}
