@@ -10,14 +10,14 @@
 		},
 		"components": {
 			"minecraft:emitter_rate_steady": {
-				"spawn_rate": 20,
-				"max_particles": 10
+				"spawn_rate": "20*math.clamp(q.entity.entity_distance*0.2,1,2)",
+				"max_particles": 1000
 			},
 			"minecraft:emitter_lifetime_once": {
-				"active_time": 0.4
+				"active_time": 0.45
 			},
 			"minecraft:emitter_shape_point": {
-				"offset": ["math.random(-0.31,0.31)*(v.emitter_age*3)", "math.random(-0.31,0.31)*(v.emitter_age*3)", "math.random(-0.35,0.35)-v.emitter_age*9"],
+				"offset": ["math.random(-0.31,0.31)*(v.emitter_age*3)", "math.random(-0.31,0.31)*(v.emitter_age*3)", "(q.entity.entity_distance*0.15)+math.random(-0.35,0.35)-v.emitter_age*(q.entity.entity_distance*2.25)"],
 				"direction": ["math.random(-0.25,0.25)*(v.emitter_age*2)", "math.random(-0.25,0.25)*(v.emitter_age*2)", "math.random(-2.05,-0.55)"]
 			},
 			"minecraft:particle_lifetime_expression": {
@@ -26,7 +26,7 @@
 			"minecraft:particle_initial_spin": {
 				"rotation": "math.random_integer(0,3)*90"
 			},
-			"minecraft:particle_initial_speed": "math.random(2.75,4.25)*0.75",
+			"minecraft:particle_initial_speed": "math.random(2.75,4.25)*(q.entity.entity_distance/5)",
 			"minecraft:particle_motion_dynamic": {
 				"linear_acceleration": [0, 3, 0],
 				"linear_drag_coefficient": 2

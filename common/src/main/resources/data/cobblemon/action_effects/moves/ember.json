@@ -1,0 +1,59 @@
+{
+  "timeline": [
+    {
+      "type": "add_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "animation",
+      "animation": ["ember", "fire", "special"],
+      "delay": 1.25
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:ember_actor",
+      "locator": "special_attack",
+      "delay": 0.03
+    },
+    {
+      "type": "pause",
+      "pause": 0.03
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:ember_fire",
+      "locator": "special_attack"
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:ember_firesparks",
+      "locator": "special_attack",
+      "delay": 0.03
+    },
+    {
+      "type": "pause",
+      "pause": 0.4
+    },
+    {
+      "type": "entity_particles",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "effect": "cobblemon:ember_target",
+      "locator": "target",
+      "delay": 0.05
+    },
+    {
+      "type": "entity_particles",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "effect": "cobblemon:ember_targetlinger",
+      "locator": "target"
+    },
+    {
+      "type": "remove_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "pause",
+      "pause": 1.9
+    }
+  ]
+}

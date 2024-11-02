@@ -10,9 +10,9 @@ package com.cobblemon.mod.common.battles.interpreter.instructions
 
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.struct.QueryStruct
-import com.bedrockk.molang.runtime.struct.VariableStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.bedrockk.molang.runtime.value.StringValue
+import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage
 import com.cobblemon.mod.common.api.battles.interpreter.Effect
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
@@ -20,7 +20,6 @@ import com.cobblemon.mod.common.api.molang.MoLangFunctions.addEntityFunctions
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addPokemonEntityFunctions
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addPokemonFunctions
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
-import com.cobblemon.mod.common.api.molang.ObjectValue
 import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
 import com.cobblemon.mod.common.api.moves.animations.TargetsProvider
@@ -32,9 +31,14 @@ import com.cobblemon.mod.common.battles.dispatch.InstructionSet
 import com.cobblemon.mod.common.battles.dispatch.InterpreterInstruction
 import com.cobblemon.mod.common.battles.dispatch.UntilDispatch
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
+import com.cobblemon.mod.common.net.messages.client.battle.BattleAppendTargetedEntityPacket
 import com.cobblemon.mod.common.pokemon.evolution.progress.UseMoveEvolutionProgress
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.cobblemonResource
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.ai.targeting.TargetingConditions
+import net.minecraft.world.phys.AABB
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -143,6 +147,17 @@ class MoveInstruction(
             runtime.environment.query.addFunction("move") { move.struct }
             runtime.environment.query.addFunction("instruction_id") { StringValue(cobblemonResource("move").toString()) }
 
+            if (userPokemon.entity != null && targetPokemon?.entity != null) {
+                //Not the most elegant solution, maybe we should just make the targeted entity a piece of SyncedData
+                val serverLevel = userPokemon.entity!!.level() as? ServerLevel
+                serverLevel?.getNearbyPlayers(
+                    TargetingConditions.forNonCombat(),
+                    userPokemon.entity!!,
+                    AABB.ofSize(userPokemon.entity!!.position(), 128.0, 128.0, 128.0)
+                )?.mapNotNull { it as? ServerPlayer }?.forEach { it.sendPacket(BattleAppendTargetedEntityPacket(userPokemon.entity!!.id, targetPokemon.entity!!.id)) }
+
+                battle.sendUpdate(BattleAppendTargetedEntityPacket(userPokemon.entity!!.id, targetPokemon.entity!!.id))
+            }
             this.future = actionEffect.run(context)
             holds = context.holds // Reference so future things can check on this action effect's holds
             future.thenApply { holds.clear() }

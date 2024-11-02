@@ -14,6 +14,7 @@ import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.entity.PokemonSideDelegate
+import com.cobblemon.mod.common.api.molang.MoLangFunctions.addEntityFunctions
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addFunctions
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.scheduling.ScheduledTask
@@ -45,8 +46,6 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.phys.Vec3
-import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 
 class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
     companion object {
@@ -93,6 +92,8 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
 
     private var scaleAnimTask: ScheduledTask? = null
     private var cryAnimation: ActiveAnimation? = null
+
+    var targetedEntityId: Int? = null
 
     override fun onSyncedDataUpdated(data: EntityDataAccessor<*>) {
         super.onSyncedDataUpdated(data)
@@ -339,6 +340,18 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
         struct.addFunctions(functions.functions)
         struct.addFunctions(ClientMoLangFunctions.clientFunctions)
         runtime.environment.query = struct
+        addEnemyFunctions(struct)
+    }
+
+    fun addEnemyFunctions(struct: QueryStruct) {
+        struct.addFunction("entity_distance") {
+            val livingEntity = targetedEntityId?.let { entityId ->
+                Minecraft.getInstance().level?.getEntity(
+                    entityId
+                )
+            }
+            currentEntity.position().distanceTo(livingEntity?.position() ?: currentEntity.position())
+        }
     }
 
     override fun initialize(entity: PokemonEntity) {
