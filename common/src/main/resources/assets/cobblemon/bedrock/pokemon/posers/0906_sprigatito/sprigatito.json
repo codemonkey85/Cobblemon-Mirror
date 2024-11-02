@@ -15,7 +15,7 @@
         "isBattle": true,
         "animations": [
           "q.look('head')",
-          "q.bedrock('sprigatito', q.array('battle_idle', 'battle_idle2'))"
+          "q.bedrock('sprigatito', math.random(0, 1) < 0.4 ? 'battle_idle2' : 'battle_idle')"
         ],
         "quirks": [
           "q.bedrock_quirk('sprigatito', 'blink')",
@@ -33,7 +33,7 @@
         "isBattle": false,
         "animations": [
           "q.look('head')",
-          "q.bedrock('sprigatito', q.array('ground_idle', 'ground_idle2'))"
+          "q.bedrock('sprigatito', math.random(0, 1) < 0.4 ? 'ground_idle2' : 'ground_idle')"
         ],
         "quirks": [
           "q.bedrock_quirk('sprigatito', 'blink')",
@@ -62,7 +62,7 @@
         "cry": "q.bedrock_stateful('dummy', 'cry')"
         },
         "animations": [
-          "q.bedrock('sprigatito', q.array('sleep', 'sleep2'))"
+          "q.bedrock('sprigatito', math.random(0, 1) < 0.4 ? 'sleep2' : 'sleep')"
         ],
         "quirks": [
           "q.bedrock_quirk('sprigatito', 'blink')",
@@ -80,6 +80,12 @@
         "quirks": [
           "q.bedrock_quirk('sprigatito', 'blink')",
           "q.bedrock_quirk('sprigatito', q.array('quirk_ear-twitch-left', 'quirk_ear-twitch-right'), 6, 20, 1)"
+        ],
+        "transformedParts": [
+          {
+            "part": "body",
+            "position": [5, 0, 0]
+          }
         ]
       },
       "shoulder_right": {
@@ -93,6 +99,12 @@
         "quirks": [
           "q.bedrock_quirk('sprigatito', 'blink')",
           "q.bedrock_quirk('sprigatito', q.array('quirk_ear-twitch-left', 'quirk_ear-twitch-right'), 6, 20, 1)"
+        ],
+        "transformedParts": [
+          {
+            "part": "body",
+            "position": [-5, 0, 0]
+          }
         ]
       }
     }

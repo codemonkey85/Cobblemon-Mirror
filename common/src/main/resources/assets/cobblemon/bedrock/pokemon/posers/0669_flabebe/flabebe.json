@@ -66,6 +66,50 @@
         "animations": [
           "q.bedrock('flabebe', 'sleep')"
         ]
+      },
+      "shoulder_left": {
+        "poseTypes": [
+          "SHOULDER_LEFT"
+        ],
+        "animations": [
+          "q.look('head')",
+          "q.bedrock('flabebe', 'ground_idle')"
+        ],
+        "quirks": [
+          "q.bedrock_quirk('flabebe', 'blink')"
+        ],
+        "transformedParts": [
+          {
+            "part": "body",
+            "position": [7, 0, 0]
+          },
+          {
+            "part": "flower",
+            "position": [7, 0, 0]
+          }
+        ]
+      },
+      "shoulder_right": {
+        "poseTypes": [
+          "SHOULDER_RIGHT"
+        ],
+        "animations": [
+          "q.look('head')",
+          "q.bedrock('flabebe', 'ground_idle')"
+        ],
+        "quirks": [
+          "q.bedrock_quirk('flabebe', 'blink')"
+        ],
+        "transformedParts": [
+          {
+            "part": "body",
+            "position": [-7, 0, 0]
+          },
+          {
+            "part": "flower",
+            "position": [-7, 0, 0]
+          }
+        ]
       }
     }
   }

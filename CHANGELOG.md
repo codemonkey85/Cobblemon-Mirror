@@ -204,6 +204,7 @@
 - Buneary
 - Combee
 - Pachirisu
+- Tepig
 - Pidove
 - Petilil, Hisui Bias Petilil
 - Zorua, Hisui Bias Zorua
@@ -237,6 +238,7 @@
 - Buneary, Lopunny
 - Magnezone
 - Alomomola
+- Tepig, Pignite, Emboar
 - Flabebe, Floette, Florges
 - Litten, Torracat, Incineroar
 - Fomantis, Lurantis

@@ -24,6 +24,42 @@
       "quirks": [
         "q.bedrock_quirk('tatsugiri', 'blink')"
       ]
+    },
+    "shoulder_left": {
+      "poseTypes": [
+        "SHOULDER_LEFT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('tatsugiri', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tatsugiri', 'blink')"
+      ],
+      "transformedParts": [
+        {
+          "part": "body",
+          "position": [3, 0, 0]
+        }
+      ]
+    },
+    "shoulder_right": {
+      "poseTypes": [
+        "SHOULDER_RIGHT"
+      ],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('tatsugiri', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('tatsugiri', 'blink')"
+      ],
+      "transformedParts": [
+        {
+          "part": "body",
+          "position": [-3, 0, 0]
+        }
+      ]
     }
   }
 }
