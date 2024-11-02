@@ -573,7 +573,6 @@ object PokemonModelRepository : VaryingModelRepository<PokemonPosableModel>() {
         inbuilt("beartic", ::BearticModel)
         inbuilt("deino", ::DeinoModel)
         inbuilt("zweilous", ::ZweilousModel)
-        inbuilt("hydreigon", ::HydreigonModel)
         inbuilt("larvesta", ::LarvestaModel)
         inbuilt("volcarona", ::VolcaronaModel)
         inbuilt("dreepy", ::DreepyModel)
