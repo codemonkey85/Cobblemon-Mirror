@@ -6,6 +6,7 @@ before_script:
 stages:
   - build
   - deploy
+  - merge
 
 #TODO add client reference test process, search for import com.cobblemon.mod.common.client
 
@@ -64,3 +65,29 @@ deploy:
       - ./*.jar
 #      - neoforge/build/libs/*+*.jar
 #      - fabric/build/libs/*+*.jar
+
+merge_on_lang_change:
+  stage: merge
+  script:
+    # Check for changes in the specified file or directory
+    - |
+      if git diff --name-only "$CI_COMMIT_BEFORE_SHA" "$CI_COMMIT_SHA" | grep -q "common/src/main/resources/assets/cobblemon/lang/en_US.json"; then
+        echo "US locale changed! Updating lang branch..."
+      
+        # Configure Git user for the merge commit
+        git config --global user.email "noreply@weblate.org"
+        git config --global user.name "Weblate"
+        git remote set-url https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/cable-mc/cobblemon.git
+      
+        # Fetch the target branch and merge main into it
+        git fetch origin lang-updates
+        git checkout lang-updates
+        git merge main
+      
+        # Push the merged branch back to the repository
+        git push origin lang-updates-test
+      else
+        echo "No need to update lang"
+      fi
+  only:
+    - ci-test
