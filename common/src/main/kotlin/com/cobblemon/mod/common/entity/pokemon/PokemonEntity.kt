@@ -1152,9 +1152,11 @@ open class PokemonEntity(
                     }
                     testPos = testPos.above()
                 }
-                val hasHeadRoom = !collidesWithBlock(Vec3(blockPos.x.toDouble(), (blockPos.y).toDouble(), (blockPos.z).toDouble()))
-                if (hasHeadRoom) {
-                    result = Vec3(result.x, testPos.y.toDouble(), result.z)
+                if (foundSurface) {
+                    val hasHeadRoom = !collidesWithBlock(Vec3(blockPos.x.toDouble(), (blockPos.y).toDouble(), (blockPos.z).toDouble()))
+                    if (hasHeadRoom) {
+                        result = Vec3(result.x, testPos.y.toDouble(), result.z)
+                    }
                 } else {
                     foundSurface = false
                 }
