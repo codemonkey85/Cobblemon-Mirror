@@ -145,8 +145,8 @@ open class Pokemon : ShowdownIdentifiable {
                 val newFeatures = SpeciesFeatures.getFeaturesFor(species).mapNotNull { it.invoke(this) }
                 features.clear()
                 features.addAll(newFeatures)
+                evolutionProxy.current().clear()
             }
-            this.evolutionProxy.current().clear()
             updateAspects()
             updateForm()
             checkGender()
