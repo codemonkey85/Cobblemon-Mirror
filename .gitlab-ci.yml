@@ -86,7 +86,7 @@ merge_on_lang_change:
         git merge origin/ci-test
       
         # Push the merged branch back to the repository
-        git push origin lang-updates-test
+        git push origin lang-updates:lang-updates-test
       else
         echo "No need to update lang"
       fi
