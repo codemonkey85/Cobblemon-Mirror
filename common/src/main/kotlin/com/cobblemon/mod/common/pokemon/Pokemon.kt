@@ -16,6 +16,7 @@ import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.abilities.Abilities
 import com.cobblemon.mod.common.api.abilities.Ability
 import com.cobblemon.mod.common.api.abilities.AbilityPool
+import com.cobblemon.mod.common.api.battles.model.actor.EntityBackedBattleActor
 import com.cobblemon.mod.common.api.data.ShowdownIdentifiable
 import com.cobblemon.mod.common.api.entity.PokemonSender
 import com.cobblemon.mod.common.api.events.CobblemonEvents
@@ -55,6 +56,7 @@ import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.api.types.tera.TeraType
 import com.cobblemon.mod.common.api.types.tera.TeraTypes
+import com.cobblemon.mod.common.battles.ActiveBattlePokemon
 import com.cobblemon.mod.common.config.CobblemonConfig
 import com.cobblemon.mod.common.datafixer.CobblemonSchemas
 import com.cobblemon.mod.common.datafixer.CobblemonTypeReferences
@@ -579,8 +581,28 @@ open class Pokemon : ShowdownIdentifiable {
                 val owner = getOwnerEntity()
                 if (owner is LivingEntity) {
                     owner.swing(InteractionHand.MAIN_HAND, true)
-                    val spawnDirection = position.subtract(owner.position())
-                    val spawnYaw = atan2(spawnDirection.z, spawnDirection.x) * 180.0 / PI + if (battleId == null) 102.5F else -90F
+                    var spawnDirection = Vec3.ZERO
+                    var spawnYaw = 0.0
+                    if (battleId != null) {
+                        // Look for an opposing opponent to face
+                        val battle = Cobblemon.battleRegistry.getBattle(battleId)
+                        val activeBattlePokemon = battle?.activePokemon?.firstOrNull { activePokemon -> activePokemon.battlePokemon?.originalPokemon == it.pokemon }
+                        var opposingEntityPos = (activeBattlePokemon?.getOppositeOpponent() as ActiveBattlePokemon?)?.battlePokemon?.entity?.position()
+                        if (opposingEntityPos == null) {
+                            // Can't find the opposing pokemon, face the opposing battle actor
+                            val opposingEntityBattleActor = Cobblemon.battleRegistry.getBattle(battleId)?.actors?.first { battleActor ->
+                                battleActor is EntityBackedBattleActor<*> && battleActor.entity != null && battleActor.entity?.uuid !== owner.uuid
+                            } as EntityBackedBattleActor<*>
+                            opposingEntityPos = opposingEntityBattleActor.initialPos
+                        }
+                        spawnDirection = opposingEntityPos?.subtract(it.position()) ?: position.subtract(owner.position())
+                        val battleYaw = (atan2(spawnDirection.z, spawnDirection.x) * 180.0 / PI) - 90.0
+                        spawnYaw = battleYaw
+                    } else {
+                        // Non-battle send out, face the trainer
+                        spawnDirection = position.subtract(owner.position())
+                        spawnYaw = atan2(spawnDirection.z, spawnDirection.x) * 180.0 / PI + 102.5
+                    }
                     it.entityData.set(PokemonEntity.SPAWN_DIRECTION, spawnYaw.toFloat())
                 }
                 if (owner != null) {
