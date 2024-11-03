@@ -198,7 +198,6 @@ object DataKeys {
     const val NPC_SIMULTANEOUS_BATTLES = "SimultaneousBattles"
     const val NPC_HEAL_AFTERWARDS = "HealAfterwards"
     const val NPC_PARTY = "Party"
-    const val NPC_PARTY_IS_STATIC = "IsStatic"
     const val NPC_PARTY_TYPE = "PartyType"
     const val NPC_PARTY_POKEMON = "Pokemon"
     const val NPC_ASPECTS = "AppliedAspects"

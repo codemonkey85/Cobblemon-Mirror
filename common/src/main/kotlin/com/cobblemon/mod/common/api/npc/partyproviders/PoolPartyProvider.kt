@@ -22,44 +22,60 @@ import com.cobblemon.mod.common.util.weightedSelection
 import com.cobblemon.mod.common.util.withQueryValue
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import com.google.gson.JsonPrimitive
 
 /**
- * A provider of a party for battling the NPC. It generates a [StaticNPCParty] but using a more complex process
+ * A provider of a party for battling the NPC. It generates a party using a more complex process
  * that takes an input level and makes a randomized selection of Pokémon and movesets from a pool.
+ *
+ * The party can be static or dynamic based on [isStatic]. If it is dynamic, the pool will be used
+ * to generate a party whenever the NPC is challenged and AI that depends on a reliable party will
+ * not run.
  *
  * Not an actual pool party. That's for v2.0.
  *
  * @author Hiroku
  * @since July 12th, 2024
  */
-class StaticPoolPartyProvider : NPCPartyProvider {
+class PoolPartyProvider : NPCPartyProvider {
     companion object {
-        const val TYPE = "static_pool"
+        const val TYPE = "pool"
     }
 
+    @Transient
     override val type = TYPE
+
+    override var isStatic: Boolean = false
+    var minPokemon: Expression = "1".asExpression()
+    var maxPokemon: Expression = "6".asExpression()
+    var pool = mutableListOf<DynamicPokemon>()
 
     override fun loadFromJSON(json: JsonElement) {
         json as JsonObject
         this.minPokemon = json.getAsJsonPrimitive("minPokemon").asString?.asExpression() ?: "1".asExpression()
         this.maxPokemon = json.getAsJsonPrimitive("maxPokemon").asString?.asExpression() ?: "6".asExpression()
         this.pool = json.getAsJsonArray("pool").map {
+            if (it is JsonPrimitive) {
+                return@map DynamicPokemon(
+                    PokemonProperties.parse(it.asString),
+                    0..0,
+                    0..100,
+                    "1".asExpression(),
+                    "1".asExpression()
+                )
+            }
+
             it as JsonObject
             DynamicPokemon(
                 PokemonProperties.parse(it.getAsJsonPrimitive("pokemon").asString),
-                it.getAsJsonPrimitive("levelVariation").asString?.split("..")?.let { it[0].toInt()..it[1].toInt() } ?: 0..0,
-                it.getAsJsonPrimitive("npcLevels").asString?.split("..")?.let { it[0].toInt()..it[1].toInt() } ?: 0..100,
-                it.getAsJsonPrimitive("selectableTimes").asString?.asExpression() ?: "1".asExpression(),
-                it.getAsJsonPrimitive("weight").asString?.asExpression() ?: "1".asExpression()
+                it.getAsJsonPrimitive("levelVariation")?.asString?.split("-")?.let { it[0].toInt()..it[1].toInt() } ?: 0..0,
+                it.getAsJsonPrimitive("npcLevels")?.asString?.split("-")?.let { it[0].toInt()..it[1].toInt() } ?: 0..100,
+                it.getAsJsonPrimitive("selectableTimes")?.asString?.asExpression() ?: "1".asExpression(),
+                it.getAsJsonPrimitive("weight")?.asString?.asExpression() ?: "1".asExpression()
             )
         }.toMutableList()
-        static = json.getAsJsonPrimitive("static").asBoolean
+        isStatic = json.getAsJsonPrimitive("isStatic").asBoolean
     }
-
-    var minPokemon: Expression = "1".asExpression()
-    var maxPokemon: Expression = "6".asExpression()
-    var pool = mutableListOf<DynamicPokemon>()
-    var static = true // TODO implement
 
     class DynamicPokemon(
         val pokemon: PokemonProperties,
@@ -104,13 +120,9 @@ class StaticPoolPartyProvider : NPCPartyProvider {
         }
     }
 
-    override fun provide(npc: NPCEntity, level: Int): NPCParty {
-//        if (static) {
-            val party = NPCPartyStore(npc)
-            formulateParty(npc, level, party)
-            return StaticNPCParty(party)
-//        } else {
-//            return DynamicNPCParty(this, npc, level)
-//        }
+    override fun provide(npc: NPCEntity, level: Int): NPCPartyStore {
+        val party = NPCPartyStore(npc)
+        formulateParty(npc, level, party)
+        return party
     }
 }

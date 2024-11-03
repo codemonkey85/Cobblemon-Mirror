@@ -299,7 +299,7 @@ object MoLangFunctions {
             }
             map.put("put_pokemon_in_healer") { params ->
                 val healer = npc.level().getBlockEntity(params.get<ArrayStruct>(0).asBlockPos(), CobblemonBlockEntities.HEALING_MACHINE).orElse(null) ?: return@put DoubleValue.ZERO
-                val party = npc.staticParty ?: return@put DoubleValue.ZERO
+                val party = npc.party ?: return@put DoubleValue.ZERO
                 if (healer.canHeal(party)) {
                     healer.activate(npc.uuid, party)
                     return@put DoubleValue.ONE
