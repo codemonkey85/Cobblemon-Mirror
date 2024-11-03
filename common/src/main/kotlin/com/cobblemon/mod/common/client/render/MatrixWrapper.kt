@@ -33,4 +33,5 @@ class MatrixWrapper {
 
     fun getOrigin() = position.add(matrix.getOrigin())
     fun transformPosition(position: Vec3) = this.position.add(matrix.transformPosition(position))
+    fun transformWorldToParticle(position: Vec3) = Matrix4f(matrix).invertAffine().transformPosition(position.subtract(this.position))
 }

@@ -45,6 +45,7 @@ import com.cobblemon.mod.common.battles.BattleBuilder
 import com.cobblemon.mod.common.battles.BattleRegistry
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity
 import com.cobblemon.mod.common.client.entity.PokemonClientDelegate
+import com.cobblemon.mod.common.entity.AttackingEntity
 import com.cobblemon.mod.common.entity.PosableEntity
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.generic.GenericBedrockEntity
@@ -131,7 +132,7 @@ open class PokemonEntity(
     world: Level,
     pokemon: Pokemon = Pokemon().apply { isClient = world.isClientSide },
     type: EntityType<out PokemonEntity> = CobblemonEntities.POKEMON,
-) : ShoulderRidingEntity(type, world), PosableEntity, Shearable, Schedulable, ScannableEntity {
+) : ShoulderRidingEntity(type, world), PosableEntity, Shearable, Schedulable, ScannableEntity, AttackingEntity {
     companion object {
         @JvmStatic val SPECIES = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.STRING)
         @JvmStatic val NICKNAME = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.COMPONENT)
@@ -1428,5 +1429,14 @@ open class PokemonEntity(
 
     override fun resolveEntityScan(): LivingEntity {
         return this
+    }
+
+    override fun getAttackingEntityId(): Int? {
+        if (pokemon.isClient) {
+            return (delegate as PokemonClientDelegate).targetedEntityId
+        }
+        else {
+            TODO("Currently there is nothing that needs to know this on the server")
+        }
     }
 }

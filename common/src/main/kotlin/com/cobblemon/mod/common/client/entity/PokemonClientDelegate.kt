@@ -343,17 +343,6 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
         addEnemyFunctions(struct)
     }
 
-    fun addEnemyFunctions(struct: QueryStruct) {
-        struct.addFunction("entity_distance") {
-            val livingEntity = targetedEntityId?.let { entityId ->
-                Minecraft.getInstance().level?.getEntity(
-                    entityId
-                )
-            }
-            currentEntity.position().distanceTo(livingEntity?.position() ?: currentEntity.position())
-        }
-    }
-
     override fun initialize(entity: PokemonEntity) {
         this.currentEntity = entity
         this.age = entity.tickCount

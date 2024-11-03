@@ -15,6 +15,7 @@ import com.cobblemon.mod.common.api.snowstorm.BedrockParticleOptions
 import com.cobblemon.mod.common.api.snowstorm.ParticleEmitterAction
 import com.cobblemon.mod.common.client.render.MatrixWrapper
 import com.cobblemon.mod.common.client.render.SnowstormParticle
+import com.cobblemon.mod.common.entity.AttackingEntity
 import com.cobblemon.mod.common.entity.PosableEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.particle.SnowstormParticleOptions
@@ -62,6 +63,9 @@ class ParticleStorm(
                 }
             if (entity is PosableEntity) {
                 runtime.environment.query.addFunction("entity") { entity.struct }
+                if (entity is AttackingEntity) {
+                    addAttackingFunctions()
+                }
             } else if (entity is Player) {
                 runtime.environment.query.addFunction("entity") { entity.asMoLangValue() }
             }
@@ -74,6 +78,33 @@ class ParticleStorm(
             runtime.environment.setSimpleVariable("entity_scale", DoubleValue((entity as? PokemonEntity)?.scale ?: 1.0))
         }
         Minecraft.getInstance().particleEngine.add(this)
+    }
+
+    fun addAttackingFunctions(attackingEntity: AttackingEntity) {
+        attackingEntity as Entity
+        runtime.environment.query.addFunction("target_deltax") {
+            val targetedEntity = getEntityById(attackingEntity.getAttackingEntityId())?: return@addFunction 1.0
+            matrixWrapper.transformWorldToParticle(attackingEntity.position()).x - matrixWrapper.transformWorldToParticle(targetedEntity.position()).x
+        }
+        runtime.environment.query.addFunction("target_deltay") {
+            val targetedEntity = getEntityById(attackingEntity.getAttackingEntityId())?: return@addFunction 1.0
+            matrixWrapper.transformWorldToParticle(attackingEntity.position()).y - matrixWrapper.transformWorldToParticle(targetedEntity.position()).y
+        }
+        runtime.environment.query.addFunction("target_deltaz") {
+            val targetedEntity = getEntityById(attackingEntity.getAttackingEntityId())?: return@addFunction 1.0
+            matrixWrapper.transformWorldToParticle(attackingEntity.position()).z - matrixWrapper.transformWorldToParticle(targetedEntity.position()).z
+        }
+        runtime.environment.query.addFunction("target_distance") {
+            val targetedEntity = getEntityById(attackingEntity.getAttackingEntityId())?: return@addFunction 2.0
+            targetedEntity.position().distanceTo(attackingEntity.position())
+        }
+    }
+
+    private fun getEntityById(entityId: Int?): Entity? {
+        if (entityId != null) {
+            Minecraft.getInstance().level?.getEntity(entityId)
+        }
+        return null
     }
 
     fun getX() = x
