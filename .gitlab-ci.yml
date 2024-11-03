@@ -4,9 +4,9 @@ before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
 stages:
+  - merge
   - build
   - deploy
-  - merge
 
 #TODO add client reference test process, search for import com.cobblemon.mod.common.client
 
