@@ -22,6 +22,7 @@ import net.minecraft.tags.TagKey
 object CobblemonBlockTags {
 
     @JvmField val ALL_HANGING_SIGNS = createTag("all_hanging_signs")
+    @JvmField val ALL_SAPLINGS = createTag("all_saplings")
     @JvmField val ALL_SIGNS = createTag("all_signs")
     @JvmField val APRICORN_LEAVES = createTag("apricorn_leaves")
     @JvmField val APRICORN_LOGS = createTag("apricorn_logs")
@@ -38,6 +39,9 @@ object CobblemonBlockTags {
     @JvmField val MEDICINAL_LEEK_PLANTABLE = createTag("medicinal_leek_plantable")
     @JvmField val MINTS = createTag("mints")
     @JvmField val ROOTS_SPREADABLE = createTag("roots_spreadable")
+    @JvmField val SACCHARINE_LEAVES = createTag("saccharine_leaves")
+    @JvmField val SACCHARINE_LOGS = createTag("saccharine_logs")
+    @JvmField val SACCHARINE_SAPLING = createTag("saccharine_sapling")
     @JvmField val SIGNS = createTag("signs")
     @JvmField val SMALL_FLOWERS = createTag("small_flowers")
     @JvmField val SEES_SKY = createTag("sees_sky")

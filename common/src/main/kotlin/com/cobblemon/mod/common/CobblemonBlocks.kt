@@ -432,7 +432,9 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
      */
     fun strippedBlocks(): Map<Block, Block> = mapOf(
         APRICORN_WOOD to STRIPPED_APRICORN_WOOD,
-        APRICORN_LOG to STRIPPED_APRICORN_LOG
+        APRICORN_LOG to STRIPPED_APRICORN_LOG,
+        SACCHARINE_WOOD to STRIPPED_SACCHARINE_WOOD,
+        SACCHARINE_LOG to STRIPPED_SACCHARINE_LOG
     )
 
 

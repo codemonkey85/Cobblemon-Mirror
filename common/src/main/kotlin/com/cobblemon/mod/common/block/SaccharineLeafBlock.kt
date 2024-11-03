@@ -128,6 +128,7 @@ class SaccharineLeafBlock(settings: Properties) : LeavesBlock(settings), Bonemea
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
+        super.createBlockStateDefinition(builder)
         builder.add(AGE, DISTANCE, PERSISTENT, WATERLOGGED)
     }
 

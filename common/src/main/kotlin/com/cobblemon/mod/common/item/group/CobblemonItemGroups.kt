@@ -107,6 +107,8 @@ object CobblemonItemGroups {
         entries.accept(CobblemonItems.VIVICHOKE)
         entries.accept(CobblemonItems.VIVICHOKE_SEEDS)
 
+        entries.accept(CobblemonItems.SWEET_SAP)
+
         entries.accept(CobblemonItems.RED_APRICORN)
         entries.accept(CobblemonItems.YELLOW_APRICORN)
         entries.accept(CobblemonItems.GREEN_APRICORN)
@@ -121,6 +123,8 @@ object CobblemonItemGroups {
         entries.accept(CobblemonItems.PINK_APRICORN_SEED)
         entries.accept(CobblemonItems.BLACK_APRICORN_SEED)
         entries.accept(CobblemonItems.WHITE_APRICORN_SEED)
+
+        entries.accept(CobblemonItems.SACCHARINE_SAPLING)
 
         entries.accept(CobblemonItems.RED_MINT_SEEDS)
         entries.accept(CobblemonItems.RED_MINT_LEAF)
@@ -283,6 +287,7 @@ object CobblemonItemGroups {
         entries.accept(CobblemonItems.SACCHARINE_SIGN)
         entries.accept(CobblemonItems.SACCHARINE_HANGING_SIGN)
         entries.accept(CobblemonItems.SACCHARINE_LEAVES)
+        //entries.accept(CobblemonItems.SACCHARINE_SAPLING)
 
 
         entries.accept(CobblemonItems.TUMBLESTONE_BLOCK)
