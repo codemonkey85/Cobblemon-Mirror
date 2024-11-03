@@ -83,7 +83,7 @@ merge_on_lang_change:
         # Fetch the target branch and merge main into it
         git fetch origin lang-updates
         git checkout lang-updates
-        git merge main
+        git merge ci-test
       
         # Push the merged branch back to the repository
         git push origin lang-updates-test
