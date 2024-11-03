@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.client.render.models.blockbench.pokemon.gen4
 
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.Pose
 import com.cobblemon.mod.common.entity.PoseType.Companion.MOVING_POSES
 import com.cobblemon.mod.common.entity.PoseType.Companion.STATIONARY_POSES
@@ -29,6 +30,8 @@ class MunchlaxModel(root: ModelPart) : PokemonPosableModel(root), HeadedFrame {
 
     lateinit var standing: Pose
     lateinit var walk: Pose
+
+    override val cryAnimation = CryProvider { bedrockStateful("munchlax", "cry") }
 
     override fun registerPoses() {
         val blink = quirk { bedrockStateful("munchlax", "blink") }

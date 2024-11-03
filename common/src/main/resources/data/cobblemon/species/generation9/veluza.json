@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Veluza",
   "nationalPokedexNumber": 976,
   "primaryType": "water",
@@ -32,6 +33,15 @@
   "eggGroups": [
     "water_2"
   ],
+  "behaviour": {
+    "moving": {
+      "swim": {
+        "swimSpeed": 0.5,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true
+      }
+    }
+  },
   "moves": [
     "1:aquajet",
     "1:tackle",
@@ -92,6 +102,12 @@
   "height": 25,
   "weight": 900,
   "evolutions": [],
+  "baseScale": 1,
+  "hitbox": {
+    "width": 1.1,
+    "height": 1,
+    "fixed": false
+  },
   "cannotDynamax": false,
   "pokedex": [
     "cobblemon.species.veluza.desc"

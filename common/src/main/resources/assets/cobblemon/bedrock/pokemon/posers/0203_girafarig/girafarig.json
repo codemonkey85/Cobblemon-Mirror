@@ -3,7 +3,10 @@
     "portraitTranslation": [-0.75, 1.21, 0],
     "profileScale": 0.68,
     "profileTranslation": [0.03, 0.75, 0],
-    "animations": {},
+    "rootBone": "girafarig",
+    "animations": {
+      "cry": "q.bedrock_stateful('girafarig', 'cry')"
+    },
     "poses": {
       "standing": {
         "poseName": "standing",

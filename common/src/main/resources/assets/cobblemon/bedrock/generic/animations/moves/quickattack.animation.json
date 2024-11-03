@@ -2,7 +2,7 @@
 	"format_version": "1.8.0",
 	"animations": {
 		"animation.quickattack.actor": {
-			"animation_length": 1.75,
+			"animation_length": 2.5833,
 			"bones": {
 				"root_part": {
 					"position": {
@@ -16,7 +16,7 @@
 							"lerp_mode": "catmullrom"
 						},
 						"1.2083": {
-							"post": [0, 0, -30],
+							"post": [0, 0, -35],
 							"lerp_mode": "catmullrom"
 						},
 						"1.375": {
@@ -40,9 +40,14 @@
 						"1.0833": [1, 1, 1],
 						"1.125": {"pre": [1, 1, 1], "post": [0, 0, 0]},
 						"1.1667": {"pre": [0, 0, 0], "post": [1, 1, 1]},
-						"1.2083": {"pre": [1, 1, 1], "post": [0, 0, 0]},
+						"1.2083": {"pre": [1, 1, 1.8], "post": [0, 0, 0]},
 						"1.6667": {"pre": [0, 0, 0], "post": [1, 1, 1]}
 					}
+				}
+			},
+			"sound_effects": {
+				"0.75": {
+					"effect": "move.quickattack.actor"
 				}
 			},
 			"particle_effects": {

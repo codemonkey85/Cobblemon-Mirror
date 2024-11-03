@@ -3,6 +3,7 @@
   "portraitTranslation": [-0.09,0,0],
   "profileScale": 0.61,
   "profileTranslation": [-0.01, 0.86, 0],
+  "rootBone": "charmander",
   "animations": {
     "cry": "q.bedrock_stateful('charmander', 'cry')",
     "special": "q.bedrock_primary('charmander', 'special', q.curve('symmetrical_wide'))"
@@ -80,7 +81,7 @@
         "STAND"
       ],
       "isTouchingWater": true,
-      "isSubmergedInWater": false,
+      "isUnderWater": false,
       "animations": [
         "q.look('head')",
         "q.bedrock('charmander', 'surfacewater_idle')"
@@ -100,7 +101,7 @@
         "WALK"
       ],
       "isTouchingWater": true,
-      "isSubmergedInWater": false,
+      "isUnderWater": false,
       "animations": [
         "q.look('head')",
         "q.bedrock('charmander', 'surfacewater_swim')"
