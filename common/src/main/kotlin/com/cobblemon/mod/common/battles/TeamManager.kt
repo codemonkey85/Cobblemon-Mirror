@@ -18,7 +18,7 @@ import java.util.*
  * @author Segfault Guy, JazzMcNade
  * @since October 26th, 2024
  */
-object TeamManager : RequestManager<TeamManager.TeamRequest>("team") {
+object TeamManager : RequestManager<TeamManager.TeamRequest>() {
 
     init {
         register(this)
@@ -39,6 +39,7 @@ object TeamManager : RequestManager<TeamManager.TeamRequest>("team") {
         override val expiryTime: Int = 60
     ) : ServerPlayerActionRequest
     {
+        override val requestKey: String = "team"
         override val requestID: UUID = UUID.randomUUID()
         val challengedTime = Instant.now()
         fun isExpired() = Instant.now().isAfter(challengedTime.plusSeconds(expiryTime.toLong()))
@@ -166,12 +167,12 @@ object TeamManager : RequestManager<TeamManager.TeamRequest>("team") {
             request.notifyReceiver(true, "battle.error.no_pokemon_opponent")
         }
         else if (existingReceiverTeam != null) {
-            request.notifySender(true, "$langKey.error.existing_team.other", request.receiver.name.copy().aqua())
-            request.notifyReceiver(true, "$langKey.error.existing_team.self")
+            request.notifySender(true, "error.existing_team.other", request.receiver.name.copy().aqua())
+            request.notifyReceiver(true, "error.existing_team.self")
         }
         else if (existingSenderTeam != null && existingSenderTeam.teamPlayersUUID.count() >= MAX_TEAM_MEMBER_COUNT) {
-            request.notifySender(true, "$langKey.error.max_team_size.other", request.receiver.name.copy().aqua())
-            request.notifyReceiver(true, "$langKey.error.max_team_size.self")
+            request.notifySender(true, "error.max_team_size.other", request.receiver.name.copy().aqua())
+            request.notifyReceiver(true, "error.max_team_size.self")
         }
         else {
             return true

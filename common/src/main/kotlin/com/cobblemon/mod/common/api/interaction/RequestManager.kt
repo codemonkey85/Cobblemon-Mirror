@@ -19,7 +19,7 @@ import java.util.*
  * @author Segfault Guy
  * @since October 26th, 2024
  */
-abstract class RequestManager<T : ServerPlayerActionRequest>(val langKey: String) {
+abstract class RequestManager<T : ServerPlayerActionRequest> {
 
     /**
      * Tracking of the active [ServerPlayerActionRequest]s by their sender.
@@ -89,7 +89,8 @@ abstract class RequestManager<T : ServerPlayerActionRequest>(val langKey: String
         val removeOutbound = outboundRequests.remove(request.senderID, request)
         val removeInbound = inbound?.remove(request) == true
         if (removeInbound && inbound?.size == 0) inboundRequests.remove(request.receiverID, inbound)
-        if (removeInbound != removeOutbound) this.log("Inbound and Outbound PlayerActionRequest desync")  // USE ADDREQUEST AND REMOVEREQUEST
+        if (removeInbound != removeOutbound)
+            Cobblemon.LOGGER.error("RequestManager: PlayerActionRequest desync")  // USE ADDREQUEST AND REMOVEREQUEST
 
         val isRemoved = removeInbound && removeOutbound
         if (isRemoved) request.sendToReceiver(this.expirationPacket(request))
@@ -97,32 +98,39 @@ abstract class RequestManager<T : ServerPlayerActionRequest>(val langKey: String
     }
 
     /** Notifies and removes an outbound request [T] sent by [ServerPlayerActionRequest.sender] to [ServerPlayerActionRequest.receiver]. */
-    open fun cancelRequest(request: T, expired: Boolean = false) {
+    open fun cancelRequest(request: T, terminator: ServerPlayer? = null) {
         if (!this.removeRequest(request)) return
-        if (expired) {
-            request.notifySender(true, "$langKey.expired.self", request.receiver.name.copy().aqua())
-            request.notifyReceiver(true, "$langKey.expired.other", request.sender.name.copy().aqua())
+        // canceled by expiration
+        if (terminator == null) {
+            request.notifySender(true, "expired.sender", request.receiver.name.copy().aqua())
+            request.notifyReceiver(true, "expired.receiver", request.sender.name.copy().aqua())
         }
+        // canceled by sender
+        else if (request.sender == terminator) {
+            request.notifySender(true, "canceled.sender", request.receiver.name.copy().aqua())
+            request.notifyReceiver(true, "canceled.receiver", request.sender.name.copy().aqua())
+        }
+        // canceled by other (RECEIVERS DECLINE, NOT CANCEL. THIS IS FOR OTHER TEAM MEMBERS.)
         else {
-            request.notifySender(true, "$langKey.canceled.self", request.receiver.name.copy().aqua())
-            request.notifyReceiver(true, "$langKey.canceled.other", request.sender.name.copy().aqua())
+            request.notifySender(true, "canceled.other", terminator.name.copy().aqua())
+            request.notifyReceiver(true, "canceled.other", terminator.name.copy().aqua())
         }
     }
 
     /** Sends an outbound request [T] from [ServerPlayerActionRequest.sender] to [ServerPlayerActionRequest.receiver]. */
     open fun sendRequest(request: T): Boolean {
-        val existingRequest = this.getOutboundRequestByRecipient(request.senderID, request.receiverID)
+        val existingRequest = this.getOutboundRequest(request.senderID)
         val pendingRequest = this.getInboundRequestBySender(request.senderID, request.receiverID)
 
         // old request
         if (existingRequest != null && existingRequest.receiverID != request.receiverID)
-            this.cancelRequest(existingRequest)
-        // if sender already has an outgoing request to the receiver they're trying to send to.
+            this.cancelRequest(existingRequest, existingRequest.sender)
+        // if sender already has a request awaiting a response from the receiver they're trying to send to.
         if (existingRequest != null && existingRequest.receiverID == request.receiverID)
-            request.notify(request.sender, true, "$langKey.error.duplicate", request.receiver.name.copy().aqua())
+            request.notify(request.sender, true, "error.duplicate", request.receiver.name.copy().aqua())
         // if sender already has a pending request from the receiver they're trying to send to.
         else if (pendingRequest != null)
-            request.notify(request.sender, true, "$langKey.error.pending", request.receiver.name.copy().aqua())
+            request.notify(request.sender, true, "error.pending", request.receiver.name.copy().aqua())
         // verify sending player can interact with target player
         else if (!this.isValidInteraction(request.sender, request.receiver))
             request.notify(request.sender, true, "ui.interact.failed")
@@ -131,9 +139,9 @@ abstract class RequestManager<T : ServerPlayerActionRequest>(val langKey: String
         // new request
         else {
             this.addRequest(request)
-            afterOnServer(seconds = request.expiryTime.toFloat()) { this.cancelRequest(request, true) }
-            request.notifySender(false, "$langKey.sent", request.receiver.name.copy().aqua())
-            request.notifyReceiver(false, "$langKey.received", request.receiver.name.copy().aqua())
+            afterOnServer(seconds = request.expiryTime.toFloat()) { this.cancelRequest(request) }
+            request.notifySender(false, "sent", request.receiver.name.copy().aqua())
+            request.notifyReceiver(false, "received", request.sender.name.copy().aqua())
             return true
         }
         return false
@@ -149,7 +157,7 @@ abstract class RequestManager<T : ServerPlayerActionRequest>(val langKey: String
 
         // verify request being responded to still valid
         if (request == null)
-            receiver.sendSystemMessage(lang("$langKey.error.request_already_expired").red(), false)
+            receiver.sendSystemMessage(lang("error.request_already_expired").red(), false)
         // verify receiving player can respond to sending player
         else if (!this.isValidInteraction(request.receiver, request.sender))
             request.notify(receiver, true, "ui.interact.failed")
@@ -158,8 +166,8 @@ abstract class RequestManager<T : ServerPlayerActionRequest>(val langKey: String
             request.notify(receiver, true, "ui.interact.unavailable")
         // if no condition is blocking acceptance, accept
         else if (this.canAccept(request)) {
-            request.notifySender(false, "$langKey.accept.other",  request.receiver.name.copy().aqua())
-            request.notifyReceiver(false, "$langKey.accept.self", request.sender.name.copy().aqua())
+            request.notifySender(false, "accept.sender",  request.receiver.name.copy().aqua())
+            request.notifyReceiver(false, "accept.receiver", request.sender.name.copy().aqua())
             accepted = true
         }
 
@@ -173,17 +181,23 @@ abstract class RequestManager<T : ServerPlayerActionRequest>(val langKey: String
     /** Declines an inbound request [requestID] for [receiver]. */
     open fun declineRequest(receiver: ServerPlayer, requestID: UUID) {
         val request = inboundRequests.get(receiver.uuid)?.find { it.requestID == requestID } ?: return
-        request.notifySender(false, "$langKey.decline.other", request.receiver.name.copy().aqua())
-        request.notifyReceiver(false, "$langKey.decline.self", request.sender.name.copy().aqua())
+        request.notifySender(false, "decline.sender", request.receiver.name.copy().aqua())
+        request.notifyReceiver(false, "decline.receiver", request.sender.name.copy().aqua())
         this.removeRequest(request)
     }
 
-    /** Cancels pending outbound requests sent from [sender]. */
-    protected open fun onLogoff(sender: ServerPlayer) {
-        outboundRequests.get(sender.uuid)?.let { this.cancelRequest(it) }   // ONLY from the player. see TeamManager for how team requests are canceled on team disband.
+    /** Cancels pending outbound requests sent from, and pending inbound request sent to, [player]. */
+    protected open fun onLogoff(player: ServerPlayer) {
+        // ONLY regarding the player. see TeamManager for how team requests are canceled on team disband.
+        outboundRequests.get(player.uuid)?.let { request ->
+            this.cancelRequest(request, player)
+        }
+        inboundRequests.get(player.uuid)?.let { requests ->
+            requests.forEach { request ->
+                this.declineRequest(player, request.requestID)
+            }
+        }
     }
-
-    protected fun log(message: String) = Cobblemon.LOGGER.error("RequestManager [$langKey]: $message")
 
     companion object {
         private val managers = mutableListOf<RequestManager<*>>()

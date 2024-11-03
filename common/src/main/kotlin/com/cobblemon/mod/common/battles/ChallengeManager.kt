@@ -24,7 +24,7 @@ import java.util.*
  * @author Segfault Guy, JazzMcNade
  * @since October 28th, 2024
  */
-object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>("challenge") {
+object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>() {
 
     init {
         register(this)
@@ -59,7 +59,9 @@ object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>("chal
         override val selectedPokemonId: UUID,
         override val battleFormat: BattleFormat,
         override val expiryTime: Int = 20
-    ) : BattleChallenge()
+    ) : BattleChallenge() {
+        override val requestKey: String = "challenge"
+    }
 
     /** TEAM-to-TEAM BattleChallenge */
     data class MultiBattleChallenge(
@@ -69,6 +71,7 @@ object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>("chal
         override val battleFormat: BattleFormat,    // TODO force this to be multi battletype
         override val expiryTime: Int = 20
     ) : BattleChallenge(), ServerTeamActionRequest {
+        override val requestKey: String = "challenge.multi"
         override val senderTeam: MultiBattleTeam = sender.getBattleTeam() ?: throw IllegalArgumentException("Sending player is not part of a team!")
         override val receiverTeam: MultiBattleTeam = receiver.getBattleTeam() ?: throw IllegalArgumentException("Target player is not part of a team!")
     }
@@ -111,8 +114,8 @@ object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>("chal
             val existingSenderTeam = TeamManager.getTeam(request.senderID)
             // validate teams
             if (existingReceiverTeam == null || existingSenderTeam == null) {
-                request.notifySender(true, "$langKey.error.missing_team")
-                request.notifyReceiver(true, "$langKey.error.missing_team")
+                request.notifySender(true, "error.missing_team")
+                request.notifyReceiver(true, "error.missing_team")
                 return false;
             }
 
@@ -120,13 +123,13 @@ object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>("chal
             val leads = players.mapNotNull { it.party().first().uuid }
             // validate team sizes
             if (players.count() != MAX_TEAM_MEMBER_COUNT * 2) {
-                request.notifySender(true, "$langKey.error.invalid_team_size", MAX_TEAM_MEMBER_COUNT)
-                request.notifyReceiver(true, "$langKey.error.invalid_team_size", MAX_TEAM_MEMBER_COUNT)
+                request.notifySender(true, "error.invalid_team_size", MAX_TEAM_MEMBER_COUNT)
+                request.notifyReceiver(true, "error.invalid_team_size", MAX_TEAM_MEMBER_COUNT)
             }
             // validate parties
             else if (leads.count() != players.count()) {
-                request.notifySender(true, "$langKey.error.missing_pokemon")
-                request.notifyReceiver(true, "$langKey.error.missing_pokemon")
+                request.notifySender(true, "error.missing_pokemon")
+                request.notifyReceiver(true, "error.missing_pokemon")
             }
             // validate dimension
             else if (this.validateDimension(players)) {
@@ -142,12 +145,12 @@ object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>("chal
         }
         else {
             if (request.receiver.party().none()) {
-                request.notifySender(true, "$langKey.error.missing_pokemon.self")
-                request.notifyReceiver(true, "$langKey.error.missing_pokemon")
+                request.notifySender(true, "error.missing_pokemon.self")
+                request.notifyReceiver(true, ".error.missing_pokemon")
             }
             else if (request.sender.party().none()) {
-                request.notifySender(true, "$langKey.error.missing_pokemon.personal")
-                request.notifyReceiver(true, "$langKey.error.missing_pokemon")
+                request.notifySender(true, "error.missing_pokemon.personal")
+                request.notifyReceiver(true, "error.missing_pokemon")
             }
             else return true
         }

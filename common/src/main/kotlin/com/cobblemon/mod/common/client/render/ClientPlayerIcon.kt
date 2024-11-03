@@ -157,6 +157,8 @@ abstract class ClientPlayerIcon(expiryTime: Int? = null) {
         }
         // TODO make some api so this is expandable? i cant be assed right now
 
+        fun clear() = trackedIcons.clear()
+
         fun onRenderPlayer(player: Player) = trackedIcons[player.uuid]?.render(player)
     }
 }

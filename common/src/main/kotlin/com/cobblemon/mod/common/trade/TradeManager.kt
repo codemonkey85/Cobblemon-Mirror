@@ -32,7 +32,7 @@ import net.minecraft.server.level.ServerPlayer
  * @author Hiroku
  * @since March 4th, 2023
  */
-object TradeManager : RequestManager<TradeManager.TradeRequest>("trade") {
+object TradeManager : RequestManager<TradeManager.TradeRequest>() {
 
     init {
         register(this)
@@ -50,6 +50,7 @@ object TradeManager : RequestManager<TradeManager.TradeRequest>("trade") {
         override val receiver: ServerPlayer,
         override val expiryTime: Int = 20
     ) : ServerPlayerActionRequest {
+        override val requestKey: String = "trade"
         override val requestID: UUID = UUID.randomUUID()
     }
 
@@ -72,12 +73,12 @@ object TradeManager : RequestManager<TradeManager.TradeRequest>("trade") {
 
     override fun canAccept(request: TradeRequest): Boolean {
         if (request.sender.party().none()) {
-            request.notifySender(true, "$langKey.insufficient_pokemon.self")
-            request.notifyReceiver(true, "$langKey.insufficient_pokemon.other", request.sender.name.copy().aqua())
+            request.notifySender(true, "error.insufficient_pokemon.self")
+            request.notifyReceiver(true, "error.insufficient_pokemon.other", request.sender.name.copy().aqua())
         }
         else if (request.receiver.party().none()) {
-            request.notifySender(true, "$langKey.insufficient_pokemon.other", request.sender.name.copy().aqua())
-            request.notifyReceiver(true, "$langKey.insufficient_pokemon.self")
+            request.notifySender(true, "error.insufficient_pokemon.other", request.sender.name.copy().aqua())
+            request.notifyReceiver(true, "error.insufficient_pokemon.self")
         }
         // isBusy already checks if sender is in an active trade
         else return true
@@ -86,11 +87,11 @@ object TradeManager : RequestManager<TradeManager.TradeRequest>("trade") {
 
     override fun isValidInteraction(player: ServerPlayer, target: ServerPlayer): Boolean = player.canInteractWith(target, Cobblemon.config.tradeMaxDistance)
 
-    override fun onLogoff(sender: ServerPlayer) {
-        super.onLogoff(sender)
-        val trade = this.getActiveTrade(sender.uuid)
+    override fun onLogoff(player: ServerPlayer) {
+        super.onLogoff(player)
+        val trade = this.getActiveTrade(player.uuid)
         if (trade != null) {
-            val tradeParticipant = trade.getTradeParticipant(sender.uuid)
+            val tradeParticipant = trade.getTradeParticipant(player.uuid)
             val oppositeParticipant = trade.getOppositePlayer(tradeParticipant)
             oppositeParticipant.cancelTrade(trade)
             this.removeActiveTrade(trade)

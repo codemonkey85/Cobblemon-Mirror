@@ -69,7 +69,6 @@ fun createPlayerInteractGui(optionsPacket: PlayerInteractOptionsPacket): Interac
             if (tradeOffer == null) {
                 CobblemonNetwork.sendToServer(OfferTradePacket(optionsPacket.targetId))
             } else {
-                Cobblemon.LOGGER.error("trade remove: " + optionsPacket.targetId)
                 CobblemonClient.requests.tradeOffers.remove(optionsPacket.targetId)
                 CobblemonNetwork.sendToServer(AcceptTradeRequestPacket(tradeOffer.requestID))
             }

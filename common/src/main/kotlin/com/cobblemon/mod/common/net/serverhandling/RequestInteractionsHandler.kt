@@ -41,7 +41,14 @@ object RequestInteractionsHandler : ServerNetworkPacketHandler<RequestPlayerInte
         ) == targetPlayerEntity) {
             val squaredDistance = targetPlayerEntity.position().distanceToSqr(player.position())
             if (squaredDistance <= Cobblemon.config.tradeMaxDistance.pow(2)) {
-                options[PlayerInteractOptionsPacket.Options.TRADE] = PlayerInteractOptionsPacket.OptionStatus.AVAILABLE
+                val playerPartyCount = player.party().count()
+                val targetPartyCount = (targetPlayerEntity as ServerPlayer).party().count()
+                if (playerPartyCount >= 1 && targetPartyCount >= 1) {
+                    options[PlayerInteractOptionsPacket.Options.TRADE] = PlayerInteractOptionsPacket.OptionStatus.AVAILABLE
+                }
+                else {
+                    options[PlayerInteractOptionsPacket.Options.TRADE] = PlayerInteractOptionsPacket.OptionStatus.INSUFFICIENT_POKEMON
+                }
             } else {
                 options[PlayerInteractOptionsPacket.Options.TRADE] = PlayerInteractOptionsPacket.OptionStatus.TOO_FAR
             }

@@ -14,9 +14,7 @@ import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.api.text.yellow
 import com.cobblemon.mod.common.battles.TeamManager
-import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.lang
-import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import java.util.UUID
 
@@ -45,6 +43,9 @@ interface PlayerActionRequest {
  */
 interface ServerPlayerActionRequest : PlayerActionRequest {
 
+    /** The subkey identifying lang entries associated with this request. */
+    val requestKey: String
+
     /** The player initiating this interaction request. */
     val sender: ServerPlayer
 
@@ -64,15 +65,13 @@ interface ServerPlayerActionRequest : PlayerActionRequest {
 
     /** Notifies the sending party of this request about [langKey]. */
     fun notifySender(error: Boolean, langKey: String, vararg params: Any) = notify(sender, error, langKey, *params)
-    //relatedName: Component? = null,
 
     /** Notifies the receiving party of this request about [langKey]. */
     fun notifyReceiver(error: Boolean, langKey: String, vararg params: Any) = notify(receiver, error, langKey, *params)
-    //relatedName: Component? = null,
 
     /** System message to inform individual [player] about [langKey]. */
     fun notify(player: ServerPlayer, error: Boolean, langKey: String, vararg params: Any) {
-        val lang = lang(langKey, *params).apply { if (error) red() else yellow() }
+        val lang = lang("$requestKey.$langKey", *params).apply { if (error) red() else yellow() }
         player.sendSystemMessage(lang, false)
     }
 }

@@ -104,6 +104,7 @@ object CobblemonClient {
         checkedStarterScreen = false
         CobblemonDataProvider.canReload = true
         DeferredRenderer.clearAll()
+        ClientPlayerIcon.clear()
     }
 
     fun initialize(implementation: CobblemonClientImplementation) {
