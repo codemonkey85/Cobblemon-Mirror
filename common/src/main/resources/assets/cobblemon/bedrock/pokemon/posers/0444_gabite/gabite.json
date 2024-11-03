@@ -10,45 +10,22 @@
   "poses": {
     "battle-idle": {
       "poseName": "battle-idle",
-      "poseTypes": [
-        "STAND"
-      ],
+      "poseTypes": ["STAND"],
       "isBattle": true,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('gabite', 'battle_idle')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('gabite', 'battle_idle')"]
     },
     "standing": {
       "poseName": "standing",
-      "poseTypes": [
-        "STAND",
-        "FLOAT",
-        "NONE",
-        "PORTRAIT",
-        "PROFILE"
-      ],
+      "poseTypes": ["STAND", "FLOAT", "NONE", "PORTRAIT", "PROFILE"],
       "isBattle": false,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('gabite', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('gabite', 'blink')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('gabite', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('gabite', 'blink')"]
     },
     "walking": {
       "poseName": "walking",
-      "poseTypes": [
-        "WALK",
-        "SWIM"
-      ],
-      "animations": [
-        "q.bedrock('gabite', 'ground_walk')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('gabite', 'blink')"
-      ]
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": ["q.bedrock('gabite', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('gabite', 'blink')"]
     }
   }
 }

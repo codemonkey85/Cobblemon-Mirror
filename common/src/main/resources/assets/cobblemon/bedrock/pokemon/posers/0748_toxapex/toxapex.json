@@ -1,53 +1,34 @@
 {
   "portraitScale": 1.46,
-  "portraitTranslation": [0.11,-0.15,0],
+  "portraitTranslation": [0.11, -0.15, 0],
   "profileScale": 0.46,
-  "profileTranslation": [0,0.95,0],
+  "profileTranslation": [0, 0.95, 0],
   "rootBone": "toxapex",
   "animations": {
     "cry": "q.bedrock_stateful('toxapex', 'cry')"
   },
   "poses": {
     "portrait": {
-      "poseTypes": [
-        "PORTRAIT",
-        "PROFILE"
-      ],
-      "animations": [
-        "q.bedrock('toxapex', 'portrait_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('toxapex', 'blink')"
-      ]
+      "poseTypes": ["PORTRAIT", "PROFILE"],
+      "animations": ["q.bedrock('toxapex', 'portrait_idle')"],
+      "quirks": ["q.bedrock_quirk('toxapex', 'blink')"]
     },
     "standing": {
-      "poseTypes": ["STAND","FLOAT", "NONE"],
-      "animations": [
-        "q.bedrock('toxapex', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('toxapex', 'blink')"
-      ]
+      "poseTypes": ["STAND", "FLOAT", "NONE"],
+      "animations": ["q.bedrock('toxapex', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('toxapex', 'blink')"]
     },
     "walking": {
       "poseTypes": ["WALK", "SWIM"],
-      "animations": [
-        "q.bedrock('toxapex', 'ground_walk')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('toxapex', 'blink')"
-      ]
+      "animations": ["q.bedrock('toxapex', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('toxapex', 'blink')"]
     },
     "sleep": {
-        "poseTypes": [
-          "SLEEP"
-        ],
-        "namedAnimations": { 
-        "cry": "q.bedrock_stateful('dummy', 'cry')" 
-        },
-        "animations": [
-           "q.bedrock('toxapex', 'sleep')"
-        ]
-      }
+      "poseTypes": ["SLEEP"],
+      "namedAnimations": {
+        "cry": "q.bedrock_stateful('dummy', 'cry')"
+      },
+      "animations": ["q.bedrock('toxapex', 'sleep')"]
+    }
   }
 }

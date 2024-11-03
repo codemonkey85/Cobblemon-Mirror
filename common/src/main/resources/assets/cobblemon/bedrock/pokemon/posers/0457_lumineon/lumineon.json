@@ -1,95 +1,51 @@
 {
-    "portraitScale": 1.3,
-    "portraitTranslation": [-0.08,-0.39,0],
-    "profileScale": 0.65,
-    "profileTranslation": [0,0.6,0],
-    "rootBone": "lumineon",
-    "animations": {
-      "cry": "q.bedrock_stateful('lumineon', 'cry')"
+  "portraitScale": 1.3,
+  "portraitTranslation": [-0.08, -0.39, 0],
+  "profileScale": 0.65,
+  "profileTranslation": [0, 0.6, 0],
+  "rootBone": "lumineon",
+  "animations": {
+    "cry": "q.bedrock_stateful('lumineon', 'cry')"
+  },
+  "poses": {
+    "portrait": {
+      "poseTypes": ["PORTRAIT", "PROFILE"],
+      "animations": ["q.bedrock('lumineon', 'water_idle')"],
+      "quirks": ["q.bedrock_quirk('lumineon', 'blink')"]
     },
-    "poses": {
-      "portrait": {
-        "poseTypes": [
-          "PORTRAIT",
-          "PROFILE"
-        ],
-        "animations": [
-          "q.bedrock('lumineon', 'water_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lumineon', 'blink')"
-        ]
-      },
-      "standing": {
-        "poseTypes": [
-          "STAND",
-          "NONE"
-        ],
-        "isTouchingWater": false,
-        "animations": [
-          "q.bedrock('lumineon', 'ground_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lumineon', 'blink')"
-        ]
-      },
-      "seafloor_standing": {
-        "poseTypes": [
-          "STAND"
-        ],
-        "isTouchingWater": true,
-        "animations": [
-          "q.bedrock('lumineon', 'seafloor_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lumineon', 'blink')"
-        ]
-      },
-      "walking": {
-        "poseTypes": [
-          "WALK"
-        ],
-        "isTouchingWater": false,
-        "animations": [
-          "q.bedrock('lumineon', 'ground_walk')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lumineon', 'blink')"
-        ]
-      },
-      "seafloor_walking": {
-        "poseTypes": [
-          "WALK"
-        ],
-        "isTouchingWater": true,
-        "animations": [
-          "q.bedrock('lumineon', 'seafloor_walk')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lumineon', 'blink')"
-        ]
-      },
-      "float": {
-        "poseTypes": [
-          "FLOAT"
-        ],
-        "animations": [
-          "q.bedrock('lumineon', 'water_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lumineon', 'blink')"
-        ]
-      },
-      "swim": {
-        "poseTypes": [
-          "SWIM"
-        ],
-        "animations": [
-          "q.bedrock('lumineon', 'water_swim')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lumineon', 'blink')"
-        ]
-      }
+    "standing": {
+      "poseTypes": ["STAND", "NONE"],
+      "isTouchingWater": false,
+      "animations": ["q.bedrock('lumineon', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('lumineon', 'blink')"]
+    },
+    "seafloor_standing": {
+      "poseTypes": ["STAND"],
+      "isTouchingWater": true,
+      "animations": ["q.bedrock('lumineon', 'seafloor_idle')"],
+      "quirks": ["q.bedrock_quirk('lumineon', 'blink')"]
+    },
+    "walking": {
+      "poseTypes": ["WALK"],
+      "isTouchingWater": false,
+      "animations": ["q.bedrock('lumineon', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('lumineon', 'blink')"]
+    },
+    "seafloor_walking": {
+      "poseTypes": ["WALK"],
+      "isTouchingWater": true,
+      "animations": ["q.bedrock('lumineon', 'seafloor_walk')"],
+      "quirks": ["q.bedrock_quirk('lumineon', 'blink')"]
+    },
+    "float": {
+      "poseTypes": ["FLOAT"],
+      "animations": ["q.bedrock('lumineon', 'water_idle')"],
+      "quirks": ["q.bedrock_quirk('lumineon', 'blink')"]
+    },
+    "swim": {
+      "poseTypes": ["SWIM"],
+      "animations": ["q.bedrock('lumineon', 'water_swim')"],
+      "quirks": ["q.bedrock_quirk('lumineon', 'blink')"]
     }
   }
+}

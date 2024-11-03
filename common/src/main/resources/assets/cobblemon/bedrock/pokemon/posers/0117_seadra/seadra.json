@@ -10,36 +10,22 @@
   "poses": {
     "standing": {
       "poseTypes": ["STAND", "NONE"],
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('seadra', 'water_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('seadra', 'blink')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('seadra', 'water_idle')"],
+      "quirks": ["q.bedrock_quirk('seadra', 'blink')"]
     },
     "walking": {
       "poseTypes": ["WALK"],
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('seadra', 'ground_walk')"
-      ],
+      "animations": ["q.look('head')", "q.bedrock('seadra', 'ground_walk')"],
       "quirks": ["q.bedrock_quirk('seadra', 'blink')"]
     },
     "float": {
       "poseTypes": ["FLOAT", "PORTRAIT", "PROFILE"],
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('seadra', 'water_idle')"
-      ],
+      "animations": ["q.look('head')", "q.bedrock('seadra', 'water_idle')"],
       "quirks": ["q.bedrock_quirk('seadra', 'blink')"]
     },
     "swim": {
       "poseTypes": ["SWIM"],
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('seadra', 'water_swim')"
-      ],
+      "animations": ["q.look('head')", "q.bedrock('seadra', 'water_swim')"],
       "quirks": ["q.bedrock_quirk('seadra', 'blink')"]
     }
   }

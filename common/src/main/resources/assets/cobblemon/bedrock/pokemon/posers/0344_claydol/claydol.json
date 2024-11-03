@@ -1,56 +1,28 @@
 {
-    "portraitScale": 1.26,
-    "portraitTranslation": [-0.58,0.93,0],
-    "profileScale": 0.58,
-    "profileTranslation": [0,0.89,0],
-    "rootBone": "claydol",
-    "poses": {
-      "walking": {
-        "poseTypes": [
-          "WALK",
-          "SWIM"
-        ],
-        "animations": [
-          "q.bedrock('claydol', 'air_fly')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('claydol', 'blink')"
-        ]
-      },
-      "hover": {
-        "poseTypes": [
-          "HOVER",
-          "STAND",
-          "FLOAT",
-          "NONE",
-          "PORTRAIT",
-          "PROFILE"
-        ],
-        "animations": [
-          "q.bedrock('claydol', 'air_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('claydol', 'blink')"
-        ]
-      },
-      "fly": {
-        "poseTypes": [
-          "FLY"
-        ],
-        "animations": [
-            "q.bedrock('claydol', 'air_fly')"
-        ],
-        "quirks": [
-            "q.bedrock_quirk('claydol', 'blink')"
-        ]
-      },
-      "sleep": {
-        "poseTypes": [
-          "SLEEP"
-        ],
-        "animations": [
-          "q.bedrock('claydol', 'sleep')"
-        ]
-      }
+  "portraitScale": 1.26,
+  "portraitTranslation": [-0.58, 0.93, 0],
+  "profileScale": 0.58,
+  "profileTranslation": [0, 0.89, 0],
+  "rootBone": "claydol",
+  "poses": {
+    "walking": {
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": ["q.bedrock('claydol', 'air_fly')"],
+      "quirks": ["q.bedrock_quirk('claydol', 'blink')"]
+    },
+    "hover": {
+      "poseTypes": ["HOVER", "STAND", "FLOAT", "NONE", "PORTRAIT", "PROFILE"],
+      "animations": ["q.bedrock('claydol', 'air_idle')"],
+      "quirks": ["q.bedrock_quirk('claydol', 'blink')"]
+    },
+    "fly": {
+      "poseTypes": ["FLY"],
+      "animations": ["q.bedrock('claydol', 'air_fly')"],
+      "quirks": ["q.bedrock_quirk('claydol', 'blink')"]
+    },
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('claydol', 'sleep')"]
     }
   }
+}

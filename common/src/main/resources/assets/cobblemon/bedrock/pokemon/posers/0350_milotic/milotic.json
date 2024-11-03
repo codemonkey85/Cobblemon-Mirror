@@ -1,8 +1,8 @@
 {
   "portraitScale": 1.49,
-  "portraitTranslation": [-0.88,1.4,0],
+  "portraitTranslation": [-0.88, 1.4, 0],
   "profileScale": 0.48,
-  "profileTranslation": [-0.1,0.93,0],
+  "profileTranslation": [-0.1, 0.93, 0],
   "rootBone": "milotic",
   "animations": {
     "cry": "q.bedrock_stateful('milotic', 'cry')"
@@ -18,12 +18,8 @@
         "PROFILE",
         "NONE"
       ],
-      "animations": [
-        "q.bedrock('milotic', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('milotic', 'blink')"
-      ]
+      "animations": ["q.bedrock('milotic', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('milotic', 'blink')"]
     }
   }
 }

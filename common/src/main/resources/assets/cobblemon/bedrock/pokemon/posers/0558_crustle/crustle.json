@@ -1,44 +1,28 @@
 {
-    "portraitScale": 2.21,
-    "portraitTranslation": [-0.89,-1.61,0],
-    "profileScale": 0.59,
-    "profileTranslation": [0,0.82,0],
-    "rootBone": "crustle",
-    "animations": {
-      "cry": "q.bedrock_stateful('crustle', 'cry')"
+  "portraitScale": 2.21,
+  "portraitTranslation": [-0.89, -1.61, 0],
+  "profileScale": 0.59,
+  "profileTranslation": [0, 0.82, 0],
+  "rootBone": "crustle",
+  "animations": {
+    "cry": "q.bedrock_stateful('crustle', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseTypes": ["STAND", "FLOAT", "NONE", "PORTRAIT", "PROFILE"],
+      "animations": ["q.look('head')", "q.bedrock('crustle', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('crustle', 'blink')"]
     },
-    "poses": {
-      "standing": {
-        "poseTypes": [
-          "STAND",
-          "FLOAT",
-          "NONE",
-          "PORTRAIT",
-          "PROFILE"
-        ],
-        "animations": [
-          "q.look('head')",
-          "q.bedrock('crustle', 'ground_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('crustle', 'blink')"
-        ]
-      },
-      "walking": {
-        "poseTypes": [
-          "WALK",
-          "SWIM"
-        ],
-        "animations": [
-          "q.look('head')",
-          "q.biped_walk(0.66, 0.6, 'leg_back_left', 'leg_back_right')",
-          "q.quadruped_walk(0.66, 0.6, 'leg_front_left', 'leg_front_right', 'leg_middle_left', 'leg_middle_right')",
-          "q.bimanual_swing(0.33, 0.3, 'arm_left', 'arm_right')",
-          "q.bedrock('crustle', 'ground_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('crustle', 'blink')"
-        ]
-      }
+    "walking": {
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": [
+        "q.look('head')",
+        "q.biped_walk(0.66, 0.6, 'leg_back_left', 'leg_back_right')",
+        "q.quadruped_walk(0.66, 0.6, 'leg_front_left', 'leg_front_right', 'leg_middle_left', 'leg_middle_right')",
+        "q.bimanual_swing(0.33, 0.3, 'arm_left', 'arm_right')",
+        "q.bedrock('crustle', 'ground_idle')"
+      ],
+      "quirks": ["q.bedrock_quirk('crustle', 'blink')"]
     }
   }
+}

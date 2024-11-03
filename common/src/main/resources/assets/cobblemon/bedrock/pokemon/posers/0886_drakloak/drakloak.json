@@ -1,64 +1,42 @@
 {
-  "portraitScale": 2.30,
-  "portraitTranslation": [-0.52,0.96,0],
+  "portraitScale": 2.3,
+  "portraitTranslation": [-0.52, 0.96, 0],
   "profileScale": 0.72,
-  "profileTranslation": [-0.01,0.83,0],
+  "profileTranslation": [-0.01, 0.83, 0],
   "rootBone": "drakloak",
   "animations": {
     "cry": "q.bedrock_stateful('drakloak', 'cry')"
   },
   "poses": {
     "battle-standing": {
-      "poseTypes": [
-        "STAND"
-      ],
+      "poseTypes": ["STAND"],
       "isBattle": true,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('drakloak', 'battle_idle')"
-      ],
+      "animations": ["q.look('head')", "q.bedrock('drakloak', 'battle_idle')"],
       "quirks": [
         "q.bedrock_quirk('drakloak', 'blink')",
         "q.bedrock_quirk('drakloak', 'blink2')"
       ]
     },
     "standing": {
-      "poseTypes": [
-        "STAND",
-        "NONE",
-        "PORTRAIT",
-        "PROFILE"
-      ],
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
       "isBattle": false,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('drakloak', 'ground_idle')"
-      ],
+      "animations": ["q.look('head')", "q.bedrock('drakloak', 'ground_idle')"],
       "quirks": [
         "q.bedrock_quirk('drakloak', 'blink')",
         "q.bedrock_quirk('drakloak', 'blink2')"
       ]
     },
     "walking": {
-      "poseTypes": [
-        "WALK"
-      ],
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('drakloak', 'ground_walk')"
-      ],
+      "poseTypes": ["WALK"],
+      "animations": ["q.look('head')", "q.bedrock('drakloak', 'ground_walk')"],
       "quirks": [
         "q.bedrock_quirk('drakloak', 'blink')",
         "q.bedrock_quirk('drakloak', 'blink2')"
       ]
     },
     "sleep": {
-      "poseTypes": [
-        "SLEEP"
-      ],
-      "animations": [
-        "q.bedrock('drakloak', 'sleep')"
-      ]
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('drakloak', 'sleep')"]
     }
   }
 }

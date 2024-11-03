@@ -1,64 +1,39 @@
 {
-    "portraitScale": 2.6,
-    "portraitTranslation": [-0.22,-1.6,0],
-    "profileScale": 0.75,
-    "profileTranslation": [0,0.67,0],
-    "rootBone": "fomantis",
-    "animations": {
-      "cry": "q.bedrock_stateful('fomantis', 'cry')"
+  "portraitScale": 2.6,
+  "portraitTranslation": [-0.22, -1.6, 0],
+  "profileScale": 0.75,
+  "profileTranslation": [0, 0.67, 0],
+  "rootBone": "fomantis",
+  "animations": {
+    "cry": "q.bedrock_stateful('fomantis', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('fomantis', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('fomantis', 'blink')"]
     },
-    "poses": {
-      "standing": {
-        "poseTypes": [
-          "STAND",
-          "NONE",
-          "PORTRAIT",
-          "PROFILE"
-        ],
-        "isBattle": false,
-        "animations": [
-          "q.look('head')",
-          "q.bedrock('fomantis', 'ground_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('fomantis', 'blink')"
-        ]
+    "walking": {
+      "poseTypes": ["WALK"],
+      "animations": ["q.look('head')", "q.bedrock('fomantis', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('fomantis', 'blink')"]
+    },
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "isWild": false,
+      "namedAnimations": {
+        "cry": "q.bedrock_stateful('dummy', 'cry')"
       },
-      "walking": {
-        "poseTypes": [
-          "WALK"
-        ],
-        "animations": [
-          "q.look('head')",
-          "q.bedrock('fomantis', 'ground_walk')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('fomantis', 'blink')"
-        ]
+      "animations": ["q.bedrock('fomantis', 'sleep')"]
+    },
+    "wild_sleep": {
+      "poseTypes": ["SLEEP"],
+      "isWild": true,
+      "namedAnimations": {
+        "cry": "q.bedrock_stateful('dummy', 'cry')"
       },
-      "sleep": {
-        "poseTypes": [
-          "SLEEP"
-        ],
-        "isWild": false,
-        "namedAnimations": { 
-        "cry": "q.bedrock_stateful('dummy', 'cry')" 
-        },
-        "animations": [
-          "q.bedrock('fomantis', 'sleep')"
-        ]
-      },
-      "wild_sleep": {
-        "poseTypes": [
-          "SLEEP"
-        ],
-        "isWild": true,
-        "namedAnimations": { 
-        "cry": "q.bedrock_stateful('dummy', 'cry')" 
-        },
-        "animations": [
-          "q.bedrock('fomantis', 'wild_sleep')"
-        ]
-      }
+      "animations": ["q.bedrock('fomantis', 'wild_sleep')"]
     }
   }
+}

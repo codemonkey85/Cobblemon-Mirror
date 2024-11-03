@@ -11,60 +11,31 @@
     "portrait": {
       "poseName": "portrait",
       "isBattle": false,
-      "poseTypes": [
-        "PORTRAIT"
-      ],
-      "animations": [
-        "q.bedrock('diggersby', 'portrait')"
-      ]
+      "poseTypes": ["PORTRAIT"],
+      "animations": ["q.bedrock('diggersby', 'portrait')"]
     },
     "battle-idle": {
       "poseName": "battle-idle",
-      "poseTypes": [
-        "STAND"
-      ],
+      "poseTypes": ["STAND"],
       "isBattle": true,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('diggersby', 'battle_idle')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('diggersby', 'battle_idle')"]
     },
     "standing": {
       "poseName": "standing",
-      "poseTypes": [
-        "STAND",
-        "NONE",
-        "PROFILE",
-        "FLOAT"
-      ],
+      "poseTypes": ["STAND", "NONE", "PROFILE", "FLOAT"],
       "isBattle": false,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('diggersby', 'ground_idle')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('diggersby', 'ground_idle')"]
     },
     "walking": {
       "poseName": "walking",
-      "poseTypes": [
-        "WALK",
-        "SWIM"
-      ],
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('diggersby', 'ground_walk')"
-      ]
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": ["q.look('head')", "q.bedrock('diggersby', 'ground_walk')"]
     },
     "sleeping": {
       "poseName": "sleeping",
-      "poseTypes": [
-        "SLEEP"
-      ],
-      "animations": [
-        "q.bedrock('diggersby', 'sleep')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('diggersby', 'quirk_sleep')"
-      ]
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('diggersby', 'sleep')"],
+      "quirks": ["q.bedrock_quirk('diggersby', 'quirk_sleep')"]
     }
   }
 }
