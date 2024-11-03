@@ -8,21 +8,6 @@
     "cry": "q.bedrock_stateful('gyarados', 'cry')"
   },
   "poses": {
-    "portrait": {
-      "poseTypes": [
-        "PORTRAIT",
-        "PROFILE"
-      ],
-      "isBattle": false,
-      "isTouchingWater": false,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('gyarados', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('gyarados', 'blink')"
-      ]
-    },
     "battle-standing": {
       "poseTypes": [
         "STAND"
@@ -39,7 +24,9 @@
     "standing": {
       "poseTypes": [
         "STAND",
-        "NONE"
+        "NONE",
+        "PORTRAIT",
+        "PROFILE"
       ],
       "isBattle": false,
       "isTouchingWater": false,
