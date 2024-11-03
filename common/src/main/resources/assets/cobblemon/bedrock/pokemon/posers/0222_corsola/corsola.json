@@ -3,6 +3,10 @@
   "portraitTranslation": [0.02, -0.7, 0],
   "profileScale": 0.9,
   "profileTranslation": [0.01, 0.45, 0],
+  "rootBone": "corsola",
+  "animations": {
+    "cry": "q.bedrock_stateful('corsola', 'cry')"
+  },
   "poses": {
     "standing": {
       "poseTypes": [ "STAND", "FLOAT", "PORTRAIT", "PROFILE", "NONE" ],

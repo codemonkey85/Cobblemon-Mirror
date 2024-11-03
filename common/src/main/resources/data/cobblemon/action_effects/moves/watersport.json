@@ -1,0 +1,36 @@
+{
+  "timeline": [
+    {
+      "type": "add_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "animation",
+      "animation": ["watersport", "water", "status"],
+      "delay": 1.2
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:watersport_actor",
+      "locator": "root"
+    },
+    {
+      "type": "pause",
+      "pause": 0.45
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:watersport_targetrain",
+      "locator": "root",
+      "delay": 1.75
+    },
+    {
+      "type": "remove_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "pause",
+      "pause": 1.95
+    }
+  ]
+}

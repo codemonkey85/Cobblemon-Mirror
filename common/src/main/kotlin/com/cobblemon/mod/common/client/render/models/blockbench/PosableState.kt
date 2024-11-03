@@ -236,6 +236,10 @@ abstract class PosableState : Schedulable {
         }
     }
 
+    fun getMatchingLocators(locator: String): List<String> {
+        return locatorStates.keys.filter { it.matches("${locator}[0-9]*".toRegex()) }
+    }
+
     /** Decides how an update to partial ticks should be applied to the state. See [FloatingState] for how it could happen. */
     abstract fun updatePartialTicks(partialTicks: Float)
 
