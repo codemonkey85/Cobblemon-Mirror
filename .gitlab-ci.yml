@@ -1,4 +1,4 @@
-image: amazoncorretto:21
+image: amazoncorretto:21-alpine
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
@@ -71,6 +71,7 @@ merge_on_lang_change:
   script:
     # Check for changes in the specified file or directory
     - |
+      apk add git
       if git diff --name-only "$CI_COMMIT_BEFORE_SHA" "$CI_COMMIT_SHA" | grep -q "common/src/main/resources/assets/cobblemon/lang/en_US.json"; then
         echo "US locale changed! Updating lang branch..."
       
