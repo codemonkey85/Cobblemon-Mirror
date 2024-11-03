@@ -2,32 +2,24 @@
     "type": "minecraft:chest",
     "pools": [
         {
-            "bonus_rolls": 0.0,
-            "entries": [
-                {
-                    "type": "minecraft:item",
-                    "name": "minecraft:heart_of_the_sea",
-                    "weight": 1
-                }
-            ],
-            "rolls": 1.0
-        },
-        {
             "rolls": {
                 "type": "minecraft:uniform",
-                "max": 2.0,
+                "max": 1.0,
                 "min": 0.0
             },
             "bonus_rolls": 0.0,
             "entries": [
                 {
                     "type": "minecraft:item",
-                    "name": "minecraft:nautilus_shell",
+                    "name": "cobblemon:water_stone",
                     "weight": 1,
                     "functions": [
                         {
                             "function": "set_count",
-                            "count": 1
+                            "count": {
+                                "min": 1,
+                                "max": 2
+                            }
                         }
                     ]
                 }
@@ -36,8 +28,8 @@
         {
             "rolls": {
                 "type": "minecraft:uniform",
-                "max": 2.0,
-                "min": 1.0
+                "max": 3.0,
+                "min": 2.0
             },
             "bonus_rolls": 0.0,
             "entries": [
@@ -49,32 +41,8 @@
                         {
                             "function": "set_count",
                             "count": {
-                                "min": 7,
-                                "max": 12
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "rolls": {
-                "type": "minecraft:uniform",
-                "max": 1.0,
-                "min": 1.0
-            },
-            "bonus_rolls": 0.0,
-            "entries": [
-                {
-                    "type": "minecraft:item",
-                    "name": "minecraft:diamond",
-                    "weight": 1,
-                    "functions": [
-                        {
-                            "function": "set_count",
-                            "count": {
-                                "min": 1,
-                                "max": 4
+                                "min": 3,
+                                "max": 9
                             }
                         }
                     ]
@@ -97,8 +65,8 @@
                         {
                             "function": "set_count",
                             "count": {
-                                "min": 3,
-                                "max": 12
+                                "min": 4,
+                                "max": 8
                             }
                         }
                     ]
@@ -111,8 +79,8 @@
                         {
                             "function": "set_count",
                             "count": {
-                                "min": 3,
-                                "max": 12
+                                "min": 4,
+                                "max": 8
                             }
                         }
                     ]
@@ -123,13 +91,60 @@
             "rolls": {
                 "type": "minecraft:uniform",
                 "max": 1.0,
-                "min": 1.0
+                "min": 0.0
             },
             "bonus_rolls": 0.0,
             "entries": [
                 {
                     "type": "minecraft:item",
-                    "name": "cobblemon:mystic_water",
+                    "name": "minecraft:nautilus_shell",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "rolls": {
+                "type": "minecraft:uniform",
+                "max": 1.0,
+                "min": 0.0
+            },
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:fishing_rod",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": 1
+                        },
+                        {
+                            "function": "enchant_randomly",
+                            "only_compatible": true
+                        }
+                    ]
+                },
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:spyglass",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:compass",
                     "weight": 1,
                     "functions": [
                         {
@@ -150,56 +165,43 @@
             "entries": [
                 {
                     "type": "minecraft:item",
-                    "name": "cobblemon:deep_sea_tooth",
+                    "name": "cobblemon:net_ball",
                     "weight": 1,
                     "functions": [
                         {
                             "function": "set_count",
-                            "count": 1
+                            "count": {
+                                "min": 3,
+                                "max": 5
+                            }
                         }
                     ]
                 },
                 {
                     "type": "minecraft:item",
-                    "name": "cobblemon:deep_sea_scale",
+                    "name": "cobblemon:dive_ball",
                     "weight": 1,
                     "functions": [
                         {
                             "function": "set_count",
-                            "count": 1
+                            "count": {
+                                "min": 3,
+                                "max": 5
+                            }
                         }
                     ]
                 },
                 {
                     "type": "minecraft:item",
-                    "name": "cobblemon:dragon_scale",
+                    "name": "cobblemon:lure_ball",
                     "weight": 1,
                     "functions": [
                         {
                             "function": "set_count",
-                            "count": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "minecraft:item",
-                    "name": "cobblemon:prism_scale",
-                    "weight": 1,
-                    "functions": [
-                        {
-                            "function": "set_count",
-                            "count": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "minecraft:item",
-                    "name": "cobblemon:shell_bell",
-                    "weight": 1,
-                    "functions": [
-                        {
-                            "function": "set_count",
-                            "count": 1
+                            "count": {
+                                "min": 3,
+                                "max": 5
+                            }
                         }
                     ]
                 }
@@ -208,24 +210,69 @@
         {
             "rolls": {
                 "type": "minecraft:uniform",
-                "max": 3.0,
-                "min": 2.0
+                "max": 2.0,
+                "min": 0.0
             },
             "bonus_rolls": 0.0,
             "entries": [
                 {
                     "type": "minecraft:item",
-                    "name": "cobblemon:pokerod_smithing_template",
-                    "weight": 2,
+                    "name": "cobblemon:water_gem",
+                    "weight": 1,
                     "functions": [
                         {
                             "function": "set_count",
-                            "count": 1
+                            "count": {
+                                "min": 3,
+                                "max": 6
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "minecraft:item",
+                    "name": "cobblemon:dark_gem",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 3,
+                                "max": 6
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "minecraft:item",
+                    "name": "cobblemon:ghost_gem",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 3,
+                                "max": 6
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "minecraft:item",
+                    "name": "cobblemon:dragon_gem",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 3,
+                                "max": 6
+                            }
                         }
                     ]
                 }
             ]
         }
     ],
-    "random_sequence": "cobblemon:shipwreck_coves/gilded_chests/big_treasure"
+    "random_sequence": "cobblemon:shipwreck_coves/gilded_chests/lesser_treasure"
 }
