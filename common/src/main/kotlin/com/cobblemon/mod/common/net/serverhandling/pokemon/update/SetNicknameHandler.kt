@@ -27,11 +27,6 @@ object SetNicknameHandler : ServerNetworkPacketHandler<SetNicknamePacket> {
     const val MAX_NAME_LENGTH = 12
 
     override fun handle(packet: SetNicknamePacket, server: MinecraftServer, player: ServerPlayer) {
-        val nickname = packet.nickname
-        if (nickname != null && nickname.length > MAX_NAME_LENGTH) {
-            return
-        }
-
         val pokemonStore: PokemonStore<*> = if (packet.isParty) {
             player.party()
         } else {
@@ -39,6 +34,13 @@ object SetNicknameHandler : ServerNetworkPacketHandler<SetNicknamePacket> {
         }
 
         val pokemon = pokemonStore[packet.pokemonUUID] ?: return
+
+        val nickname = packet.nickname
+        if (nickname != null && nickname.length > MAX_NAME_LENGTH) {
+            return run {
+                player.sendPacket(NicknameUpdatePacket({ pokemon }, pokemon.nickname))
+            }
+        }
 
         CobblemonEvents.POKEMON_NICKNAMED.postThen(
             event = PokemonNicknamedEvent(
