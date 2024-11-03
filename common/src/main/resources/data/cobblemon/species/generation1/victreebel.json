@@ -25,6 +25,19 @@
   "eggGroups": [
     "grass"
   ],
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.185
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
+  },
   "drops": {
     "amount": 2,
     "entries": [
@@ -168,10 +181,10 @@
   ],
   "preEvolution": "weepinbell",
   "evolutions": [],
-  "baseScale": 1.5,
+  "baseScale": 0.95,
   "hitbox": {
-    "width": 0.7,
-    "height": 1.1,
+    "width": 1.15,
+    "height": 2,
     "fixed": false
   },
   "baseFriendship": 70,

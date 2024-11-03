@@ -7,18 +7,18 @@
 - Added Lure Ball functionality, increasing the catch rate of Pokémon that were caught on a fishing rod.
 - Added Repeat Ball functionality, increasing the catch rate of Pokémon that are already registered as caught in a player's Pokédex.
 - Added property chaining support for duplicate CustomPokemonPropertyType elements.
+- Added flat level battling with options to set all Pokemon to level 50, 100, or 5 for the duration of a battle. No experience or EVs are granted for a flat battle.
 - Added `aspect` and `unaspect` PokemonProperty arguments (which also includes commands such as `/pokemonedit`, `/spawnpokemon`, and `/givepokemon`) to allow forcing or un-forcing an aspect on a Pokémon.
 - Added `type` alternatively `elemental_type` PokemonProperty argument, this is only used for filtering and is not applied to Pokémon. Example `type=fire` would be true for Charmander but false for Squirtle.
 - Added support for Double Battles, Triple Battles, and Multi-battles.
 - CriticalCaptures and Pokédex progress capture multiplier now work with the Pokédex.
 - Added extra visuals to early berry growth stages.
-- Hidden Power now displays its effective typing.
 - Moves impacted by the abilities Pixelate, Refrigerate, Aerilate, Galvanize, and Normalize now display as their altered typing.
 - Added Polished Tumblestone and Tumblestone Brick block sets from Tumblestone, Black Tumblestone, and Sky Tumblestone.
+- Added Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
+- Added particles for moves: Watersport, Mud Sport, and Psychic.
 - Added Fire, Water, Thunder, Leaf, Ice, Sun, Moon, Shiny, Dawn, and Dusk Stone storage blocks.
 - Added Eject Pack, Metronome, Protective Pads, Punching Glove, Room Service, Scope Lens, Shed Shell, Terrain Extender, Throat Spray, Utility Umbrella, Wide Lens, and Zoom Lens held items
-- Moves can now be benched without specifying a replacement move, allowing for empty move slots.
-- Moves learned via Sketch now persist after battle.
 - Added `stonjourner_henge_ruins`, `luna_henge_ruins`, and `sol_henge_ruins` structures.
 - Added a `battleInvulnerability` gamerule to make players invulnerable to any damage during a battle.
 - Added a `mobTargetInBattle` gamerule to exclude players from being targeted by mobs during a battle.
@@ -30,10 +30,18 @@
 - New config setting `displayEntityNameLabel` and `displayEntityLabelsWhenCrouchingOnly` to control what and when is displayed for the pokemon label
 - `/freezepokemon` command to pause a Pokémon's animation at a specific point in time.
 - Added `no_ai` and `freeze_frame` options to the `/spawnpokemon` command.
+- Added shiny Pokémon effects.
+- Added effects for the burn status effect.
+- Added effects for the moves: Psychic, Water Sport, and Mud Sport.
+- Added a new universal locator called "top".
 - Added shiny Pokémon particles with sound effects.
 - Added animation for trading.
 
 ### Pokémon Added
+#### Gen 1
+- Alola Bias Cubone
+- Alolan Marowak
+
 #### Gen 2
 - Ledyba
 - Ledian
@@ -41,13 +49,39 @@
 - Sunflora
 - Wobbuffet
 - Girafarig
+- Corsola
+- Remoraid
+- Octillery
+- Mantine
+- Smeargle
 - Remoraid
 - Octillery
 - Mantine
 - Corsola
 
 #### Gen 3
+- Slakoth
+- Vigoroth
+- Slaking
+- Corphish
+- Crawdaunt
+- Feebas
+- Milotic
 - Wynaut
+- Absol
+- Spheal
+- Sealeo
+- Walrein
+- Bagon
+- Shelgon
+- Salamence
+
+#### Gen 4
+- Shellos [East Sea form]
+- Gastrodon [East Sea form]
+- Finneon
+- Lumineon
+- Mantyke
 - Feebas
 - Milotic
 - Spheal
@@ -66,12 +100,28 @@
 #### Gen 5
 - Purrloin
 - Liepard
+- Scraggy
+- Scrafty
 
 #### Gen 6
 - Clauncher
 - Clawitzer
 
 #### Gen 7
+- Pikipek
+- Trumbeak
+- Toucannon
+- Mareanie
+- Toxapex
+- Sandygast
+- Palossand
+- Bruxish
+
+#### Gen 8
+- Cramorant
+- Hatenna
+- Hattrem
+- Hatterene
 - Bruxish
 - Mareanie
 - Toxapex
@@ -81,16 +131,168 @@
 - Pincurchin
 
 #### Gen 9
+- Wattrel
+- Kilowattrel
+- Wiglett
+- Wugtrio
+- Flamigo
+- Veluza
 - Farigiraf
+- Klawf
 - Finizen
 - Palafin
 - Wiglett
 - Wugtrio
 - Flamigo
 
+#### Unique Forms
+- Magikarp Jump Variants
+- Gyarados Jump Variants
+
 ### Added cries to the following Pokémon
+- Sandshrew, Sandslash
+- Magnemite, Magneton, Magnezone
+- Gastly, Haunter, Gengar
+- Rhyhorn, Rhydon, Rhyperior
+- Happiny, Chansey
+- Horsea, Seadra, Kingdra
+- Magby, Magmar, Magmortar
+- Porygon, Porygon2, Porygon-Z
+- Sentret, Furret
+- Misdreavus, Mismagius
+- Corsola
+- Mantyke, Mantine
+- Girafarig, Farigiraf
+- Wynaut, Wobbuffet
+- Lunatone
+- Solrock
+- Corphish, Crawdaunt
+- Feebas, Milotic
+- Kecleon
+- Absol
+- Spheal, Sealeo, Walrein
+- Relicanth
+- Bagon, Shelgon, Salamence
+- Munchlax
+- Finneon, Lumineon
+- Purrloin, Liepard
 - Timburr, Gurdurr, Conkeldurr
+- Joltik, Galvantula
+- Elgyem, Beheeyem
 - Golett, Golurk
+- Deino, Zweilous, Hydreigon
+- Flabébé, Floette, Florges
+- Clauncher, Clawitzer
+- Mareanie, Toxapex
+- Wimpod, Golisopod
+- Bruxish
+- Hatenna, Hattrem, Hatterene
+- Pincurchin
+- Klawf
+- Finizen, Palafin [Zero], Palafin [Hero]
+- Dondozo
+
+### Added shoulder mounts for the following Pokémon
+- Weedle
+- Caterpie
+- Spearow
+- Mew
+- Murkrow
+- Smoochum
+- Larvitar
+- Tailow
+- Plusle
+- Minun
+- Beldum
+- Starly
+- Buneary
+- Combee
+- Pachirisu
+- Tepig
+- Pidove
+- Petilil, Hisui Bias Petilil
+- Zorua, Hisui Bias Zorua
+- Elgyem
+- Fletchling
+- Skrelp
+- Klefki
+- Litten
+- Fomantis
+- Morelull
+- Dreepy
+- Sprigatito
+- Shroodle
+- Tatsugiri
+- Glimmet
+- Gimmighoul [Roaming]
+
+### Animation updates for the following Pokémon
+- Bellsprout, Weepinbel, Victreebel
+- Shellder, Cloyster
+- Porygon, Porygon2, Porygon-Z
+- Furret
+- Swinub, Piloswine, Mamoswine
+- Skarmory
+- Tyrogue
+- Spinda
+- Torkoal
+- Nincada, Ninjask
+- Lunatone
+- Solrock
+- Buneary, Lopunny
+- Magnezone
+- Alomomola
+- Tepig, Pignite, Emboar
+- Flabebe, Floette, Florges
+- Litten, Torracat, Incineroar
+- Fomantis, Lurantis
+- Dreepy, Drakloak
+- Kleavor
+- Scorbunny
+- Gimmighoul [Roaming]
+
+### Model updates for the following Pokémon
+- Bulbasaur, Ivysaur, Venusaur
+- Charmander, Charmeleon, Charizard
+- Kakuna, Beedrill
+- Lapras
+- Porygon, Porygon2, Porygon-Z
+- Igglybuff, Jigglypuff, Wigglytuff
+- Poliwhirl, Poliwrath
+- Bellsprout, Weepinbell, Victreebel
+- Shellder, Cloyster
+- Gastly, Haunter
+- Onix
+- Krabby, Kingler
+- Rhyhorn, Rhydon, Rhyperior
+- Horsea, Seadra, Kingdra
+- Goldeen, Seaking
+- Magby, Magmar, Magmortar
+- Magikarp, Gyarados
+- Munchlax, Snorlax
+- Swinub, Piloswine, Mamoswine
+- Mudkip, Marshtomp, Swampert
+- Baltoy, Claydol
+- Carvanha
+- Relicanth
+- Prinplup, Empoleon
+- Gible, Gabite, Garchomp
+- Riolu, Lucario
+- Snivy, Servine, Serperior
+- Tepig, Pignite, Emboar
+- Krookodile
+- Dwebble, Crustle
+- Joltik, Galvantula
+- Klink, Klang, Klinglang
+- Golett, Golurk
+- Fennekin, Braixen, Delphox
+- Phantump, Trevenant
+- Litten, Torracat, Incineroar
+- Popplio, Brionne, Primarina
+- Lurantis
+- Scorbunny, Cinderace
+- Quaxly
+- Tatsugiri
 
 ### Changes
 - Buffed Dusk Ball catch multipliers: Increased multiplier to 3.5 (from 3.0) in light level 0. Increased multiplier to 3.0 (from 1.5) in light levels 1-7.
@@ -98,9 +300,7 @@
 - Adjusted some berry balance values like yield and growth times.
 - Adjusted volumes of sounds made by Display Cases, Berry Bushes, Energy Root, Medicinal Leek, Vivichoke, Mints, Revival Herbs and Gilded Chests.
 - Changes to mulch buffs/durations.
-- Dreepy is now shoulder mountable.
 - Updated potion sprites.
-- Weedle, Caterpie, Spearow, Smoochum, Mew, Murkrow, Larvitar, Taillow, Plusle, Minun, Beldum, Starly, Buneary, Combee, Pachirisu, Pidove, Petilil, Hisui Bias Petilil, Zorua, Hisuian Zorua, Elgyem, Fletchling, Skrelp, Klefki, Fomantis, Morelull, Dreepy, Shroodle, Tatsugiri, Glimmet, and Roaming Gimmighoul are now shoulder mountable.
 - Link Cable recipe has been redesigned.
 - Updated sounds for Medicinal Leeks, Big Roots, Energy Roots and Revival Herbs.
 - Updated UI sounds for clicking and evolving Pokémon.
@@ -123,6 +323,15 @@
 - The default number of digits for the Pokédex number in the summary has been increased, from 3 to 4.
 - The pasture block model's screen is now off by default.
 - The Poké Balls creative tab is now named Utility Items as it also encompasses Poké Rod and Pokédex items.
+- Moves can now be benched without specifying a replacement move, allowing for empty move slots.
+- Moves learned via Sketch now persist after battle.
+- Updated potion sprites
+- Removed the interchangeable evolution results for the first stage Hisuian starters to prevent confusion. The method still exists for stage 2 to 3, but stage 1 to 2 was not distinguishable enough for many users.
+- Hidden Power now displays its effective typing.
+- Updated particles for moves: Confusion, Protect, Sand Attack, and Quick Attack.
+- Updated particles for status effects: Paralysis, Poison, and Sleep.
+- Updated particles on Gastly.
+- Revamped stat buff and de-buff particles.
 
 ### Fixes
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating.
@@ -178,6 +387,7 @@
 - Fixed Slowking's battle idle. 
 - Fixed Grafaiai's walk speed to prevent model sliding. 
 - Fixed Alolan Exeggutor's tail not showing in the party UI. It will now also stand in front of all Pokémon in the party menu :)
+- Fixed Timburr duplicating its log while fainting.
 - Fixed reviving items throwing an exception when used in battle.
 - Fixed messages for Focus Sash, Confusion, Mummy, Ice Face, Own Tempo, and Revive.
 - Improve error handling when loading spawn-sets to ensure invalid configurations don't crash the server.

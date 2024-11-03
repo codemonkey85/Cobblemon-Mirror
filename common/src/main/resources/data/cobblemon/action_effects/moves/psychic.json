@@ -1,0 +1,62 @@
+{
+  "timeline": [
+    {
+      "type": "add_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "animation",
+      "animation": ["psychic", "special"],
+      "delay": 1.2
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:psychic_actor",
+      "locator": "special_attack"
+    },
+    {
+      "type": "entity_particles",
+      "effect": "cobblemon:psychic_actordots",
+      "locator": "special_attack"
+    },
+    {
+      "type": "pause",
+      "pause": 0.65
+    },
+    {
+      "type": "entity_particles",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "effect": "cobblemon:psychic_target",
+      "locator": "root"
+    },
+    {
+      "type": "entity_molang",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "expressions": ["q.play_animation(q.bedrock_stateful('psychic', 'target'))"]
+    },
+    {
+      "type": "pause",
+      "pause": 0.95
+    },
+    {
+      "type": "entity_particles",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "effect": "cobblemon:psychic_impact",
+      "locator": "target"
+    },
+    {
+      "type": "entity_particles",
+      "entityCondition": "q.entity.is_user == false && q.missed(q.entity.uuid) == false",
+      "effect": "cobblemon:psychic_impactdots",
+      "locator": "target"
+    },
+    {
+      "type": "remove_holds",
+      "holds": ["effects"]
+    },
+    {
+      "type": "pause",
+      "pause": 1.8
+    }
+  ]
+}

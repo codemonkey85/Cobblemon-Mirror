@@ -55,6 +55,12 @@
       "walk": {
         "canWalk": false
       }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
     }
   },
   "moves": [
@@ -204,10 +210,10 @@
   ],
   "preEvolution": "magneton",
   "evolutions": [],
-  "baseScale": 1.4,
+  "baseScale": 1,
   "hitbox": {
     "width": 1.5,
-    "height": 1,
+    "height": 1.6,
     "fixed": false
   },
   "baseFriendship": 50,

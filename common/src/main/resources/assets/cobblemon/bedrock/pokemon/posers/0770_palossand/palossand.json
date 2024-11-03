@@ -4,6 +4,8 @@
     "profileScale": 0.52,
     "profileTranslation": [0.02,0.85,0],
     "animations": {
+    "recoil": "q.bedrock_stateful('palossand', 'recoil')",
+    "cry": "q.bedrock_stateful('palossand', 'cry')"
     },
     "poses": {
       "standing": {
@@ -15,7 +17,8 @@
           "PROFILE"
         ],
         "animations": [
-          "q.bedrock('palossand', 'ground_idle')"
+          "q.bedrock('palossand', 'ground_idle')",
+          "q.bedrock('palossand', 'shovel_spin')"
         ],
         "quirks": [
           "q.bedrock_quirk('palossand', 'blink')"
@@ -26,7 +29,9 @@
           "WALK"
         ],
         "animations": [
-          "q.bedrock('palossand', 'ground_idle')"
+          "q.bedrock('palossand', 'ground_walk')",
+          "q.bedrock('palossand', 'shovel_spin')",
+          "q.bimanual_swing(0.26, 0.36, 'arm_left', 'arm_right')"
         ],
         "quirks": [
           "q.bedrock_quirk('palossand', 'blink')"

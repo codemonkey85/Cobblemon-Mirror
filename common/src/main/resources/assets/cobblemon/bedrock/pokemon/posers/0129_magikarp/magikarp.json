@@ -3,6 +3,7 @@
   "portraitTranslation": [-0.09,-0.82,0],
   "profileScale": 0.75,
   "profileTranslation": [-0.05,0.57,0],
+  "rootBone": "magikarp",
   "animations": {
     "cry": "q.bedrock_stateful('magikarp', 'cry')"
   },
@@ -56,7 +57,7 @@
         "PROFILE",
         "FLOAT"
       ],
-      "isSubmergedInWater": true,
+      "isUnderWater": true,
       "animations": [
         "q.look('head')",
         "q.bedrock('magikarp', 'water_idle')"
@@ -69,7 +70,7 @@
       "poseTypes": [
         "SWIM"
       ],
-      "isSubmergedInWater": true,
+      "isUnderWater": true,
       "animations": [
         "q.look('head')",
         "q.bedrock('magikarp', 'water_swim')"
@@ -95,7 +96,7 @@
         "STAND"
       ],
       "isTouchingWater": true,
-      "isSubmergedInWater": false,
+      "isUnderWater": false,
       "animations": [
         "q.look('head')",
         "q.bedrock('magikarp', 'surfacewater_idle')"
@@ -116,7 +117,7 @@
         "WALK"
       ],
       "isTouchingWater": true,
-      "isSubmergedInWater": false,
+      "isUnderWater": false,
       "animations": [
         "q.look('head')",
         "q.bedrock('magikarp', 'surfacewater_swim')"

@@ -75,6 +75,7 @@ import com.cobblemon.mod.common.pokemon.evolution.progress.DamageTakenEvolutionP
 import com.cobblemon.mod.common.pokemon.evolution.progress.RecoilEvolutionProgress
 import com.cobblemon.mod.common.pokemon.feature.SeasonFeatureHandler
 import com.cobblemon.mod.common.pokemon.feature.StashHandler
+import com.cobblemon.mod.common.pokemon.properties.BattleCloneProperty
 import com.cobblemon.mod.common.pokemon.properties.UncatchableProperty
 import com.cobblemon.mod.common.pokemon.status.PersistentStatus
 import com.cobblemon.mod.common.pokemon.status.PersistentStatusContainer
@@ -820,6 +821,13 @@ open class Pokemon : ShowdownIdentifiable {
      * @return If the Pokémon is uncatchable.
      */
     fun isUncatchable() = UncatchableProperty.uncatchable().matches(this)
+
+    /**
+     * A utility method that checks if this Pokémon has the [BattleCloneProperty.isBattleClone] property.
+     *
+     * @return If the Pokémon is a battle clone.
+     */
+    fun isBattleClone() = BattleCloneProperty.isBattleClone().matches(this)
 
     /**
      * Returns a copy of the held item.

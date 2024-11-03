@@ -6,7 +6,7 @@
 				"identifier": "geometry.incineroar",
 				"texture_width": 128,
 				"texture_height": 128,
-				"visible_bounds_width": 7,
+				"visible_bounds_width": 5,
 				"visible_bounds_height": 4.5,
 				"visible_bounds_offset": [0, 1.75, 0]
 			},
@@ -61,17 +61,17 @@
 				{
 					"name": "head",
 					"parent": "neck",
-					"pivot": [0.5, 35, 0]
+					"pivot": [0, 40, 0.25]
 				},
 				{
 					"name": "head_correction",
 					"parent": "head",
-					"pivot": [0.5, 35, 0]
+					"pivot": [0, 40, 0.25]
 				},
 				{
 					"name": "head_ai",
 					"parent": "head_correction",
-					"pivot": [0.5, 35, 0]
+					"pivot": [0, 40, 0.25]
 				},
 				{
 					"name": "head_angle",
@@ -1089,7 +1089,7 @@
 				{
 					"name": "leg_right2",
 					"parent": "leg_right1",
-					"pivot": [-3.55, 10, -2.5],
+					"pivot": [-3.55, 11.5, -2.5],
 					"cubes": [
 						{"origin": [-5.55, 6, -2.5], "size": [4, 6, 4], "uv": [79, 36]},
 						{"origin": [-5.05, 1, -2], "size": [3, 5, 3], "uv": [107, 64]}

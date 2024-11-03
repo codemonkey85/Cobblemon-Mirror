@@ -25,6 +25,19 @@
   "eggGroups": [
     "grass"
   ],
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.26
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
+  },
   "drops": {
     "amount": 2,
     "entries": [
@@ -176,10 +189,10 @@
       "requiredContext": "cobblemon:leaf_stone"
     }
   ],
-  "baseScale": 1,
+  "baseScale": 1.1,
   "hitbox": {
-    "width": 0.6,
-    "height": 0.9,
+    "width": 0.8,
+    "height": 0.8,
     "fixed": false
   },
   "baseFriendship": 70,

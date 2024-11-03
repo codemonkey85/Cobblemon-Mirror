@@ -3,6 +3,10 @@
   "portraitTranslation": [-0.16, -0.42, 0],
   "profileScale": 0.92,
   "profileTranslation": [0,0.35,0],
+  "rootBone": "sandygast",
+  "animations": {
+    "cry": "q.bedrock_stateful('sandygast', 'cry')"
+  },
   "poses": {
     "standing": {
       "poseTypes": [
@@ -25,7 +29,8 @@
         "SWIM"
       ],
       "animations": [
-        "q.bedrock('sandygast', 'ground_idle')"
+        "q.bedrock('sandygast', 'ground_walk')",
+        "q.bimanual_swing(0.26, 0.36, 'arm_left', 'arm_right')"
       ],
       "quirks": [
         "q.bedrock_quirk('sandygast', 'blink')"

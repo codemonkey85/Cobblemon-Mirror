@@ -25,9 +25,8 @@ object CobblemonSounds : PlatformRegistry<Registry<SoundEvent>, ResourceKey<Regi
 
     @JvmField
     val GUI_CLICK = this.create("gui.click")
-
     @JvmField
-    val TRADE = this.create("gui.trade")
+    val GUI_TRADE = this.create("gui.trade")
 
     @JvmField
     val PC_ON = this.create("pc.on")

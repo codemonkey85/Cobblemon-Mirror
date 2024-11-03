@@ -19,25 +19,28 @@ import net.minecraft.network.chat.Component
 
 class BattleRequestNavigationButton(
     pX: Int, pY: Int,
+    private val clickHeight: Float = HEIGHT,
     private val forward: Boolean,
     onPress: OnPress
-): Button(pX, pY, (WIDTH * SCALE).toInt(), (CLICK_HEIGHT * SCALE).toInt(), Component.literal("Navigation"), onPress, DEFAULT_NARRATION) {
+): Button(pX, pY, (WIDTH * SCALE).toInt(), (clickHeight * SCALE).toInt(), Component.literal("Navigation"), onPress, DEFAULT_NARRATION) {
 
     companion object {
-        private const val WIDTH = 9F
-        private const val HEIGHT = 16F
-        private const val CLICK_HEIGHT = HEIGHT * 6
-        private const val SCALE = 0.5F
+        const val WIDTH = 9F
+        const val HEIGHT = 16F
+        const val SCALE = 0.5F
         private val forwardButtonResource = cobblemonResource("textures/gui/interact/request/arrow_right.png")
         private val backwardsButtonResource = cobblemonResource("textures/gui/interact/request/arrow_left.png")
     }
 
     override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+        if (!isActive) {
+            return
+        }
         val hovered = (isHovered(pMouseX.toDouble(), pMouseY.toDouble()))
         blitk(
             matrixStack = context.pose(),
             x = x / SCALE,
-            y = (y + (CLICK_HEIGHT - HEIGHT) / 4) / SCALE,
+            y = (y + (clickHeight - HEIGHT) / 4) / SCALE,
             texture = if (forward) forwardButtonResource else backwardsButtonResource,
             width = WIDTH,
             height = HEIGHT,
@@ -51,5 +54,5 @@ class BattleRequestNavigationButton(
         soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.PC_CLICK, 1.0F))
     }
 
-    fun isHovered(mouseX: Double, mouseY: Double) = mouseX.toFloat() in (x.toFloat()..(x.toFloat() + (WIDTH * SCALE))) && mouseY.toFloat() in ((y.toFloat())..(y.toFloat() + (CLICK_HEIGHT * SCALE)))
+    fun isHovered(mouseX: Double, mouseY: Double) = mouseX.toFloat() in (x.toFloat()..(x.toFloat() + (WIDTH * SCALE))) && mouseY.toFloat() in ((y.toFloat())..(y.toFloat() + (clickHeight * SCALE)))
 }
