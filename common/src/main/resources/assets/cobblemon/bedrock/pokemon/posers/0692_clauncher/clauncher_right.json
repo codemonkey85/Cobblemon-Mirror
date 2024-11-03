@@ -1,8 +1,8 @@
 {
   "portraitScale": 1.58,
-  "portraitTranslation": [0.02,-0.85,0],
+  "portraitTranslation": [0.02, -0.85, 0],
   "profileScale": 0.96,
-  "profileTranslation": [-0.17,0.25,0],
+  "profileTranslation": [-0.17, 0.25, 0],
   "rootBone": "clauncher",
   "animations": {
     "cry": "q.bedrock_stateful('clauncher_right', 'cry')"
@@ -10,21 +10,13 @@
   "poses": {
     "standing": {
       "poseTypes": ["STAND", "WALK", "PORTRAIT", "PROFILE", "NONE"],
-      "animations": [
-        "q.bedrock('clauncher_right', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('clauncher_right', 'blink')"
-      ]
+      "animations": ["q.bedrock('clauncher_right', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('clauncher_right', 'blink')"]
     },
     "swimming": {
       "poseTypes": ["SWIM", "FLOAT"],
-      "animations": [
-        "q.bedrock('clauncher_right', 'water_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('clauncher_right', 'blink')"
-      ]
+      "animations": ["q.bedrock('clauncher_right', 'water_idle')"],
+      "quirks": ["q.bedrock_quirk('clauncher_right', 'blink')"]
     }
   }
 }

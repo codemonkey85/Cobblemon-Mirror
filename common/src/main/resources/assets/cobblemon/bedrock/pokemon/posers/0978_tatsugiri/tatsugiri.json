@@ -1,8 +1,8 @@
 {
   "portraitScale": 2.52,
-  "portraitTranslation": [-0.25,-1.55,0],
+  "portraitTranslation": [-0.25, -1.55, 0],
   "profileScale": 0.99,
-  "profileTranslation": [0,0.28,0],
+  "profileTranslation": [0, 0.28, 0],
   "rootBone": "tatsugiri",
   "animations": {
     "cry": "q.bedrock_stateful('tatsugiri', 'cry')"
@@ -18,24 +18,13 @@
         "PROFILE",
         "NONE"
       ],
-      "animations": [
-        "q.bedrock('tatsugiri', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('tatsugiri', 'blink')"
-      ]
+      "animations": ["q.bedrock('tatsugiri', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('tatsugiri', 'blink')"]
     },
     "shoulder_left": {
-      "poseTypes": [
-        "SHOULDER_LEFT"
-      ],
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('tatsugiri', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('tatsugiri', 'blink')"
-      ],
+      "poseTypes": ["SHOULDER_LEFT"],
+      "animations": ["q.look('head')", "q.bedrock('tatsugiri', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('tatsugiri', 'blink')"],
       "transformedParts": [
         {
           "part": "body",
@@ -44,16 +33,9 @@
       ]
     },
     "shoulder_right": {
-      "poseTypes": [
-        "SHOULDER_RIGHT"
-      ],
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('tatsugiri', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('tatsugiri', 'blink')"
-      ],
+      "poseTypes": ["SHOULDER_RIGHT"],
+      "animations": ["q.look('head')", "q.bedrock('tatsugiri', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('tatsugiri', 'blink')"],
       "transformedParts": [
         {
           "part": "body",

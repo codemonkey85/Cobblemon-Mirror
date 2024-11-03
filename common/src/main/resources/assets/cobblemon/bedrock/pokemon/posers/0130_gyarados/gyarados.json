@@ -1,131 +1,68 @@
 {
   "portraitScale": 1.49,
-  "portraitTranslation": [-1.39,1.99,0],
+  "portraitTranslation": [-1.39, 1.99, 0],
   "profileScale": 0.38,
-  "profileTranslation": [-0.15,1.18,-10],
+  "profileTranslation": [-0.15, 1.18, -10],
   "rootBone": "gyarados",
   "animations": {
     "cry": "q.bedrock_stateful('gyarados', 'cry')"
   },
   "poses": {
-    "portrait": {
-      "poseTypes": [
-        "PORTRAIT",
-        "PROFILE"
-      ],
-      "isBattle": false,
-      "isTouchingWater": false,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('gyarados', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('gyarados', 'blink')"
-      ]
-    },
     "battle-standing": {
-      "poseTypes": [
-        "STAND"
-      ],
+      "poseTypes": ["STAND"],
       "isBattle": true,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('gyarados', 'battle_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('gyarados', 'blink')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('gyarados', 'battle_idle')"],
+      "quirks": ["q.bedrock_quirk('gyarados', 'blink')"]
     },
     "standing": {
-      "poseTypes": [
-        "STAND",
-        "NONE"
-      ],
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
       "isBattle": false,
       "isTouchingWater": false,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('gyarados', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('gyarados', 'blink')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('gyarados', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('gyarados', 'blink')"]
     },
     "walking": {
-      "poseTypes": [
-        "WALK"
-      ],
+      "poseTypes": ["WALK"],
       "isTouchingWater": false,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('gyarados', 'ground_walk')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('gyarados', 'blink')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('gyarados', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('gyarados', 'blink')"]
     },
     "float": {
-      "poseTypes": [
-        "FLOAT"
-      ],
+      "poseTypes": ["FLOAT"],
       "isUnderWater": true,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('gyarados', 'water_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('gyarados', 'blink')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('gyarados', 'water_idle')"],
+      "quirks": ["q.bedrock_quirk('gyarados', 'blink')"]
     },
     "swim": {
-      "poseTypes": [
-        "SWIM"
-      ],
+      "poseTypes": ["SWIM"],
       "isUnderWater": true,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('gyarados', 'water_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('gyarados', 'blink')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('gyarados', 'water_idle')"],
+      "quirks": ["q.bedrock_quirk('gyarados', 'blink')"]
     },
     "sleep": {
-      "poseTypes": [
-        "SLEEP"
-      ],
+      "poseTypes": ["SLEEP"],
       "isTouchingWater": false,
-      "animations": [
-        "q.bedrock('gyarados', 'sleep')"
-      ]
+      "animations": ["q.bedrock('gyarados', 'sleep')"]
     },
     "surface_idle": {
-      "poseTypes": [
-        "STAND"
-      ],
+      "poseTypes": ["STAND"],
       "isTouchingWater": true,
       "isUnderWater": false,
       "animations": [
         "q.look('head')",
         "q.bedrock('gyarados', 'surfacewater_idle')"
       ],
-      "quirks": [
-        "q.bedrock_quirk('gyarados', 'blink')"
-      ]
+      "quirks": ["q.bedrock_quirk('gyarados', 'blink')"]
     },
     "surface_swim": {
-      "poseTypes": [
-        "WALK"
-      ],
+      "poseTypes": ["WALK"],
       "isTouchingWater": true,
       "isUnderWater": false,
       "animations": [
         "q.look('head')",
         "q.bedrock('gyarados', 'surfacewater_swim')"
       ],
-      "quirks": [
-        "q.bedrock_quirk('gyarados', 'blink')"
-      ],
+      "quirks": ["q.bedrock_quirk('gyarados', 'blink')"],
       "transformedParts": [
         {
           "part": "body",

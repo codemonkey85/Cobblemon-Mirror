@@ -11,25 +11,16 @@
     "battle-standing": {
       "poseTypes": ["STAND"],
       "isBattle": true,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('sunflora', 'battle_idle')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('sunflora', 'battle_idle')"]
     },
     "standing": {
       "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
       "isBattle": false,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('sunflora', 'ground_idle')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('sunflora', 'ground_idle')"]
     },
     "walking": {
       "poseTypes": ["WALK"],
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('sunflora', 'ground_walk')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('sunflora', 'ground_walk')"]
     },
     "sleep": {
       "poseTypes": ["SLEEP"],

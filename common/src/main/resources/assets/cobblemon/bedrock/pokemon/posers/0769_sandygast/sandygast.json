@@ -2,39 +2,24 @@
   "portraitScale": 1.37,
   "portraitTranslation": [-0.16, -0.42, 0],
   "profileScale": 0.92,
-  "profileTranslation": [0,0.35,0],
+  "profileTranslation": [0, 0.35, 0],
   "rootBone": "sandygast",
   "animations": {
     "cry": "q.bedrock_stateful('sandygast', 'cry')"
   },
   "poses": {
     "standing": {
-      "poseTypes": [
-        "STAND",
-        "FLOAT",
-        "NONE",
-        "PORTRAIT",
-        "PROFILE"
-      ],
-      "animations": [
-        "q.bedrock('sandygast', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('sandygast', 'blink')"
-      ]
+      "poseTypes": ["STAND", "FLOAT", "NONE", "PORTRAIT", "PROFILE"],
+      "animations": ["q.bedrock('sandygast', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('sandygast', 'blink')"]
     },
     "walking": {
-      "poseTypes": [
-        "WALK",
-        "SWIM"
-      ],
+      "poseTypes": ["WALK", "SWIM"],
       "animations": [
         "q.bedrock('sandygast', 'ground_walk')",
         "q.bimanual_swing(0.26, 0.36, 'arm_left', 'arm_right')"
       ],
-      "quirks": [
-        "q.bedrock_quirk('sandygast', 'blink')"
-      ]
+      "quirks": ["q.bedrock_quirk('sandygast', 'blink')"]
     }
   }
 }

@@ -6,31 +6,14 @@
   "rootBone": "regice",
   "poses": {
     "standing": {
-      "poseTypes": [
-        "STAND",
-        "FLOAT",
-        "PORTRAIT",
-        "PROFILE",
-        "NONE"
-      ],
-      "animations": [
-        "q.bedrock('regice', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('regice', 'blink')"
-      ]
+      "poseTypes": ["STAND", "FLOAT", "PORTRAIT", "PROFILE", "NONE"],
+      "animations": ["q.bedrock('regice', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('regice', 'blink')"]
     },
     "walking": {
-      "poseTypes": [
-        "WALK",
-        "SWIM"
-      ],
-      "animations": [
-        "q.bedrock('regice', 'ground_walk')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('regice', 'blink')"
-      ]
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": ["q.bedrock('regice', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('regice', 'blink')"]
     }
   }
 }

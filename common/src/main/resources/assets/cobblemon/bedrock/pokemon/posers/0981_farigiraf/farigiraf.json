@@ -1,35 +1,28 @@
 {
-    "portraitScale": 1.58,
-    "portraitTranslation": [-1.19, 4.37, 0],
-    "profileScale": 0.34,
-    "profileTranslation": [0.01, 1.34, 0],
-    "rootBone": "farigiraf",
-    "animations": {
-      "cry": "q.bedrock_stateful('farigiraf', 'cry')"
+  "portraitScale": 1.58,
+  "portraitTranslation": [-1.19, 4.37, 0],
+  "profileScale": 0.34,
+  "profileTranslation": [0.01, 1.34, 0],
+  "rootBone": "farigiraf",
+  "animations": {
+    "cry": "q.bedrock_stateful('farigiraf', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE", "FLOAT", "HOVER"],
+      "animations": ["q.look('head')", "q.bedrock('farigiraf', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('farigiraf', 'blink')"]
     },
-    "poses": {
-      "standing": {
-        "poseName": "standing",
-        "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE", "FLOAT", "HOVER"],
-        "animations": [
-            "q.look('head')",
-            "q.bedrock('farigiraf', 'ground_idle')"
-        ],
-        "quirks": [
-            "q.bedrock_quirk('farigiraf', 'blink')"
-        ]
-      },
-      "walking": {
-        "poseName": "walking",
-        "poseTypes": ["WALK", "SWIM", "FLY"],
-        "animations": [
-            "q.look('head')",
-            "q.bedrock('farigiraf', 'ground_idle')",
-            "q.quadruped_walk(0.45, 0.7)"
-        ],
-        "quirks": [
-            "q.bedrock_quirk('farigiraf', 'blink')"
-        ]
-      }
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": ["WALK", "SWIM", "FLY"],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('farigiraf', 'ground_idle')",
+        "q.quadruped_walk(0.45, 0.7)"
+      ],
+      "quirks": ["q.bedrock_quirk('farigiraf', 'blink')"]
     }
   }
+}

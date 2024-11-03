@@ -11,25 +11,16 @@
     "battle-standing": {
       "poseTypes": ["STAND"],
       "isBattle": true,
-      "animations": [
-        "q.look('head_ai')",
-        "q.bedrock('kingler', 'battle_idle')"
-      ]
+      "animations": ["q.look('head_ai')", "q.bedrock('kingler', 'battle_idle')"]
     },
     "standing": {
       "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
       "isBattle": false,
-      "animations": [
-        "q.look('head_ai')",
-        "q.bedrock('kingler', 'ground_idle')"
-      ]
+      "animations": ["q.look('head_ai')", "q.bedrock('kingler', 'ground_idle')"]
     },
     "walking": {
       "poseTypes": ["WALK"],
-      "animations": [
-        "q.look('head_ai')",
-        "q.bedrock('kingler', 'ground_walk')"
-      ]
+      "animations": ["q.look('head_ai')", "q.bedrock('kingler', 'ground_walk')"]
     }
   }
 }
