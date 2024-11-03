@@ -10,13 +10,9 @@
   "poses": {
     "battle-standing": {
       "poseName": "battle-standing",
-      "poseTypes": [
-        "STAND"
-      ],
+      "poseTypes": ["STAND"],
       "isBattle": true,
-      "animations": [
-        "q.bedrock('wugtrio', 'battle_idle')"
-      ],
+      "animations": ["q.bedrock('wugtrio', 'battle_idle')"],
       "quirks": [
         "q.bedrock_quirk('wugtrio', 'blink')",
         "q.bedrock_quirk('wugtrio', 'blink2')",
@@ -25,17 +21,9 @@
     },
     "standing": {
       "poseName": "standing",
-      "poseTypes": [
-        "STAND",
-        "WALK",
-        "NONE",
-        "PORTRAIT",
-        "PROFILE"
-      ],
+      "poseTypes": ["STAND", "WALK", "NONE", "PORTRAIT", "PROFILE"],
       "isBattle": false,
-      "animations": [
-        "q.bedrock('wugtrio', 'ground_idle')"
-      ],
+      "animations": ["q.bedrock('wugtrio', 'ground_idle')"],
       "quirks": [
         "q.bedrock_quirk('wugtrio', 'blink')",
         "q.bedrock_quirk('wugtrio', 'blink2')",

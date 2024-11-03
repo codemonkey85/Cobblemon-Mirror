@@ -1,20 +1,17 @@
 {
-    "species": "cobblemon:clawitzer",
-    "order": 1,
-    "variations": [
-      {
-        "aspects": ["right"],
-        "poser": "cobblemon:clawitzer_right",
-        "model": "cobblemon:clawitzer_right.geo",
-        "texture": "cobblemon:textures/pokemon/0693_clawitzer/clawitzer_right.png",
-        "layers": []
-      },
-      {
-        "aspects": [
-          "right",
-          "shiny"
-        ],
-        "texture": "cobblemon:textures/pokemon/0693_clawitzer/clawitzer_right_shiny.png"
-      }
-    ]
-  }
+  "species": "cobblemon:clawitzer",
+  "order": 1,
+  "variations": [
+    {
+      "aspects": ["right"],
+      "poser": "cobblemon:clawitzer_right",
+      "model": "cobblemon:clawitzer_right.geo",
+      "texture": "cobblemon:textures/pokemon/0693_clawitzer/clawitzer_right.png",
+      "layers": []
+    },
+    {
+      "aspects": ["right", "shiny"],
+      "texture": "cobblemon:textures/pokemon/0693_clawitzer/clawitzer_right_shiny.png"
+    }
+  ]
+}

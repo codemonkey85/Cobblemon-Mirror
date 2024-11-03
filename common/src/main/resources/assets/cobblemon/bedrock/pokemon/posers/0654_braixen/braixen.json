@@ -10,49 +10,26 @@
   "poses": {
     "battle-standing": {
       "poseName": "battle-standing",
-      "poseTypes": [
-        "STAND"
-      ],
+      "poseTypes": ["STAND"],
       "isBattle": true,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('braixen', 'battle_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('braixen', 'blink')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('braixen', 'battle_idle')"],
+      "quirks": ["q.bedrock_quirk('braixen', 'blink')"]
     },
     "standing": {
       "poseName": "standing",
-      "poseTypes": [
-        "STAND",
-        "NONE",
-        "PORTRAIT",
-        "PROFILE",
-        "FLOAT"
-      ],
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE", "FLOAT"],
       "isBattle": false,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('braixen', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('braixen', 'blink')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('braixen', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('braixen', 'blink')"]
     },
     "walking": {
       "poseName": "walking",
-      "poseTypes": [
-        "WALK",
-        "SWIM"
-      ],
+      "poseTypes": ["WALK", "SWIM"],
       "animations": [
         "q.look('head')",
         "q.bedrock('braixen', 'ground_walk_old')"
       ],
-      "quirks": [
-        "q.bedrock_quirk('braixen', 'blink')"
-      ],
+      "quirks": ["q.bedrock_quirk('braixen', 'blink')"],
       "transformedParts": [
         {
           "part": "stick_hand",

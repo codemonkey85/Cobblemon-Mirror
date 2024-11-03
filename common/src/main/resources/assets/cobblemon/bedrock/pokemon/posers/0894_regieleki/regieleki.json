@@ -6,32 +6,17 @@
   "rootBone": "regieleki",
   "poses": {
     "standing": {
-      "poseTypes": [
-        "STAND",
-        "FLOAT",
-        "PORTRAIT",
-        "PROFILE",
-        "NONE"
-      ],
-      "animations": [
-        "q.bedrock('regieleki', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('regieleki', 'blink')"
-      ]
+      "poseTypes": ["STAND", "FLOAT", "PORTRAIT", "PROFILE", "NONE"],
+      "animations": ["q.bedrock('regieleki', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('regieleki', 'blink')"]
     },
     "walking": {
-      "poseTypes": [
-        "WALK",
-        "SWIM"
-      ],
+      "poseTypes": ["WALK", "SWIM"],
       "animations": [
         "q.bedrock('regieleki', 'ground_idle')",
         "q.bimanual_swing(0.36, 0.3, 'arm_left', 'arm_right')"
       ],
-      "quirks": [
-        "q.bedrock_quirk('regieleki', 'blink')"
-      ]
+      "quirks": ["q.bedrock_quirk('regieleki', 'blink')"]
     }
   }
 }

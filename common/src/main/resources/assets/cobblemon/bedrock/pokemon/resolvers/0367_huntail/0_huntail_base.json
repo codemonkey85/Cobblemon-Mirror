@@ -1,31 +1,32 @@
 {
-	"species": "cobblemon:huntail",
-	"order": 0,
-	"variations": [{
-			"aspects": [],
-			"poser": "cobblemon:huntail",
-			"model": "cobblemon:huntail.geo",
-			"texture": "cobblemon:textures/pokemon/0367_huntail/huntail.png",
-			"layers": [
-				{
-					"name": "emissive",
-					"texture": "cobblemon:textures/pokemon/0367_huntail/huntail_emissive.png",
-					"emissive": true,
-					"translucent": true
-				}
-			]
-		},
-		{
-			"aspects": ["shiny"],
-			"texture": "cobblemon:textures/pokemon/0367_huntail/huntail_shiny.png",
-			"layers": [
-			{
-				"name": "emissive",
-				"texture": "cobblemon:textures/pokemon/0367_huntail/huntail_shiny_emissive.png",
-				"emissive": true,
-				"translucent": true
-			}			
-			]
-		}
-	]
+  "species": "cobblemon:huntail",
+  "order": 0,
+  "variations": [
+    {
+      "aspects": [],
+      "poser": "cobblemon:huntail",
+      "model": "cobblemon:huntail.geo",
+      "texture": "cobblemon:textures/pokemon/0367_huntail/huntail.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "texture": "cobblemon:textures/pokemon/0367_huntail/huntail_emissive.png",
+          "emissive": true,
+          "translucent": true
+        }
+      ]
+    },
+    {
+      "aspects": ["shiny"],
+      "texture": "cobblemon:textures/pokemon/0367_huntail/huntail_shiny.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "texture": "cobblemon:textures/pokemon/0367_huntail/huntail_shiny_emissive.png",
+          "emissive": true,
+          "translucent": true
+        }
+      ]
+    }
+  ]
 }

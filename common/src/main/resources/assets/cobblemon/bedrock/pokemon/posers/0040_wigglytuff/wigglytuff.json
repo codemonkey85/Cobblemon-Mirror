@@ -10,23 +10,12 @@
   "poses": {
     "standing": {
       "poseName": "standing",
-      "poseTypes": [
-        "STAND",
-        "FLOAT",
-        "NONE",
-        "PORTRAIT",
-        "PROFILE"
-      ],
-      "animations": [
-        "q.bedrock('wigglytuff', 'ground_idle')"
-      ]
+      "poseTypes": ["STAND", "FLOAT", "NONE", "PORTRAIT", "PROFILE"],
+      "animations": ["q.bedrock('wigglytuff', 'ground_idle')"]
     },
     "walking": {
       "poseName": "walking",
-      "poseTypes": [
-        "WALK",
-        "SWIM"
-      ],
+      "poseTypes": ["WALK", "SWIM"],
       "animations": [
         "q.biped_walk(0.66, 0.6, 'foot_left', 'foot_right')",
         "q.bedrock('wigglytuff', 'ground_idle')"

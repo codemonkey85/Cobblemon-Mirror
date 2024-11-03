@@ -10,35 +10,22 @@
   "poses": {
     "standing": {
       "poseName": "standing",
-      "poseTypes": [
-        "STAND",
-        "FLOAT",
-        "NONE",
-        "PORTRAIT",
-        "PROFILE"
-      ],
+      "poseTypes": ["STAND", "FLOAT", "NONE", "PORTRAIT", "PROFILE"],
       "animations": [
         "q.look('head_ai')",
         "q.bedrock('rhyperior', 'ground_idle')"
       ],
-      "quirks": [
-        "q.bedrock_quirk('rhyperior', 'blink')"
-      ]
+      "quirks": ["q.bedrock_quirk('rhyperior', 'blink')"]
     },
     "walking": {
       "poseName": "walking",
-      "poseTypes": [
-        "WALK",
-        "SWIM"
-      ],
+      "poseTypes": ["WALK", "SWIM"],
       "animations": [
         "q.look('head_ai')",
         "q.biped_walk(0.66, 0.6, 'left_upper_leg', 'right_upper_leg')",
         "q.bedrock('rhyperior', 'ground_idle')"
       ],
-      "quirks": [
-        "q.bedrock_quirk('rhyperior', 'blink')"
-      ]
+      "quirks": ["q.bedrock_quirk('rhyperior', 'blink')"]
     }
   }
 }

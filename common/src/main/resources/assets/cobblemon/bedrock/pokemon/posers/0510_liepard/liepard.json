@@ -12,19 +12,13 @@
       "poseName": "battle-standing",
       "poseTypes": ["STAND"],
       "isBattle": true,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('liepard', 'pose')"
-      ],
+      "animations": ["q.look('head')", "q.bedrock('liepard', 'pose')"],
       "quirks": ["q.bedrock_quirk('liepard', 'blink')"]
     },
     "standing": {
       "poseName": "standing",
       "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('liepard', 'ground_idle')"
-      ],
+      "animations": ["q.look('head')", "q.bedrock('liepard', 'ground_idle')"],
       "quirks": ["q.bedrock_quirk('liepard', 'blink')"]
     },
     "walking": {

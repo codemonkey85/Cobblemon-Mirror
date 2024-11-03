@@ -6,19 +6,9 @@
   "rootBone": "registeel",
   "poses": {
     "standing": {
-      "poseTypes": [
-        "STAND",
-        "FLOAT",
-        "PORTRAIT",
-        "PROFILE",
-        "NONE"
-      ],
-      "animations": [
-        "q.bedrock('registeel', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('registeel', 'blink')"
-      ]
+      "poseTypes": ["STAND", "FLOAT", "PORTRAIT", "PROFILE", "NONE"],
+      "animations": ["q.bedrock('registeel', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('registeel', 'blink')"]
     },
     "walking": {
       "poseTypes": ["WALK", "SWIM"],
@@ -26,9 +16,7 @@
         "q.biped_walk(0.4, 0.7, 'leg_left2', 'leg_right2')",
         "q.bedrock('registeel', 'ground_idle')"
       ],
-      "quirks": [
-        "q.bedrock_quirk('registeel', 'blink')"
-      ]
+      "quirks": ["q.bedrock_quirk('registeel', 'blink')"]
     }
   }
 }
