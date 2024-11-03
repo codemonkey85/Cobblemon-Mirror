@@ -27,10 +27,15 @@ interface BrainConfig {
     companion object {
         val types = mutableMapOf<String, Class<out BrainConfig>>(
             "script" to ScriptBrainConfig::class.java,
-
+            "add_tasks_to_activity" to AddTasksToActivity::class.java,
+            "apply_presets" to ApplyPresets::class.java,
+            "set_default_activity" to SetDefaultActivity::class.java,
+            "set_core_activities" to SetCoreActivities::class.java
         )
 
     }
 
+//    fun encode(buffer: RegistryFriendlyByteBuf)
+//    fun decode(buffer: RegistryFriendlyByteBuf)
     fun configure(entity: LivingEntity, brainConfigurationContext: BrainConfigurationContext)
 }

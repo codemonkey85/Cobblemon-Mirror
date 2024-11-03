@@ -11,6 +11,9 @@ package com.cobblemon.mod.common.item.interactive
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
+import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.events.pokemon.healing.PokemonHealedEvent
+import com.cobblemon.mod.common.api.item.HealingSource
 import com.cobblemon.mod.common.api.item.PokemonSelectingItem
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
@@ -30,7 +33,7 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.level.Level
 
-class PotionItem(val type: PotionType) : CobblemonItem(Properties()), PokemonSelectingItem {
+class PotionItem(val type: PotionType) : CobblemonItem(Properties()), PokemonSelectingItem, HealingSource {
     override val bagItem = type
     override fun canUseOnPokemon(pokemon: Pokemon) = !pokemon.isFullHealth() && pokemon.currentHealth > 0
     override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
@@ -48,13 +51,18 @@ class PotionItem(val type: PotionType) : CobblemonItem(Properties()), PokemonSel
         if (pokemon.isFullHealth()) {
             return InteractionResultHolder.fail(stack)
         }
+        var amount = genericRuntime.resolveInt(type.amountToHeal())
+        CobblemonEvents.POKEMON_HEALED.postThen(PokemonHealedEvent(pokemon, amount, this), { cancelledEvent -> return InteractionResultHolder.fail(stack)}) { event ->
+            amount = event.amount
+        }
+        pokemon.currentHealth = min(pokemon.currentHealth + amount, pokemon.maxHealth)
 
         val healthToRestore = genericRuntime.resolveInt(type.amountToHeal())
         pokemon.currentHealth = min(pokemon.currentHealth + healthToRestore, pokemon.maxHealth)
         if (type.curesStatus) {
             pokemon.status = null
         }
-        player.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
+        pokemon.entity?.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
         if (!player.isCreative) {
             stack.shrink(1)
             player.giveOrDropItemStack(ItemStack(Items.GLASS_BOTTLE))
@@ -64,7 +72,7 @@ class PotionItem(val type: PotionType) : CobblemonItem(Properties()), PokemonSel
 
     override fun applyToBattlePokemon(player: ServerPlayer, stack: ItemStack, battlePokemon: BattlePokemon) {
         super.applyToBattlePokemon(player, stack, battlePokemon)
-        player.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
+        battlePokemon.entity?.playSound(CobblemonSounds.MEDICINE_SPRAY_USE, 1F, 1F)
     }
 }
 
