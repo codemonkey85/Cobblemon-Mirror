@@ -35,6 +35,12 @@ interface Targetable {
         }
     }
 
+    fun getOppositeOpponent() : Targetable {
+        val digit = getDigit()
+        val sideSize = getFormat().battleType.pokemonPerSide
+        return getAllActivePokemon().first { pokemon -> !pokemon.isAllied(this) && (sideSize - pokemon.getDigit() + 1) - digit == 0 }
+    }
+
     fun getAdjacentAllies() = getAdjacent().filter { it.isAllied(this) }
     fun getAdjacentOpponents() = getAdjacent().filterNot { it.isAllied(this) }
 
