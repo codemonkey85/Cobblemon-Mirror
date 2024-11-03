@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.animation.Quadru
 import com.cobblemon.mod.common.client.render.models.blockbench.animation.SingleBoneLookAnimation
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.HeadedFrame
 import com.cobblemon.mod.common.client.render.models.blockbench.frame.QuadrupedFrame
+import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonPosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.pose.CobblemonPose
 import com.cobblemon.mod.common.entity.PoseType
@@ -41,7 +42,7 @@ class ZweilousModel (root: ModelPart) : PokemonPosableModel(root), HeadedFrame, 
     lateinit var standing: CobblemonPose
     lateinit var walk: CobblemonPose
 
-//    override val cryAnimation = CryProvider { bedrockStateful("zweilous", "cry") }
+    override val cryAnimation = CryProvider { bedrockStateful("zweilous", "cry") }
 
     override fun registerPoses() {
 

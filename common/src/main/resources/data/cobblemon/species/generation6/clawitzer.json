@@ -24,6 +24,20 @@
     "water_1",
     "water_3"
   ],
+  "behaviour": {
+    "moving": {
+      "canLook": false,
+      "walk": {
+        "walkSpeed": 0.3,
+        "avoidsLand": true
+      },
+      "swim": {
+        "swimSpeed": 0.45,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true
+      }
+    }
+  },
   "moves": [
     "1:darkpulse",
     "1:dragonpulse",

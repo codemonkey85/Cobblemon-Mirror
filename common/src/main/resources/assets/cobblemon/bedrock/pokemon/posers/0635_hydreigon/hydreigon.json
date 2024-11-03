@@ -1,0 +1,56 @@
+{
+    "portraitScale": 1.57,
+    "portraitTranslation": [-1.04,1.93,0],
+    "profileScale": 0.58,
+    "profileTranslation": [0,1.2,0],
+    "rootBone": "hydreigon",
+    "animations": {
+      "cry": "q.bedrock_stateful('hydreigon', 'cry')",
+      "recoil": "q.bedrock_stateful('hydreigon', 'recoil')"
+    },
+    "poses": {
+      "hover": {
+        "poseTypes": [
+          "HOVER",
+          "STAND",
+          "NONE",
+          "PORTRAIT",
+          "PROFILE"
+        ],
+        "animations": [
+          "q.look('head')",
+          "q.bedrock('hydreigon', 'air_idle')",
+          "q.bedrock('hydreigon', 'wing_motion')"
+        ],
+        "quirks": [
+          "q.bedrock_quirk('hydreigon', 'blink')"
+        ]
+      },
+      "fly": {
+        "poseTypes": [
+          "FLY",
+          "WALK"
+        ],
+        "animations": [
+          "q.look('head')",
+          "q.bedrock('hydreigon', 'air_fly')",
+          "q.bedrock('hydreigon', 'wing_motion')"
+        ],
+        "quirks": [
+          "q.bedrock_quirk('hydreigon', 'blink')"
+        ]
+      },
+      "sleep": {
+        "poseTypes": [
+          "SLEEP"
+        ],
+        "namedAnimations": { 
+        "cry": "q.bedrock_stateful('dummy', 'cry')" 
+        },
+        "animations": [
+          "q.bedrock('hydreigon', 'sleep')",
+          "q.bedrock('hydreigon', 'wing_motion')"
+        ]
+      }
+    }
+  }

@@ -3,6 +3,7 @@
   "portraitTranslation": [-1.11,2.43,0],
   "profileScale": 0.51,
   "profileTranslation": [0.05,0.99,-10],
+  "rootBone": "charizard",
   "animations": {
     "cry": "q.bedrock_stateful('charizard', 'cry')",
     "recoil": "q.bedrock_stateful('charizard', 'recoil')",
@@ -115,7 +116,7 @@
         "STAND"
       ],
       "isTouchingWater": true,
-      "isSubmergedInWater": false,
+      "isUnderWater": false,
       "animations": [
         "q.look('head')",
         "q.bedrock('charizard', 'surfacewater_idle')"
@@ -135,7 +136,7 @@
         "WALK"
       ],
       "isTouchingWater": true,
-      "isSubmergedInWater": false,
+      "isUnderWater": false,
       "animations": [
         "q.look('head')",
         "q.bedrock('charizard', 'surfacewater_swim')"

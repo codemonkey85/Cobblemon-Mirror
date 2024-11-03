@@ -120,9 +120,17 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
             } else if (it.maleRatio == 1F) {
                 setOf(Gender.MALE)
             } else {
-                setOf(Gender.FEMALE)
+                setOf(Gender.FEMALE, Gender.MALE)
             }
-        }.toSet()
+        }.toSet() + (if (maleRatio == -1F) {
+            setOf(Gender.GENDERLESS)
+        } else if (maleRatio == 0F) {
+            setOf(Gender.FEMALE)
+        } else if (maleRatio == 1F) {
+            setOf(Gender.MALE)
+        } else {
+            setOf(Gender.FEMALE, Gender.MALE)
+        })
 
     /**
      * Contains the evolutions of this species.

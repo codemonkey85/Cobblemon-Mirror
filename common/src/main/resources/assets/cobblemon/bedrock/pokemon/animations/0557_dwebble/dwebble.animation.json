@@ -4,46 +4,71 @@
 		"animation.dwebble.ground_idle": {
 			"loop": true,
 			"bones": {
-				"leftarm": {
-					"rotation": [0, 45, -30]
+				"body": {
+					"position": [0, 0.5, 0]
 				},
-				"lefthand": {
-					"rotation": [0, 45, 45]
+				"torso": {
+					"rotation": [-10, 0, 0]
 				},
-				"rightarm": {
-					"rotation": [0, -45, 30]
+				"arm_left": {
+					"rotation": [-6.94629, 29.37042, -11.36078]
 				},
-				"righthand": {
-					"rotation": [0, -45, -45]
+				"arm_left2": {
+					"rotation": [17.23227, 31.75787, 41.53921]
+				},
+				"arm_right": {
+					"rotation": [-6.94629, -29.37042, 11.36078]
+				},
+				"head": {
+					"rotation": [12.5, 0, 0]
+				},
+				"tail": {
+					"rotation": [15, 0, 0]
+				},
+				"rock": {
+					"rotation": [-45, 0, 0],
+					"position": [0, -5.5, -1]
+				},
+				"leg_left": {
+					"rotation": [-4.88344, -11.49468, 23.76499]
+				},
+				"leg_left2": {
+					"rotation": [0, 0, -22.5]
+				},
+				"leg_right": {
+					"rotation": [-4.88344, 11.49468, -23.76499]
+				},
+				"leg_right2": {
+					"rotation": [0, 0, 22.5]
+				},
+				"arm_right2": {
+					"rotation": [17.23227, -31.75787, -41.53921]
+				}
+			}
+		},
+		"animation.dwebble.blink": {
+			"animation_length": 0.1667,
+			"bones": {
+				"eyelid_left": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"eyelid_right": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
 				}
 			}
 		},
 		"animation.dwebble.cry": {
-			"animation_length": 0.95833,
-			"bones": {
-				"head": {
-					"rotation": {
-						"0.0": {
-							"post": [0, 0, 0],
-							"lerp_mode": "catmullrom"
-						},
-						"0.125": {
-							"post": [-5, 0, 0],
-							"lerp_mode": "catmullrom"
-						},
-						"0.5833": {
-							"post": [-7.5, 0, 0],
-							"lerp_mode": "catmullrom"
-						},
-						"0.9583": {
-							"post": [0, 0, 0],
-							"lerp_mode": "catmullrom"
-						}
-					}
-				}
-			},
+			"animation_length": 1.2,
 			"sound_effects": {
-				"0.0417": {
+				"0.04": {
 					"effect": "pokemon.dwebble.cry"
 				}
 			}

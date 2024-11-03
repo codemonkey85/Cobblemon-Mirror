@@ -8,6 +8,13 @@
 				"texture": "textures/particles/cotton"
 			}
 		},
+		"events": {
+			"event_sound": {
+				"sound_effect": {
+					"event_name": "move.cottonguard.actor"
+				}
+			}
+		},
 		"components": {
 			"minecraft:emitter_rate_steady": {
 				"spawn_rate": "math.clamp(350 * math.clamp(q.entity_size,0.5,3), 10, 100)",
@@ -15,6 +22,9 @@
 			},
 			"minecraft:emitter_lifetime_once": {
 				"active_time": 2
+			},
+			"minecraft:emitter_lifetime_events": {
+				"creation_event": "event_sound"
 			},
 			"minecraft:emitter_shape_sphere": {
 				"radius": "math.clamp(q.entity_scale,0.9,1) + (1.8 / math.clamp(q.entity_size,1,1.2))",
