@@ -8,7 +8,6 @@
 
 package com.cobblemon.mod.common.net.serverhandling
 
-import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.battles.ChallengeManager
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -36,7 +35,7 @@ object ChallengeResponseHandler : ServerNetworkPacketHandler<BattleChallengeResp
         if (targetedEntity !is ServerPlayer)
             return
         else if (packet.accept)
-            ChallengeManager.acceptRequest(player, packet.requestID)
+            ChallengeManager.acceptRequest(player, packet.requestID, targetedEntity)
         else
             ChallengeManager.declineRequest(player, packet.requestID)
 

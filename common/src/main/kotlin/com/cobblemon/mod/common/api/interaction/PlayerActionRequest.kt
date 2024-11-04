@@ -44,7 +44,7 @@ interface PlayerActionRequest {
 interface ServerPlayerActionRequest : PlayerActionRequest {
 
     /** The subkey identifying lang entries associated with this request. */
-    val requestKey: String
+    val key: String
 
     /** The player initiating this interaction request. */
     val sender: ServerPlayer
@@ -64,14 +64,14 @@ interface ServerPlayerActionRequest : PlayerActionRequest {
     fun sendToReceiver(packet: NetworkPacket<*>) = receiver.sendPacket(packet)
 
     /** Notifies the sending party of this request about [langKey]. */
-    fun notifySender(error: Boolean, langKey: String, vararg params: Any) = notify(sender, error, langKey, *params)
+    fun notifySender(error: Boolean, langKey: String, vararg params: Any) = notify(sender, error, "$key.$langKey", *params)
 
     /** Notifies the receiving party of this request about [langKey]. */
-    fun notifyReceiver(error: Boolean, langKey: String, vararg params: Any) = notify(receiver, error, langKey, *params)
+    fun notifyReceiver(error: Boolean, langKey: String, vararg params: Any) = notify(receiver, error, "$key.$langKey", *params)
 
     /** System message to inform individual [player] about [langKey]. */
     fun notify(player: ServerPlayer, error: Boolean, langKey: String, vararg params: Any) {
-        val lang = lang("$requestKey.$langKey", *params).apply { if (error) red() else yellow() }
+        val lang = lang(langKey, *params).apply { if (error) red() else yellow() }
         player.sendSystemMessage(lang, false)
     }
 }
@@ -99,8 +99,8 @@ interface ServerTeamActionRequest : ServerPlayerActionRequest {
     override fun sendToReceiver(packet: NetworkPacket<*>) = CobblemonNetwork.sendPacketToPlayers(receiverTeam.teamPlayers, packet)
 
     override fun notifySender(error: Boolean, langKey: String, vararg params: Any) =
-        senderTeam.teamPlayers.forEach { this.notify(it, error, langKey, params) }
+        senderTeam.teamPlayers.forEach { this.notify(it, error, "$key.$langKey", *params) }
 
     override fun notifyReceiver(error: Boolean, langKey: String, vararg params: Any) =
-        receiverTeam.teamPlayers.forEach { this.notify(it, error, langKey, params) }
+        receiverTeam.teamPlayers.forEach { this.notify(it, error, "$key.$langKey", *params) }
 }

@@ -9,7 +9,6 @@ import com.cobblemon.mod.common.api.text.aqua
 import com.cobblemon.mod.common.net.messages.client.battle.*
 import com.cobblemon.mod.common.util.*
 import net.minecraft.server.level.ServerPlayer
-import java.time.Instant
 import java.util.*
 
 /**
@@ -39,10 +38,8 @@ object TeamManager : RequestManager<TeamManager.TeamRequest>() {
         override val expiryTime: Int = 60
     ) : ServerPlayerActionRequest
     {
-        override val requestKey: String = "team"
+        override val key: String = "team"
         override val requestID: UUID = UUID.randomUUID()
-        val challengedTime = Instant.now()
-        fun isExpired() = Instant.now().isAfter(challengedTime.plusSeconds(expiryTime.toLong()))
     }
     // TODO right now team requests are sent PLAYER-to-PLAYER. May want to redesign once larger teams are implemented? Or have a 'team lead' who is responsible for inviting?
 
@@ -76,8 +73,13 @@ object TeamManager : RequestManager<TeamManager.TeamRequest>() {
         val pendingTeamRequests = teamEntry.teamPlayersUUID.mapNotNull { member -> this.getOutboundRequest(member) } // team requests are by player
         pendingTeamRequests.forEach { this.cancelRequest(it) }
 
+        // Decline any inbound requests for the team
+        ChallengeManager.getInboundRequests(teamEntry.teamID)?.forEach { ChallengeManager.declineRequest(it) } // multi challenges are by team
+
         // Remove any outstanding multibattle challenges from the team
         ChallengeManager.getOutboundRequest(teamEntry.teamID)?.let { ChallengeManager.cancelRequest(it) } // multi challenges are by team
+
+        // TODO have a way to get all types of requests targeting a team instead of just querying the ChallengeManger
 
         // Notify remaining players that the team has been disbanded
         teamEntry.teamPlayersUUID.forEach { member ->
@@ -104,8 +106,8 @@ object TeamManager : RequestManager<TeamManager.TeamRequest>() {
         if (teamEntry.teamPlayersUUID.count() == 1)  this.disbandTeam(teamEntry)
     }
 
-    /** Adds [player] as a member of [team]. */
-    private fun joinTeam(player: ServerPlayer, team: MultiBattleTeam) {
+    /** Adds [player] as a member of existing [team]. */
+    fun joinTeam(player: ServerPlayer, team: MultiBattleTeam) {
         // decline any other incoming requests to team up
         this.getInboundRequests(player.uuid)?.forEach { this.cancelRequest(it) }    // this is guaranteed to not contain the request currently being accepted
 
@@ -122,13 +124,13 @@ object TeamManager : RequestManager<TeamManager.TeamRequest>() {
         // notify the joiner
         val joinerPacket = TeamJoinNotificationPacket(
             team.teamPlayersUUID,
-            team.teamPlayers.mapNotNull { it.name.plainCopy() }  // TODO is this really necessary
+            team.teamPlayers.mapNotNull { it.name.plainCopy() }
         )
         CobblemonNetwork.sendPacketToPlayer(player, joinerPacket)
     }
 
     /** Creates and registers a [MultiBattleTeam] from [players]. */
-    private fun createTeam(vararg players: ServerPlayer): MultiBattleTeam {
+    fun createTeam(vararg players: ServerPlayer): MultiBattleTeam {
         // decline any other incoming requests to team up
         players.forEach {
             this.getInboundRequests(it.uuid)?.forEach { this.cancelRequest(it) }    // this is guaranteed to not contain the request currently being accepted
@@ -140,7 +142,7 @@ object TeamManager : RequestManager<TeamManager.TeamRequest>() {
         // Notify the team
         val joinerPacket = TeamJoinNotificationPacket(
             team.teamPlayersUUID,
-            players.mapNotNull { it.name.plainCopy() }  // TODO is this really necessary
+            players.mapNotNull { it.name.plainCopy() }
         )
 
         players.forEach {
@@ -152,6 +154,7 @@ object TeamManager : RequestManager<TeamManager.TeamRequest>() {
     }
 
     override fun onAccept(request: TeamRequest) {
+        super.onAccept(request) // notification
         val existingTeam = this.getTeam(request.sender)
         if (existingTeam == null)
             this.createTeam(request.receiver, request.sender)
@@ -163,8 +166,8 @@ object TeamManager : RequestManager<TeamManager.TeamRequest>() {
         val existingReceiverTeam = this.getTeam(request.receiverID)
         val existingSenderTeam = this.getTeam(request.senderID)
         if (request.sender.party().none()) {
-            request.notifySender(true, "battle.error.no_pokemon") // TODO this is legacy but why exactly do we need pokemon for a team?
-            request.notifyReceiver(true, "battle.error.no_pokemon_opponent")
+            request.notifySender(true, "error.no_pokemon")
+            request.notifyReceiver(true, "error.no_pokemon")
         }
         else if (existingReceiverTeam != null) {
             request.notifySender(true, "error.existing_team.other", request.receiver.name.copy().aqua())

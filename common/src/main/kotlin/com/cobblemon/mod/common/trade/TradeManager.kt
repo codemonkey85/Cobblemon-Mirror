@@ -50,7 +50,7 @@ object TradeManager : RequestManager<TradeManager.TradeRequest>() {
         override val receiver: ServerPlayer,
         override val expiryTime: Int = 20
     ) : ServerPlayerActionRequest {
-        override val requestKey: String = "trade"
+        override val key: String = "trade"
         override val requestID: UUID = UUID.randomUUID()
     }
 

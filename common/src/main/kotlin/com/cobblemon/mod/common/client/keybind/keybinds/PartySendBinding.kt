@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.client.keybind.keybinds
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonNetwork.sendToServer
+import com.cobblemon.mod.common.battles.BattleFormat
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.battle.BattleGUI
 import com.cobblemon.mod.common.client.keybind.CobblemonBlockingKeyBinding
@@ -101,7 +102,7 @@ object PartySendBinding : CobblemonBlockingKeyBinding(
             }
             is PokemonEntity -> {
                 if (!entity.canBattle(player) || entity.position().distanceToSqr(player.position()) > Cobblemon.config.battleWildMaxDistance.pow(2)) return
-                    sendToServer(BattleChallengePacket(entity.id,  pokemon.uuid))
+                    sendToServer(BattleChallengePacket(entity.id,  pokemon.uuid, BattleFormat.GEN_9_SINGLES))
                 }
         }
     }

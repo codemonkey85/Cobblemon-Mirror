@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.api.interaction.RequestManager
 import com.cobblemon.mod.common.api.interaction.ServerPlayerActionRequest
 import com.cobblemon.mod.common.api.interaction.ServerTeamActionRequest
 import com.cobblemon.mod.common.api.net.NetworkPacket
+import com.cobblemon.mod.common.api.text.aqua
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.battles.TeamManager.MAX_TEAM_MEMBER_COUNT
 import com.cobblemon.mod.common.battles.TeamManager.MultiBattleTeam
@@ -15,7 +16,6 @@ import com.cobblemon.mod.common.util.getBattleTeam
 import com.cobblemon.mod.common.util.party
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.phys.Vec3
-import java.time.Instant
 import java.util.*
 
 /**
@@ -48,8 +48,6 @@ object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>() {
         abstract val selectedPokemonId: UUID
         abstract val battleFormat: BattleFormat
         override val requestID: UUID = UUID.randomUUID()
-        val challengedTime = Instant.now()
-        fun isExpired() = Instant.now().isAfter(challengedTime.plusSeconds(expiryTime.toLong()))    // TODO this won't work with recent tickmanager changes
     }
 
     /** PLAYER-to-PLAYER BattleChallenge */
@@ -60,7 +58,7 @@ object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>() {
         override val battleFormat: BattleFormat,
         override val expiryTime: Int = 20
     ) : BattleChallenge() {
-        override val requestKey: String = "challenge"
+        override val key: String = "challenge"
     }
 
     /** TEAM-to-TEAM BattleChallenge */
@@ -71,7 +69,7 @@ object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>() {
         override val battleFormat: BattleFormat,    // TODO force this to be multi battletype
         override val expiryTime: Int = 20
     ) : BattleChallenge(), ServerTeamActionRequest {
-        override val requestKey: String = "challenge.multi"
+        override val key: String = "challenge.multi"
         override val senderTeam: MultiBattleTeam = sender.getBattleTeam() ?: throw IllegalArgumentException("Sending player is not part of a team!")
         override val receiverTeam: MultiBattleTeam = receiver.getBattleTeam() ?: throw IllegalArgumentException("Target player is not part of a team!")
     }
@@ -79,6 +77,16 @@ object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>() {
     override fun expirationPacket(request: BattleChallenge): NetworkPacket<*> = BattleChallengeExpiredPacket(request)
 
     override fun notificationPacket(request: BattleChallenge): NetworkPacket<*> = BattleChallengeNotificationPacket(request)
+
+    override fun onDecline(request: BattleChallenge) {
+        request.notifySender(true, "decline.sender", request.receiver.name.copy().aqua(), request.battleFormat.battleType.displayName)
+        request.notifyReceiver(false, "decline.receiver", request.sender.name.copy().aqua(), request.battleFormat.battleType.displayName)
+    }
+
+    override fun onSend(request: BattleChallenge) {
+        request.notifySender(false, "sent", request.receiver.name.copy().aqua(), request.battleFormat.battleType.displayName)
+        request.notifyReceiver(false, "received", request.sender.name.copy().aqua(), request.battleFormat.battleType.displayName)
+    }
 
     override fun onAccept(request: BattleChallenge) {
         if (request is MultiBattleChallenge) {
@@ -109,7 +117,7 @@ object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>() {
     override fun isValidInteraction(player: ServerPlayer, target: ServerPlayer) = player.canInteractWith(target, Cobblemon.config.BattlePvPMaxDistance)
 
     override fun canAccept(request: BattleChallenge): Boolean {
-        if (request.battleFormat.battleType == BattleTypes.MULTI) {
+        if (request is MultiBattleChallenge) {
             val existingReceiverTeam = TeamManager.getTeam(request.receiverID)
             val existingSenderTeam = TeamManager.getTeam(request.senderID)
             // validate teams
@@ -121,6 +129,7 @@ object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>() {
 
             val players = existingReceiverTeam.teamPlayers + existingSenderTeam.teamPlayers
             val leads = players.mapNotNull { it.party().first().uuid }
+            val farAwayPlayer = this.validateProximity(players)
             // validate team sizes
             if (players.count() != MAX_TEAM_MEMBER_COUNT * 2) {
                 request.notifySender(true, "error.invalid_team_size", MAX_TEAM_MEMBER_COUNT)
@@ -128,30 +137,32 @@ object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>() {
             }
             // validate parties
             else if (leads.count() != players.count()) {
-                request.notifySender(true, "error.missing_pokemon")
-                request.notifyReceiver(true, "error.missing_pokemon")
+                request.notifySender(true, "error.insufficient_pokemon")
+                request.notifyReceiver(true, "error.insufficient_pokemon")
             }
             // validate dimension
             else if (this.validateDimension(players)) {
-                request.notifySender(true, "battle.error.player_different_dimension")
-                request.notifyReceiver(true, "battle.error.player_different_dimension")
+                request.notifySender(true, "error.player_different_dimension")
+                request.notifyReceiver(true, "error.player_different_dimension")
             }
             // validate proximity
-            else if (this.validateProximity(players)) {
-                request.notifySender(true, "battle.error.player_distance") //personal
-                request.notifyReceiver(true, "battle.error.player_distance")
+            else if (farAwayPlayer != null) {
+                request.notifySender(true, "error.player_distance", farAwayPlayer.name.copy().aqua())
+                request.notifyReceiver(true, "error.player_distance", farAwayPlayer.name.copy().aqua())
             }
             else return true
         }
         else {
+            // validate parties
             if (request.receiver.party().none()) {
-                request.notifySender(true, "error.missing_pokemon.self")
-                request.notifyReceiver(true, ".error.missing_pokemon")
+                request.notifySender(true, "error.insufficient_pokemon.other", request.receiver.name.copy().aqua())
+                request.notifyReceiver(true, "error.insufficient_pokemon.self")
             }
             else if (request.sender.party().none()) {
-                request.notifySender(true, "error.missing_pokemon.personal")
-                request.notifyReceiver(true, "error.missing_pokemon")
+                request.notifySender(true, "error.insufficient_pokemon.self")
+                request.notifyReceiver(true, "error.insufficient_pokemon.other", request.sender.name.copy().aqua())
             }
+            // TODO worth validating size and party health here? BattleBuilder already does it
             else return true
         }
         return false
@@ -160,15 +171,15 @@ object ChallengeManager : RequestManager<ChallengeManager.BattleChallenge>() {
     private fun validateDimension(players: Collection<ServerPlayer>): Boolean {
         val dimension = players.first().level().dimension()
         val playerInWrongDimension = players.firstOrNull { it.level().dimension() != dimension }
-        return playerInWrongDimension == null
+        return playerInWrongDimension != null
     }
 
-    private fun validateProximity(players: Collection<ServerPlayer>): Boolean {
+    private fun validateProximity(players: Collection<ServerPlayer>): ServerPlayer? {
         // Check if all players are nearby
         var averagePos = Vec3(0.0, 0.0, 0.0)
         players.forEach { averagePos = averagePos.add(it.position().multiply(1.0 / players.count(), 0.0, 1.0 / players.count())) }
         val farAwayPlayer = players.firstOrNull { it.position().subtract(0.0, it.position().y, 0.0).distanceToSqr(averagePos) > MAX_BATTLE_RADIUS * MAX_BATTLE_RADIUS }
-        return farAwayPlayer == null
+        return farAwayPlayer
     }
 
     fun setLead(player: ServerPlayer, lead: UUID) = this.selectedLead.put(player.uuid, lead)

@@ -8,9 +8,10 @@
 
 package com.cobblemon.mod.common.net.messages.server
 
+import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.battles.BattleFormat
-import com.cobblemon.mod.common.net.serverhandling.battle.TeamRequestHandler
+import com.cobblemon.mod.common.net.serverhandling.ChallengeHandler
 import com.cobblemon.mod.common.util.cobblemonResource
 import java.util.UUID
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -18,7 +19,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 /**
  * Packet fired when a player makes an interaction request to challenge another player to a Pokemon battle.
  *
- * Handled by [TeamRequestHandler].
+ * Handled by [ChallengeHandler].
  *
  * @param targetedEntityId The ID of the player who's the target of this interaction request.
  * @param battleFormat The showdown format of the challenge.
@@ -26,7 +27,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf
  * @author JazzMcNade
  * @since April 15th, 2024
  */
-class BattleChallengePacket(val targetedEntityId: Int, val selectedPokemonId: UUID, val battleFormat: BattleFormat = BattleFormat.GEN_9_SINGLES) : NetworkPacket<BattleChallengePacket> {
+class BattleChallengePacket(val targetedEntityId: Int, val selectedPokemonId: UUID, val battleFormat: BattleFormat) : NetworkPacket<BattleChallengePacket> {
     override val id = ID
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeInt(this.targetedEntityId)

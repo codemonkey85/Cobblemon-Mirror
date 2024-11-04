@@ -28,8 +28,8 @@ import net.minecraft.network.chat.MutableComponent
  * @since April 9th, 2024
  */
 class TeamJoinNotificationPacket(
-        val teamMemberUUIDs: List<UUID>,
-        val teamMemberNames: List<MutableComponent>,
+    val teamMemberUUIDs: List<UUID>,
+    val teamMemberNames: List<MutableComponent>,
 ): NetworkPacket<TeamJoinNotificationPacket> {
     override val id = ID
     override fun encode(buffer: RegistryFriendlyByteBuf) {

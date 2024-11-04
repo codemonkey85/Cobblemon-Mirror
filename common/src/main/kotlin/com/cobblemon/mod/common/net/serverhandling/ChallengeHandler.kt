@@ -38,7 +38,7 @@ object ChallengeHandler : ServerNetworkPacketHandler<BattleChallengePacket> {
         ChallengeManager.setLead(player, packet.selectedPokemonId)
         if (targetedEntity !is ServerPlayer) return
         val challenge =
-            if (packet.battleFormat.battleType == BattleTypes.MULTI)
+            if (packet.battleFormat.battleType.name == BattleTypes.MULTI.name)
                 ChallengeManager.MultiBattleChallenge(player, targetedEntity, packet.selectedPokemonId, packet.battleFormat)
             else
                 ChallengeManager.SinglesBattleChallenge(player, targetedEntity, packet.selectedPokemonId, packet.battleFormat)

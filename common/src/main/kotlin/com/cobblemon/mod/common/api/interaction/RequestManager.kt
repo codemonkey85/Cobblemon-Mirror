@@ -14,7 +14,9 @@ import java.util.*
  * Defines a manager for organizing active interaction requests between parties. Responsible for dispatching requests to clients,
  * notifying senders and receivers of requests, and handling their acceptance, expiration, or cancellation.
  *
- * @param langKey The subkey used for the notification messages sent with for requests.
+ * Implementations can manage either PLAYER-to-PLAYER requests or TEAM-to-TEAM requests.
+ *
+ * @param T The type of interaction request this manager tracks.
  *
  * @author Segfault Guy
  * @since October 26th, 2024
@@ -98,39 +100,41 @@ abstract class RequestManager<T : ServerPlayerActionRequest> {
     }
 
     /** Notifies and removes an outbound request [T] sent by [ServerPlayerActionRequest.sender] to [ServerPlayerActionRequest.receiver]. */
-    open fun cancelRequest(request: T, terminator: ServerPlayer? = null) {
+    open fun cancelRequest(request: T, expired: Boolean = false) {
         if (!this.removeRequest(request)) return
         // canceled by expiration
-        if (terminator == null) {
+        if (expired) {
             request.notifySender(true, "expired.sender", request.receiver.name.copy().aqua())
             request.notifyReceiver(true, "expired.receiver", request.sender.name.copy().aqua())
         }
         // canceled by sender
-        else if (request.sender == terminator) {
+        else {
             request.notifySender(true, "canceled.sender", request.receiver.name.copy().aqua())
             request.notifyReceiver(true, "canceled.receiver", request.sender.name.copy().aqua())
         }
-        // canceled by other (RECEIVERS DECLINE, NOT CANCEL. THIS IS FOR OTHER TEAM MEMBERS.)
-        else {
-            request.notifySender(true, "canceled.other", terminator.name.copy().aqua())
-            request.notifyReceiver(true, "canceled.other", terminator.name.copy().aqua())
-        }
+        // receivers DECLINE, not cancel
+    }
+
+    /** Hook into [sendRequest] immediately after the [request] is sent and added to the manager. Default behavior is to notify parties. */
+    protected open fun onSend(request: T) {
+        request.notifySender(false, "sent", request.receiver.name.copy().aqua())
+        request.notifyReceiver(false, "received", request.sender.name.copy().aqua())
     }
 
     /** Sends an outbound request [T] from [ServerPlayerActionRequest.sender] to [ServerPlayerActionRequest.receiver]. */
-    open fun sendRequest(request: T): Boolean {
+    fun sendRequest(request: T): Boolean {
         val existingRequest = this.getOutboundRequest(request.senderID)
         val pendingRequest = this.getInboundRequestBySender(request.senderID, request.receiverID)
 
         // old request
         if (existingRequest != null && existingRequest.receiverID != request.receiverID)
-            this.cancelRequest(existingRequest, existingRequest.sender)
+            this.cancelRequest(existingRequest)
         // if sender already has a request awaiting a response from the receiver they're trying to send to.
         if (existingRequest != null && existingRequest.receiverID == request.receiverID)
-            request.notify(request.sender, true, "error.duplicate", request.receiver.name.copy().aqua())
+            request.notify(request.sender, true, "${request.key}.error.duplicate", request.receiver.name.copy().aqua())
         // if sender already has a pending request from the receiver they're trying to send to.
         else if (pendingRequest != null)
-            request.notify(request.sender, true, "error.pending", request.receiver.name.copy().aqua())
+            request.notify(request.sender, true, "${request.key}.error.pending", request.receiver.name.copy().aqua())
         // verify sending player can interact with target player
         else if (!this.isValidInteraction(request.sender, request.receiver))
             request.notify(request.sender, true, "ui.interact.failed")
@@ -139,37 +143,36 @@ abstract class RequestManager<T : ServerPlayerActionRequest> {
         // new request
         else {
             this.addRequest(request)
-            afterOnServer(seconds = request.expiryTime.toFloat()) { this.cancelRequest(request) }
-            request.notifySender(false, "sent", request.receiver.name.copy().aqua())
-            request.notifyReceiver(false, "received", request.sender.name.copy().aqua())
+            afterOnServer(seconds = request.expiryTime.toFloat()) { this.cancelRequest(request, true) }
+            this.onSend(request)
             return true
         }
         return false
     }
 
-    /** Hooks into [acceptRequest] immediately after the [request] is accepted and removed from the manager. */
-    protected open fun onAccept(request: T) {}
+    /** Hook into [acceptRequest] immediately after the [request] is accepted and removed from the manager. Default behavior is to notify parties. */
+    protected open fun onAccept(request: T) {
+        request.notifySender(false, "accept.sender",  request.receiver.name.copy().aqua())
+        request.notifyReceiver(false, "accept.receiver", request.sender.name.copy().aqua())
+    }
 
-    /** Accepts an inbound [requestID] for [receiver]. */
-    open fun acceptRequest(receiver: ServerPlayer, requestID: UUID): Boolean {
+    /** Accepts a pending inbound [requestID] for [player]. */
+    fun acceptRequest(player: ServerPlayer, requestID: UUID, target: ServerPlayer? = null): Boolean {
         var accepted = false
-        val request = this.getInboundRequest(receiver, requestID)
+        val request = this.getInboundRequest(player, requestID)
 
         // verify request being responded to still valid
         if (request == null)
-            receiver.sendSystemMessage(lang("error.request_already_expired").red(), false)
-        // verify receiving player can respond to sending player
-        else if (!this.isValidInteraction(request.receiver, request.sender))
-            request.notify(receiver, true, "ui.interact.failed")
+            player.sendSystemMessage(lang("ui.interact.request_already_expired").red(), false)
+        // verify accepting player can respond to sending player
+        else if (!this.isValidInteraction(player, target ?: request.sender))    // with teams anyone can accept
+            request.notify(player, true, "ui.interact.failed")
         // if sending player is occupied, can't accept response
         else if (this.isBusy(request.sender))                                   // TODO enhancement: allow retries - modify client so we don't remove request when sending acceptance
-            request.notify(receiver, true, "ui.interact.unavailable")
+            request.notify(player, true, "ui.interact.unavailable")
         // if no condition is blocking acceptance, accept
-        else if (this.canAccept(request)) {
-            request.notifySender(false, "accept.sender",  request.receiver.name.copy().aqua())
-            request.notifyReceiver(false, "accept.receiver", request.sender.name.copy().aqua())
+        else if (this.canAccept(request))
             accepted = true
-        }
 
         request?.let {
             this.removeRequest(it)
@@ -178,19 +181,29 @@ abstract class RequestManager<T : ServerPlayerActionRequest> {
         return accepted
     }
 
-    /** Declines an inbound request [requestID] for [receiver]. */
-    open fun declineRequest(receiver: ServerPlayer, requestID: UUID) {
-        val request = inboundRequests.get(receiver.uuid)?.find { it.requestID == requestID } ?: return
-        request.notifySender(false, "decline.sender", request.receiver.name.copy().aqua())
+    /** Hook into [declineRequest] immediately after the [request] is declined and removed from the manager. Default behavior is to notify parties. */
+    protected open fun onDecline(request: T) {
+        request.notifySender(true, "decline.sender", request.receiver.name.copy().aqua())
         request.notifyReceiver(false, "decline.receiver", request.sender.name.copy().aqua())
+    }
+
+    /** Declines a pending [request]. */
+    fun declineRequest(request: T) {
         this.removeRequest(request)
+        this.onDecline(request)
+    }
+
+    /** Declines an inbound request [requestID] for [receiver]. */
+    fun declineRequest(receiver: ServerPlayer, requestID: UUID) {
+        val request = this.getInboundRequest(receiver, requestID) ?: return
+        this.declineRequest(request)
     }
 
     /** Cancels pending outbound requests sent from, and pending inbound request sent to, [player]. */
     protected open fun onLogoff(player: ServerPlayer) {
         // ONLY regarding the player. see TeamManager for how team requests are canceled on team disband.
         outboundRequests.get(player.uuid)?.let { request ->
-            this.cancelRequest(request, player)
+            this.cancelRequest(request)
         }
         inboundRequests.get(player.uuid)?.let { requests ->
             requests.forEach { request ->

@@ -64,7 +64,7 @@ object RequestInteractionsHandler : ServerNetworkPacketHandler<RequestPlayerInte
                 if (playerPartyCount >= 1 && targetPartyCount >= 1) {
                     options[PlayerInteractOptionsPacket.Options.SINGLE_BATTLE] = PlayerInteractOptionsPacket.OptionStatus.AVAILABLE
                     //options[PlayerInteractOptionsPacket.Options.ROYAL_BATTLE] = PlayerInteractOptionsPacket.OptionStatus.AVAILABLE
-                    if (TeamManager.getTeam(player) != null && TeamManager.getTeam(packet.targetId) !== null) {
+                    if (TeamManager.getTeam(player) != null && TeamManager.getTeam(targetPlayerEntity) != null) {
                         if (TeamManager.getTeam(player)?.teamID != TeamManager.getTeam(targetPlayerEntity)?.teamID) {
                             options[PlayerInteractOptionsPacket.Options.MULTI_BATTLE] = PlayerInteractOptionsPacket.OptionStatus.AVAILABLE
                         } else {
