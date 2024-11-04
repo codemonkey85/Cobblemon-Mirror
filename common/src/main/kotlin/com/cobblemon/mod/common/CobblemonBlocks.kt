@@ -20,6 +20,7 @@ import com.cobblemon.mod.common.block.sign.CobblemonWallSignBlock
 import com.cobblemon.mod.common.mixin.invoker.*
 import com.cobblemon.mod.common.platform.PlatformRegistry
 import com.cobblemon.mod.common.util.cobblemonResource
+import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -27,8 +28,11 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.valueproviders.UniformInt
 import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.BlockSetType
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument
 import net.minecraft.world.level.block.state.properties.WoodType
@@ -166,7 +170,20 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     @JvmField
     val SACCHARINE_PLANKS = this.create("saccharine_planks", Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).instrument(NoteBlockInstrument.BASS).strength(2.0f, 3.0f).sound(SoundType.WOOD)))
     @JvmField
-    val SACCHARINE_LEAVES = leaves("saccharine_leaves")
+    val SACCHARINE_LEAVES = this.create("saccharine_leaves", SaccharineLeafBlock(
+        BlockBehaviour.Properties.of().mapColor(
+            MapColor.PLANT
+        ).strength(0.2f).randomTicks().sound(SoundType.GRASS).noOcclusion()
+            .isValidSpawn { _: BlockState?, _: BlockGetter?, _: BlockPos?, entity: EntityType<*>? ->
+                entity === EntityType.OCELOT || entity === EntityType.PARROT
+            }.isSuffocating { _: BlockState?, _: BlockGetter?, _: BlockPos? ->
+                false
+            }.isViewBlocking { _: BlockState?, _: BlockGetter?, _: BlockPos? ->
+                false
+            }.ignitedByLava().pushReaction(PushReaction.DESTROY)
+            .isRedstoneConductor { _: BlockState?, _: BlockGetter?, _: BlockPos? ->
+                false
+            }))
     @JvmField
     val SACCHARINE_FENCE = this.create("saccharine_fence", FenceBlock(BlockBehaviour.Properties.of().mapColor(SACCHARINE_PLANKS.defaultMapColor()).instrument(NoteBlockInstrument.BASS).strength(2.0f, 3.0f).sound(SoundType.WOOD)))
     @JvmField

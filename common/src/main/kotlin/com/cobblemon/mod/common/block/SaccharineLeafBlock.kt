@@ -119,7 +119,7 @@ class SaccharineLeafBlock(settings: Properties) : LeavesBlock(settings), Bonemea
         return super.getCollisionShape(state, level, pos, context)
     }
 
-    override fun isValidBonemealTarget(level: LevelReader, pos: BlockPos, state: BlockState): Boolean = false
+    override fun isValidBonemealTarget(level: LevelReader, pos: BlockPos, state: BlockState): Boolean = true
 
     override fun isBonemealSuccess(level: Level, random: RandomSource, pos: BlockPos, state: BlockState) = true
 
@@ -129,7 +129,7 @@ class SaccharineLeafBlock(settings: Properties) : LeavesBlock(settings), Bonemea
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         super.createBlockStateDefinition(builder)
-        builder.add(AGE, DISTANCE, PERSISTENT, WATERLOGGED)
+        builder.add(AGE)
     }
 
     @Deprecated("Deprecated in Java")
