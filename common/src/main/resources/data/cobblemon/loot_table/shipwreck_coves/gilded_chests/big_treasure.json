@@ -15,25 +15,11 @@
         {
             "rolls": {
                 "type": "minecraft:uniform",
-                "max": 6.0,
-                "min": 3.0
+                "max": 2.0,
+                "min": 0.0
             },
             "bonus_rolls": 0.0,
             "entries": [
-                {
-                    "type": "minecraft:item",
-                    "name": "cobblemon:water_stone",
-                    "weight": 1,
-                    "functions": [
-                        {
-                            "function": "set_count",
-                            "count": {
-                                "min": 3,
-                                "max": 5
-                            }
-                        }
-                    ]
-                },
                 {
                     "type": "minecraft:item",
                     "name": "minecraft:nautilus_shell",
@@ -44,28 +30,14 @@
                             "count": 1
                         }
                     ]
-                },
-                {
-                    "type": "minecraft:item",
-                    "name": "cobblemon:water_gem",
-                    "weight": 1,
-                    "functions": [
-                        {
-                            "function": "set_count",
-                            "count": {
-                                "min": 1,
-                                "max": 2
-                            }
-                        }
-                    ]
                 }
             ]
         },
         {
             "rolls": {
                 "type": "minecraft:uniform",
-                "max": 4.0,
-                "min": 3.0
+                "max": 2.0,
+                "min": 1.0
             },
             "bonus_rolls": 0.0,
             "entries": [
@@ -88,39 +60,73 @@
         {
             "rolls": {
                 "type": "minecraft:uniform",
-                "max": 4.0,
-                "min": 3.0
+                "max": 1.0,
+                "min": 1.0
             },
             "bonus_rolls": 0.0,
             "entries": [
                 {
                     "type": "minecraft:item",
-                    "name": "cobblemon:net_ball",
+                    "name": "minecraft:diamond",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 4
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "rolls": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 1.0
+            },
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:emerald",
                     "weight": 1,
                     "functions": [
                         {
                             "function": "set_count",
                             "count": {
                                 "min": 3,
-                                "max": 5
+                                "max": 12
                             }
                         }
                     ]
                 },
                 {
                     "type": "minecraft:item",
-                    "name": "cobblemon:dive_ball",
+                    "name": "minecraft:gold_ingot",
                     "weight": 1,
                     "functions": [
                         {
                             "function": "set_count",
                             "count": {
                                 "min": 3,
-                                "max": 5
+                                "max": 12
                             }
                         }
                     ]
-                },
+                }
+            ]
+        },
+        {
+            "rolls": {
+                "type": "minecraft:uniform",
+                "max": 1.0,
+                "min": 1.0
+            },
+            "bonus_rolls": 0.0,
+            "entries": [
                 {
                     "type": "minecraft:item",
                     "name": "cobblemon:mystic_water",
@@ -131,7 +137,17 @@
                             "count": 1
                         }
                     ]
-                },
+                }
+            ]
+        },
+        {
+            "rolls": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 1.0
+            },
+            "bonus_rolls": 0.0,
+            "entries": [
                 {
                     "type": "minecraft:item",
                     "name": "cobblemon:deep_sea_tooth",
@@ -156,16 +172,34 @@
                 },
                 {
                     "type": "minecraft:item",
-                    "name": "minecraft:fishing_rod",
+                    "name": "cobblemon:dragon_scale",
                     "weight": 1,
                     "functions": [
                         {
                             "function": "set_count",
                             "count": 1
-                        },
+                        }
+                    ]
+                },
+                {
+                    "type": "minecraft:item",
+                    "name": "cobblemon:prism_scale",
+                    "weight": 1,
+                    "functions": [
                         {
-                            "function": "enchant_randomly",
-                            "only_compatible": true
+                            "function": "set_count",
+                            "count": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "minecraft:item",
+                    "name": "cobblemon:shell_bell",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": 1
                         }
                     ]
                 }
@@ -175,7 +209,7 @@
             "rolls": {
                 "type": "minecraft:uniform",
                 "max": 3.0,
-                "min": 1.0
+                "min": 2.0
             },
             "bonus_rolls": 0.0,
             "entries": [

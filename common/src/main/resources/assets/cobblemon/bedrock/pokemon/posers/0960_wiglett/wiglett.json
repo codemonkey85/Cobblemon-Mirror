@@ -10,33 +10,17 @@
   "poses": {
     "battle-standing": {
       "poseName": "battle-standing",
-      "poseTypes": [
-        "STAND"
-      ],
+      "poseTypes": ["STAND"],
       "isBattle": true,
-      "animations": [
-        "q.bedrock('wiglett', 'battle_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('wiglett', 'blink')"
-      ]
+      "animations": ["q.bedrock('wiglett', 'battle_idle')"],
+      "quirks": ["q.bedrock_quirk('wiglett', 'blink')"]
     },
     "standing": {
       "poseName": "standing",
-      "poseTypes": [
-        "STAND",
-        "WALK",
-        "NONE",
-        "PORTRAIT",
-        "PROFILE"
-      ],
+      "poseTypes": ["STAND", "WALK", "NONE", "PORTRAIT", "PROFILE"],
       "isBattle": false,
-      "animations": [
-        "q.bedrock('wiglett', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('wiglett', 'blink')"
-      ]
+      "animations": ["q.bedrock('wiglett', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('wiglett', 'blink')"]
     }
   }
 }

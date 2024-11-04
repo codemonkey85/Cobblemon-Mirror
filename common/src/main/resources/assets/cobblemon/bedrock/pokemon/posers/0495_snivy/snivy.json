@@ -1,49 +1,27 @@
 {
-    "portraitScale": 1.79,
-    "portraitTranslation": [-0.05,0.27,0],
-    "profileScale": 0.75,
-    "profileTranslation": [0.02,0.65,0],
-    "rootBone": "snivy",
-    "animations": {
-      "cry": "q.bedrock_stateful('snivy', 'cry')"
+  "portraitScale": 1.79,
+  "portraitTranslation": [-0.05, 0.27, 0],
+  "profileScale": 0.75,
+  "profileTranslation": [0.02, 0.65, 0],
+  "rootBone": "snivy",
+  "animations": {
+    "cry": "q.bedrock_stateful('snivy', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('snivy', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('snivy', 'blink')"]
     },
-    "poses": {
-      "standing": {
-        "poseTypes": [
-          "STAND",
-          "NONE",
-          "PORTRAIT",
-          "PROFILE"
-        ],
-        "isBattle": false,
-        "animations": [
-          "q.look('head')",
-          "q.bedrock('snivy', 'ground_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('snivy', 'blink')"
-        ]
-      },
-      "walking": {
-        "poseTypes": [
-          "WALK"
-        ],
-        "animations": [
-          "q.look('head')",
-          "q.bedrock('snivy', 'ground_walk')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('snivy', 'blink')"
-        ]
-      },
-      "sleep": {
-        "poseTypes": [
-          "SLEEP"
-        ],
-        "animations": [
-          "q.bedrock('snivy', 'sleep')"
-        ]
-      }
+    "walking": {
+      "poseTypes": ["WALK"],
+      "animations": ["q.look('head')", "q.bedrock('snivy', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('snivy', 'blink')"]
+    },
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('snivy', 'sleep')"]
     }
   }
-  
+}

@@ -1,53 +1,44 @@
 {
-    "portraitScale": 1.8,
-    "portraitTranslation": [-0.1, -0.35, 0.0],
-    "profileScale": 1,
-    "profileTranslation": [0.0, 0.3, 0.0],
-    "rootBone": "tinkaton",
+  "portraitScale": 1.8,
+  "portraitTranslation": [-0.1, -0.35, 0.0],
+  "profileScale": 1,
+  "profileTranslation": [0.0, 0.3, 0.0],
+  "rootBone": "tinkaton",
   "animations": {
-        "faint": "q.bedrock_primary('tinkaton', 'faint', q.curve('one'))",
-        "cry": "q.bedrock_stateful('tinkaton', 'cry')"
+    "faint": "q.bedrock_primary('tinkaton', 'faint', q.curve('one'))",
+    "cry": "q.bedrock_stateful('tinkaton', 'cry')"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseName": "battle-standing",
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": ["q.look('head')", "q.bedrock('tinkaton', 'battle_idle')"],
+      "quirks": ["q.bedrock_quirk('tinkaton', 'blink')"]
     },
-    "poses": {
-        "battle-standing": {
-            "poseName": "battle-standing",
-            "poseTypes": ["STAND"],
-            "isBattle": true,
-            "animations": [
-                "q.look('head')",
-                "q.bedrock('tinkaton', 'battle_idle')"
-            ],
-            "quirks": ["q.bedrock_quirk('tinkaton', 'blink')"]
-        },
-        "standing": {
-            "poseName": "standing",
-            "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
-            "isBattle": false,
-            "animations": [
-                "q.look('head')",
-                "q.bedrock('tinkaton', 'ground_idle')"
-            ],
-            "quirks": ["q.bedrock_quirk('tinkaton', 'blink')"],
-            "transitions": {
-                "sleeping": "q.bedrock_primary('tinkaton', 'sleep_transition')"
-            }
-        },
-        "walking": {
-            "poseName": "walking",
-            "poseTypes": ["WALK"],
-            "animations": [
-                "q.look('head')",
-                "q.bedrock('tinkaton', 'ground_walk')"
-            ],
-            "quirks": ["q.bedrock_quirk('tinkaton', 'blink')"],
-            "transitions": {
-                "sleeping": "q.bedrock_primary('tinkaton', 'sleep_transition')"
-            }
-        },
-        "sleeping": {
-            "poseName": "sleeping",
-            "poseTypes": ["SLEEP"],
-            "animations": ["q.bedrock('tinkaton', 'sleep')"]
-        }
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('tinkaton', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('tinkaton', 'blink')"],
+      "transitions": {
+        "sleeping": "q.bedrock_primary('tinkaton', 'sleep_transition')"
+      }
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": ["WALK"],
+      "animations": ["q.look('head')", "q.bedrock('tinkaton', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('tinkaton', 'blink')"],
+      "transitions": {
+        "sleeping": "q.bedrock_primary('tinkaton', 'sleep_transition')"
+      }
+    },
+    "sleeping": {
+      "poseName": "sleeping",
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('tinkaton', 'sleep')"]
     }
+  }
 }
