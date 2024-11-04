@@ -11,10 +11,7 @@ package com.cobblemon.mod.common.trade
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
 import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.api.text.text
-import com.cobblemon.mod.common.net.messages.client.trade.TradeAcceptanceChangedPacket
-import com.cobblemon.mod.common.net.messages.client.trade.TradeCancelledPacket
-import com.cobblemon.mod.common.net.messages.client.trade.TradeCompletedPacket
-import com.cobblemon.mod.common.net.messages.client.trade.TradeUpdatedPacket
+import com.cobblemon.mod.common.net.messages.client.trade.*
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.party
 import java.util.UUID
@@ -49,6 +46,15 @@ interface TradeParticipant {
      */
     fun changeTradeAcceptance(trade: ActiveTrade, pokemonId: UUID, acceptance: Boolean)
 
+    /**
+     * Notifies the participant that the trade process has begun.
+     *
+     * @param isTradeInitiator Indicates if the user is the one who accepted last.
+     * Used by the UI to complete the trade after the process/animation is done.
+     * Only 1 user should handle sending the completion to the server to prevent conflicts.
+     */
+    fun startTradeProcess(trade: ActiveTrade, isTradeInitiator: Boolean)
+
     /** Notifies the participant that the trade has been cancelled. */
     fun cancelTrade(trade: ActiveTrade)
 
@@ -73,6 +79,10 @@ class PlayerTradeParticipant(val player: ServerPlayer): TradeParticipant {
 
     override fun changeTradeAcceptance(trade: ActiveTrade, pokemonId: UUID, acceptance: Boolean) {
         player.sendPacket(TradeAcceptanceChangedPacket(pokemonId, acceptance))
+    }
+
+    override fun startTradeProcess(trade: ActiveTrade, isTradeInitiator: Boolean) {
+        player.sendPacket(TradeProcessStartedPacket(isTradeInitiator))
     }
 
     override fun cancelTrade(trade: ActiveTrade) {
@@ -101,6 +111,10 @@ class DummyTradeParticipant(val pokemonList: MutableList<Pokemon>) : TradePartic
 
     override fun completeTrade(trade: ActiveTrade, pokemonId1: UUID, pokemonId2: UUID) {
         // Don't need to do any notifying.
+    }
+
+    override fun startTradeProcess(trade: ActiveTrade, isTradeInitiator: Boolean) {
+        // React, maybe. Change code and hotswap.
     }
 
     override fun changeTradeAcceptance(trade: ActiveTrade, pokemonId: UUID, acceptance: Boolean) {

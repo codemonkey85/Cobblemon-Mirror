@@ -27,16 +27,26 @@ object FishingRodTooltipGenerator : TooltipGenerator() {
 
         // Add the description of the Poke Ball used in the rod
         ball.item.description.let {
-            val bobberDescription = Component.literal("Bobber: ").append(it.copy().gray())
+            val bobberDescription = Component.translatable(
+                "cobblemon.pokerod.bobber",
+                it.copy().gray()
+            )
             resultLines.add(bobberDescription)
         }
 
         val client = Minecraft.getInstance()
         val itemRegistry = client.level?.registryAccess()?.registryOrThrow(Registries.ITEM)
         itemRegistry?.let { registry ->
-            FishingBaits.getFromRodItemStack(stack)?.toItemStack(registry)?.item?.description?.copy()?.gray()?.let { // maybe this can be simplified to not use the FishingBaits to get the stack and just use PokerodItem to get the stack since we have it already
-                resultLines.add(Component.literal("Bait: ").append(it).append(" x${PokerodItem.getBaitStackOnRod(stack).count}"))
-            }
+            FishingBaits.getFromRodItemStack(stack)?.toItemStack(registry)?.item?.description
+                ?.let { // maybe this can be simplified to not use the FishingBaits to get the stack and just use PokerodItem to get the stack since we have it already
+                    val baitDescription =
+                        Component.translatable(
+                            "cobblemon.pokerod.bait",
+                            it.copy().gray(),
+                            PokerodItem.getBaitStackOnRod(stack).count
+                        )
+                    resultLines.add(baitDescription)
+                }
         }
 
         return resultLines

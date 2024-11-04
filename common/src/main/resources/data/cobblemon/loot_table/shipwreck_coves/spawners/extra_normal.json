@@ -1,0 +1,39 @@
+{
+    "type": "minecraft:chest",
+    "pools": [
+        {
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:potion",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_potion",
+                            "id": "healing"
+                        }
+                    ],
+                    "weight": 1
+                },
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:potion",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_potion",
+                            "id": "regeneration"
+                        }
+                    ],
+                    "weight": 1
+                },
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:golden_apple",
+                    "weight": 1
+                }
+            ],
+            "rolls": 1.0
+        }
+    ],
+    "random_sequence": "cobblemon:shipwreck_coves/spawners/extra_normal"
+}

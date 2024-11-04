@@ -68,6 +68,7 @@ object ShowdownInterpreter {
         updateInstructionParser["cant"]                  = { _, _, message, _ -> CantInstruction(message) }
         updateInstructionParser["-clearallboost"]        = { _, _, message, _ -> ClearAllBoostInstruction(message) }
         updateInstructionParser["-clearnegativeboost"]   = { _, _, message, _ -> ClearNegativeBoostInstruction(message) }
+        updateInstructionParser["-clearboost"]        = {  _, _, message, _ -> ClearBoostInstruction(message) }
         updateInstructionParser["-copyboost"]            = { _, _, message, _ -> CopyBoostInstruction(message) }
         updateInstructionParser["-crit"]                 = { _, instructionSet, message, _ -> CritInstruction(message, instructionSet) }
         updateInstructionParser["-curestatus"]           = { _, _, message, _ -> CureStatusInstruction(message) }
@@ -147,59 +148,74 @@ object ShowdownInterpreter {
      */
      fun getSendoutPosition(battle: PokemonBattle, activePokemon: ActiveBattlePokemon, battleActor: BattleActor): Vec3? {
         val pnx = activePokemon.getPNX()
-        val entityPosList = battleActor.getSide().actors.mapNotNull { if (it is EntityBackedBattleActor<*>) it.initialPos else null }
-        var entityPos = if (entityPosList.size == 1)
-            entityPosList[0]
-        else if (entityPosList.size > 1)
-            entityPosList.fold(Vec3(0.0, 0.0, 0.0)) { acc, vec3 -> acc.add(vec3.scale(1.0 / entityPosList.size)) }
+        val actorEntityPosList = battleActor.getSide().actors.mapNotNull { if (it is EntityBackedBattleActor<*>) it.initialPos else null }
+        val actorEntityPos = if (actorEntityPosList.size == 1)
+            actorEntityPosList[0]
+        else if (actorEntityPosList.size > 1)
+            actorEntityPosList.fold(Vec3(0.0, 0.0, 0.0)) { acc, vec3 -> acc.add(vec3.scale(1.0 / actorEntityPosList.size)) }
         else
             null
-        val opposingEntityList = battleActor.getSide().getOppositeSide().actors.mapNotNull { if (it is EntityBackedBattleActor<*>) it.initialPos else null }
-        val opposingEntityPos = if (opposingEntityList.size == 1)
-            opposingEntityList[0]
-        else if (opposingEntityList.size > 1)
-            opposingEntityList.fold(Vec3(0.0, 0.0, 0.0)) { acc, vec3 -> acc.add(vec3.scale(1.0 / opposingEntityList.size)) }
+        val opposingActorEntityList = battleActor.getSide().getOppositeSide().actors.mapNotNull { if (it is EntityBackedBattleActor<*>) it.initialPos else null }
+        val opposingEntityPos = if (opposingActorEntityList.size == 1)
+            opposingActorEntityList[0]
+        else if (opposingActorEntityList.size > 1) {
+            // If multiple actors per side, avg their position
+            opposingActorEntityList.fold(Vec3(0.0, 0.0, 0.0)) { acc, vec3 -> acc.add(vec3.scale(1.0 / opposingActorEntityList.size)) }
+        }
         else null
         
-        var baseOffset = entityPos?.let { opposingEntityPos?.subtract(it) }
-
-        if (baseOffset != null) {
-            val minDistance = if (battle.isPvW) 8.0 else 5.0
-            val length = baseOffset.length()
-            if (length < minDistance) {
-                val temp = baseOffset.scale(minDistance / length) ?: baseOffset
-                entityPos = entityPos?.subtract(temp.subtract(baseOffset))
-                baseOffset = temp
+        var actorOffset = actorEntityPos?.let { opposingEntityPos?.subtract(it) }
+        var result = actorEntityPos
+        if (actorOffset != null) {
+            var widthSum = 4.0 // Leave a constant to allow double/triples alignment to be consistent
+            if (battle.format.battleType.pokemonPerSide == 1) {
+                activePokemon.battlePokemon?.let { battlePokemon ->
+                    // sum of the hitbox widths of both pokemon
+                    val opposingActivePokemon = (activePokemon.getOppositeOpponent() as ActiveBattlePokemon)
+                    val pokemonWidth = battlePokemon.originalPokemon.form.hitbox.width * battlePokemon.originalPokemon.form.baseScale
+                    val opposingPokemonWidth = opposingActivePokemon.battlePokemon?.let {
+                        it.originalPokemon.form.hitbox.width * it.originalPokemon.form.baseScale
+                    } ?: pokemonWidth
+                    widthSum = (pokemonWidth + opposingPokemonWidth) / 2.0 // Only care about the front half of each hitbox
+                }
             }
-            var vector = Vec3(baseOffset.x, 0.0, baseOffset.z).normalize()
+
+            val minDistance = 4.0 + widthSum
+            val actorDistance = actorOffset.length()
+
+            if (actorDistance < minDistance) {
+                val temp = actorOffset.scale(minDistance / actorDistance) ?: actorOffset
+                result = actorEntityPos?.subtract(temp.subtract(actorOffset))
+                actorOffset = temp
+            }
+            var vector = Vec3(actorOffset.x, 0.0, actorOffset.z).normalize()
             vector = vector.cross(Vec3(0.0, 1.0, 0.0))
 
             if (battle.format.battleType.pokemonPerSide == 1) { // Singles
-                entityPos = entityPos?.add(baseOffset.scale(if (battle.isPvW) 0.4 else 0.3))
+                result = result?.add(actorOffset.scale(if (battle.isPvW) 0.4 else 0.3))
                 activePokemon.battlePokemon?.let { battlePokemon ->
                     val hitbox = battlePokemon.originalPokemon.form.hitbox
                     val scale = battlePokemon.originalPokemon.form.baseScale
-                    if (hitbox.height * scale > 1.1) {
-                        entityPos = entityPos?.add(vector.scale(-1.5 - hitbox.width * scale / 2))
-                    }
+                    activePokemon.getAdjacentOpponents()
+                    result = result?.add(vector.scale(-0.3 - hitbox.width * scale ))
                 }
-            } else if (battle.format.battleType.pokemonPerSide == 2) { // Doubles
+            } else if (battle.format.battleType.pokemonPerSide == 2) { // Doubles/Multi
                 if (battle.actors.first() !== battle.actors.last()) {
                     val offsetB = if (pnx[2] == 'a') vector.scale(-1.0) else vector
-                    entityPos = entityPos?.add(baseOffset.scale(0.33))?.add(offsetB.scale(2.5))
+                    result = result?.add(actorOffset.scale(0.33))?.add(offsetB.scale(2.5))
                 }
             } else if (battle.format.battleType.pokemonPerSide == 3) { // Triples
                 if (battle.actors.first() !== battle.actors.last()) {
-                    entityPos = when (pnx[2]) {
-                        'a' -> entityPos?.add(baseOffset.scale(0.15))?.add(vector.scale(-3.5))
-                        'b' -> entityPos?.add(baseOffset.scale(0.3))
-                        'c' -> entityPos?.add(baseOffset.scale(0.15))?.add(vector.scale(3.5))
-                        else -> entityPos
+                    result = when (pnx[2]) {
+                        'a' -> result?.add(actorOffset.scale(0.15))?.add(vector.scale(-3.5))
+                        'b' -> result?.add(actorOffset.scale(0.3))
+                        'c' -> result?.add(actorOffset.scale(0.15))?.add(vector.scale(3.5))
+                        else -> result
                     }
                 }
             }
         }
-        return entityPos
+        return result
     }
 
 

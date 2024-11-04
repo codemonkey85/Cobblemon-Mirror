@@ -1,0 +1,37 @@
+{
+  "portraitScale": 1.8,
+  "portraitTranslation": [-0.28, 2.31, 0],
+  "profileScale": 0.54,
+  "profileTranslation": [0, 1.04, 0],
+  "rootBone": "florges",
+  "animations": {
+    "cry": "q.bedrock_stateful('florges', 'cry')",
+    "recoil": "q.bedrock_stateful('florges', 'recoil')"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": ["q.look('head')", "q.bedrock('florges', 'battle_idle')"],
+      "quirks": ["q.bedrock_quirk('florges', 'blink')"]
+    },
+    "standing": {
+      "poseTypes": ["STAND", "HOVER", "FLOAT", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('florges', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('florges', 'blink')"]
+    },
+    "walking": {
+      "poseTypes": ["WALK", "FLY", "SWIM"],
+      "animations": ["q.look('head')", "q.bedrock('florges', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('florges', 'blink')"]
+    },
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "namedAnimations": {
+        "cry": "q.bedrock_stateful('dummy', 'cry')"
+      },
+      "animations": ["q.bedrock('florges', 'sleep')"]
+    }
+  }
+}

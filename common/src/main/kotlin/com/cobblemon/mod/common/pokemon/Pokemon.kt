@@ -22,6 +22,7 @@ import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.CobblemonEvents.FRIENDSHIP_UPDATED
 import com.cobblemon.mod.common.api.events.CobblemonEvents.POKEMON_FAINTED
 import com.cobblemon.mod.common.api.events.pokemon.*
+import com.cobblemon.mod.common.api.events.pokemon.healing.PokemonHealedEvent
 import com.cobblemon.mod.common.api.moves.*
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.api.pokemon.Natures
@@ -74,6 +75,7 @@ import com.cobblemon.mod.common.pokemon.evolution.progress.DamageTakenEvolutionP
 import com.cobblemon.mod.common.pokemon.evolution.progress.RecoilEvolutionProgress
 import com.cobblemon.mod.common.pokemon.feature.SeasonFeatureHandler
 import com.cobblemon.mod.common.pokemon.feature.StashHandler
+import com.cobblemon.mod.common.pokemon.properties.BattleCloneProperty
 import com.cobblemon.mod.common.pokemon.properties.UncatchableProperty
 import com.cobblemon.mod.common.pokemon.status.PersistentStatus
 import com.cobblemon.mod.common.pokemon.status.PersistentStatusContainer
@@ -143,8 +145,8 @@ open class Pokemon : ShowdownIdentifiable {
                 val newFeatures = SpeciesFeatures.getFeaturesFor(species).mapNotNull { it.invoke(this) }
                 features.clear()
                 features.addAll(newFeatures)
+                evolutionProxy.current().clear()
             }
-            this.evolutionProxy.current().clear()
             updateAspects()
             updateForm()
             checkGender()
@@ -246,22 +248,23 @@ open class Pokemon : ShowdownIdentifiable {
             }
             this.healTimer = Cobblemon.config.healTimer
         }
+
     var gender = Gender.GENDERLESS
         set(value) {
+            if (!isClient && value !in species.possibleGenders) {
+                return
+            }
             field = value
-            if (!isClient) {
-                checkGender()
-            }
-            if (field == value) {
-                updateAspects()
-                _gender.emit(value)
-            }
+            updateAspects()
+            _gender.emit(value)
         }
+
     var status: PersistentStatusContainer? = null
         set(value) {
             field = value
             this._status.emit(value?.status)
         }
+
     var experience = 0
         internal set(value) {
             field = value
@@ -290,8 +293,10 @@ open class Pokemon : ShowdownIdentifiable {
 
     var state: PokemonState = InactivePokemonState()
         set(value) {
-            field = value
-            _state.emit(value)
+            if (field != value) {
+                field = value
+                _state.emit(value)
+            }
         }
 
     val entity: PokemonEntity?
@@ -687,13 +692,15 @@ open class Pokemon : ShowdownIdentifiable {
     }
 
     fun heal() {
-        this.currentHealth = maxHealth
-        this.moveSet.heal()
-        this.status = null
-        this.faintedTimer = -1
-        this.healTimer = -1
-        val entity = entity
-        entity?.heal(entity.maxHealth - entity.health)
+        CobblemonEvents.POKEMON_HEALED.postThen(PokemonHealedEvent(this)) { event ->
+            this.currentHealth = maxHealth
+            this.moveSet.heal()
+            this.status = null
+            this.faintedTimer = -1
+            this.healTimer = -1
+            val entity = entity
+            entity?.heal(entity.maxHealth - entity.health)
+        }
     }
 
     fun isFullHealth() = this.currentHealth == this.maxHealth
@@ -816,6 +823,13 @@ open class Pokemon : ShowdownIdentifiable {
     fun isUncatchable() = UncatchableProperty.uncatchable().matches(this)
 
     /**
+     * A utility method that checks if this Pokémon has the [BattleCloneProperty.isBattleClone] property.
+     *
+     * @return If the Pokémon is a battle clone.
+     */
+    fun isBattleClone() = BattleCloneProperty.isBattleClone().matches(this)
+
+    /**
      * Returns a copy of the held item.
      * In order to change the [ItemStack] use [swapHeldItem].
      *
@@ -926,7 +940,7 @@ open class Pokemon : ShowdownIdentifiable {
         this.currentHealth = other.currentHealth
         this.gender = other.gender
         this.moveSet.copyFrom(other.moveSet)
-        this.benchedMoves = other.benchedMoves
+        this.benchedMoves.copyFrom(other.benchedMoves)
         this.scaleModifier = other.scaleModifier
         this.shiny = other.shiny
         this.state = other.state
@@ -1103,6 +1117,9 @@ open class Pokemon : ShowdownIdentifiable {
 
     val allAccessibleMoves: Set<MoveTemplate>
         get() = form.moves.getLevelUpMovesUpTo(level) + benchedMoves.map { it.moveTemplate } + form.moves.evolutionMoves
+
+    val relearnableMoves: Iterable<MoveTemplate>
+        get() = allAccessibleMoves.filter { accessibleMove -> moveSet.none { it.template == accessibleMove } }
 
     fun updateAspects() {
         aspects = emptySet()

@@ -29,7 +29,10 @@ import net.minecraft.server.level.ServerLevel
 class EntityParticlesActionEffectKeyframe : ConditionalActionEffectKeyframe(), EntityConditionalActionEffectKeyframe {
     override val entityCondition = "q.entity.is_user".asExpressionLike()
     var effect: String? = null
+    @Deprecated("Use the locators property instead", ReplaceWith("locators"))
     var locator: String = "root"
+    var locators: Set<String> = setOf("root")
+
     val delay: ExpressionLike = "0".asExpressionLike()
     val visibilityRange = 200
 
@@ -45,7 +48,7 @@ class EntityParticlesActionEffectKeyframe : ConditionalActionEffectKeyframe(), E
         }?.asIdentifierDefaultingNamespace() ?: return skip()
 
         entities.filter { it is PosableEntity }.forEach { entity ->
-            val packet = SpawnSnowstormEntityParticlePacket(effectIdentifier, entity.id, listOf(locator))
+            val packet = SpawnSnowstormEntityParticlePacket(effectIdentifier, entity.id, (locators + locator).toList())
             val players = (entity.level() as ServerLevel).getPlayers { it.distanceTo(entity) <= visibilityRange }
             packet.sendToPlayers(players)
         }

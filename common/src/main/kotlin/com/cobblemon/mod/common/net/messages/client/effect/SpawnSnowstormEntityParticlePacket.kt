@@ -9,12 +9,15 @@
 package com.cobblemon.mod.common.net.messages.client.effect
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
+import com.cobblemon.mod.common.client.net.effect.SpawnSnowstormEntityParticleHandler
 import com.cobblemon.mod.common.util.*
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
 
 /**
  * Packet that spawns a snowstorm particle effect on a specified entity and specified locator.
+ *
+ * Handled by [SpawnSnowstormEntityParticleHandler]
  *
  * @author Hiroku
  * @since January 21st, 2024

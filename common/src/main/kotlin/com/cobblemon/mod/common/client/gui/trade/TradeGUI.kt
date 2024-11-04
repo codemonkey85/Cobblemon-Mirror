@@ -21,11 +21,10 @@ import com.cobblemon.mod.common.client.gui.TypeIcon
 import com.cobblemon.mod.common.client.gui.summary.Summary
 import com.cobblemon.mod.common.client.gui.summary.widgets.common.reformatNatureTextIfMinted
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
 import com.cobblemon.mod.common.client.trade.ClientTrade
 import com.cobblemon.mod.common.net.messages.client.trade.TradeStartedPacket.TradeablePokemon
-import com.cobblemon.mod.common.net.messages.server.trade.CancelTradePacket
-import com.cobblemon.mod.common.net.messages.server.trade.ChangeTradeAcceptancePacket
-import com.cobblemon.mod.common.net.messages.server.trade.UpdateTradeOfferPacket
+import com.cobblemon.mod.common.net.messages.server.trade.*
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.asTranslated
@@ -36,6 +35,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.client.resources.sounds.SoundInstance
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.sounds.SoundEvent
 import java.util.*
@@ -61,12 +61,25 @@ class TradeGUI(
         const val BASE_BACKGROUND_HEIGHT = 85
         const val PARTY_SLOT_PADDING = 4
         const val PORTRAIT_SIZE = 78
+        const val PORTRAIT_SCALE = 2F
+        const val PORTRAIT_SCALE_MULTIPLIER = 0.4F
+        const val PORTRAIT_MODEL_OFFSET_Y = -8.0
         const val TYPE_SPACER_WIDTH = 134
         const val TYPE_SPACER_HEIGHT = 12
         const val TRADE_READY_WIDTH = 28
         const val TRADE_READY_HEIGHT = 6
         const val TRADE_READY_TOP_HEIGHT = 5
         const val READY_PROGRESS_LIMIT = 6
+        const val TRADE_ANIMATION_WIDTH = 114
+        const val TRADE_ANIMATION_HEIGHT = 133
+        const val TRADE_ANIMATION_ARROWS_WIDTH = 69
+        const val TRADE_ANIMATION_FRAMES = 13
+        const val TRADE_ANIMATION_ARROWS_FRAMES = 18
+        const val MODEL_SCALE_BUFFER_FRAMES = 3
+        const val REVERSE_ANIMATION_TICK = TRADE_ANIMATION_FRAMES + MODEL_SCALE_BUFFER_FRAMES + TRADE_ANIMATION_ARROWS_FRAMES
+        const val MAX_TRADE_PROGRESS = REVERSE_ANIMATION_TICK + TRADE_ANIMATION_FRAMES + MODEL_SCALE_BUFFER_FRAMES
+        const val CRY_BUFFER = 7
+
         const val SCALE = 0.5F
 
         private val baseResource = cobblemonResource("textures/gui/trade/trade_base.png")
@@ -78,6 +91,8 @@ class TradeGUI(
         private val tradeReadyTopResource = cobblemonResource("textures/gui/trade/trade_ready_top.png")
         private val opposingTradeReadyResource = cobblemonResource("textures/gui/trade/trade_ready_opposing.png")
         private val opposingTradeReadyTopResource = cobblemonResource("textures/gui/trade/trade_ready_top_opposing.png")
+        private val tradeAnimationResource = cobblemonResource("textures/gui/trade/trade_animation.png")
+        private val tradeAnimationArrowsResource = cobblemonResource("textures/gui/trade/trade_animation_arrows.png")
     }
 
     private var offeredPokemonModel: ModelWidget? = null
@@ -87,15 +102,20 @@ class TradeGUI(
     var opposingOfferedPokemon: Pokemon? = null
 
     var ticksElapsed = 0
+    var protectiveTicks = 0
     var selectPointerOffsetY = 0
     var readyProgress = 0
+    var tradeAnimationProgress = 0
     var selectPointerOffsetIncrement = false
-    var protectiveTicks = 0
+    var tradeProcessing = false
+    var isTradeInitiator = false
+
+    var tradeSoundInstance: SoundInstance? = null
 
     init {
         trade.cancelEmitter.subscribe {
+            cancelTradeSound()
             super.onClose()
-            // Maybe a sound
         }
 
         trade.completedEmitter.subscribe {
@@ -106,29 +126,35 @@ class TradeGUI(
                 CobblemonNetwork.sendToServer(CancelTradePacket())
                 return@subscribe onClose()
             }
-            val i1 = party.indexOf(myTradedPokemon)
-            val i2 = traderParty.indexOf(theirTradedPokemon)
-            party[i1] = theirTradedPokemon
-            traderParty[i2] = myTradedPokemon
-            offeredPokemon = null
-            opposingOfferedPokemon = null
-            ticksElapsed = 0
-            readyProgress = 0
+            val tradedSlot = party.indexOf(myTradedPokemon)
+            val opposingTradedSlot = traderParty.indexOf(theirTradedPokemon)
+            party[tradedSlot] = theirTradedPokemon
+            traderParty[opposingTradedSlot] = myTradedPokemon
+
             trade.oppositeAcceptedMyOffer.set(false)
-            setOfferedPokemon(pokemon = null, isOpposing = true)
-            setOfferedPokemon(pokemon = null, isOpposing = false)
+            CobblemonNetwork.sendToServer(UpdateTradeOfferPacket(Pair(theirTradedPokemon.pokemonId, PartyPosition(tradedSlot))))
+
             rebuildWidgets()
-            // Make a sound maybe
         }
+
         trade.oppositeOffer.subscribe { newOffer: Pokemon? ->
             setOfferedPokemon(pokemon = newOffer, isOpposing = true)
         }
+
         trade.myOffer.subscribe { myOffer: Pokemon? ->
             setOfferedPokemon(pokemon = myOffer)
         }
+
         trade.oppositeAcceptedMyOffer.subscribe {
             ticksElapsed = 0
             readyProgress = 0
+        }
+
+        trade.tradeProcessing.subscribe {
+            val (processStatus, isInitiator) = it
+            tradeProcessing = processStatus
+            isTradeInitiator = isInitiator
+            tradeAnimationProgress = 0
         }
     }
 
@@ -152,17 +178,11 @@ class TradeGUI(
                 y = y + 119,
                 parent = this,
                 onPress = {
-                    if (offeredPokemon != null && opposingOfferedPokemon != null && protectiveTicks <= 0) {
+                    if (offeredPokemon != null && opposingOfferedPokemon != null && protectiveTicks <= 0 && !tradeProcessing) {
                         ticksElapsed = 0
-                        if (trade.acceptedOppositeOffer) {
-//                            trade.acceptedOppositeOffer = false;
-                            readyProgress = 0
-                            CobblemonNetwork.sendToServer(ChangeTradeAcceptancePacket(opposingOfferedPokemon!!.uuid, false))
-                        } else {
-//                            trade.acceptedOppositeOffer = true;
-                            readyProgress = 0
-                            CobblemonNetwork.sendToServer(ChangeTradeAcceptancePacket(opposingOfferedPokemon!!.uuid, true))
-                        }
+                        readyProgress = 0
+                        CobblemonNetwork.sendToServer(ChangeTradeAcceptancePacket(opposingOfferedPokemon!!.uuid, !trade.acceptedOppositeOffer))
+                        playSound(CobblemonSounds.GUI_CLICK)
                     }
                 }
             )
@@ -190,9 +210,10 @@ class TradeGUI(
                 pokemon = pokemon,
                 parent = this,
                 onPress = {
-                    if (!trade.acceptedOppositeOffer) {
+                    if (!trade.acceptedOppositeOffer && !tradeProcessing) {
                         val pk = if (offeredPokemon?.uuid == pokemon?.pokemonId) null else pokemon
                         CobblemonNetwork.sendToServer(UpdateTradeOfferPacket(pk?.let { it.pokemonId to PartyPosition(partyIndex) }))
+                        playSound(CobblemonSounds.GUI_CLICK)
                     }
                 }
             ).also { widget -> addRenderableWidget(widget) }
@@ -244,16 +265,59 @@ class TradeGUI(
             height = BASE_BACKGROUND_HEIGHT
         )
 
+        if (
+            (tradeAnimationProgress in MODEL_SCALE_BUFFER_FRAMES until(TRADE_ANIMATION_FRAMES + MODEL_SCALE_BUFFER_FRAMES)) ||
+            (tradeAnimationProgress in (REVERSE_ANIMATION_TICK..(REVERSE_ANIMATION_TICK + TRADE_ANIMATION_FRAMES)).drop(1))
+        ) {
+            val frameOffset = (
+                if (tradeAnimationProgress > REVERSE_ANIMATION_TICK)
+                    (REVERSE_ANIMATION_TICK + TRADE_ANIMATION_FRAMES - tradeAnimationProgress)
+                else (tradeAnimationProgress - MODEL_SCALE_BUFFER_FRAMES)
+            ) * TRADE_ANIMATION_HEIGHT
+            blitk(
+                matrixStack = matrices,
+                texture = tradeAnimationResource,
+                x = (x + 80.5) / SCALE,
+                y = (y + 31) / SCALE,
+                width = TRADE_ANIMATION_WIDTH,
+                height = TRADE_ANIMATION_HEIGHT,
+                vOffset = frameOffset,
+                textureHeight = TRADE_ANIMATION_HEIGHT * TRADE_ANIMATION_FRAMES,
+                scale = SCALE
+            )
+
+            blitk(
+                matrixStack = matrices,
+                texture = tradeAnimationResource,
+                x = (x + 155.5) / SCALE,
+                y = (y + 31) / SCALE,
+                width = TRADE_ANIMATION_WIDTH,
+                height = TRADE_ANIMATION_HEIGHT,
+                vOffset = frameOffset,
+                textureHeight = TRADE_ANIMATION_HEIGHT * TRADE_ANIMATION_FRAMES,
+                scale = SCALE
+            )
+        }
+
         // Render Model Portraits
-        context.enableScissor(
-            backgroundX,
-            backgroundY,
-            backgroundX + BASE_BACKGROUND_WIDTH,
-            backgroundY +  BASE_BACKGROUND_HEIGHT
-        )
-        offeredPokemonModel?.render(context, mouseX, mouseY, delta)
-        opposingOfferedPokemonModel?.render(context, mouseX, mouseY, delta)
-        context.disableScissor()
+        var scale = PORTRAIT_SCALE
+        var scaleOffsetY = PORTRAIT_MODEL_OFFSET_Y
+        if (tradeProcessing) {
+            val scaleInterval = if (tradeAnimationProgress > REVERSE_ANIMATION_TICK) (MAX_TRADE_PROGRESS - tradeAnimationProgress) else tradeAnimationProgress
+            scale = (PORTRAIT_SCALE - (scaleInterval * PORTRAIT_SCALE_MULTIPLIER)).coerceIn(0F, PORTRAIT_SCALE)
+            scaleOffsetY = (45.0 - (45.0 / PORTRAIT_SCALE) * scale) + PORTRAIT_MODEL_OFFSET_Y
+        }
+        if (scale > 0F) {
+            context.enableScissor(backgroundX, backgroundY, backgroundX + BASE_BACKGROUND_WIDTH, backgroundY +  BASE_BACKGROUND_HEIGHT)
+            offeredPokemonModel?.baseScale = scale
+            offeredPokemonModel?.offsetY = scaleOffsetY
+            offeredPokemonModel?.render(context, mouseX, mouseY, delta)
+
+            opposingOfferedPokemonModel?.baseScale = scale
+            opposingOfferedPokemonModel?.offsetY = scaleOffsetY
+            opposingOfferedPokemonModel?.render(context, mouseX, mouseY, delta)
+            context.disableScissor()
+        }
 
         // Render Base Resource
         blitk(
@@ -281,16 +345,18 @@ class TradeGUI(
                 textureHeight = TRADE_READY_HEIGHT * READY_PROGRESS_LIMIT
             )
 
-            blitk(
-                matrixStack = matrices,
-                texture = tradeReadyTopResource,
-                x = x + 112,
-                y = y + 2,
-                width = TRADE_READY_WIDTH,
-                height = TRADE_READY_TOP_HEIGHT,
-                vOffset = TRADE_READY_TOP_HEIGHT * readyProgress,
-                textureHeight = TRADE_READY_TOP_HEIGHT * READY_PROGRESS_LIMIT
-            )
+            if (!tradeProcessing) {
+                blitk(
+                    matrixStack = matrices,
+                    texture = tradeReadyTopResource,
+                    x = x + 112,
+                    y = y + 2,
+                    width = TRADE_READY_WIDTH,
+                    height = TRADE_READY_TOP_HEIGHT,
+                    vOffset = TRADE_READY_TOP_HEIGHT * readyProgress,
+                    textureHeight = TRADE_READY_TOP_HEIGHT * READY_PROGRESS_LIMIT
+                )
+            }
         }
 
         if (trade.oppositeAcceptedMyOffer.get()) {
@@ -305,15 +371,31 @@ class TradeGUI(
                 textureHeight = TRADE_READY_HEIGHT * READY_PROGRESS_LIMIT
             )
 
+            if (!tradeProcessing) {
+                blitk(
+                    matrixStack = matrices,
+                    texture = opposingTradeReadyTopResource,
+                    x = x + 153,
+                    y = y + 2,
+                    width = TRADE_READY_WIDTH,
+                    height = TRADE_READY_TOP_HEIGHT,
+                    vOffset = TRADE_READY_TOP_HEIGHT * readyProgress,
+                    textureHeight = TRADE_READY_TOP_HEIGHT * READY_PROGRESS_LIMIT
+                )
+            }
+        }
+
+        // Trade animation arrows
+        if (tradeAnimationProgress >= (TRADE_ANIMATION_FRAMES + MODEL_SCALE_BUFFER_FRAMES) && tradeAnimationProgress < REVERSE_ANIMATION_TICK) {
             blitk(
                 matrixStack = matrices,
-                texture = opposingTradeReadyTopResource,
-                x = x + 153,
+                texture = tradeAnimationArrowsResource,
+                x = x + 112,
                 y = y + 2,
-                width = TRADE_READY_WIDTH,
+                width = TRADE_ANIMATION_ARROWS_WIDTH,
                 height = TRADE_READY_TOP_HEIGHT,
-                vOffset = TRADE_READY_TOP_HEIGHT * readyProgress,
-                textureHeight = TRADE_READY_TOP_HEIGHT * READY_PROGRESS_LIMIT
+                vOffset = (((tradeAnimationProgress - MODEL_SCALE_BUFFER_FRAMES) % TRADE_ANIMATION_ARROWS_FRAMES) - MODEL_SCALE_BUFFER_FRAMES) * TRADE_READY_TOP_HEIGHT,
+                textureHeight = TRADE_READY_TOP_HEIGHT * TRADE_ANIMATION_ARROWS_FRAMES
             )
         }
 
@@ -322,19 +404,17 @@ class TradeGUI(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
             text = Minecraft.getInstance().user.name.text().bold(),
-            x = x + 57,
+            x = x + 13,
             y = y - 10.5,
-            centered = true,
             shadow = true
         )
 
-        drawScaledText(
+        drawScaledTextJustifiedRight(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
             text = traderName.bold(),
-            x = x + 237,
+            x = x + 280,
             y = y - 10.5,
-            centered = true,
             shadow = true
         )
 
@@ -359,14 +439,15 @@ class TradeGUI(
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
         if (minecraft?.options?.keyInventory?.matches(keyCode, scanCode) == true) {
             CancelTradePacket().sendToServer()
+            cancelTradeSound()
             Minecraft.getInstance().setScreen(null)
             return true
         }
 
         when (keyCode) {
             InputConstants.KEY_ESCAPE -> {
-//                playSound(CobblemonSounds.PC_OFF)
                 CancelTradePacket().sendToServer()
+                cancelTradeSound()
             }
         }
         return super.keyPressed(keyCode, scanCode, modifiers)
@@ -374,8 +455,35 @@ class TradeGUI(
 
     override fun tick() {
         ticksElapsed++
-        if (protectiveTicks > 0) {
-            protectiveTicks--
+        if (protectiveTicks > 0) protectiveTicks--
+        if (tradeProcessing) {
+            if (tradeAnimationProgress == 0) tradeSoundInstance = playSound(CobblemonSounds.GUI_TRADE)
+
+            tradeAnimationProgress++
+
+            if (offeredPokemon != null && opposingOfferedPokemon != null
+                && tradeAnimationProgress == REVERSE_ANIMATION_TICK
+                && isTradeInitiator
+            ) {
+                CobblemonNetwork.sendToServer(PerformTradePacket(opposingOfferedPokemon!!.uuid))
+            }
+
+            if (tradeAnimationProgress == (MAX_TRADE_PROGRESS + CRY_BUFFER)) {
+                if (offeredPokemonModel !== null && opposingOfferedPokemonModel !== null) {
+                    offeredPokemonModel!!.state.activeAnimations.clear()
+                    offeredPokemonModel!!.state.addFirstAnimation(setOf("cry"))
+                    opposingOfferedPokemonModel!!.state.activeAnimations.clear()
+                    opposingOfferedPokemonModel!!.state.addFirstAnimation(setOf("cry"))
+                }
+            }
+
+            if (tradeAnimationProgress > (MAX_TRADE_PROGRESS + CRY_BUFFER)) {
+                trade.tradeProcessing.set(Pair(false, false))
+                ticksElapsed = 0
+                readyProgress = 0
+                tradeAnimationProgress = 0
+                tradeSoundInstance = null
+            }
         }
 
         // Calculate select pointer offset
@@ -388,6 +496,7 @@ class TradeGUI(
 
     override fun onClose() {
         CobblemonNetwork.sendToServer(CancelTradePacket())
+        cancelTradeSound()
         super.onClose()
     }
 
@@ -403,33 +512,39 @@ class TradeGUI(
         if (isOpposing) {
             opposingOfferedPokemon = pokemon
             opposingOfferedPokemonModel = if (pokemon != null) ModelWidget(
-                pX = x + 147,
+                pX = x + 145,
                 pY = y + 30,
                 pWidth = PORTRAIT_SIZE,
                 pHeight = PORTRAIT_SIZE,
                 pokemon = pokemon.asRenderablePokemon(),
-                baseScale = 2F,
+                baseScale = PORTRAIT_SCALE,
                 rotationY = 35F,
-                offsetY = -10.0
+                offsetY = PORTRAIT_MODEL_OFFSET_Y
             ) else null
             trade.acceptedOppositeOffer = false
         } else {
             offeredPokemon = pokemon
             offeredPokemonModel = if (pokemon != null) ModelWidget(
-                pX = x + 68,
+                pX = x + 70,
                 pY = y + 30,
                 pWidth = PORTRAIT_SIZE,
                 pHeight = PORTRAIT_SIZE,
                 pokemon = pokemon.asRenderablePokemon(),
-                baseScale = 2F,
+                baseScale = PORTRAIT_SCALE,
                 rotationY = 325F,
-                offsetY = -10.0
+                offsetY = PORTRAIT_MODEL_OFFSET_Y
             ) else null
         }
     }
 
-    private fun playSound(soundEvent: SoundEvent) {
-        Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))
+    private fun playSound(soundEvent: SoundEvent): SoundInstance {
+        val soundInstance = SimpleSoundInstance.forUI(soundEvent, 1.0F)
+        Minecraft.getInstance().soundManager.play(soundInstance)
+        return soundInstance
+    }
+
+    private fun cancelTradeSound() {
+        if (tradeSoundInstance !== null) Minecraft.getInstance().soundManager.stop(tradeSoundInstance)
     }
 
     private fun renderPokemonInfo(pokemon: Pokemon?, isOpposing: Boolean, context: GuiGraphics, x: Int, y: Int, mouseX: Int, mouseY: Int) {
@@ -506,7 +621,7 @@ class TradeGUI(
                 blitk(
                     matrixStack = matrices,
                     texture = Summary.iconShinyResource,
-                    x = (x + (if (isOpposing) 214.5 else 71.5)) / SCALE,
+                    x = (x + (if (isOpposing) 213.5 else 71.5)) / SCALE,
                     y = (y + 33.5) / SCALE,
                     width = 16,
                     height = 16,

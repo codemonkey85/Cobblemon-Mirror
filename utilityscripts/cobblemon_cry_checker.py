@@ -9,6 +9,7 @@ from scriptutils import printCobblemonHeader, print_list_filtered, print_cobblem
     print_cobblemon_script_footer, print_problems_and_paths, print_warning, sanitize_pokemon, print_separator
 
 DEFAULT_POKEMON_MODELS_PATH = "../common/src/main/kotlin/com/cobblemon/mod/common/client/render/models/blockbench/pokemon/"
+DEFAULT_POKEMON_POSER_PATH = "../common/src/main/resources/assets/cobblemon/bedrock/pokemon/posers/"
 
 # Download the CSV file
 ASSETS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSTisDTkJvV0GzKV1zKjAPdMAQAO7znWxjEWXrM1gZPUVmsTU91oy54aJGMpbbvOqAOg03ER1wl7eeA/pub?gid=0&single=true&output=csv"
@@ -141,6 +142,7 @@ def main(print_missing_models=True, print_missing_animations=True):
         animations = None
 
         # Check if the Model.kt file exists and contains the required import and cryAnimation override
+        json_poser_path = os.path.join(DEFAULT_POKEMON_POSER_PATH, dex_number + "_" + sanitized_pokemon_name_lower, sanitized_pokemon_name_lower + ".json")
         if os.path.isfile(model_file_path):
             content = read_file_ignore_comments(model_file_path)
             if "import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.CryProvider" in content:
@@ -165,10 +167,19 @@ def main(print_missing_models=True, print_missing_animations=True):
                             content_between_braces,
                             pokemon_name,
                             all_warnings_combined))
+        elif os.path.isfile(json_poser_path):
+            try:
+                with open(json_poser_path, 'r', encoding="utf-8-sig") as file:
+                    data = json.load(file)
+                    if "animations" in data and "cry" in data["animations"] and sanitized_pokemon_name_lower in data["animations"]["cry"]:
+                        checks["override_correct"] = True
+                        checks["import_correct"] = True
+
+            except json.decoder.JSONDecodeError:
+                print_warning("Invalid JSON poser in " +  dex_number + "_" + sanitized_pokemon_name_lower + "/" +  sanitized_pokemon_name_lower + ".json")
         else:
             all_warnings_combined.append(
-                (pokemon_name,
-                 f"⚠️ Warning: Model.kt file not found at: {model_file_path.replace(DEFAULT_POKEMON_MODELS_PATH, '...')}"))
+                (pokemon_name, f"⚠️ Warning: Model.kt file or JSON poser not found for: {sanitized_pokemon_name_lower}"))
             # Ignore the checks for this file
             checks["override_correct"] = True
             checks["import_correct"] = True

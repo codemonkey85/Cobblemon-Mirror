@@ -45,6 +45,19 @@
   "eggGroups": [
     "water_2"
   ],
+  "behaviour": {
+    "moving": {
+      "canLook": false,
+      "walking": {
+        "avoidsLand": true
+      },
+      "swim": {
+        "swimSpeed": 0.25,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true
+      }
+    }
+  },
   "moves": [
     "1:pound",
     "6:watergun",

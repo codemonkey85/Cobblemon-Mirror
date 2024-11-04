@@ -9,9 +9,11 @@
 package com.cobblemon.mod.common.battles
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.api.storage.party.PartyStore
+import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore
 import com.cobblemon.mod.common.battles.actor.PlayerBattleActor
 import com.cobblemon.mod.common.battles.actor.PokemonBattleActor
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
@@ -31,7 +33,6 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.phys.Vec3
-import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.Iterable
 import kotlin.collections.MutableSet
@@ -60,8 +61,30 @@ object BattleBuilder {
         healFirst: Boolean = false,
         partyAccessor: (ServerPlayer) -> PartyStore = { it.party() }
     ): BattleStartResult {
-        val team1 = partyAccessor(player1).toBattleTeam(clone = cloneParties, healPokemon = healFirst, leadingPokemonPlayer1).sortedBy { it.health <= 0 }
-        val team2 = partyAccessor(player2).toBattleTeam(clone = cloneParties, healPokemon = healFirst, leadingPokemonPlayer2).sortedBy { it.health <= 0 }
+
+        val adjustLevel = battleFormat.adjustLevel
+        val team1 = partyAccessor(player1).toBattleTeam(clone = cloneParties || adjustLevel > 0,  healPokemon = healFirst, leadingPokemonPlayer1).sortedBy { it.health <= 0 }
+        val team2 = partyAccessor(player2).toBattleTeam(clone = cloneParties || adjustLevel > 0,  healPokemon = healFirst, leadingPokemonPlayer2).sortedBy { it.health <= 0 }
+
+        val battlePartyStores = mutableListOf<PlayerPartyStore>()
+
+        if (adjustLevel > 0) {
+            val tempStoreP1 = PlayerPartyStore(player1.uuid)
+            team1.forEachIndexed { index, it ->
+                it.effectedPokemon.level = adjustLevel
+                it.effectedPokemon.heal()
+                tempStoreP1.set(index, it.effectedPokemon)
+            }
+            battlePartyStores.add(tempStoreP1)
+
+            val tempStoreP2 = PlayerPartyStore(player2.uuid)
+            team2.forEachIndexed { index, it ->
+                it.effectedPokemon.level = adjustLevel
+                it.effectedPokemon.heal()
+                tempStoreP2.set(index, it.effectedPokemon)
+            }
+            battlePartyStores.add(tempStoreP2)
+        }
 
         val player1Actor = PlayerBattleActor(player1.uuid, team1)
         val player2Actor = PlayerBattleActor(player2.uuid, team2)
@@ -91,6 +114,7 @@ object BattleBuilder {
             ).ifSuccessful {
                 player1Actor.battleTheme = player2.getBattleTheme()
                 player2Actor.battleTheme = player1.getBattleTheme()
+                it.battlePartyStores.addAll(battlePartyStores)
                 result = SuccessfulBattleStart(it)
             }
             result
@@ -116,6 +140,20 @@ object BattleBuilder {
             ).sortedBy { it.health <= 0 }
         }
         val playerActors = teams.mapIndexed { index, team -> PlayerBattleActor(players[index].uuid, team)}.toMutableList()
+
+        val adjustLevel = battleFormat.adjustLevel
+        val battlePartyStores = mutableListOf<PlayerPartyStore>()
+
+        if (adjustLevel > 0) {
+            teams.forEachIndexed { index, battleTeam ->
+                battleTeam.forEach { battlePokemon ->
+                    battlePokemon.effectedPokemon.level = adjustLevel
+                    battlePokemon.effectedPokemon.heal()
+                    val tempStore = PlayerPartyStore(players[index].uuid)
+                    battlePartyStores.add(tempStore)
+                }
+            }
+        }
 
         val errors = ErroredBattleStart()
 
@@ -169,6 +207,8 @@ object BattleBuilder {
 
                 playerActors[2].battleTheme = players[0].getBattleTheme()
                 playerActors[3].battleTheme = players[0].getBattleTheme()
+
+                it.battlePartyStores.addAll(battlePartyStores)
             }
             errors
         } else {
@@ -272,7 +312,6 @@ object BattleBuilder {
     ): BattleStartResult {
         val playerTeam = party.toBattleTeam(clone = cloneParties, healPokemon = healFirst, leadingPokemon = leadingPokemon)
         val playerActor = PlayerBattleActor(player.uuid, playerTeam)
-
         val npcParty = npcEntity.party?.getParty(player, npcEntity)
         val errors = ErroredBattleStart()
 
@@ -313,8 +352,7 @@ object BattleBuilder {
                 side1 = BattleSide(playerActor),
                 side2 = BattleSide(npcActor)
             ).ifSuccessful { battle ->
-                // TODO NPC battle themes
-//                playerActor.battleTheme = pokemonEntity.getBattleTheme()
+                playerActor.battleTheme = npcEntity.getBattleTheme()
                 npcEntity.entityData.update(NPCEntity.BATTLE_IDS) { it + battle.battleId }
                 result = SuccessfulBattleStart(battle)
             }

@@ -14,6 +14,7 @@ import net.minecraft.world.entity.schedule.Activity
 import net.minecraft.world.entity.schedule.Schedule
 
 class BrainConfigurationContext {
+
     var defaultActivity = Activity.IDLE
     var coreActivities = setOf(Activity.CORE)
     val activities = mutableListOf<ActivityConfigurationContext>()
@@ -31,8 +32,9 @@ class BrainConfigurationContext {
 
         // Apply the brain config
         activities.forEach { it.apply(entity) }
-        brain.setDefaultActivity(defaultActivity)
         brain.setCoreActivities(coreActivities)
+        brain.setDefaultActivity(defaultActivity)
         brain.schedule = schedule
+        brain.setActiveActivityIfPossible(defaultActivity)
     }
 }

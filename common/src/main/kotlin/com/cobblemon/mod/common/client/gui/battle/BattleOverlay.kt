@@ -312,6 +312,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
             drawPokeBall(
                 state = ballState,
                 matrixStack = matrixStack,
+                reversed = reversed,
                 partialTicks = partialTicks
             )
         } else {
