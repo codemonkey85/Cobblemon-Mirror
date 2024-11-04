@@ -1,37 +1,37 @@
 {
-    "portraitScale": 2.19,
-    "portraitTranslation": [-0.75, 1.21, 0],
-    "profileScale": 0.68,
-    "profileTranslation": [0.03, 0.75, 0],
-    "rootBone": "girafarig",
-    "animations": {
-      "cry": "q.bedrock_stateful('girafarig', 'cry')"
+  "portraitScale": 2.19,
+  "portraitTranslation": [-0.75, 1.21, 0],
+  "profileScale": 0.68,
+  "profileTranslation": [0.03, 0.75, 0],
+  "rootBone": "girafarig",
+  "animations": {
+    "cry": "q.bedrock_stateful('girafarig', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE", "FLOAT", "HOVER"],
+      "animations": [
+        "q.look('head', 1, 0.65)",
+        "q.bedrock('girafarig', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('girafarig', 'blink')",
+        "q.bedrock_quirk('girafarig', 'blink2')"
+      ]
     },
-    "poses": {
-      "standing": {
-        "poseName": "standing",
-        "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE", "FLOAT", "HOVER"],
-        "animations": [
-            "q.look('head', 1, 0.65)",
-            "q.bedrock('girafarig', 'ground_idle')"
-        ],
-        "quirks": [
-            "q.bedrock_quirk('girafarig', 'blink')",
-            "q.bedrock_quirk('girafarig', 'blink2')"
-        ]
-      },
-      "walking": {
-        "poseName": "walking",
-        "poseTypes": ["WALK", "SWIM", "FLY"],
-        "animations": [
-            "q.look('head', 1, 0.65)",
-            "q.bedrock('girafarig', 'ground_idle')",
-            "q.quadruped_walk(0.45, 0.7)"
-        ],
-        "quirks": [
-            "q.bedrock_quirk('girafarig', 'blink')",
-            "q.bedrock_quirk('girafarig', 'blink2')"
-        ]
-      }
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": ["WALK", "SWIM", "FLY"],
+      "animations": [
+        "q.look('head', 1, 0.65)",
+        "q.bedrock('girafarig', 'ground_idle')",
+        "q.quadruped_walk(0.45, 0.7)"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('girafarig', 'blink')",
+        "q.bedrock_quirk('girafarig', 'blink2')"
+      ]
     }
   }
+}

@@ -9,13 +9,7 @@
   },
   "poses": {
     "standing": {
-      "poseTypes": [
-        "STAND", 
-        "FLOAT", 
-        "PORTRAIT", 
-        "PROFILE", 
-        "NONE"
-      ],
+      "poseTypes": ["STAND", "FLOAT", "PORTRAIT", "PROFILE", "NONE"],
       "animations": ["q.bedrock('joltik', 'ground_idle')"],
       "quirks": [
         "q.bedrock_quirk('joltik', 'blink1')",
@@ -24,10 +18,7 @@
     },
     "walking": {
       "poseName": "walking",
-      "poseTypes": [
-        "WALK", 
-        "SWIM"
-      ],
+      "poseTypes": ["WALK", "SWIM"],
       "animations": [
         "q.bedrock('joltik', 'ground_idle')",
         "q.quadruped_walk(1, 1, 'leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right')"

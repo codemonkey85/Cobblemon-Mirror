@@ -1,43 +1,20 @@
 {
   "rootBone": "alakazam",
   "portraitScale": 1.75,
-  "portraitTranslation": [
-    -0.25,
-    0.85,
-    0
-  ],
+  "portraitTranslation": [-0.25, 0.85, 0],
   "profileScale": 0.73,
-  "profileTranslation": [
-    0,
-    0.65,
-    0
-  ],
+  "profileTranslation": [0, 0.65, 0],
   "poses": {
     "standing": {
       "poseName": "standing",
-      "poseTypes": [
-        "STAND",
-        "FLOAT",
-        "HOVER",
-        "PROFILE",
-        "PORTRAIT"
-      ],
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('alakazam', 'ground_idle')"
-      ],
+      "poseTypes": ["STAND", "FLOAT", "HOVER", "PROFILE", "PORTRAIT"],
+      "animations": ["q.look('head')", "q.bedrock('alakazam', 'ground_idle')"],
       "transformTicks": 10,
-      "quirks": [
-        "q.bedrock_quirk('alakazam', 'blink')"
-      ]
+      "quirks": ["q.bedrock_quirk('alakazam', 'blink')"]
     },
     "walk": {
       "poseName": "walk",
-      "poseTypes": [
-        "WALK",
-        "SWIM",
-        "FLY"
-      ],
+      "poseTypes": ["WALK", "SWIM", "FLY"],
       "animations": [
         "q.look('head')",
         "q.bedrock('alakazam', 'ground_idle')",
@@ -45,9 +22,7 @@
         "q.bimanual_swing(0.6, 0.9, 'left_shoulder', 'right_shoulder')"
       ],
       "transformTicks": 10,
-      "quirks": [
-        "q.bedrock_quirk('alakazam', 'blink')"
-      ]
+      "quirks": ["q.bedrock_quirk('alakazam', 'blink')"]
     }
   }
 }

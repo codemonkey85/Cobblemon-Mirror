@@ -1,57 +1,29 @@
 {
-    "portraitScale": 1.78,
-    "portraitTranslation": [-0.02,-0.06,0],
-    "profileScale": 0.75,
-    "profileTranslation": [0,0.64,0],
-    "rootBone": "baltoy",
-    "poses": {
-      "standing": {
-        "poseTypes": [
-          "STAND",
-          "NONE",
-          "PORTRAIT",
-          "PROFILE"
-        ],
-        "animations": [
-          "q.bedrock('baltoy', 'ground_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('baltoy', 'blink')"
-        ]
-      },
-      "walking": {
-        "poseTypes": [
-          "WALK"
-        ],
-        "animations": [
-          "q.bedrock('baltoy', 'ground_walk')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('baltoy', 'blink')"
-        ]
-      },
-      "hover": {
-        "poseTypes": [
-          "HOVER",
-          "FLOAT"
-        ],
-        "animations": [
-          "q.bedrock('baltoy', 'air_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('baltoy', 'blink')"
-        ]
-      },
-      "fly": {
-        "poseTypes": [
-          "FLY"
-        ],
-        "animations": [
-            "q.bedrock('baltoy', 'air_fly')"
-        ],
-        "quirks": [
-            "q.bedrock_quirk('baltoy', 'blink')"
-        ]
-      }
+  "portraitScale": 1.78,
+  "portraitTranslation": [-0.02, -0.06, 0],
+  "profileScale": 0.75,
+  "profileTranslation": [0, 0.64, 0],
+  "rootBone": "baltoy",
+  "poses": {
+    "standing": {
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
+      "animations": ["q.bedrock('baltoy', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('baltoy', 'blink')"]
+    },
+    "walking": {
+      "poseTypes": ["WALK"],
+      "animations": ["q.bedrock('baltoy', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('baltoy', 'blink')"]
+    },
+    "hover": {
+      "poseTypes": ["HOVER", "FLOAT"],
+      "animations": ["q.bedrock('baltoy', 'air_idle')"],
+      "quirks": ["q.bedrock_quirk('baltoy', 'blink')"]
+    },
+    "fly": {
+      "poseTypes": ["FLY"],
+      "animations": ["q.bedrock('baltoy', 'air_fly')"],
+      "quirks": ["q.bedrock_quirk('baltoy', 'blink')"]
     }
   }
+}

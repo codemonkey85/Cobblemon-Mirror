@@ -1,38 +1,21 @@
 {
   "portraitScale": 1.94,
-  "portraitTranslation": [-0.99,-1.19,0],
+  "portraitTranslation": [-0.99, -1.19, 0],
   "profileScale": 0.72,
-  "profileTranslation": [0,0.32,0],
+  "profileTranslation": [0, 0.32, 0],
   "rootBone": "veluza",
   "animations": {},
   "poses": {
     "standing": {
-      "poseTypes": [
-        "STAND",
-        "NONE",
-        "FLOAT",
-        "PORTRAIT",
-        "PROFILE"
-      ],
+      "poseTypes": ["STAND", "NONE", "FLOAT", "PORTRAIT", "PROFILE"],
       "isBattle": false,
-      "animations": [
-        "q.bedrock('veluza', 'water_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('veluza', 'blink')"
-      ]
+      "animations": ["q.bedrock('veluza', 'water_idle')"],
+      "quirks": ["q.bedrock_quirk('veluza', 'blink')"]
     },
     "walking": {
-      "poseTypes": [
-        "WALK",
-        "SWIM"
-      ],
-      "animations": [
-        "q.bedrock('veluza', 'water_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('veluza', 'blink')"
-      ]
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": ["q.bedrock('veluza', 'water_idle')"],
+      "quirks": ["q.bedrock_quirk('veluza', 'blink')"]
     }
   }
 }

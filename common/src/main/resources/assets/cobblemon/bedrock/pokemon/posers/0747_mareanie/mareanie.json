@@ -1,8 +1,8 @@
 {
   "portraitScale": 1.2,
-  "portraitTranslation": [0.01,0.1,0],
+  "portraitTranslation": [0.01, 0.1, 0],
   "profileScale": 0.65,
-  "profileTranslation": [0,0.74,0],
+  "profileTranslation": [0, 0.74, 0],
   "rootBone": "mareanie",
   "animations": {
     "cry": "q.bedrock_stateful('mareanie', 'cry')"
@@ -10,21 +10,13 @@
   "poses": {
     "standing": {
       "poseTypes": ["STAND", "FLOAT", "PORTRAIT", "PROFILE", "NONE"],
-      "animations": [
-        "q.bedrock('mareanie', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('mareanie', 'blink')"
-      ]
+      "animations": ["q.bedrock('mareanie', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('mareanie', 'blink')"]
     },
     "walking": {
       "poseTypes": ["WALK", "SWIM"],
-      "animations": [
-        "q.bedrock('mareanie', 'ground_walk')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('mareanie', 'blink')"
-      ]
+      "animations": ["q.bedrock('mareanie', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('mareanie', 'blink')"]
     }
   }
 }

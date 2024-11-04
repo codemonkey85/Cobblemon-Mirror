@@ -1,205 +1,138 @@
 {
-    "portraitScale": 1.14,
-    "portraitTranslation": [-0.66,1.91,0],
-    "profileScale": 0.48,
-    "profileTranslation": [0,0.99,0],
-    "rootBone": "lapras",
-    "animations": {
-      "cry": "q.bedrock_stateful('lapras', 'cry')",
-      "recoil": "q.bedrock_stateful('lapras', 'recoil')"
-    },
-    "poses": {
-      "battle-standing": {
-        "poseTypes": [
-          "STAND"
-        ],
-        "isBattle": true,
-        "isTouchingWater": false,
-        "namedAnimations": { 
+  "portraitScale": 1.14,
+  "portraitTranslation": [-0.66, 1.91, 0],
+  "profileScale": 0.48,
+  "profileTranslation": [0, 0.99, 0],
+  "rootBone": "lapras",
+  "animations": {
+    "cry": "q.bedrock_stateful('lapras', 'cry')",
+    "recoil": "q.bedrock_stateful('lapras', 'recoil')"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "isTouchingWater": false,
+      "namedAnimations": {
         "cry": "q.bedrock_primary('lapras', 'battle_cry', q.curve('symmetrical_wide'))",
         "special": "q.bedrock_primary('lapras', 'special', q.curve('symmetrical_wide'))",
         "status": "q.bedrock_primary('lapras', 'status', q.curve('symmetrical_wide'))"
-        },
-        "animations": [
-          "q.look('head')",
-          "q.bedrock('lapras', 'ground_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lapras', 'blink')"
-        ]
       },
-      "surfacewater-battle-standing": {
-        "poseTypes": [
-          "STAND"
-        ],
-        "isBattle": true,
-        "isTouchingWater": true,
-        "isUnderWater": false,
-        "namedAnimations": { 
+      "animations": ["q.look('head')", "q.bedrock('lapras', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('lapras', 'blink')"]
+    },
+    "surfacewater-battle-standing": {
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "isTouchingWater": true,
+      "isUnderWater": false,
+      "namedAnimations": {
         "cry": "q.bedrock_primary('lapras', 'surfacewater_battle_cry', q.curve('symmetrical_wide'))",
         "special": "q.bedrock_primary('lapras', 'surfacewater_special', q.curve('symmetrical_wide'))",
         "status": "q.bedrock_primary('lapras', 'surfacewater_status', q.curve('symmetrical_wide'))"
-        },
-        "animations": [
-          "q.look('head')",
-          "q.bedrock('lapras', 'surfacewater_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lapras', 'blink')"
-        ]
       },
-      "underwater-battle-standing": {
-        "poseTypes": [
-          "FLOAT"
-        ],
-        "isBattle": true,
-        "isTouchingWater": true,
-        "isUnderWater": true,
-        "namedAnimations": { 
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('lapras', 'surfacewater_idle')"
+      ],
+      "quirks": ["q.bedrock_quirk('lapras', 'blink')"]
+    },
+    "underwater-battle-standing": {
+      "poseTypes": ["FLOAT"],
+      "isBattle": true,
+      "isTouchingWater": true,
+      "isUnderWater": true,
+      "namedAnimations": {
         "cry": "q.bedrock_primary('lapras', 'water_battle_cry', q.curve('symmetrical_wide'))",
         "special": "q.bedrock_primary('lapras', 'water_special', q.curve('symmetrical_wide'))",
         "status": "q.bedrock_primary('lapras', 'water_status', q.curve('symmetrical_wide'))"
-        },
-        "animations": [
-          "q.look('head')",
-          "q.bedrock('lapras', 'water_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lapras', 'blink')"
-        ]
       },
-      "standing": {
-        "poseTypes": [
-          "STAND",
-          "NONE",
-          "PORTRAIT",
-          "PROFILE"
-        ],
-        "isBattle": false,
-        "isTouchingWater": false,
-        "animations": [
-          "q.look('head')",
-          "q.bedrock('lapras', 'ground_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lapras', 'blink')",
-          "q.bedrock_quirk('lapras', q.array('quirk', 'quirk2'))"
-        ]
-      },
-      "walking": {
-        "poseTypes": [
-          "WALK"
-        ],
-        "isTouchingWater": false,
-        "animations": [
-          "q.look('head')",
-          "q.bedrock('lapras', 'ground_walk')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lapras', 'blink')"
-        ]
-      },
-      "surfacewater-float": {
-        "poseTypes": [
-          "STAND"
-        ],
-        "isTouchingWater": true,
-        "isUnderWater": false,
-        "animations": [
-          "q.look('head')",
-          "q.bedrock('lapras', 'surfacewater_idle', q.curve('symmetrical_wide'))"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lapras', 'blink')",
-          "q.bedrock_quirk('lapras', q.array('quirk', 'quirk2'))"
-        ]
-      },
-      "float": {
-        "poseTypes": [
-          "FLOAT"
-        ],
-        "isTouchingWater": true,
-        "isUnderWater": true,
-        "animations": [
-          "q.look('head')",
-          "q.bedrock('lapras', 'water_idle')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lapras', 'blink')",
-          "q.bedrock_quirk('lapras', 'water_quirk')"
-        ]
-      },
-      "surfacewater-swim": {
-        "poseTypes": [
-          "WALK"
-        ],
-        "isTouchingWater": true,
-        "isUnderWater": false,
-        "animations": [
-          "q.look('head')",
-          "q.bedrock('lapras', 'surfacewater_swim')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lapras', 'blink')"
-        ]
-      },
-      "swim": {
-        "poseTypes": [
-          "SWIM"
-        ],
-        "isTouchingWater": true,
-        "isUnderWater": true,
-        "animations": [
-          "q.look('head')",
-          "q.bedrock('lapras', 'water_swim')"
-        ],
-        "quirks": [
-          "q.bedrock_quirk('lapras', 'blink')"
-        ]
-      },
-      "sleep": {
-        "poseTypes": [
-          "SLEEP"
-        ],
-        "isTouchingWater": false,
-        "namedAnimations": {
+      "animations": ["q.look('head')", "q.bedrock('lapras', 'water_idle')"],
+      "quirks": ["q.bedrock_quirk('lapras', 'blink')"]
+    },
+    "standing": {
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "isTouchingWater": false,
+      "animations": ["q.look('head')", "q.bedrock('lapras', 'ground_idle')"],
+      "quirks": [
+        "q.bedrock_quirk('lapras', 'blink')",
+        "q.bedrock_quirk('lapras', q.array('quirk', 'quirk2'))"
+      ]
+    },
+    "walking": {
+      "poseTypes": ["WALK"],
+      "isTouchingWater": false,
+      "animations": ["q.look('head')", "q.bedrock('lapras', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('lapras', 'blink')"]
+    },
+    "surfacewater-float": {
+      "poseTypes": ["STAND"],
+      "isTouchingWater": true,
+      "isUnderWater": false,
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('lapras', 'surfacewater_idle', q.curve('symmetrical_wide'))"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('lapras', 'blink')",
+        "q.bedrock_quirk('lapras', q.array('quirk', 'quirk2'))"
+      ]
+    },
+    "float": {
+      "poseTypes": ["FLOAT"],
+      "isTouchingWater": true,
+      "isUnderWater": true,
+      "animations": ["q.look('head')", "q.bedrock('lapras', 'water_idle')"],
+      "quirks": [
+        "q.bedrock_quirk('lapras', 'blink')",
+        "q.bedrock_quirk('lapras', 'water_quirk')"
+      ]
+    },
+    "surfacewater-swim": {
+      "poseTypes": ["WALK"],
+      "isTouchingWater": true,
+      "isUnderWater": false,
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('lapras', 'surfacewater_swim')"
+      ],
+      "quirks": ["q.bedrock_quirk('lapras', 'blink')"]
+    },
+    "swim": {
+      "poseTypes": ["SWIM"],
+      "isTouchingWater": true,
+      "isUnderWater": true,
+      "animations": ["q.look('head')", "q.bedrock('lapras', 'water_swim')"],
+      "quirks": ["q.bedrock_quirk('lapras', 'blink')"]
+    },
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "isTouchingWater": false,
+      "namedAnimations": {
         "cry": "q.bedrock_stateful('dummy', 'cry')"
-        },
-        "animations": [
-          "q.bedrock('lapras', 'sleep')"
-        ]
       },
-      "underwater-sleep": {
-        "poseTypes": [
-          "SLEEP"
-        ],
-        "poseName": [
-        "water-sleep"
-        ],
-        "isTouchingWater": true,
-        "isUnderWater": true,
-        "namedAnimations": {
+      "animations": ["q.bedrock('lapras', 'sleep')"]
+    },
+    "underwater-sleep": {
+      "poseTypes": ["SLEEP"],
+      "poseName": ["water-sleep"],
+      "isTouchingWater": true,
+      "isUnderWater": true,
+      "namedAnimations": {
         "cry": "q.bedrock_stateful('dummy', 'cry')"
-        },
-        "animations": [
-          "q.bedrock('lapras', 'water_sleep')"
-        ]
       },
-      "surfacewater-sleep": {
-        "poseTypes": [
-          "SLEEP"
-        ],
-        "poseName": [
-        "surfacewater-sleep"
-        ],
-        "isTouchingWater": true,
-        "isUnderWater": false,
-        "namedAnimations": {
+      "animations": ["q.bedrock('lapras', 'water_sleep')"]
+    },
+    "surfacewater-sleep": {
+      "poseTypes": ["SLEEP"],
+      "poseName": ["surfacewater-sleep"],
+      "isTouchingWater": true,
+      "isUnderWater": false,
+      "namedAnimations": {
         "cry": "q.bedrock_stateful('dummy', 'cry')"
-        },
-        "animations": [
-          "q.bedrock('lapras', 'surfacewater_sleep')"
-        ]
-      }
+      },
+      "animations": ["q.bedrock('lapras', 'surfacewater_sleep')"]
     }
   }
+}

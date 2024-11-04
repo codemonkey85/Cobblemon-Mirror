@@ -10,45 +10,23 @@
   "poses": {
     "standing": {
       "poseName": "standing",
-      "poseTypes": [
-        "STAND",
-        "FLOAT",
-        "NONE",
-        "PORTRAIT",
-        "PROFILE"
-      ],
-      "animations": [
-        "q.bedrock('igglybuff', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('igglybuff', 'blink')"
-      ]
+      "poseTypes": ["STAND", "FLOAT", "NONE", "PORTRAIT", "PROFILE"],
+      "animations": ["q.bedrock('igglybuff', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('igglybuff', 'blink')"]
     },
     "walking": {
       "poseName": "walking",
-      "poseTypes": [
-        "WALK",
-        "SWIM"
-      ],
+      "poseTypes": ["WALK", "SWIM"],
       "animations": [
         "q.biped_walk(0.66, 0.6, 'left_foot', 'right_foot')",
         "q.bedrock('igglybuff', 'ground_idle')"
       ],
-      "quirks": [
-        "q.bedrock_quirk('igglybuff', 'blink')"
-      ]
+      "quirks": ["q.bedrock_quirk('igglybuff', 'blink')"]
     },
     "shoulder_left": {
-      "poseTypes": [
-        "SHOULDER_LEFT"
-      ],
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('igglybuff', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('igglybuff', 'blink')"
-      ],
+      "poseTypes": ["SHOULDER_LEFT"],
+      "animations": ["q.look('head')", "q.bedrock('igglybuff', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('igglybuff', 'blink')"],
       "transformedParts": [
         {
           "part": "body",
@@ -57,16 +35,9 @@
       ]
     },
     "shoulder_right": {
-      "poseTypes": [
-        "SHOULDER_RIGHT"
-      ],
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('igglybuff', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('igglybuff', 'blink')"
-      ],
+      "poseTypes": ["SHOULDER_RIGHT"],
+      "animations": ["q.look('head')", "q.bedrock('igglybuff', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('igglybuff', 'blink')"],
       "transformedParts": [
         {
           "part": "body",

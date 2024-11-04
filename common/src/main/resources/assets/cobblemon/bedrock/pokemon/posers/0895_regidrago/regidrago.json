@@ -6,28 +6,14 @@
   "rootBone": "regidrago",
   "poses": {
     "standing": {
-      "poseTypes": [
-        "STAND",
-        "FLOAT",
-        "PORTRAIT",
-        "PROFILE",
-        "NONE"
-      ],
-      "animations": [
-        "q.bedrock('regidrago', 'ground_idle')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('regidrago', 'blink')"
-      ]
+      "poseTypes": ["STAND", "FLOAT", "PORTRAIT", "PROFILE", "NONE"],
+      "animations": ["q.bedrock('regidrago', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('regidrago', 'blink')"]
     },
     "walking": {
       "poseTypes": ["WALK", "SWIM"],
-      "animations": [
-        "q.bedrock('regidrago', 'ground_walk')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('regidrago', 'blink')"
-      ]
+      "animations": ["q.bedrock('regidrago', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('regidrago', 'blink')"]
     }
   }
 }
