@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.CropBlock
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.IntegerProperty
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.CollisionContext
@@ -41,12 +42,19 @@ import kotlin.random.Random
 @Suppress("OVERRIDE_DEPRECATION")
 class BugwortBlock(settings: Properties) : CropBlock(settings), BonemealableBlock {
 
+    init {
+        registerDefaultState(stateDefinition.any()
+                .setValue(AGE, 0)
+                .setValue(IS_WILD, false))
+    }
+
     override fun getAgeProperty(): IntegerProperty = AGE
 
     override fun getMaxAge(): Int = MATURE_AGE
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(this.ageProperty)
+        builder.add(IS_WILD)
     }
 
     override fun getBaseSeedId(): ItemLike = CobblemonItems.BUGWORT
@@ -69,7 +77,7 @@ class BugwortBlock(settings: Properties) : CropBlock(settings), BonemealableBloc
     override fun isBonemealSuccess(world: Level, random: RandomSource, pos: BlockPos, state: BlockState) = true
 
     override fun performBonemeal(world: ServerLevel, random: RandomSource, pos: BlockPos, state: BlockState) {
-        world.setBlock(pos, state.setValue(BugwortBlock.AGE, state.getValue(BugwortBlock.AGE) + 1), 2)
+        world.setBlock(pos, state.setValue(AGE, state.getValue(AGE) + 1), 2)
     }
 
     override fun canSurvive(state: BlockState, world: LevelReader, pos: BlockPos): Boolean {
@@ -77,7 +85,7 @@ class BugwortBlock(settings: Properties) : CropBlock(settings), BonemealableBloc
         return (world.getRawBrightness(pos, 0) >= 8 || world.canSeeSky(pos)) && ((this.isWild(state) && (floor.`is`(BlockTags.DIRT) || floor.`is`(Blocks.FARMLAND)) || this.mayPlaceOn(floor, world, pos)))
     }
 
-    fun isWild(state: BlockState): Boolean = state.getValue(MintBlock.IS_WILD)
+    fun isWild(state: BlockState): Boolean = state.getValue(IS_WILD)
     override fun mayPlaceOn(state: BlockState, world: BlockGetter, pos: BlockPos): Boolean {
         val blockPos = pos!!.below()
         val down = pos.below()
@@ -112,6 +120,7 @@ class BugwortBlock(settings: Properties) : CropBlock(settings), BonemealableBloc
 
         const val MATURE_AGE = 3
         val AGE: IntegerProperty = BlockStateProperties.AGE_3
+        val IS_WILD: BooleanProperty = BooleanProperty.create("is_wild")
         val AGE_TO_SHAPE = arrayOf(
                 box(0.0, 0.0, 0.0, 16.0, 2.0, 16.0),
                 box(0.0, 0.0, 0.0, 16.0, 5.0, 16.0),

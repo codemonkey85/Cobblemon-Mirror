@@ -227,6 +227,7 @@ object CobblemonClient {
             CobblemonBlocks.REVIVAL_HERB,
             CobblemonBlocks.VIVICHOKE_SEEDS,
             CobblemonBlocks.PEP_UP_FLOWER,
+            CobblemonBlocks.BUGWORT,
             CobblemonBlocks.POTTED_PEP_UP_FLOWER,
             CobblemonBlocks.REVIVAL_HERB,
             *CobblemonBlocks.berries().values.toTypedArray(),

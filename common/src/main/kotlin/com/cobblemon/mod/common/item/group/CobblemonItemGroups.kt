@@ -106,6 +106,7 @@ object CobblemonItemGroups {
         entries.accept(CobblemonItems.MIRROR_HERB)
         entries.accept(CobblemonItems.VIVICHOKE)
         entries.accept(CobblemonItems.VIVICHOKE_SEEDS)
+        entries.accept(CobblemonItems.BUGWORT)
 
         entries.accept(CobblemonItems.SWEET_SAP)
 
