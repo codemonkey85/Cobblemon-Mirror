@@ -18,6 +18,7 @@ import com.cobblemon.mod.common.util.permission
 import com.cobblemon.mod.common.util.toBlockPos
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
+import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
 import net.minecraft.commands.CommandSourceStack
@@ -32,6 +33,7 @@ object SpawnNPCCommand {
     private const val NAME = "spawnnpc"
     private const val CLASS = "class"
     private const val POSITION = "pos"
+    private const val LEVEL = "level"
     private const val ALIAS = "npcspawn"
     private const val AT_NAME = "${NAME}at"
     private const val AT_ALIAS = "${ALIAS}at"
@@ -43,7 +45,11 @@ object SpawnNPCCommand {
         val contextPositionCommand = dispatcher.register(literal(NAME)
             .permission(CobblemonPermissions.SPAWN_NPC)
             .then(argument(CLASS, NPCClassArgumentType.npcClass())
-                .executes{ context -> execute(context, context.source.position) }
+                .then(
+                    argument(LEVEL, IntegerArgumentType.integer(1))
+                        .executes { context -> execute(context, context.source.position, IntegerArgumentType.getInteger(context, LEVEL)) }
+                )
+                .executes { context -> execute(context, context.source.position, 1) }
             )
         )
         dispatcher.register(contextPositionCommand.alias(ALIAS))
@@ -51,14 +57,18 @@ object SpawnNPCCommand {
             .permission(CobblemonPermissions.SPAWN_NPC)
             .then(argument(POSITION, Vec3Argument.vec3())
                 .then(argument(CLASS, NPCClassArgumentType.npcClass())
-                    .executes { context -> execute(context, Vec3Argument.getVec3(context, POSITION)) }
+                    .then(
+                        argument(LEVEL, IntegerArgumentType.integer(1))
+                            .executes { context -> execute(context, Vec3Argument.getVec3(context, POSITION), IntegerArgumentType.getInteger(context, LEVEL)) }
+                    )
+                    .executes { context -> execute(context, Vec3Argument.getVec3(context, POSITION), 1) }
                 )
             )
         )
         dispatcher.register(argumentPositionCommand.alias(AT_ALIAS))
     }
 
-    private fun execute(context: CommandContext<CommandSourceStack>, pos: Vec3): Int {
+    private fun execute(context: CommandContext<CommandSourceStack>, pos: Vec3, level: Int): Int {
         val world = context.source.level
         val blockPos = pos.toBlockPos()
         if (!Level.isInSpawnableBounds(blockPos)) {
@@ -68,7 +78,7 @@ object SpawnNPCCommand {
         val npc = NPCEntity(world)
         npc.moveTo(pos.x, pos.y, pos.z, npc.yRot, npc.xRot)
         npc.npc = npcClass
-        npc.initialize(1)
+        npc.initialize(level)
         if (world.addFreshEntity(npc)) {
             return Command.SINGLE_SUCCESS
         }
