@@ -3,19 +3,16 @@
   "portraitTranslation": [-0.27, 0.55, 0],
   "profileScale": 0.58,
   "profileTranslation": [-0.08, 0.92, 0.0],
+  "rootBone": "wugtrio",
   "animations": {
     "recoil": "q.bedrock_stateful('wugtrio', 'recoil')"
   },
   "poses": {
     "battle-standing": {
       "poseName": "battle-standing",
-      "poseTypes": [
-        "STAND"
-      ],
+      "poseTypes": ["STAND"],
       "isBattle": true,
-      "animations": [
-        "q.bedrock('wugtrio', 'battle_idle')"
-      ],
+      "animations": ["q.bedrock('wugtrio', 'battle_idle')"],
       "quirks": [
         "q.bedrock_quirk('wugtrio', 'blink')",
         "q.bedrock_quirk('wugtrio', 'blink2')",
@@ -24,17 +21,9 @@
     },
     "standing": {
       "poseName": "standing",
-      "poseTypes": [
-        "STAND",
-        "WALK",
-        "NONE",
-        "PORTRAIT",
-        "PROFILE"
-      ],
+      "poseTypes": ["STAND", "WALK", "NONE", "PORTRAIT", "PROFILE"],
       "isBattle": false,
-      "animations": [
-        "q.bedrock('wugtrio', 'ground_idle')"
-      ],
+      "animations": ["q.bedrock('wugtrio', 'ground_idle')"],
       "quirks": [
         "q.bedrock_quirk('wugtrio', 'blink')",
         "q.bedrock_quirk('wugtrio', 'blink2')",

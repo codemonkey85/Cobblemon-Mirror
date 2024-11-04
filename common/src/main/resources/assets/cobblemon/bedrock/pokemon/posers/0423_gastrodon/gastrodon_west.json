@@ -3,12 +3,19 @@
   "portraitTranslation": [-0.56, 1.1, 0],
   "profileScale": 0.56,
   "profileTranslation": [0, 0.85, 0],
+  "rootBone": "gastrodon_west",
   "poses": {
     "standing": {
-      "poseTypes": ["STAND", "WALK", "SWIM", "FLOAT", "PORTRAIT", "PROFILE", "NONE"],
-      "animations": [
-        "q.bedrock('gastrodon_west', 'ground_idle')"
-      ]
+      "poseTypes": [
+        "STAND",
+        "WALK",
+        "SWIM",
+        "FLOAT",
+        "PORTRAIT",
+        "PROFILE",
+        "NONE"
+      ],
+      "animations": ["q.bedrock('gastrodon_west', 'ground_idle')"]
     }
   }
 }

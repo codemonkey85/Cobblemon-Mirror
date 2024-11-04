@@ -1,0 +1,45 @@
+{
+  "portraitScale": 2.57,
+  "portraitTranslation": [-0.18, 0.35, 0],
+  "profileScale": 0.71,
+  "profileTranslation": [0, 0.69, 0],
+  "rootBone": "lurantis",
+  "animations": {
+    "cry": "q.bedrock_stateful('lurantis', 'cry')"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": ["q.look('head')", "q.bedrock('lurantis', 'battle_idle')"],
+      "quirks": ["q.bedrock_quirk('lurantis', 'blink')"]
+    },
+    "standing": {
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('lurantis', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('lurantis', 'blink')"]
+    },
+    "walking": {
+      "poseTypes": ["WALK"],
+      "animations": ["q.look('head')", "q.bedrock('lurantis', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('lurantis', 'blink')"]
+    },
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "isWild": false,
+      "namedAnimations": {
+        "cry": "q.bedrock_stateful('dummy', 'cry')"
+      },
+      "animations": ["q.bedrock('lurantis', 'sleep')"]
+    },
+    "wild_sleep": {
+      "poseTypes": ["SLEEP"],
+      "isWild": true,
+      "namedAnimations": {
+        "cry": "q.bedrock_stateful('dummy', 'cry')"
+      },
+      "animations": ["q.bedrock('lurantis', 'flowering')"]
+    }
+  }
+}

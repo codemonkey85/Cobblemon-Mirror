@@ -16,12 +16,9 @@ import com.cobblemon.mod.common.client.particle.BedrockParticleOptionsRepository
 import com.cobblemon.mod.common.client.particle.ParticleStorm
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.entity.PosableEntity
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket
-import com.cobblemon.mod.common.pokemon.Pokemon
 import net.minecraft.client.Minecraft
 import net.minecraft.world.entity.Entity
-import kotlin.text.get
 
 object SpawnSnowstormEntityParticleHandler : ClientNetworkPacketHandler<SpawnSnowstormEntityParticlePacket> {
     override fun handle(packet: SpawnSnowstormEntityParticlePacket, client: Minecraft) {
@@ -30,23 +27,24 @@ object SpawnSnowstormEntityParticleHandler : ClientNetworkPacketHandler<SpawnSno
         val entity = world.getEntity(packet.entityId) as? PosableEntity ?: return
         entity as Entity
         val state = entity.delegate as PosableState
-        val locator = packet.locator.firstOrNull() { state.locatorStates[it] != null } ?: return
-        val matrixWrapper = state.locatorStates[locator]!!
+        val locators = packet.locator.firstNotNullOfOrNull { state.getMatchingLocators(it).takeIf { it.isNotEmpty() } } ?: return
 
-        val particleRuntime = MoLangRuntime().setup().setupClient()
-        particleRuntime.environment.query.addFunction("entity") { state.runtime.environment.query }
+        val matrixWrappers = locators.mapNotNull { state.locatorStates[it] }
+        matrixWrappers.forEach { matrixWrapper ->
+            val particleRuntime = MoLangRuntime().setup().setupClient()
+            particleRuntime.environment.query.addFunction("entity") { state.runtime.environment.query }
+            val storm = ParticleStorm(
+                effect = effect,
+                matrixWrapper = matrixWrapper,
+                world = world,
+                runtime = particleRuntime,
+                sourceVelocity = { entity.deltaMovement },
+                sourceAlive = { !entity.isRemoved },
+                sourceVisible = { !entity.isInvisible },
+                entity = entity
+            )
 
-        val storm = ParticleStorm(
-            effect = effect,
-            matrixWrapper = matrixWrapper,
-            world = world,
-            runtime = particleRuntime,
-            sourceVelocity = { entity.deltaMovement },
-            sourceAlive = { !entity.isRemoved },
-            sourceVisible = { !entity.isInvisible },
-            entity = entity
-        )
-
-        storm.spawn()
+            storm.spawn()
+        }
     }
 }

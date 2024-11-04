@@ -1,8 +1,9 @@
 {
   "portraitScale": 1.44,
-  "portraitTranslation": [-0.14,-0.63,0],
+  "portraitTranslation": [-0.14, -0.63, 0],
   "profileScale": 0.63,
-  "profileTranslation": [0,0.64,0],
+  "profileTranslation": [0, 0.64, 0],
+  "rootBone": "goldeen",
   "poses": {
     "standing": {
       "poseTypes": [
@@ -14,12 +15,8 @@
         "PROFILE",
         "NONE"
       ],
-      "animations": [
-        "q.bedrock('goldeen', 'render')"
-      ],
-      "quirks": [
-        "q.bedrock_quirk('goldeen', 'blink')"
-      ]
+      "animations": ["q.bedrock('goldeen', 'render')"],
+      "quirks": ["q.bedrock_quirk('goldeen', 'blink')"]
     }
   }
 }

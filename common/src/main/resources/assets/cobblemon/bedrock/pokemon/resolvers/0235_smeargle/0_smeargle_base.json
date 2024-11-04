@@ -7,11 +7,24 @@
       "poser": "cobblemon:smeargle",
       "model": "cobblemon:smeargle.geo",
       "texture": "cobblemon:textures/pokemon/0235_smeargle/smeargle.png",
-      "layers": []
+      "layers": [
+        {
+          "name": "paint",
+          "translucent": true,
+          "texture": "cobblemon:textures/pokemon/0235_smeargle/smeargle_paint_green.png"
+        }
+      ]
     },
     {
       "aspects": ["shiny"],
-      "texture": "cobblemon:textures/pokemon/0235_smeargle/smeargle_shiny.png"
+      "texture": "cobblemon:textures/pokemon/0235_smeargle/smeargle_shiny.png",
+      "layers": [
+        {
+          "name": "paint",
+          "translucent": true,
+          "texture": "cobblemon:textures/pokemon/0235_smeargle/smeargle_paint_red.png"
+        }
+      ]
     },
     {
       "aspects": ["color-black"],

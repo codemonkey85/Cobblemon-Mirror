@@ -49,6 +49,20 @@
     "special_defence": 0,
     "speed": 0
   },
+  "behaviour": {
+    "moving": {
+      "walking": {
+        "walkSpeed": 0.16
+      },
+      "fly": {
+        "canFly": true
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "times": "night"
+    }
+  },
   "experienceGroup": "medium_slow",
   "eggCycles": 20,
   "eggGroups": [
@@ -114,6 +128,12 @@
     "tm:uturn",
     "tm:waterpulse"
   ],
+  "baseScale": 0.75,
+  "hitbox": {
+    "width": 1,
+    "height": 2,
+    "fixed": false
+  },
   "labels": [
     "gen9"
   ],
