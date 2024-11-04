@@ -30,16 +30,14 @@ object SetNicknameHandler : ServerNetworkPacketHandler<SetNicknamePacket> {
         val pokemonStore: PokemonStore<*> = if (packet.isParty) {
             player.party()
         } else {
-            PCLinkManager.getPC(player) ?: return run { ClosePCPacket(null).sendToPlayer(player) }
+            PCLinkManager.getPC(player) ?: return ClosePCPacket(null).sendToPlayer(player)
         }
 
         val pokemon = pokemonStore[packet.pokemonUUID] ?: return
 
         val nickname = packet.nickname
         if (nickname != null && nickname.length > MAX_NAME_LENGTH) {
-            return run {
-                player.sendPacket(NicknameUpdatePacket({ pokemon }, pokemon.nickname))
-            }
+            return player.sendPacket(NicknameUpdatePacket({ pokemon }, pokemon.nickname))
         }
 
         CobblemonEvents.POKEMON_NICKNAMED.postThen(
