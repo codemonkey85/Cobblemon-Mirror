@@ -75,28 +75,34 @@ class SaccharineLeafBlock(settings: Properties) : LeavesBlock(settings), Bonemea
         }
     }
 
-    override fun isRandomlyTicking(state: BlockState) = state.getValue(AGE) != 2
+    override fun isRandomlyTicking(state: BlockState) = state.getValue(AGE) != 0
 
     override fun randomTick(state: BlockState, world: ServerLevel, pos: BlockPos, random: RandomSource) {
-        // todo if a honey soaked leaf block is the first block below this block then over time age that leaf block
-        if (random.nextInt(180) == 0) {
 
-            // todo if leaf block is within 10 blocks of a lead soaked block then age it
+        if (random.nextInt(2) == 0) {
+
+
             for (i in 1..10) {
 
-                val abovePos = pos.above(i)
-                val aboveState = world.getBlockState(abovePos)
+                val belowPos = pos.below(i)
+                val belowState = world.getBlockState(belowPos)
                 val currentAge = state.getValue(AGE)
 
-                if (!aboveState.isAir) {
-                    if ((aboveState.block is SaccharineLeafBlock && aboveState.getValue(AGE) > 0)/* ||
-                            (aboveState.block is BeehiveBlock && aboveState.get(HONEY_LEVEL) == 5)*/) {
-                        // todo -1 age from top block
-                        world.setBlock(abovePos, aboveState.setValue(AGE, aboveState.getValue(AGE) - 1), 2)
+                if (belowState.isAir) {
+                    continue
+                } else if (belowState.block is SaccharineLeafBlock) {
+                    val belowAge = belowState.getValue(AGE)
+                    if (belowAge < MAX_AGE) {
+                        // Decrease age from the top leaf block
+                        val newCurrentAge = (currentAge - 1).coerceAtLeast(MIN_AGE)
+                        world.setBlock(pos, state.setValue(AGE, newCurrentAge), 2)
 
-                        // todo +1 age the leaf bottom block
-                        world.setBlock(pos, state.setValue(AGE, currentAge + 1), 2)
+                        // Increase age from the bottom leaf block
+                        val newBelowAge = (belowAge + 1).coerceAtMost(MAX_AGE)
+                        world.setBlock(belowPos, belowState.setValue(AGE, newBelowAge), 2)
                     }
+                    break
+                } else {
                     break
                 }
             }
