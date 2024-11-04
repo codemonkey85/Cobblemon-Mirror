@@ -28,6 +28,7 @@ import java.util.concurrent.CompletableFuture
  * @since March 5th, 2024
  */
 class TransformEffect(
+    // This really should include aspects separately
     override var mock: PokemonProperties = PokemonProperties(),
     override var scale: Float = 1.0F,
     val doCry: Boolean = true

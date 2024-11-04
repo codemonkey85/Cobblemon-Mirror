@@ -33,7 +33,7 @@ class FailInstruction(val message: BattleMessage): InterpreterInstruction {
             val of = message.battlePokemonFromOptional(battle)
 
             val lang = when (effectID) {
-                null, "burnup", "doubleshock" -> battleLang("fail") // Moves that use default fail lang. (Null included for moves that fail with no effect, for example: Baton Pass.)
+                null, "burnup", "doubleshock", "allyswitch" -> battleLang("fail") // Moves that use default fail lang. (Null included for moves that fail with no effect, for example: Baton Pass.)
                 "shedtail" -> battleLang("fail.substitute", pokemonName)
                 "hyperspacefury", "aurawheel" -> battleLang("fail.darkvoid", pokemonName) // Moves that can only be used by one species and fail when any others try
                 "corrosivegas" -> battleLang("fail.healblock", pokemonName)
