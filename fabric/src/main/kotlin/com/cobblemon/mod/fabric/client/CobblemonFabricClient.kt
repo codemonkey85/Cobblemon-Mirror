@@ -61,6 +61,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import java.util.function.Supplier
+import net.minecraft.world.InteractionHand
 
 class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation {
     override fun onInitializeClient() {
@@ -97,17 +98,38 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
 
         })
 
-        // Register the HUD render callback for pokedex
+        // Register the HUD render callback for Pokédex
         HudRenderCallback.EVENT.register { graphics, tickDelta ->
             val client = Minecraft.getInstance()
             val player = client.player
             if (player != null) {
                 val itemStack = player.mainHandItem
-                if (itemStack.item is PokedexItem) {
-                    pokedexUsageContext.tryRenderOverlay(graphics, tickDelta)
+                val offhandStack = player.offhandItem
+                if (((itemStack.item is PokedexItem && player.usedItemHand == InteractionHand.MAIN_HAND) ||
+                    (offhandStack.item is PokedexItem && player.usedItemHand == InteractionHand.OFF_HAND))
+                ) {
+                    pokedexUsageContext.renderUpdate(graphics, tickDelta)
+                } else if (pokedexUsageContext.transitionIntervals > 0) {
+                    pokedexUsageContext.resetState()
                 }
             }
         }
+
+        ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client ->
+            val player = client.player
+            if (player != null) {
+                val itemStack = player.mainHandItem
+                val offhandStack = player.offhandItem
+                if (((itemStack.item is PokedexItem && player.usedItemHand == InteractionHand.MAIN_HAND) ||
+                    (offhandStack.item is PokedexItem && player.usedItemHand == InteractionHand.OFF_HAND)) &&
+                    player.isUsingItem &&
+                    pokedexUsageContext.scanningGuiOpen
+                ) {
+                    val keyAttack = client.options.keyAttack
+                    pokedexUsageContext.attackKeyHeld(keyAttack.isDown)
+                }
+            }
+        })
 
         CobblemonKeyBinds.register(KeyBindingHelper::registerKeyBinding)
 

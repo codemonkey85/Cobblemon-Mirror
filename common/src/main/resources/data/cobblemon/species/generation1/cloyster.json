@@ -41,8 +41,11 @@
   ],
   "behaviour": {
     "moving": {
+      "walk": {
+        "walkSpeed": 0.2
+      },
       "swim": {
-        "swimSpeed": 0.15,
+        "swimSpeed": 0.3,
         "canSwimInWater": true,
         "canBreatheUnderwater": true
       }
@@ -196,10 +199,10 @@
   ],
   "preEvolution": "shellder",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.9,
   "hitbox": {
-    "width": 1,
-    "height": 1.1,
+    "width": 2,
+    "height": 2,
     "fixed": false
   },
   "baseFriendship": 50,

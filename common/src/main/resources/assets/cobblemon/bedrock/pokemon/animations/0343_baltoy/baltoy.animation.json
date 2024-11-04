@@ -22,6 +22,12 @@
 						"Math.cos((query.anim_time + 0) * 45) * 4",
 						"Math.cos((query.anim_time + 0) * 90 * 2) * 3"
 					]
+				},
+				"arm_left3": {
+					"rotation": [0, 0, 12.5]
+				},
+				"arm_right3": {
+					"rotation": [0, 0, -12.5]
 				}
 			}
 		},
@@ -47,6 +53,12 @@
 						"Math.cos((query.anim_time + 0) * 90 * 2) * 2.5"
 					],
 					"position": [0, "0.25 + Math.cos((query.anim_time + 0.5) * 360) * 0.2", 0]
+				},
+				"arm_left3": {
+					"rotation": [0, 0, 12.5]
+				},
+				"arm_right3": {
+					"rotation": [0, 0, -12.5]
 				}
 			}
 		},
@@ -66,11 +78,13 @@
 					"rotation": [-16.47474, 42.42028, -18.9149]
 				},
 				"body": {
-					"rotation": [
-						"Math.cos((query.anim_time + 0) * 90 * 6) * 3.0",
-						"Math.abs((query.anim_time + 0) * 90 * 12) * -0.5",
-						"Math.sin((query.anim_time + 0) * 90 * 6) * 3.6"
-					]
+					"rotation": ["Math.cos((query.anim_time + 0) * 90 * 6) * 3.0", "-math.mod(q.anim_time*2, 1)*360", "Math.sin((query.anim_time + 0) * 90 * 6) * 3.6"]
+				},
+				"arm_left3": {
+					"rotation": [4.30963, 29.7174, 8.64388]
+				},
+				"arm_right3": {
+					"rotation": [-4.30963, 29.7174, -8.64388]
 				}
 			}
 		},
@@ -90,15 +104,35 @@
 					"rotation": [-16.47474, 32.4203, -18.9149]
 				},
 				"body": {
-					"rotation": [
-						"Math.cos((query.anim_time + 0) * 90 * 3) * 3.0",
-						"Math.abs((query.anim_time + 0) * 90 * 6) * -0.5",
-						"Math.sin((query.anim_time + 0) * 90 * 3) * 3.6"
-					],
+					"rotation": ["Math.cos((query.anim_time + 0) * 90 * 3) * 3.0", "-math.mod(q.anim_time*1, 1)*360", "Math.sin((query.anim_time + 0) * 90 * 3) * 3.6"],
 					"position": [0, "0.25 + Math.cos((query.anim_time + 10.0) * 180) * 0.2", 0]
+				},
+				"arm_left3": {
+					"rotation": [4.30963, 29.7174, 8.64388]
+				},
+				"arm_right3": {
+					"rotation": [-4.30963, 29.7174, -8.64388]
+				}
+			}
+		},
+		"animation.baltoy.blink": {
+			"animation_length": 0.1667,
+			"bones": {
+				"eyelid_left": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
+				},
+				"eyelid_right": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.1667": [0, 0, 0]
+					}
 				}
 			}
 		}
-	},
-	"geckolib_format_version": 2
+	}
 }

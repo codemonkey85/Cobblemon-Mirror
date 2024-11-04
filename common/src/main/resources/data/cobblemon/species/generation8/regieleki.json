@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Regieleki",
   "nationalPokedexNumber": 894,
   "primaryType": "electric",
@@ -12,6 +13,13 @@
     "special_attack": 100,
     "special_defence": 50,
     "speed": 200
+  },
+  "behaviors": {
+    "moving": {
+      "walking": {
+        "walkSpeed": 1
+      }
+    }
   },
   "catchRate": 3,
   "maleRatio": -1,
@@ -89,8 +97,8 @@
   "evolutions": [],
   "baseScale": 1,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 1.5,
+    "height": 2.5,
     "fixed": false
   },
   "baseFriendship": 35,

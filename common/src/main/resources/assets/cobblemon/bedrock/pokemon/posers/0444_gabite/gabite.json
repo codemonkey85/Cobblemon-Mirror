@@ -1,0 +1,31 @@
+{
+  "portraitScale": 1.86,
+  "portraitTranslation": [-0.35, 0.84, 0],
+  "profileScale": 0.63,
+  "profileTranslation": [0.0, 0.76, 0.0],
+  "rootBone": "gabite",
+  "animations": {
+    "cry": "q.bedrock_stateful('gabite', 'cry')"
+  },
+  "poses": {
+    "battle-idle": {
+      "poseName": "battle-idle",
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": ["q.look('head')", "q.bedrock('gabite', 'battle_idle')"]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": ["STAND", "FLOAT", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('gabite', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('gabite', 'blink')"]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": ["q.bedrock('gabite', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('gabite', 'blink')"]
+    }
+  }
+}

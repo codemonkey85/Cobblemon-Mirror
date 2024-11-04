@@ -1,0 +1,30 @@
+{
+  "species": "cobblemon:regieleki",
+  "order": 0,
+  "variations": [
+    {
+      "aspects": [],
+      "poser": "cobblemon:regieleki",
+      "model": "cobblemon:regieleki.geo",
+      "texture": "cobblemon:textures/pokemon/0894_regieleki/regieleki.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "emissive": true,
+          "texture": "cobblemon:textures/pokemon/0894_regieleki/regieleki_emissive.png"
+        }
+      ]
+    },
+    {
+      "aspects": ["shiny"],
+      "texture": "cobblemon:textures/pokemon/0894_regieleki/regieleki_shiny.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "emissive": true,
+          "texture": "cobblemon:textures/pokemon/0894_regieleki/regieleki_emissive.png"
+        }
+      ]
+    }
+  ]
+}

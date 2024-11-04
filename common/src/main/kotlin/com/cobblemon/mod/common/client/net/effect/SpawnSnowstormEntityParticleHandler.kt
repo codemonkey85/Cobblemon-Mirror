@@ -27,22 +27,24 @@ object SpawnSnowstormEntityParticleHandler : ClientNetworkPacketHandler<SpawnSno
         val entity = world.getEntity(packet.entityId) as? PosableEntity ?: return
         entity as Entity
         val state = entity.delegate as PosableState
-        val matrixWrapper = state.locatorStates[packet.locator] ?: state.locatorStates["root"]!!
+        val locators = packet.locator.firstNotNullOfOrNull { state.getMatchingLocators(it).takeIf { it.isNotEmpty() } } ?: return
 
-        val particleRuntime = MoLangRuntime().setup().setupClient()
-        particleRuntime.environment.query.addFunction("entity") { state.runtime.environment.query }
+        val matrixWrappers = locators.mapNotNull { state.locatorStates[it] }
+        matrixWrappers.forEach { matrixWrapper ->
+            val particleRuntime = MoLangRuntime().setup().setupClient()
+            particleRuntime.environment.query.addFunction("entity") { state.runtime.environment.query }
+            val storm = ParticleStorm(
+                effect = effect,
+                matrixWrapper = matrixWrapper,
+                world = world,
+                runtime = particleRuntime,
+                sourceVelocity = { entity.deltaMovement },
+                sourceAlive = { !entity.isRemoved },
+                sourceVisible = { !entity.isInvisible },
+                entity = entity
+            )
 
-        val storm = ParticleStorm(
-            effect = effect,
-            matrixWrapper = matrixWrapper,
-            world = world,
-            runtime = particleRuntime,
-            sourceVelocity = { entity.deltaMovement },
-            sourceAlive = { !entity.isRemoved },
-            sourceVisible = { !entity.isInvisible },
-            entity = entity
-        )
-
-        storm.spawn()
+            storm.spawn()
+        }
     }
 }

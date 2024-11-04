@@ -1,0 +1,41 @@
+{
+  "portraitScale": 1.8,
+  "portraitTranslation": [-0.15, 1.5, 0.0],
+  "profileScale": 0.5,
+  "profileTranslation": [0.0, 1.0, 0.0],
+  "rootBone": "diggersby",
+  "animations": {
+    "cry": "q.bedrock_stateful('diggersby', 'cry')"
+  },
+  "poses": {
+    "portrait": {
+      "poseName": "portrait",
+      "isBattle": false,
+      "poseTypes": ["PORTRAIT"],
+      "animations": ["q.bedrock('diggersby', 'portrait')"]
+    },
+    "battle-idle": {
+      "poseName": "battle-idle",
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": ["q.look('head')", "q.bedrock('diggersby', 'battle_idle')"]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": ["STAND", "NONE", "PROFILE", "FLOAT"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('diggersby', 'ground_idle')"]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": ["q.look('head')", "q.bedrock('diggersby', 'ground_walk')"]
+    },
+    "sleeping": {
+      "poseName": "sleeping",
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('diggersby', 'sleep')"],
+      "quirks": ["q.bedrock_quirk('diggersby', 'quirk_sleep')"]
+    }
+  }
+}

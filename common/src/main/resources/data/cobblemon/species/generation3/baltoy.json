@@ -24,6 +24,13 @@
   "eggGroups": [
     "mineral"
   ],
+  "behaviour": {
+    "moving": {
+      "fly": {
+        "canFly": true
+      }
+    }
+  },
   "drops": {
     "amount": 3,
     "entries": [
@@ -182,10 +189,10 @@
       ]
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.65,
   "hitbox": {
     "width": 1,
-    "height": 1,
+    "height": 1.2,
     "fixed": false
   },
   "baseFriendship": 50,

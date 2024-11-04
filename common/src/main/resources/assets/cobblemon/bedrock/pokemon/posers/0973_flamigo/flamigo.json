@@ -1,0 +1,50 @@
+{
+  "portraitScale": 2.89,
+  "portraitTranslation": [-1.03, 1.96, 0],
+  "profileScale": 0.69,
+  "profileTranslation": [0, 0.72, 0],
+  "rootBone": "flamigo",
+  "animations": {
+    "cry": "q.bedrock_stateful('flamigo', 'cry')",
+    "recoil": "q.bedrock_stateful('flamigo', 'recoil')"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": ["q.look('head')", "q.bedrock('flamigo', 'battle_idle')"],
+      "quirks": ["q.bedrock_quirk('flamigo', 'blink')"]
+    },
+    "standing": {
+      "poseTypes": ["STAND", "FLOAT", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('flamigo', 'ground_idle')"],
+      "quirks": [
+        "q.bedrock_quirk('flamigo', 'blink')",
+        "q.bedrock_primary_quirk('flamigo', 'quirk_tap')"
+      ]
+    },
+    "walking": {
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": ["q.look('head')", "q.bedrock('flamigo', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('flamigo', 'blink')"]
+    },
+    "hover": {
+      "poseTypes": ["HOVER"],
+      "animations": ["q.look('head')", "q.bedrock('flamigo', 'air_idle')"],
+      "quirks": ["q.bedrock_quirk('flamigo', 'blink')"]
+    },
+    "fly": {
+      "poseTypes": ["FLY"],
+      "animations": ["q.look('head')", "q.bedrock('flamigo', 'air_fly')"],
+      "quirks": ["q.bedrock_quirk('flamigo', 'blink')"]
+    },
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "namedAnimations": {
+        "cry": "q.bedrock_stateful('dummy', 'cry')"
+      },
+      "animations": ["q.bedrock('flamigo', 'sleep')"]
+    }
+  }
+}

@@ -17,8 +17,10 @@ import net.minecraft.commands.Commands
 object CobblemonCommands {
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registry: CommandBuildContext, selection: Commands.CommandSelection) {
         SpawnPokemon.register(dispatcher)
+        SpawnNPCCommand.register(dispatcher)
         GivePokemon.register(dispatcher)
         TakePokemon.register(dispatcher)
+        ChangeEyeHeight.register(dispatcher)
         ChangeScaleAndSize.register(dispatcher)
         ChangeWalkSpeed.register(dispatcher)
         TestCommand.register(dispatcher)
@@ -52,6 +54,7 @@ object CobblemonCommands {
         NPCEditCommand.register(dispatcher)
         AbandonMultiTeam.register(dispatcher)
         FreezePokemonCommand.register(dispatcher)
+        ApplyPlayerTextureCommand.register(dispatcher)
 
         // Possibly lock down registration if and only if under dev environment or running in an environment
         // with a certain system environment variable set

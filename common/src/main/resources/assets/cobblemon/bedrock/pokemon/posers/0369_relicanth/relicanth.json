@@ -1,0 +1,24 @@
+{
+  "portraitScale": 1.07,
+  "portraitTranslation": [-0.19, 0.23, 0],
+  "profileScale": 0.54,
+  "profileTranslation": [-0.04, 0.85, 0],
+  "rootBone": "relicanth",
+  "animations": {
+    "cry": "q.bedrock_stateful('relicanth', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseTypes": [
+        "STAND",
+        "WALK",
+        "SWIM",
+        "FLOAT",
+        "PORTRAIT",
+        "PROFILE",
+        "NONE"
+      ],
+      "animations": ["q.bedrock('relicanth', 'ground_idle')"]
+    }
+  }
+}

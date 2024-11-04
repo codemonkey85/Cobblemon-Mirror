@@ -1,0 +1,32 @@
+{
+  "portraitScale": 1.8,
+  "portraitTranslation": [-0.04, 0.13, 0],
+  "profileScale": 0.51,
+  "profileTranslation": [0, 0.96, 0],
+  "rootBone": "scorbunny",
+  "animations": {
+    "cry": "q.bedrock_stateful('scorbunny', 'cry')"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseName": "battle-standing",
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": ["q.look('head')", "q.bedrock('scorbunny', 'battle_idle')"],
+      "quirks": ["q.bedrock_quirk('scorbunny', 'blink')"]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('scorbunny', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('scorbunny', 'blink')"]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": ["WALK"],
+      "animations": ["q.look('head')", "q.bedrock('scorbunny', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('scorbunny', 'blink')"]
+    }
+  }
+}

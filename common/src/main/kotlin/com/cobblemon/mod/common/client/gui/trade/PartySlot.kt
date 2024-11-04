@@ -60,13 +60,7 @@ open class PartySlot(
         }
 
         if (pokemon != null) {
-            context.enableScissor(
-                x - 2,
-                y + 2,
-                x + SIZE + 4,
-                y + SIZE + 4
-            )
-
+            // context.enableScissor(x - 2, y + 2, x + SIZE + 4, y + SIZE + 4)
             // Render Pokémon
             matrices.pushPose()
             matrices.translate(x + (SIZE / 2.0), y + 1.0, 0.0)
@@ -81,7 +75,7 @@ open class PartySlot(
             )
             matrices.popPose()
 
-            context.disableScissor()
+            // context.disableScissor()
 
             // Ensure elements are not hidden behind Pokémon render
             matrices.pushPose()

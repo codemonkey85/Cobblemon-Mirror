@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Milotic",
   "nationalPokedexNumber": 350,
   "primaryType": "water",
@@ -25,6 +26,19 @@
     "water_1",
     "dragon"
   ],
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "canWalk": true,
+        "avoidsLand": true
+      },
+      "swim": {
+        "swimSpeed": 0.35,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true
+      }
+    }
+  },
   "moves": [
     "1:flail",
     "1:refresh",
@@ -157,10 +171,10 @@
   ],
   "preEvolution": "feebas",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 1.1,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 1.4,
+    "height": 2.3,
     "fixed": false
   },
   "baseFriendship": 50,

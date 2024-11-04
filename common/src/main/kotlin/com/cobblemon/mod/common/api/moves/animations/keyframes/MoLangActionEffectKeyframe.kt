@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.api.moves.animations.keyframes
 
+import com.bedrockk.molang.runtime.struct.QueryStruct
+import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
 import com.cobblemon.mod.common.api.scheduling.delayedFuture

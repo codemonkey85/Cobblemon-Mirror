@@ -18,22 +18,29 @@ import com.bedrockk.molang.runtime.value.DoubleValue
 import com.bedrockk.molang.runtime.value.MoValue
 import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.CobblemonActivities
+import com.cobblemon.mod.common.CobblemonBlockEntities
+import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.dialogue.PlayerDialogueFaceProvider
 import com.cobblemon.mod.common.api.dialogue.ReferenceDialogueFaceProvider
+import com.cobblemon.mod.common.api.moves.animations.ActionEffectContext
+import com.cobblemon.mod.common.api.moves.animations.ActionEffects
+import com.cobblemon.mod.common.api.moves.animations.NPCProvider
 import com.cobblemon.mod.common.api.scripting.CobblemonScripts
+import com.cobblemon.mod.common.api.storage.party.PartyStore
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.client.render.models.blockbench.wavefunction.WaveFunctions
 import com.cobblemon.mod.common.entity.npc.NPCEntity
+import com.cobblemon.mod.common.entity.pokemon.PokemonBehaviourFlag
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.cobblemon.mod.common.entity.pokemon.ai.PokemonMoveControl
 import com.cobblemon.mod.common.net.messages.client.effect.RunPosableMoLangPacket
-import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
-import com.cobblemon.mod.common.util.effectiveName
-import com.cobblemon.mod.common.util.getBooleanOrNull
-import com.cobblemon.mod.common.util.getDoubleOrNull
-import com.cobblemon.mod.common.util.isInt
-import com.cobblemon.mod.common.util.itemRegistry
-import com.cobblemon.mod.common.util.worldRegistry
+import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.*
 import com.mojang.datafixers.util.Either
+import java.util.UUID
+import net.minecraft.commands.arguments.EntityAnchorArgument
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
@@ -49,12 +56,15 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.tags.TagKey
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.dimension.DimensionType
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 
 /**
  * Holds a bunch of useful MoLang trickery that can be used or extended in API
@@ -99,6 +109,12 @@ object MoLangFunctions {
             runtime.environment.context = params.environment.context
             val script = params.getString(0).asIdentifierDefaultingNamespace()
             CobblemonScripts.run(script, runtime) ?: DoubleValue(0)
+        },
+        "run_command" to java.util.function.Function { params ->
+            val command = params.getString(0)
+            server()?.let {
+                return@Function DoubleValue(it.commands.dispatcher.execute(command, it.createCommandSourceStack()))
+            } ?: return@Function DoubleValue.ZERO
         }
     )
     val biomeFunctions = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
@@ -118,6 +134,7 @@ object MoLangFunctions {
             map.put("swing_hand") { _ -> player.swing(player.usedItemHand) }
             map.put("food_level") { _ -> DoubleValue(player.foodData.foodLevel) }
             map.put("saturation_level") { _ -> DoubleValue(player.foodData.saturationLevel) }
+//            map.put("has_permission") { params -> DoubleValue(Cobblemon.permissionValidator.hasPermission(player, Permission)) }
             map.put("tell") { params ->
                 val message = params.getString(0).text()
                 val overlay = params.getBooleanOrNull(1) ?: false
@@ -139,12 +156,35 @@ object MoLangFunctions {
                 environment.query = player.asMoLangValue()
                 environment
             }
+            if (player is ServerPlayer) {
+                map.put("is_party_at_full_health") { _ ->
+                    DoubleValue(player.party().none(Pokemon::canBeHealed)) }
+                map.put("can_heal_at_healer") { params ->
+                    val pos = params.get<ArrayStruct>(0).asBlockPos()
+                    val healer = player.level().getBlockEntity(pos, CobblemonBlockEntities.HEALING_MACHINE).orElse(null) ?: return@put DoubleValue.ZERO
+                    val party = player.party()
+                    return@put DoubleValue(healer.canHeal(party))
+                }
+                map.put("put_pokemon_in_healer") { params ->
+                    val healer = player.level()
+                        .getBlockEntity(params.get<ArrayStruct>(0).asBlockPos(), CobblemonBlockEntities.HEALING_MACHINE)
+                        .orElse(null) ?: return@put DoubleValue.ZERO
+                    val party = player.party()
+                    if (healer.canHeal(party)) {
+                        healer.activate(player.uuid, party)
+                        return@put DoubleValue.ONE
+                    } else {
+                        return@put DoubleValue.ZERO
+                    }
+                }
+            }
             map
         }
     )
     val entityFunctions = mutableListOf<(LivingEntity) -> HashMap<String, java.util.function.Function<MoParams, Any>>>(
         { entity ->
             val map = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
+            map.put("uuid") { _ -> StringValue(entity.uuid.toString()) }
             map.put("damage") { params ->
                 val amount = params.getDouble(0)
                 val source = DamageSource(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolder(DamageTypes.GENERIC).get())
@@ -156,6 +196,7 @@ object MoLangFunctions {
             map.put("is_in_water") { _ -> DoubleValue(entity.isUnderWater) }
             map.put("is_touching_water_or_rain") { _ -> DoubleValue(entity.isInWaterRainOrBubble) }
             map.put("is_touching_water") { _ -> DoubleValue(entity.isInWater) }
+            map.put("is_underwater") { DoubleValue(entity.getIsSubmerged()) }
             map.put("is_in_lava") { _ -> DoubleValue(entity.isInLava) }
             map.put("is_on_fire") { _ -> DoubleValue(entity.isOnFire) }
             map.put("is_invisible") { _ -> DoubleValue(entity.isInvisible) }
@@ -172,17 +213,44 @@ object MoLangFunctions {
             map.put("velocity_x") { _ -> DoubleValue(entity.deltaMovement.x) }
             map.put("velocity_y") { _ -> DoubleValue(entity.deltaMovement.y) }
             map.put("velocity_z") { _ -> DoubleValue(entity.deltaMovement.z) }
+            map.put("width") { DoubleValue(entity.boundingBox.xsize) }
+            map.put("height") { DoubleValue(entity.boundingBox.ysize) }
+            map.put("entity_size") { DoubleValue(entity.boundingBox.run { if (xsize > ysize) xsize else ysize }) }
+            map.put("entity_width") { DoubleValue(entity.boundingBox.xsize) }
+            map.put("entity_height") { DoubleValue(entity.boundingBox.ysize) }
+
             map.put("horizontal_velocity") { _ -> DoubleValue(entity.deltaMovement.horizontalDistance()) }
+            map.put("vertical_velocity") { DoubleValue(entity.deltaMovement.y) }
             map.put("is_on_ground") { _ -> DoubleValue(entity.onGround()) }
             map.put("world") { _ -> entity.level().worldRegistry.wrapAsHolder(entity.level()).asWorldMoLangValue() }
             map.put("biome") { _ -> entity.level().getBiome(entity.blockPosition()).asBiomeMoLangValue() }
+            map.put("is_passenger") { DoubleValue(entity.isPassenger) }
+            map.put("is_healer_in_use") { params ->
+                val pos = params.get<ArrayStruct>(0).asBlockPos()
+                val healer = entity.level().getBlockEntity(pos, CobblemonBlockEntities.HEALING_MACHINE).orElse(null) ?: return@put DoubleValue.ONE
+                return@put DoubleValue(healer.isInUse)
+            }
+            map.put("find_nearby_block") { params ->
+                val type = params.getString(0).asIdentifierDefaultingNamespace(namespace = "minecraft")
+                val isTag = type.path.startsWith("#")
+                val range = params.getDoubleOrNull(1) ?: 10
+                val blockPos = entity.level().getBlockStatesWithPos(AABB.ofSize(entity.position(), range.toDouble(), range.toDouble(), range.toDouble()))
+                    .filter { it.first.blockHolder.let { if (isTag) it.`is`(TagKey.create(Registries.BLOCK, type)) else it.`is`(type) } }
+                    .minByOrNull { it.second.distSqr(entity.blockPosition()) }
+                    ?.second
+                if (blockPos != null) {
+                    return@put ArrayStruct(mapOf("0" to DoubleValue(blockPos.x), "1" to DoubleValue(blockPos.y), "2" to DoubleValue(blockPos.z)))
+                } else {
+                    return@put DoubleValue.ZERO
+                }
+            }
             map
         }
     )
     val npcFunctions = mutableListOf<(NPCEntity) -> HashMap<String, java.util.function.Function<MoParams, Any>>>(
         { npc ->
             val map = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
-            map.put("class") { StringValue(npc.npc.resourceIdentifier.toString()) }
+            map.put("class") { StringValue(npc.npc.id.toString()) }
             map.put("name") { StringValue(npc.name.string) }
             map.put("face") { params -> ObjectValue(ReferenceDialogueFaceProvider(npc.id, params.getBooleanOrNull(0) != false)) }
             map.put("in_battle") { DoubleValue(npc.isInBattle()) }
@@ -197,12 +265,49 @@ object MoLangFunctions {
             }
             map.put("run_script") { params ->
                 val script = params.getString(0).asIdentifierDefaultingNamespace()
-                val environment = params.environment
                 val runtime = MoLangRuntime()
-                runtime.environment.query = environment.query
-                runtime.environment.variable = environment.variable
-                runtime.environment.context = environment.context
+                runtime.environment.cloneFrom(params.environment)
                 CobblemonScripts.run(script, runtime) ?: DoubleValue(0)
+            }
+            map.put("run_action_effect") { params ->
+                val runtime = MoLangRuntime().setup()
+                runtime.environment.cloneFrom(params.environment)
+                runtime.withNPCValue(value = npc)
+                val actionEffect = ActionEffects.actionEffects[params.getString(0).asIdentifierDefaultingNamespace()]
+                if (actionEffect != null) {
+                    val context = ActionEffectContext(
+                        actionEffect = actionEffect,
+                        providers = mutableListOf(NPCProvider(npc)),
+                        runtime = runtime
+                    )
+                    npc.actionEffect = context
+                    npc.brain.setMemory(CobblemonMemories.ACTIVE_ACTION_EFFECT, context)
+                    npc.brain.setActiveActivityIfPossible(CobblemonActivities.NPC_ACTION_EFFECT)
+                    actionEffect.run(context).thenRun {
+                        val npcActionEffect = npc.brain.getMemory(CobblemonMemories.ACTIVE_ACTION_EFFECT).orElse(null)
+                        if (npcActionEffect == context && npc.brain.isActive(CobblemonActivities.NPC_ACTION_EFFECT)) {
+                            npc.brain.eraseMemory(CobblemonMemories.ACTIVE_ACTION_EFFECT)
+                            npc.actionEffect = null
+                        }
+                    }
+
+                    return@put DoubleValue(1)
+                }
+                return@put DoubleValue(0)
+            }
+            map.put("put_pokemon_in_healer") { params ->
+                val healer = npc.level().getBlockEntity(params.get<ArrayStruct>(0).asBlockPos(), CobblemonBlockEntities.HEALING_MACHINE).orElse(null) ?: return@put DoubleValue.ZERO
+                val party = npc.staticParty ?: return@put DoubleValue.ZERO
+                if (healer.canHeal(party)) {
+                    healer.activate(npc.uuid, party)
+                    return@put DoubleValue.ONE
+                } else {
+                    return@put DoubleValue.ZERO
+                }
+            }
+            map.put("look_at_position") { params ->
+                val pos = Vec3(params.getDouble(0), params.getDouble(1), params.getDouble(2))
+                npc.lookAt(EntityAnchorArgument.Anchor.EYES, pos)
             }
             map.put("environment") { _ -> npc.runtime.environment }
             map
@@ -218,9 +323,51 @@ object MoLangFunctions {
             map.put("is_pvw") { DoubleValue(battle.isPvW) }
             map.put("battle_type") { StringValue(battle.format.toString()) }
             map.put("environment") { battle.runtime.environment }
+            map.put("get_actor") { params ->
+                val uuid = UUID.fromString(params.getString(0))
+                val actor = battle.actors.find { it.uuid == uuid } ?: return@put DoubleValue.ZERO
+                return@put actor.struct
+            }
             map
         }
     )
+
+    val pokemonFunctions = mutableListOf<(Pokemon) -> HashMap<String, java.util.function.Function<MoParams, Any>>>(
+        { pokemon ->
+            val map = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
+            map.put("is_wild") { DoubleValue(pokemon.isWild()) }
+            map.put("is_shiny") { DoubleValue(pokemon.shiny) }
+            map.put("form") { StringValue(pokemon.form.name) }
+            map.put("weight") { DoubleValue(pokemon.species.weight.toDouble()) }
+            map
+        }
+    )
+
+    val pokemonEntityFunctions = mutableListOf<(PokemonEntity) -> HashMap<String, java.util.function.Function<MoParams, Any>>>(
+        { pokemonEntity ->
+            val map = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
+            map.put("in_battle") { DoubleValue(pokemonEntity.isBattling) }
+            map.put("is_moving") { DoubleValue((pokemonEntity.moveControl as? PokemonMoveControl)?.hasWanted() == true) }
+            map.put("is_flying") { DoubleValue(pokemonEntity.getBehaviourFlag(PokemonBehaviourFlag.FLYING)) }
+            map.put("has_aspect") { DoubleValue(it.getString(0) in pokemonEntity.aspects) }
+            map
+        }
+    )
+
+    val partyFunctions = mutableListOf<(PartyStore) -> HashMap<String, java.util.function.Function<MoParams, Any>>>(
+        { party ->
+            val map = hashMapOf<String, java.util.function.Function<MoParams, Any>>()
+            map.put("get_pokemon") { params ->
+                val index = params.getInt(0)
+                val pokemon = party.get(index) ?: return@put DoubleValue.ZERO
+                val struct = VariableStruct()
+                pokemon.writeVariables(struct)
+                return@put struct
+            }
+            map.put("healing_remainder_percent") { _ -> DoubleValue(party.getHealingRemainderPercent()) }
+
+            return@mutableListOf map
+        })
 
     fun Holder<Biome>.asBiomeMoLangValue() = asMoLangValue(Registries.BIOME).addFunctions(biomeFunctions)
     fun Holder<Level>.asWorldMoLangValue() = asMoLangValue(Registries.DIMENSION).addFunctions(worldFunctions)
@@ -273,6 +420,30 @@ object MoLangFunctions {
 
     fun QueryStruct.addStandardFunctions(): QueryStruct {
         functions.putAll(generalFunctions)
+        return this
+    }
+
+    fun QueryStruct.addEntityFunctions(entity: LivingEntity): QueryStruct {
+        val addedFunctions = entityFunctions
+            .flatMap { it.invoke(entity).entries }
+            .associate { it.key to it.value }
+        functions.putAll(addedFunctions)
+        return this
+    }
+
+    fun QueryStruct.addPokemonFunctions(pokemon: Pokemon): QueryStruct {
+        val addedFunctions = pokemonFunctions
+            .flatMap { it.invoke(pokemon).entries }
+            .associate { it.key to it.value }
+        functions.putAll(addedFunctions)
+        return this
+    }
+
+    fun QueryStruct.addPokemonEntityFunctions(pokemonEntity: PokemonEntity): QueryStruct {
+        val addedFunctions = pokemonEntityFunctions
+            .flatMap { it.invoke(pokemonEntity).entries }
+            .associate { it.key to it.value }
+        functions.putAll(addedFunctions)
         return this
     }
 

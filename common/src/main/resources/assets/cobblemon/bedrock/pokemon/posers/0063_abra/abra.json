@@ -3,6 +3,7 @@
   "portraitTranslation": [0.0, 0.2, 0],
   "profileScale": 0.85,
   "profileTranslation": [0.0, 0.7, 0],
+  "rootBone": "abra",
   "animations": {
     "faint": "q.bedrock_stateful('abra', 'faint')",
     "cry": "q.bedrock_stateful('abra', 'cry')"
@@ -17,29 +18,20 @@
       "poseTypes": ["STAND", "FLOAT", "HOVER", "PROFILE", "PORTRAIT"],
       "transformTicks": 10,
       "condition": "!q.in_battle",
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('abra', 'ground_idle')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('abra', 'ground_idle')"]
     },
     "walking": {
       "poseName": "walking",
       "poseTypes": ["WALK", "SWIM", "FLY"],
       "transformTicks": 10,
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('abra', 'ground_walk')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('abra', 'ground_walk')"]
     },
     "battle_idle": {
       "poseName": "battle_idle",
       "poseTypes": ["STAND", "FLOAT", "HOVER"],
       "transformTicks": 10,
       "condition": "q.in_battle",
-      "animations": [
-        "q.look('head')",
-        "q.bedrock('abra', 'battle_idle')"
-      ]
+      "animations": ["q.look('head')", "q.bedrock('abra', 'battle_idle')"]
     }
   }
 }

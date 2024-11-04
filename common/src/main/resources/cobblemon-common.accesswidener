@@ -77,7 +77,6 @@ transitive-accessible method net/minecraft/world/level/block/state/properties/Wo
 transitive-accessible field com/mojang/blaze3d/systems/RenderSystem shaderLightDirections [Lorg/joml/Vector3f;
 transitive-accessible class net/minecraft/world/inventory/BrewingStandMenu$PotionSlot
 transitive-accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
-transitive-accessible field net/minecraft/world/level/biome/Biome climateSettings Lnet/minecraft/world/level/biome/Biome$ClimateSettings;
 accessible field net/minecraft/client/gui/components/toasts/AdvancementToast BACKGROUND_SPRITE Lnet/minecraft/resources/ResourceLocation;
 #accessible method net/minecraft/text/Text$Serialization fromJson (Lcom/google/gson/JsonElement;)Lnet/minecraft/text/MutableComponent;
 
@@ -111,3 +110,5 @@ transitive-accessible method net/minecraft/world/entity/Entity getDimensions (Ln
 transitive-extendable method net/minecraft/world/entity/LivingEntity getDimensions (Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/entity/EntityDimensions;
 #String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, MultiPhaseParameters phases
 transitive-accessible field net/minecraft/world/level/material/MapColor MATERIAL_COLORS [Lnet/minecraft/world/level/material/MapColor;
+
+transitive-accessible field net/minecraft/client/Minecraft textureManager Lnet/minecraft/client/renderer/texture/TextureManager;

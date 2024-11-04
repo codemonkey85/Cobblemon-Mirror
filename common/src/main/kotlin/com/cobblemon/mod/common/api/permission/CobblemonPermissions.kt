@@ -15,6 +15,7 @@ object CobblemonPermissions {
     private const val COMMAND_PREFIX = "command."
     private val permissions = arrayListOf<Permission>()
 
+    val CHANGE_EYE_HEIGHT = this.create("${COMMAND_PREFIX}changeeyeheight", PermissionLevel.ALL_COMMANDS)
     val CHANGE_SCALE_AND_SIZE = this.create("${COMMAND_PREFIX}changescaleandsize", PermissionLevel.ALL_COMMANDS)
     val CHANGE_WALK_SPEED = this.create("${COMMAND_PREFIX}changewalkspeed", PermissionLevel.ALL_COMMANDS)
     val CHECKSPAWNS = this.create("${COMMAND_PREFIX}checkspawns", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
@@ -46,6 +47,7 @@ object CobblemonPermissions {
     val GIVE_ALL_POKEMON = this.create("${COMMAND_PREFIX}giveallpokemon", PermissionLevel.ALL_COMMANDS)
 
     val SPAWN_POKEMON = this.create("${COMMAND_PREFIX}spawnpokemon", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
+    val SPAWN_NPC = this.create("${COMMAND_PREFIX}spawnnpc", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
 
     val STOP_BATTLE = this.create("${COMMAND_PREFIX}stopbattle", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
 
@@ -75,6 +77,7 @@ object CobblemonPermissions {
 
     val NPC_EDIT = this.create("${COMMAND_PREFIX}npcedit", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
     val FREEZE_POKEMON = this.create("${COMMAND_PREFIX}freezepokemon", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
+    val APPLY_PLAYER_TEXTURE = this.create("${COMMAND_PREFIX}applyplayertexture", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
 
     val ABANDON_MULTITEAM = this.create("${COMMAND_PREFIX}abandonmultiteam", PermissionLevel.NONE)
 

@@ -54,7 +54,7 @@ class MoveSet : Iterable<Move> {
     fun copyFrom(other: MoveSet) {
         doWithoutEmitting {
             clear()
-            other.getMoves().forEach { add(it) }
+            other.getMoves().forEach { add(it.copy()) }
         }
         update()
     }

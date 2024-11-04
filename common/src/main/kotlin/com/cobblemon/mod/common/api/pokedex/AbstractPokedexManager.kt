@@ -12,6 +12,7 @@ import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.addStandardFunctions
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexEntry
 import com.cobblemon.mod.common.api.pokedex.entry.PokedexForm
+import com.cobblemon.mod.common.pokedex.scanner.PokedexEntityData
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import net.minecraft.resources.ResourceLocation
@@ -46,6 +47,11 @@ abstract class AbstractPokedexManager {
         }
     }
 
+    fun getHighestKnowledgeForSpecies(pokemonId: ResourceLocation): PokedexEntryProgress {
+        val speciesRecord = getSpeciesRecord(pokemonId)
+        return speciesRecord?.getKnowledge() ?: PokedexEntryProgress.NONE
+    }
+
     fun getHighestKnowledgeFor(entry: PokedexEntry): PokedexEntryProgress {
         val speciesRecord = getSpeciesRecord(entry.speciesId) ?: return PokedexEntryProgress.NONE
         val hasAllAspects = entry.conditionAspects.all(speciesRecord::hasAspect)
@@ -78,6 +84,21 @@ abstract class AbstractPokedexManager {
         return entry.forms.filter { form ->
             form.unlockForms.any { (speciesRecord.getFormRecord(it)?.knowledge ?: PokedexEntryProgress.NONE) >= knowledge }
         }
+    }
+
+    fun getNewInformation(pokedexEntityData: PokedexEntityData): PokedexLearnedInformation {
+        val speciesRecord = getSpeciesRecord(pokedexEntityData.species.resourceIdentifier)
+        if (speciesRecord == null || speciesRecord.getKnowledge() == PokedexEntryProgress.NONE) {
+            return PokedexLearnedInformation.SPECIES
+        }
+        val formRecord = speciesRecord.getFormRecord(pokedexEntityData.form.name)
+        if (formRecord == null || formRecord.knowledge == PokedexEntryProgress.NONE) {
+            return PokedexLearnedInformation.FORM
+        }
+        if (pokedexEntityData.aspects.none(speciesRecord::hasAspect) || pokedexEntityData.gender !in formRecord.getGenders() || !formRecord.hasSeenShinyState(pokedexEntityData.shiny)) {
+            return PokedexLearnedInformation.VARIATION
+        }
+        return PokedexLearnedInformation.NONE
     }
 
     fun getSeenShinyStates(entry: PokedexEntry, form: PokedexForm): Set<String> {

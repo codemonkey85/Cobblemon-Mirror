@@ -25,6 +25,8 @@ import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler
 import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler.SEND_OUT_STAGGER_BASE_DURATION
 import com.cobblemon.mod.common.net.serverhandling.storage.SendOutPokemonHandler.SEND_OUT_STAGGER_RANDOM_MAX_DURATION
 import com.cobblemon.mod.common.util.battleLang
+import com.cobblemon.mod.common.util.getPlayer
+import com.cobblemon.mod.common.util.party
 import com.cobblemon.mod.common.util.swap
 import java.util.concurrent.CompletableFuture
 import kotlin.random.Random
@@ -66,7 +68,7 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
                 else if (pokemonEntity == null && entity != null) {
                     activePokemon.battlePokemon = pokemon
                     activePokemon.illusion = illusion
-                    val targetPos = ShowdownInterpreter.getSendoutPosition(battle, pnx, battleActor)
+                    val targetPos = ShowdownInterpreter.getSendoutPosition(battle, activePokemon, battleActor)
                     if (targetPos != null) {
                         val battleSendoutCount = activePokemon.getActorShowdownId()[1].digitToInt() - 1 + actor.stillSendingOutCount
                         actor.stillSendingOutCount++
@@ -88,6 +90,28 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
                     }
                 }
                 GO
+            }
+
+            val futureSwitches = instructionSet.getSubsequentInstructions(this).filterIsInstance<SwitchInstruction>()
+            if (futureSwitches.isEmpty()) {
+                if (battle.format.adjustLevel > 0) {
+                    // means battle is using clone teams, recall the "real" pokemon before the sendouts occur
+                    var waitOnRecall = false
+                    battle.actors.forEach { it ->
+                        val playerUUIDS = it.getPlayerUUIDs()
+                        playerUUIDS.forEach { uuid ->
+                            uuid.getPlayer()?.party()?.forEach { pokemon ->
+                                if (pokemon.entity != null) {
+                                    waitOnRecall = true
+                                    pokemon.entity!!.recallWithAnimation()
+                                }
+                            }
+                        }
+                    }
+                    if (waitOnRecall) {
+                        battle.dispatchWaitingToFront(SEND_OUT_DURATION) {  }
+                    }
+                }
             }
         }
         else {
@@ -152,12 +176,12 @@ class SwitchInstruction(val instructionSet: InstructionSet, val battleActor: Bat
                         if (!imposter) newPokemon.entity?.cry()
                         sendOutFuture.complete(Unit)
                     }
-                }
-                else {
-                    val lastPosition = activePokemon.position
+                } else {
+                    // For Singles, we modify the sendout position based on the pokemon's hitbox size
+                    val pos = (if (battle.format.battleType.pokemonPerSide == 1) ShowdownInterpreter.getSendoutPosition(battle, activePokemon, actor)
+                        else  activePokemon.position?.second) ?: entity.position()
                     // Send out at previous Pokémon's location if it is known, otherwise actor location
-                    val world = lastPosition?.first ?: entity.level() as ServerLevel
-                    val pos = lastPosition?.second ?: entity.position()
+                    val world = entity.level() as ServerLevel
                     newPokemon.effectedPokemon.sendOutWithAnimation(
                         source = entity,
                         battleId = battle.battleId,

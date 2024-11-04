@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.api.battles.model
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
+import com.bedrockk.molang.runtime.value.MoValue
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.Cobblemon.LOGGER
 import com.cobblemon.mod.common.CobblemonNetwork
@@ -24,6 +25,7 @@ import com.cobblemon.mod.common.api.events.battles.BattleFledEvent
 import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.asMoLangValue
 import com.cobblemon.mod.common.api.net.NetworkPacket
+import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.api.text.yellow
@@ -41,6 +43,8 @@ import com.cobblemon.mod.common.battles.dispatch.WaitDispatch
 import com.cobblemon.mod.common.battles.interpreter.ContextManager
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon
 import com.cobblemon.mod.common.battles.runner.ShowdownService
+import com.cobblemon.mod.common.entity.npc.NPCBattleActor
+import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.net.messages.client.battle.BattleEndPacket
 import com.cobblemon.mod.common.net.messages.client.battle.BattleMessagePacket
@@ -80,6 +84,8 @@ open class PokemonBattle(
 
     val onEndHandlers: MutableList<(PokemonBattle) -> Unit> = mutableListOf()
 
+    val battlePartyStores = mutableListOf<PlayerPartyStore>()
+
     init {
         side1.battle = this
         side2.battle = this
@@ -90,6 +96,7 @@ open class PokemonBattle(
                     .filterIsInstance<LastBattleCriticalHitsEvolutionProgress>()
                     .forEach { it.reset() }
             }
+            actor.setupStruct()
         }
     }
 
@@ -180,6 +187,11 @@ open class PokemonBattle(
      * Gets the first battle actor whom the given player controls, or null if there is no such actor.
      */
     fun getActor(player: ServerPlayer) = actors.firstOrNull { it.isForPlayer(player) }
+
+    /**
+     * Gets the first battle actor whom the given NPC controls, or null if there is no such actor.
+     */
+    fun getActor(npc: NPCEntity) = actors.firstOrNull { it is NPCBattleActor && it.npc == npc }
 
     /**
      * Gets a [BattleActor] and an [ActiveBattlePokemon] from a pnx key, e.g. p2a
@@ -360,6 +372,13 @@ open class PokemonBattle(
     fun dispatchToFront(dispatcher: () -> DispatchResult) {
         dispatches.addFirst(BattleDispatch { dispatcher() })
 
+    }
+
+    fun dispatchWaitingToFront(delaySeconds: Float = 1F, dispatcher: () -> Unit) {
+        dispatches.addFirst(BattleDispatch {
+            dispatcher()
+            WaitDispatch(delaySeconds)
+        })
     }
 
     fun dispatchGo(dispatcher: () -> Unit) {

@@ -9,11 +9,13 @@
 package com.cobblemon.mod.common.util
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.item.HealingSource
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.entity.npc.NPCEntity
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
+import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.math.min
@@ -140,6 +142,13 @@ fun EquipmentSlot.toHand(): InteractionHand {
     }
 }
 
+val String.asUUID: UUID?
+    get() = try {
+        UUID.fromString(this)
+    } catch (e: Exception) {
+        null
+    }
+
 fun toHex(red: Float, green: Float, blue: Float, alpha: Float): Int {
     return ((alpha * 255).toInt() shl 24) or ((red * 255).toInt() shl 16) or ((green * 255).toInt() shl 8) or (blue * 255).toInt()
 }
@@ -150,4 +159,10 @@ fun Int.toRGBA(): Vector4f {
     val blue = (this and 255) / 255.0f
     val alpha = (this shr 24 and 255) / 255.0f
     return Vector4f(red, green, blue, alpha)
+}
+
+inline fun <reified T> Any.ifIsType(block: T.() -> Unit) {
+    if (this is T) {
+        block(this)
+    }
 }

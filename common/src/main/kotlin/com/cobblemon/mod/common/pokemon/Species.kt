@@ -75,9 +75,9 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
         private set
     var features = mutableSetOf<String>()
         private set
-    private var standingEyeHeight: Float? = null
-    private var swimmingEyeHeight: Float? = null
-    private var flyingEyeHeight: Float? = null
+    var standingEyeHeight: Float? = null
+    var swimmingEyeHeight: Float? = null
+    var flyingEyeHeight: Float? = null
     var behaviour = PokemonBehaviour()
         private set
     var pokedex = mutableListOf<String>()
@@ -110,6 +110,27 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
 
     var labels = hashSetOf<String>()
         private set
+
+    val possibleGenders: Set<Gender>
+        get() = forms.flatMap {
+            if (it.maleRatio == -1F) {
+                setOf(Gender.GENDERLESS)
+            } else if (it.maleRatio == 0F) {
+                setOf(Gender.FEMALE)
+            } else if (it.maleRatio == 1F) {
+                setOf(Gender.MALE)
+            } else {
+                setOf(Gender.FEMALE, Gender.MALE)
+            }
+        }.toSet() + (if (maleRatio == -1F) {
+            setOf(Gender.GENDERLESS)
+        } else if (maleRatio == 0F) {
+            setOf(Gender.FEMALE)
+        } else if (maleRatio == 1F) {
+            setOf(Gender.MALE)
+        } else {
+            setOf(Gender.FEMALE, Gender.MALE)
+        })
 
     /**
      * Contains the evolutions of this species.
@@ -164,8 +185,7 @@ class Species : ClientDataSynchronizer<Species>, ShowdownIdentifiable {
     fun getForm(aspects: Set<String>) = forms.lastOrNull { it.aspects.all { it in aspects } } ?: standardForm
 
     fun eyeHeight(entity: PokemonEntity): Float {
-        val multiplier = this.resolveEyeHeight(entity) ?: VANILLA_DEFAULT_EYE_HEIGHT
-        return entity.bbHeight * multiplier
+        return this.resolveEyeHeight(entity) ?: VANILLA_DEFAULT_EYE_HEIGHT
     }
 
     private fun resolveEyeHeight(entity: PokemonEntity): Float? = when {

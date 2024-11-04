@@ -17,18 +17,16 @@
       ]
     },
     {
-      "aspects": [
-        "shiny"
-      ],
-        "texture": "cobblemon:textures/pokemon/0709_trevenant/trevenant_shiny.png",
-        "layers": [
-          {
-            "name": "emissive",
-            "texture": "cobblemon:textures/pokemon/0709_trevenant/trevenant_emissive_shiny.png",
-            "emissive": true,
-            "translucent": true
-          }
-        ]
+      "aspects": ["shiny"],
+      "texture": "cobblemon:textures/pokemon/0709_trevenant/trevenant_shiny.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "texture": "cobblemon:textures/pokemon/0709_trevenant/trevenant_shiny_emissive.png",
+          "emissive": true,
+          "translucent": true
+        }
+      ]
     }
   ]
 }

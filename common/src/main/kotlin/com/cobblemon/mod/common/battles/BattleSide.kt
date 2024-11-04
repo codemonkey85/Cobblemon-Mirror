@@ -11,6 +11,9 @@ package com.cobblemon.mod.common.battles
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.battles.interpreter.ContextManager
+import com.cobblemon.mod.common.client.entity.PokemonClientDelegate
+import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket
+import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.network.chat.Component
 
 /**
@@ -37,6 +40,10 @@ class BattleSide(vararg val actors: BattleActor) {
         activePokemon.forEach {
             val entity = it.battlePokemon?.entity ?: return@forEach
             entity.cry()
+            if(entity.pokemon.shiny) {
+                SpawnSnowstormEntityParticlePacket(cobblemonResource("shiny_ring"), entity.id, listOf("shiny_particles", "middle"))
+                    .sendToPlayersAround(entity.x, entity.y, entity.z, 64.0, entity.level().dimension())
+            }
         }
     }
 }

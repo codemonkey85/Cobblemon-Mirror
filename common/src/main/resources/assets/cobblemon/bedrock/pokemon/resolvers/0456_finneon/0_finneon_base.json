@@ -1,0 +1,30 @@
+{
+  "species": "cobblemon:finneon",
+  "order": 0,
+  "variations": [
+    {
+      "aspects": [],
+      "poser": "cobblemon:finneon",
+      "model": "cobblemon:finneon.geo",
+      "texture": "cobblemon:textures/pokemon/0456_finneon/finneon.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "emissive": true,
+          "texture": "cobblemon:textures/pokemon/0456_finneon/finneon_emissive.png"
+        }
+      ]
+    },
+    {
+      "aspects": ["shiny"],
+      "texture": "cobblemon:textures/pokemon/0456_finneon/finneon_shiny.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "emissive": true,
+          "texture": "cobblemon:textures/pokemon/0456_finneon/finneon_shiny_emissive.png"
+        }
+      ]
+    }
+  ]
+}

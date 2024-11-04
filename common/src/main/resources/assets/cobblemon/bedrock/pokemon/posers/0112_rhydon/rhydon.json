@@ -1,0 +1,28 @@
+{
+  "portraitScale": 1.21,
+  "portraitTranslation": [-0.46, 1.27, 0],
+  "profileScale": 0.51,
+  "profileTranslation": [0.0, 0.89, 0.0],
+  "rootBone": "rhydon",
+  "animations": {
+    "cry": "q.bedrock_stateful('rhydon', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": ["STAND", "FLOAT", "NONE", "PORTRAIT", "PROFILE"],
+      "animations": ["q.look('head_ai')", "q.bedrock('rhydon', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('rhydon', 'blink')"]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": [
+        "q.look('head_ai')",
+        "q.biped_walk(0.66, 0.6, 'left_upper_leg', 'right_upper_leg')",
+        "q.bedrock('rhydon', 'ground_idle')"
+      ],
+      "quirks": ["q.bedrock_quirk('rhydon', 'blink')"]
+    }
+  }
+}

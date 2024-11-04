@@ -1,0 +1,26 @@
+{
+  "portraitScale": 1.99,
+  "portraitTranslation": [-0.69, -1.25, 0],
+  "profileScale": 0.7,
+  "profileTranslation": [-0.05, 0.71, 0.0],
+  "rootBone": "wiglett",
+  "animations": {
+    "recoil": "q.bedrock_stateful('wiglett', 'recoil')"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseName": "battle-standing",
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": ["q.bedrock('wiglett', 'battle_idle')"],
+      "quirks": ["q.bedrock_quirk('wiglett', 'blink')"]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": ["STAND", "WALK", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.bedrock('wiglett', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('wiglett', 'blink')"]
+    }
+  }
+}

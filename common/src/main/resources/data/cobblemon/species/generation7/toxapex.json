@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Toxapex",
   "nationalPokedexNumber": 748,
   "primaryType": "poison",
@@ -25,6 +26,15 @@
   "eggGroups": [
     "water_1"
   ],
+  "behaviour": {
+    "moving": {
+      "swim": {
+        "swimSpeed": 0.2,
+        "canSwimInWater": false,
+        "canBreatheUnderwater": true
+      }
+    }
+  },
   "moves": [
     "1:banefulbunker",
     "1:bite",
@@ -123,10 +133,10 @@
   ],
   "preEvolution": "mareanie",
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.9,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 2,
+    "height": 1.6,
     "fixed": false
   },
   "baseFriendship": 50,

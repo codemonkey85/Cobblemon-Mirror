@@ -43,6 +43,7 @@ data class GeneralPlayerData(
             starterLocked,
             starterSelected,
             starterUUID,
+            advancementData.totalBattleVictoryCount == 0,
             battleTheme
         )
     }

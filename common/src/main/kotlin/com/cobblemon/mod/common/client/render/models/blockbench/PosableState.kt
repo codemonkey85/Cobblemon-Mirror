@@ -35,6 +35,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.quirk.ModelQuirk
 import com.cobblemon.mod.common.client.render.models.blockbench.quirk.QuirkData
 import com.cobblemon.mod.common.entity.PosableEntity
 import com.cobblemon.mod.common.entity.PoseType
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.ClientLevel
@@ -44,6 +45,7 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.phys.Vec3
 import java.util.concurrent.ConcurrentLinkedQueue
+import kotlin.text.get
 
 /**
  * Represents some kind of animation state for an entity or GUI element or other renderable component in the game.
@@ -182,6 +184,7 @@ abstract class PosableState : Schedulable {
 
                 val entity = getEntity() ?: return@addFunction Unit
                 val world = entity.level() as ClientLevel
+
                 val matrixWrapper = locatorStates[locator] ?: locatorStates["root"]!!
 
                 val particleRuntime = MoLangRuntime().setup().setupClient()
@@ -231,6 +234,10 @@ abstract class PosableState : Schedulable {
             this.primaryAnimation = null
             primaryAnimation.afterAction.accept(Unit)
         }
+    }
+
+    fun getMatchingLocators(locator: String): List<String> {
+        return locatorStates.keys.filter { it.matches("${locator}[0-9]*".toRegex()) }
     }
 
     /** Decides how an update to partial ticks should be applied to the state. See [FloatingState] for how it could happen. */
@@ -317,6 +324,7 @@ abstract class PosableState : Schedulable {
     fun setActiveAnimations(vararg animations: ActiveAnimation) {
         activeAnimations.clear()
         activeAnimations.addAll(animations)
+        animations.forEach { it.start(this) }
     }
 
     /**
@@ -329,6 +337,7 @@ abstract class PosableState : Schedulable {
     fun addActiveAnimation(animation: ActiveAnimation, whenComplete: (state: PosableState) -> Unit = {}) {
         this.activeAnimations.add(animation)
         val duration = animation.duration
+        animation.start(this)
         if (duration > 0F) {
             after(seconds = (duration * 20F).toInt() / 20F) {
                 whenComplete(this)
@@ -341,10 +350,10 @@ abstract class PosableState : Schedulable {
      */
     fun addPrimaryAnimation(primaryAnimation: PrimaryAnimation) {
         this.primaryAnimation = primaryAnimation
-        this.activeAnimations.clear()
+        primaryAnimation.start(this)
+        this.activeAnimations.removeIf { !it.enduresPrimaryAnimations }
         this.quirks.clear()
         this.poseIntensity = 1F
-        primaryAnimation.started = animationSeconds
     }
 
     /**

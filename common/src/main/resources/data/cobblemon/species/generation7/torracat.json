@@ -24,6 +24,18 @@
   "eggGroups": [
     "field"
   ],
+  "behaviour": {
+    "moving": {
+      "walking": {
+        "walkSpeed": 0.19
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "times": "night",
+      "willSleepOnBed": true
+    }
+  },
   "drops": {
     "amount": 2,
     "entries": [
@@ -137,7 +149,7 @@
       ]
     }
   ],
-  "baseScale": 0.8,
+  "baseScale": 0.65,
   "hitbox": {
     "width": 1,
     "height": 1.1,

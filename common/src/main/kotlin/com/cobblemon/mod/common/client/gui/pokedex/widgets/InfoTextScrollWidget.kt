@@ -68,6 +68,7 @@ abstract class InfoTextScrollWidget(val pX: Int, val pY: Int): ScrollingWidget<I
                 .map { it.string }
                 .forEach { addEntry(TextSlot(it)) }
         }
+        scrollAmount = 0.0
     }
 
     override fun renderScrollbar(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {

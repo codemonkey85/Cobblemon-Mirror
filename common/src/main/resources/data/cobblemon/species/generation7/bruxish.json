@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Bruxish",
   "nationalPokedexNumber": 779,
   "primaryType": "water",
@@ -41,6 +42,19 @@
   "eggGroups": [
     "water_2"
   ],
+  "behaviour": {
+    "moving": {
+      "canLook": false,
+      "walk": {
+        "avoidsLand": true
+      },
+      "swim": {
+        "swimSpeed": 0.3,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true
+      }
+    }
+  },
   "moves": [
     "1:watergun",
     "4:astonish",
@@ -144,10 +158,10 @@
     "cobblemon.species.bruxish.desc"
   ],
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.8,
   "hitbox": {
     "width": 1,
-    "height": 1,
+    "height": 1.2,
     "fixed": false
   },
   "baseFriendship": 70,

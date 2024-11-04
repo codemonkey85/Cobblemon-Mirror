@@ -1,0 +1,37 @@
+{
+  "portraitScale": 1.65,
+  "portraitTranslation": [-0.76, 1.66, 0],
+  "profileScale": 0.54,
+  "profileTranslation": [0.0, 0.94, 0.0],
+  "rootBone": "garchomp",
+  "animations": {
+    "cry": "q.bedrock_stateful('garchomp', 'cry')"
+  },
+  "poses": {
+    "battle-idle": {
+      "poseName": "battle-idle",
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": ["q.look('head')", "q.bedrock('garchomp', 'battle_idle')"]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": ["STAND", "FLOAT", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('garchomp', 'ground_idle')"]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": [
+        "q.bedrock('garchomp', 'ground_idle')",
+        "q.bedrock('garchomp', 'ground_run')"
+      ]
+    },
+    "flying": {
+      "poseName": "flying",
+      "poseTypes": ["FLY", "HOVER"],
+      "animations": ["q.look('head')", "q.bedrock('garchomp', 'air_idle')"]
+    }
+  }
+}

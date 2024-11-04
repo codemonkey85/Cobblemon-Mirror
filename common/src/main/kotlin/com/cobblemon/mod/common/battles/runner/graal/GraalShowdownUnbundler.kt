@@ -14,12 +14,15 @@ import com.cobblemon.mod.common.util.extractTo
 import com.cobblemon.mod.common.util.fromJson
 import com.google.gson.GsonBuilder
 import net.minecraft.resources.ResourceLocation
+import oshi.util.FileUtil
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStreamReader
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 /**
- * Unbundles a zipped Showdown file found within {@code resources/assets/showdown.zip} for use within the GraalShowdownService.
+ * Unbundles a zipped Showdown file found within {@code resources/data/showdown.zip} for use within the GraalShowdownService.
  * This will do a metadata check prior to unbundling and stop if there is already an unbundled showdown package
  * of the same version.
  *
@@ -62,8 +65,8 @@ class GraalShowdownUnbundler {
             }
 
             if (extract) {
-                ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID, "showdown.zip").extractTo(showdownZip)
-                ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID, "showdown.json").extractTo(showdownMetadataFile)
+                FileUtils.copyInternalToExternal("/data/${Cobblemon.MODID}/showdown.zip", showdownZip.toPath())
+                FileUtils.copyInternalToExternal("/data/${Cobblemon.MODID}/showdown.json", showdownMetadataFile.toPath())
                 FileUtils.unzipFile(showdownZip.toPath(), showdownDir.toPath())
                 showdownZip.delete()
             }
@@ -72,7 +75,7 @@ class GraalShowdownUnbundler {
 
     private fun loadShowdownMetadata() : ShowdownMetadata? {
         try {
-            val inputStream = javaClass.getResourceAsStream("/assets/${Cobblemon.MODID}/showdown.json")!!
+            val inputStream = javaClass.getResourceAsStream("/data/${Cobblemon.MODID}/showdown.json")!!
             return gson.fromJson<ShowdownMetadata>(InputStreamReader(inputStream))
         } catch (exception: Exception) {
             exception.printStackTrace()

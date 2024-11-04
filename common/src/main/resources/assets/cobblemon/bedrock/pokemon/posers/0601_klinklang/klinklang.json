@@ -1,0 +1,35 @@
+{
+  "portraitScale": 1.1,
+  "portraitTranslation": [0.18, 0.55, 0],
+  "profileScale": 0.64,
+  "profileTranslation": [-0.07, 0.82, 0],
+  "rootBone": "klinklang",
+  "animations": {
+    "faint": "q.bedrock_primary('klinklang', 'faint', q.curve('one'))",
+    "cry": "q.bedrock_stateful('klinklang', 'cry')",
+    "recoil": "q.bedrock_stateful('klinklang', 'recoil')",
+    "physical": "q.bedrock_primary('klinklang', 'physical', q.curve('symmetrical_wide'))",
+    "special": "q.bedrock_primary('klinklang', 'special', q.curve('symmetrical_wide'))",
+    "status": "q.bedrock_primary('klinklang', 'status', q.curve('symmetrical_wide'))"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": ["q.bedrock('klinklang', 'battle_idle')"]
+    },
+    "standing": {
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.bedrock('klinklang', 'ground_idle')"]
+    },
+    "walking": {
+      "poseTypes": ["WALK"],
+      "animations": ["q.bedrock('klinklang', 'ground_walk')"]
+    },
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('klinklang', 'sleep')"]
+    }
+  }
+}

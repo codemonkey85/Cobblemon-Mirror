@@ -1,0 +1,26 @@
+{
+  "portraitScale": 1.59,
+  "portraitTranslation": [-0.06, -0.78, 0],
+  "profileScale": 0.78,
+  "profileTranslation": [-0.02, 0.59, 0],
+  "rootBone": "pincurchin",
+  "animations": {
+    "cry": "q.bedrock_stateful('pincurchin', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseTypes": ["STAND", "FLOAT", "PORTRAIT", "PROFILE", "NONE"],
+      "animations": ["q.bedrock('pincurchin', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('pincurchin', 'blink')"]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": [
+        "q.bedrock('pincurchin', 'ground_idle')",
+        "q.quadruped_walk(1, 1, 'leg_left1', 'leg_right1', 'leg_left2', 'leg_right2')"
+      ],
+      "quirks": ["q.bedrock_quirk('pincurchin', 'blink')"]
+    }
+  }
+}

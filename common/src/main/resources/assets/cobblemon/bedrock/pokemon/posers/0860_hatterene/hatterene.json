@@ -1,0 +1,23 @@
+{
+  "portraitScale": 1.75,
+  "portraitTranslation": [-1.14, 3.45, 0],
+  "profileScale": 0.34,
+  "profileTranslation": [0.0, 1.29, 0],
+  "rootBone": "hatterene",
+  "animations": {
+    "cry": "q.bedrock_stateful('hatterene', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE", "FLOAT"],
+      "isBattle": false,
+      "animations": ["q.bedrock('hatterene', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('hatterene', 'blink')"]
+    },
+    "walking": {
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": ["q.bedrock('hatterene', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('hatterene', 'blink')"]
+    }
+  }
+}

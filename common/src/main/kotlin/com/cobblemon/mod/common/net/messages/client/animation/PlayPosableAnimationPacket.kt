@@ -25,7 +25,7 @@ import net.minecraft.resources.ResourceLocation
 class PlayPosableAnimationPacket(
     val entityId: Int,
     val animation: Set<String>,
-    val expressions: Set<String>
+    val expressions: List<String>
 ) : NetworkPacket<PlayPosableAnimationPacket> {
     override val id: ResourceLocation = ID
 
@@ -34,7 +34,7 @@ class PlayPosableAnimationPacket(
         fun decode(buffer: RegistryFriendlyByteBuf) = PlayPosableAnimationPacket(
             buffer.readInt(),
             buffer.readList { buffer.readString() }.toSet(),
-            buffer.readList { buffer.readString() }.toSet()
+            buffer.readList { buffer.readString() }
         )
     }
 

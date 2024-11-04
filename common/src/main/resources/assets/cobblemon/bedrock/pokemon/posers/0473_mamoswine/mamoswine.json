@@ -1,0 +1,40 @@
+{
+  "portraitScale": 0.65,
+  "portraitTranslation": [-0.65, 1.48, 0],
+  "profileScale": 0.33,
+  "profileTranslation": [-0.05, 1.16, 0],
+  "animations": {
+    "faint": "q.bedrock_primary('mamoswine', 'faint', q.curve('one'))",
+    "cry": "q.bedrock_stateful('mamoswine', 'cry')",
+    "recoil": "q.bedrock_stateful('mamoswine', 'recoil')",
+    "physical": "q.bedrock_primary('mamoswine', 'physical', q.curve('symmetrical_wide'))",
+    "special": "q.bedrock_primary('mamoswine', 'special', q.curve('symmetrical_wide'))",
+    "status": "q.bedrock_primary('mamoswine', 'status', q.curve('symmetrical_wide'))"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "namedAnimations": {
+        "cry": "q.bedrock_stateful('mamoswine', 'battle_cry')"
+      },
+      "animations": ["q.look('head')", "q.bedrock('mamoswine', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('mamoswine', 'blink')"]
+    },
+    "standing": {
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('mamoswine', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('mamoswine', 'blink')"]
+    },
+    "walking": {
+      "poseTypes": ["WALK"],
+      "animations": ["q.look('head')", "q.bedrock('mamoswine', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('mamoswine', 'blink')"]
+    },
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('mamoswine', 'sleep')"]
+    }
+  }
+}

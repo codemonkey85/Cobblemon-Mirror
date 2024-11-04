@@ -25,6 +25,18 @@
   "eggGroups": [
     "field"
   ],
+  "behaviour": {
+    "moving": {
+      "walking": {
+        "walkSpeed": 0.28
+      }
+    },
+    "resting": {
+      "canSleep": true,
+      "times": "night",
+      "willSleepOnBed": true
+    }
+  },
   "drops": {
     "amount": 2,
     "entries": [
@@ -185,10 +197,10 @@
   ],
   "preEvolution": "torracat",
   "evolutions": [],
-  "baseScale": 1.2,
+  "baseScale": 0.85,
   "hitbox": {
     "width": 1,
-    "height": 2.1,
+    "height": 2.9,
     "fixed": false
   },
   "baseFriendship": 50,

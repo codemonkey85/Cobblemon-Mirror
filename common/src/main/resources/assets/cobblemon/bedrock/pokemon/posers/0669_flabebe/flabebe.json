@@ -1,0 +1,73 @@
+{
+  "portraitScale": 2.26,
+  "portraitTranslation": [0, -0.14, 0],
+  "profileScale": 0.81,
+  "profileTranslation": [0, 0.63, 0],
+  "rootBone": "flabebe",
+  "animations": {
+    "cry": "q.bedrock_stateful('flabebe', 'cry')",
+    "recoil": "q.bedrock_stateful('flabebe', 'recoil')"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": ["q.look('head')", "q.bedrock('flabebe', 'battle_idle')"],
+      "quirks": [
+        "q.bedrock_quirk('flabebe', 'blink')",
+        "q.bedrock_quirk('flabebe', 'quirk_look')"
+      ]
+    },
+    "standing": {
+      "poseTypes": ["STAND", "HOVER", "FLOAT", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('flabebe', 'ground_idle')"],
+      "quirks": [
+        "q.bedrock_quirk('flabebe', 'blink')",
+        "q.bedrock_quirk('flabebe', 'quirk_look')"
+      ]
+    },
+    "walking": {
+      "poseTypes": ["WALK", "FLY", "SWIM"],
+      "animations": ["q.look('head')", "q.bedrock('flabebe', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('flabebe', 'blink')"]
+    },
+    "sleep": {
+      "poseTypes": ["SLEEP"],
+      "namedAnimations": {
+        "cry": "q.bedrock_stateful('dummy', 'cry')"
+      },
+      "animations": ["q.bedrock('flabebe', 'sleep')"]
+    },
+    "shoulder_left": {
+      "poseTypes": ["SHOULDER_LEFT"],
+      "animations": ["q.look('head')", "q.bedrock('flabebe', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('flabebe', 'blink')"],
+      "transformedParts": [
+        {
+          "part": "body",
+          "position": [7, 0, 0]
+        },
+        {
+          "part": "flower",
+          "position": [7, 0, 0]
+        }
+      ]
+    },
+    "shoulder_right": {
+      "poseTypes": ["SHOULDER_RIGHT"],
+      "animations": ["q.look('head')", "q.bedrock('flabebe', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('flabebe', 'blink')"],
+      "transformedParts": [
+        {
+          "part": "body",
+          "position": [-7, 0, 0]
+        },
+        {
+          "part": "flower",
+          "position": [-7, 0, 0]
+        }
+      ]
+    }
+  }
+}

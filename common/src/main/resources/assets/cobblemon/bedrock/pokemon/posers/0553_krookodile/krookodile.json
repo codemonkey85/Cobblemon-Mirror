@@ -1,0 +1,50 @@
+{
+  "portraitScale": 1.17,
+  "portraitTranslation": [-0.33, 1.65, 0],
+  "profileScale": 0.55,
+  "profileTranslation": [-0.03, 0.94, 0],
+  "rootBone": "krookodile",
+  "animations": {
+    "faint": "q.bedrock_primary('krookodile', 'faint', q.curve('one'))",
+    "cry": "q.bedrock_stateful('krookodile', 'cry')"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseName": "battle-standing",
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('krookodile', 'battle_idle')"
+      ],
+      "quirks": ["q.bedrock_quirk('krookodile', 'blink')"]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE", "FLOAT"],
+      "isBattle": false,
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('krookodile', 'ground_idle')"
+      ],
+      "quirks": [
+        "q.bedrock_quirk('krookodile', 'blink')",
+        "q.bedrock_quirk('krookodile', 'look_quirk')"
+      ]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": [
+        "q.look('head')",
+        "q.bedrock('krookodile', 'ground_walk')"
+      ],
+      "quirks": ["q.bedrock_quirk('krookodile', 'blink')"]
+    },
+    "sleeping": {
+      "poseName": "sleeping",
+      "poseTypes": ["SLEEP"],
+      "animations": ["q.bedrock('krookodile', 'sleep')"]
+    }
+  }
+}

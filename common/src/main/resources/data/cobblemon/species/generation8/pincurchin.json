@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Pincurchin",
   "nationalPokedexNumber": 871,
   "primaryType": "electric",
@@ -24,6 +25,19 @@
     "water_1",
     "amorphous"
   ],
+  "behaviour": {
+    "moving": {
+      "walk": {
+        "walkSpeed": 0.175
+      },
+      "swim": {
+        "swimSpeed": 0.1,
+        "canSwimInWater": false,
+        "canBreatheUnderwater": true
+      },
+      "wanderChance": 360
+    }
+  },
   "moves": [
     "1:peck",
     "1:thundershock",
@@ -97,10 +111,10 @@
     "cobblemon.species.pincurchin.desc"
   ],
   "evolutions": [],
-  "baseScale": 1,
+  "baseScale": 0.75,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.6,
+    "height": 0.6,
     "fixed": false
   },
   "baseFriendship": 50,

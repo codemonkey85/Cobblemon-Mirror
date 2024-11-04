@@ -1,0 +1,25 @@
+{
+  "timeline": [
+    {
+      "type": "molang",
+      "expressions": "c.npc.look_at_position(v.healer[0] + 0.5, v.healer[1] + 0.8, v.healer[2] + 0.5);"
+    },
+    {
+      "type": "animation",
+      "animation": ["punch_right"],
+      "entityCondition": "true"
+    },
+    {
+      "type": "molang",
+      "expressions": "c.player.put_pokemon_in_healer(v.healer);"
+    },
+    {
+      "type": "pause",
+      "pause": 2.5
+    },
+    {
+      "type": "molang",
+      "expressions": "q.run_script('run_callback_dialogue');"
+    }
+  ]
+}

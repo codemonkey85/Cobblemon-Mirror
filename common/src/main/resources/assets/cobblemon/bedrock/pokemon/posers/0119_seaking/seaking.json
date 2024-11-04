@@ -1,0 +1,22 @@
+{
+  "portraitScale": 0.86,
+  "portraitTranslation": [-0.07, 0.29, 0],
+  "profileScale": 0.51,
+  "profileTranslation": [0, 0.8, 0],
+  "rootBone": "seaking",
+  "poses": {
+    "standing": {
+      "poseTypes": [
+        "STAND",
+        "WALK",
+        "SWIM",
+        "FLOAT",
+        "PORTRAIT",
+        "PROFILE",
+        "NONE"
+      ],
+      "animations": ["q.bedrock('seaking', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('seaking', 'blink')"]
+    }
+  }
+}

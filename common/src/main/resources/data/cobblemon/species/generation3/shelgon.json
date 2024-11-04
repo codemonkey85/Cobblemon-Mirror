@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Shelgon",
   "nationalPokedexNumber": 372,
   "primaryType": "dragon",
@@ -13,6 +14,13 @@
     "special_attack": 60,
     "special_defence": 50,
     "speed": 50
+  },
+  "behaviour": {
+    "moving": {
+      "walking": {
+        "walkSpeed": 0.2
+      }
+    }
   },
   "catchRate": 45,
   "maleRatio": 0.5,
@@ -146,8 +154,8 @@
   ],
   "baseScale": 1,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 1.5,
+    "height": 1.55,
     "fixed": false
   },
   "baseFriendship": 35,

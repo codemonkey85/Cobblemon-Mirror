@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.advancement.CobblemonCriteria
 import com.cobblemon.mod.common.advancement.predicate.CobblemonEntitySubPredicates
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.net.serializers.IdentifierDataSerializer
+import com.cobblemon.mod.common.api.net.serializers.NPCPlayerTextureSerializer
 import com.cobblemon.mod.common.api.net.serializers.PoseTypeDataSerializer
 import com.cobblemon.mod.common.api.net.serializers.StringSetDataSerializer
 import com.cobblemon.mod.common.api.net.serializers.UUIDSetDataSerializer
@@ -221,6 +222,7 @@ object CobblemonFabric : CobblemonImplementation {
         EntityDataSerializers.registerSerializer(PoseTypeDataSerializer)
         EntityDataSerializers.registerSerializer(IdentifierDataSerializer)
         EntityDataSerializers.registerSerializer(UUIDSetDataSerializer)
+        EntityDataSerializers.registerSerializer(NPCPlayerTextureSerializer)
     }
 
     override fun registerItems() {
@@ -379,7 +381,9 @@ object CobblemonFabric : CobblemonImplementation {
     }
 
     private fun attemptModCompat() {
-
+        if(isModInstalled("adorn")) {
+            registerBuiltinResourcePack(cobblemonResource("adorncompatibility"), Component.literal("Adorn Compatibility"), ResourcePackActivationBehaviour.ALWAYS_ENABLED)
+        }
     }
 
     private class CobblemonReloadListener(private val identifier: ResourceLocation, private val reloader: PreparableReloadListener, private val dependencies: Collection<ResourceLocation>) : IdentifiableResourceReloadListener {
@@ -393,7 +397,6 @@ object CobblemonFabric : CobblemonImplementation {
         override fun getFabricDependencies(): MutableCollection<ResourceLocation> = this.dependencies.toMutableList()
     }
 
-    @Suppress("UnstableApiUsage")
     private class FabricItemGroupInjector(private val fabricItemGroupEntries: FabricItemGroupEntries) : CobblemonItemGroups.Injector {
         override fun putFirst(item: ItemLike) {
             this.fabricItemGroupEntries.prepend(item)

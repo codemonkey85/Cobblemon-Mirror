@@ -30,7 +30,7 @@
     "speed": 65
   },
   "catchRate": 100,
-  "maleRatio": 1,
+  "maleRatio": 0.5,
   "baseExperienceYield": 171,
   "baseFriendship": 50,
   "evYield": {
@@ -112,6 +112,15 @@
   "evolutions": [],
   "cannotDynamax": false,
   "forms": [
+    {
+      "name": "undecided_temporary_form",
+      "maleRatio": 0.5
+    },
+    {
+      "name": "male",
+      "maleRatio": 1,
+      "aspects": ["male"]
+    },
     {
       "name": "female",
       "primaryType": "normal",

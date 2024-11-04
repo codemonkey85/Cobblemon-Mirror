@@ -16,6 +16,7 @@ import java.util.UUID
 class ClientTrade {
     var myOffer = SettableObservable<Pokemon?>(null)
     var oppositeOffer = SettableObservable<Pokemon?>(null)
+    var tradeProcessing = SettableObservable(Pair(false, false))
     var oppositeAcceptedMyOffer = SettableObservable(false)
     var acceptedOppositeOffer = false
 

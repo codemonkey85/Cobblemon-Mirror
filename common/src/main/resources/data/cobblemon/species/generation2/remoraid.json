@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Remoraid",
   "nationalPokedexNumber": 223,
   "primaryType": "water",
@@ -21,7 +22,7 @@
         "avoidsLand": true
       },
       "swim": {
-        "swimSpeed": 0.15,
+        "swimSpeed": 0.4,
         "canSwimInWater": true,
         "canBreatheUnderwater": true
       }
@@ -189,10 +190,10 @@
       ]
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.8,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.8,
+    "height": 0.6,
     "fixed": false
   },
   "baseFriendship": 50,

@@ -1,0 +1,25 @@
+{
+  "portraitScale": 1.5,
+  "portraitTranslation": [-0.24, 0.08, 0],
+  "profileScale": 0.61,
+  "profileTranslation": [0, 0.89, 0],
+  "rootBone": "shellos_west",
+  "animations": {
+    "recoil": "q.bedrock_stateful('shellos_west', 'recoil')"
+  },
+  "poses": {
+    "standing": {
+      "poseTypes": [
+        "STAND",
+        "WALK",
+        "SWIM",
+        "FLOAT",
+        "PORTRAIT",
+        "PROFILE",
+        "NONE"
+      ],
+      "animations": ["q.bedrock('shellos_west', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('shellos_west', 'blink')"]
+    }
+  }
+}

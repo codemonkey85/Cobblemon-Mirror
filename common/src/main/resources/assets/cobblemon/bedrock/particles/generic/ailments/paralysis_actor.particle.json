@@ -10,10 +10,6 @@
 		},
 		"events": {
 			"paraSparks": {
-				"particle_effect": {
-					"effect": "cobblemon:paralysis_actorresidual",
-					"type": "emitter"
-				},
 				"sound_effect": {
 					"event_name": "cobblemon:status.paralysis.actor"
 				}
@@ -21,17 +17,17 @@
 		},
 		"components": {
 			"minecraft:emitter_rate_steady": {
-				"spawn_rate": 28,
-				"max_particles": 14
+				"spawn_rate": "math.clamp(30*(q.entity_radius*1.5),30,120)",
+				"max_particles": 140
 			},
 			"minecraft:emitter_lifetime_once": {
-				"active_time": 0.5
+				"active_time": 0.3
 			},
 			"minecraft:emitter_lifetime_events": {
 				"creation_event": "paraSparks"
 			},
 			"minecraft:emitter_shape_sphere": {
-				"radius": "math.clamp(q.entity_radius*0.9,0.7,1.5)",
+				"radius": "(q.entity_radius*(0.95+v.emitter_age))/math.clamp(q.entity_scale*1.1-0.1,1,2)",
 				"surface_only": true,
 				"direction": ["(math.random(-2,2))*math.random(2,4)", "math.random(12,15)", "(math.random(-2,2))*math.random(2,4)"]
 			},
@@ -44,7 +40,7 @@
 			"minecraft:particle_initial_speed": "math.random(0.55,0.85)*0.8",
 			"minecraft:particle_motion_dynamic": {},
 			"minecraft:particle_appearance_billboard": {
-				"size": ["(0.225-(variable.particle_random_3*0.075))*math.clamp(q.entity_height,1,1.25)", "(0.225-(variable.particle_random_3*0.075))*math.clamp(q.entity_height,1,1.25)"],
+				"size": ["0.125+(v.particle_random_2*0.1)*math.clamp(q.entity_height,1,1.25)", "0.125+(v.particle_random_2*0.1)*math.clamp(q.entity_height,1,1.25)"],
 				"facing_camera_mode": "rotate_xyz",
 				"uv": {
 					"texture_width": 80,

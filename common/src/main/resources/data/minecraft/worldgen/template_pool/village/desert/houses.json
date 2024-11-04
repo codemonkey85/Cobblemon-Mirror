@@ -335,7 +335,17 @@
         "element_type": "minecraft:single_pool_element",
         "location": "cobblemon:village_desert/village_desert_pokecenter",
         "override_liquid_settings": "ignore_waterlogging",
-        "processors": "cobblemon:villages/pokecenter",
+        "processors": "minecraft:empty",
+        "projection": "rigid"
+      },
+      "weight": 150
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "cobblemon:village_desert/village_desert_pokecenter",
+        "override_liquid_settings": "ignore_waterlogging",
+        "processors": "minecraft:empty",
         "projection": "rigid"
       },
       "weight": 150

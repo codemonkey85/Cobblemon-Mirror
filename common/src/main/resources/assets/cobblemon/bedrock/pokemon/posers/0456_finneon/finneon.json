@@ -1,0 +1,64 @@
+{
+  "portraitScale": 1.91,
+  "portraitTranslation": [0.18, -1.4, 0],
+  "profileScale": 1.02,
+  "profileTranslation": [0.12, 0.04, 0],
+  "rootBone": "finneon",
+  "animations": {
+    "cry": "q.bedrock_stateful('finneon', 'cry')"
+  },
+  "poses": {
+    "portrait": {
+      "poseTypes": ["PORTRAIT", "PROFILE"],
+      "animations": ["q.bedrock('finneon', 'water_idle')"],
+      "quirks": ["q.bedrock_quirk('finneon', 'blink')"]
+    },
+    "battle-standing": {
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "isTouchingWater": false,
+      "namedAnimations": {
+        "faint": "q.bedrock_primary('finneon', 'ground_faint', q.curve('one'))"
+      },
+      "animations": ["q.bedrock('finneon', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('finneon', 'blink')"]
+    },
+    "water-battle-standing": {
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "isTouchingWater": true,
+      "namedAnimations": {
+        "faint": "q.bedrock_primary('finneon', 'water_faint', q.curve('one'))"
+      },
+      "animations": ["q.bedrock('finneon', 'water_idle')"],
+      "quirks": [
+        "q.bedrock_quirk('finneon', 'blink')",
+        "q.bedrock_quirk('finneon', 'quirk')"
+      ]
+    },
+    "standing": {
+      "poseTypes": ["STAND", "NONE"],
+      "isBattle": false,
+      "animations": ["q.bedrock('finneon', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('finneon', 'blink')"]
+    },
+    "walking": {
+      "poseTypes": ["WALK"],
+      "animations": ["q.bedrock('finneon', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('finneon', 'blink')"]
+    },
+    "float": {
+      "poseTypes": ["FLOAT"],
+      "animations": ["q.bedrock('finneon', 'water_idle')"],
+      "quirks": [
+        "q.bedrock_quirk('finneon', 'blink')",
+        "q.bedrock_quirk('finneon', 'quirk')"
+      ]
+    },
+    "swim": {
+      "poseTypes": ["SWIM"],
+      "animations": ["q.bedrock('finneon', 'water_swim')"],
+      "quirks": ["q.bedrock_quirk('finneon', 'blink')"]
+    }
+  }
+}

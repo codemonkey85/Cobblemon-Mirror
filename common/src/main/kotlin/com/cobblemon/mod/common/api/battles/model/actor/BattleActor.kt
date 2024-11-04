@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.api.battles.model.actor
 
+import com.bedrockk.molang.runtime.struct.QueryStruct
+import com.bedrockk.molang.runtime.value.StringValue
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.battles.ActiveBattlePokemon
@@ -33,6 +35,8 @@ abstract class BattleActor(
     init {
         pokemonList.forEach { it.actor = this }
     }
+
+    val struct = QueryStruct(hashMapOf())
 
     lateinit var showdownId: String
     lateinit var battle: PokemonBattle
@@ -132,6 +136,10 @@ abstract class BattleActor(
         request = null
         expectingPassActions.clear()
         battle.writeShowdownAction(">$showdownId ${showdownMessages.joinToString()}")
+    }
+
+    open fun setupStruct() {
+        struct.addFunction("uuid") { StringValue(uuid.toString()) }
     }
 
     abstract fun getName(): MutableComponent

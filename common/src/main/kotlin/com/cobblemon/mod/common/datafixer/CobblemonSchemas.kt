@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.datafixer
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.datafixer.fix.BlockPosUpdateFix
 import com.cobblemon.mod.common.datafixer.fix.EvolutionProxyNestingFix
+import com.cobblemon.mod.common.datafixer.fix.FeatureFix
 import com.cobblemon.mod.common.datafixer.fix.IvEvToIdentifierFix
 import com.cobblemon.mod.common.datafixer.fix.TeraTypeFix
 import com.cobblemon.mod.common.datafixer.fix.TradeableMissingFix
@@ -20,7 +21,6 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder
 import com.mojang.datafixers.DSL.TypeReference
 import com.mojang.datafixers.DataFixer
 import com.mojang.datafixers.DataFixerBuilder
-import com.mojang.datafixers.schemas.Schema
 import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
@@ -82,6 +82,7 @@ object CobblemonSchemas {
         builder.addFixer(TradeableMissingFix(schema1))
         builder.addFixer(ItemStackComponentizationFix(schema1))
         builder.addFixer(BlockPosUpdateFix(schema1))
+        builder.addFixer(FeatureFix(schema1))
     }
 
     private class CobblemonDataFixerCodec<R>(private val baseCodec: Codec<R>, private val typeReference: TypeReference) : Codec<R> {

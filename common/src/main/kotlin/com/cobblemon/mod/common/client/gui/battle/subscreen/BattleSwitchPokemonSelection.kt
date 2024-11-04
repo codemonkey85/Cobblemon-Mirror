@@ -47,7 +47,8 @@ class BattleSwitchPokemonSelection(
     battleGUI,
     request,
     x = 0,
-    y = 0,
+    y = if (Minecraft.getInstance().window.guiScaledHeight > 630) Minecraft.getInstance().window.guiScaledHeight / 2 - 148 / 2
+    else Minecraft.getInstance().window.guiScaledHeight - 226,
     width = Minecraft.getInstance().window.guiScaledWidth,
     height = Minecraft.getInstance().window.guiScaledHeight,
     battleLang("switch_pokemon")
@@ -63,6 +64,8 @@ class BattleSwitchPokemonSelection(
     val tiles = mutableListOf<SwitchTile>()
     val backButton = BattleBackButton(x + 9F, Minecraft.getInstance().window.guiScaledHeight - 22F )
 
+    var isReviving = false
+
     init {
         val pendingActionRequests = CobblemonClient.battle!!.pendingActionRequests
         val switchingInPokemon = pendingActionRequests.mapNotNull { it.response }.filterIsInstance<SwitchActionResponse>().map { it.newPokemonId }
@@ -73,7 +76,9 @@ class BattleSwitchPokemonSelection(
                     ?.let { showdownPokemon to it }
             }.filter { it.second.uuid !in switchingInPokemon }
 
-        if (showdownPokemonToPokemon.isEmpty() && request.forceSwitch) {
+        isReviving = request.side.pokemon.any { it.reviving && it.uuid == request.activePokemon.battlePokemon?.uuid }
+        if (request.forceSwitch && !isReviving && showdownPokemonToPokemon.all {
+            (it.second.uuid in battleGUI.actor!!.activePokemon.map { it.battlePokemon?.uuid } || ("fnt" in it.first.condition))}) { // on field or fainted
             // Occurs after a multi-knock out and the player doesn't have enough pokemon to fill every vacant slot
             battleGUI.selectAction(request, PassActionResponse)
         }
@@ -89,7 +94,7 @@ class BattleSwitchPokemonSelection(
 
     fun getSlotPosition(index: Int): Pair<Float, Float> {
         val startX = ((width / 2) - SwitchTile.SELECT_WIDTH - 1)
-        val startY = ((height - BACKGROUND_HEIGHT) / 2) + 34
+        val startY = y + 34
         val row = index / 2
         val column = index % 2
         val slotX = startX.toFloat() + column * (SLOT_HORIZONTAL_SPACING + SwitchTile.SELECT_WIDTH)
@@ -101,12 +106,11 @@ class BattleSwitchPokemonSelection(
         if (opacity <= 0.05F) return
 
         val matrixStack = context.pose()
-        val startY = (height - BACKGROUND_HEIGHT) / 2
         blitk(
             matrixStack = matrixStack,
             texture = underlayTexture,
             x = x,
-            y = startY,
+            y = y,
             width = width,
             height = BACKGROUND_HEIGHT
         )
@@ -118,7 +122,7 @@ class BattleSwitchPokemonSelection(
             context = context,
             text = text,
             x = (width - textWidth) / 2,
-            y = startY + 17,
+            y = y + 17,
             shadow = true
         )
 
@@ -148,7 +152,7 @@ class BattleSwitchPokemonSelection(
             playDownSound(Minecraft.getInstance().soundManager)
             return true
         }
-        val clicked = tiles.find { it.isHovered(mouseX, mouseY) && !it.isFainted && !it.isCurrentlyInBattle } ?: return false
+        val clicked = tiles.find { it.isHovered(mouseX, mouseY) && if (isReviving) it.isFainted else (!it.isFainted && !it.isCurrentlyInBattle) } ?: return false
         val pokemon = clicked.pokemon
         playDownSound(Minecraft.getInstance().soundManager)
         battleGUI.selectAction(request, SwitchActionResponse(pokemon.uuid))
@@ -187,6 +191,7 @@ class BattleSwitchPokemonSelection(
         fun isHovered(mouseX: Double, mouseY: Double) = mouseX in x..(x + SELECT_WIDTH) && mouseY in (y..(y + SELECT_HEIGHT))
 
         fun render(context: GuiGraphics, mouseX: Double, mouseY: Double, deltaTicks: Float) {
+            state.currentAspects = pokemon.aspects
             val matrixStack = context.pose()
             val healthRatioSplits = showdownPokemon.condition.split(" ")[0].split("/")
             try {
@@ -246,7 +251,6 @@ class BattleSwitchPokemonSelection(
                 matrixStack.scale(2.5F, 2.5F, 1F)
                 drawProfilePokemon(
                     species = pokemon.species.resourceIdentifier,
-                    aspects = pokemon.aspects.toSet(),
                     matrixStack = matrixStack,
                     rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),
                     state = state,

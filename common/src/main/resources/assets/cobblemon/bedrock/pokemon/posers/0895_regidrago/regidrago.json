@@ -1,0 +1,19 @@
+{
+  "portraitScale": 0.63,
+  "portraitTranslation": [-0.16, 0.9, 0],
+  "profileScale": 0.4,
+  "profileTranslation": [0, 1.13, 0],
+  "rootBone": "regidrago",
+  "poses": {
+    "standing": {
+      "poseTypes": ["STAND", "FLOAT", "PORTRAIT", "PROFILE", "NONE"],
+      "animations": ["q.bedrock('regidrago', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('regidrago', 'blink')"]
+    },
+    "walking": {
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": ["q.bedrock('regidrago', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('regidrago', 'blink')"]
+    }
+  }
+}

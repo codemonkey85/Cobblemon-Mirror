@@ -8,25 +8,16 @@
 				"texture": "textures/particles/powder"
 			}
 		},
-		"events": {
-			"event_sound": {
-				"sound_effect": {
-					"event_name": "cobblemon:move.sandattack.target"
-				}
-			}
-		},
 		"components": {
 			"minecraft:emitter_rate_steady": {
 				"spawn_rate": 500,
-				"max_particles": 30
+				"max_particles": 25
 			},
 			"minecraft:emitter_lifetime_looping": {
 				"active_time": 1
 			},
-			"minecraft:emitter_lifetime_events": {
-				"creation_event": "event_sound"
-			},
 			"minecraft:emitter_shape_point": {
+				"offset": [0, 0.01, 0],
 				"direction": ["math.random(-1.61,1.61)", "math.random(-0.35,2.15)", "math.random(-0.81,2.21)"]
 			},
 			"minecraft:particle_lifetime_expression": {
@@ -37,11 +28,11 @@
 			},
 			"minecraft:particle_initial_speed": "math.random(5.25,8.25)",
 			"minecraft:particle_motion_dynamic": {
-				"linear_acceleration": [0, -8, 0],
+				"linear_acceleration": [0, -7.5, 0],
 				"linear_drag_coefficient": 3
 			},
 			"minecraft:particle_appearance_billboard": {
-				"size": [0.3, 0.3],
+				"size": [0.25, 0.25],
 				"facing_camera_mode": "rotate_xyz",
 				"uv": {
 					"texture_width": 99,
@@ -56,7 +47,8 @@
 				}
 			},
 			"minecraft:particle_motion_collision": {
-				"coefficient_of_restitution": 2
+				"coefficient_of_restitution": 2,
+				"collision_radius": 0.01
 			},
 			"minecraft:particle_appearance_lighting": {},
 			"minecraft:particle_appearance_tinting": {

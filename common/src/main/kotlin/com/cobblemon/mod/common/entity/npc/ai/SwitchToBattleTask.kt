@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.entity.npc.ai
 
+import com.cobblemon.mod.common.CobblemonActivities
 import com.cobblemon.mod.common.CobblemonMemories
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.behavior.OneShot
@@ -30,7 +31,7 @@ object SwitchToBattleTask {
             ).apply(it) { walkTarget, _ ->
                 Trigger { _, entity, _ ->
                     walkTarget.erase()
-//                    entity.brain.doExclusively(NPCEntity.BATTLING)
+                    entity.brain.setActiveActivityIfPossible(CobblemonActivities.NPC_BATTLING)
                     true
                 }
             }

@@ -1,0 +1,23 @@
+{
+  "portraitScale": 2.05,
+  "portraitTranslation": [-0.2, -0.69, 0],
+  "profileScale": 0.69,
+  "profileTranslation": [0.04, 0.78, 0],
+  "rootBone": "hattrem",
+  "animations": {
+    "cry": "q.bedrock_stateful('hattrem', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE", "FLOAT"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('hattrem', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('hattrem', 'blink')"]
+    },
+    "walking": {
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": ["q.look('head')", "q.bedrock('hattrem', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('hattrem', 'blink')"]
+    }
+  }
+}

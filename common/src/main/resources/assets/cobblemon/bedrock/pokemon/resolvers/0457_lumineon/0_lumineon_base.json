@@ -1,0 +1,30 @@
+{
+  "species": "cobblemon:lumineon",
+  "order": 0,
+  "variations": [
+    {
+      "aspects": [],
+      "poser": "cobblemon:lumineon",
+      "model": "cobblemon:lumineon.geo",
+      "texture": "cobblemon:textures/pokemon/0457_lumineon/lumineon.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "emissive": true,
+          "texture": "cobblemon:textures/pokemon/0457_lumineon/lumineon_emissive.png"
+        }
+      ]
+    },
+    {
+      "aspects": ["shiny"],
+      "texture": "cobblemon:textures/pokemon/0457_lumineon/lumineon_shiny.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "emissive": true,
+          "texture": "cobblemon:textures/pokemon/0457_lumineon/lumineon_shiny_emissive.png"
+        }
+      ]
+    }
+  ]
+}

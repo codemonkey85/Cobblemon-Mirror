@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Salamence",
   "nationalPokedexNumber": 373,
   "primaryType": "dragon",
@@ -51,6 +52,13 @@
       "eggGroups": [
         "dragon"
       ],
+      "behaviour": {
+        "moving": {
+          "fly": {
+            "canFly": true
+          }
+        }
+      },
       "labels": [
         "gen6",
         "mega",
@@ -71,6 +79,16 @@
   "eggGroups": [
     "dragon"
   ],
+  "behaviour": {
+    "moving": {
+      "walking": {
+        "walkSpeed": 0.2
+      },
+      "fly": {
+        "canFly": true
+      }
+    }
+  },
   "moves": [
     "1:bite",
     "1:dragonbreath",
@@ -225,8 +243,8 @@
   "evolutions": [],
   "baseScale": 1,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 2.7,
+    "height": 2,
     "fixed": false
   },
   "baseFriendship": 35,

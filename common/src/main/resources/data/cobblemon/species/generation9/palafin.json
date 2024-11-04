@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Palafin",
   "nationalPokedexNumber": 964,
   "primaryType": "water",
@@ -31,6 +32,19 @@
     "field",
     "water_2"
   ],
+  "behaviour": {
+    "moving": {
+      "canLook": false,
+      "walk": {
+        "avoidsLand": true
+      },
+      "swim": {
+        "swimSpeed": 0.1,
+        "canSwimInWater": true,
+        "canBreatheUnderwater": true
+      }
+    }
+  },
   "moves": [
     "1:jetpunch",
     "1:supersonic",
@@ -101,6 +115,12 @@
     "tm:whirlpool",
     "tm:zenheadbutt"
   ],
+  "baseScale": 0.85,
+  "hitbox": {
+    "width": 1.25,
+    "height": 1,
+    "fixed": false
+  },
   "labels": [
     "gen9"
   ],
@@ -143,6 +163,12 @@
         "field",
         "water_2"
       ],
+      "baseScale": 0.85,
+      "hitbox": {
+        "width": 1.2,
+        "height": 2.5,
+        "fixed": false
+      },
       "labels": [
         "gen9"
       ],

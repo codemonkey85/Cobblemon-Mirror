@@ -175,10 +175,19 @@ class CobblemonConfig {
     var displayEntityLevelLabel = true
 
     @NodeCategory(Category.Pokemon)
-    var displayEntityNameLabel = false
+    var displayEntityNameLabel = true
+
+    @NodeCategory(Category.Pokemon)
+    var diplayNameForUnknownPokemon = false
+
+    @NodeCategory(Category.Pokemon)
+    var displayEntityLabelsWhenCrouchingOnly  = true
 
     @NodeCategory(Category.Spawning)
     var shinyRate = 8192F
+
+    @NodeCategory(Category.Pokemon)
+    val shinyNoticeParticlesDistance = 24F
 
     @NodeCategory(Category.Pokemon)
     var captureCalculator: CaptureCalculator = CobblemonCaptureCalculator

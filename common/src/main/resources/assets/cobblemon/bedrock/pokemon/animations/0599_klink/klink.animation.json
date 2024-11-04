@@ -35,6 +35,14 @@
 				}
 			}
 		},
+		"animation.klink.cry": {
+			"animation_length": 1.2,
+			"sound_effects": {
+				"0.0": {
+					"effect": "pokemon.klink.cry"
+				}
+			}
+		},
 		"animation.klink.faint": {
 			"loop": true,
 			"animation_length": 3,
@@ -146,14 +154,6 @@
 				},
 				"gear2": {
 					"rotation": [0, 0, "Math.cos((query.anim_time) * 90 * 0.4) * -30"]
-				}
-			}
-		},
-		"animation.klink.cry": {
-			"animation_length": 1.2,
-			"sound_effects": {
-				"0.04": {
-					"effect": "pokemon.klink.cry"
 				}
 			}
 		}

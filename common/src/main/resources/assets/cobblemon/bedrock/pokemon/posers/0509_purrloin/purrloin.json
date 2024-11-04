@@ -1,0 +1,32 @@
+{
+  "portraitScale": 1.7,
+  "portraitTranslation": [-0.11, 0.8, 0],
+  "profileScale": 0.59,
+  "profileTranslation": [0.0, 0.93, 0.0],
+  "rootBone": "purrloin",
+  "animations": {
+    "cry": "q.bedrock_stateful('purrloin', 'cry')"
+  },
+  "poses": {
+    "battle-standing": {
+      "poseName": "battle-standing",
+      "poseTypes": ["STAND"],
+      "isBattle": true,
+      "animations": ["q.look('head')", "q.bedrock('purrloin', 'battle_idle')"],
+      "quirks": ["q.bedrock_quirk('purrloin', 'blink')"]
+    },
+    "standing": {
+      "poseName": "standing",
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('purrloin', 'pose1')"],
+      "quirks": ["q.bedrock_quirk('purrloin', 'blink')"]
+    },
+    "walking": {
+      "poseName": "walking",
+      "poseTypes": ["WALK"],
+      "animations": ["q.look('head')", "q.bedrock('purrloin', 'ground_walk')"],
+      "quirks": ["q.bedrock_quirk('purrloin', 'blink')"]
+    }
+  }
+}

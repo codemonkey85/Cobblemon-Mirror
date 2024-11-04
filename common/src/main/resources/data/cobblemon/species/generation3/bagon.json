@@ -1,4 +1,5 @@
 {
+  "implemented": true,
   "name": "Bagon",
   "nationalPokedexNumber": 371,
   "primaryType": "dragon",
@@ -13,6 +14,13 @@
     "special_attack": 40,
     "special_defence": 30,
     "speed": 50
+  },
+  "behaviour": {
+    "moving": {
+      "walking": {
+        "walkSpeed": 0.2
+      }
+    }
   },
   "catchRate": 45,
   "maleRatio": 0.5,
@@ -155,10 +163,10 @@
       ]
     }
   ],
-  "baseScale": 1,
+  "baseScale": 0.9,
   "hitbox": {
-    "width": 1,
-    "height": 1,
+    "width": 0.6,
+    "height": 1.1,
     "fixed": false
   },
   "baseFriendship": 35,

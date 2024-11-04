@@ -1,0 +1,30 @@
+{
+  "species": "cobblemon:toxapex",
+  "order": 0,
+  "variations": [
+    {
+      "aspects": [],
+      "poser": "cobblemon:toxapex",
+      "model": "cobblemon:toxapex.geo",
+      "texture": "cobblemon:textures/pokemon/0748_toxapex/toxapex.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "emissive": true,
+          "texture": "cobblemon:textures/pokemon/0748_toxapex/toxapex_emissive.png"
+        }
+      ]
+    },
+    {
+      "aspects": ["shiny"],
+      "texture": "cobblemon:textures/pokemon/0748_toxapex/toxapex_shiny.png",
+      "layers": [
+        {
+          "name": "emissive",
+          "emissive": true,
+          "texture": "cobblemon:textures/pokemon/0748_toxapex/toxapex_shiny_emissive.png"
+        }
+      ]
+    }
+  ]
+}

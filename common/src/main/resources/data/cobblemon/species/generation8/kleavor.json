@@ -9,23 +9,6 @@
     "sheerforce",
     "h:sharpness"
   ],
-  "baseStats": {
-    "hp": 70,
-    "attack": 135,
-    "defence": 95,
-    "special_attack": 45,
-    "special_defence": 70,
-    "speed": 85
-  },
-  "catchRate": 115,
-  "maleRatio": 0.5,
-  "shoulderMountable": false,
-  "baseExperienceYield": 175,
-  "experienceGroup": "medium_fast",
-  "eggCycles": 0,
-  "eggGroups": [
-    "bug"
-  ],
   "drops": {
     "amount": 3,
     "entries": [
@@ -38,6 +21,31 @@
         "percentage": 5.0
       }
     ]
+  },
+  "baseStats": {
+    "hp": 70,
+    "attack": 130,
+    "defence": 95,
+    "special_attack": 45,
+    "special_defence": 75,
+    "speed": 85
+  },
+  "catchRate": 115,
+  "maleRatio": 0.5,
+  "shoulderMountable": false,
+  "baseExperienceYield": 175,
+  "experienceGroup": "medium_fast",
+  "eggCycles": 0,
+  "eggGroups": [
+    "bug"
+  ],
+  "behaviour": {
+    "resting": {
+      "canSleep": true,
+      "willSleepOnBed": false,
+      "depth": "normal",
+      "light": "0-4"
+    }
   },
   "moves": [
     "1:leer",

@@ -8,7 +8,6 @@
 
 package com.cobblemon.mod.common
 
-//import com.cobblemon.mod.common.api.storage.player.factory.MongoPlayerDataStoreFactory
 import com.cobblemon.mod.common.CobblemonBuildDetails.smallCommitHash
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.SeasonResolver
@@ -45,6 +44,7 @@ import com.cobblemon.mod.common.api.spawning.prospecting.SpawningProspector
 import com.cobblemon.mod.common.api.starter.StarterHandler
 import com.cobblemon.mod.common.api.storage.PokemonStoreManager
 import com.cobblemon.mod.common.api.storage.adapter.conversions.ReforgedConversion
+import com.cobblemon.mod.common.api.storage.adapter.database.MongoDBStoreAdapter
 import com.cobblemon.mod.common.api.storage.adapter.flatfile.FileStoreAdapter
 import com.cobblemon.mod.common.api.storage.adapter.flatfile.JSONStoreAdapter
 import com.cobblemon.mod.common.api.storage.adapter.flatfile.NBTStoreAdapter
@@ -53,10 +53,8 @@ import com.cobblemon.mod.common.api.storage.molang.NbtMoLangDataStoreFactory
 import com.cobblemon.mod.common.api.storage.pc.PCStore
 import com.cobblemon.mod.common.api.storage.pc.link.PCLinkManager
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreManager
-import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreType
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreTypes
-import com.cobblemon.mod.common.api.storage.player.adapter.DexDataNbtBackend
-import com.cobblemon.mod.common.api.storage.player.adapter.PlayerDataJsonBackend
+import com.cobblemon.mod.common.api.storage.player.adapter.*
 import com.cobblemon.mod.common.api.storage.player.factory.CachedPlayerDataStoreFactory
 import com.cobblemon.mod.common.api.tags.CobblemonEntityTypeTags
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
@@ -71,6 +69,7 @@ import com.cobblemon.mod.common.command.argument.DexArgumentType
 import com.cobblemon.mod.common.command.argument.DialogueArgumentType
 import com.cobblemon.mod.common.command.argument.FormArgumentType
 import com.cobblemon.mod.common.command.argument.MoveArgumentType
+import com.cobblemon.mod.common.command.argument.NPCClassArgumentType
 import com.cobblemon.mod.common.command.argument.PartySlotArgumentType
 import com.cobblemon.mod.common.command.argument.PokemonPropertiesArgumentType
 import com.cobblemon.mod.common.command.argument.PokemonStoreArgumentType
@@ -99,6 +98,7 @@ import com.cobblemon.mod.common.pokemon.properties.HiddenAbilityPropertyType
 import com.cobblemon.mod.common.pokemon.properties.NoAIProperty
 import com.cobblemon.mod.common.pokemon.properties.UnaspectPropertyType
 import com.cobblemon.mod.common.pokemon.properties.UncatchableProperty
+import com.cobblemon.mod.common.pokemon.properties.BattleCloneProperty
 import com.cobblemon.mod.common.pokemon.properties.tags.PokemonFlagProperty
 import com.cobblemon.mod.common.pokemon.stat.CobblemonStatProvider
 import com.cobblemon.mod.common.starter.CobblemonStarterHandler
@@ -107,7 +107,10 @@ import com.cobblemon.mod.common.util.*
 import com.cobblemon.mod.common.world.feature.CobblemonPlacedFeatures
 import com.cobblemon.mod.common.world.feature.ore.CobblemonOrePlacedFeatures
 import com.cobblemon.mod.common.world.gamerules.CobblemonGameRules
+import com.mongodb.ConnectionString
+import com.mongodb.MongoClientSettings
 import com.mongodb.client.MongoClient
+import com.mongodb.client.MongoClients
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
@@ -131,6 +134,7 @@ object Cobblemon {
     const val MODID = CobblemonBuildDetails.MOD_ID
     const val VERSION = CobblemonBuildDetails.VERSION
     const val CONFIG_PATH = "config/$MODID/main.json"
+    @JvmField
     val LOGGER: Logger = LogManager.getLogger()
 
     lateinit var implementation: CobblemonImplementation
@@ -163,7 +167,7 @@ object Cobblemon {
         this.implementation = implementation
 
         this.LOGGER.info("Launching Cobblemon ${CobblemonBuildDetails.VERSION}${if(CobblemonBuildDetails.SNAPSHOT) "-SNAPSHOT" else ""} ")
-        if(CobblemonBuildDetails.SNAPSHOT) {
+        if (CobblemonBuildDetails.SNAPSHOT) {
             this.LOGGER.info("  - Git Commit: ${smallCommitHash()} (https://gitlab.com/cable-mc/cobblemon/-/commit/${CobblemonBuildDetails.GIT_COMMIT})")
             this.LOGGER.info("  - Branch: ${CobblemonBuildDetails.BRANCH}")
         }
@@ -274,6 +278,7 @@ object Cobblemon {
             FlagSpeciesFeatureProvider(keys = listOf(DataKeys.HAS_BEEN_SHEARED), default = false))
 
         CustomPokemonProperty.register(UncatchableProperty)
+        CustomPokemonProperty.register(BattleCloneProperty)
         CustomPokemonProperty.register(PokemonFlagProperty)
         CustomPokemonProperty.register(HiddenAbilityPropertyType)
         CustomPokemonProperty.register(AspectPropertyType)
@@ -321,9 +326,7 @@ object Cobblemon {
                     }
                 }
 
-                /*
                 "mongodb" -> {
-                    /*
                     try {
                         Class.forName("com.mongodb.client.MongoClient")
 
@@ -331,18 +334,22 @@ object Cobblemon {
                             .applyConnectionString(ConnectionString(config.mongoDBConnectionString))
                             .build()
                         mongoClient = MongoClients.create(mongoClientSettings)
-                        val mongoFactory = MongoPlayerDataStoreFactory(mongoClient, config.mongoDBDatabaseName)
-                        playerData.setFactory(mongoFactory, PlayerInstancedDataStoreType.GENERAL)
+                        val generalMongoFactory = CachedPlayerDataStoreFactory(PlayerDataMongoBackend(mongoClient, config.mongoDBDatabaseName, "PlayerDataCollection"))
+                        generalMongoFactory.setup(server)
+
+                        val pokedexMongoFactory = CachedPlayerDataStoreFactory(DexDataMongoBackend(mongoClient, config.mongoDBDatabaseName, "PokeDexCollection"))
+                        pokedexMongoFactory.setup(server)
+
+                        playerDataManager.setFactory(generalMongoFactory, PlayerInstancedDataStoreTypes.GENERAL)
+                        playerDataManager.setFactory(pokedexMongoFactory, PlayerInstancedDataStoreTypes.POKEDEX)
                         MongoDBStoreAdapter(mongoClient, config.mongoDBDatabaseName)
                     } catch (e: ClassNotFoundException) {
                         LOGGER.error("MongoDB driver not found.")
                         throw e
                     }
 
-                     */
                 }
 
-                 */
 
                 else -> throw IllegalArgumentException("Unsupported storageFormat: ${config.storageFormat}")
             }
@@ -490,6 +497,7 @@ object Cobblemon {
         this.implementation.registerCommandArgument(cobblemonResource("dialogue"), DialogueArgumentType::class, SingletonArgumentInfo.contextFree(DialogueArgumentType::dialogue))
         this.implementation.registerCommandArgument(cobblemonResource("form"), FormArgumentType::class, SingletonArgumentInfo.contextFree(FormArgumentType::form))
         this.implementation.registerCommandArgument(cobblemonResource("dex"), DexArgumentType::class, SingletonArgumentInfo.contextFree (DexArgumentType::dex))
+        this.implementation.registerCommandArgument(cobblemonResource("npc_class"), NPCClassArgumentType::class, SingletonArgumentInfo.contextFree(NPCClassArgumentType::npcClass))
     }
 
 }

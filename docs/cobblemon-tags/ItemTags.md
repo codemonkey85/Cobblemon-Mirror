@@ -975,7 +975,7 @@ This file contains tags related to items in cobblemon.
 </details>
 
 <details>
-<summary><b>Tag:</b> #items:x_items</summary>
+<summary><b>Tag:</b> #items:battle_items</summary>
 
 - cobblemon:dire_hit
 - cobblemon:guard_spec

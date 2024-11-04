@@ -1,0 +1,23 @@
+{
+  "portraitScale": 0.53,
+  "portraitTranslation": [-0.69, 0.72, 0],
+  "profileScale": 0.31,
+  "profileTranslation": [-0.11, 1.02, -20],
+  "rootBone": "dondozo",
+  "animations": {
+    "cry": "q.bedrock_stateful('dondozo', 'cry')"
+  },
+  "poses": {
+    "standing": {
+      "poseTypes": ["STAND", "NONE", "PORTRAIT", "PROFILE"],
+      "isBattle": false,
+      "animations": ["q.look('head')", "q.bedrock('dondozo', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('dondozo', 'blink')"]
+    },
+    "walking": {
+      "poseTypes": ["WALK", "SWIM"],
+      "animations": ["q.look('head')", "q.bedrock('dondozo', 'ground_idle')"],
+      "quirks": ["q.bedrock_quirk('dondozo', 'blink')"]
+    }
+  }
+}

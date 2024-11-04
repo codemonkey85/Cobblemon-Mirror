@@ -63,8 +63,8 @@ internal class ClientPokemonP1(
         other.evs = this.evs
         other.currentHealth = this.currentHealth
         other.gender = this.gender
-        other.moveSet = this.moveSet
-        other.benchedMoves = this.benchedMoves
+        other.moveSet.copyFrom(this.moveSet)
+        other.benchedMoves.copyFrom(this.benchedMoves)
         other.scaleModifier = this.scaleModifier
         this.features.forEach { featureNbt ->
             val featureId = featureNbt.getString(FEATURE_ID)

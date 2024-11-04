@@ -101,11 +101,12 @@ abstract class VaryingModelRepository<T : PosableModel> {
         gsonBuilder.setupGsonForJsonPosableModels(adapter) { json -> conditionParser(json) }
     }
 
-    open fun loadJsonPoser(json: String): (Bone) -> T {
+    open fun loadJsonPoser(fileName: String, json: String): (Bone) -> T {
         // Faster to deserialize during asset load rather than rerunning this every time a poser is constructed.
         val jsonObject = gson.fromJson(json, JsonObject::class.java)
         return {
-            adapter.modelPart = it
+            var boneName = jsonObject.getAsJsonPrimitive("rootBone")
+            adapter.modelPart = if (boneName != null && it.children[boneName.asString] != null) it.children[boneName.asString] else it.children[fileName] ?: it.children.values.first()
             gson.fromJson(jsonObject, poserClass).also {
                 it.poses.forEach { (poseName, pose) -> pose.poseName = poseName }
             }
@@ -129,7 +130,7 @@ abstract class VaryingModelRepository<T : PosableModel> {
                     resource.open().use { stream ->
                         val json = String(stream.readAllBytes(), StandardCharsets.UTF_8)
                         val resolvedIdentifier = ResourceLocation.fromNamespaceAndPath(identifier.namespace, File(identifier.path).nameWithoutExtension)
-                        posers[resolvedIdentifier] = loadJsonPoser(json)
+                        posers[resolvedIdentifier] = loadJsonPoser(resolvedIdentifier.path, json)
                     }
                 }
         }
@@ -191,31 +192,31 @@ abstract class VaryingModelRepository<T : PosableModel> {
         registerVariations(resourceManager)
     }
 
-    fun getPoser(name: ResourceLocation, aspects: Set<String>): T {
+    fun getPoser(name: ResourceLocation, state: PosableState): T {
         try {
-            val poser = this.variations[name]?.getPoser(aspects)
+            val poser = this.variations[name]?.getPoser(state)
             if (poser != null) {
                 return poser
             }
         } catch(e: IllegalStateException) {
 //            e.printStackTrace()
         }
-        return this.variations[fallback]!!.getPoser(aspects)
+        return this.variations[fallback]!!.getPoser(state)
     }
 
-    fun getTexture(name: ResourceLocation, aspects: Set<String>, animationSeconds: Float = 0F): ResourceLocation {
+    fun getTexture(name: ResourceLocation, state: PosableState): ResourceLocation {
         try {
-            val texture = this.variations[name]?.getTexture(aspects, animationSeconds)
-            if (texture != null && texture.exists()) {
+            val texture = this.variations[name]?.getTexture(state)
+            if (texture != null) {
                 return texture
             }
         } catch(_: IllegalStateException) { }
-        return this.variations[fallback]!!.getTexture(aspects, animationSeconds)
+        return this.variations[fallback]!!.getTexture(state)
     }
 
-    fun getTextureNoSubstitute(name: ResourceLocation, aspects: Set<String>, animationSeconds: Float = 0F): ResourceLocation? {
+    fun getTextureNoSubstitute(name: ResourceLocation, state: PosableState): ResourceLocation? {
         try {
-            val texture = this.variations[name]?.getTexture(aspects, animationSeconds)
+            val texture = this.variations[name]?.getTexture(state)
             if (texture != null && texture.exists()) {
                 return texture
             }
@@ -223,19 +224,19 @@ abstract class VaryingModelRepository<T : PosableModel> {
         return null
     }
 
-    fun getLayers(name: ResourceLocation, aspects: Set<String>): Iterable<ModelLayer> {
+    fun getLayers(name: ResourceLocation, state: PosableState): Iterable<ModelLayer> {
         try {
-            val layers = this.variations[name]?.getLayers(aspects)
+            val layers = this.variations[name]?.getLayers(state)
             if (layers != null) {
                 return layers
             }
         } catch(_: IllegalStateException) { }
-        return this.variations[fallback]!!.getLayers(aspects)
+        return this.variations[fallback]!!.getLayers(state)
     }
 
-    fun getSprite(name: ResourceLocation, aspects: Set<String>, type: SpriteType): ResourceLocation? {
+    fun getSprite(name: ResourceLocation, state: PosableState, type: SpriteType): ResourceLocation? {
         try {
-            return this.variations[name]?.getSprite(aspects, type)
+            return this.variations[name]?.getSprite(state, type)
         } catch (_: IllegalStateException) {}
         return null
     }

@@ -9,17 +9,10 @@
       "texture": "cobblemon:textures/pokemon/0500_emboar/emboar.png",
       "layers": [
         {
-          "name": "flame",
-          "texture": {
-            "frames": [
-              "cobblemon:textures/pokemon/0500_emboar/flame/emboar1.png",
-              "cobblemon:textures/pokemon/0500_emboar/flame/emboar2.png",
-              "cobblemon:textures/pokemon/0500_emboar/flame/emboar3.png"
-            ],
-            "fps": 6,
-            "loop": true
-          },
-          "emissive": true
+          "name": "glow",
+          "texture": "cobblemon:textures/pokemon/0500_emboar/emboar_emissive.png",
+          "emissive": true,
+          "translucent": true
         }
       ]
     },
@@ -28,17 +21,10 @@
       "texture": "cobblemon:textures/pokemon/0500_emboar/emboar_shiny.png",
       "layers": [
         {
-          "name": "flame",
-          "texture": {
-            "frames": [
-              "cobblemon:textures/pokemon/0500_emboar/flame/emboar_shiny1.png",
-              "cobblemon:textures/pokemon/0500_emboar/flame/emboar_shiny2.png",
-              "cobblemon:textures/pokemon/0500_emboar/flame/emboar_shiny3.png"
-            ],
-            "fps": 6,
-            "loop": true
-          },
-          "emissive": true
+          "name": "glow",
+          "texture": "cobblemon:textures/pokemon/0500_emboar/emboar_shiny_emissive.png",
+          "emissive": true,
+          "translucent": true
         }
       ]
     }

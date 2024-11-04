@@ -1,0 +1,52 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.corsola.ground_idle": {
+			"loop": true
+		},
+		"animation.corsola.cry": {
+			"animation_length": 1.2,
+			"sound_effects": {
+				"0.04": {
+					"effect": "pokemon.corsola.cry"
+				}
+			}
+		},
+		"animation.corsola.blink": {
+			"animation_length": 0.2083,
+			"bones": {
+				"eye_right_closed": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.2083": [0, 0, 0]
+					}
+				},
+				"eye_left_closed": {
+					"position": {
+						"0.0": [0, 0, -0.1],
+						"0.125": [0, 0, -0.1],
+						"0.2083": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.corsola.render": {
+			"loop": true,
+			"bones": {
+				"body": {
+					"position": [0, 1, 0]
+				},
+				"head": {
+					"rotation": [-9.11405, 22.13991, -10.80524]
+				},
+				"mouth": {
+					"position": [0, 0, 0.1]
+				},
+				"mouth_open": {
+					"position": [0, 0, -0.1]
+				}
+			}
+		}
+	}
+}

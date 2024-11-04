@@ -10,6 +10,7 @@ package com.cobblemon.mod.common.data
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.Cobblemon.LOGGER
+import com.cobblemon.mod.common.CobblemonBrainConfigs
 import com.cobblemon.mod.common.CobblemonMechanics
 import com.cobblemon.mod.common.api.abilities.Abilities
 import com.cobblemon.mod.common.api.berry.Berries
@@ -18,6 +19,7 @@ import com.cobblemon.mod.common.api.data.DataRegistry
 import com.cobblemon.mod.common.api.pokedex.Dexes
 import com.cobblemon.mod.common.api.dialogue.Dialogues
 import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.fishing.FishingBait
 import com.cobblemon.mod.common.api.fishing.FishingBaits
 import com.cobblemon.mod.common.api.fishing.PokeRods
 import com.cobblemon.mod.common.api.fossil.Fossils
@@ -25,6 +27,7 @@ import com.cobblemon.mod.common.api.fossil.NaturalMaterials
 import com.cobblemon.mod.common.api.moves.Moves
 import com.cobblemon.mod.common.api.moves.animations.ActionEffects
 import com.cobblemon.mod.common.api.npc.NPCClasses
+import com.cobblemon.mod.common.api.npc.NPCPresets
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.api.pokedex.DexAdditions
 import com.cobblemon.mod.common.api.pokedex.entry.DexEntries
@@ -70,6 +73,7 @@ object CobblemonDataProvider : DataProvider {
         this.register(ActionEffects)
         this.register(Moves)
         this.register(Abilities)
+        this.register(CobblemonBrainConfigs)
         this.register(PokemonSpecies)
         this.register(SpeciesAdditions)
         this.register(PokeBalls)
@@ -81,6 +85,7 @@ object CobblemonDataProvider : DataProvider {
         this.register(Dialogues)
         this.register(NaturalMaterials)
         this.register(Fossils)
+        this.register(NPCPresets)
         this.register(NPCClasses)
         this.register(DexEntries)
         this.register(DexEntryAdditions)
@@ -91,6 +96,7 @@ object CobblemonDataProvider : DataProvider {
         this.register(PokeRods)
         this.register(Berries)
         this.register(FishingBaits)
+        FishingBait.Effects.setupEffects()
 
         PlatformEvents.SERVER_PLAYER_LOGOUT.subscribe {
             synchronizedPlayerIds.remove(it.player.uuid)

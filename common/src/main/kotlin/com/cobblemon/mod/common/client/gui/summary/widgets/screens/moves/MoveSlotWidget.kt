@@ -111,9 +111,9 @@ class MoveSlotWidget(
 
             var movePPText = Component.literal("${move.currentPp}/${move.maxPp}").bold()
 
-        if (move.currentPp <= Mth.floor(move.maxPp / 2F)) {
-            movePPText = if (move.currentPp == 0) movePPText.red() else movePPText.gold()
-        }
+            if (move.currentPp <= Mth.floor(move.maxPp / 2F)) {
+                movePPText = if (move.currentPp == 0) movePPText.red() else movePPText.gold()
+            }
 
             drawScaledText(
                     context = context,
