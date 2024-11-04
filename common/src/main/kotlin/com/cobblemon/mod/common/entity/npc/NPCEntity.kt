@@ -349,12 +349,6 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Npc, P
         this.skill = npc.skill
         val partyNBT = nbt.getCompound(DataKeys.NPC_PARTY)
         if (!partyNBT.isEmpty) {
-            partyNBT.allKeys.toSet().forEach { key ->
-                // Migrating pre-1.6 release data structure
-                if (key.startsWith(DataKeys.NPC_PARTY_POKEMON)) {
-                    partyNBT.put(DataKeys.STORE_SLOT, partyNBT.getCompound(key.replace(DataKeys.NPC_PARTY_POKEMON, "")))
-                }
-            }
             party = NPCPartyStore(this).also { it.loadFromNBT(partyNBT, registryAccess()) }
         }
         if (nbt.contains(DataKeys.NPC_PLAYER_TEXTURE)) {
