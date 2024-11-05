@@ -312,7 +312,7 @@ object BattleBuilder {
     ): BattleStartResult {
         val playerTeam = party.toBattleTeam(clone = cloneParties, healPokemon = healFirst, leadingPokemon = leadingPokemon)
         val playerActor = PlayerBattleActor(player.uuid, playerTeam)
-        val npcParty = npcEntity.party?.getParty(player, npcEntity)
+        val npcParty = npcEntity.getPartyForChallenge(player)
         val errors = ErroredBattleStart()
 
         if (playerActor.pokemonList.size < battleFormat.battleType.slotsPerActor) {

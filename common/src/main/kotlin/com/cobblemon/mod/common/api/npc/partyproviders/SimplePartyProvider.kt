@@ -28,6 +28,8 @@ class SimplePartyProvider : NPCPartyProvider {
 
     @Transient
     override val type = TYPE
+    @Transient
+    override val isStatic = true
 
     val pokemon = mutableListOf<PokemonProperties>()
 
@@ -47,10 +49,10 @@ class SimplePartyProvider : NPCPartyProvider {
         }
     }
 
-    override fun provide(npc: NPCEntity, level: Int): NPCParty {
+    override fun provide(npc: NPCEntity, level: Int): NPCPartyStore {
         val pokemon = pokemon.map { it.copy().also { it.level = it.level ?: level }.create() }
         val party = NPCPartyStore(npc)
         pokemon.forEach(party::add)
-        return StaticNPCParty(party)
+        return party
     }
 }

@@ -155,19 +155,20 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
 
     val pokedexes = mutableListOf<PokedexItem>()
     @JvmField
-    val POKEDEX_BLACK = pokedexItem(PokedexTypes.BLACK)
+    val POKEDEX_RED = pokedexItem(PokedexTypes.RED)
     @JvmField
-    val POKEDEX_BLUE = pokedexItem(PokedexTypes.BLUE)
+    val POKEDEX_YELLOW = pokedexItem(PokedexTypes.YELLOW)
     @JvmField
     val POKEDEX_GREEN = pokedexItem(PokedexTypes.GREEN)
     @JvmField
+    val POKEDEX_BLUE = pokedexItem(PokedexTypes.BLUE)
+    @JvmField
     val POKEDEX_PINK = pokedexItem(PokedexTypes.PINK)
     @JvmField
-    val POKEDEX_RED = pokedexItem(PokedexTypes.RED)
+    val POKEDEX_BLACK = pokedexItem(PokedexTypes.BLACK)
     @JvmField
     val POKEDEX_WHITE = pokedexItem(PokedexTypes.WHITE)
-    @JvmField
-    val POKEDEX_YELLOW = pokedexItem(PokedexTypes.YELLOW)
+
 
     @JvmField
     val VIVICHOKE = compostableItem("vivichoke")
