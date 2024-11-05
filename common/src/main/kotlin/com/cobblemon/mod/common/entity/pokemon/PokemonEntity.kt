@@ -252,6 +252,9 @@ open class PokemonEntity(
     /** The form exposed to the client and used for calculating hitbox and height. */
     val exposedForm: FormData get() = this.effects.mockEffect?.exposedForm ?: this.pokemon.form
 
+    /** The aspects exposed to the client */
+    val exposedAspects: Set<String> get() = this.effects.mockEffect?.exposedForm?.aspects?.toSet() ?: this.pokemon.aspects
+
     override val struct: QueryStruct = QueryStruct(hashMapOf())
         .addStandardFunctions()
         .addEntityFunctions(this)

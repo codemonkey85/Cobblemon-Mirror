@@ -40,7 +40,7 @@ class FeatureFix(output: Schema) : PokemonFix(output) {
                 feature.saveToNBT(tag)
                 featureTag += tag
             }
-            if(featureTag.isEmpty()){
+            if (featureTag.isEmpty()){
                 return dynamic // no features to migrate
             }
             rootTag.put(FEATURES, Codec.list<CompoundTag>(CompoundTag.CODEC)
