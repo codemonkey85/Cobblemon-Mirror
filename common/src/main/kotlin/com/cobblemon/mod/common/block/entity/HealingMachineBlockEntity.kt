@@ -137,7 +137,7 @@ class HealingMachineBlockEntity(
             val npc = level
                 ?.getEntities(null, AABB.ofSize(blockPos.toVec3d(), 10.0, 10.0, 10.0)) { it.uuid == currentUser && it is NPCEntity }
                 ?.firstOrNull() as? NPCEntity
-            val party = npc?.staticParty
+            val party = npc?.party
             if (party != null) {
                 party.heal()
                 npc.sendSystemMessage(lang("healingmachine.healed").green()) // An NPC can read text, right?

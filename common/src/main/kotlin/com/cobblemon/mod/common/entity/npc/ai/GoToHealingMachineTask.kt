@@ -53,7 +53,7 @@ object GoToHealingMachineTask {
                     val speedMultiplier = runtime.resolveFloat(speedMultiplier)
                     val completionRange = runtime.resolveInt(completionRange)
 
-                    if ((entity.staticParty?.getHealingRemainderPercent() ?: 0F) > 0F) {
+                    if ((entity.party?.getHealingRemainderPercent() ?: 0F) > 0F) {
                         val npcPos = entity.blockPosition()
                         val nearestFreeHealer = world
                             .getNearbyBlockEntities(

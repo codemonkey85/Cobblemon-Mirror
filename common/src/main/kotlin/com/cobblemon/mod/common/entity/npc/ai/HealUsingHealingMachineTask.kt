@@ -53,7 +53,7 @@ class HealUsingHealingMachineTask(
             return false
         }
 
-        val partyNeedsHealing = (entity.staticParty?.getHealingRemainderPercent() ?: 0.0F) > 0.0F
+        val partyNeedsHealing = (entity.party?.getHealingRemainderPercent() ?: 0.0F) > 0.0F
         if (!partyNeedsHealing) {
             return false
         }
@@ -77,7 +77,7 @@ class HealUsingHealingMachineTask(
 
     override fun start(world: ServerLevel, entity: LivingEntity, l: Long) {
         entity as NPCEntity
-        nearestHealer?.activate(entity.uuid, entity.staticParty ?: return)
+        nearestHealer?.activate(entity.uuid, entity.party ?: return)
         entity.playAnimation("punch_right")
     }
 }
