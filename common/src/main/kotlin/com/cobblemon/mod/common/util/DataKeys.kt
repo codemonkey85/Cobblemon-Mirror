@@ -198,9 +198,7 @@ object DataKeys {
     const val NPC_SIMULTANEOUS_BATTLES = "SimultaneousBattles"
     const val NPC_HEAL_AFTERWARDS = "HealAfterwards"
     const val NPC_PARTY = "Party"
-    const val NPC_PARTY_IS_STATIC = "IsStatic"
     const val NPC_PARTY_TYPE = "PartyType"
-    const val NPC_PARTY_POKEMON = "Pokemon"
     const val NPC_ASPECTS = "AppliedAspects"
     const val NPC_DATA = "Data"
     const val NPC_CONFIG = "Config"
@@ -212,6 +210,7 @@ object DataKeys {
     const val NPC_PLAYER_TEXTURE = "NPCPlayerTexture"
     const val NPC_PLAYER_TEXTURE_MODEL = "Model"
     const val NPC_PLAYER_TEXTURE_TEXTURE = "Texture"
+    const val NPC_LEVEL = "Level"
 
     // PokemonProperties
     const val ELEMENTAL_TYPE = "ElementalType"
