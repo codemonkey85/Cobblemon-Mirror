@@ -213,7 +213,7 @@ abstract class RequestManager<T : ServerPlayerActionRequest> {
         outboundRequests.get(player.uuid)?.let { request ->
             this.cancelRequest(request)
         }
-        inboundRequests.get(player.uuid)?.let { requests ->
+        inboundRequests.get(player.uuid)?.toMutableList()?.let { requests ->
             requests.forEach { request ->
                 this.declineRequest(player, request.requestID)
             }
