@@ -23,14 +23,22 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.network.chat.Component
 
 object SetNicknameHandler : ServerNetworkPacketHandler<SetNicknamePacket> {
+
+    const val MAX_NAME_LENGTH = 12
+
     override fun handle(packet: SetNicknamePacket, server: MinecraftServer, player: ServerPlayer) {
         val pokemonStore: PokemonStore<*> = if (packet.isParty) {
             player.party()
         } else {
-            PCLinkManager.getPC(player) ?: return run { ClosePCPacket(null).sendToPlayer(player) }
+            PCLinkManager.getPC(player) ?: return ClosePCPacket(null).sendToPlayer(player)
         }
 
         val pokemon = pokemonStore[packet.pokemonUUID] ?: return
+
+        val nickname = packet.nickname
+        if (nickname != null && nickname.length > MAX_NAME_LENGTH) {
+            return player.sendPacket(NicknameUpdatePacket({ pokemon }, pokemon.nickname))
+        }
 
         CobblemonEvents.POKEMON_NICKNAMED.postThen(
             event = PokemonNicknamedEvent(
