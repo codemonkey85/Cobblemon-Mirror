@@ -20,6 +20,17 @@
       ],
       "animations": ["q.bedrock('shellos_west', 'ground_idle')"],
       "quirks": ["q.bedrock_quirk('shellos_west', 'blink')"]
+    },
+    "walking": {
+      "poseTypes": [
+        "WALK",
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('shellos_west', 'ground_idle')",
+        "q.quadruped_walk(0.66, 0.6, 'leg_front_left', 'leg_front_right', 'leg_back_left', 'leg_back_right')"
+      ],
+      "quirks": ["q.bedrock_quirk('shellos_west', 'blink')"]
     }
   }
 }

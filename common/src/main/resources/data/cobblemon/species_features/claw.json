@@ -1,0 +1,11 @@
+{
+    "type": "choice",
+    "keys": ["claw"],
+    "default": "random",
+    "choices": [
+      "left",
+      "right"
+    ],
+    "isAspect": true,
+    "aspectFormat": "claw-{{choice}}"
+  }

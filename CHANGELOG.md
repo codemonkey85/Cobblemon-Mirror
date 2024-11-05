@@ -78,8 +78,8 @@
 - Salamence
 
 #### Gen 4
-- Shellos [East Sea form]
-- Gastrodon [East Sea form]
+- Shellos
+- Gastrodon
 - Finneon
 - Lumineon
 - Mantyke
@@ -145,6 +145,7 @@
 - Wiglett
 - Wugtrio
 - Flamigo
+- Dondozo
 
 #### Unique Forms
 - Magikarp Jump Variants
