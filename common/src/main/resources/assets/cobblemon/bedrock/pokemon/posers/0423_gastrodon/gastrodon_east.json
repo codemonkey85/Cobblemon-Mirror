@@ -8,14 +8,23 @@
     "standing": {
       "poseTypes": [
         "STAND",
-        "WALK",
-        "SWIM",
         "FLOAT",
         "PORTRAIT",
         "PROFILE",
         "NONE"
       ],
       "animations": ["q.bedrock('gastrodon_east', 'ground_idle')"]
+    },
+    "walking": {
+      "poseTypes": [
+        "WALK",
+        "SWIM"
+      ],
+      "animations": [
+        "q.bedrock('gastrodon_east', 'ground_idle')",
+        "q.biped_walk(0.36, 0.3, 'leg_back_left', 'leg_back_right')",
+        "q.quadruped_walk(0.36, 0.3, 'leg_front_left', 'leg_front_right', 'leg_middle_left', 'leg_middle_right')"
+      ]
     }
   }
 }

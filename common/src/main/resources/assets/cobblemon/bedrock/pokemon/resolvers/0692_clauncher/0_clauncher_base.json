@@ -12,6 +12,28 @@
     {
       "aspects": ["shiny"],
       "texture": "cobblemon:textures/pokemon/0692_clauncher/clauncher_left_shiny.png"
+    },
+    {
+      "aspects": ["claw-left"],
+      "poser": "cobblemon:clauncher_left",
+      "model": "cobblemon:clauncher_left.geo",
+      "texture": "cobblemon:textures/pokemon/0692_clauncher/clauncher_left.png",
+      "layers": []
+    },
+    {
+      "aspects": ["shiny", "claw-left"],
+      "texture": "cobblemon:textures/pokemon/0692_clauncher/clauncher_left_shiny.png"
+    },
+    {
+      "aspects": ["claw-right"],
+      "poser": "cobblemon:clauncher_right",
+      "model": "cobblemon:clauncher_right.geo",
+      "texture": "cobblemon:textures/pokemon/0692_clauncher/clauncher_right.png",
+      "layers": []
+    },
+    {
+      "aspects": ["shiny", "claw-right"],
+      "texture": "cobblemon:textures/pokemon/0692_clauncher/clauncher_right_shiny.png"
     }
   ]
 }
