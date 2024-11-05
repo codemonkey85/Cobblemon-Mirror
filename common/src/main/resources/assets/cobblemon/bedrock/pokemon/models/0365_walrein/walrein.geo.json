@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.unknown",
+				"identifier": "geometry.walrein",
 				"texture_width": 128,
 				"texture_height": 128,
 				"visible_bounds_width": 5,
@@ -297,6 +297,14 @@
 					]
 				},
 				{
+					"name": "leg_hidden_left",
+					"parent": "leg_left",
+					"pivot": [7, 4.5, 9],
+					"cubes": [
+						{"origin": [6.21644, -1.75268, 5.94303], "size": [3, 3, 6], "uv": [0, 118]}
+					]
+				},
+				{
 					"name": "foot_left",
 					"parent": "leg_left",
 					"pivot": [7.71644, -1.75268, 11.94303],
@@ -320,6 +328,14 @@
 					"rotation": [15.34878, 17.3259, 6.35401],
 					"cubes": [
 						{"origin": [-10.21644, -1.75268, 4.94303], "size": [5, 9, 8], "uv": [67, 87]}
+					]
+				},
+				{
+					"name": "lef_hidden_right",
+					"parent": "leg_right",
+					"pivot": [-7, 4.5, 9],
+					"cubes": [
+						{"origin": [-9.21644, -1.75268, 5.94303], "size": [3, 3, 6], "uv": [19, 118]}
 					]
 				},
 				{
