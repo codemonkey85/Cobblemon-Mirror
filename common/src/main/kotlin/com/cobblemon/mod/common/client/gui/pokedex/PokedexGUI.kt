@@ -448,7 +448,7 @@ class PokedexGUI private constructor(
             val form = species.forms.find { it.name.equals(formName, ignoreCase = true) } ?: species.standardForm
             when (tabInfoIndex) {
                 TAB_DESCRIPTION -> {
-                    textToShowInDescription.addAll(species.pokedex)
+                    textToShowInDescription.addAll(form.pokedex)
                     (tabInfoElement as DescriptionWidget).showPlaceholder = false
                 }
                 TAB_ABILITIES -> {
