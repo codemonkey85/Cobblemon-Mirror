@@ -144,6 +144,7 @@
 - Wiglett
 - Wugtrio
 - Flamigo
+- Dondozo
 
 #### Unique Forms
 - Magikarp Jump Variants
