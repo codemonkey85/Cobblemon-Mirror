@@ -10,11 +10,13 @@ package com.cobblemon.mod.common.client.net.battle
 
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
+import com.cobblemon.mod.common.client.render.ClientPlayerIcon
 import com.cobblemon.mod.common.net.messages.client.battle.TeamRequestExpiredPacket
 import net.minecraft.client.Minecraft
 
 object TeamRequestExpiredHandler : ClientNetworkPacketHandler<TeamRequestExpiredPacket> {
     override fun handle(packet: TeamRequestExpiredPacket, client: Minecraft) {
-        CobblemonClient.requests.onMultiChallengeExpired(packet.teamRequestId)
+        CobblemonClient.requests.multiBattleTeamRequests.remove(packet.senderID)
+        ClientPlayerIcon.update(packet.senderID)
     }
 }

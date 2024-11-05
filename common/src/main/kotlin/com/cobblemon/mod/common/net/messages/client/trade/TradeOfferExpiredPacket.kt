@@ -9,26 +9,32 @@
 package com.cobblemon.mod.common.net.messages.client.trade
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
+import com.cobblemon.mod.common.trade.TradeManager
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readUUID
-import com.cobblemon.mod.common.util.writeUUID
 import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
 /**
  * Packet fired to tell the client that a trade offer expired.
  *
+ * Handled by [com.cobblemon.mod.common.client.net.trade.TradeOfferExpiredHandler].
+ *
+ * @param senderID The unique identifier of the party that sent the request.
+ * @param expired Whether this cancellation is due to expiration.
+ *
  * @author Hiroku
  * @since March 11th, 2023
  */
-class TradeOfferExpiredPacket(val tradeOfferId: UUID) : NetworkPacket<TradeOfferExpiredPacket> {
+class TradeOfferExpiredPacket(val senderID: UUID) : NetworkPacket<TradeOfferExpiredPacket> {
     companion object {
-        val ID = cobblemonResource("trade_offer_expired")
+        val ID = cobblemonResource("trade_offer_canceled")
         fun decode(buffer: RegistryFriendlyByteBuf) = TradeOfferExpiredPacket(buffer.readUUID())
     }
 
     override val id = ID
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeUUID(tradeOfferId)
+        buffer.writeUUID(senderID)
     }
+
+    constructor(request: TradeManager.TradeRequest) : this(request.senderID)
 }

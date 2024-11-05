@@ -11,6 +11,7 @@ package com.cobblemon.mod.common.net.serverhandling
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.battles.BattleRegistry
+import com.cobblemon.mod.common.battles.TeamManager
 import com.cobblemon.mod.common.net.messages.client.PlayerInteractOptionsPacket
 import com.cobblemon.mod.common.net.messages.server.RequestPlayerInteractionsPacket
 import com.cobblemon.mod.common.util.party
@@ -40,7 +41,14 @@ object RequestInteractionsHandler : ServerNetworkPacketHandler<RequestPlayerInte
         ) == targetPlayerEntity) {
             val squaredDistance = targetPlayerEntity.position().distanceToSqr(player.position())
             if (squaredDistance <= Cobblemon.config.tradeMaxDistance.pow(2)) {
-                options[PlayerInteractOptionsPacket.Options.TRADE] = PlayerInteractOptionsPacket.OptionStatus.AVAILABLE
+                val playerPartyCount = player.party().count()
+                val targetPartyCount = (targetPlayerEntity as ServerPlayer).party().count()
+                if (playerPartyCount >= 1 && targetPartyCount >= 1) {
+                    options[PlayerInteractOptionsPacket.Options.TRADE] = PlayerInteractOptionsPacket.OptionStatus.AVAILABLE
+                }
+                else {
+                    options[PlayerInteractOptionsPacket.Options.TRADE] = PlayerInteractOptionsPacket.OptionStatus.INSUFFICIENT_POKEMON
+                }
             } else {
                 options[PlayerInteractOptionsPacket.Options.TRADE] = PlayerInteractOptionsPacket.OptionStatus.TOO_FAR
             }
@@ -55,13 +63,13 @@ object RequestInteractionsHandler : ServerNetworkPacketHandler<RequestPlayerInte
                 if (playerPartyCount >= 1 && targetPartyCount >= 1) {
                     options[PlayerInteractOptionsPacket.Options.SINGLE_BATTLE] = PlayerInteractOptionsPacket.OptionStatus.AVAILABLE
                     //options[PlayerInteractOptionsPacket.Options.ROYAL_BATTLE] = PlayerInteractOptionsPacket.OptionStatus.AVAILABLE
-                    if (BattleRegistry.playerToTeam[player.uuid] != null && BattleRegistry.playerToTeam[packet.targetId] !== null) {
-                        if (BattleRegistry.playerToTeam[player.uuid]?.teamID != BattleRegistry.playerToTeam[packet.targetId]?.teamID) {
+                    if (TeamManager.getTeam(player) != null && TeamManager.getTeam(targetPlayerEntity) != null) {
+                        if (TeamManager.getTeam(player)?.teamID != TeamManager.getTeam(targetPlayerEntity)?.teamID) {
                             options[PlayerInteractOptionsPacket.Options.MULTI_BATTLE] = PlayerInteractOptionsPacket.OptionStatus.AVAILABLE
                         } else {
                             options[PlayerInteractOptionsPacket.Options.TEAM_LEAVE] = PlayerInteractOptionsPacket.OptionStatus.AVAILABLE
                         }
-                    } else if (BattleRegistry.playerToTeam[player.uuid] === null && BattleRegistry.playerToTeam[packet.targetId] === null) {
+                    } else if (TeamManager.getTeam(player) === null && TeamManager.getTeam(targetPlayerEntity) === null) {
                         // TODO: Max team size checking, allow for team of size > 2
                         options[PlayerInteractOptionsPacket.Options.TEAM_REQUEST] = PlayerInteractOptionsPacket.OptionStatus.AVAILABLE
                     }
@@ -83,5 +91,5 @@ object RequestInteractionsHandler : ServerNetworkPacketHandler<RequestPlayerInte
             PlayerInteractOptionsPacket(options, packet.targetId, packet.targetNumericId, packet.pokemonId).sendToPlayer(player)
         }
     }
-
+    // TODO move all this to the RequestManagers
 }

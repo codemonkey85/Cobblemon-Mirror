@@ -18,8 +18,10 @@ import com.cobblemon.mod.common.api.dialogue.DialogueManager
 import com.cobblemon.mod.common.api.reactive.Observable.Companion.filter
 import com.cobblemon.mod.common.api.reactive.Observable.Companion.takeFirst
 import com.cobblemon.mod.common.battles.BattleRegistry
+import com.cobblemon.mod.common.battles.TeamManager
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.trade.TradeManager
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.registries.BuiltInRegistries
@@ -29,6 +31,7 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
@@ -91,6 +94,18 @@ fun ServerPlayer.getBattleState(): Pair<PokemonBattle, BattleActor>? {
     }
     return null
 }
+
+fun ServerPlayer.getBattleTeam() = TeamManager.getTeam(this)
+
+fun ServerPlayer.isTrading() = TradeManager.getActiveTrade(this.uuid) != null
+
+fun ServerPlayer.canInteractWith(target: Entity, maxDistance: Float) = target is ServerPlayer && target != this && !this.isSpectator && !target.isSpectator &&
+    this.traceFirstEntityCollision(
+        entityClass = LivingEntity::class.java,
+        ignoreEntity = this,
+        maxDistance = maxDistance,
+        collideBlock = ClipContext.Fluid.NONE
+    ) == target
 
 // TODO Player extension for queueing next login?
 class TraceResult(

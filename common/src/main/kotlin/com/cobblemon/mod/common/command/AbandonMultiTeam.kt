@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.command
 
 
 import com.cobblemon.mod.common.api.permission.CobblemonPermissions
-import com.cobblemon.mod.common.battles.BattleRegistry
+import com.cobblemon.mod.common.battles.TeamManager
 import com.cobblemon.mod.common.util.alias
 import com.cobblemon.mod.common.util.permission
 import com.mojang.brigadier.Command.SINGLE_SUCCESS
@@ -36,7 +36,7 @@ object AbandonMultiTeam {
 
         val player = context.source.player
         if (player != null) {
-            BattleRegistry.removeTeamMember(player)
+            TeamManager.removeTeamMember(player)
         }
         return SINGLE_SUCCESS
     }

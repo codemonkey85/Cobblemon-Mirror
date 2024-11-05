@@ -36,6 +36,7 @@
 - Added a new universal locator called "top".
 - Added shiny Pokémon particles with sound effects.
 - Added animation for trading.
+- Added icons for pending trade, team-up, and battle requests from other players.
 
 ### Pokémon Added
 #### Gen 1

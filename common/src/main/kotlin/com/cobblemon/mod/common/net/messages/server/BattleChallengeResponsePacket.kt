@@ -9,19 +9,33 @@
 package com.cobblemon.mod.common.net.messages.server
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
+import com.cobblemon.mod.common.net.messages.client.battle.BattleChallengeNotificationPacket
+import com.cobblemon.mod.common.net.serverhandling.ChallengeResponseHandler
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
-class BattleChallengeResponsePacket(val targetedEntityId: Int, val selectedPokemonId: UUID, val accept: Boolean) : NetworkPacket<BattleChallengeResponsePacket> {
+/**
+ * Packet sent when a player responds to a [BattleChallenge] after receiving the respective [BattleChallengeNotificationPacket].
+ *
+ * Handled by [ChallengeResponseHandler].
+ *
+ * @param requestID The unique identifier of the request that the player is responding to.
+ * @param accept Whether the player accepted the team request.
+ *
+ * @author JazzMcNade
+ * @since March 12th, 2024
+ */
+class BattleChallengeResponsePacket(val targetedEntityId: Int, val requestID: UUID, val selectedPokemonId: UUID, val accept: Boolean) : NetworkPacket<BattleChallengeResponsePacket> {
     override val id = ID
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeInt(this.targetedEntityId)
+        buffer.writeUUID(this.requestID)
         buffer.writeUUID(this.selectedPokemonId)
         buffer.writeBoolean(accept)
     }
     companion object {
         val ID = cobblemonResource("battle_challenge_response")
-        fun decode(buffer: RegistryFriendlyByteBuf) = BattleChallengeResponsePacket(buffer.readInt(), buffer.readUUID(), buffer.readBoolean())
+        fun decode(buffer: RegistryFriendlyByteBuf) = BattleChallengeResponsePacket(buffer.readInt(), buffer.readUUID(), buffer.readUUID(), buffer.readBoolean())
     }
 }

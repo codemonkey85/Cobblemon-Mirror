@@ -9,12 +9,21 @@
 package com.cobblemon.mod.common.net.messages.server.trade
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
+import com.cobblemon.mod.common.net.serverhandling.trade.OfferTradeHandler
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readUUID
-import com.cobblemon.mod.common.util.writeUUID
 import net.minecraft.network.RegistryFriendlyByteBuf
 import java.util.UUID
 
+/**
+ * Packet fired when a player makes an interaction request to trade with another player.
+ *
+ * Handled by [OfferTradeHandler].
+ *
+ * @param targetedEntityId The ID of the player who's the target of this interaction request.
+ *
+ * @author Hiroku
+ * @since March 12th, 2023
+ */
 class OfferTradePacket(val offeredPlayerId: UUID) : NetworkPacket<OfferTradePacket> {
     companion object {
         val ID = cobblemonResource("offer_trade")

@@ -18,7 +18,7 @@ import java.util.UUID
 /**
  * Packet sent when a player joins or leaves a team that the client is currently a member of.
  *
- * Handled by [com.cobblemon.mod.common.client.net.battle.TeamRequestNotificationHandler].
+ * Handled by [com.cobblemon.mod.common.client.net.battle.TeamMemberRemoveNotificationHandler].
  *
  * @author JazzMcNade
  * @since April 9th, 2024

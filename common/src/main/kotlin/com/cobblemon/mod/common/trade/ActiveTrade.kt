@@ -59,7 +59,7 @@ class ActiveTrade(val player1: TradeParticipant, val player2: TradeParticipant) 
     fun cancelTrade() {
         player1.cancelTrade(this)
         player2.cancelTrade(this)
-        TradeManager.activeTrades -= this
+        TradeManager.removeActiveTrade(this)
     }
 
     fun completeTrade() {

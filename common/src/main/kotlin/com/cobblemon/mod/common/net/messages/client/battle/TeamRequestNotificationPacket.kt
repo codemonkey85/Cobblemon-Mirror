@@ -9,36 +9,47 @@
 package com.cobblemon.mod.common.net.messages.client.battle
 
 import com.cobblemon.mod.common.api.net.NetworkPacket
+import com.cobblemon.mod.common.battles.TeamManager
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.readText
-import com.cobblemon.mod.common.util.writeText
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.network.chat.MutableComponent
 import java.util.UUID
 
 /**
- * Packet send when a player has requested to join a team. The responsibility
- * of this packet currently is to send a battle challenge message that includes
- * the keybind to challenge them back. In future this is likely to include information
- * about the battle.
+ * Packet sent when a player has requested to form or join a team.
  *
  * Handled by [com.cobblemon.mod.common.client.net.battle.TeamRequestNotificationHandler].
  *
+ * @param requestID The unique identifier of the request.
+ * @param senderID The unique identifier of the party that sent the request.
+ * @param expiryTime How long (in seconds) this request is active.
+ *
+ * @author JazzMcNade
+ * @since April 15th, 2024
  */
 class TeamRequestNotificationPacket(
-        val teamRequestId: UUID,
-        val requesterId: UUID,
-        val requesterName: MutableComponent,
+    val requestID: UUID,
+    val senderID: UUID,
+    val expiryTime: Int
 ): NetworkPacket<TeamRequestNotificationPacket> {
     override val id = ID
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeUUID(teamRequestId)
-        buffer.writeUUID(requesterId)
-        buffer.writeText(requesterName)
+        buffer.writeUUID(requestID)
+        buffer.writeUUID(senderID)
+        buffer.writeInt(expiryTime)
     }
 
     companion object {
         val ID = cobblemonResource("team_request_notification")
-        fun decode(buffer: RegistryFriendlyByteBuf) = TeamRequestNotificationPacket(buffer.readUUID(), buffer.readUUID(), buffer.readText().copy())
+        fun decode(buffer: RegistryFriendlyByteBuf) = TeamRequestNotificationPacket(
+            buffer.readUUID(),
+            buffer.readUUID(),
+            buffer.readInt()
+        )
     }
+
+    constructor(request: TeamManager.TeamRequest) : this(
+        requestID = request.requestID,
+        senderID = request.senderID,
+        expiryTime = request.expiryTime
+    )
 }

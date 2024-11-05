@@ -10,19 +10,14 @@ package com.cobblemon.mod.common.client.net.trade
 
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.client.CobblemonClient
-import com.cobblemon.mod.common.client.keybind.boundKey
-import com.cobblemon.mod.common.client.keybind.keybinds.PartySendBinding
-import com.cobblemon.mod.common.client.trade.ClientTradeOffer
+import com.cobblemon.mod.common.client.render.ClientPlayerIcon
+import com.cobblemon.mod.common.client.trade.ClientTradeRequest
 import com.cobblemon.mod.common.net.messages.client.trade.TradeOfferNotificationPacket
-import com.cobblemon.mod.common.util.lang
 import net.minecraft.client.Minecraft
 
 object TradeOfferNotificationHandler : ClientNetworkPacketHandler<TradeOfferNotificationPacket> {
     override fun handle(packet: TradeOfferNotificationPacket, client: Minecraft) {
-        CobblemonClient.requests.tradeOffers.add(ClientTradeOffer(packet.tradeOfferId, packet.traderId))
-        client.player?.displayClientMessage(
-            lang("trade.offer", packet.traderName, PartySendBinding.boundKey().displayName),
-            true
-        )
+        CobblemonClient.requests.tradeOffers[packet.senderID] = ClientTradeRequest(packet.requestID, packet.senderID, packet.expiryTime)
+        ClientPlayerIcon.update(packet.senderID)
     }
 }
