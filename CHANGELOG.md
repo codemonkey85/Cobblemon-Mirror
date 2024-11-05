@@ -76,13 +76,6 @@
 - Bagon
 - Shelgon
 - Salamence
-
-#### Gen 4
-- Shellos
-- Gastrodon
-- Finneon
-- Lumineon
-- Mantyke
 - Feebas
 - Milotic
 - Spheal
@@ -191,7 +184,7 @@
 - Hatenna, Hattrem, Hatterene
 - Pincurchin
 - Klawf
-- Finizen, Palafin [Zero], Palafin [Hero]
+- Finizen, Palafin \[Zero\], Palafin \[Hero\]
 - Dondozo
 
 ### Added shoulder mounts for the following Pokémon
@@ -226,7 +219,7 @@
 - Shroodle
 - Tatsugiri
 - Glimmet
-- Gimmighoul [Roaming]
+- Gimmighoul \[Roaming\]
 
 ### Animation updates for the following Pokémon
 - Bellsprout, Weepinbel, Victreebel
@@ -251,7 +244,7 @@
 - Dreepy, Drakloak
 - Kleavor
 - Scorbunny
-- Gimmighoul [Roaming]
+- Gimmighoul \[Roaming\]
 
 ### Model updates for the following Pokémon
 - Bulbasaur, Ivysaur, Venusaur
@@ -338,7 +331,7 @@
 ### Fixes
 - Scaled down Amaura's fetus model to avoid clipping through the tank while animating.
 - Fixed Cubone's cry not having a sound.
-- Fixed the sendout sound erronously playing when a wild Pokémon breaks out of a Poké ball.
+- Fixed the sendout sound erroneously playing when a wild Pokémon breaks out of a Poké ball.
 - Flamethrower is no longer missing sounds.
 - Fixed the Seafloor spawning context not being a usable context.
 - Fixed Pokemon spawning in non-full blocks like slabs.
@@ -346,11 +339,6 @@
 - Fixed Pokémon losing their Hidden Ability through evolution if the middle stage did not have a Hidden Ability.
 - Hidden Power no longer plays the water type action effect (It now plays the normal type action effect).
 - Fixed Chimchar and Monferno T-posing whenever they sleep.
-- Fixed the Magby line not having any placeholder walk animations.
-- Fixed Duskull and Dusclops using skylight levels for their nether spawn data. There is no sun in the Nether!
-- Fixed Hisuian Zoroark using base Zoroark stats.
-- Fixed Bellossom clipping into the player head when shoulder mounted.
-- Fixed Shroomish's look range to prevent it from looking higher than it should.
 - Fixed Cetitan's cry breaking its walk and sleep animations. 
 - Fixed Crumbling Arch not blending in with the world.
 - Fixed Energy Root applying being usable on a fainted Pokémon.
